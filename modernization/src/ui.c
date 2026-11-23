@@ -4939,6 +4939,169 @@ undo_key_class(int k, int sel)
 }
 
 
+/* ============================================================== the mouse */
+/* The wheel and the click of the X11 window; docs/MOUSE.txt describes them. */
+#define WHEEL_STEP 3
+
+static int
+is_mouse_key(int k)
+{
+    int b = K_BASE(k);
+
+    return b == K_WHEEL_UP || b == K_WHEEL_DOWN || b == K_CLICK;
+}
+
+
+/* Puts the cursor on the character under the cell x of the vline line. */
+static int
+cursor_to_cell(int line, int x)
+{
+    Pos p;
+
+    if (ed_pos_at(ED, line, x, &p) == 0) {
+        return 0;
+    }
+
+    ED->cur = p;
+    ed_fix_cursor(ED);
+
+    /* On a picture the cursor stands on the row that was clicked. */
+    int first;
+
+    if (ed_picture_rows(ED, &first) > 1) {
+        ed_set_picture_row(ED, line - ED->view.bv[ED->cur.item].line0 - first);
+    } else {
+        ed_set_picture_row(ED, 0);
+    }
+
+    int cx;
+
+    if (ed_cursor_screen(ED, &cx, NULL) >= 0) {
+        ED->want_x = cx;
+    }
+
+    layout_precise = 1;
+
+    return 1;
+}
+
+
+/*
+ * A step of the wheel moves the first line shown by three rows, and by half
+ * a screen with Ctrl.  The cursor is put on the nearest row that is shown
+ * when the move took it out of the view, as the keys Up and Down do, because
+ * the next drawing scrolls the view back to the cursor.
+ */
+static void
+mouse_wheel(int dir, int ctrl)
+{
+    int rows = text_rows();
+    int step = ctrl != 0 ? rows / 2 : WHEEL_STEP;
+    int margin = rows > 8 ? 2 : 0;
+
+    ed_layout(ED);
+
+    if (step < 1) {
+        step = 1;
+    }
+
+    int last = ED->view.n - rows + margin;
+    int top = ED->top + dir * step;
+
+    if (last < ED->top) {
+        last = ED->top;
+    }
+
+    top = top > last ? last : top;
+    top = top < 0 ? 0 : top;
+
+    if (top == ED->top) {
+        return;
+    }
+
+    ED->top = top;
+
+    int line = ed_cursor_screen(ED, NULL, NULL);
+    int lo = top + margin;
+    int hi = top + rows - 1 - margin;
+
+    if (line < 0 || (line >= lo && line <= hi)) {
+        return;
+    }
+
+    Pos keep = ED->cur;
+    int keepx = ED->want_x;
+    int sgn = line < lo ? 1 : -1;
+
+    for (int l = line < lo ? lo : hi; l >= lo && l <= hi; l += sgn) {
+        if (cursor_to_cell(l, keepx) != 0) {
+            int now = ed_cursor_screen(ED, NULL, NULL);
+
+            if (now >= lo && now <= hi) {
+                ED->want_x = keepx;
+
+                return;
+            }
+        }
+    }
+
+    ED->cur = keep;
+    ED->want_x = keepx;
+}
+
+
+/*
+ * A click in the text of this window puts the cursor on the character under
+ * the pointer.  In the highlight mode it moves the end of the highlight, as
+ * the cursor keys do, but only inside the text that the highlight is in.  A
+ * click anywhere else (the status line, the other window, the rows of the
+ * keys) does nothing.
+ */
+static void
+mouse_click(void)
+{
+    int r;
+    int c;
+    int y0 = text_y0();
+
+    term_mouse_cell(&r, &c);
+
+    if (A->moving != 0 || r < y0 || r >= y0 + text_rows()) {
+        return;
+    }
+
+    ed_layout(ED);
+
+    int line = ED->top + r - y0;
+    Pos p;
+
+    if (ed_pos_at(ED, line, c, &p) == 0) {
+        return;
+    }
+
+    if ((ED->sel.kind == SEL_TEXT || ED->sel.kind == SEL_COLUMN) &&
+        (p.item != ED->sel.anchor.item ||
+         (ED->sel.kind == SEL_TEXT && p.col != ED->sel.anchor.col))) {
+        return;
+    }
+
+    cursor_to_cell(line, c);
+}
+
+
+static void
+mouse_key(int k)
+{
+    int b = K_BASE(k);
+
+    if (b == K_CLICK) {
+        mouse_click();
+    } else {
+        mouse_wheel(b == K_WHEEL_UP ? -1 : 1, (k & KM_CTRL) != 0);
+    }
+}
+
+
 /*
  * Handle a key, and keep what it changed for Undo: the document is compared
  * with the copy that was made after the key before.
@@ -5269,8 +5432,9 @@ app_run(App *a, const char *initial)
     int draw_owed = 0;
 
     while (a->quit == 0) {
-        int k = term_getkey(draw_owed != 0 ? 0 :
-                            autosave_on != 0 ? 1000 : -1);
+        int k = term_getkey_mouse(draw_owed != 0 ? 0 :
+                                  autosave_on != 0 ? 1000 : -1,
+                                  MOUSE_EDITOR);
 
         if (k == K_NONE && draw_owed != 0) {
             draw_owed = 0;
@@ -5294,7 +5458,12 @@ app_run(App *a, const char *initial)
         {
             LayoutSig before = layout_sig();
 
-            handle_key(k);
+            if (is_mouse_key(k) != 0) {
+                mouse_key(k);
+            } else {
+                handle_key(k);
+            }
+
             layout_after_key(&before);
         }
 

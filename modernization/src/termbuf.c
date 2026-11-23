@@ -344,7 +344,9 @@ term_getkey(int timeout_ms)
         k = term_getkey_raw(timeout_ms);
     }
 
-    if (keyrec_on != 0 && k != K_NONE && k != K_RESIZE) {
+    if (keyrec_on != 0 && k != K_NONE && k != K_RESIZE &&
+        K_BASE(k) != K_WHEEL_UP && K_BASE(k) != K_WHEEL_DOWN &&
+        K_BASE(k) != K_CLICK) {
         if (k == (K_F(1) | KM_CTRL)) {
             keyrec_on = 0;
 
@@ -359,6 +361,19 @@ term_getkey(int timeout_ms)
             keyrec[keyrec_n++] = k;
         }
     }
+
+    return k;
+}
+
+
+int
+term_getkey_mouse(int timeout_ms, int mode)
+{
+    int k;
+
+    term_mouse_mode(mode);
+    k = term_getkey(timeout_ms);
+    term_mouse_mode(MOUSE_OFF);
 
     return k;
 }

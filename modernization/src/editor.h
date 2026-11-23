@@ -253,6 +253,18 @@ ed_cursor_screen(Editor *e, int *x, int *y);
 
 
 /*
+ * The position of the character under the cell x of the vline line (the
+ * mouse).  It is the inverse of ed_cursor_screen: the column whose range
+ * holds x, else the nearest column; the token that the cell shows; a cell
+ * past the end of the row gives the end of the row; a cell of a displayed
+ * picture gives the marker of the picture.  Returns 1 and sets *out, or 0
+ * when the line is not a text line (a rule, a border, no line).
+ */
+int
+ed_pos_at(Editor *e, int line, int x, Pos *out);
+
+
+/*
  * The cursor is on a displayed Picture marker (a picture that is the only
  * thing in its rows; the equation of a displayed block is not one):
  * returns the number of rows of the picture and sets *first to its first

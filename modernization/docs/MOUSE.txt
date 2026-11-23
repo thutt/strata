@@ -1,6 +1,37 @@
 MOUSE OPERATIONS: A STUDY
 =========================
 
+Status (branch development-2.mouse)
+-----------------------------------
+  Built: stage 1 (the wheel) and stage 2 (a click places the cursor), in
+  the X11 Editor and in the Viewer (tools/dviview).
+    - Viewer: buttons 4 and 5 pan the page by the step of the arrow keys
+      (the Viewer has no half screen key, so Ctrl changes nothing).
+    - Editor, X11: ButtonPressMask; a wheel step moves the first line shown
+      by 3 rows, with Ctrl by half a screen, and the cursor is put into the
+      rows that are shown.  In the lists (popup_menu, popup_list_desc,
+      pager, help viewer) the wheel is three Up or Down keys, Page Up and
+      Page Down with Ctrl, through the mode of term_getkey_mouse (the flag
+      of section 2); every other loop drops the mouse, so a menu, a panel
+      and a popup that is not a list ignore it.
+    - A click with button 1 in the text of the current window calls ed_pos_at
+      (view.c, the inverse of ed_cursor_screen) and puts the cursor there:
+      the column that holds the cell (else the nearest), the token of the
+      cell, the end of the row after the text, the tab for a cell inside a
+      tab, the marker of a picture (on the row that was clicked), the end of
+      the text of a column below its last row.  A click on a rule line, a
+      border, the status line, the key strip, the other window or in a
+      menu does nothing.  In the highlight mode the click moves the end like
+      the cursor keys, but a Text or Column highlight takes it only inside
+      its own block (and column).
+    - The mouse keys are not recorded in a macro.  The terminal version
+      sends nothing to the terminal and takes no mouse input.
+    - Tests: tests/xmouse.py (Xvfb and xdotool), the dviview test of the
+      wheel, tests/mousetui.py (no mouse mode in the terminal).
+  Not built: stage 3 (the terminal), selection by dragging, double and
+  triple clicks, clicks in menus, panels, lists and the strip, PRIMARY and
+  CLIPBOARD (stage 4).  The study below is unchanged.
+
 This is the result of the exploration in the worklist item "Mouse
 operations (explore)".  No program, test or manual was changed.  What was
 tested is marked TESTED; what comes from reading the code is marked CODE;

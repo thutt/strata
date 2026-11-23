@@ -386,7 +386,8 @@ page (a number past the end is the last page and 0 the first), {k:Backspace}
 deletes a digit, {k:Esc} closes the entry only, and no other key acts.  The
 title of the window is the name of the DVI file without its directory.
 Closing the window with the window manager also ends the program.  The
-mouse is not used.  The details are in {x:print-dviview}.
+wheel of the mouse pans the page like {k:Up} and {k:Down}; nothing else of the
+mouse is used.  The details are in {x:print-dviview}.
 .h4 Exit status and messages of the Viewer [appcmd-dviview-exit]
 .ix Exit status, Viewer
 .table 8 52

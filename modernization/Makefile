@@ -636,6 +636,8 @@ xtest: x11
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 TBIN=$(O)/term \
 	STRATA_HELP=$(O)/strata.hlp python3 -I -B tests/xlmpic.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xpicscroll.py
+	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 STRATA_HELP=$(O)/strata.hlp \
+	python3 -I -B tests/xmouse.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xfallback.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 STRATA_HELP=$(O)/strata.hlp \
 	XLAG_RUNS=1 python3 -I -B tests/xlag.py

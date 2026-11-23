@@ -207,7 +207,14 @@ files are is not known (OPEN-QUESTIONS.txt).
   - A text file save mode (the .DOC format is binary).
   - A safe save: write to a temporary file, then rename; Autosave saves
     under the name of the document.
-  - Mouse (studied in docs/MOUSE.txt; neither version takes mouse input).
+  - Mouse (studied in docs/MOUSE.txt).  Stages 1 and 2 are done in the X11
+    window and in the Viewer: the wheel scrolls (three rows, half a screen
+    with Ctrl; the lists, the pager and the help take it as Up and Down
+    keys) and a click in the text places the cursor or moves the end of the
+    highlight.  NOT done: the terminal version (decoding of the reports of a
+    terminal; it takes no mouse input), selection by dragging, double and
+    triple clicks, clicks in menus, panels, lists and the key strip,
+    X11 PRIMARY and CLIPBOARD, bracketed paste.
     The X11 window can be resized in height (the width is fixed).
   - Guarding the PNG reader against hostile images (limits on pixels and
     inflated size, tests under the address sanitizer).

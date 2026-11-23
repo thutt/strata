@@ -975,6 +975,66 @@ ed_cursor_screen(Editor *e, int *x, int *y)
 }
 
 
+int
+ed_pos_at(Editor *e, int line, int x, Pos *out)
+{
+    ed_layout(e);
+    View *v = &e->view;
+
+    if (line < 0 || line >= v->n) {
+        return 0;
+    }
+
+    const VLine *l = &v->lines[line];
+
+    if (l->kind != 0 || l->item < 0 || l->item >= v->nbv) {
+        return 0;
+    }
+
+    const BView *bv = &v->bv[l->item];
+
+    if (bv->visible == 0 || bv->ncl < 1) {
+        return 0;
+    }
+
+    int best = 0;
+    int bd = 1 << 30;
+
+    for (int c = 0; c < bv->ncl; c++) {
+        int d = x < bv->colx[c] ? bv->colx[c] - x :
+                x >= bv->colx[c] + bv->colw[c] ?
+                    x - bv->colx[c] - bv->colw[c] + 1 :
+                    0;
+
+        if (d < bd) {
+            bd = d;
+            best = c;
+        }
+    }
+
+    const ColLayout *cl = &bv->cl[best];
+
+    if (cl->rows == NULL || cl->nrows < 1) {
+        return 0;
+    }
+
+    out->item = l->item;
+    out->col = best;
+
+    if (l->row >= cl->nrows) {
+        /* Below the text of a column that has fewer rows than its block: the
+           end of the text. */
+        out->tok = layout_tok_at(cl, cl->nrows - 1, 1 << 20);
+
+        return 1;
+    }
+
+    out->tok = layout_tok_at(cl, l->row, x - bv->colx[best]);
+
+    return 1;
+}
+
+
 void
 ed_scroll_to_cursor(Editor *e, int rows)
 {

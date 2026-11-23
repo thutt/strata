@@ -74,6 +74,9 @@ enum {
     K_ESC,
     K_BTAB,
     K_BKSP,
+    K_WHEEL_UP, /* Mouse wheel, X11 only: see term_getkey_mouse. */
+    K_WHEEL_DOWN,
+    K_CLICK, /* Button 1 pressed: the cell is in term_mouse_cell. */
     K_F1 = 0x1100 /* K_F1+n-1 for Fn */
 };
 #define K_F(n) (K_F1 + (n) - 1)
@@ -154,6 +157,44 @@ term_present(void); /* flush changes */
 /* -1 timeout -> block */
 int
 term_getkey(int timeout_ms);
+
+
+/*
+ * The mouse (X11 window only; the terminal version never reports it and
+ * sends nothing to the terminal).  A mouse event is delivered only to a
+ * caller that asked for it, by the mode of the call; in every other loop
+ * the events are dropped, so that a menu or a panel is never moved by the
+ * mouse.
+ *
+ *   MOUSE_OFF         every mouse event is dropped (the default);
+ *   MOUSE_WHEEL_KEYS  the wheel is returned as the keys Up and Down, three
+ *                     for a step, and Page Up and Page Down with Ctrl; the
+ *                     clicks are dropped (the lists and the viewers);
+ *   MOUSE_EDITOR      the wheel is returned as K_WHEEL_UP and K_WHEEL_DOWN
+ *                     (with KM_CTRL when Ctrl is held) and button 1 as
+ *                     K_CLICK; term_mouse_cell gives the cell of the click.
+ *
+ * term_getkey_mouse is term_getkey with a mode for this one call.  A mouse
+ * event is not recorded in a macro.
+ */
+enum {
+    MOUSE_OFF,
+    MOUSE_WHEEL_KEYS,
+    MOUSE_EDITOR
+};
+
+
+int
+term_getkey_mouse(int timeout_ms, int mode);
+
+
+void
+term_mouse_mode(int mode);
+
+
+/* The screen row and column of the last K_CLICK, counted from 0. */
+void
+term_mouse_cell(int *row, int *col);
 
 
 /* The keyboard itself, below the queue and the recording of term_getkey. */
