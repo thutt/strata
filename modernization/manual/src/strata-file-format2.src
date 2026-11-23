@@ -1,0 +1,335 @@
+# File Formats, part 2: the files that share the container, the files of the
+# user, the data files, the pictures and the text files.
+.h2 Templates, macro sets, libraries and backups [appfmt-set]
+.ix Template file format
+.ix .SET file
+.ix Settings file, template
+A template is a complete document.  A file that Save Global Settings Only
+(Reference Manual, chapter 2) makes has the full header and an empty body: the
+record {c:*B1}
+followed at once by {c:*E}.  A template that has text is the text that a New
+File starts with.  Retrieve Global Settings replaces the header records except
+{c:*R}, {c:*B} and MR; Retrieve Body Only replaces the body.  The panel of
+New File offers the name DEFAULT.SET; when no such file is found the Editor
+starts from a built-in document and asks whether it is to be structured or
+unstructured.  No other record is special: a template that is a document is a
+document.
+.h3 Macro sets: .MAC [appfmt-mac]
+.ix Macro file format
+.ix .MAC file
+.ix Key token in a macro
+.ix Keystrokes, stored
+A macro set is a structured document, written by Tools, Macros, Save.  The
+header holds *R2, the description MD, the author MA and the revision MR, in
+that order, and the body is made so:
+.code
+*B1
+S                      the root section
+T 00                   its empty text
++
+S                      the first macro
+T K 11 key flag 1D 00  the headline: K, then the key of the macro
+T description 1D 00    the description of the macro
++
+S
+T keys 1D 00           the keystrokes
+-
+...                    the next macros
+-
+*E
+.end
+The key of a macro is an upper case letter or a digit; in the headline it is
+written as a key token (below) with the flag byte 80, which means that the
+macro is started with the key {k:Alt} and that letter.  Only the macros that
+have Include in Macro Set at Yes are written.  The keystrokes of a macro are a
+mixture of two kinds of bytes.  A character that was typed without a modifier
+is the byte itself.  Every other key is a token of three bytes: 11, a code, and
+a flag.
+.table 14 56
+Flag | Meaning of the key token
+00 | A character key; the code is the upper case letter or the character.
+40 | The Ctrl key is held with the key (a letter from A to Z as the code).
+80 | The Alt key is held.
+C0 | Both.
+11 | An editing key; the code is 0 Enter, 1 Insert, 2 Delete, 3 Escape,
+ | 5 Backspace and 7 Tab.
+12 | A function key; the code is its number, 1 to 10.
+14 | A cursor key; the code is 0 Up, 1 Down, 2 Left, 3 Right, 4 Page Up, 5
+ | Page Down, 6 Home and 7 End.
+.end
+The kind of key is in the low five bits of the flag (00, 11, 12 and 14 in the
+table), and the modifiers in the bits 40 and 80 above them: a flag of 52 is
+the function key with the Ctrl key, that is
+{k:Ctrl-F3} when the code is 3 (the token 11 03 52), and the token 11 0A 12 is
+the key {k:F12}.
+Shift is not kept.  A token that Strata does not know is dropped when the file
+is read.  A file of a macro set that does not begin {c:*R2} is refused when it
+is retrieved.
+.caution A macro set is read by its own reader, which ends a T record at a NUL
+  that is followed by CR LF, because a key token may have the byte 00 as an
+  operand (the code of the Enter key is 0: 11 00 11).  The reader of
+  documents ends a record at the first NUL outside a marker ({x:appfmt-rec}),
+so it cuts such a record early.  A macro set that has the Enter key in a
+  macro is read by Retrieve of the macro commands but does not make the same
+  bytes when it is loaded and saved as a document.  Do not open a macro set
+  with the Retrieve of the File menu, and do not save it from there.
+.h3 Libraries: .LIB [appfmt-lib]
+.ix Library file format
+.ix .LIB file
+.ix Library entries, stored
+A library is also a structured document, written by Tools, Library, Save, with
+the header records MD, MA and MR.  Each entry is a section of the root, with
+two blocks and a group of subsections:
+.code
+S
+T kind name 1D 00      the headline: a letter and the name of the entry
+T description 1D 00    the description
++
+...                    the contents of the entry
+-
+.end
+The letter of the headline is B for an entry that is a block, S for a section
+and T for text.  The contents of a text entry are one section with one block
+that holds the text; those of a block entry are one section with the blocks
+of the entry; those of a section entry are the sections and the blocks of the
+entry as they were, with their formats.  The entries are kept in alphabetical
+order.  A library has
+at most 200 entries and a macro set has at most 64 macros.  A file that is not
+structured, or whose first record is not a section, is refused with "That file
+is not a library".
+.h3 Backup files: .BAK [appfmt-bak]
+.ix Backup file format
+.ix .BAK file
+.ix Autosave file
+A backup is a copy of the document as it was on the disk before Save wrote
+the new version: the bytes are the same, so it is a document and can be
+retrieved.  Up to the number of backups that the user chose (0 to 99, three by
+default) are kept, as numbered files in the folder {c:.backup} in the directory
+of the document: the
+name of the document without {c:.doc}, then {c:.bak} and the number with two
+digits, such as {c:.backup/report.bak01} (the newest) to
+{c:.backup/report.bak99} (versions before this one left them beside the
+document); {c:.BAK}
+when the extension of the document is in capital letters.  A name that does
+not end with {c:.doc} gets {c:.bak01} and so on added to the whole name.  A
+save moves every backup up by one number, removes the one above the number
+chosen and keeps the old file as number 01; it does nothing when the content
+is the same as the file on the disk (Reference Manual, chapter 2,
+{x:file-backup}).  Autosave is not a file of its own: it writes the document
+under its own name, as {k:Ctrl-S} does, and makes no backup.
+
+.h2 The files of the user in ~/.strata [appfmt-strata]
+.ix .strata directory, files
+.ix config file format
+.ix fonts file format
+.ix dictionary file format
+.ix STRATA_HOME
+The directory is {c:~/.strata}, or the directory that the environment variable
+{c:STRATA_HOME} names.  It is made with the mode 0700 and its files with the
+mode
+0600, and a file or a directory that is not of the user is not used
+(Reference Manual, appendix B).
+.h3 config [appfmt-strata-config]
+.ix config, record layout
+.ix key=value, settings file
+A text file of lines {c:key=value}, in the character set of the system.  The
+lines are written in this order, one for each of the settings:
+.table 6 24 40
+Line | Key | Value
+1 | workdir | The initial working directory.
+2 | (the name of the Editor program) | The program to start for editing.
+3 | help | The help file.
+4 | autosave | yes or no.
+5 | {c:autosave_seconds} | A number of seconds, 1 to 86400.
+6 | {c:expanded_status} | yes or no.
+7 | {c:onscreen_help} | yes or no.
+8 | {c:show_marks} | yes or no.
+9 | {c:show_dots} | yes or no.
+10 | backups | A number, 0 to 99; written only when it is not 1.  The key
+ backup (yes or no) of an older file is read as 1 or 0 and not written.
+11 | printer | The name of a printer queue; empty when none is named.
+12 | {c:spell_language} | The language of the spell check; this line is written
+ only when a language is set.
+13 | {c:latex_pictures} | keep, when the LaTeX file names its pictures in place;
+ this line is written only for keep.
+14 | {c:latex_positions} | yes, when the LaTeX file keeps its position comments;
+ this line is written only for yes.
+.end
+The line {c:printer=} is always written and is empty when no printer is named.
+A yes-or-no value is written as {c:yes} or {c:no}.  A key that the reader does
+not know is ignored and the line is lost at the next save.  Appendix B of the
+Reference Manual
+({x:appcfg-format}) lists the keys with their rules.
+.h3 fonts [appfmt-strata-fonts]
+.ix fonts, record layout
+.ix Font list file
+One line for each font, the fields set apart by bars:
+.code
+NUMBER|NAME|PACKAGE|OPTIONS|FAMILY|ARCHIVE|MAP
+5|Helvetica|helvet|scaled=0.92|sans||
+19|Lato|lato|default|sans|lato|lato.map
+.end
+NUMBER is 1 to 20, FAMILY is one of roman, sans and mono, and the other fields
+may be empty.  The characters of the package, the options, the archive and the
+map are limited to letters, digits and {c:. _ - + = ,}, so that nothing of
+the list reaches a shell or the TeX file as a command; the name may be any text
+that has no bar.  A line with another number of fields, with a bad number or
+family, or with a field that has a character that is not allowed, is ignored.
+The whole list is written at every save.  The list that comes with Strata,
+and the meaning of every field, are in appendix B of the Reference Manual
+({x:appcfg-fonts}).
+.h3 dictionary [appfmt-strata-dict]
+.ix dictionary, record layout
+.ix Personal word list file
+.ix Spell check word list
+The personal word list of the spell check, one word to a line, in UTF-8, with
+a line feed at the end of each line.  A blank line is ignored.  A word that
+has a letter that the character set does not have is read with a question mark
+in its place.  When the
+list is read, a word in lower case is also taken with an initial capital
+letter, and a word that has capitals is taken as it is; Define writes the
+word as it was typed to the Editor.  The words are not sorted: new words go at
+the end.  The file is written whole at every Define.
+.h3 hyphenation [appfmt-strata-hyph]
+.ix hyphenation, file
+.ix Hyphenation list file
+.ix Personal hyphenation list file
+The personal hyphenation list, one entry to a line, in UTF-8, with a line feed
+at the end of each line.  A blank line is ignored.  An entry is a word with a
+hyphen at each place where it may be broken: {c:hy-phen-a-tion}.  A word with
+no hyphen is never broken; an equals sign in front of it ({c:=Jacksonville})
+says so, and no hyphen may follow it.  The letters are letters of the PC
+character set, accented ones too; a digit, an apostrophe, a space or a hyphen
+at either end or two hyphens in a row make the line no entry, and so does a
+character that the fonts of the print do not have.  Such a line is skipped
+when the list is read.  Maintain Dictionaries keeps the entries in order of
+their letters, without regard to case, and two entries with the same letters
+are one word.  The Printer writes the entries as a TeX hyphenation command in
+front of the document: the words of the list are broken at the hyphens only.
+.h2 Pictures [appfmt-pic]
+.ix Picture formats
+.ix PNG, JPEG, PDF and EPS pictures
+.ix Picture file, kind by content
+The Picture marker (Reference Manual, chapter 5) names a file.  The Printer
+accepts four kinds:
+PNG, JPEG, PDF and EPS (PostScript).  The kind is found from the first bytes of
+the file, not from its extension, and then the structure of the file is
+checked, so that a damaged file does not stop TeX without a message.
+.table 10 24 36
+Kind | First bytes | Checked
+PNG | 89 50 4E 47 0D 0A 1A 0A | Every chunk and its CRC up to IEND.
+JPEG | FF D8 FF | A frame header, and the end marker FF D9.
+PDF | the text %PDF | The text %%EOF in the last 1024 bytes.
+EPS | the text %!PS, or C5 D0 D3 C6 | The text %%BoundingBox:
+.end
+A file that is none of these, or that does not pass the check, is printed in
+the long form of its marker (a frame with the name), and the run goes on.  The
+A file is looked for as the name is
+written (a full path, or a path below the
+directory of the document), and then by the last part of the name, with any
+case of the letters, in the directory of the document and in the current
+directory of the Printer; a backslash in the name is read as a slash.  The
+Picture panel offers the extensions {c:.png .jpg .jpeg .pdf .eps} in its list.
+.h2 The help file [appfmt-help]
+.ix Help file format
+.ix Help topics, format
+The help file is a plain text file, {c:strata.hlp}, made of topics.  The build
+makes it by joining the topic files of the source tree, which have the same
+format; a person who writes help for Strata writes a topic file.  Every line is
+ASCII text.  A line that begins with a mark and a blank is a command; any other
+line is text of the topic that the last {c:=} line began.
+.table 10 60
+Mark | Meaning
+{c:=} | Begins a topic and gives its title.
+{c:~} | Another name of the topic.  The programs ask for a topic by the title of
+ | the menu, panel or field that the cursor is in, for example {c:Save File} or
+ | {c:Menu:Print:Draft} or {c:Save File:Options}; a topic answers to its title
+ | and to its names.  A name that has no topic is made shorter, by the part from
+ | a blank and a parenthesis and by the last part after a colon, until a topic
+ | answers.
+{c:?} | A message.  When the message line shows a text that begins with it, {k:F1}
+ | shows the topic.  A text that begins with {c:N} and a blank stands for a
+ | number: {c:N replacement} fits {c:3 replacements}.
+{c:;} | A comment, which is not part of the topic.
+{c:-} | An item of a list; the lines after it that begin with two blanks belong to
+ | it.
+.end
+A blank line ends a paragraph.  The lines of a paragraph are joined and broken
+again at the width of the window.  A line that begins with a vertical bar and a
+blank is shown as it is, and is not joined with the lines around it.  In the
+text, a key name between braces is shown as a keycap; a name between two pairs
+of square brackets is a link to the topic of that name, and a name, a vertical
+bar and words between them is a link that shows the words; a brace that is not
+the start of a key is written twice.  The title and the names of the topics
+are each used by one topic only (the case is ignored).
+.h2 The thesaurus data [appfmt-thes]
+.ix Thesaurus file format
+.ix MyThes files
+.ix STRATA_THESAURUS
+.ix .idx and .dat files
+The thesaurus reads the files of the MyThes thesaurus, as the system packages
+for spell checkers have them (a pair, the index NAME.idx and the data
+NAME.dat).  Both are text,
+and the first line of each names the character set, normally {c:UTF-8}.
+.table 12 58
+File | Layout
+.idx | Line 1 the character set.  Line 2 the number of entries.  Then one line
+ | for each entry: the word, a bar, and the decimal offset of its entry in
+ | the data file.  The words are in byte order, in lower case.
+.dat | Line 1 the character set.  An entry is a line {c:word|n}, then n lines of
+ | senses.  A sense line begins with (noun), (verb), (adj) or (adv),
+ | then the words set apart by bars.  A word followed by a space and (similar
+ | term), (generic term), (antonym) or (related term) is a word of that
+ | relation; a word with no relation is a synonym.
+.end
+The data is looked for in the directory that {c:STRATA_THESAURUS} names (or the
+file, or the name without its extension), and when the variable is not set in
+{c:/usr/share/mythes}.  A line that does not have the shape above gives "not
+found" and not a failure.  With UTF-8 the words are converted to code page 437,
+and a word that has a letter that the set lacks is dropped.
+.h2 Text files [appfmt-textout]
+.ix Text file, made by Export
+.ix Export, file format
+.ix Text mode of the Editor, file format
+Export (Reference Manual, chapter 2) writes bytes of the code page chosen,
+each line ended by CR
+LF, with the bullet of a list written as an asterisk.  A screen image has
+the width of 80 cells and no more than 79 characters in a line, with a blank
+line between blocks; data only has one line for a block, tabs as the byte 09,
+and no marker but those that have a text.  The text mode of the Editor
+(Reference Manual, chapter 10) writes UTF-8, a line feed at the end of each
+line, lines of at
+most 78 cells with trailing spaces taken off, and a blank line for each rule of
+the screen; a character of the document between B0 and DF is {c:+} or {c:-}.
+.h2 LaTeX files [appfmt-latex]
+.ix LaTeX file, format
+.ix Export a LaTeX File, file format
+.ix Pictures folder, file format
+Export a LaTeX File writes the
+LaTeX file that Print and Preview give to LaTeX (Reference Manual, chapter 2,
+{x:file-export-latex}), as text in ASCII with the characters above 7F as UTF-8
+for the package inputenc.  The lines end with a line feed.  The file has these
+parts, in this order.
+.table 6 64
+1 | A header of comment lines: the words "LaTeX file exported by Strata.", the
+ | name of the document, the day, the command that compiles the file, the
+ | packages, the folder of the pictures and the warning that the file is made
+ | again.
+2 | The preamble and the body of the file of a print, without the banner, the
+ | marks of errors and the Error Log.  A comment line that begins with
+ | {c:%@P} and gives the item, column and line of the document is written
+ | before each line of text only when the setting {c:latex_positions} is
+ | yes.
+3 | The line that ends the LaTeX document.
+4 | A list of the pictures, as comment lines: the name that the file uses for
+ | the picture, an equals sign and the name that the document has for it.
+.end
+A picture is written as {c:FOLDER/picN.EXT}, where FOLDER is the name of the
+file without {c:.tex} followed by {c:_files} (with the characters other than
+letters, digits and {c:._-} replaced by an underscore), N counts the pieces of
+the document that LaTeX can refuse from 1 (so the numbers of the pictures are
+not always consecutive), and EXT is png, jpg or pdf.  A picture of PostScript
+is copied as {c:picN.eps} and made into {c:picN.pdf}, and the file uses the
+second.  With {c:latex_pictures=keep} the name is the full name of the picture
+file instead, except for a picture of PostScript.  The file is written to a
+temporary name and renamed when it is whole.

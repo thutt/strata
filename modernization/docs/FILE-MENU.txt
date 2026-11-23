@@ -1,0 +1,366 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+THE FILE MENU
+=============
+
+How to open it: press F12 (or MENU) and choose File.  The original has six
+commands, which Strata has with the same names and panels:
+
+    Save   Retrieve   New   Delete   Import   Export
+
+This document says what each one does, what is on its panel, how it differs
+from the original, and which part of the program does the work.  What is
+said about the original was checked by running Lotus Manuscript 2.1 in
+DOSBox-X and by reading the 1.0 manual (documentation/manuals-1.0).
+
+
+Keys and conventions
+--------------------
+  - Panels.  A panel is a list of fields.  Up and Down (or Enter) move
+    between fields, a line of text is typed over (the first key replaces
+    what is there), a list of choices is changed with Left, Right or the
+    space bar, Ins accepts the panel and Esc cancels it.  A panel refuses
+    values the original refuses and says why.
+  - Gray + (Alt-+ on a terminal, the keypad plus key in the X11 window, or
+    F2).  On a text field that has a checklist this shows it: a list of
+    directories for Working Directory, a list of files for a file name.
+    The choice goes into the field.
+  - Working Directory.  The first field of every panel.  It is shared: a
+    directory typed or chosen on one panel is the one the next panel shows.
+    A name typed without a directory is looked for in it.  At the start it
+    is the directory of the document, or else the current directory.
+  - Overwriting.  Save and Export ask "Overwrite old version on disk?" when
+    the file exists, and Delete asks before it deletes.
+  - Accelerators.  Ctrl-S saves the document at once, without the panel,
+    under the name it has (see Save).  Ctrl-R is Retrieve.
+  - A name without an extension gets .doc (.set for settings only).  File
+    names are matched ignoring the case of the letters.
+
+
+Save
+----
+Stores the document, or part of it, on disk.
+
+  Panel:   Working Directory
+           Document Name       the name of the document; a new name saves
+                               under that name
+           Options             Save Entire Document
+                               Save Global Settings Only
+                               Extract Current Section   (Extract Current
+                                                          Block when the
+                                                          document is not
+                                                          structured)
+           Description         the description of the document
+           Author              the author of the document
+           Revision            the revision, such as 1.007
+
+  Save Entire Document writes the text and the settings, and the document
+  takes the name and is no longer marked as changed.
+
+  Save Global Settings Only writes the settings and no text.  The file is a
+  template, and the name is given .set when it has no extension.  The header
+  of the file is the settings in full, including the description and the
+  author; the body is empty.
+
+  Extract Current Section writes the section the cursor is in, with its
+  subsections, and all the settings.  The section is written between a plain
+  S, + and - so that the file is a complete document.  In a document that is
+  not structured the current block is written instead.
+
+  Description and Author are shown as they are.  Whatever is typed becomes
+  the description and author of the document, and of the file that is
+  written.  They are the values that the Description and Author markers
+  print.
+
+  Revision.  The revision is kept in the header as a number of thousandths:
+  1.007 is 1007.  The number shown is the one the document has.  When the
+  file is written the revision goes up by one if the document has changed
+  since it was last saved, and stays as it is if it has not.  If a
+  different number is typed it is used as it is.  A new document starts at
+  1.000, so its first save is 1.001.
+
+  Ctrl-S.  Writes the document at once under its name and takes the same
+  revision rule.  A document that has no name yet gets the Save panel.
+
+  Differences from the original: the original has no separate Save As.  Its
+  Save panel does that, by a new name, and so does Strata's.  The original
+  asks the same overwrite question.  Strata refuses a Save onto a backup
+  file (see below), and the Working Directory does not change the directory
+  the program runs in.
+
+  Where: filemenu.c (the panel), fileops.c (doc_save_mode, which writes the
+  parts), msdoc.c (the header and revision records).
+
+
+Retrieve
+--------
+Brings a file back into the editor while editing, without leaving for the
+Document Manager.  It is more than loading a file: it can bring in only a
+part of it, and it can add the text of a file to the current document.
+(For that reason it is not called Load.)
+
+  Panel:   Working Directory
+           Document Name       defaults to the name of the document
+           Options             Retrieve Entire Document
+                               Retrieve Body Only
+                               Retrieve Global Settings
+                               Retrieve Typeface Settings Only
+                               Retrieve Named Block Settings Only
+                               Retrieve & Insert after Current Section
+                                 (Current Block when the document is not
+                                  structured)
+
+  The file can be a document, a template (.set) or a backup (.bak01 and so
+  on).  A name that is not found is tried again with .doc added.
+
+  Retrieve Entire Document replaces the document with the file: text,
+  settings and revision.
+
+  Retrieve Body Only replaces the text and keeps the settings of the
+  document.
+
+  Retrieve Global Settings replaces the settings and keeps the text.  The
+  settings are all the records of the header except the revision, so the
+  description and author of the file come too, and so do the page headers
+  and footers.
+
+  Retrieve Typeface Settings Only replaces only the typeface records of the
+  settings (the DF records, with DP) and nothing else.  In the original's
+  results these were the only records that changed.
+
+  Retrieve & Insert after Current Section adds the text of the file after
+  the section the cursor is in (after its subsections).  The first section
+  of the file takes the level of the current section.  In a document that is
+  not structured it adds the text after the current block.
+
+  If the document has changes that were not saved, the three options that
+  replace something ask first whether to ignore them.  Insert does not.
+
+  Retrieve Named Block Settings Only takes the named block formats of the
+  file (the FN records of its header) into the document: a format of the
+  same name is replaced and the others stay.  The text and the other
+  settings do not change.  A file that has no named block format gives the
+  message "The file has no named block settings".  The original has the
+  option; what exactly it replaces was not seen in any file that was
+  tried, so this follows the way a format is saved under a name.
+
+  Where: filemenu.c (the panel), fileops.c (doc_retrieve_into).
+
+
+New
+---
+Creates a new document without leaving the editor.
+
+  Panel:   Working Directory
+           Document Name       required
+           Template            DEFAULT.SET, or another .set file
+           Description
+           Author
+           Revision            1.000
+
+  When there is a template in the template folders (STRATA_TEMPLATES, the
+  folder templates below the settings folder, share/strata/templates of the
+  install; src/template.c) a list comes first: Structured, Unstructured and
+  the templates by name, the description of the chosen one below, Enter takes
+  it, Esc takes the built-in settings (the Document Manager asks the same).
+  The shipped templates are in templates/ (made by tests/mktemplates.py):
+  letter-us, letter-a4 and the 16 envelopes of tests/mktemplates.py (North
+  America: us-ca-10, us-ca-9, us-ca-monarch; United Kingdom: uk-dl, uk-c5,
+  uk-c6; Germany: de-din5008-dl; France: fr-dl; continental Europe: eu-dl,
+  eu-c5, eu-c65; Latin America: latam-dl; Australia: au-dl, au-c5; Japan:
+  jp-yougata-4, jp-yougata-2; each name begins with envelope-;
+  docs/ENVELOPES.txt).
+  The new document is a copy of the template: its settings and its text.
+  Templates are looked for in the working directory, then in the directory
+  that the environment variable STRATA_TEMPLATES names, then in the
+  directory of the program, ignoring the case of the name.  If no template
+  called DEFAULT.SET is found the built-in one is used, and the program asks
+  whether the document is to be structured or not.  A description or an
+  author left blank is taken from the template.  The revision is the one
+  typed.  If the name is that of a file that exists, the program asks
+  whether it may be replaced when the document is saved.  Changes in the
+  current document are asked about, as for Retrieve.
+
+  Where: filemenu.c, fileops.c (template_find), msdoc.c (doc_new).
+
+
+Delete
+------
+Erases a file from the disk.
+
+  Panel:   Working Directory
+           File Name           Gray + lists every file
+
+  The program asks "Delete <name>?" before it deletes.  There is no way to
+  get a deleted file back.
+
+  Where: filemenu.c.
+
+
+Import
+------
+Inserts an ASCII (plain text) file into the document at the cursor.  It is
+not a conversion of another program's format: it reads plain text.
+
+  Panel:   Working Directory
+           ASCII File Name
+           Options             Ignore Line Endings
+                               Preserve Line Endings
+           Character Set       IBM Extended ASCII (CP 437)   the default
+                               96 Character ASCII (7 Bit)
+                               IBM Multilingual (CP 850)
+                               Portuguese (CP 860)
+                               Norwegian/Danish (CP 865)
+                               UTF-8
+                               Latin-1 (ISO 8859-1)
+
+  Ignore Line Endings treats the file as a document: a blank line starts a
+  new block, and a single line end is read as a space, so that the lines of
+  a paragraph run together.  Preserve Line Endings keeps every line end, for
+  data in columns and tables.  A tab in the file is a tab.  A control
+  character is written as ^ and a letter.  The characters are converted
+  from the chosen set to the one the editor uses (CP 437), and a letter the
+  editor cannot show becomes ?.  The cursor is put at the start of the text
+  that was added.
+
+  UTF-8 and Latin-1 (stage 0 of the UTF-8 study, docs/UTF8.txt).  The
+  documents and the Editor's character set (CP 437) do not change; only
+  the file is read in a new way.
+    - A character that CP 437 has a place for is kept: the accented
+      letters, the box characters, the no-break space (the byte FF) and
+      the rest.  The house (7F) is kept from U+2302.  The symbols that
+      CP 437 draws in the control range (the smiling faces, the arrows of
+      the first 32 codes) are not kept.  Any other character (a
+      Chinese character, an emoji, a Greek letter that CP 437 lacks) becomes
+      ? in the text and is counted.
+    - After the import the message line says "Imported; N characters not
+      kept" (or "1 character not kept") when N is not zero, and it says
+      "Imported" and the name of the file when nothing was lost.  The
+      message is given for UTF-8 and Latin-1 only; the older sets do not
+      count.
+    - UTF-8: a byte order mark (EF BB BF) at the start of the file is
+      skipped.  A byte that is not well formed UTF-8 (a lone continuation
+      byte, a cut or overlong sequence, a surrogate, a value above 10FFFF,
+      or a lead byte followed by a wrong byte) is taken as one Latin-1
+      character, so that a file in Latin-1 that was mislabelled still reads
+      well and nothing is dropped without a trace; if CP 437 has no place
+      for that Latin-1 character it is a ? and is counted.
+    - Latin-1: bytes 20 to 7E and A0 to FF are read as the characters of
+      Latin-1; the control bytes 80 to 9F have no place and are ?.  A0 is
+      the no-break space.
+
+  Where: filemenu.c, fileops.c (ed_import_ascii and the code page tables).
+
+
+Export
+------
+Writes the document as an ASCII file for other programs.  It is not a
+conversion to another program's format: it writes plain text, with CR LF
+line ends as on DOS.
+
+  Panel:   Working Directory
+           ASCII File Name
+           Options             Export a Screen Image
+                               Export Data Only
+           Character Set       as for Import
+           Scope               Export Entire Document
+                               Export Current Section
+                               (shown for a structured document only)
+
+  Export a Screen Image writes the text as it is laid out on the screen,
+  with the blank rows between blocks, the centring and the columns side by
+  side, and the borders of the blocks drawn as the screen draws them (the
+  line above the first block and below the last, the lines between two blocks
+  and the sides of each row, in the box characters of the chosen set).  Export Data Only writes only the text: each
+  block on a line, with real tab characters, and each column of a table on a
+  line of its own.  In both the bullet of a list is written as an asterisk,
+  and the characters are converted to the chosen set.  The title page (the
+  text in the sections above the first level) is not part of either.
+
+  UTF-8 writes every character of the Editor as its Unicode character; a
+  character of CP 437 that has no Unicode place cannot happen.  The byte FF
+  is the no-break space (U+00A0), the house (7F) is U+2302, and a control
+  byte (below 20) is written as it is, as for the other sets.  Latin-1
+  writes the characters that Latin-1 has (the accented letters, the
+  no-break space for FF) and a question mark for each character that it
+  lacks: the Greek letters, the box characters, the house and the like.
+  The lines are CR LF ended for all sets.
+
+  The output was compared with the original's on the same documents.  Data
+  Only is the same, byte for byte.  A screen image is the same line for
+  line except that in two of the sample documents the text in a few centred
+  table cells is one column to the right (the borders were compared before
+  they were drawn: the original wrote blank rows where it draws a border, and
+  Strata now writes the border there).
+
+  Where: filemenu.c, fileops.c (doc_export_ascii), export.c (the laid out
+  lines).
+
+
+How the text is laid out
+------------------------
+Export brought out a rule that the editor now follows too.  A line holds one
+character less than its width, because the last cell is kept for the space
+or end-of-line mark that follows the last word: a word is never put in the
+last column, and right aligned text stops one cell short of the margin.
+Centring is the plain half of what is left.  Before this, paragraphs ran one
+column further.
+
+
+Numbered backups
+----------------
+  Save keeps up to N backups of the file it replaces (the key backups of
+  the settings, 0 to 99, three by default; the field Backups Kept of Setup and
+  of Global, Options; the old key backup=yes or no is NOT read: see the table
+  of the old keys in docs/DM-SETUP-DESIGN.txt).  The
+  names are NAME.bak01 (the newest) to NAME.bak99, NAME.BAK01 for a name
+  that ends in .DOC, and .bak01 added to a name that does not end in .doc.
+  src/backup.c does the work for doc_save_depth:
+    1. A file that already holds the bytes to be written is left alone
+       (nothing is written, moved or removed): "no change, no backup made".
+    2. The new bytes are written to a short temporary name (.tmpPID-N) in
+       the same directory and flushed.
+    3. The backups are moved up from the oldest (the highest number below N
+       is dropped when all of 1 to N exist; a gap is filled and nothing is
+       removed), the old document is hard linked as backup 1 (copied where
+       there is no link), and the temporary file is renamed over the
+       document, so that a complete document is on the disk at every moment.
+    4. The backups above N are removed after a save that made a backup.
+  A failing step gives the message and leaves the document and the backups
+  as they were; a directory that cannot be written but a file that can be
+  changed is written in place, without backups.  Autosave and Save Global
+  Settings Only and Extract make none (filemenu_autosave passes depth 0).
+  A file that is a link is followed.  Tests: tests/backuptest.c (the unit
+  tests) and the block "numbered backups" of tests/smoke.py.
+
+What is left
+------------
+  - The centring of cells in some tables.
+  - The title page is not shown or edited apart from the text (see
+    WORKLIST.txt).
+
+A Save onto a backup file is refused
+------------------------------------
+  Done (2026-11-18, worklist W39).  backup_write (src/backup.c) and
+  doc_save_mode (src/fileops.c) refuse a name for which
+  backup_is_backup_file says yes: the extension of the file name is .bak or
+  .bak and digits (report.bak01), in capitals or in lower case, or the file is
+  in a folder named .backup.  The message is BACKUP_REFUSED_MSG ("A backup
+  file is not saved over: use Restore Backup or give another name"); nothing
+  is written, the document stays changed and the revision is not raised.  The
+  same code stops Ctrl-S, File Save, Save Global Settings Only, Extract and
+  Autosave.  Reading a backup is allowed: Retrieve of report.bak01 opens it,
+  and a Save under another name works.  Tests: tests/backuptest.c (the names
+  and the refused writes) and the block 'backup file:' of tests/smoke.py.

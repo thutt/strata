@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Background color must be different from all foreground colors -- 
+
+The background color must be different from all of the foreground colors. Change
+either the foreground or background colors and continue with Setup.
+
+-- Block is too large to print -- 
+
+The block being printed is larger than can be stored in memory. Check for margin
+indent or paper size problems or break into smaller blocks and reprint.
+
+-- Block width exceeds maximum of 210 ruler units --
+
+The width of the block has exceeded the maximum 210 ruler units.  Use the 
+Column and Table Editor to change column widths.
+
+-- Bottom margin is smaller than minimum required by printer --
+
+The printer requires a larger bottom margin than is specified on the Page Layout
+panels. Edit the bottom margin selection and reprint the document.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

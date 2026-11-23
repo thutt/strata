@@ -1,0 +1,433 @@
+# Chapter 7, part 5: the lists of files, TeX Font Association, the help
+# viewer, the menu inside the Editor, Quit, the messages and the terminal and
+# X11 versions.
+
+.h2 Choosing a file or a directory from a list [str-browse]
+.ix Listing of files
+.ix File list
+.ix Browse, files and directories
+.ix Keypad + in panels
+.ix F2, list of choices
+.ix Printers, list
+.ix Directory list
+.ix Use this directory
+A field that holds the name of a file, of a directory or of a printer can be
+filled from a list.  Move to the field and press {k:Keypad +}, {k:Alt-+},
+{k:+} or {k:F2}: the four keys do the same.  The plus key is taken by the list
+on those fields, so a plus sign cannot be typed in them (the Caution in
+{n:str-keys-panel}).  On any other field {k:F2} does nothing and the plus
+sign is typed.
+.table 20 10 20
+Field | Shows | Files shown
+Document Name | files | Names that end in {c:.doc}.
+Help file | files | Names that end in {c:.hlp}.
+Editor program | files | All files.
+Working Directory | directories | None.
+Initial Working Directory | directories | None.
+Printer | printers | The queues of the system.
+.end
+The suffix is compared without regard to the case of letters.  Subdirectories
+are always shown.
+.h3 The list of files and directories [str-browse-list]
+.ix List of files, keys
+.ix Parent directory, list
+The list is a box over the panel.  Its title is the directory that it shows
+(when the name is longer than 56 characters, its last part with three dots
+before it).  The entries are, in this order:
+.table 22 38
+Entry | Meaning
+[Use this directory] | A list of directories only: take the directory that the
+ | list shows.
+../ | The directory above (not shown at the top of the tree).
+NAME/ | A subdirectory: choose it to go into it.
+NAME | A file with one of the suffixes of the table.
+.end
+The directories and the files are each sorted so that names that begin with a
+capital letter come before the others.  Names
+that begin with a point are shown.  A file or a directory that cannot be read as
+a status (a broken link) is left out.
+.table 19 41
+Key | Effect
+{k:Up} {k:Down} | Move the highlight one entry.
+{k:Home} {k:End} | Go to the first or to the last entry.
+{k:PgUp} {k:PgDn} | Move by a page of the box.
+{k:Enter} | Choose the entry: a directory is entered and the list is drawn
+ | again, a file or [Use this directory] ends the list.
+{k:Esc} | Leave the list.  The field is not changed.
+A letter or digit | The next entry that begins with it; in a list of twelve
+ | entries or fewer it is chosen at once ({n:str-keys-list}).
+.end
+The list starts in the directory that the Working Directory field of the panel
+holds; when the panel has no such field (Setup), or the field is not a
+directory, in the directory of the name already in the field, and otherwise
+in the current directory.  When the name of a directory cannot be read the
+notice "Cannot read the directory" (title Directory) is shown.
+.h3 What the choice does to the panel [str-browse-effect]
+.ix Document Name, chosen from the list
+.ix Working Directory, changed by the list
+.table 22 38
+Field | After the choice
+A file, with a Working Directory field in the panel | The Working Directory
+ | field is set to the directory of the list and the file field to the file
+ | name alone.
+A file, with no such field (Setup) | The field holds the whole path.
+A directory | The field holds the directory.
+.end
+.h2 TeX Font Association [str-fonts]
+.ix TeX Font Association
+.ix Fonts, list for printing
+.ix Font list, TeX
+.ix LaTeX package of a font
+.ix CTAN
+.ix Install Now
+.ix Lato
+A font of a document is a number from 1 to 20 (Headline, Text and
+Header/Footer, then Font 4 to Font 20; {n:format-typeface}).  The
+entry TeX Font Association of the menu keeps, for each number, the LaTeX font
+that it stands for: the package that selects the font, the options of the
+package and the family.  A font is a package of LaTeX or, for the fonts that
+every LaTeX has, nothing.  The list belongs to the user, not to a document.
+.h3 The list of the twenty fonts [str-fonts-list]
+.ix Font list, keys
+.ix not installed
+.pic pictures/str-fonts-list.png 5.2 The list of fonts: TeX Font Association.
+The entry opens a menu titled TeX Font Association, with the instruction Press
+Ins to Change a Font, and twenty lines.  A line shows, in columns, the number
+of the font, its name (24 characters at most), its LaTeX package (15 at most;
+(LaTeX default) for a name that has no package, and nothing when there is no
+name) and the words "not installed" when the package is named and TeX cannot
+find it.  The
+keys are those of the menus of {x:str-keys-menu}: {k:Enter} or {k:Ins} opens the
+panel of the highlighted font, {k:Esc} leaves the list, and a letter or digit
+moves to the next line that begins with it (the lines begin with the number).
+The highlight stays on the font that was used.
+.h3 The panel of a font [str-fonts-panel]
+.ix Font panel
+.ix Font Number
+.ix LaTeX Package
+.ix Package Options
+.ix Family, font
+.ix CTAN Archive to Download
+.ix Map File to Enable
+.ix Installed, font
+.ix Install Now (Yes or No)
+.pic pictures/str-font-panel.png 5 The panel of a font.
+The panel is titled Font N.  It has the keys of every panel of the Document
+Manager ({n:str-keys-panel}); {k:Ins} accepts it and {k:Esc} leaves the font as
+it was.
+.table 20 10 20
+Field | Default | Meaning
+Font Number | the number | Dimmed (n/a).  The number of the font.
+Name | per font | The name that panels show for the font.
+LaTeX Package | per font | The package that selects the font.
+Package Options | per font | The options of the package.
+Family (roman, sans or mono) | per font | How the font is selected.
+CTAN Archive to Download | empty | The archive for Install Now.
+Map File to Enable | empty | The map file that Install Now enables.
+Installed | Yes or No | Dimmed (n/a).  Whether TeX finds the package.
+Install Now (Yes or No) | No | Yes downloads and installs the font.
+.end
+.rows 24 46
+Name | Any text without a vertical bar, up to 47 characters.  The name is
+ | what is shown in the lists of fonts of the Keycap Format panel and
+ | of the Keycap marker ({n:markers}).
+LaTeX Package | The name of a LaTeX package such as {c:mathpazo}, up to 47
+ | characters; empty for the fonts that LaTeX has without a package (Computer
+ | Modern).  Only letters, digits and the characters . _ - + = , are allowed.
+Package Options | The options of the package, such as {c:scaled=0.92}, up to 63
+ | characters, with the same characters.
+Family | A choice: {c:roman}, {c:sans} or {c:mono}.  {k:Space} takes the next
+ | one and goes round to the first after the last; {k:Left}, {k:Right} and
+ | {k:F2} choose too.  The font is selected as the roman, sans serif or
+ | typewriter family once the package is loaded.
+CTAN Archive to Download | The name of the archive on CTAN, without its suffix,
+ | for example {c:lato}: the file {c:lato.tds.zip} of the directory
+ | {c:install/fonts}.  It may not hold a slash.  Same characters as above.
+Map File to Enable | The map file of the font, such as {c:lato.map}; empty when
+ | the font needs none.  Same characters as above.
+Install Now | A choice, No or Yes.  {k:Space} changes it, as it does every field
+ | that has a fixed set of values.  Yes installs the font when the panel is
+ | accepted.  The field is always No when the panel opens.
+.end
+.h3 The values that a new user has [str-fonts-default]
+.ix Font list, defaults
+.ix Latin Modern, default font
+.ix TeX Gyre
+.ix psnfss
+The list that comes with Strata names fonts that every TeX Live has, except
+the last one.
+.table 4 18 18 10
+No | Name | Package | Family
+1 | Latin Modern Sans | lmodern | sans
+2 | Latin Modern Roman | lmodern | roman
+3 | Latin Modern Roman | lmodern | roman
+4 | Times | mathptmx | roman
+5 | Helvetica | helvet, scaled=0.92 | sans
+6 | Courier | courier | mono
+7 | Palatino | mathpazo | roman
+8 | Bookman | bookman | roman
+9 | New Century Schoolbook | newcent | roman
+10 | Avant Garde | avant | sans
+11 | Zapf Chancery | chancery | roman
+12 | Charter | charter | roman
+13 | Utopia | utopia | roman
+14 | TeX Gyre Termes | tgtermes | roman
+15 | TeX Gyre Heros | tgheros | sans
+16 | TeX Gyre Pagella | tgpagella | roman
+17 | TeX Gyre Cursor | tgcursor | mono
+18 | Computer Modern Roman | none | roman
+19 | Lato | lato, default | sans
+20 | not set | none | roman
+.end
+The outlines behind the names of the standard PostScript fonts (4 to 13) are the
+free ones that TeX Live carries, not the fonts of the makers of those names.
+Font 19, Lato, needs the download: its archive is {c:lato} and its map file
+{c:lato.map}.  A font that is not set (20) shows no name.
+.h3 What is saved, and when [str-fonts-save]
+.ix Font list, file
+.ix fonts, file of the user
+.ix STRATA_HOME, fonts
+.ix Install Now, programs
+When a panel is accepted and all values are good, the font is changed and the
+list is saved in the file {c:fonts} in the settings directory of the user
+({c:.strata} in the home directory, or the directory that {c:STRATA_HOME}
+names), the same directory as the file {c:config}
+({n:appcfg}).  Leaving the list with {k:Esc} saves nothing more.  A font whose
+entry in the file cannot be read has its default.
+.table 31 29
+Fault | Notice (title Font)
+The family is not roman, sans or mono | The family is roman, sans or mono;
+ | not saved
+A bar in the name, or a character that is
+ not allowed in the package, the options, | Only letters, digits and . _ - + = ,
+ the archive or the map file | can be used for the package, options,
+ | archive and map file; not saved
+.end
+Nothing is changed after one of these notices: the panel is not shown again, and
+the list returns.  If the file cannot be written a notice titled Fonts gives the
+reason, which is one of the messages of {x:format-messages-options} or
+"Font N has a character that cannot be used (only letters, digits and . _ - +
+= , are allowed)".  The change is then in effect until the program ends.
+.h3 Install Now [str-fonts-install]
+.ix Install Now, steps
+.ix Font download
+.ix curl, unzip, mktexlsr, updmap-user
+Install Now makes a font that TeX does not have available for the user, without
+any privilege and without touching the system.  While it works a box titled
+Installing font names the step that runs: "Downloading NAME..." with the size
+received so far, "Unpacking NAME...", "Making the file list of TeX
+(mktexlsr)..." and "Enabling the map file MAP (updmap-user)...".  {k:Esc}
+stops the download: the footer then shows "Installation cancelled", the partial
+file is removed and nothing is installed.  The steps after the download are
+short and cannot be stopped; the box shows "Please wait".  The font is fetched as an archive from CTAN
+({c:https://mirrors.ctan.org/install/fonts/} followed by the name of the
+archive and {c:.tds.zip}) and unpacked into the TeX directory of the user.  The
+programs that do the work must be installed.
+.if .STRATA_BUILD_TYPE # release
+.ix STRATA_CTAN_URL
+For developers: the environment variable {c:STRATA_CTAN_URL} names another
+directory that holds the archives, also a {c:file:} one.
+.endif
+.table 19 41
+Program | Use
+{c:curl} | Fetches the archive.
+{c:unzip} | Unpacks it.
+{c:kpsewhich}, mktexlsr | Find the TeX directory of the user and make TeX see the
+ | new files (a TeX system).
+updmap-user | Enables the map file, when the font has one.
+.end
+A good end shows a notice titled Installed with the text "Installed in
+DIR".  The other ends show a notice titled Install failed.
+.table 32 28
+Text of the notice | Cause
+This font has no archive to download | CTAN Archive to Download is empty.
+The name of the archive or of the map file | A character that is not allowed,
+ has a character that cannot be used | or a slash in the archive.
+{c:kpsewhich} did not run (is TeX installed?) | TeX is not on the machine.
+Cannot make a temporary directory | Strata cannot write in {c:TMPDIR}, or in
+ {c:/tmp} when {c:TMPDIR} is not set.
+The archive could not be downloaded from URL | No network, or the archive does
+ | not exist.
+The archive could not be unpacked | The unpacking failed.
+updmap-user failed to enable the map file | The map file name is wrong.
+.end
+Installing a font does not change a document: the font that a number stands
+for is only read when a document is printed or shown, and the list is only
+read for the pictures of keycaps (the next section says where).
+.h3 Where the list is used [str-fonts-use]
+.ix Font list, use
+.ix Keycap, font of
+The list is read by the Editor for the legend of a keycap that is drawn as a
+picture on the screen of the X11 version, and for the names that the Font field
+of the Keycap Format panel and of the Keycap marker offers.  The Printer does
+not read it: the pages of a Print and of a Preview are always set in Latin
+Modern, in the family that the name of the font in the Typeface List gives
+({n:print}, Fonts).  A font that the list shows is not installed is left out in
+the picture of a keycap and the legend is set in the roman face.
+.caution Changing a font here does not change what is printed.  To change the
+  look of the printed page, change the names of the fonts in the Typeface List
+  of the document ({n:format}).
+
+.h2 The help viewer [str-help]
+.ix Help viewer
+.ix Help file
+.ix F1, help
+.ix Help topics
+.ix Help Index
+The help of the Document Manager is read from a help file and shown in a window
+across the foot of the screen.  The help file is the one named by the setting
+Help file of Setup; the places where it is looked for are in
+{x:str-help-search}.  The window and its keys are described in {x:view-help};
+this section tells what {k:F1} shows in the Document Manager.
+.h3 Reaching the help [str-help-reach]
+.ix F1, context
+.ix Help, topic of a panel
+{k:F1} on a menu or on a panel opens the window on the topic that fits it.
+.table 29 31
+Where {k:F1} is pressed | Topic
+The main menu | The topic of the entry that is highlighted
+Edit / Preview / Print Document | Edit / Preview / Print Document
+Maintain Dictionaries | Maintain Dictionaries
+Compare Document Versions | Compare Document Versions
+The comparison report | Comparison Report
+TeX Font Association | TeX Font Association
+Setup | Setup
+New File | Edit / Preview / Print Document
+A dimmed field of Setup | A topic that says the setting is not used
+A message in a box | The topic of the message, or of the box
+.end
+When the file has no topic for the place, the topic of the program is shown.
+When no help file has been found, {k:F1} shows a notice titled Help that reports
+this and reports how to name a help file; any key closes it.
+
+.h2 The menu inside the Editor [str-inside]
+.ix Editor, own menu
+.ix Document Manager, inside the Editor
+.ix Start of the Editor with no document
+.ix Entry menu of the Editor
+The Editor can be started with no document name.  The Editor then shows an
+empty editing screen with a menu on it that has the title Document Manager and
+the
+four entries of the table.  It is not the program of this chapter: it has
+no Setup panel and no list of fonts.  The usual way to start Strata
+is the Document Manager, which starts the Editor on a document it has chosen.
+.table 4 24 22
+No | Entry | What it does
+1 | Edit / Preview / Print Document | A list: Enter a file
+ | | name, Choose from this directory, New document.
+2 | Maintain Dictionaries | The panel of the personal word lists
+ | | ({n:str-spell-words}).
+3 | Compare Document Versions | The panel that compares two documents
+ | | ({n:str-compare}).
+4 | Quit | Ends the program with status 0.
+.end
+{k:Up}, {k:Down}, {k:Home}, {k:End}, {k:PgUp}, {k:PgDn}, {k:Enter} and the first
+letter of an entry work as in a list ({n:str-keys-list}): a letter chooses at
+once.  {k:Esc} shows the menu again.  Enter a file
+name prompts for a name in one line (".doc" is added when it has no dot, and
+the question "File does not exist. Create it?" is asked when it is not found);
+Choose from this directory is the list of files of Retrieve ({n:file}); New
+document is New of the File menu.  When a document is opened the menu goes away
+and the editing screen is the one of the document.
+.note To check the spelling of a document, open it and use Tools, Spell
+  ({n:spell}).
+
+.h2 Quit [str-quit]
+.ix Quit
+.ix Leaving the Document Manager
+.ix Ending Strata
+Quit ends the Document Manager.  There is no question and nothing is saved by
+it (the settings are saved by Setup when it is accepted, the list of fonts when
+a font is accepted).  The program ends with status 0.  No document is open at
+that time, because each Editor ended before the menu came back.  The keys
+that choose Quit are {k:Q}, which highlights it, and {k:Enter} or {k:Ins}, or
+{k:End} and then one of them.  Only Quit ends the program: {k:Esc} on the
+main menu, {k:Ctrl-Q} and the closing of the window of the X11 version leave
+it on the screen ({n:str-keys-menu}).
+
+.h2 Messages of the Document Manager [str-messages]
+.ix Messages, Document Manager
+.ix Error messages, Document Manager
+.ix Notices, Document Manager
+.ix Footer messages
+The messages are of three kinds: the footer messages (one line in bold in the
+last row of the screen, until the next key), the notices (a box that any key
+closes) and the lines written on the standard error before the screen is
+open.  Where a message belongs to a
+section of this chapter the table says which.  The parts in capitals vary.
+.h3 Footer messages [str-messages-footer]
+.table 31 29
+Text | Where and why
+Enter a document name | Edit / Preview / Print Document: no document name.
+Cannot find directory DIR | The Working Directory (or the directory part of
+ | the name) does not exist.
+Settings saved to PATH | Setup was accepted and written.
+Installation cancelled | TeX Font Association, Install Now: {k:Esc} stopped the
+ download.
+A footer message that names the field and shows that it is not available in
+ this version | A character is typed in a dimmed field
+ (n/a): the Font Number and Installed fields of a font panel.
+.end
+.h3 Notices [str-messages-notices]
+The title of the box is the first column.
+.table 22 18 10
+Title | Text | Section
+Edit / Preview / Print Document | Cannot run the editor: PATH |
+ {x:str-edit-end}
+Edit / Preview / Print Document | The editor ended with status N |
+ {x:str-edit-end}
+Setup | The reasons in the table of {x:str-setup-accept} | {x:str-setup-accept}
+Setup | Settings are in effect but could not be saved | {x:str-setup-accept}
+Font | The family is roman, sans or mono; not saved | {x:str-fonts-save}
+Font | Only letters, digits and . _ - + = , can be used ... | {x:str-fonts-save}
+Fonts | The reason that the list could not be written | {x:str-fonts-save}
+Installed | Installed in DIR | {x:str-fonts-install}
+Install failed | The reasons of the table | {x:str-fonts-install}
+Directory | Cannot read the directory | {x:str-browse-list}
+Help | No help file was found | {x:str-help-reach}
+.end
+.h3 The standard error [str-messages-stderr]
+.ix Standard error, Document Manager
+.ix Usage text
+These lines are written before the screen opens, and the program then ends.
+.table 34 26
+Text | When
+A line that shows the program needs an interactive | There is no terminal, or
+ terminal (or an X display with the X11 build) | in the X11 version no display.
+ | Status 1.
+The usage text, a few lines | The option {c:-h} or {c:--usage}.  Status 0.
+Two lines: the name and the version, and the file format | The option
+ {c:--version}.  Status 0.
+.end
+The exit statuses are in {x:str-exit}.
+
+.h2 The terminal version and the X11 version [str-versions]
+.ix Terminal and X11, Document Manager
+.ix X11 version, Document Manager
+.ix Terminal version, Document Manager
+.ix Window, X11
+The Document Manager has the same panels, keys and messages in the two versions.
+What differs is the shell around them.
+.table 9 51
+Subject | Terminal version, then X11 version
+Screen | The terminal, as large as it is (80 by 25 when the terminal reports no size);
+ | a window of 80 columns and 50 rows.
+Size | A resize of the terminal redraws the screen; the window of the X11
+ | version follows a change of its height, and its width cannot be changed.
+Keypad + | The plus key, or Alt-+; the keypad plus key.
+Closing | The program is left by Quit; the close button of the window does
+ | not end it.
+Editor | Takes the terminal, and the screen of the menu is given up while it
+ | runs; opens its own window, and the window of the Document Manager waits.
+Viewer | Needs an X display ({c:DISPLAY}); opens its own window.
+Colors | Those of the terminal; a dark background, bold in white and
+ | dimmed text in grey.
+.end
+
+The environment variables that change the font and the size of the window of the
+X11 version are in {n:appcmd} and {n:appx11}.  The key {k:Keypad +} of the
+panels is the keypad plus key in the X11 version; a terminal that sends the
+plus key as an ordinary plus makes the same list open, and so does {k:F2}
+in both versions.
+.note A resize of the terminal while the Editor or the Viewer runs is harmless:
+  the menu is drawn again at the new size when the program is back.

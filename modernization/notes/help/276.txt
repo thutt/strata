@@ -1,0 +1,25 @@
+
+------------------------------------ Markers -----------------------------------
+
+
+The following markers specify additional information to incorporate as part of
+the document.
+
+
+Comment: Inserts commentary-type text. Comments do not print unless specifically
+         requested on the print document Optional Settings panel when you final
+         print.  All text, column, and block formats are available for comments.
+
+
+Figure:  Specifies a name and identifies a page number to use in the table of
+         figures.
+
+
+Table:   Specifies a name and identifies a page number to use in the table of
+         tables.
+
+
+
+--------------------------------------------------------------------------------
+      Markers              Optional Settings              Comment Edit
+               Keyboard Summary                 Help Index

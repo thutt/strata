@@ -1,0 +1,35 @@
+# Appendix B of the Reference Manual: Configuration.
+# The appendix is kept in three files that this one includes.
+.doc Strata Reference: Appendix B, Configuration
+.chapter B
+.h1 Configuration [appcfg]
+This appendix describes everything that Strata keeps for the user between
+runs and everything that Strata reads at start: the settings
+directory and the files in it, every key of the file {c:config} with its
+allowed values and its default, the panels that read and write the keys, the
+list of fonts for printing, the places where the programs look for the
+Editor, templates and helper programs, and what each program reads at start,
+in order.  The options and the environment variables of every program are in
+{n:appcmd}; the Setup panel of the Document Manager is described field by
+field in {x:str-setup}.
+.ix Configuration
+.ix Settings of the user
+.ix Setup files
+.ix .strata
+The sections follow the life of a setting: the place where settings are kept
+and the rules that protect it ({n:appcfg-dir}, {n:appcfg-files}); the file, its
+format and its keys, which a user may edit by hand ({n:appcfg-format},
+{n:appcfg-keys}); the panels that write the keys and the messages of a failed
+save ({n:appcfg-write}, {n:appcfg-setup}, {n:appcfg-options}); the two other
+sources of settings, the font list and the search paths ({n:appcfg-fonts},
+{n:appcfg-search}); and last what is not a setting, and a table of problems
+({n:appcfg-notin}, {n:appcfg-examples}).
+.ix Home directory
+Strata keeps little.  The settings of the user are one line to a key in one
+text file, from a dozen lines up to about fifty when many colors are changed,
+and the list of fonts is twenty lines in another.
+Everything about a document (its formats, page layout, fonts used, markers)
+is stored in the document itself and not in the directory of the user; see
+{x:appcfg-notin}.
+.include appcfg1.src
+.include appcfg2.src

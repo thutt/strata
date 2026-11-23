@@ -1,0 +1,25 @@
+
+------------------ Convert Hyphenation Dictionary to Document ------------------
+
+Convert Hyphenation Dictionary to Document converts a custom hyphenation 
+dictionary into a document so you can edit the entries.
+
+  +--------------- Convert Hyphenation Dictionary to Document ---------------+
+  |                                                                          |
+  |             Working Directory:                                           |
+  |                                                                          |
+  |   Hyphenation Dictionary Name:                                           |
+  |                                                                          |
+  |                 Document Name:                                           |
+  |                                                                          |
+  +--------------------- Press Ins to Convert Dictionary --------------------+
+
+--Procedure---------------------------------------------------------------------
+
+ Select Maintain Dictionaries from the Document Manager.
+ Select Convert Hyphenation Dictionary to Document.
+ Enter the name of the custom hyphenation dictionary to convert and the name 
+  of the document file to create. Press Ins to convert the dictionary.
+ Select Edit Document and retrieve the converted document.
+--------------------------------------------------------------------------------
+         Maintain Dictionaries       Keyboard Summary        Help Index

@@ -1,0 +1,25 @@
+
+--------------------------------- Copy -----------------------------------------
+
+Copy (F3) copies highlighted material from the document to a clipboard. You can
+then paste the clipboard contents into other areas of the document. When you end
+the editing session, the clipboard contents are erased. To use material over 
+again or in multiple documents, use Library Copy (Ctrl F3).
+
+Copy highlighted text.              Copy blocks in the current section.
+         +---------------+                 +-------+
+                    +--------------------------------------+
+                    |  Text    Column    Block    Section  |
+                    +--------------------------------------+
+               +-----------------+                   |
+Copy columns in the current block.   Copy sections, including their subsections,
+                                     at the same level. (This selection
+                                     is available only in Structured mode.)
+
+--Procedure---------------------------------------------------------------------
+ Press Copy.
+ Select Text, Column, Block, or Section and press Enter.
+ Highlight the area to copy.
+ Press Enter to copy the selected area to the clipboard.
+--------------------------------------------------------------------------------
+   Paste    Library Copy    Highlighting    Keyboard Summary    Help Index

@@ -1,0 +1,25 @@
+
+------------------------------- Hyphenation Settings ---------------------------
+
+
+Minimum, Maximum, and   Specify the minimum, maximum, and preferred width of a
+Preferred Space Widths: blank space to use when final printing the document.
+                        Manuscript will adjust the width of a blank space within
+                        these values to minimize the need for hyphenation.  Use
+                        values from 0 to 999, with 100 representing the size
+                        of the font's space character.
+
+
+Adjust Maximum in       Select Yes to allow Manuscript to adjust the maximum
+Narrow Columns?         space width in areas of the document that are narrower
+                        than the entire document (for example, in a column, 
+                        a winding column, or an indented block).  When Yes is
+                        selected, Manuscript increases the maximum space width
+                        as the width of the portion of the document being 
+                        printed decreases to help avoid excessive hyphenation
+                        in narrow areas of the document.  The space width will 
+                        never exceed 150% of the amount specified at the 
+                        Maximum Space Width prompt.  
+
+--------------------------------------------------------------------------------
+      Hyphenation Settings           Keyboard Summary           Help Index

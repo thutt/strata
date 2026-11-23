@@ -1,0 +1,108 @@
+TESTING Strata
+==============
+
+All commands are run from the project directory after
+
+    source scripts/setup [-b debug|release|asan] <build directory>
+
+and put their files under the build directory and under TMPDIR.  Setup sets
+STRATA_HELP and STRATA_TEMPLATES, which is all that a program run in place from
+the build directory needs (tests/setupenv.py checks it).
+
+The suites
+----------
+
+  strata-build test     The unit tests of the C programs and a few scripts
+                        (about 10 minutes).
+  strata-build smoke    The scripts of tests/smokerun.py (terminal programs in
+                        a pseudo-terminal, printing, the Viewer under Xvfb).
+  strata-build smoke-quick
+                        The same scripts, each stopped after 60 seconds.
+  strata-build xtest    The X11 programs under Xvfb (tests/xsmoke.py and
+                        others).
+  strata-build verify   test, smoke and xtest, then a check that the source
+                        tree was not changed.
+  strata-build check-tools
+                        Not a test: reports which programs, headers and
+                        libraries that building, testing and running need
+                        are present, and the Debian package of each missing
+                        one (scripts/check-tools; it installs nothing and
+                        needs no build directory).  Run it first on a new
+                        machine.  tests/checktools.py tests the tool and
+                        tests/installtest.py the install script; both are
+                        part of 'strata-build test'.
+
+smoke: in parallel
+------------------
+
+The scripts of the smoke target are independent: tests/smokerun.py starts
+SMOKE_JOBS of them at a time (default: the number of CPUs, at most 4).
+
+    strata-build smoke                 parallel, SMOKE_JOBS from the CPUs
+    SMOKE_JOBS=1 strata-build smoke    one at a time, in the order of the list
+    SMOKE_JOBS=8 strata-build smoke    eight at a time
+
+Every script is run, whatever the others do.  Each has a directory of its own
+under TMPDIR (made by the runner, removed at the end of the script unless
+SMOKE_KEEP is set) that is its TMPDIR, and a settings directory of its own
+(STRATA_HOME in it), so no script reads or writes the ~/.strata of the user or a
+file of another script.  Each script keeps its output in a file of its own; at
+the end the outputs are shown in the order of the list, then a table of the
+seconds, the ok lines and the FAIL lines of each script, and the status is 1 if
+a script exited with a status other than 0 or printed a line that begins with
+FAIL.  The list of the scripts is SCRIPTS in tests/smokerun.py: a new script of
+the smoke target is added there (the slowest first).  Rules for a script that is
+run at the same time as the others:
+
+  - make temporary files only below TMPDIR (tempfile.mkdtemp);
+  - use the settings directory of STRATA_HOME, never ~/.strata;
+  - never name a display, a port, a socket or a file in a fixed way: let Xvfb
+    choose (-displayfd), put the process number in the name of a socket;
+  - read the build directory only.
+
+smoke-quick: what it leaves out
+-------------------------------
+
+    strata-build smoke-quick                   60 seconds for each script
+    SMOKE_QUICK_SECONDS=20 strata-build smoke-quick
+
+Every script is run as in smoke but is stopped (SIGTERM) after
+SMOKE_QUICK_SECONDS seconds.  The checks that it made before are real checks; a
+script that was stopped and had no FAIL line is not a failure.  What is left
+out is everything after the point where the script was stopped: the table at
+the end says "stopped at the time limit" for those scripts and gives the number
+of checks that they made.  A script whose total is shorter than the limit is run
+completely.  The long scripts (smoke.py, printpdf.py, preview.py, xlatex.py,
+latexmarker.py) are the ones that are cut: the blocks at their end (for
+example the Setup, backups, Document Manager and Restore Backup blocks of
+smoke.py, and the late blocks of printpdf.py) are not run.  Use smoke before a
+commit that changes the programs; smoke-quick shows that nothing basic is
+broken in about five minutes.
+
+
+The counts of the last verification
+-----------------------------------
+
+The numbers that the test programs and the scripts printed in the verification
+of 2026-11-19 (the debug build; "strata-build test", "strata-build smoke" and
+"strata-build xtest" of the main line with the border and the cursor work).
+The sample document of the history of the project (samples/story) quotes this
+table and tests/story.py compares the two.
+
+  unit test program   checks      unit test program   checks
+  undotest              156       lxtest                607
+  backuptest            107       condtest              155
+  recovertest            34       incltest               35
+  dicttest              115       cmptest                42
+  searchtest             64       colortest             469
+  pngtest               262       logtest               838
+  loadtest               50       perrtest              120
+  pvtest                 90       pjtest                124
+
+  Together the sixteen programs made 3,268 checks, with 0 failures.  Other
+  programs of "strata-build test" print "all passed" and no number (depcheck,
+  calctest, bordertest, edtest, samplesguard, stylerules, installtest, gsdoc,
+  checktools) or "0 failures" (srctree, checkpics, picscripts, strdev,
+  logpolicy, tmpclean).
+  The complete smoke printed 2,555 ok lines and no FAIL line, in 1,182
+  seconds; the X11 smoke printed 150 ok lines.

@@ -1,0 +1,1908 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Installs Strata under a prefix, removes it again, and lists the programs
+# that Strata needs at run time.  The files to install come from the payload
+# directory next to this script (a delivered release) or, for a developer,
+# from a build directory.  Every file that is installed is recorded in a
+# manifest, so that --uninstall removes exactly what the install put there.
+#
+# An administrator installs under /usr.  The missing packages are named, the
+# question "Install these packages? [y/N]" is asked, and the packages are
+# installed with apt only after a yes.  An ordinary user installs into
+# ${HOME}/usr.  The programs that Strata can use are optional prerequisites:
+# a missing one never stops the install.  A warning at the end of the run
+# lists what is missing, what is lost without it, and the command that an
+# administrator runs.  Nothing about the missing programs is printed in the
+# middle of the run, where it could scroll off the screen.
+#
+# Run the script with --help for the options.
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+# The directory of the project: this script is in its scripts directory.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+project_dir="$(dirname "${script_dir}")"
+tree_dir="${project_dir}/modernization"
+
+# The options, with their defaults.  The prerequisites are installed unless
+# --no-prereqs is given; with_prereqs_asked is "yes" when --with-prereqs
+# asked for them, so that a system that cannot install them is an error and
+# not only a note.
+prefix="/usr"
+prefix_given="no"
+destdir="${DESTDIR:-}"
+build_dir="${STRATA_BUILD_DIR:-}"
+payload_dir=""
+release_dir=""
+mode="install"
+with_prereqs="yes"
+with_prereqs_asked="no"
+assume_yes="no"
+list_only="no"
+dry_run="no"
+quiet="no"
+
+# The programs that --with-prereqs fetches go into this tree below the prefix
+# (the uninstall removes the tree as a whole).
+prereq_dir=""
+
+# What --with-prereqs has worked out it would fetch: one line per package
+# (group, name, version, download bytes, installed bytes, separated by tabs),
+# the names alone, and the packages that were asked for.
+plan_rows=()
+plan_names=()
+plan_asked=0
+plan_ok="yes"
+plan_total_down=0
+
+# The exit statuses of a declined or impossible question (see --help).
+status_declined=3
+status_no_terminal=4
+
+# What the install has made, in the order it made it.
+created_dirs=()
+installed_files=()
+installed_trees=()
+scratch=""
+
+# The programs that the build makes in the terminal and in the X11 version.
+term_programs=(str stred strprint)
+x11_programs=(str stred)
+
+
+# Prints the help text.
+function usage
+{
+    cat <<EOF
+usage: strata-install [options]
+       strata-install --uninstall [--prefix DIR] [--destdir DIR]
+       strata-install --check
+       strata-install --list-prereqs
+
+Install Strata under a prefix, or remove it again.
+
+  As an administrator, the install is under /usr.  What is present and what
+  is missing is shown, the packages are listed with their sizes, the question
+  "Install these packages? [y/N]" is asked, and the packages are installed
+  with apt only after y or Y.
+
+  Anybody else installs into \${HOME}/usr.  The programs that Strata can use
+  are optional: when one is missing, the install is made all the same.  A
+  warning at the end of the install lists the missing programs, what is lost
+  without each one, and the apt-get command that an administrator runs.
+
+  --prefix DIR      Install under DIR (default: /usr for an administrator,
+                    \${HOME}/usr for anybody else).  DIR may be any directory
+                    that you own.  The rules above apply to it.
+  --destdir DIR     Put everything under DIR/PREFIX, for a package (the
+                    variable DESTDIR does the same).
+  --build-dir DIR   Install from the directory of the built programs of a
+                    developer (default: the variable STRATA_BUILD_DIR).
+  --uninstall       Remove what an install under the same prefix put there,
+                    using its manifest, and nothing else.
+  --check           Only check which programs that Strata needs are present
+                    and which are missing.  Nothing is installed.
+  --no-prereqs      Install Strata only: the programs that Strata can use
+                    are not looked for, not installed, and no warning about
+                    them is printed.  Strata then starts, and each feature
+                    that needs a missing program reports that when it is
+                    used.
+  --with-prereqs    The default: the programs that Strata can use are looked
+                    for, and the missing ones are listed in the warning at
+                    the end.  This is an error only when this system cannot
+                    do it (an administrator needs apt).
+  -y, --yes         Do not ask the administrator's question: install the
+                    packages that were listed.  Without a terminal and
+                    without --yes nothing is installed (exit status 4).
+                    A "no" answer installs nothing (exit status 3).
+  --list-prereqs    Only show what is present and what is missing, and for
+                    an administrator the packages with their estimated
+                    sizes.  Nothing is installed.
+  --dry-run         Say what would be done and do nothing.
+  --quiet           Print only warnings and errors.
+  -h, --help        This text.
+
+The layout under the prefix:
+  bin/str stred strprint dviview     the terminal version and the Printer
+  bin/str-x11 stred-x11              the X11 version (when it was built)
+  bin/strata-run COMMAND...          runs COMMAND with the environment that
+                                     the installed Strata needs
+  share/strata/strata.hlp            the help file
+  share/strata/doc/                  the documents of Strata
+  share/strata/pdf/                  the manuals as PDF files
+  share/strata/samples/              the sample documents
+  share/strata/samples/letters/      the sample business letters (US Letter
+                                     and A4)
+  share/strata/samples/envelopes/    the sample envelopes, one for each style
+  share/strata/samples/labels/       the sample sheet of address labels
+  share/strata/samples/fonts/        the sample of the standard fonts and sizes
+  share/strata/samples/comments/     the sample memo with comments
+  share/strata/samples/story/        the sample document "How Strata Was
+                                     Made" and its pictures
+  share/strata/tutorial/             the documents of the Tutorial, and
+                                     their pictures in a directory next to
+                                     them
+  share/strata/templates/            the templates of New (letters, envelopes)
+  share/strata/manifest              every file and directory installed
+  share/doc/strata/                  the licence, the README and the known
+                                     issues
+At the end, where everything was installed is listed, and then the warning
+about the missing optional programs, when there is one.
+EOF
+}
+
+
+# Prints a message unless --quiet was given.
+function note
+{
+    if [ "${quiet}" != "yes" ]; then
+        echo "strata-install: ${*}"
+    fi
+}
+
+
+# Prints a message on the error output.
+function warn
+{
+    echo "strata-install: ${*}" >&2
+}
+
+
+# Stops with a message.
+function die
+{
+    warn "${*}"
+    exit 1
+}
+
+
+# Removes the scratch directory when the script ends.
+function cleanup
+{
+    if [ -n "${scratch}" ] && [ -d "${scratch}" ]; then
+        rm -rf -- "${scratch}"
+    fi
+}
+
+
+# Makes the scratch directory the first time it is needed.
+function make_scratch
+{
+    if [ -z "${scratch}" ]; then
+        scratch="$(mktemp -d "${TMPDIR:-/tmp}/strata-install.XXXXXX")"
+    fi
+}
+
+
+# Succeeds when this run has made the directory (or, in a dry run, would
+# have made it).
+function was_created
+{
+    local dir
+
+    for dir in "${created_dirs[@]+"${created_dirs[@]}"}"; do
+        if [ "${dir}" = "${1}" ]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+
+# Makes a directory and every missing directory above it with install -d,
+# and records each one that did not exist before.  The argument is the path
+# below the destination root, as it is seen once Strata is installed.
+function make_dir
+{
+    local path="${1}"
+    local missing=()
+    local walk="${path}"
+
+    while [ ! -d "${destdir}${walk}" ] && [ "${walk}" != "/" ] &&
+          ! was_created "${walk}"; do
+        missing=("${walk}" "${missing[@]+"${missing[@]}"}")
+        walk="$(dirname "${walk}")"
+    done
+
+    local dir
+
+    for dir in "${missing[@]+"${missing[@]}"}"; do
+        if [ "${dry_run}" = "yes" ]; then
+            note "would make the directory ${dir}"
+        else
+            install -d -m 755 -- "${destdir}${dir}"
+        fi
+
+        created_dirs+=("${dir}")
+    done
+}
+
+
+# Installs one file with install -m and records it.  The arguments are the
+# mode, the source file and the path below the destination root.
+function put_file
+{
+    local mode_bits="${1}"
+    local source="${2}"
+    local dest="${3}"
+
+    make_dir "$(dirname "${dest}")"
+
+    if [ "${dry_run}" = "yes" ]; then
+        note "would install ${dest}"
+    else
+        install -m "${mode_bits}" -- "${source}" "${destdir}${dest}"
+    fi
+
+    installed_files+=("${dest}")
+}
+
+
+# Succeeds when the program is found in the PATH.
+function have_program
+{
+    command -v -- "${1}" >/dev/null 2>&1
+}
+
+
+# Succeeds when this run is an administrator's: then the programs that are
+# missing are installed in the system with apt, and not unpacked into the
+# prefix.
+function system_mode
+{
+    [ -z "${destdir}" ] && [ "$(id -u)" = "0" ]
+}
+
+
+# Stops with a message that says what to do when the user cannot write where
+# the prefix is.  The default prefix is /usr, which needs administrator
+# privileges; the way out for anybody else is a prefix in the home directory.
+function check_privilege
+{
+    local dir="${destdir}${prefix}"
+
+    while [ ! -e "${dir}" ] && [ "${dir}" != "/" ]; do
+        dir="$(dirname "${dir}")"
+    done
+
+    if [ ! -w "${dir}" ]; then
+        die "cannot write to ${dir}: the prefix ${prefix} needs" \
+            "administrator privileges.  Run this script as an" \
+            "administrator (for example with sudo), or install into your" \
+            "home directory with: strata-install --prefix \${HOME}/usr"
+    fi
+}
+
+
+# Counts of the check, so that the summary can say what is missing.
+check_missing_required=0
+check_missing_optional=0
+
+# 0 when --with-prereqs fetched what it was to fetch (or was not given).
+prereq_status=0
+
+# During an install the optional programs that are missing are only recorded:
+# each entry is NAME|PACKAGE|FEATURE LOST.  The warning at the end of the run
+# prints them (final_warning), when final_warn is "yes".
+defer_missing="no"
+final_warn="no"
+late_items=()
+
+
+# Prints one line of the check.  The arguments are the status (ok, missing
+# or optional), the name, the Debian package and what needs it.
+function report
+{
+    local status="${1}"
+    local name="${2}"
+    local package="${3}"
+    local what="${4}"
+
+    case "${status}" in
+        ok)
+            note "ok        ${name}"
+            ;;
+        missing)
+            check_missing_required=$((check_missing_required + 1))
+            warn "MISSING   ${name} (package ${package}): ${what}"
+            ;;
+        optional)
+            check_missing_optional=$((check_missing_optional + 1))
+            late_items+=("${name}|${package}|${what}")
+
+            if [ "${defer_missing}" != "yes" ]; then
+                note "optional  ${name} is not installed (package" \
+                     "${package}): ${what}"
+            fi
+            ;;
+    esac
+}
+
+
+# Checks that a program is in the PATH or in the prefix.  The arguments are
+# the requirement (required or optional), the program, the package and what
+# the program is for.
+function check_program
+{
+    local need="${1}"
+    local program="${2}"
+    local package="${3}"
+    local what="${4}"
+
+    if have_program "${program}" ||
+       [ -x "${destdir}${prereq_dir}/usr/bin/${program}" ]; then
+        report ok "${program}" "${package}" "${what}"
+    elif [ "${need}" = "required" ]; then
+        report missing "${program}" "${package}" "${what}"
+    else
+        report optional "${program}" "${package}" "${what}"
+    fi
+}
+
+
+# Checks that a LaTeX file is known to kpsewhich.  The arguments are the
+# file, the package and what it is for.
+function check_tex_file
+{
+    local file="${1}"
+    local package="${2}"
+    local what="${3}"
+
+    if have_program kpsewhich && [ -n "$(kpsewhich "${file}" 2>/dev/null)" ]
+    then
+        report ok "${file}" "${package}" "${what}"
+    else
+        report optional "${file}" "${package}" "${what}"
+    fi
+}
+
+
+# Checks the shared libraries of one built program: a library that the loader
+# cannot find is a missing requirement.
+function check_libraries
+{
+    local program="${1}"
+    local line
+
+    if ! have_program ldd || [ ! -x "${program}" ]; then
+        return 0
+    fi
+
+    while IFS= read -r line; do
+        case "${line}" in
+            *"not found"*)
+                local lib="${line%% *}"
+                lib="${lib#"${lib%%[![:space:]]*}"}"
+                report missing "${lib}" "$(library_package "${lib}")" \
+                       "$(basename "${program}") cannot start without it"
+                ;;
+        esac
+    done < <(ldd "${program}" 2>/dev/null || true)
+}
+
+
+# Gives the Debian package that holds a shared library, as far as Strata
+# uses libraries.
+function library_package
+{
+    case "${1}" in
+        libX11.so*) echo "libx11-6" ;;
+        libXft.so*) echo "libxft2" ;;
+        libfreetype.so*) echo "libfreetype6" ;;
+        libfontconfig.so*) echo "libfontconfig1" ;;
+        libpng*.so*) echo "libpng16-16" ;;
+        *) echo "the package of ${1}" ;;
+    esac
+}
+
+
+# Runs the whole check of the programs that Strata needs.  Returns a failure
+# when a required one is missing.
+function run_check
+{
+    local dir
+    local prog
+
+    note "Checking what the installed Strata needs."
+    check_missing_required=0
+    check_missing_optional=0
+
+    # Programs that an earlier install fetched into the prefix count.
+    if [ -r "${destdir}${prefix}/share/strata/prereq-env.sh" ]; then
+        . "${destdir}${prefix}/share/strata/prereq-env.sh"
+    fi
+
+    if [ -n "${payload_dir}" ]; then
+        for prog in str stred str-x11 stred-x11 dviview; do
+            check_libraries "${payload_dir}/bin/${prog}"
+        done
+    elif [ -n "${build_dir}" ]; then
+        for dir in term x11; do
+            for prog in "${build_dir}/${dir}/str" "${build_dir}/${dir}/stred"
+            do
+                check_libraries "${prog}"
+            done
+        done
+
+        check_libraries "${build_dir}/term/dviview"
+    fi
+
+    check_program optional pdflatex texlive-latex-base \
+        "printing to a PDF file or to a printer"
+    check_program optional latex texlive-latex-base \
+        "Preview, and equations and LaTeX markers as images"
+    check_program optional dvipdfmx texlive-binaries \
+        "printing to a PDF file or to a printer"
+    check_program optional dvipng dvipng \
+        "equations, LaTeX markers and keycaps as images in the window version"
+    check_program optional gs ghostscript \
+        "pictures from PDF and EPS files"
+    check_program optional kpsewhich texlive-binaries \
+        "finding the LaTeX fonts"
+
+    if program_present aspell || program_present hunspell; then
+        report ok "the spell check" "hunspell" "the spell check"
+    else
+        report optional "hunspell" "hunspell" "the spell check"
+        report optional "hunspell-en-us" "hunspell-en-us" \
+            "the dictionary of the spell check"
+    fi
+
+    check_program optional lp cups-client "printing on a printer"
+    check_program optional lpstat cups-client \
+        "the list of printer queues in Setup"
+    check_program optional curl curl "installing a font (Install Now)"
+    check_program optional unzip unzip "installing a font (Install Now)"
+    check_tex_file lmodern.sty lmodern "the default LaTeX fonts"
+    check_tex_file fancyhdr.sty texlive-latex-base \
+        "headers, footers and the table of contents"
+    check_tex_file adjustbox.sty texlive-latex-extra "tables of the Printer"
+    check_tex_file tikz.sty texlive-pictures "borders and pictures"
+
+    if [ -d /usr/share/mythes ] ||
+       [ -d "${destdir}${prereq_dir}/usr/share/mythes" ]; then
+        report ok "thesaurus" "mythes-en-us" "the thesaurus"
+    else
+        report optional "thesaurus" "mythes-en-us" \
+            "the thesaurus (Tools, Thesaurus)"
+    fi
+
+    if [ "${check_missing_required}" -ne 0 ]; then
+        warn "${check_missing_required} required item(s) missing."
+
+        return 1
+    fi
+
+    if [ "${check_missing_optional}" -ne 0 ]; then
+        if [ "${defer_missing}" != "yes" ]; then
+            note "${check_missing_optional} optional item(s) missing;" \
+                 "Strata starts without them, and each feature that needs" \
+                 "one reports that when it is used."
+            note "For an administrator's install, the list of packages" \
+                 "with their sizes is shown and the question is asked" \
+                 "before the packages are installed; an ordinary user's" \
+                 "install is made and the missing programs are listed at" \
+                 "the end; --no-prereqs installs Strata alone."
+        fi
+    fi
+
+    return 0
+}
+
+
+# Writes the text of a small launcher script into a file in the scratch
+# directory and prints the name of the file.  The launcher sets the PATH and
+# the environment of the programs that were fetched into the prefix, then
+# runs the command it was given.
+function make_launcher
+{
+    make_scratch
+
+    local file="${scratch}/strata-run"
+
+    cat >"${file}" <<'EOF'
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Runs a command with the environment that the installed Strata needs, for
+# example:  strata-run str
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+# The prefix is the directory above the directory of this script.
+here="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+prefix="$(dirname "${here}")"
+
+if [ -r "${prefix}/share/strata/prereq-env.sh" ]; then
+    . "${prefix}/share/strata/prereq-env.sh"
+fi
+
+export PATH="${prefix}/bin:${PATH}"
+
+if [ ${#} -eq 0 ]; then
+    echo "usage: strata-run COMMAND [ARGUMENT...]" >&2
+    exit 2
+fi
+
+exec "${@}"
+EOF
+    echo "${file}"
+}
+
+
+# Writes the manifest of everything installed into the scratch directory and
+# prints the name of the file.  A line is "d PATH" for a directory that the
+# install made, "t PATH" for a whole tree that --with-prereqs unpacked (it is
+# removed as a whole) and "f PATH" for a file, in the order they were made.
+function make_manifest
+{
+    make_scratch
+
+    local file="${scratch}/manifest"
+    local path
+
+    : >"${file}"
+
+    for path in "${created_dirs[@]+"${created_dirs[@]}"}"; do
+        echo "d ${path}" >>"${file}"
+    done
+
+    for path in "${installed_trees[@]+"${installed_trees[@]}"}"; do
+        echo "t ${path}" >>"${file}"
+    done
+
+    for path in "${installed_files[@]+"${installed_files[@]}"}"; do
+        echo "f ${path}" >>"${file}"
+    done
+
+    echo "${file}"
+}
+
+
+# Adds the entries of the manifest of an earlier install under the same prefix
+# to the lists of this run, so that the uninstall removes the directories and
+# the files of every install and not only of the last one.  Entries that this
+# run has made again are not listed twice.
+function merge_old_manifest
+{
+    local manifest="${destdir}${prefix}/share/strata/manifest"
+    local kind
+    local path
+    local old_dirs=()
+    local old_trees=()
+    local old_files=()
+
+    [ -r "${manifest}" ] || return 0
+
+    while read -r kind path; do
+        case "${kind}" in
+            d) old_dirs+=("${path}") ;;
+            t) old_trees+=("${path}") ;;
+            f) old_files+=("${path}") ;;
+        esac
+    done <"${manifest}"
+
+    local merged=("${old_dirs[@]+"${old_dirs[@]}"}")
+
+    for path in "${created_dirs[@]+"${created_dirs[@]}"}"; do
+        if ! in_list "${path}" "${merged[@]+"${merged[@]}"}"; then
+            merged+=("${path}")
+        fi
+    done
+
+    created_dirs=("${merged[@]+"${merged[@]}"}")
+
+    for path in "${old_trees[@]+"${old_trees[@]}"}"; do
+        if ! in_list "${path}" \
+             "${installed_trees[@]+"${installed_trees[@]}"}"; then
+            installed_trees+=("${path}")
+        fi
+    done
+
+    for path in "${old_files[@]+"${old_files[@]}"}"; do
+        if ! in_list "${path}" \
+             "${installed_files[@]+"${installed_files[@]}"}"; then
+            installed_files+=("${path}")
+        fi
+    done
+}
+
+
+# Succeeds when the first argument is one of the other arguments.
+function in_list
+{
+    local wanted="${1}"
+    local item
+
+    shift
+
+    for item in "${@}"; do
+        if [ "${item}" = "${wanted}" ]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+
+# Installs the programs, the help file, the documents, the templates and
+# the samples from a build directory and the source tree of a developer.
+function install_from_tree
+{
+    local doc
+    local pdf
+    local pdf_count
+    local prog
+    local sample
+    local tpl
+
+    for prog in "${term_programs[@]}"; do
+        put_file 755 "${build_dir}/term/${prog}" "${prefix}/bin/${prog}"
+    done
+
+    if [ -x "${build_dir}/term/dviview" ]; then
+        put_file 755 "${build_dir}/term/dviview" "${prefix}/bin/dviview"
+    else
+        warn "the Viewer (dviview) was not built; Preview needs it."
+    fi
+
+    if [ -x "${build_dir}/x11/stred" ]; then
+        for prog in "${x11_programs[@]}"; do
+            put_file 755 "${build_dir}/x11/${prog}" \
+                     "${prefix}/bin/${prog}-x11"
+        done
+    else
+        note "The X11 version was not built; only the terminal version" \
+             "is installed."
+    fi
+
+    put_file 755 "$(make_launcher)" "${prefix}/bin/strata-run"
+    put_file 644 "${build_dir}/strata.hlp" "${prefix}/share/strata/strata.hlp"
+    put_file 644 "${build_dir}/version" "${prefix}/share/strata/VERSION"
+    put_file 644 "${tree_dir}/COPYING" "${prefix}/share/doc/strata/COPYING"
+    put_file 644 "${tree_dir}/README.txt" \
+             "${prefix}/share/doc/strata/README.txt"
+    put_file 644 "${tree_dir}/docs/KNOWN-ISSUES.txt" \
+             "${prefix}/share/doc/strata/KNOWN-ISSUES.txt"
+
+    for doc in "${tree_dir}"/manual/doc/*.doc; do
+        if [ -f "${doc}" ] && ! is_undelivered "${doc}"; then
+            put_file 644 "${doc}" \
+                     "${prefix}/share/strata/doc/$(basename "${doc}")"
+        fi
+    done
+
+    for tpl in "${tree_dir}"/templates/*.doc; do
+        if [ -f "${tpl}" ]; then
+            put_file 644 "${tpl}" \
+                     "${prefix}/share/strata/templates/$(basename "${tpl}")"
+        fi
+    done
+
+    # The manuals as PDF files, when the manual was built into the build
+    # directory (the guides and cards, and the Reference Manual).
+    pdf_count=0
+
+    for pdf in "${build_dir}"/manual/pdf/*.pdf; do
+        if [ -f "${pdf}" ] && ! is_undelivered "${pdf}"; then
+            put_file 644 "${pdf}" \
+                     "${prefix}/share/strata/pdf/$(basename "${pdf}")"
+            pdf_count=$((pdf_count + 1))
+        fi
+    done
+
+    if [ "${pdf_count}" -eq 0 ]; then
+        note "The manuals as PDF files are not built in ${build_dir}/manual:" \
+             "they are not installed."
+    fi
+
+    # The sample documents, macro sets, libraries and settings.
+    for sample in "${tree_dir}"/tests/samples/*; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" \
+                     "${prefix}/share/strata/samples/$(basename "${sample}")"
+        fi
+    done
+
+    # The sample business letters, one folder of their own.
+    letters_dir="${prefix}/share/strata/samples/letters"
+
+    for sample in "${tree_dir}"/samples/letters/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" "${letters_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    # The sample envelopes, one for each style of envelope.
+    envelope_dir="${prefix}/share/strata/samples/envelopes"
+
+    for sample in "${tree_dir}"/samples/envelopes/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" \
+                     "${envelope_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    # The sample sheet of address labels.
+    labels_dir="${prefix}/share/strata/samples/labels"
+
+    for sample in "${tree_dir}"/samples/labels/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" "${labels_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    # The sample of the standard fonts and sizes.
+    fonts_dir="${prefix}/share/strata/samples/fonts"
+
+    for sample in "${tree_dir}"/samples/fonts/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" "${fonts_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    # The sample memo with comments, for the Draft print.
+    comments_dir="${prefix}/share/strata/samples/comments"
+
+    for sample in "${tree_dir}"/samples/comments/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" "${comments_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    # The sample document of the history of Strata, with the pictures that it
+    # names in a directory next to it.
+    story_dir="${prefix}/share/strata/samples/story"
+
+    for sample in "${tree_dir}"/samples/story/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" "${story_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    for sample in "${tree_dir}"/samples/story/pictures/*; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" \
+                     "${story_dir}/pictures/$(basename "${sample}")"
+        fi
+    done
+
+    # The documents that the Tutorial teaches with, and the pictures that
+    # they name, which stay in a directory next to them.
+    tutorial_dir="${prefix}/share/strata/tutorial"
+
+    for sample in "${tree_dir}"/manual/samples/*.doc; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" \
+                     "${tutorial_dir}/$(basename "${sample}")"
+        fi
+    done
+
+    for sample in "${tree_dir}"/manual/samples/pictures/*; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" \
+                     "${tutorial_dir}/pictures/$(basename "${sample}")"
+        fi
+    done
+}
+
+
+# Installs every file of a payload directory: a tree that has the layout of
+# the installed files, relative to the prefix (bin, share/strata and so on).
+# The launcher and the manifest are made by this script and are not taken
+# from the payload.  A file is executable in the installed tree when it is
+# executable in the payload.  A payload that holds a document that is not
+# delivered (see is_undelivered) is refused before anything is installed.
+function install_from_payload
+{
+    local file
+    local rel
+    local bits
+
+    while IFS= read -r -d '' file; do
+        rel="${file#"${payload_dir}"/}"
+
+        if is_undelivered "${rel}"; then
+            die "refused: ${rel} is a document for developers and is not" \
+                "delivered."
+        fi
+    done < <(find "${payload_dir}" -type f -print0)
+
+    while IFS= read -r -d '' file; do
+        rel="${file#"${payload_dir}"/}"
+
+        case "${rel}" in
+            bin/strata-run|share/strata/manifest)
+                continue
+                ;;
+        esac
+
+        if [ -x "${file}" ]; then
+            bits=755
+        else
+            bits=644
+        fi
+
+        put_file "${bits}" "${file}" "${prefix}/${rel}"
+    done < <(find "${payload_dir}" -type f -print0 | sort -z)
+
+    put_file 755 "$(make_launcher)" "${prefix}/bin/strata-run"
+}
+
+
+# Succeeds when the name is one of a document that is not delivered.  The
+# specification of the file formats is a document for developers: it is
+# never installed, and an install from a payload that holds it stops.
+function is_undelivered
+{
+    case "${1}" in
+        *strata-file-format*) return 0 ;;
+    esac
+
+    return 1
+}
+
+
+# Installs the programs, the help file, the documents and the launcher.
+function do_install
+{
+    local doc
+    local pdf
+    local pdf_count
+    local prog
+    local sample
+    local tpl
+    local version
+
+    if [ -n "${payload_dir}" ]; then
+        [ -d "${payload_dir}" ] || die "no such directory: ${payload_dir}"
+        [ -x "${payload_dir}/bin/stred" ] ||
+            die "the programs are not in ${payload_dir}/bin."
+        [ -r "${payload_dir}/share/strata/strata.hlp" ] ||
+            die "the help file is not in ${payload_dir}/share/strata."
+        [ -r "${payload_dir}/share/strata/VERSION" ] ||
+            die "the version is not in ${payload_dir}/share/strata."
+        version="$(head -n 1 "${payload_dir}/share/strata/VERSION")"
+    else
+        [ -n "${build_dir}" ] ||
+            die "there is nothing to install: no directory of programs" \
+                "was given (see --payload and --build-dir)."
+        [ -d "${build_dir}" ] || die "no such build directory: ${build_dir}"
+        [ -x "${build_dir}/term/stred" ] ||
+            die "the terminal programs are not built in ${build_dir}."
+        [ -r "${build_dir}/strata.hlp" ] ||
+            die "the help file is not built in ${build_dir}."
+        [ -r "${build_dir}/version" ] ||
+            die "the version is not in ${build_dir}: build the programs first."
+        version="$(head -n 1 "${build_dir}/version")"
+    fi
+
+    # The scratch directory is made here, in this shell: a directory made
+    # inside a command substitution would not be removed when the script
+    # ends.
+    make_scratch
+
+    note "Installing Strata ${version} under ${destdir}${prefix}."
+
+    # The optional programs that are missing are listed at the end.
+    defer_missing="yes"
+
+    if ! run_check; then
+        die "install stops: a required program is missing."
+    fi
+
+    # What is present and what is missing, the list of what would be
+    # downloaded and the question come before anything is installed.
+    if [ "${with_prereqs}" = "yes" ]; then
+        plan_prereqs
+    fi
+
+    if [ -n "${payload_dir}" ]; then
+        install_from_payload
+    else
+        install_from_tree
+    fi
+
+    if [ "${with_prereqs}" = "yes" ]; then
+        if fetch_prereqs; then
+            prereq_status=0
+        else
+            prereq_status=1
+        fi
+    fi
+
+    # An install over an earlier one keeps what the earlier one made.
+    merge_old_manifest
+
+    # The manifest names itself, so that the uninstall removes it too.
+    if ! in_list "${prefix}/share/strata/manifest" \
+         "${installed_files[@]+"${installed_files[@]}"}"; then
+        installed_files+=("${prefix}/share/strata/manifest")
+    fi
+
+    if [ "${dry_run}" = "yes" ]; then
+        note "Nothing was installed (--dry-run)."
+
+        return 0
+    fi
+
+    install -m 644 -- "$(make_manifest)" \
+            "${destdir}${prefix}/share/strata/manifest"
+    note "Installed ${#installed_files[@]} files." \
+         "To start the Document Manager: ${prefix}/bin/str"
+    show_installed
+
+    if [ "${prereq_status}" -ne 0 ]; then
+        warn "the programs that Strata needs are not all there; the rest" \
+             "is installed."
+
+        return 1
+    fi
+
+    if [ "${with_prereqs}" = "yes" ] && [ "${plan_asked}" -gt 0 ]; then
+        if system_mode; then
+            note "The packages were installed with apt; the uninstall does" \
+                 "not remove them."
+        else
+            note "Run Strata through ${prefix}/bin/strata-run, for example:" \
+                 "${prefix}/bin/strata-run str"
+        fi
+    fi
+
+    # The warning is the last output of the run.
+    if [ "${final_warn}" = "yes" ]; then
+        final_warning
+    fi
+}
+
+
+# Lists where the install put everything, one group of files at a time, from
+# the files it installed: the directory, the number of files and their names.
+function show_installed
+{
+    local group
+    local dir
+    local label
+    local path
+    local names
+    local count
+    local groups=("bin|Programs"
+                  "share/strata/doc|Documents"
+                  "share/strata/pdf|Manuals as PDF files"
+                  "share/strata/samples|Sample documents, macros and libraries"
+                  "share/strata/samples/letters|Sample business letters"
+                  "share/strata/samples/envelopes|Sample envelopes"
+                  "share/strata/samples/labels|Sample label sheet"
+                  "share/strata/samples/comments|Sample memo with comments"
+                  "share/strata/samples/story|Sample document, the story"
+                  "share/strata/samples/story/pictures|Pictures of the story"
+                  "share/strata/templates|Templates of New"
+                  "share/strata/tutorial|Documents of the Tutorial"
+                  "share/strata/tutorial/pictures|Pictures of the Tutorial"
+                  "share/strata|Help, version and the manifest"
+                  "share/doc/strata|Licence and README")
+
+    [ "${quiet}" != "yes" ] || return 0
+
+    echo
+    echo "Installed under ${destdir}${prefix}:"
+
+    for group in "${groups[@]}"; do
+        dir="${prefix}/${group%%|*}"
+        label="${group#*|}"
+        names=""
+        count=0
+
+        for path in "${installed_files[@]+"${installed_files[@]}"}"; do
+            if [ "$(dirname "${path}")" = "${dir}" ]; then
+                names="${names} $(basename "${path}")"
+                count=$((count + 1))
+            fi
+        done
+
+        if [ "${count}" -gt 0 ]; then
+            echo "  ${label}: ${count} files in ${dir}"
+            echo "${names# }" | fold -s -w 68 | sed -e 's/ *$//' -e 's/^/    /'
+        fi
+    done
+
+    echo "  The list of every installed path: ${prefix}/share/strata/manifest"
+    echo
+}
+
+
+# Succeeds when the program is in the PATH or in the prerequisite tree that an
+# earlier install made.
+function program_present
+{
+    have_program "${1}" || [ -x "${destdir}${prereq_dir}/usr/bin/${1}" ]
+}
+
+
+# The LaTeX files that the Printer asks for (src/latex.c), each with the
+# Debian package that holds it, as FILE:PACKAGE.
+tex_files=(adjustbox.sty:texlive-latex-extra
+           needspace.sty:texlive-latex-extra
+           extarticle.cls:texlive-latex-extra
+           pmboxdraw.sty:texlive-latex-extra
+           tikz.sty:texlive-pictures
+           ulem.sty:texlive-plain-generic
+           xcolor.sty:texlive-latex-recommended
+           setspace.sty:texlive-latex-recommended
+           pdflscape.sty:texlive-latex-recommended
+           fancyhdr.sty:texlive-latex-base
+           lmodern.sty:lmodern)
+
+
+# Prints the Debian package of every LaTeX file of the list above that
+# kpsewhich cannot find, one per line.  Prints nothing when there is no
+# kpsewhich: the programs of LaTeX are missing then, and all its packages are
+# asked for.
+function missing_tex_packages
+{
+    local row
+    local file
+    local package
+
+    program_present kpsewhich || return 0
+
+    for row in "${tex_files[@]}"; do
+        file="${row%%:*}"
+        package="${row#*:}"
+
+        if [ -z "$(kpsewhich "${file}" 2>/dev/null)" ]; then
+            echo "${package}"
+        fi
+    done
+}
+
+
+# Prints the Debian packages that must be fetched, one per line, for the
+# programs of the check that are missing.
+function missing_packages
+{
+    local pkg
+
+    if ! program_present pdflatex || ! program_present latex ||
+       ! program_present kpsewhich; then
+        echo texlive-latex-base
+        echo texlive-latex-recommended
+        echo texlive-latex-extra
+        echo texlive-pictures
+        echo texlive-plain-generic
+        echo lmodern
+    else
+        # The programs are there, but a package that the Printer needs may
+        # not be: only those packages are asked for.
+        while IFS= read -r pkg; do
+            echo "${pkg}"
+        done < <(missing_tex_packages | sort -u)
+    fi
+
+    if ! program_present dvipng; then
+        echo dvipng
+    fi
+
+    if ! program_present gs; then
+        echo ghostscript
+    fi
+
+    if ! program_present aspell && ! program_present hunspell; then
+        echo hunspell
+        echo hunspell-en-us
+    fi
+
+    if [ ! -d /usr/share/mythes ] &&
+       [ ! -d "${destdir}${prereq_dir}/usr/share/mythes" ]; then
+        echo mythes-en-us
+    fi
+}
+
+
+# Prints the names and versions of the packages that apt would install, with
+# what they depend on and that this machine does not have, one per line.
+# Nothing is installed: apt only simulates the install.
+function apt_closure
+{
+    apt-get -s --no-install-recommends install "${@}" 2>&1 |
+        awk '/^Inst /{v = $3; sub(/^\(/, "", v); print $2, v}'
+
+    return "${PIPESTATUS[0]}"
+}
+
+
+# Prints the group of a package that missing_packages asked for.
+function package_group
+{
+    case "${1}" in
+        texlive-*|lmodern) echo "latex" ;;
+        dvipng) echo "dvipng" ;;
+        ghostscript) echo "ghostscript" ;;
+        *) echo "spelling" ;;
+    esac
+}
+
+
+# Prints a size in bytes as kB or MB.
+function human_size
+{
+    awk -v b="${1}" 'BEGIN {
+        if (b >= 1048576) {
+            printf "%.1f MB", b / 1048576
+        } else {
+            printf "%d kB", (b + 1023) / 1024
+        }
+    }'
+}
+
+
+# Prints the estimated download size and installed size, in bytes, of a
+# package at a version, from the index of packages (Size is in bytes and
+# Installed-Size in kilobytes there).
+function package_sizes
+{
+    apt-cache show "${1}=${2}" 2>/dev/null |
+        awk '/^Size:/ {d = $2} /^Installed-Size:/ {i = $2}
+             END {printf "%d %d\n", d + 0, (i + 0) * 1024}'
+}
+
+
+# Prints what Strata needs at run time, one line each: present, or missing
+# (the packages and their sizes are in the table that follows).
+function show_status
+{
+    local state
+    local latex="present"
+    local dvipng="present"
+    local gs="present"
+    local spell="present"
+    local thesaurus="present"
+
+    if ! program_present pdflatex || ! program_present latex ||
+       ! program_present kpsewhich ||
+       [ -n "$(missing_tex_packages)" ]; then
+        latex="missing"
+    fi
+
+    if ! program_present dvipng; then
+        dvipng="missing"
+    fi
+
+    if ! program_present gs; then
+        gs="missing"
+    fi
+
+    if ! program_present aspell && ! program_present hunspell; then
+        spell="missing"
+    fi
+
+    if [ ! -d /usr/share/mythes ] &&
+       [ ! -d "${destdir}${prereq_dir}/usr/share/mythes" ]; then
+        thesaurus="missing"
+    fi
+
+    echo
+    echo "What Strata needs to run:"
+    printf '  %-8s %s\n' "${latex}" \
+           "LaTeX: Print to PDF, Preview and the equations on the screen"
+    printf '  %-8s %s\n' "${dvipng}" \
+           "dvipng: equations, keycaps and pictures in the X11 version"
+    printf '  %-8s %s\n' "${gs}" "ghostscript: pictures in a print"
+    printf '  %-8s %s\n' "${spell}" "spell check: aspell or hunspell"
+    printf '  %-8s %s\n' "${thesaurus}" "thesaurus: Tools, Thesaurus"
+}
+
+
+# Prints the table of what the install would fetch, with the estimated
+# sizes and the totals.
+function show_plan
+{
+    local row
+    local group
+    local name
+    local version
+    local down
+    local inst
+    local total_down=0
+    local total_inst=0
+    local label
+
+    show_status
+    echo
+
+    echo "Packages that apt would install"
+
+    echo "(sizes are estimates from the package index)"
+    echo
+    printf '%-30s %-14s %10s %10s  %s\n' PACKAGE VERSION DOWNLOAD \
+           INSTALLED "NEEDED FOR"
+
+    for row in "${plan_rows[@]}"; do
+        IFS=$'\t' read -r group name version down inst <<<"${row}"
+
+        case "${group}" in
+            latex) label="LaTeX, fonts" ;;
+            *) label="${group}" ;;
+        esac
+
+        printf '%-30s %-14s %10s %10s  %s\n' "${name:0:30}" \
+               "${version:0:14}" "$(human_size "${down}")" \
+               "$(human_size "${inst}")" "${label}"
+        total_down=$((total_down + down))
+        total_inst=$((total_inst + inst))
+    done
+
+    printf '%-30s %-14s %10s %10s\n' "TOTAL, ${#plan_rows[@]} packages" "" \
+           "$(human_size "${total_down}")" "$(human_size "${total_inst}")"
+    echo
+
+    plan_total_down="${total_down}"
+}
+
+
+# Prints the warning about the optional programs that are missing, as the
+# last block of the run: one entry for each package with what is lost without
+# it, and the command that an administrator runs.  It is printed on the error
+# output, without the name of the script in front of each line, and only when
+# something was recorded by report.
+function final_warning
+{
+    local item
+    local name
+    local package
+    local what
+    local order=()
+    local -A lost=()
+    local all=()
+
+    [ ${#late_items[@]} -gt 0 ] || return 0
+
+    for item in "${late_items[@]}"; do
+        IFS='|' read -r name package what <<<"${item}"
+
+        if [ -z "${lost[${package}]+x}" ]; then
+            order+=("${package}")
+            lost["${package}"]="${what}"
+        elif [[ "; ${lost[${package}]}; " != *"; ${what}; "* ]]; then
+            lost["${package}"]+="; ${what}"
+        fi
+    done
+
+    {
+        echo
+        echo "Optional programs are missing:"
+
+        for package in "${order[@]}"; do
+            all+=("${package}")
+            echo "  ${package}"
+            echo "${lost[${package}]}" | fold -s -w 68 |
+                sed -e 's/ *$//' -e 's/^/      /'
+        done
+
+        echo
+        echo "Strata runs without them.  Each feature that needs one reports"
+        echo "that it is missing when the feature is used."
+
+        if have_program apt-get; then
+            echo "An administrator installs them with:"
+            echo "    sudo apt-get install --no-install-recommends ${all[*]}"
+        else
+            echo "Install the packages listed above with the package manager"
+            echo "of this system."
+        fi
+    } >&2
+}
+
+
+# The install of an ordinary user: a missing optional program never stops the
+# install.  The missing programs were recorded by the check, and the warning
+# at the end of the run lists them.  With --list-prereqs the state is shown
+# at once and the script stops with status 0.  Returns when the install is to
+# go on.
+function check_user_prereqs
+{
+    local pkgs=()
+    local pkg
+
+    if [ "${list_only}" != "yes" ]; then
+        final_warn="yes"
+
+        return 0
+    fi
+
+    while IFS= read -r pkg; do
+        pkgs+=("${pkg}")
+    done < <(missing_packages)
+
+    plan_asked=${#pkgs[@]}
+
+    if [ "${quiet}" != "yes" ] || [ ${#pkgs[@]} -ne 0 ]; then
+        show_status
+        echo
+    fi
+
+    if [ ${#pkgs[@]} -eq 0 ]; then
+        note "Nothing is missing: every program that Strata can use is there."
+
+        exit 0
+    fi
+
+    warn "${#pkgs[@]} package(s) that Strata can use are missing:" \
+         "${pkgs[*]}"
+    note "An ordinary user's install is made all the same, and the missing" \
+         "programs are listed at its end; an administrator's install asks," \
+         "and then installs the packages."
+
+    if have_program apt-get; then
+        warn "An administrator installs the programs with:"
+        warn "    sudo apt-get install --no-install-recommends ${pkgs[*]}"
+    else
+        warn "Install the packages listed above with the package manager" \
+             "of this system."
+    fi
+
+    exit 0
+}
+
+
+# Works out what --with-prereqs would fetch, shows it with the estimated
+# sizes, and the question is asked before anything is downloaded.  A no stops
+# the whole run with status 3 and a missing terminal without --yes with
+# status 4: in both cases nothing has been downloaded or installed.  With
+# --list-prereqs only the list is shown, and the run stops.
+function plan_prereqs
+{
+    local pkgs=()
+    local group
+    local gpk
+    local pkg
+    local closure
+    local name
+    local version
+    local sizes
+    local answer
+
+    plan_rows=()
+    plan_names=()
+    plan_asked=0
+    plan_ok="yes"
+
+    if [ -n "${destdir}" ]; then
+        [ "${with_prereqs_asked}" != "yes" ] ||
+            die "--with-prereqs cannot be used with --destdir: the tree is" \
+                "made for the final place of the prefix."
+
+        note "The programs that Strata needs are not installed into a" \
+             "--destdir tree: install them on the system that runs Strata."
+        with_prereqs="no"
+
+        return 0
+    fi
+
+    if ! system_mode; then
+        check_user_prereqs
+
+        return 0
+    fi
+
+    for pkg in apt-get apt-cache dpkg-deb; do
+        if ! have_program "${pkg}"; then
+            [ "${with_prereqs_asked}" != "yes" ] ||
+                die "--with-prereqs needs ${pkg}: this is not a system" \
+                    "with apt, so install the programs of the check with" \
+                    "its own package manager."
+
+            note "this is not a system with apt (${pkg} is missing): the" \
+                 "programs that Strata can use, listed at the end of the" \
+                 "install, must be installed with the package manager of" \
+                 "this system."
+            final_warn="yes"
+            with_prereqs="no"
+
+            return 0
+        fi
+    done
+
+    while IFS= read -r pkg; do
+        pkgs+=("${pkg}")
+    done < <(missing_packages)
+
+    plan_asked=${#pkgs[@]}
+
+    if [ ${#pkgs[@]} -eq 0 ]; then
+        if [ "${quiet}" != "yes" ]; then
+            show_status
+            echo
+        fi
+
+        note "Nothing is missing: no program is installed."
+
+        [ "${list_only}" != "yes" ] || exit 0
+
+        return 0
+    fi
+
+    for group in latex dvipng ghostscript spelling; do
+        gpk=()
+
+        for pkg in "${pkgs[@]}"; do
+            if [ "$(package_group "${pkg}")" = "${group}" ]; then
+                gpk+=("${pkg}")
+            fi
+        done
+
+        [ ${#gpk[@]} -gt 0 ] || continue
+
+        if ! closure="$(apt_closure "${gpk[@]}")"; then
+            closure=""
+        fi
+
+        while read -r name version; do
+            [ -n "${name}" ] || continue
+
+            if in_list "${name}" "${plan_names[@]+"${plan_names[@]}"}"; then
+                continue
+            fi
+
+            sizes="$(package_sizes "${name}" "${version}")"
+            plan_names+=("${name}")
+            plan_rows+=("${group}"$'\t'"${name}"$'\t'"${version}"$'\t'\
+"${sizes% *}"$'\t'"${sizes#* }")
+        done <<<"${closure}"
+    done
+
+    if [ ${#plan_names[@]} -eq 0 ]; then
+        warn "apt could not work out what to fetch for ${pkgs[*]}; is the" \
+             "list of packages known (apt-get update needs an" \
+             "administrator)?"
+        plan_ok="no"
+
+        [ "${list_only}" != "yes" ] || exit 1
+
+        return 0
+    fi
+
+    if [ "${assume_yes}" != "yes" ] || [ "${quiet}" != "yes" ] ||
+       [ "${list_only}" = "yes" ]; then
+        show_plan
+    else
+        plan_total_down=0
+    fi
+
+    if [ "${list_only}" = "yes" ]; then
+        exit 0
+    fi
+
+    if [ "${dry_run}" = "yes" ]; then
+        return 0
+    fi
+
+    if [ "${assume_yes}" = "yes" ]; then
+        note "Installing ${#plan_names[@]} packages (--yes: not asking)."
+
+        return 0
+    fi
+
+    if [ ! -t 0 ]; then
+        warn "the install needs an answer and there is no terminal: run" \
+             "again with --yes to install the packages listed above." \
+             "Nothing was installed."
+        exit "${status_no_terminal}"
+    fi
+
+    printf 'Install these packages? [y/N] '
+
+    answer=""
+    read -r answer || answer=""
+
+    case "${answer}" in
+        y|Y) ;;
+        *)
+            warn "declined: nothing was installed." \
+                 "Run again with --no-prereqs to install Strata alone."
+            final_warning
+            exit "${status_declined}"
+            ;;
+    esac
+}
+
+
+# True when the output of apt in the file ${1} shows the symptom of an old
+# package index: the mirrors no longer have versions that the index names.
+function stale_index_symptom
+{
+    local symptom='Failed to fetch|404[[:space:]]+Not Found'
+
+    symptom="${symptom}|Unable to fetch some archives"
+    grep -q -E "${symptom}" -- "${1}"
+}
+
+
+# Runs the command ${2...} and keeps what it printed (the error stream too)
+# in the file ${1}, while it is shown as it comes.  The status is that of the
+# command.
+function run_apt_logged
+{
+    local log="${1}"
+
+    shift
+    "${@}" 2>&1 | tee -- "${log}"
+
+    return "${PIPESTATUS[0]}"
+}
+
+
+# Says what to do by hand after the install failed because the package index
+# is old.
+function stale_index_by_hand
+{
+    warn "the package index of this system is old: the mirrors no longer" \
+         "have some of the package versions that it names."
+    warn "Run these commands, one after the other:"
+    warn "    sudo apt-get update"
+    warn "    sudo apt-get install --no-install-recommends ${*}"
+}
+
+
+# As an administrator, after apt-get install failed with the symptom of an
+# old index: offers to run apt-get update and to try the install once more
+# (with --fix-missing).  --yes runs the update without asking.  Returns 0
+# when the install worked the second time.
+function retry_after_update
+{
+    local answer=""
+    local log="${scratch}/apt-install-2.log"
+
+    if [ "${assume_yes}" != "yes" ]; then
+        local ask="The package index of this system is old: the mirrors no"
+
+        ask="${ask} longer have some of the package versions that it names."
+        printf '%s  Run apt-get update and try again? [y/N] ' "${ask}"
+        read -r answer || answer=""
+
+        case "${answer}" in
+            y|Y) ;;
+            *)
+                stale_index_by_hand "${@}"
+
+                return 1
+                ;;
+        esac
+    fi
+
+    note "Running apt-get update."
+
+    if ! apt-get -q update; then
+        warn "apt-get update failed: is there a network?"
+
+        return 1
+    fi
+
+    note "Trying the install again."
+
+    if run_apt_logged "${log}" apt-get install -y --no-install-recommends \
+                      --fix-missing "${@}"; then
+        return 0
+    fi
+
+    if stale_index_symptom "${log}"; then
+        warn "the install failed again after the package index was" \
+             "updated: a mirror may be out of step; try again later, or" \
+             "install the packages by hand:"
+        warn "    sudo apt-get install --no-install-recommends ${*}"
+    else
+        warn "apt-get install failed."
+    fi
+
+    return 1
+}
+
+
+# Installs the programs that are missing with apt.  Only an administrator
+# gets here with something to install: for an ordinary user the missing
+# programs are listed at the end of the install (see final_warning).
+function fetch_prereqs
+{
+    local all=("${plan_names[@]+"${plan_names[@]}"}")
+
+    if [ "${plan_ok}" != "yes" ]; then
+        return 1
+    fi
+
+    if [ ${#all[@]} -eq 0 ] || ! system_mode; then
+        return 0
+    fi
+
+    note "Installing ${#all[@]} packages with apt."
+
+    if [ "${dry_run}" = "yes" ]; then
+        note "would install ${#all[@]} packages: ${all[*]}"
+
+        return 0
+    fi
+
+    make_scratch
+
+    if ! run_apt_logged "${scratch}/apt-install-1.log" \
+                        apt-get install -y --no-install-recommends \
+                        "${all[@]}"; then
+        if ! stale_index_symptom "${scratch}/apt-install-1.log"; then
+            warn "apt-get install failed."
+
+            return 1
+        fi
+
+        retry_after_update "${all[@]}" || return 1
+    fi
+
+    note "Installed ${#all[@]} packages (${plan_asked} asked for)."
+
+    return 0
+}
+
+
+# Removes what the manifest of an install lists, files first, then the
+# directories that the install made, deepest first, and only when empty.
+function do_uninstall
+{
+    local manifest="${destdir}${prefix}/share/strata/manifest"
+    local kind
+    local path
+    local dirs=()
+    local count=0
+
+    [ -r "${manifest}" ] ||
+        die "no manifest at ${manifest}: nothing to remove."
+
+    while read -r kind path; do
+        case "${kind}" in
+            f)
+                if [ "${dry_run}" = "yes" ]; then
+                    note "would remove ${path}"
+                else
+                    rm -f -- "${destdir}${path}"
+                fi
+
+                count=$((count + 1))
+                ;;
+            t)
+                if [ "${dry_run}" = "yes" ]; then
+                    note "would remove the tree ${path}"
+                else
+                    rm -rf -- "${destdir}${path}"
+                fi
+
+                count=$((count + 1))
+                ;;
+            d)
+                dirs=("${path}" "${dirs[@]+"${dirs[@]}"}")
+                ;;
+        esac
+    done <"${manifest}"
+
+    for path in "${dirs[@]+"${dirs[@]}"}"; do
+        if [ "${dry_run}" = "yes" ]; then
+            note "would remove the directory ${path} if it is empty"
+        elif [ -d "${destdir}${path}" ]; then
+            rmdir -- "${destdir}${path}" 2>/dev/null ||
+                note "kept ${path}: it is not empty."
+        fi
+    done
+
+    note "Removed ${count} files."
+}
+
+
+# Makes a release directory for a developer: the script and, in the
+# directory payload, the files that an install from the build directory
+# makes, without the manifest and the launcher.  The release directory is
+# what is delivered: it holds no build script and no source.
+function do_make_release
+{
+    local out="${release_dir}"
+    local stage
+
+    [ -n "${out}" ] || die "--make-release needs a directory."
+    [ -n "${build_dir}" ] || die "--make-release needs --build-dir."
+
+    make_scratch
+    stage="${scratch}/stage"
+    mkdir -p -- "${stage}"
+
+    "${BASH_SOURCE[0]}" --build-dir "${build_dir}" --destdir "${stage}" \
+        --prefix /release --no-prereqs --quiet
+
+    rm -f -- "${stage}/release/share/strata/manifest" \
+        "${stage}/release/bin/strata-run"
+
+    mkdir -p -- "${out}"
+    rm -rf -- "${out}/payload"
+    cp -a -- "${stage}/release" "${out}/payload"
+    install -m 755 -- "${BASH_SOURCE[0]}" "${out}/strata-install"
+    note "Made the release directory ${out}."
+}
+
+
+# Reads the options of the command line.
+
+while [ ${#} -gt 0 ]; do
+    case "${1}" in
+        --prefix)
+            [ ${#} -ge 2 ] || die "--prefix needs a directory."
+            prefix="${2}"
+            prefix_given="yes"
+            shift 2
+            ;;
+        --prefix=*)
+            prefix="${1#--prefix=}"
+            prefix_given="yes"
+            shift
+            ;;
+        --destdir)
+            [ ${#} -ge 2 ] || die "--destdir needs a directory."
+            destdir="${2}"
+            shift 2
+            ;;
+        --destdir=*)
+            destdir="${1#--destdir=}"
+            shift
+            ;;
+        --build-dir)
+            [ ${#} -ge 2 ] || die "--build-dir needs a directory."
+            build_dir="${2}"
+            shift 2
+            ;;
+        --build-dir=*)
+            build_dir="${1#--build-dir=}"
+            shift
+            ;;
+        --payload)
+            [ ${#} -ge 2 ] || die "--payload needs a directory."
+            payload_dir="${2}"
+            shift 2
+            ;;
+        --payload=*)
+            payload_dir="${1#--payload=}"
+            shift
+            ;;
+        --make-release)
+            [ ${#} -ge 2 ] || die "--make-release needs a directory."
+            release_dir="${2}"
+            mode="make-release"
+            shift 2
+            ;;
+        --uninstall)
+            mode="uninstall"
+            shift
+            ;;
+        --check)
+            mode="check"
+            shift
+            ;;
+        --with-prereqs)
+            with_prereqs="yes"
+            with_prereqs_asked="yes"
+            shift
+            ;;
+        --no-prereqs)
+            with_prereqs="no"
+            with_prereqs_asked="no"
+            shift
+            ;;
+        -y|--yes)
+            assume_yes="yes"
+            shift
+            ;;
+        --list-prereqs)
+            mode="list-prereqs"
+            shift
+            ;;
+        --dry-run)
+            dry_run="yes"
+            shift
+            ;;
+        --quiet)
+            quiet="yes"
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            die "unknown option ${1}; try --help."
+            ;;
+    esac
+done
+
+# A delivered release has the files to install in a directory named payload
+# next to this script.  It is used unless a payload directory or a build
+# directory was given.
+if [ -z "${payload_dir}" ] && [ -z "${build_dir}" ] &&
+   [ -d "${script_dir}/payload" ]; then
+    payload_dir="${script_dir}/payload"
+fi
+
+# An ordinary user installs into the home directory unless a prefix or a
+# destination root was given; an administrator installs under /usr.
+if [ "${prefix_given}" = "no" ] && [ -z "${destdir}" ] &&
+   [ "$(id -u)" != "0" ]; then
+    [ -n "${HOME:-}" ] ||
+        die "HOME is not set: use --prefix to say where to install."
+
+    prefix="${HOME}/usr"
+fi
+
+# The prefix must be an absolute path, and the destination root too.
+case "${prefix}" in
+    /*) ;;
+    *) die "the prefix must be an absolute path: ${prefix}" ;;
+esac
+
+if [ -n "${destdir}" ]; then
+    case "${destdir}" in
+        /*) ;;
+        *) die "the destdir must be an absolute path: ${destdir}" ;;
+    esac
+fi
+
+# A prefix with a trailing slash would put a double slash into the manifest.
+prefix="${prefix%/}"
+[ -n "${prefix}" ] || die "the prefix must not be the root directory."
+
+prereq_dir="${prefix}/lib/strata/prereq"
+
+trap cleanup EXIT
+
+case "${mode}" in
+    install)
+        if [ "${dry_run}" != "yes" ]; then
+            check_privilege
+        fi
+
+        do_install
+        ;;
+    uninstall)
+        if [ "${dry_run}" != "yes" ]; then
+            check_privilege
+        fi
+
+        do_uninstall
+        ;;
+    make-release)
+        do_make_release
+        ;;
+    check) run_check ;;
+    list-prereqs)
+        list_only="yes"
+        with_prereqs_asked="yes"
+        plan_prereqs
+        ;;
+esac

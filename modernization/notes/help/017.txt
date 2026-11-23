@@ -1,0 +1,25 @@
+
+--------------------------- File Conversion Utilities --------------------------
+
+The File Conversion Utilities are accessed from the Document Manager and 
+convert files between Manuscript file format and other file formats.
+
+  +------------------------ File Conversion Utilities -----------------------+
+  |                                                                          |
+  |                        DCA (Revisable) File Import                       |
+  |                        DCA (Revisable) File Export                       |
+  |                        ThinkTank File Import                             |
+  |                        Datacopy Image File Import                        |
+  |                        Microtek Image File Import                        |
+  |                        HP ScanJet Image File Import (TIFF)               |
+  |                        DEST Image File Import (TIFF)                     |
+  |                        PC Paintbrush File Import                         |
+  |                        MacPaint File Import                              |
+  |                        Manuscript Document Downgrade                     |
+  |                        Manuscript Local Format Reset                     |
+  |                                                                          |
+  +----------------------- Press Ins to Select Action -----------------------+
+
+To import or export ASCII files, use the Menu (F10) File commands in the editor.
+--------------------------------------------------------------------------------
+  Document Manager      File Commands       Keyboard Summary       Help Index

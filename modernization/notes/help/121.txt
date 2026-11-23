@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+-- Invalid section number --
+
+The section number entered is not valid.  Enter the internal decimal number for
+the referenced section, as displayed in the Sect prompt of the Status line.
+
+-- Invalid section number range --
+
+The section range specified on the Print, Preview, or Compare Document panel
+is incorrect. Make sure the first number is less than the second and that the 
+sections exist. Reenter the sections to print and retry the operation.
+
+-- Invalid section range -- 
+
+You cannot change the document name on the print formatter panel after using
+the Menu Print Preview Section command in the editor. 
+
+-- Invalid Setup information in value file (MS.VAL) -- 
+
+The setup information in your MS.VAL file is not valid.  Rerun Setup from the
+Document Manager.  If you continue to get this message, delete the MS.VAL file
+from your Manuscript directory and then run Setup to reconfigure Manuscript.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

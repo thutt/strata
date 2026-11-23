@@ -1,0 +1,25 @@
+
+--------------------------- Window Zoom-up/Zoom-down ---------------------------
+
+Use Menu (F10) Edit Window Zoom-up to temporarily display only the current 
+window; Window Zoom-down displays both windows.           Accelerator:   Ctrl Z
+
+  # View of the screen before               # View of the screen after
+    using Window Zoom-up.                     using Window Zoom-up.
+
+    ..........................                ..........................
+    .^^^^^^^^^^^^^^^^^^^^^^^^^                .^^^^^^^^^^^^^^^^^^^^^^^^^
+    . 3.4 Management Position                 .+ Schedule of Events in t
+    .                                         . + Permissions and licens
+    .     The initial reaction                .  - On-site drilling lic#
+    .     merger proposal was                 .  - Off-site drilling lic
+    ._________________________                .  - Water permits
+    .+ Schedule of Events in t                . + Preliminary Time-Line
+    . + Permissions and licens                .  + Engineers to estimate
+    .  - On-site drilling lic#                .   - Drilling requirement
+
+Window Zoom-up temporarily hides the second window from view. Use Window Close 
+to close a window.
+
+--------------------------------------------------------------------------------
+  Accelerators     Window     Window Close     Keyboard Summary     Help Index

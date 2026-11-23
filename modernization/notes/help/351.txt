@@ -1,0 +1,25 @@
+
+-------------------------------- Document Printer ------------------------------
+
+Select the printer to use as the document printer.  Use this option to define 
+specific typefaces for a document independent of the printers defined in Setup.
+
+# Selecting a printer from the Printer prompt on the Typeface List panel 
+  replaces your current typeface list with the default typeface list for the
+  printer you select.  Any changes you have made to the current typeface list
+  are lost.
+
+# To set the document printer to match the Setup printer, select Primary or
+  Secondary from the list of choices at the Printer prompt on the Typeface List
+  panel.
+
+# If the document printer is different from the Setup printer (either the 
+  primary or secondary), you will receive a message when you final print asking
+  you to specify either the Setup printer or the document printer to use
+  for final printing.  Select the printer that matches the actual printer that
+  is connected to your system.  If you select the Setup printer, the document's
+  typeface list will be replicated as closely as possible for the Setup printer.
+
+
+--------------------------------------------------------------------------------
+    Typeface List          Setup         Keyboard Summary         Help Index

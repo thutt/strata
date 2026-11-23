@@ -1,0 +1,1907 @@
+MANUAL CHECK LEDGER, CHAPTERS 1 AND 2 (the part ch01-02)
+
+This ledger follows docs/MANUAL-CHECK-LEDGER-README.txt, which says what
+a ledger line is and what the notation of the state means.
+
+One line per section of chapter 1 (A View of Strata) and chapter 2 (File).
+Columns: source file | label | level | heading | state | how the facts were
+checked | what was wrong or changed.
+
+How deep: every section was READ in full, in the source.  The facts of the
+sections were checked against the program by the means named on each line:
+the compare tables came from scripts (the keys against docs/KEY-MAP.txt, the
+menu entries and hints against the output of stred --dump-menus and the MI
+tables of src/ui.c, the templates against tests/mktemplates.py) and by grep of
+the message texts, field labels and limits in src.  A statement of behavior
+that has no message, label or limit to compare (for example how a cursor moves
+after a Retrieve, or the order of the steps of Save) was read and not run: the
+program was built but those behaviors were not driven by keys in this pass.
+That is the limit of this ledger.
+Driven in the second round: the revision arithmetic, Autosave, the
+recovery of a damaged file, the checklist, Restore Backup, Retrieve &
+Insert, Export a LaTeX File and its typesetting, strprint options, the
+Viewer under Xvfb, the help viewer.  Driven in the third round: the same
+File commands and screens in the X11 Editor under Xvfb (status line,
+Ctrl-S, the Save, Retrieve, New, Delete, Import and Export panels, Ctrl-^,
+the unit list, the F12 bar, F1 help, the Marker grid, the Go To list and
+the key labels that follow Alt); Check Validity set to Yes with a fake
+latex that fails (the message and the box) and with the real latex (LaTeX
+accepts it); a checklist of a directory of 600 files (FAULT: the 500 are
+the first that the file system gives, not the first by name; the text now
+says so); strprint --keep, --draft, --double-spaced, --long-list,
+--progress and --docdir (--double-spaced doubled the spacing of a letter
+and left the plan sample unchanged; --draft ran, its effect needs a
+comment marker that no sample has); the Setup panel of the Document
+Manager (labels, defaults, the question when Backups Kept is lowered, the
+keys backups, autosave, autosave_seconds and workdir of the config file;
+FAULT: the field is called Initial Working Directory).
+Not driven: the effect of --draft (no sample holds a Comment marker),
+and the panels of Setup that chapter 2 does not describe.  Appendix A
+agrees with the observed behavior of the options above.
+Pages read at 110 dpi: 27, 33, 40, 46, 54, 71, 72, 85, 86, 90, 97, 111, 113.
+
+Sections of the part: 180 (headings of levels 1 to 4 in the ten sources).
+
+view.src | view | h1 | A View of Strata | read
+  checked: read; keys and the F12 menu names compared with docs/KEY-MAP.txt
+    and stred --dump-menus; the program names compared with src/str.c
+  changed: rewritten as reference: intro, map of the chapter as a table,
+    conventions; the editor is the Editor
+view.src | view-conventions | h2 | How this manual is written | read
+  checked: read; keys and the F12 menu names compared with docs/KEY-MAP.txt
+    and stred --dump-menus; the program names compared with src/str.c
+  changed: rewritten as reference: intro, map of the chapter as a table,
+    conventions; the editor is the Editor
+view1.src | view-elements | h2 | The elements of a document | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-text | h3 | What text is | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-block | h3 | What a block is | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-column | h3 | What a column is | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-section | h3 | What a section is | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-levels | h4 | Levels | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-section-shape | h4 | The shape of a section on the screen |
+    read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-modes | h2 | Documents with sections and documents without |
+    read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-make-kind | h3 | Making a document structured or unstructured
+    | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-section-mode | h3 | Editing one section | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-guidelines | h2 | Guidelines for large documents | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-master | h3 | A work with several authors | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-save-habits | h3 | Saving, backup and autosave | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-formatting | h2 | Global and local formats | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-global-formats | h3 | Global format settings | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-local-formats | h3 | Local format settings | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view1.src | view-format-view | h3 | The expanded status line and the ruler
+    show the format | read
+  checked: read; DRIVEN in the terminal Editor (tests/tui.py): Ctrl-^ shows
+    SECTION EDIT and leaves it, F3 offers Text Column Block Section, Alt-F2
+    offers Peer-section and Sub-section, Alt-F5 gives Overtype on and OVR,
+    asterisk before a changed name; menu pop-ups (Append, Split, Join, unit
+    list) compared with src/ui.c; status line fields with src/view.c; autosave
+    and backups with src/ui.c and src/backup.c; Edit menu items with src/ui.c
+  changed: narration removed (you, ease, suggestions); the editor is the
+    Editor; autosave stated as 120 seconds by default
+view2.src | view-screen | h2 | The screen | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-screen-kinds | h3 | The two versions of the screen | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-status | h3 | The status line | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-expanded | h3 | The expanded status line | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-ruler | h3 | The ruler | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-screen-text | h3 | The text area | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-term-screen | h4 | A terminal screen, as text | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-keylabels | h3 | The labels of the function keys | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-message | h3 | The message line | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-cursor | h3 | The cursor | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-panels | h2 | Panels, menus and prompts | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-list | h3 | Lists of choices | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-prompt | h3 | Prompts | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-form | h3 | Panels | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-form-keys | h4 | The keys of a panel | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-checklist | h4 | Checklists | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-grid | h3 | The Marker Commands grid | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-question | h3 | Questions and message boxes | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-pager | h3 | The pager | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-menubar-short | h3 | The menu bar | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-highlight | h3 | Highlighting an area | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view2.src | view-help-viewer | h3 | The Help | read
+  checked: read; DRIVEN: status line fields, the two rows of key labels, F12
+    menu top row and hint row, F1 opens HELP; messages, labels and defaults
+    compared with src/view.c, src/ui.c and src/widgets.c; the labels of the
+    function keys with src/view.c; the ruler setting with src/editor.c
+  changed: FAULT: Ctrl-F10 and Ctrl-F11 have the labels Undo and Redo, the
+    manual said no label; the Attr values Super and Sub added; the ruler is
+    not optional
+view3.src | view-keys | h2 | The keys | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-typing | h3 | Typing text | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-moving | h3 | Moving the cursor | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-outline-keys | h3 | The outline: showing and hiding | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-sbc | h3 | Sections, blocks and columns | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-copykeys | h3 | Highlight, copy, cut, paste | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-attrkeys | h3 | Attributes and formats | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-undo-keys | h3 | Undo and Redo | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-miscellaneous | h3 | Search, replace, markers, files | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-ctrlf | h3 | The Ctrl-F menu | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-terminal-keys | h3 | Alternative keys for terminals | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-fkeys | h2 | The function keys | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-menu | h2 | The F12 menu | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-menu-entries | h3 | The menus entry by entry | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-quit | h3 | Quit | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-accel | h2 | Accelerators | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-markers | h2 | Markers in brief | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-marker-use | h3 | Inserting and changing a marker | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-marker-list | h3 | The markers | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view3.src | view-marker-look | h3 | How a marker looks on the screen | read
+  checked: read; DRIVEN: Go To list (5 entries), Edit menu row of a multi-
+    section document (Title Section Window), Alt-F1 not available, Ctrl-G
+    message, Ctrl-F9 and Ctrl-F10 messages, Alt-F12 grid with LaTeX; every key
+    row compared with docs/KEY-MAP.txt by a script; every menu entry and hint
+    compared with stred --dump-menus and src/ui.c; the markers with
+    src/marker.c
+  changed: FAULTS: keys missing (Undo, Redo, Case, Math, Border, print errors,
+    Ctrl-G, Alt-=, no-break space, soft hyphen); the menu table lacked 8
+    entries and had 7 hint texts that differ from the program; 35 markers, not
+    34 (the LaTeX marker was missing); the function key table lacked 12 keys
+view4.src | view-tools | h2 | The programs and the Help | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-stred | h3 | The Editor | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-str | h3 | The Document Manager | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-docmgr-inside | h4 | The small Document Manager of the Editor
+    | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-strprint | h3 | The Printer | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-dviview | h3 | The Viewer | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-keycaps | h3 | Keycaps | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-help | h3 | Help | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+view4.src | view-help-file | h4 | Finding the help file | read
+  checked: read; DRIVEN: strprint with no arguments (usage, status 2), with a
+    missing document (cannot open file, status 1), with an unknown option
+    (status 2), -o, --dvi, --tex-only, --pdf-via-dvi with --dvi (status 2);
+    dviview under Xvfb on a DVI of strprint (title is the file name, status
+    bar Page 1 of 4 Zoom 100%, the line of keys, + zooms, Q closes, screens
+    read); the Document Manager menu (7 entries) in str; F1 opens HELP: Edit
+    Screen, Z and Q in the help; the entries of the Document Manager compared
+    with src/str.c; the options with src/main.c; the messages with
+    src/preview.c and src/widgets.c
+  changed: FAULT: the Document Manager table had 4 of 7 entries; the developer
+    option tables replaced by pointers to Appendix A (said once); the keycap
+    fallback described
+file.src | file | h1 | File | read
+  checked: read; names of panels and the menu hints compared with
+    src/filemenu.c
+  changed: narration removed; the Document Manager reference made a cross
+    reference
+file.src | file-organization | h2 | How the chapter is organized | read
+  checked: read; names of panels and the menu hints compared with
+    src/filemenu.c
+  changed: narration removed; the Document Manager reference made a cross
+    reference
+file0.src | file-types | h2 | File types | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-types-doc | h3 | Document files | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-types-set | h3 | Template files | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-types-bak | h3 | Backup files | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-workdir | h2 | Working directory | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-workdir-rules | h3 | How it begins and how it changes | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-workdir-docmgr | h3 | Working directory and the Document
+    Manager | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names | h2 | File names | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-ext | h3 | Extensions that the commands add | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-case | h3 | Case of letters | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-long | h3 | Long names and backups | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-utf8 | h3 | Letters outside the English alphabet | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-shown | h3 | How a long name is shown | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-signs | h3 | Names that look like commands | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-names-path | h3 | Directories in a name | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-checklist | h2 | Directory and file checklists | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-checklist-ask | h3 | How to ask for a checklist | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-checklist-lists | h3 | What the lists show | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-checklist-filters | h3 | Which files each panel shows | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-checklist-keys | h3 | Keys in a checklist | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-panels | h2 | The File panels: keys and rules | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-panels-move | h3 | Moving and accepting | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-panels-text | h3 | A text field | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-panels-choice | h3 | A field with choices | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-panels-check | h3 | Panels that refuse a value | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file0.src | file-panels-yn | h3 | Questions and messages | read
+  checked: read; filters, limits (511, 500, 255), messages and titles compared
+    with src/filemenu.c, src/widgets.c, src/fileops.c and src/backup.c
+  changed: second person removed; Bksp written Backspace
+file1.src | file-templates | h2 | Templates | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-templates-create | h3 | Making a template file | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-templates-use | h3 | Starting a document from a template |
+    read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-templates-path | h3 | Where the templates are looked for |
+    read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-backup | h2 | Backup files | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-backup-folder | h3 | The directory .backup | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-backup-option | h3 | Choosing how many backups are kept |
+    read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-backup-when | h3 | When a backup is made | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-backup-use | h3 | Using a backup | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-backup-autosave | h3 | Autosave and the files | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-revision | h2 | Revision, description and author | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file1.src | file-revision-rule | h3 | The rule for the revision | read
+  checked: read; DRIVEN: autosave with --autosave-seconds 1 (revision raised
+    by one, the file holds the change, no backup made), backups .bak01 to
+    .bak03 made by Ctrl-S, Restore Backup in the Document Manager (the list
+    shows number, date, size and first words; View the text, Restore this
+    backup, Back; the restore is a swap: the document is the chosen backup,
+    the old document is backup 1, the others move up); field labels, messages
+    and limits compared with src/filemenu.c, src/restoremenu.c, src/str.c,
+    src/config.c and src/backup.c
+  changed: second person removed; the Autosave field label made exact
+file2.src | file-save | h2 | Save | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-panel | h3 | The Save File panel | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-options | h3 | What the Options field writes | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-dar | h3 | Description, Author and Revision | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-result | h3 | The question and the result | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-quick | h3 | Ctrl-S, the quick save | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-cursor-place | h3 | Where the cursor is when a document is
+    opened | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-edges | h3 | Save at the edges | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-diff | h3 | The terminal version and the X11 version |
+    read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-save-see | h3 | See | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve | h2 | Retrieve | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieving | h3 | Ways to open a document | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-panel | h3 | The Retrieve File panel | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-options | h3 | What the Options field takes | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-global | h4 | What Retrieve Global Settings replaces
+    | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-typeface | h4 | What Retrieve Typeface Settings Only
+    replaces | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-after | h3 | What happens after the panel | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-recover | h3 | The part that can be read | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-edges | h3 | Retrieve at the edges | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-use | h3 | Using Retrieve | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file2.src | file-retrieve-see | h3 | See | read
+  checked: read; DRIVEN: revision arithmetic (Ctrl-S changed 1.006 to 1.007,
+    unchanged stays, typed 2.5 written, 1.2345 refused with Not a valid
+    revision number, a changed Description raises it, the panel with nothing
+    changed keeps it), the recovery of a cut-short copy (the box, Y opens it
+    as NAME.recovered.doc, Recovered N blocks), Retrieve & Insert (Retrieved
+    message, document marked changed), the checklist of files (../,
+    directories, files; a letter chooses at once in a short list and fills the
+    Document Name), Export a LaTeX File (Exported message, the file typeset by
+    pdflatex rc 0, comment at the top), Save panel six fields, Ctrl-S message
+    Saved and asterisk gone, backups .bak01 and .bak02, Ctrl-S on an unchanged
+    document writes nothing, Save As, Save Global Settings Only (307 byte
+    .set, name kept), Extract Current Section, the overwrite question, Save
+    onto a backup (question, then refusal), Retrieve question and message,
+    cursor after Retrieve Entire Document (FAULT), Body Only, the six values
+    of Options (FAULT); Save and Retrieve options and messages compared with
+    src/filemenu.c, src/fileops.c, src/backup.c, src/readfile.c and
+    src/recoverui.c
+  changed: FAULT: the edge table said a Save onto a backup is written; the
+    program refuses it with a message, now in the manual; the reason cannot
+    read file added
+file3.src | file-new | h2 | New | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-ways | h3 | Ways to begin a document | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-defaults | h3 | The new document | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-list | h3 | The list of templates | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-shipped | h3 | The templates that come with Strata | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-sample-envelopes | h3 | The sample envelopes | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-sample-story | h3 | The structured sample | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-example | h3 | A letter and an envelope, step by step |
+    read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-samples | h3 | Sample letters | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-panel | h3 | The New File panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-after | h3 | What happens after the panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-edges | h3 | New at the edges | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-new-see | h3 | See | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-delete | h2 | Delete | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-delete-panel | h3 | The Delete File panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-delete-after | h3 | What happens after the panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-delete-edges | h3 | Delete at the edges | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-delete-see | h3 | See | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import | h2 | Import | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import-panel | h3 | The Import ASCII Text File panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import-options | h3 | The Options field | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import-charset | h3 | The Character Set field | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import-where | h3 | Where the text goes | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import-edges | h3 | Import at the edges and messages | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-import-see | h3 | See | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export | h2 | Export | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-panel | h3 | The Export ASCII Text File panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-options | h3 | The Options field | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-scope | h3 | The Scope field | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-charset | h3 | The Character Set field | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-latex | h3 | Export a LaTeX File | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-latex-check | h3 | Checking that LaTeX accepts the
+    file | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-latex-compile | h3 | Making the pages of an exported
+    file | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-latex-pictures | h3 | The pictures of an exported file
+    | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-latex-errors | h3 | Errors, and what an exported file
+    is for | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-after | h3 | After the panel | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-edges | h3 | Export at the edges | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-export-see | h3 | See | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-messages | h2 | Messages of the File commands | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-messages-panel | h3 | Panel refusals | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-messages-fail | h3 | Boxes that report a failure | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-messages-questions | h3 | Questions | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-messages-line | h3 | The message line | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-examples | h2 | Examples | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-examples-saveas | h3 | Saving a document under a new name,
+    keeping the old | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-examples-template | h3 | Making a template and using it |
+    read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-examples-backup | h3 | Getting an older version back | read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-examples-insert | h3 | Adding a standard text to a document |
+    read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed
+file3.src | file-examples-text | h3 | Moving text to and from a text editor |
+    read
+  checked: read; DRIVEN: New list of templates, New panel fields, New document
+    and asterisk, Delete question and Deleted, Import (Ignore Line Endings
+    joins lines), Export Data Only (CR LF, tabs, Exported), Export panel
+    Scope; the envelope table compared with tests/mktemplates.py; Import,
+    Export and Delete texts with src/filemenu.c and src/readfile.c
+  changed: FAULTS: sender position 5, 5 now 7, 7 (14 rows); Import failure
+    texts (cannot open file, cannot read file, read error, directory, device);
+    Gray + was Keypad +; unterminated text record was the program text damaged
+    document...; second person removed

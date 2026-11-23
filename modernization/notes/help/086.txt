@@ -1,0 +1,25 @@
+
+---------------------------------- Edit Title ----------------------------------
+
+Menu (F10) Edit Title displays a document's Title Page Edit panel.
+
+--Procedure---------------------------------------------------------------------
+
+ Press Menu.
+ Select Edit Title.
+ Enter the contents of the title page and press Ins.
+
+--------------------------------------------------------------------------------
+
+# The title page can contain columns and blocks, but not sections.  
+
+# A title page can include graphics, markers, tables, borders, and any other
+  document features available in unstructured documents.
+
+# A title page can be any number of pages; however, a warning message appears 
+  during printing when a title page is longer than one page.
+
+# To design the title page layout, select Menu (F10) Global Page. Press PgUp to
+  display the Title Page Layout panel.
+--------------------------------------------------------------------------------
+     Edit      Global Page      Keyboard Summary      Help Index

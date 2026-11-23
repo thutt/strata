@@ -1,0 +1,25 @@
+
+------------------------------------ Autosort ----------------------------------
+
+Use the Menu (F10) Tools Autosort commands to sort parts of a document in
+alphanumeric order.
+
+Sort the subsections of the section in          Sort the blocks in a table 
+which the cursor is located according           according to the entries in the
+to the first line of the subsections'           column in which the cursor is
+headline blocks (section tags are ignored).     located.
+               +------+                               +-----+
+         +--------------------------------------------------------+
+         |          Section                         Table         |
+         +--------------------------------------------------------+
+--------------------------------------------------------------------------------
+
+# A table is defined as all adjacent blocks with the same number of columns. 
+  Autosort Table can be used to sort all adjacent single column blocks as well 
+  as multicolumn blocks.
+
+# Blocks are sorted in the following order: empty blocks, blocks beginning with
+  spaces, blocks beginning with special characters (such as compose characters),
+  blocks beginning with numbers, and blocks beginning with letters.
+--------------------------------------------------------------------------------
+   Tools       Compose Characters         Keyboard Summary        Help Index

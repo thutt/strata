@@ -1,0 +1,25 @@
+
+------------------------------ Graphics Zoom Option ----------------------------
+
+Use Menu (F10) Zoom in preview to magnify the display of a graphics image to 
+fill the screen.  Graphics zoom is available only in full-page preview.
+
+
+# To zoom an image, position the selector box on the graphics image, 
+  press Menu (F10), and select Zoom.  When one of the dimensions of the image
+  is considerably larger than the other, press Menu and select Zoom again
+  to split the image and magnify both parts.
+
+  If there is more than one graphics image in the selector box, Manuscript 
+  zooms the image closest to the center of the selector box.
+
+  Accelerator:     Ctrl Z
+
+
+# To return to preview, press Menu and select Full-page.
+
+  Accelerator:     Enter
+
+
+--------------------------------------------------------------------------------
+        Preview Menu             Keyboard Summary             Help Index

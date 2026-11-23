@@ -1,0 +1,61 @@
+# Messages of the message line that F1 must answer.
+Found
+Not found: abc
+Nothing to search for: use Search (F9) first
+Highlighting: move the cursor, Enter to accept, Esc to cancel
+Highlight the area with the cursor keys, then press Enter (Esc cancels)
+Use arrow keys to highlight block(s); then press Enter.
+Block selection must stay within one section
+Section selection must be of whole sections
+Only a structured document has sections
+Sections exist only in structured documents
+Collapse/expand works in structured documents
+No section 2.1
+No previous peer section
+Cannot join a section that has subsections
+Cannot take the whole document as a section
+Cannot delete the only section
+The section cannot move left
+A document with several sections cannot be made flat
+The section has no subsections to sort
+Nothing to sort
+Autosort sorts blocks that are highlighted
+Sorted 3 blocks
+Sorted 2 sections
+Saved /tmp/a.doc
+Retrieved /tmp/a.doc
+Imported a.txt
+Imported; 3 characters not kept
+Exported a.txt
+New document
+Deleted
+Deleted x.doc
+Cancelled
+Print: 2 print errors (Ctrl-F8 finds the first)
+Print: no print errors
+Print cancelled
+Print Error removed
+No print errors
+3 print errors removed
+A Print Error cannot be made by hand
+The cursor is not on a Print Error
+There is no current section
+The cursor is not in a block
+PRINT FAILED: Preview shown in spite of errors of the print
+Preview done
+Preview done: 2 pages
+Preview cancelled
+Preview failed: x
+LaTeX failed: x y
+Defining Alt-Q: press Ctrl-F1 to end
+Macro Alt-Q has 4 keystrokes
+Library entry a made
+Not included in the library
+3 library entries made
+Alt-F8: not available
+Ctrl-F2: not available
+Zoom: graphics preview is not implemented
+Marker type 9 cannot be edited
+Hanging indent set at 4
+Type the hanging characters first, then press Ctrl-H
+3 replacements

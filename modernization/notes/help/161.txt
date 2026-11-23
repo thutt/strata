@@ -1,0 +1,25 @@
+
+--------------------- Printing Selected Areas of a Document --------------------
+
+
+For structured documents, the Print prompt specifies which blocks of the 
+document will print. The Print prompt is on the Global Format and Current 
+Section Format panels.
+
+
+
+Headlines and Text:  Prints all blocks in the sections.
+
+
+Only Headlines:      Prints only the section headline blocks. If you use the
+                     headlines as titles or headings, this is similar to 
+                     printing an outline.           
+
+
+Only Text:           Prints only the section text blocks.
+                      
+
+
+--------------------------------------------------------------------------------
+First Block Type     Global Format     Current Section Format     Print Document
+                  Keyboard Summary               Help Index

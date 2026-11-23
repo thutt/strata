@@ -1,0 +1,151 @@
+MEMORY ERRORS WITH VALGRIND: HOW AND WHAT WAS FOUND
+===================================================
+
+Status: done (task 44).  valgrind memcheck was run on every program of Strata
+and on the unit test programs.  No error of Strata's own code was found: no
+invalid read or write, no use of an uninitialised value, no double free and no
+definite leak in a program that runs a command.  The only reports are leaks
+of the X11 libraries, which the program holds until it ends (below).
+
+1. HOW VALGRIND WAS BUILT (no sudo, no apt)
+-------------------------------------------
+
+  The session may not install packages, so the tool was built from the source
+  inside the scratchpad, with a prefix there:
+
+    curl -O https://sourceware.org/pub/valgrind/valgrind-3.28.0.tar.bz2
+    tar -xjf valgrind-3.28.0.tar.bz2
+    cd valgrind-3.28.0
+    ./configure --prefix=$S/vg-prefix       (S is the scratchpad)
+    make -j6 ; make install
+    $S/vg-prefix/bin/valgrind --version      valgrind-3.28.0
+
+  gcc, make and the C library headers were enough; nothing was missing.
+  heaptrack was NOT built: it needs cmake, which this machine does not have
+  (cmake: command not found), and its other dependencies (boost, libunwind,
+  elfutils, zstd headers) are not there either.  It was skipped.
+
+2. THE COMMANDS
+---------------
+
+    VALGRIND=$S/vg-prefix/bin/valgrind STRATA_BUILD_DIR=$S/b44/debug \
+        python3 -I -B tests/vgrun.py --log LOGDIR [--only WORD] [--dry]
+
+  The build is the debug build (-O0 -g, so that a report has line numbers).
+  tests/vgrun.py is a benchmark and is not in the smoke runner.  Every
+  scenario runs under
+
+    valgrind --error-exitcode=9 --leak-check=full --track-origins=yes \
+        --num-callers=16 --suppressions=tests/vg.supp --log-file=...
+
+  The Editor and the Document Manager are driven by tests/tui.py (a pty); the
+  variable STRATA_WRAP, read by tests/tui.py only, puts the valgrind words in
+  front of the program, so nothing in the product changed.  The keys go in
+  0.4 seconds apart and the scenario waits 15 seconds at its end, for the
+  slow program.  The Document Manager runs with --trace-children=yes (it starts
+  the Editor).  The Printer, the Viewer and the unit programs are started
+  directly.  The Viewer and the window Editor run on a private Xvfb display.
+  The process of a scenario ends by SIGTERM when it has no end of its own;
+  valgrind then prints its leak summary all the same.
+
+  The table counts as errors what memcheck counts: invalid accesses, uses of
+  uninitialised values, and every leak record that it reports as definite or
+  possible.  definitely and possibly are the bytes.
+
+3. WHAT THE SCENARIOS DO
+------------------------
+
+  Editor, terminal (tests/tui.py, 21): typing and deleting; search; replace;
+  block copy, cut, move and paste; undo and redo and Case; the Marker
+  Commands grid with an entry of each of the 39 markers made with Ins and left
+  with Esc (five scenarios); a document that holds markers of many kinds;
+  tables and the Append and Join menus; borders and Set Attr; a document with
+  pictures; Edit, Structured and Unstructured; Save three times; the Print
+  and Draft panels; the spell check panel; the thesaurus; the F12 menus and
+  the Global Format panels (all fourteen); Help.
+  Document Manager (6): the list, Edit with a name (it starts the Editor and
+  saves and quits), Restore Backup, Compare Document Versions, Maintain
+  Dictionaries, the Setup pages.
+  Printer (68): every document of samples/letters, samples/envelopes and
+  samples/story and a generated document of 100 pages, each with --tex-only
+  and with the PDF made (pdflatex is a child and runs outside valgrind).
+  Viewer (1): a DVI file made by the Printer (the Viewer shows DVI files, not
+  PDF), with Next, Prior, plus and minus keys.
+  Window Editor (1): ctrl+End, ctrl+Home, F9, F12, ctrl+s and typing.
+  Unit programs (18): undotest (with its fuzz test), listtest, edtest, lxtest,
+  condtest, incltest, cmptest, perrtest, searchtest, backuptest, recovertest,
+  loadtest, sptest, calctest, bordertest, pngtest, dicttest, pvtest.
+
+4. THE RESULTS
+--------------
+
+  Before the suppression file (the first run, 21 + 6 + 68 scenarios and the
+  Viewer and the window Editor; the unit programs were added in the second):
+
+    all terminal Editor, Document Manager and Printer scenarios   0 errors
+    viewer-dvi          2 errors     256 bytes definitely lost
+    x11-editor          5 errors  12,544 bytes definitely, 2,808 possibly
+
+  After (the second run, with the suppression file and the unit programs):
+
+    scenarios   errors   definitely lost   possibly lost
+    21 Editor        0                 0               0
+    6 Document Mgr   0                 0               0
+    68 Printer       0                 0               0
+    viewer-dvi       0                 0               0
+    x11-editor       0                 0               0
+    18 unit          0                 0               0
+    total            0                 0               0
+
+  The seven errors of the first run are all leaks that a library made for the
+  life of the program.  The Viewer calls XCreateGC and XLoadQueryFont in main
+  and keeps the graphics context and the font until it ends, which is when the
+  X server frees them.  The window Editor opens its fonts with Xft
+  (term_x11.c open_xft); fontconfig keeps the font patterns, the cache of the
+  files of fonts that expat read, and FreeType the table of its modules (a
+  dlopen).  None of this grows with the use of the program and none of it is
+  a defect of Strata: "Leaks at exit of memory the program owns for its whole
+  life are not defects".  They are in the suppression file.
+
+  That the table can show a defect was checked: a scratch copy of calc.c with
+  a malloc that is lost and a read of an uninitialised int, run with
+  --only unit-calctest, gave 66 errors and 2,214 bytes definitely lost; the
+  copy was taken out again.
+
+5. THE SUPPRESSION FILE tests/vg.supp
+-------------------------------------
+
+  fontconfig-held-until-exit   definite or possible leaks whose stack has a
+                               frame in libfontconfig: patterns and caches of
+                               fonts that Xft and fontconfig keep until exit.
+  libc-dlopen-mappings         _dl_find_object_update: the table of the
+                               mappings of the objects that dlopen loaded
+                               (FreeType loads its modules).
+  freetype-held-until-exit     leaks with a frame in libfreetype.
+  libx11-held-until-exit       leaks with a frame in libX11: graphics contexts,
+                               font structures and connection data that a
+                               client keeps for its life.
+  libxcb-held-until-exit       the same for libxcb.
+  Each entry has the comment in the file.  Every entry is for a leak (the
+  kind Memcheck:Leak) of a library; nothing that is an invalid access or an
+  uninitialised value is suppressed.
+
+6. WHAT WAS NOT COVERED
+-----------------------
+
+  - heaptrack (no cmake).
+  - The programs that the Editor and the Printer start (pdflatex, latex,
+    dvipdfmx, lp, the spell and thesaurus programs, the PDF viewer) run
+    outside valgrind; only the Document Manager is traced into the Editor.
+  - The spell check and the thesaurus scenarios start the panels with the
+    programs and data of this machine; the screens were not checked for the
+    word list (the scenarios only drive the keys).
+  - Pictures are shown by the window Editor only; the window scenario does
+    not open a document with pictures.  The terminal scenarios print and
+    list them through the marker panel and the Printer.
+  - The release build (-O2) was built with -Werror but not run under
+    valgrind; the debug build has the line numbers.
+  - A key that the slow program had not read when the scenario ended is not
+    exercised; the wait at the end is 15 seconds.
+  - Threads: none of the programs has a thread; helgrind was not used.
+  - The complete smoke and xtest were not run under valgrind (hours).

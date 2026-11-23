@@ -1,0 +1,332 @@
+# Chapter 11, part 2: print and preview jobs, the Printer, the Document Manager
+# and the Viewer.
+.h2 Print and preview jobs [msg-job]
+.ix Messages, Print
+.ix Messages, Preview
+.ix Print messages
+.ix Preview messages
+.ix Print job messages
+These messages are shown when a PDF is made and sent to a queue, and when a
+preview is made.  Two commands show them: the Print panel of the Editor
+(Draft and Final) and its Preview.  The tables say where.  {X:print-messages} describes the
+same messages in the context of those commands.
+.h3 Values that are refused [msg-job-check]
+.ix Refused values, print
+.ix Copies, message
+.ix Printer queue, message
+A value is refused before anything is made.  In the Print panel the message is
+in a box titled Marker ({n:msg-ed-panels}) and the panel stays open.
+.table 28 32
+Message | Meaning and what to do
+A page must be a number from 1 to 99999 | Print from Page or to Page is not a
+ | whole number in that range.  Type digits.
+A page range needs a printer: name one in Printer | A page range, and the
+ | printer is File only or PDF viewer. A page range can be printed only to a
+ | queue.  With PDF viewer the message ends with the words "(the program that
+ | opens the PDF has its own print dialog)".  The same
+ | message begins with another phrase when the fault is another one:
+ | {c:More than one copy}, {c:Double sided} or {c:Sort output pages}.  Name a queue, or
+ | take the default values.
+Cannot find section number NAME | Print from Section or to Section names a
+ | section that the document does not have.  Look at the numbers on the screen.
+Cannot find the directory DIR | The directory of Output File does not exist.
+Cannot write in the directory DIR | The directory of Output File exists and
+ | cannot be written.
+Contents Levels is a number from 1 to 99 | Table of Contents? is Yes and
+ | Contents Levels is not a whole number from 1 to 99.
+Copies must be a number from 1 to 99 | Copies is not a whole number in that
+ | range.
+NAME is a directory | Output File names a directory.  Add a file name.
+"NAME" is not the name of a printer queue | The text typed as the printer
+ | cannot be a queue: it begins with a minus, contains a space or one of /
+ | # \ ' " , or is 128 letters or longer.  Press {k:F2} in the field for the
+ | queues that the system lists ({n:print-sending}).
+No output file given | Output File is empty.
+Only a structured document has sections | Print from Section in an
+ | unstructured document.
+The first page is after the last page | Print from Page is greater than to
+ | Page.
+The first section is after the last | The sections named are in the wrong
+ | order.
+The PDF cannot replace the document | Output File is the path of the document.
+There is no current section | Print Current Section Only? (box titled Print)
+ | and the cursor is in no section.
+.end
+.h3 The run and its end [msg-job-run]
+.ix Wrote, message
+.ix lp failed
+.ix Print failed
+.ix Print cancelled
+.ix Cancelled while sending
+.ix Print stopped by a signal
+.ix LaTeX failed
+.ix Print needs
+.ix lp was not found
+These are the texts that a print makes when it has run.  A good print without
+a queue ends with one line; a failure or a good print with lp shows a box
+(titled Print).  The Document
+Manager shows the first line of a good print on its footer ({n:msg-docmgr}).
+.table 30 30
+Message | Meaning and what to do
+Cancelled while sending to QUEUE. The PDF PATH was made; the print job may or
+ may not have been queued. | {k:Esc} was pressed while lp ran.  Look at the
+ | queue (the print system's own command) before printing again.
+Cannot make a temporary directory: REASON | The working directory of the job
+ | cannot be made.  Free space or rights in the directory that {c:TMPDIR}
+ | names.
+Cannot start <Printer>: REASON | The Printer could not be started: no memory
+ | or no process.
+Cannot write in DIR | The working directory of the job cannot be written.
+Cannot write the PDF: REASON | The PDF is made but cannot be put at its place:
+ | the directory is full or protected.
+LaTeX failed: TEXT1 TEXT2 | LaTeX stopped. TEXT1 is the first error line of
+ | the log (it begins with an exclamation mark) and TEXT2 the line after.
+ | Nothing is written.  See {x:msg-other-latex}.
+lp failed (status N): TEXT  Nothing was sent and no PDF was kept: choose File
+ only to keep one. | lp ended with an error and the PDF of a print to a queue
+ | was deleted.
+lp failed (status N): TEXT The PDF PATH was made. | lp ended with an error and
+ | TEXT is its own message (for example the queue does not exist).  The PDF is
+ | kept and can be printed with another command.
+Print cancelled | {k:Esc} was pressed during the typesetting; nothing is sent
+ | and no PDF is written.  The Document Manager shows it on its footer when it
+ | stops the job.
+Print failed (<Printer> ended with status N) | The Printer failed without a
+ | message of its own.
+Print failed: TEXT | The Printer wrote TEXT as its message ({n:msg-printer}).
+PRINT FAILED: Wrote PATH (N pages).  E errors and W warnings. | The PDF is made
+ | and not sent, and the document has errors: the print FAILED and every page
+ | has the banner and the marks ({n:print-failed}).
+Print needs <Printer>: it was not found next to <Editor> or in the system
+ directories. | The
+ | program that makes the PDF is not installed.
+Print needs LaTeX: pdflatex was not found in FOLDERS. See README.txt for the
+ packages. | The prerequisites are not met: install the LaTeX packages.
+Print stopped by a signal | The Editor got SIGINT, SIGTERM or SIGHUP during
+ | the job.  The working files are removed.
+Sent to QUEUE: N pages, C copies, SIDES.  No PDF was kept | A print to a queue:
+ | lp took the pages; the PDF that was made for it is deleted.
+The PDF PATH was made but lp could not be started. | lp exists and cannot run.
+The PDF PATH was made but lp did not answer within a minute. | lp was stopped
+ | after 60 seconds.  The PDF is kept.
+The PDF PATH was made but was not sent. TEXT | The page range or the queue was
+ | refused after the PDF was made. TEXT is one of: {c:No printer is named},
+ | {c:The PDF must be given with its full path},
+ | {c:The document has only N pages, so it has no page N} (the first page is past the end), or one of the
+ | refusals of {x:msg-job-check}.
+The printer NAME is not in the list of the system any more: File only is shown |
+ | The Print panel kept NAME from the last print and the system does not report
+ | it now.  The panel opens with File only.
+Wrote PATH | The PDF is made.  The page count was not known.
+Wrote PATH and sent it to QUEUE (ANSWER) | The same when the page count was
+ | not known.
+Wrote PATH but lp was not found, so it was not sent to QUEUE. Install
+ cups-client. | The PDF is made; the print command is not
+ | installed.
+Wrote PATH (N pages) | The PDF is made and not sent. {c:1 page} for one.
+Wrote PATH (N pages) and opened it to print | PDF viewer: the PDF is made
+ | and a program that shows PDF files was started.
+Wrote PATH (N pages) and sent it to QUEUE (ANSWER) | lp took the PDF. ANSWER
+ | is the answer of lp, such as {c:request id is laser-17 (1 file(s))}, or
+ | {c:no answer from lp}.
+Wrote PATH (N pages) but no PDF viewer was found: set one in Setup: it is saved
+ | PDF viewer, and no such program or no display, or the setting pdf_viewer
+ | names a word processor.  The PDF is kept.
+Wrote PATH (N pages) but the program of the setting pdf_viewer was not found:
+ it is saved | The setting names a program that is not there.
+Wrote PATH (N pages) but the program that opens it could not be started: it is
+ saved | The program could not be run.
+.end
+The Print panel has one more text, a line {c:Print Status} that shows only when
+ lp is
+not installed: {c:lp not found: only the PDF is made}.  It is a notice: the
+ panel is
+accepted, and a print makes the PDF but cannot send it.
+.h3 The texts of the progress box [msg-job-progress]
+.ix Progress box
+.ix Running LaTeX
+While a print or a preview runs the Editor shows a box with a bar.  Its texts
+ are
+not errors.
+.table 28 32
+Text | When
+Another pass, for the references. | The second or third run of LaTeX, which is
+ | made because page references or a table of contents moved.
+Close the viewer to return. | The Viewer is open (Preview).
+Page N of about M | LaTeX is on page N; M is an estimate. {c:Page N of M} when
+ | it is sure.
+Running LaTeX (pass N) | LaTeX runs; N is the number of the pass.
+Sending to the printer | lp is running. {k:Esc} stops lp (the hint in the box
+ | says {c:Esc stops lp}).
+Writing | The document is being prepared for typesetting.
+.end
+.h3 Preview [msg-job-preview]
+.ix Preview, failure
+.ix Viewer, not found
+.ix X display, Preview
+The three messages that begin with {c:Preview needs} are boxes titled Preview;
+ the
+others are on the message line.
+.table 30 30
+Message | Meaning and what to do
+LaTeX failed: TEXT1 TEXT2 | LaTeX stopped and no preview was made.  See
+ | {x:msg-other-latex}.
+Preview cancelled | {k:Esc} while the preview was made.
+Preview: cannot make a temporary directory: REASON | As for a print.
+Preview: cannot run the viewer PATH | The Viewer exists and cannot run.
+Preview: cannot start <Printer>: REASON | As for a print.
+Preview: cannot write in DIR | The working directory cannot be written.
+Preview done | The Viewer was closed after a good preview.
+Preview done: PRINT FAILED, N print errors (Ctrl-F8 finds the next) | The
+ | Viewer was closed after a preview that had errors; its pages and the
+ | Viewer's red area said PRINT FAILED ({n:print-failed}).
+Preview done; the viewer could not show N things: TEXT | The Viewer left
+ | something out of the pages (TEXT names the first); the preview is
+ | otherwise good.  When the run has a log the line ends with "; details in
+ | the log of the run" ({n:appcfg-log}).
+Preview failed (<Printer> ended with status N) | The Printer failed without a
+ | message.
+Preview failed: TEXT | The Printer wrote TEXT as its message.
+Preview needs <Printer>: it was not found next to <Editor> or in the system
+ directories. | The
+ | program that typesets is not installed.
+Preview needs an X display: DISPLAY is not set.  Run <Editor> under X, or use
+ the X11 version. | The Viewer opens a window.  There is no display.
+Preview needs the viewer <Viewer>: it was not found next to <Editor> or in
+ the system directories. | The Viewer is not installed.  Install the Viewer.
+Preview shown in spite of errors of LaTeX: TEXT1 TEXT2 | The preview has
+ | pages, but LaTeX met an error: some part of the text may be missing or
+ | wrong.  Read TEXT1.
+Preview: the viewer failed: TEXT | The Viewer ended with an error; TEXT is
+ | the reason.  When the run has a log the line ends with "; details in the
+ | log of the run" ({n:appcfg-log}).
+.end
+.h2 The Printer [msg-printer]
+.ix Messages, Printer
+.ix Printer, error output
+.ix Printer, messages
+The Editor shows the messages of the Printer after {c:Print failed: } or
+{c:Preview failed: } ({n:msg-job}).  The tables write each with the prefix
+{c:<Printer>: }.
+.table 32 28
+Message | Meaning and what to do
+<Printer>: cannot make a temporary directory: REASON | The working directory
+ | cannot be made.
+<Printer>: cannot write in DIR | The working directory cannot be written.
+ |
+<Printer>: cannot write PATH | The PDF, the pages of a Preview or the TeX
+ | source cannot be written; or a picture cannot be copied next to them.
+<Printer>: FILE: dvipdfmx failed | The PDF could not be made from the DVI
+ | file.
+<Printer>: FILE: ENGINE did not run (is it installed? sudo apt install
+ texlive-latex-recommended texlive-latex-extra texlive-extra-utils lmodern)
+ | The program ENGINE (pdflatex or latex) did not run.  Install the packages
+ | named.
+<Printer>: FILE: ENGINE failed, no error line in LOGFILE | The engine failed
+ | and the log has no line that begins with an exclamation mark.  Read the log,
+ | kept with the option that keeps the files.
+<Printer>: FILE: REASON | FILE could not be loaded.  REASON is one of the
+ | messages about a file that are listed in {x:msg-ed-file}: the file cannot
+ | be opened or read, is damaged, is not a document of this software, or has
+ | a version that is not read.
+<Printer>: FILE: ! TEXT | LaTeX stopped at the first error and no PDF was
+ | made: the text is the first error line of the log.  See
+ | {x:msg-other-latex}.
+<Printer>: files kept in DIR | A notice with the option that keeps the files:
+ | the directory holds the TeX source and the log.
+<Printer>: PATH exists and differs: the picture is not copied | The pictures
+ | of a Preview are copied next to its pages, and a different file of the same
+ | name is there. A notice; the other file is not changed.
+{c:<Printer>: warning: PLACE: No font has the character U+XXXX; it is printed as [U+XXXX]. [char-missing]} | A
+ | character of the document has no letter in the font.  A warning: the PDF is
+ | made, and the character is printed as the bracketed number.  XXXX is the
+ | number of the character in Unicode.  Choose another font ({n:print-fonts}) or
+ | delete the character.  The same text is in the Error Log ({n:msg-errlog}).
+.end
+.h2 The Document Manager [msg-docmgr]
+.ix Messages, Document Manager
+.ix Document Manager, messages
+.ix Footer messages
+The Document Manager shows a message on its footer line (the text stays until
+ the
+next key and replaces the hint), in a box that ends with a key, or on the error
+output.  The same messages are in {n:str} with their panels.
+.h3 The footer [msg-docmgr-footer]
+.ix Footer, Document Manager
+.table 30 30
+Text | Meaning and what to do
+Cannot find directory DIR | The Working Directory of a panel does not exist.
+Enter a document name | The field Document Name is empty.
+Installation cancelled | TeX Font Association, Install Now: {k:Esc} stopped the
+ | download ({n:msg-other-font}).
+Settings saved to PATH | Setup was accepted and written.
+.end
+.h3 Boxes [msg-docmgr-boxes]
+.ix Boxes, Document Manager
+.table 20 18 22
+Title: text | Where | Meaning and what to do
+Edit / Preview / Print Document: Cannot run the editor: PATH | Edit / Preview /
+ | Print Document | The Editor named in Setup (Editor program) cannot be
+ | | started.  Correct the field.
+Edit / Preview / Print Document: The editor ended with status N | Edit /
+ | Preview / Print Document | The Editor stopped with a status other than 0.
+ | | The document may be unchanged.
+Font: Only letters, digits and . _ - + = , can be used for the package,
+ options, archive and map file; not saved | Font panel | One of those fields
+ | | has another character.  Nothing is saved.
+Font: The family is roman, sans or mono; not saved | Font panel | The field
+ | | Family has another value.
+Fonts: the text of a failed write | TeX Font Association | The list of fonts
+ | | could not be saved: {x:appcfg-write-errors} (here in the wording of
+ | | {n:msg-start-config}).
+Install failed: TEXT | TeX Font Association | The installation failed;
+ | | {x:msg-other-font} lists the texts.
+Installed: Installed in DIR | TeX Font Association | The font is installed in
+ | | DIR.
+Installing font: TEXT | TeX Font Association | Install Now is running and TEXT
+ | | names the step ({n:msg-other-font}).  {k:Esc} stops the download.
+Setup: Settings are in effect but could not be saved | Setup | The file of
+ | | settings could not be written.  They are used until the program ends.  See
+ | | {x:appcfg-write-errors}.
+.end
+.h3 The refusals of Setup [msg-docmgr-setup]
+.ix Setup, refused values
+.ix Refused values, Setup
+When a field of Setup holds a value that cannot be used, the reason is on the
+line at the foot of the panel when the focus leaves the field, and again when
+{k:Ins} is pressed; the panel stays open and nothing is saved.
+.table 31 29
+Text | Meaning and what to do
+A word processor is not a PDF viewer | PDF Viewer names a word processor.
+Backups Kept is a whole number from 0 to 99 | Backups Kept has another value.
+The autosave interval is 1 to 86400 seconds | Autosave Interval (Seconds) is
+ not a whole number in that range.
+The Dictionary Language is a code such as en_US or de_DE | The language has a
+ character that is not a letter, a digit, an underline, a minus or an at sign.
+The initial working directory does not exist | Initial Working Directory is
+ not a directory.
+The PDF Directory is a full path or starts with ~/ | PDF Directory is a
+ relative path.
+The PDF viewer is not an executable file | PDF Viewer names a file that cannot
+ be run.
+The PDF viewer needs its full path, such as /usr/bin/evince | PDF Viewer is not
+ a full path.
+The PDF viewer or its directory can be changed by other users: it is not used
+ | The file or its directory is writable by others, or belongs to another user.
+The window rows are a whole number, or empty | Window Rows has another value.
+Undo Levels is a whole number from 0 to 500 | Undo Levels has another value.
+.end
+.h3 Questions and the error output [msg-docmgr-more]
+.ix Questions, Document Manager
+.table 31 29
+Text | Meaning
+New File: document type (Structured, Unstructured) | Edit / Preview /
+ | Print Document, new name.
+.end
+.table 33 27
+Error output | When
+<Document Manager> needs an interactive terminal (or an X display with the x11
+ build) | There is no terminal and no display.
+usage: <Document Manager> [document] | The first line of the usage text
+ | that the option for the usage writes on the standard output.
+.end

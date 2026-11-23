@@ -1,0 +1,245 @@
+; The Document Manager: the program that starts Strata.
+= Document Manager
+~ Strata Document Manager
+The Document Manager starts Strata.  Its menu has these entries:
+
+- Edit / Preview / Print Document: open a document in the Editor, or begin a new
+  one.
+- Maintain Dictionaries: your own words for the spell check.
+- Compare Document Versions: the differences between two documents.
+- Restore Backup: bring back one of the backups of a document.
+- TeX Font Association: the fonts that the Printer uses.
+- Setup: your settings.
+- Quit: leave Strata.
+
+Choose with {Up} and {Down}, or press the first letter, and press {Enter} or
+{Ins}.  {Esc} leaves a panel.  {F1} shows the help for the entry that is
+highlighted.  See [[Edit / Preview / Print Document]], [[TeX Font
+Association]], [[Restore Backup]], [[Setup]].
+
+= Edit / Preview / Print Document
+~ Document Manager:Edit / Preview / Print Document
+~ Selecting a File
+~ Edit / Preview / Print Document:Document Name
+~ Edit / Preview / Print Document:Working Directory
+~ Selecting a File:Document Name
+~ Selecting a File:Working Directory
+~ Selecting a File:Variables
+~ Document Description
+Opens a document in the Editor.  The panel has the Document Name, the Working
+Directory and the Variables.  {F2} or {Keypad +] lists the documents and the
+directories.
+
+- The name of a document that exists opens it.
+- A name that does not exist starts a new document.  You are asked whether it is
+  structured or unstructured, and for a Description and an Author.  A name with
+  no dot gets .doc.
+- Variables lets you give names and values that the markers of the document
+  take; see [[Variables]].
+
+When the Editor ends you come back here.  Printing and previewing are in the
+Editor, on the Print menu.  See [[Menu:Print]].
+
+= Variables
+Pairs of a name and a value.  A marker of the document that names a variable
+takes its value for the print.
+
+= Maintain Dictionaries
+~ Document Manager:Maintain Dictionaries
+Your own words for the [[Spell Check]]: the words that the check must not ask
+about.  One list serves every language.  The words are shown in order, with
+their number.  {Tab} shows the other list, your hyphenation list: where words
+may be broken in the print (see [[Hyphenation List]]).
+
+- {Ins}: add a word.  A word has letters, apostrophes and hyphens, begins and
+  ends with a letter, and has no space or digit.
+- {Del}: take out the word that has the cursor, after a question.
+- {F3}: import the words of a text file that has one word on a line.  The panel
+  says how many were new.
+- {F4}: export the words to a text file.
+- Type letters to go to a word that begins with them; {Backspace} takes a letter
+  back.
+- {Up}, {Down}, {PgUp}, {PgDn}, {Home} and {End} move through the list.
+- {Esc}: leave.  Every change is saved at once.
+
+Define in the Spell Check adds a word to the same list.  See [[Add a Word]]
+and [[Import and Export Words]].
+
+= Hyphenation List
+~ Maintain Dictionaries:Hyphenation list
+~ Hyphenation list
+~ Hyphenation
+Press {Tab} in Maintain Dictionaries to see the hyphenation list, and {Tab}
+again to come back to the spelling words.  The same keys work.  A word is
+written with a hyphen where it may be broken: hy-phen-a-tion.  A word with no
+hyphen is never broken; an equals sign in front (=Jacksonville) says so.
+Letters only, also accented ones: no digit, no apostrophe, no space.  The
+print reads the list and gives it to TeX, so the words are broken as you wrote
+them.  {F3} also reads a hyphenation dictionary of older programs (a file
+that ends in .hyc).
+
+= Add a Word
+~ Maintain Dictionaries:Add a word
+Type the word and press {Enter}.  A word has letters, apostrophes and hyphens,
+begins and ends with a letter, and has no space or digit.  A word that the list
+has already, or that it covers (a word with a capital letter is covered by the
+same word in lower case), is not added again.
+
+= Import and Export Words
+~ Maintain Dictionaries:Import Words
+~ Maintain Dictionaries:Export Words
+Import reads a text file with one word on a line and adds the words that the
+list does not have.  A file that is not UTF-8 is read in the PC character set
+(code page 437), so that words with accents from older programs are kept.
+A line that is not a word (it has a space or a digit, or does not begin and
+end with a letter) is left out.  The panel shows how many words were added, how
+many the list had already and how many were not words.
+
+Export writes the list to a text file, one word on a line, in order.  Name the
+file in the panel; press {F2} to choose it from a list.  A file that is there
+is replaced only after you say so.
+
+= Compare Document Versions
+~ Document Manager:Compare Document Versions
+Shows what is different between two documents, such as a document and its
+backup file.  The panel prompts for the Working Directory, the First Document,
+the Second Document and the Report Document.  The backup file of the last
+document is offered as the second one, and the report is named after the first
+document with -diff added.  Press {Keypad +] or {F2} in a name to choose a file
+from a list.  Press {Ins} to compare.
+
+The report is shown on the screen.  See [[Comparison Report]].
+
+= Restore Backup
+~ Document Manager:Restore Backup
+Brings back a backup of a document.  The panel prompts for the Working Directory
+and the Document Name; press {Keypad +} or {F2} in a name to choose a file from
+a list.  Then it lists the backups of the document, newest first, with the
+number, the date and time, the size and the first words.  The backups are in
+the folder .backup next to the document; those that older versions of Strata
+left beside the document are listed too, marked old.
+The special backups that the Editor made when it loaded a file of an older
+version of the file format (V2-NAME beside the document) are listed last,
+marked V2.  They are never removed, and restoring one writes the file as it
+was, with the version number it has.
+
+Choose a backup.  View the text shows it in a pager ({Esc} closes it).
+Restore this backup asks first (Y or N; {Esc} is N), and then swaps: the
+document that is there becomes backup 1, the backups below the restored one
+move up by one, and the text of the backup becomes the document.  A backup with
+the same text as the document changes nothing.  If the document is open in an
+Editor, the Editor keeps the old text until it loads the document again.  See
+[[Backup Files]].
+
+= Comparison Report
+~ Comparison of two documents
+The report lists what is different, block by block.  The first part is a
+summary and the sections that were added, removed, moved or put on another
+level.  The second part lists the blocks: a block that is only in the second
+document is Inserted, a block that is only in the first document is Removed, a
+block with other words is Changed, and a block that is in another place is
+Moved.  A block with the same words but another format, marker or attribute is
+listed on its own line.
+
+In a changed block the words that were added are in brackets with plus signs,
+[+like this+], and the words that were removed are in brackets with minus
+signs, [-like this-].  Press {Up}, {Down}, {PgUp} or {PgDn} to read it and
+{Esc} to close it.  The Document Manager then offers to save the report as a
+document that you can open in the Editor.  The added words are bold in it and
+the removed words are underlined.
+
+= TeX Font Association
+~ Document Manager:TeX Font Association
+~ Installed
+~ Install failed
+Lists the twenty fonts of the Typeface List and the LaTeX package that gives
+each
+one.  Choose a font and press {Ins} to change it.  The panel prompts for the
+Name, the LaTeX Package, the Package Options, the Family (roman, sans or mono),
+the CTAN Archive to download and the Map File to enable.  Install Now: Yes
+downloads and installs the package when it is not installed.
+
+The Printer uses the family to choose the type.  See [[Typeface List]].
+
+= Setup
+~ Document Manager:Setup
+Your settings, which are kept for every document.  Setup is one panel of three
+pages: the settings, the colors of the screen and the advanced settings.
+{PgUp} goes to the next page and {PgDn} to the one before, as in the panels of
+the Editor.  {Ins} saves what was typed on all the pages; {Esc} takes it all
+back.  The fields of the first page are in four groups, Documents, Printing,
+Writing and Screen.  A field with choices takes {Right} (the next), {Left} (the
+one before), {Space} (the next, round to the first) and {F2} or Keypad + (the
+list).  The default of a field is shown at its right and {Del} puts it
+back.  A value is checked
+when you leave its field: a wrong one keeps the focus there and the reason is
+in the line at the foot.  Nothing else that you typed is lost.
+
+- Initial Working Directory: the directory where Edit / Preview / Print
+  Document begins.
+- Backups Kept (0 to 99): how many numbered backups a save keeps of the
+  older version of a document.  0 makes none; see [[Backup Files]].  A lower
+  number asks first, in a box, which backups will go and when.
+- Autosave and Autosave Interval (Seconds): whether the Editor saves a changed
+  document by itself, and how often.  Autosave is a choice.
+- Print To: where a print goes when you do not say otherwise: Printer, File
+  only or PDF viewer.  Right, Left and Space change it; F2 shows the list.
+- Printer Queue: the print queue for Print To = Printer.  The list is made
+  by the system, with the system default first; you choose, you do not type a
+  name.  No printers found is not an error.
+- PDF Directory: where the PDF of File only and PDF viewer is made.  Empty
+  means the directory of the document.  A full path or ~/ and a path.
+- PDF Viewer: the program that shows the PDF for PDF viewer, given with its
+  FULL PATH, such as /usr/bin/evince: a name or a relative path is refused,
+  and PATH is never searched.  The file must be executable and neither it nor
+  its directory may be changed by other users.  Empty means evince, okular or
+  another viewer of /usr/bin, /usr/local/bin or /bin.  A word processor is
+  refused.  The line at the foot says what was found.
+- Paper for New Documents: Letter or A4, the paper of a document that is made
+  new and does not come from a template.  A template keeps its paper.
+- Dictionary Language: the language of the spell check, such as en_US.
+- Undo Levels (0 to 500): how many operations Undo keeps.  0 turns Undo off.
+  The Editor uses it the next time it starts.
+- Window Rows: one line, two fields.  X11: the height of the window, in rows
+  (20 to 200; empty means 50), kept from the last run.  Terminal: the most
+  rows that the Editor uses in a terminal, kept from the last run (20 to 200;
+  empty means all the rows).  Tab goes from one field to the other.  The
+  program never changes the size of your terminal.
+- Page 2, the colors of the screen: press {PgUp}.  See [[Screen Colors]].
+- Page 3, the advanced settings: press {PgUp} twice, or {PgDn} once.
+  Initial Macro Set and Initial Library name a macro file and a library file
+  that the Editor loads when it starts, as Tools, Macros, Retrieve and Tools,
+  Library, Retrieve do; Keypad + or F2 chooses a file, a name without a slash
+  is looked for in the working directory and then in the settings directory,
+  and empty loads none; a file that cannot be used is a message of the Editor
+  and it starts anyway.  Terminal Characters: how the terminal version draws
+  its screen: Automatic (it checks the terminal at the start), UTF-8, or ASCII
+  (plain characters for lines and blocks, for a terminal that cannot show the
+  shapes); choose with Left and Right; the variable STRATA_ASCII (1 or 0)
+  overrules it.  Editor program: the path of the Editor.  Help File: the path
+  of the help file, one file for every version.
+
+= Screen Colors
+~ Setup:Screen Colors
+~ Choose a color
+~ Colors
+The colors of the screen: a foreground and a background color for every kind
+of text, for the terminal version and for the X11 version.  The screen is blue
+with yellow text until you change it.  Printing is not changed.
+
+- This is the second page of Setup: {PgUp} and {PgDn} go to the other pages.
+- {Up}, {Down} and {Enter} choose the kind of text; {Tab} switches between its
+  foreground and its background.
+- {Right} takes the next color, {Left} the one before, {Space} the next round
+  to the first; {F2} or Keypad + opens the palette, in which {Enter} chooses
+  and {Esc} closes it.
+  T in the palette types a color: a name such as light-cyan, or #rrggbb.
+- {Del} takes the default for the entry, R takes the defaults for the whole
+  version, and V shows the other version (terminal or X11).
+- {Ins} keeps the colors, and the other pages, in the settings; {Esc} takes
+  them back.
+
+A line under the list warns when the text is hard to read on its background.
+If the screen becomes unreadable, start the program with --default-colors, or
+set the variable STRATA_DEFAULT_COLORS to 1.
+

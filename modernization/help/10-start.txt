@@ -1,0 +1,192 @@
+; The first topics of the help of Strata.  See src/help.h for the format.
+; Every line is plain ASCII of at most 80 columns.
+= Help
+~ Help Index
+Press {F1} for help about the place that you are in.  The window shows the
+topic that fits: the menu entry that is highlighted, the panel or the field
+that the cursor is in, or the message that was on the message line.  If there
+is no topic for the place, you get the topic of the screen.
+
+The help window lies across the bottom of the screen, so that your document
+stays in view above it.
+
+- {Tab} and {Shift-Tab} (or {Right} and {Left}) move to the next and to the
+  previous link, and {Enter} follows the link that is highlighted.
+- {Backspace} goes back to the topic that you came from.
+- {Up}, {Down}, {PgUp}, {PgDn}, {Home} and {End} scroll the text.
+- {I} lists all the topics, in the order of the alphabet.
+- {Z} makes the window as large as the screen, and back.
+- {Esc} or {F1} closes the window.
+
+Where to begin: [[Edit Screen]], [[Document Manager]], [[Function Keys]],
+[[Menu Bar]], [[Panels and Fields]], [[Messages]].
+
+= Edit Screen
+~ Edit
+The Edit Screen shows your document and lets you change it.  Type to put text
+in at the cursor.  The top line names the document, the status line shows
+where the cursor is, and the bottom line shows the function keys.
+
+- {F12} opens the [[Menu Bar]].
+- The [[Function Keys]] do the common commands, and the [[Alt Commands]] and
+  the [[Accelerator Keys]] are shortcuts.
+- [[Moving the Cursor]] and [[Units of Text]] tell how to move and how to
+  choose what a command works on.
+- [[Copy Cut and Paste]] and [[Search]] are the commands that you will use
+  most.
+- A line of text may hold [[Markers]]: dates, page numbers, notes, pictures
+  and the like.
+
+A document is either [[Structured and Unstructured|structured]], made of
+numbered sections, or unstructured, a flat run of blocks.
+
+= Function Keys
+~ Function keys
+The keys F1 to F12 have three layers, which the bottom line of the screen
+shows as you hold {Alt} or {Ctrl}.
+
+- {F1} Help, {F2} Split, {F3} Copy, {F4} Cut, {F5} Paste, {F6} Format,
+  {F7} Move, {F8} Table, {F9} Search, {F12} Menu.
+- With {Alt}: {Alt-F2} Append, {Alt-F3} Join, {Alt-F4} Delete, {Alt-F5}
+  Overtype, {Alt-F6} Set Attributes, {Alt-F7} Go To, {Alt-F9} Replace,
+  {Alt-F12} Marker.
+- With {Ctrl}: {Ctrl-F1} Learn, {Ctrl-F3} Lib Copy, {Ctrl-F4} Lib Cut,
+  {Ctrl-F5} Lib Paste, {Ctrl-F7} and {Ctrl-F8} the previous and the next Print
+  Error, {Ctrl-F9} Search again, {Ctrl-F12} Marker.
+- {F10} and {F11} have no command.  {Shift} with a function key does nothing.
+
+Some terminals and desktops keep keys such as {Alt-F4} for themselves.  The
+[[Alt Commands]] menu ({Ctrl-F}) and the [[Menu Bar]] reach the same
+commands.  See [[Copy Cut and Paste]], [[Search]], [[Learn a Macro]],
+[[Library]].
+
+= Menu Bar
+~ Menu
+{F12} opens the menu bar over the top two lines of the screen.  The first line
+holds the names; the second says what the highlighted entry does.  When the
+names of a menu do not all fit in one line, the rest continue on a second
+line and the explanation moves down.  The top level is File, Global, Edit,
+Print, Tools and Quit.
+
+- {Left} and {Right} choose an entry; {Home} and {End} go to the first and the
+  last.
+- {Enter}, {Ins} or {Down} opens the entry or does the command.
+- A letter chooses the entry that begins with it.
+- {Esc} goes up one level, and closes the menu at the top level.  {F12}
+  closes the menu from any level.
+- {F1} shows the help for the entry that is highlighted.
+
+The entries: [[Menu:File]], [[Menu:Global]], [[Menu:Edit]], [[Menu:Print]],
+[[Menu:Tools]], [[Menu:Quit]].
+
+= Panels and Fields
+~ Panel
+A panel is a box with fields.  Fill it in and press {Ins} to do the command, or
+{Esc} to cancel it.  {F1} in a panel shows the help for the field that the
+cursor is in, or for the panel.
+
+- {Enter}, {Down} and {Tab} go to the next field; {Up} and {Shift-Tab} to the
+  previous one.  {Enter} on the last field does not accept the panel.
+- In a text field the whole text is highlighted when you arrive: the first key
+  that you type replaces it.  Press {Left}, {Right}, {Home} or {End} first to
+  edit the text instead.
+- In a field with choices, {Right} and {Left} change the value and {Space}
+  goes round the values.
+- {F2} or {Keypad +} lists the choices, or the files or directories that fit
+  the field, when it has such a list.  See [[Checklists]].
+- {PgDn} and {PgUp} show the next and the previous panel of a group of panels.
+
+If a value is not acceptable, a message shows why and the panel stays open.
+See [[Messages]].
+
+= Checklists
+~ Checklist
+~ Directory
+~ Entries
+A checklist is a list of choices for a field.  Press {F2} or {Keypad +} in a
+field that has one.  For a name of a file or a directory it shows the files or
+the directories next to the one in the field.
+
+- {Up}, {Down}, {PgUp}, {PgDn}, {Home} and {End} move through the list.
+- {Enter} chooses the highlighted name.  A name with a slash goes into that
+  directory, and the first entry, two dots, goes up.
+- {Esc} closes the list and leaves the field as it was.
+
+= Alt Commands
+~ Alt commands
+~ Commands
+{Ctrl-F} opens a list headed Commands: every command that has a function
+key, each with its key (Copy (F3), Search Again (Ctrl-F9), Border (Alt-F8)
+and the rest), then Promote section, Demote section and Soft hyphen.  Use it
+when your terminal or desktop keeps those keys for itself.  Choose with the
+arrow keys and {Enter}; the list scrolls; a letter goes to the next entry
+that begins with it; {Esc} leaves.
+
+See [[Function Keys]], [[Append]], [[Join]], [[Delete]], [[Overtype]],
+[[Set Attributes]], [[Go To]], [[Replace]], [[Marker Commands]].
+
+= Accelerator Keys
+~ Accelerators
+A Ctrl letter does at once what a menu or a function key does in several steps.
+
+- {Ctrl-S} save, {Ctrl-R} retrieve, {Ctrl-P} print final, {Ctrl-Q} quit.
+- {Ctrl-B} bold, {Ctrl-U} underscore, {Ctrl-N} normal text, {Alt-I} italics.
+- {Ctrl-E} the block format editor, {Ctrl-H} hanging indent.
+- {Ctrl-X} cut text, {Ctrl-K} cut the block, {Ctrl-L} cut the section.
+- {Ctrl-A} and {Ctrl-O} append a block, {Ctrl-V} and {Ctrl-Y} split the block or
+  the section.
+- {Ctrl-T} thesaurus, {Ctrl-C} spell check of the word, {Ctrl-W} the
+  equation.
+- {Ctrl-F} the [[Alt Commands]], {Ctrl-^} edit the section or the document.
+
+Not every terminal can tell a Ctrl letter such as {Ctrl-I} from the key
+itself.  See [[Function Keys]].
+
+= Moving the Cursor
+~ Cursor keys
+- {Left}, {Right}, {Up} and {Down} move one character or one line.
+- {Home} and {End} go to the start and the end of the screen line.
+- {PgUp} and {PgDn} move half a screen.
+- {Ctrl-Left} and {Ctrl-Right} go to the start of the previous and of the next
+  word.
+- {Ctrl-Home} and {Ctrl-End} go to the start and the end of the column.
+- {Shift-Home} and {Shift-End} go to the start and the end of the document.
+- In a structured document, {Shift-Up} and {Shift-Down} go to the headline of
+  the section and of the next section, {Shift-PgUp} and {Shift-PgDn} to the
+  previous and the next section of the same level.
+
+[[Go To]] ({Alt-F7}) jumps to a section, to the start or to the end.
+
+= Units of Text
+~ Unit
+~ Units
+Copy, Cut, Delete and Move work on a unit of text.  After the key, a list of
+units opens: Text (any stretch that you highlight), Column, Block and, in a
+structured document, Section.  Choose one, then move the cursor to highlight
+what the command is to work on, and press {Enter} to do it.  {Esc} cancels.
+
+While text is highlighted, only the cursor keys, {Enter} and {Esc} work.
+See [[Copy Cut and Paste]], [[Delete]].
+
+= Structured and Unstructured
+~ Structured
+~ Unstructured
+A structured document is made of sections with numbers (1, 1.1, 1.2.1 and so
+on), each with a headline.  An unstructured document is a run of blocks with no
+sections.  Choose Structured or Unstructured on the Edit menu to change from one
+to the other.  [[Contract and Expand]] hide or show the parts of a structured
+document, and [[Go To]] jumps to a section.
+
+= Contract and Expand
+~ Outline
+In a structured document a section can be shown with only its headline, so
+that you can read the headlines without the text.  The text is hidden, not
+removed.  These keys work on the current section:
+
+- {Alt--} contracts the section to its headline.
+- {Alt-+} or {Alt-=} expands the section by one level.
+- {Alt-*} hides or shows the text of the section.
+- {Alt-1} to {Alt-9} and {Alt-0} show a whole level of the document at once.
+
+In an unstructured document the message line shows that contract and expand
+work in structured documents only.  See [[Go To]] and [[Menu:Edit]].

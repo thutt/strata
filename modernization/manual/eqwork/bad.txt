@@ -1,0 +1,32 @@
+\input{x}
+\begin{align} a \end{align}
+a$b
+a%b
+a#b
+\hspace{1cm}
+\badcmd{x}
+x^
+{a
+a}
+\label{x}
+\tag{1}
+a \\ b
+\begin{split} a &= b \\ &= c \end{split}
+\color{red} x
+\begin{equation} a \end{equation}
+\begin{matrix} a & b \end{matrix}
+\verb|x|
+a^^41
+\newcommand{\foo}{x}
+\frac{1}{2
+\left( x
+\sqrt[3
+\text{caf}
+\begin{array}{cc} a & b & c \end{array}
+\left( x \right]
+a_1_2
+a^1^2
+\over
+\end{aligned}
+\if a b c \fi
+x &= y

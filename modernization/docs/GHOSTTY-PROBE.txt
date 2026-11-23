@@ -1,0 +1,120 @@
+GHOSTTY: WHAT KEYS IT SENDS (PROBE FOR THE TERMINAL SURVEY)
+==========================================================
+
+Status: probe done on the tree maude-main8 (branch alien-41).  Nothing in
+src/ was changed.  Statements are of two kinds: [tried] seen in this probe,
+[not tried] not looked at.
+
+1. TOOLS (what the owner asked to be installed)
+-----------------------------------------------
+
+  ghostty    already installed: Ghostty 1.3.0-dev (/usr/bin/ghostty).  [tried]
+  valgrind   NOT installed.  The package exists (3.26.0-0ubuntu1) but the
+             install needs sudo, and the permission check of the session
+             refused "sudo apt-get install -y valgrind heaptrack".  I did not
+             try another way round it.  The owner can allow it or install it.
+  heaptrack  NOT installed, same reason.
+
+2. HOW THE PROBE WAS MADE
+-------------------------
+
+  Xvfb :88 (1024x768x24) with no window manager, own HOME, XDG_* and TMPDIR
+  in the scratchpad.  Ghostty (single instance off, no close confirmation)
+  ran a small program that puts the terminal in raw mode and writes every
+  chunk of bytes it reads with the time.  xdotool sent one key at a time
+  (xdotool key NAME, real X events, not --window), with 0.7 s between keys,
+  and the bytes read in the time of each key are the result.  The modifier
+  keys were released after each key.  The terminal type is the one Ghostty
+  sets (xterm-ghostty).  The keyboard is the plain Xvfb keymap.
+
+3. RESULT: THE BYTES (ESC is 1b)
+--------------------------------
+
+  F5                       ESC [ 15 ; 3 ~ (see note 1)
+  F10                      ESC [ 21 ; 3 ~ (note 1)
+  F12                      ESC [ 24 ; 3 ~ (note 1)
+  Shift-F1                 ESC [ 1 ; 4 P (note 1)
+  Shift-F5                 ESC [ 15 ; 4 ~ (note 1)
+  Ctrl-F1, Ctrl-F5         nothing arrived (note 2)
+  Alt-F1                   ESC [ 1 ; 3 P (same as plain F1)
+  Ctrl-Shift-F5            ESC [ 15 ; 8 ~
+  Up                       ESC [ A
+  Left                     ESC [ D
+  Shift-Left               ESC [ 1 ; 2 D
+  Ctrl-Left                ESC [ 1 ; 5 D
+  Alt-Left                 ESC [ 1 ; 3 D
+  Home                     ESC [ H
+  End                      ESC [ F
+  PageUp (Prior)           ESC [ 5 ~
+  PageDown (Next)          ESC [ 6 ~
+  Insert                   ESC [ 2 ~
+  Delete                   ESC [ 3 ~
+  Shift-Insert, Ctrl-Insert nothing (Ghostty paste and copy keys)
+  Shift-Delete             ESC [ 3 ; 2 ~
+  BackSpace                DEL (7f)
+  Ctrl-BackSpace           BS (08)
+  Alt-BackSpace            ESC 7f
+  Tab                      09
+  Shift-Tab                ESC [ Z
+  Return                   0d
+  Escape                   1b
+  Ctrl-Space               00
+  Ctrl-Shift-Space         00 (same as Ctrl-Space)
+  Ctrl-^ (asciicircum)     1e
+  Ctrl-_ (underscore)      1f
+  Alt-_                    ESC 5f
+  Ctrl-A                   01
+  Ctrl-Shift-A             nothing (Ghostty binding, note 2)
+  Alt-A                    ESC 61
+  Alt-Shift-A              ESC 41
+  Keypad +                 2b (plain character)
+  Keypad -                 2d (plain character)
+  Keypad Enter             0d
+  Keypad *                 2a
+  Ctrl-Home                ESC [ 1 ; 5 H
+  Ctrl-End                 ESC [ 1 ; 5 F
+  Ctrl-PageUp              ESC [ 5 ; 5 ~
+  Ctrl-PageDown            ESC [ 6 ; 5 ~
+  Alt-Home                 ESC [ 1 ; 3 H
+  Alt-PageUp               ESC [ 5 ; 3 ~
+
+  Note 1.  Every F key arrived with the modifier number 3 (Alt) even when no
+  key was pressed with it, and Alt-F5 gave the same bytes as F5; Shift-F5 gave
+  4 (Shift and Alt) and Ctrl-Shift-F5 gave 8.  The arrow, Home, End, Page and
+  Insert keys did not have this.  I think it is a property of this setup (the
+  plain Xvfb keymap and xdotool, no window manager), not of Ghostty, but I did
+  not prove it: a probe on a real display with a real keyboard is needed
+  before the table of the F keys is trusted.  [not tried: a second display]
+  Note 2.  Some combinations never arrived: Ctrl-F1, Ctrl-F5, Shift-Insert,
+  Ctrl-Insert and Ctrl-Shift-A.  They are most likely keys that Ghostty takes
+  for itself (copy, paste, its own bindings) or that the toolkit took; not
+  proved.
+
+4. WHAT IT MEANS FOR THE EDITOR
+-------------------------------
+
+  - Ghostty encodes the keys with the xterm modifier numbers (2 Shift, 3 Alt,
+    4 Shift-Alt, 5 Ctrl, 6 Ctrl-Shift, 7 Ctrl-Alt, 8 Ctrl-Alt-Shift): the
+    forms ESC [ 1 ; m X and ESC [ n ; m ~ that docs/TERMINALS.txt lists for
+    the xterm family.  [tried, for the keys above]
+  - Alt-letter is ESC and the letter; Alt-Shift-letter is ESC and the capital.
+  - Ctrl-Space is 00, the same as Ctrl-Shift-Space: the Editor takes 00 for
+    the no-break space already (src/term.c), so the two keys are not told
+    apart here.
+  - Ctrl-^ is 1e and Ctrl-_ is 1f: the keys that the Editor uses for the
+    structure commands and the soft hyphen reach the program as bytes.
+  - BackSpace is 7f and Ctrl-BackSpace is 08, which is the Ctrl-H of the
+    Editor: the two are told apart by the program (K_BKSP is 127).
+  - The keypad keys are plain characters (+ - * Enter): the Editor cannot tell
+    Keypad + from the main + in this terminal.  Keypad + is the key of the
+    checklists in the panels: Alt-+ or F2 must be the way in Ghostty.
+  - The kitty keyboard protocol was not looked at: no program asked for it.
+    [not tried]
+
+5. WHAT WAS NOT DONE
+--------------------
+
+  - No run of the Editor inside Ghostty was made.
+  - Mouse, bracketed paste, colour and the width of wide characters were not
+    probed.
+  - The probe was not repeated with a window manager or a real keyboard.

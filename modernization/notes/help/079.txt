@@ -1,0 +1,25 @@
+
+---------------------------------- Typeface List -------------------------------
+
+The Menu (F10) Global Typeface List panel displays the fonts available, 
+including download fonts, for the selected printer.  You can assign up to 20 
+fonts for both portrait and landscape page orientations.
+                               +----------------- Typeface List ---------------+
+--Procedure-----------------   |                                               |
+                               | Font #  Font Name     Typeface        Size    |
+ Press Menu.                  |   1     Headline      Times Roman     14.0pt  |
+ Select Global Typeface.      |   2     Text          Times Roman     12.0pt  |
+ If necessary, press Space    |   3     Header/Footer Times Roman     8.0pt   |
+  Bar at Printer to change     |   4     Font 4        Times Roman     12.0pt  |
+  the printer type.            |   5     Font 5        Times Roman     12.0pt  |
+ Complete the panel and       |   :        :               :            :     |
+  press Ins.                   |   20    Font 20       Times Roman     12.0pt  |
+                               | Printer: Apple LaserWriter                    |
+----------------------------   +------- Press Ins to Use Displayed Settings ---+
+
+-------------------------------------------------------------------------------
+# Fonts available vary depending on the printer specified on the Typeface List.
+# Fonts can be set on global or local format panels or with the Font marker.
+--------------------------------------------------------------------------------
+Font #      Font Name       Typeface      Size     Printer       Font Marker
+Local Format    Global Format    Download Fonts    Keyboard Summary   Help Index

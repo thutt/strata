@@ -1,0 +1,25 @@
+
+---------------------------------- Contents Edit -------------------------------
+
+
+You can edit a library entry as well as assign local text, column, block, and
+section formats.
+
+
+
+                                        +----------- Contents Edit ----------+
+# Enter the text and format settings    |             M E M O               |
+  you want for the library entry.       |------------------------------------|
+                                        |To:                               |
+# Press Ins to accept your edits and    |From:                             |
+  return to the Library Entry panel or  |Date:     [Date]                  |
+  press Esc to cancel your edits and    |Subject:                          |
+  return to the Library Entry panel.    |------------------------------------|
+                                        |                                   |
+                                        +----- Press Ins to ... Version -----+
+
+
+
+
+--------------------------------------------------------------------------------
+      Library Overview             Keyboard Summary            Help Index

@@ -1,0 +1,391 @@
+# Chapter 9, first part: what an equation is, editing, place, screen, print.
+
+.h2 What an equation is [eq-what]
+.ix Equation marker, type 9
+.ix Marker type 9
+.ix Equation text
+.ix Alt-F12
+Marker type 9, the Equation marker, is a marker that holds text, as the Note and
+the Comment markers do.  An equation is one item of the text: it can be
+selected, copied, cut, pasted, moved and deleted like a letter, and it counts
+as one position of the line.  How a marker is inserted and what the others
+are is described in {x:markers} and in {x:edit-b-marker}; this
+chapter is about the Equation marker.
+
+The text of the equation is TeX math notation.  LaTeX, with the packages
+amsmath and amssymb, typesets it.  Three consequences are true
+all through the chapter.
+- Every command of math mode of LaTeX and of amsmath and amssymb is available,
+  not only the ones that this chapter lists; the tables list those that were
+  tried and typeset with the result shown.
+- A mistake in the text is found by TeX: the message is the message of TeX
+  ({n:eq-errors}).
+- The text of an equation is not changed by loading and saving.
+
+.table 17 43
+What is needed | For what
+{c:latex} and {c:dvipng} | The pictures on the screen (X11 version).  Both are looked
+ for in the system directories ({n:appcmd-find}) when the Editor starts.  Without them every
+ equation keeps its label.
+LaTeX with amsmath and amssymb | Printing and preview.  The prerequisites are
+ the same as for the printing of any document ({n:appcmd}, Programs).
+The X11 version | Only the X11 version draws pictures.  The terminal version
+ shows labels at all times.
+.end
+
+.h2 Inserting and editing an equation [eq-insert]
+.ix Insert an equation
+.ix Edit an equation
+.ix Equation Edit
+.ix EQUATION EDIT
+.ix Marker Commands, Equation
+.ix Ctrl-F12
+.ix Ctrl-W, view an equation
+.ix Equation, view
+.ix Ins saves, Esc restores, Ctrl-W views the equation
+
+.h3 Insert [eq-insert-new]
+Put the cursor where the equation goes and press {k:Alt-F12} (or {k:Ctrl-F12},
+which Strata offers because many terminals and window managers keep
+{k:Alt-F12} for themselves).  The box Marker Commands opens, with the names of
+the markers in three columns.  Equation is the tenth name in the first column,
+after Endif.  Move to it with the arrow keys or by typing {k:E} (the first
+letter takes the selection to the next name that begins with E: Else, Endif,
+Equation; press it until Equation is highlighted) and press {k:Ins} or
+{k:Return}.  The editor of the equation opens at once.
+.pic pictures/equations-grid.png 5.5 Marker Commands with Equation selected.
+The command is not on the {k:F12} menu bar.  The terminal version reaches it through
+{k:Ctrl-F} and the menu of the Alt commands (see {n:edit-b-marker}).
+The marker can be placed in structured and unstructured text, in a table
+column, in notes and comments.
+
+.h3 The editor of the equation [eq-editor]
+.ix Equation Edit editor
+.ix Restore previous version
+The editor of the equation is a full editor of the kind that edits a note: the
+text of the equation is edited with the same keys as the text of the document.
+The status line shows the mode EQUATION EDIT at the right, the bottom line
+shows "Ins saves, Esc restores, Ctrl-W views the equation", and the name field
+shows (new) for a new equation.
+.pic pictures/equations-edit.png 5.5 The editor of an equation (X11).
+.table 8 52
+Key | Effect
+{k:Ins} | Keep the text and go back to the document.  The marker is put in (a
+ new one) or changed (an existing one) and the document is marked as changed
+ (the star in the status line).  The key counts only without Shift, Ctrl or Alt
+ and when no block is highlighted.
+{k:Esc} | Throw the changes away and go back to the document as it was.  Not
+ taken while a block is highlighted: it then cancels the highlight.
+{k:Ctrl-W} | View the equation as it stands now ({n:eq-view}).
+.end
+All the other keys are those of the text editor: cursor keys, delete, copy
+and paste of the function keys.  What you type is the text of the equation.
+The text is read as follows:
+- The lines are joined.  {k:Return} starts a new line in the editor, so that a
+  long formula can be written in parts; every end of line counts as a space,
+  and the label of the marker shows the lines on one line.  A space has no
+  effect on the result in math mode.
+- The text of an equation has no attributes: bold, underline and italic that
+  you give to the characters, and tab characters, are dropped.  Use
+  {c:\mathbf} and the other commands of {x:eq-fonts} for bold and the others.
+- The blocks that follow the first one are read as further lines.  TeX
+  comments ({c:%}) are refused when printing.
+.ix Equation, lines joined
+.ix Equation, attributes dropped
+
+.h3 Edit an equation that is in the text [eq-insert-edit]
+Put the cursor on the marker, so that the status line shows the marker (in the
+terminal version the label is highlighted; in the X11 version the cursor is a
+box round the whole picture) and press {k:Alt-F12} or {k:Ctrl-F12}.  The editor
+opens with the text.  When the cursor is not on the marker but after it, the
+same key opens the table Marker Commands instead and a new marker would be
+inserted.  The panels of the other markers show fields; the Equation marker
+has none, and its editor opens directly.
+.pic pictures/equations-cursor.png 5.5 The cursor on a displayed equation.
+
+.h3 Other things done to an equation [eq-insert-other]
+.ix Copy an equation
+.ix Delete an equation
+.ix Move an equation
+An equation is an item of the text.  Delete and Backspace remove it like any
+character.  Cut, Copy, Paste and Move ({k:F3}, {k:F4}, {k:F5}, {k:F7}) work on it as on
+any marker, together with the text around it; a block that holds an equation
+carries it along.  Search does not look inside the text of an equation.  The
+count of the words of the document does not count what a marker holds
+({n:edit-b-search}).
+
+.h2 Inline and displayed equations [eq-place]
+.ix Displayed equation
+.ix Inline equation
+.ix On its own
+.ix Display style
+.ix Text style
+Strata does not store whether an equation is displayed (set on a line of its
+own, centered, at full size) or inline (set in the line of text, at text size).
+Each time the line is laid out, the place of the marker determines it, by this
+rule.
+.table 24 36
+Place of the marker | The equation is
+The only item of its line (besides spaces, tabs and attribute changes) |
+ Displayed.
+There is other text or a character on the line, before or after it | Inline.
+Another marker is on the line | Inline (a marker counts as something else on
+ the line).
+Two equations on one line | Both inline.
+An equation followed by a full stop or a comma | Inline: the character after it
+ is other text.
+An equation in a column of a table (a block of several columns) | Judged for
+ its column: alone in the column it is displayed on the screen.
+.end
+A line is the text between two ends of line of a column, or from the start or
+to the end of the column.  A block of one column that holds
+one equation and nothing else is therefore a displayed equation; two
+equations on two lines of one block are two displayed equations.  The rule
+is evaluated when the page is laid out: typing a letter next to a displayed
+equation makes it inline at once, and removing it makes it displayed again.
+There is no way to have a displayed equation followed by punctuation:
+leave the punctuation out, or put it into the text of the equation
+(for instance {c:x=1.}).
+.pic pictures/equations-screen.png 5.5 Inline and displayed equations (X11).
+What changes between the two:
+.table 17 20 21
+ | Displayed | Inline
+Screen | Rows of their own, centered, full size ({c:\displaystyle}) | In the
+ line, text size, on the baseline of the text
+Print | {c:\[ ... \]}, on its own | {c:$ ... $} in the text
+Sums, limits, fractions | Limits above and below, fractions at full size |
+ Limits at the side, fractions small
+.end
+In a table cell or in a box of the printed page an equation is always set
+inline, even when it stands alone in the cell; begin the text with
+{c:\displaystyle} to get the large form there.  On the screen a table column
+that holds only the equation shows it displayed.
+
+.h2 Equations on the screen [eq-screen]
+.ix Equation pictures
+.ix Equation label
+.ix EQN label
+.ix latex, dvipng
+.ix Equation cache
+.ix Equation, rendering
+.ix XDG_CACHE_HOME
+.ix Cache of equation pictures
+The X11 version shows each equation as a picture of the typeset formula.  This
+section says what is shown while the picture is not ready or cannot be made,
+and what the display modes do.  The terminal version always shows the label.
+
+.h3 How the picture is made [eq-screen-job]
+When an equation comes on the screen the Editor makes its picture in the
+background, so that typing is not blocked; the picture appears when it is
+ready and the text below it moves once.  The pictures have the colors of the
+window and a size that follows the font of the window.  A picture that takes
+more than 5 seconds is given up and the equation gets the message "{c:latex}
+took more than 5 seconds".  An equation with a refused command ({n:eq-refused}) gets the message
+"That TeX command is not allowed in an equation", and an empty equation "The
+equation is empty".
+
+.h3 The cache [eq-screen-cache]
+A picture that was made once is kept, so that the equation is shown at once the
+next time the document is opened.  Changing the font of the window or its
+colors makes new pictures.  The place where the pictures are kept is in
+{x:appcfg-search-cache}; it can be deleted at any time, and the pictures are
+made again.
+
+.h3 What is shown meanwhile [eq-screen-label]
+Until the picture is ready, and for ever when it cannot be made, the equation
+is shown as a label in the color of markers: {c:[EQN text]} with the lines
+joined (the name EQN and the text between square brackets).  The label is also
+what an equation is in the terminal version.  A failure shows the label and not
+the message in the line; the message is in the log of the run ({n:appcfg-log}),
+with the block and the line of the equation, and in the message line while the
+cursor is on the equation.  {k:Ctrl-W} in the editor of the equation shows it
+({n:eq-view}).  A Keycap, a Picture and a LaTeX marker whose pictures cannot be made
+are drawn in the Short form in the same way.  An equation that has a command
+that does not exist is shown the same way.
+.pic pictures/equations-bad.png 5 Ctrl-W on an equation that TeX refused.
+
+.h3 The cursor, movement and wrapping [eq-screen-cursor]
+The cursor on an equation is a box round the whole picture.  Up and Down pass
+over the rows that only hold a picture as if they were one.  From the text of
+an inline equation they go to the line above or below.  A displayed equation
+gives two stops: the equation, and the end of its line.  When a line of text
+has an inline equation, the line gets taller if the picture is taller than a
+row; word wrap moves a picture with the words that come after the break.  A
+picture that does not fit in what is left of the line starts the next line and
+the text goes on after it.  A picture that is wider than the whole line is
+clipped at the right edge.
+
+.h3 Viewing an equation: Ctrl-W [eq-view]
+.ix Ctrl-W
+.ix latex could not typeset the equation
+.ix Typesetting...
+In the editor of the equation, {k:Ctrl-W} opens a panel titled Equation over
+the editor.  It shows the picture of the text as it is now, three times the
+resolution of the picture in the text.  If the picture is larger than the
+window it is made again, once, smaller, so that all of it shows.  While the
+picture is made the panel shows "Typesetting...".  If TeX could not typeset the
+text, the panel shows "latex could not typeset the equation:" and, under it,
+the message of TeX with up to three lines after it.  Any key closes the panel,
+and {k:Esc} goes back to the editor.  The text is not saved until {k:Ins}.
+A picture of an equation that is damaged, has no size, has more than eight
+million dots or is wider or taller than 20000 dots is not shown: the panel
+gives the reason in the place of the message of TeX, and the label stays in
+the text.
+.pic pictures/equations-view.png 5 Ctrl-W: the enlarged equation being edited.
+Where no picture can be made the panel is a pop-up with a short text:
+.table 31 29
+Text | When
+Viewing an equation needs the X11 version | The terminal version.
+{c:latex} and {c:dvipng} are needed to typeset an equation | The X11 version, and {c:latex}
+ or {c:dvipng} is not in the system directories.
+.end
+
+.h3 Marker display modes [eq-modes]
+.ix Marker Display Modes
+.ix Display mode, Equation
+.ix Inline mode
+.ix Global, Marker, Marker Display Modes
+The Global menu ({k:F12}, Global, Marker, and then the pages of the Marker Display
+Modes with PgUp) has a row Equation that sets how equations are shown.  The
+default is Inline.
+.pic pictures/equations-modes.png 5 Marker Display Modes: the row Equation.
+.table 10 50
+Mode | What is shown
+Diamond | A diamond glyph in place of the equation.
+Name | The name {c:[EQN]}.
+Short | {c:[EQN text]}: the name and the text.
+Long | {c:[EQUATION text]}.
+Hidden | Nothing: the marker takes no room on the line.  It is still in the
+ text and is printed.
+Inline | The picture (X11 version, {c:latex} and {c:dvipng} found), or {c:[EQN text]}
+ when there is no picture yet or none can be made.
+.end
+Only Inline shows pictures.  The terminal version always draws the labels, and
+in the Inline mode it draws {c:[EQN text]}.  A document that has Hidden
+equations still prints them.
+
+.h2 Printing equations [eq-print]
+.ix Print, equations
+.ix Printing equations
+.ix Printer, equations
+.ix Preview, equations
+.ix Long form of an equation
+.ix EQUATION label
+Final print and Preview (see {n:print}) typeset equations.  A displayed
+equation is set on a line of its own; an inline equation, and an equation in a
+table cell or a box, is set in the text.  Amsmath and amssymb are loaded for
+the whole document; the commands that select a color or define something are
+refused ({n:eq-refused}).  The fonts of the text are those that the Global
+Typeface settings pick; the math is the math of LaTeX.
+
+.h3 What is refused when printing [eq-print-refuse]
+.ix Equation refused
+.ix Refused equations
+.ix Long form
+.ix Printing, refused equation
+Before an equation is printed, the text is checked.  An equation that fails is
+printed as text instead, in what is called the long form of the marker: the
+word EQUATION and the text, in a small typewriter font, in a box.  The rest of
+the document is printed as usual and the run does not stop; the Printer
+reports the equation as an error ({n:eq-print-fail}).  The checks are these
+(the lists are in {n:eq-refused}).
+- The text is empty or has only spaces and line ends.
+- The text has more than 4000 characters.
+- A character above 127 or a control character other than the line end and the
+  tab.
+- A percent sign ({c:%}), a number sign ({c:#}) or a dollar sign ({c:$}), unless
+  written as {c:\%}, {c:\#} and {c:\$}; the character pair {c:^^}.
+- A closing brace without an opening one, or braces that do not balance at the
+  end.
+- A command that is on the list of the refused commands, and any command that
+  begins with {c:pdf}, {c:xetex} or {c:luatex}.
+- {c:\begin} or {c:\end} whose environment is not on the list of the
+  allowed environments, or that has no name in braces.
+- Text that TeX itself cannot set as math.
+A document therefore always gives a PDF, with the unsuitable equations as text.
+The equation reads, for instance,
+.code
+EQUATION \input{x}
+.end
+in the box, which is the way to see in the output that something was refused.
+
+.h3 Differences between the screen and the printed page [eq-print-diff]
+.ix Screen and print differ
+.table 22 18 18
+Point | Screen | Print
+Checked by | A short list of commands | A longer list, plus the environments
+ and the characters
+Environments | Anything that TeX takes | Only a list of 13 ({n:eq-refused})
+{c:\hspace}, {c:\vspace}, {c:\label} | Accepted by the list | Refused
+Percent, number, dollar signs | Reach TeX | Refused unless escaped
+Characters above 127 | Reach TeX unchanged | Refused
+Length | 1023 characters, the rest is cut | 4000 characters
+Colors | Window colors | The colors of the text of the page
+Equation alone in a table cell | Displayed | Inline
+.end
+An equation that you want on both must keep to the common part: the commands
+of the tables of this chapter do.  The long form of printing is what you see
+if you do not.
+
+.h2 The text of an equation [eq-text]
+.ix Math mode
+.ix Spaces in equations
+.ix Groups
+.ix Braces
+.ix Special characters in equations
+.ix Escape characters
+.ix Characters with a meaning in TeX
+.ix Letters in equations
+.ix Digits in equations
+.ix Italics in equations
+The text of an equation is read in the math mode of TeX.  The few rules that
+the rest of the chapter takes for granted are these.
+- Spaces and ends of line are ignored.  {c:a   +   b} and {c:a+b} are the same.
+  Spacing is made by the program from the kind of each symbol
+  ({n:eq-spacing} says how to change it).
+- A letter is a variable and is set in the italic of math ({eq:abc}), a digit is
+  upright ({eq:123}), and so is a name that is a command ({eq:\sin x}).  Several
+  letters side by side are several variables multiplied, never a word: for a
+  word use {c:\text} or {c:\mathrm} ({n:eq-fonts}).
+- A command begins with a backslash and a name of letters; it ends at the first
+  character that is not a letter.  A space after the name belongs to the name
+  and is lost: {c:\alpha x} is {eq:\alpha x}.  A command that is a backslash and
+  one non-letter ({c:\, \;} {c:\{{}) has no name to end.
+- The braces make a group.  The argument of a command is the next character or
+  the next group: {c:\frac12} is {c:\frac{{1}}{{2}}}; {c:x^2} and {c:x^{{2}}}
+  are the
+  same, but {c:x^{{10}}} needs the braces (without them only the 1 goes up).
+  A group alone, {c:{{ }}}, sets what is in it as a unit and makes the sign
+  that stands in it an ordinary symbol: {c:a{{+}}b} has no spaces round the
+  sign.
+- The signs that have a meaning of their own are written as in the table to get
+  the character itself.
+.ix \ (backslash)
+.table 8 23 27
+Sign | Meaning in the text | The sign itself
+{c:\} | Starts a command | {c:\backslash}
+{c:{{} {c:}}} | Group | {c:\{{} and {c:\}}} (or {c:\lbrace \rbrace})
+{c:^} | Superscript | {c:\^{{}}} (a hat on nothing); {c:\hat{{}}}; {c:\wedge}
+ is a different sign
+{c:_} | Subscript | {c:\_}
+{c:&} | Separator of the columns of a table | {c:\&}
+{c:#} | Parameter of a definition; refused when printed | {c:\#}
+{c:%} | Comment; refused when printed | {c:\%}
+{c:$} | End of math mode; refused when printed | {c:\$}
+{c:~} | A space that does not break (a tie) | {c:\sim} is the sign;
+ {c:\textasciitilde} in text
+{c:'} | A prime | {c:\prime}, and {c:\textquotesingle} in text
+.end
+.ix \{{ (brace)
+.ix \% (percent)
+.ix \# (number sign)
+.ix \$ (dollar)
+.ix \& (ampersand)
+.ix \_ (underscore)
+The characters {c:\$ \% \# \& \_ \{{ \}}} are typeset by the commands that the
+table gives: {eq:\$ \% \# \& \_ \{{ \}}}.  Characters of the keyboard that have
+no
+meaning in TeX (the letters, the digits, {c:+ - = < > / ( ) [ ] ! , ; : . ' | @
+" `} and
+the question mark) are ordinary.  The bar {c:|} is a vertical line, and with
+{c:\left} and {c:\right} it grows with its contents; {c:\|} is the double bar.

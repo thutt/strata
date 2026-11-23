@@ -1,0 +1,25 @@
+
+---------------------------------- Command File --------------------------------
+
+The Command File panel is used to save or retrieve settings that you use 
+repeatedly or use when performing a Manuscript function directly from DOS.
+
+--Procedure---------------------------------------------------------------------
+
+ Select the function to use in the 
+  command file; for example, +------------------ Command File -----------------+
+  select Print Document to   |                                                 |
+  save your final print      | Command File Name:                              |
+  settings.                  |                                                 |
+ Complete the panels.       | Operation:  Save settings in command file       |
+ Press Shift Ins.           |             Retrieve settings from command file |
+ Enter a command file name. |                                                 |
+ Press Ins to create the    +---- Press Ins to Save/Retrieve Command File ----+
+  file.
+--------------------------------------------------------------------------------
+# The .CMF extension is automatically assigned to command files.
+# Command files are saved in the working directory unless you specify a path 
+  in the command file name.
+# See Appendix A in the Reference manual for information on using command files.
+--------------------------------------------------------------------------------
+   Document Manager   Batch Print Utility   Keyboard Summary   Help Index

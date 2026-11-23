@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+-- Canceled <description> --
+
+You have pressed Ctrl Break to stop a process.  Press any key to continue.
+
+-- Cannot bottom align columns (too much whitespace) --
+
+Bottom aligning the winding columns would leave too much whitespace between
+lines, blocks, or sections.  Change the bottom alignment settings on the 
+Winding Column Layout panel and retry the operation.
+
+-- Cannot display complete directory listing (too many files) -- 
+
+There is not enough memory available to display a complete file listing for the 
+current directory. To use Gray + for this directory, remove terminate-and-stay
+resident programs from memory or move some of the files into another directory.
+
+-- Cannot do hanging indent - not on first line of block --
+
+You pressed Ctrl H to create a hanging indent without having the cursor on the 
+first line of the block or column.  Move to the first line of the block and 
+retry.  Use Ctrl G on any line in a block to insert a text indent.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

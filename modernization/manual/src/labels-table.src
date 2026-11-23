@@ -1,0 +1,56 @@
+.table 16 10 6 8 11 4
+Numbers | Kind | Paper | Stickers | Size in mm | Lines
+5160, 5260, 8160 | Address | Letter | 3 x 10 | 66.7 x 25.4 | 5
+5161, 5261, 8161 | Address | Letter | 2 x 10 | 101.6 x 25.4 | 5
+5162, 5262, 8162, 5962 | Address | Letter | 2 x 7 | 101.6 x 33.9 | 7
+5159 | Address | Letter | 2 x 7 | 101.6 x 38.1 | 7
+5197 | Address | Letter | 2 x 6 | 101.6 x 38.1 | 7
+5163, 5263, 8163, | Shipping | Letter | 2 x 5 | 101.6 x 50.8 | 10
+ 8463, 8663 |  |  |  |  |
+5164, 5264, 8164 | Shipping | Letter | 2 x 3 | 101.6 x 84.7 | 17
+5168 | Shipping | Letter | 2 x 2 | 88.9 x 127 | 25
+6873 | Shipping | Letter | 2 x 4 | 95.2 x 50.8 | 10
+6874 | Shipping | Letter | 2 x 3 | 95.2 x 76.2 | 15
+6573 | Shipping | Letter | 1 x 2 | 206.5 x 127 | 25
+5126 | Shipping | Letter | 1 x 2 | 215.9 x 139.7 | 28
+5165, 8165, 5265 | Full page | Letter | 1 x 1 | 215.9 x 279.4 | 57
+5167, 5267, 8167 | Return address | Letter | 4 x 20 | 44.4 x 12.7 | 3
+8195 | Return address | Letter | 4 x 15 | 44.4 x 16.9 | 4
+5366, 5066, 5166, | Filing | Letter | 2 x 15 | 87.3 x 16.9 | 4
+ 5266, 8066, 8166, 8366 |  |  |  |  |
+5026 | Filing | Letter | 2 x 9 | 87.3 x 23.8 | 4
+5195, 5295 | Round | Letter | 2 x 3 | diameter 84.1 | 12
+5193, 5293 | Round | Letter | 4 x 6 | diameter 41.3 | 6
+5194, 5294 | Round | Letter | 3 x 4 | diameter 63.5 | 9
+3274.2, 3112, 8293 | Round | Letter | 4 x 5 | diameter 38.1 | 5
+3274.3 | Round | Letter | 3 x 3 | diameter 63.5 | 9
+5395, 5095, 5895, 8395 | Name badge | Letter | 2 x 4 | 85.7 x 59.3 | 11
+5196 | Diskette | Letter | 3 x 3 | 69.8 x 69.8 | 13
+5931 | CD or DVD | Letter | 1 x 2 | diameter 117.5 | 17
+5824 | CD or DVD | Letter | 1 x 2 | diameter 117.5 | 17
+8960 | CD or DVD | Letter | 1 x 2 | diameter 117.5 | 17
+L7160, J8160 | Address | A4 | 3 x 7 | 64 x 38.1 | 7
+L7161, J8161 | Address | A4 | 3 x 6 | 63.6 x 46.8 | 9
+L7162 | Address | A4 | 2 x 8 | 99.1 x 33.9 | 7
+L7163 | Address | A4 | 2 x 7 | 99.1 x 38.1 | 7
+L7164, J8164 | Address | A4 | 3 x 4 | 63.5 x 72 | 14
+L7165, J8165 | Address | A4 | 2 x 4 | 99.1 x 67.7 | 13
+L7169 | Shipping | A4 | 2 x 2 | 99.1 x 139 | 28
+L4785, L4784, L4786, | Name badge | A4 | 2 x 5 | 80 x 50 | 9
+ L4787 |  |  |  |  |
+L4732 | Mini address | A4 | 5 x 16 | 35.6 x 16.9 | 4
+L4770, J8654, L6140, | Mini address | A4 | 4 x 10 | 45.7 x 25.4 | 5
+ L6145, L7654 |  |  |  |  |
+J8157 | Address | A4 | 3 x 11 | 64 x 24.3 | 5
+8651, L8651, J8651, | Mini address | A4 | 5 x 13 | 38.1 x 21.2 | 4
+ J8551, L7651, L7551 |  |  |  |  |
+8658, J8658, L8658 | ID | A4 | 7 x 27 | 25.4 x 10 | 2
+L7664 | Diskette | A4 | 2 x 4 | 70 x 71.9 | 14
+8666, J8666 | Diskette | A4 | 2 x 5 | 70 x 52 | 10
+L6043 | CD or DVD | A4 | 1 x 2 | diameter 117.4 | 17
+L7676 | CD or DVD | A4 | 1 x 2 | diameter 117 | 17
+8676, J8676 | CD or DVD | A4 | 1 x 2 | diameter 117.5 | 17
+L6015 | CD or DVD | A4 | 1 x 2 | diameter 117 | 17
+38931, DL33, CR33 | Address | A4 | 3 x 11 | 70 x 25 | 5
+18036 | Address | A4 | 3 x 9 | 69.8 x 32.1 | 6
+.end

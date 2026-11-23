@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Math computation error (<description>) -- 
+
+The expression specified for the Math command cannot be computed for the reason
+specified.  Redefine the expression to correct the problem and retry the 
+operation.  See chapter 4 of the Reference manual for more information.
+
+-- Math syntax error (<description>) -- 
+
+The expression specified for the Math command is not valid for the reason
+specified.  Redefine the expression and retry the operation.  See chapter 4 of
+the Reference manual for more information.
+
+-- Memory overflow occurred -- 
+
+There is not enough printer memory available to print the current document 
+with the current printer setup configuration.  Modify the document or change 
+the graphics density setting in Setup.
+
+-- Merge data field too long; must be 240 characters or less --
+
+A merge data field cannot be longer than 240 characters; data after the 240th
+character will be truncated. Adjust the field and reprint the document.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

@@ -1,0 +1,530 @@
+KEYS OF STRATA: EVERY KEY THAT DOES SOMETHING
+=============================================
+
+This list names every key that does something in Strata.  It is the source of
+the key leaflet.  A row can name several keys that do the same.
+
+Columns
+  KEY   The key as the leaflet writes it.  A semicolon separates keys that do
+        the same.  Keypad is always "Keypad".
+  AT    Where the key works:
+          ed  the Editor (structured or unstructured text)
+          hl  the Editor while an area is highlighted (F3, F4, F7, Alt-F4,
+              Ctrl-X, Ctrl-F3, Ctrl-F4, Autosort)
+          eq  the note, comment and equation editor (the same editor, with
+              Ins to keep and Esc to restore)
+          mn  the F12 menu bar          gr  the Marker Commands grid
+          pn  a panel (form) of the Editor   ls  a list, a one-line question
+          hp  the help viewer           pg  the pager (text pages)
+          dm  the Document Manager (and the Editor when it has no file)
+          vw  the Viewer of Preview
+          sp, th  Spell, Thesaurus      all  everywhere
+  VER   both = the terminal and the X11 version; term = terminal only;
+        x11 = X11 only.
+  WHAT  What the key does.
+
+How the two versions name the keys
+  - The X11 version sees every modifier.  Keypad +, Keypad - and Keypad *
+    arrive as Alt-+, Alt-- and Alt-* (the outline keys).  Esc loses its
+    modifiers; Backspace keeps only Alt; Tab with Shift is back-tab; Enter
+    and Keypad Enter are the same.
+  - The terminal version takes the cursor keys, Home, End, Ins, Del, PgUp,
+    PgDn and F1 to F12 with Shift, Alt and Ctrl, Alt-key as Esc and the key,
+    and Ctrl-letter as the control key.  Terminals and window managers often
+    keep Alt-F keys, Shift-Ins, F11 or F12 for themselves: Strata offers
+    Ctrl-F (a list of the Alt-F commands), Ctrl-F12 (Marker), Alt-O
+    (Overtype), Alt-I (Italics) and Alt-< Alt-> (move a section).
+
+
+MOVING THE CURSOR
+-----------------
+KEY                        AT  VER  WHAT
+Left ; Right               ed  both Character left, right.
+Up ; Down                  ed  both Line up, down.
+PgUp ; PgDn                ed  both About half a screen up, down.
+Home ; End                 ed  both Start, end of the line.
+Ctrl-Left ; Ctrl-Right     ed  both Word left, right.
+Ctrl-Home ; Ctrl-End       ed  both Start, end of the block (of the
+                                    column).
+Shift-Left ; Shift-Right   ed  both Column left, right; at the edge of
+                                    a block with one column, to the
+                                    section above (level up), to the
+                                    first subsection (level down).
+Shift-Up ; Shift-Down      ed  both Structured: to the headline of the
+                                    section (on it already: of the
+                                    previous section); to the headline
+                                    of the next section.
+Shift-PgUp ; Shift-PgDn    ed  both Structured: previous, next section
+                                    of the same level.
+Shift-Home ; Shift-End     ed  both Start, end of the document.
+Alt-F7                     ed  both Go To: Document start, Document
+                                    end, Section number (type 2.1),
+                                    Next section, Previous section.
+                                    Terminal: Ctrl-F, Go To.
+Ctrl-Up ; Ctrl-Down ;      ed  both Same as the key without Ctrl or
+Alt-Left ; Alt-Right ;              Alt.  Ctrl-PgUp
+Alt-Up ; Alt-Down ;                 and Ctrl-PgDn are not
+Ctrl-PgUp ; Ctrl-PgDn ;             special.
+Alt-PgUp ; Alt-PgDn ;               
+Alt-Home ; Alt-End                  
+Ctrl-Shift-Left ;          ed  both Ctrl wins: word left, right.
+Ctrl-Shift-Right                    
+Ctrl-Shift-Home ;          ed  both Shift wins: start, end of the
+Ctrl-Shift-End ;                    document.
+Alt-Shift-Home ;                    
+Alt-Shift-End                       
+
+EDITING, BLOCKS, COLUMNS AND SECTIONS
+-------------------------------------
+KEY                        AT  VER  WHAT
+Del                        ed  both Delete the character under the
+                                    cursor (an empty block).
+Backspace                  ed  both Delete the character before.
+Ctrl-D                     ed  both Delete the next word.
+Alt-Backspace              ed  both Delete the previous word.
+Ctrl-Backspace ;           ed  both Same as Backspace: the modifier is
+Shift-Backspace                     dropped.  (Use Alt-Backspace.)
+Shift-Del ; Ctrl-Del ;     ed  both Same as Del.
+Alt-Del                             
+Enter ; Ctrl-M ; Ctrl-J    ed  both End the line: break the line at
+                                    the cursor and start a new one.
+Tab ; Ctrl-I               ed  both Insert a tab, to the next tab
+                                    stop.
+Ctrl-Shift-Space           ed  both Insert a nonbreaking space: a
+                                    space that a line is never broken
+                                    at.  In a field of a panel, the
+                                    same character.
+Alt-F5 ; Alt-O             ed  both Overtype on, off (OVR in the
+                                    status line).  Terminal: Alt-O, or
+                                    Ctrl-F, Overtype.
+Ctrl-H                     ed  both Hanging indent at the cursor.  (A
+                                    terminal whose Backspace sends
+                                    Ctrl-H gives this, not Backspace.)
+Shift-Tab                  ed  both Back one field in panels and
+                                    one link in help.
+Alt-F2                     ed  both Append menu: Column, Block,
+                                    Global-block, and in a structured
+                                    document Peer-section,
+                                    Sub-section.  Terminal: Ctrl-F,
+                                    Append.
+F2                         ed  both Split menu: Column, Block, Section
+                                    (structured): splits at the
+                                    cursor.
+Alt-F3                     ed  both Join menu: Block, Section
+                                    (structured): joins with the next.
+                                    Terminal: Ctrl-F, Join.
+Alt-F4                     ed  both Delete: choose Text, Column,
+                                    Block, Section, highlight, Enter.
+                                    Terminal: Ctrl-F, Delete.
+Ctrl-A                     ed  both Append a block, local format (the
+                                    format of this block).  Menu:
+                                    Alt-F2 Block.
+Ctrl-O                     ed  both Append a block, global format.
+                                    Menu: Alt-F2 Global-block.
+Ins                        ed  both Structured: append a section of
+                                    the same level.  Menu: Alt-F2
+                                    Peer-section.
+Shift-Ins                  ed  both Structured: append a subsection.
+                                    Menu: Alt-F2 Sub-section.  Many
+                                    terminals keep Shift-Ins for
+                                    paste.
+Ctrl-Ins ; Alt-Ins         ed  both Same as Ins.
+Ctrl-V                     ed  both Split the block at the cursor.
+                                    Menu: F2 Block.
+Ctrl-Y                     ed  both Structured: split the section at
+                                    the cursor.  Menu: F2 Section.
+Ctrl-/ ; Ctrl-F10 ; Ctrl-Z ed  both Undo the last operation.  Menu: F12
+                                    Tools Undo.  A terminal sends
+                                    Ctrl-/ as the byte 1F.
+Alt-/ ; Ctrl-F11           ed  both Redo.  Menu: F12 Tools Redo.
+Alt-_                      ed  both Type a soft hyphen: a place where a
+                                    word may be broken (Alt-Shift-
+                                    hyphen).  Alt-- still contracts.
+Ctrl-K                     ed  both Cut the block (into the clipboard;
+                                    F5 pastes it).
+Ctrl-L                     ed  both Structured: cut the section.
+F8                         ed  both Table menu: Add column, Split
+                                    column here.
+F6 ; Ctrl-E                ed  both Block format editor: indent,
+                                    justification, indent kind,
+                                    attribute, tabs, one question at a
+                                    time (Enter, Esc).
+
+OUTLINE AND LEVELS
+------------------
+KEY                        AT  VER  WHAT
+Ctrl-^                     ed  both Structured: edit this section only
+                                    (SECTION EDIT), again: the whole
+                                    document.  Menu: F12 Edit Section
+                                    or Document.  Ctrl-Shift-6 on a PC
+                                    keyboard.
+Keypad + ; Alt-+ ; Alt-=   ed  both Expand the section; pressed again,
+                                    one level deeper.  X11: the keypad
+                                    key; terminal: Alt-+ or Alt-=.
+Keypad - ; Alt--           ed  both Collapse the section to its
+                                    headline.  X11: the keypad key;
+                                    terminal: Alt--.
+Keypad * ; Alt-*           ed  both Show, hide the text of the
+                                    section.  X11: the keypad key;
+                                    terminal: Alt-*.
+Alt-1 ... Alt-9            ed  both Show the headlines down to that
+                                    level; pressed again, back.
+Alt-0                      ed  both Outline the whole document;
+                                    pressed again, open everything.
+Alt-[ ; Alt-< ; Alt-,      ed  both Move the section left (a level
+                                    up).  In a terminal Alt-[ cannot
+                                    be told from the start of a key
+                                    code: use Alt-< or Alt-,.
+Alt-] ; Alt-> ; Alt-.      ed  both Move the section right (a level
+                                    down, under the section before
+                                    it).
+
+COPY, CUT, PASTE, MOVE, LIBRARY, HIGHLIGHT
+------------------------------------------
+KEY                        AT  VER  WHAT
+F3                         ed  both Copy: choose Text, Column, Block,
+                                    Section; highlight; Enter.
+
+F4                         ed  both Cut: choose, highlight, Enter.
+
+
+F5                         ed  both Paste the last copy or cut at the
+                                    cursor.
+F7                         ed  both Move: choose, highlight, Enter,
+                                    then place the cursor and F5.
+
+Ctrl-X                     ed  both Cut text: highlight with the
+                                    cursor keys, then Enter.
+Ctrl-F3                    ed  both Copy to the library: choose,
+                                    highlight, Enter, then name the
+                                    entry.
+Ctrl-F4                    ed  both Cut to the library: choose,
+                                    highlight, Enter, then name the
+                                    entry.
+Ctrl-F5                    ed  both Paste from the library: a list of
+                                    entries.
+Enter                      hl  both Accept the highlighted area.
+Esc                        hl  both Cancel the highlight.
+Left ; Right ; Up ; Down ; hl  both Stretch the highlight (the cursor
+PgUp ; PgDn ; Home ; End            keys of the text).
+F1                         hl  both Help while highlighting.
+Home ; End                 hl  both In Autosort Table: start, end of
+                                    the section.
++ ; -                      hl  both In Autosort Table: change the sort
+                                    direction.
+
+ATTRIBUTES
+----------
+KEY                        AT  VER  WHAT
+Ctrl-B                     ed  both Bold on, off.
+Alt-I                      ed  both Italics on, off (Ctrl-I is Tab).
+Ctrl-U                     ed  both Underscore on, off.
+Ctrl-N                     ed  both Normal text.
+Alt-F6                     ed  both Set Attributes menu: Normal, Bold,
+                                    Italics, Underscore Words.
+                                    Terminal: Ctrl-F, Set Attribute.
+
+SEARCH AND REPLACE
+------------------
+KEY                        AT  VER  WHAT
+F9                         ed  both Search: a panel for the text,
+                                    Enter searches forward.
+Alt-F9                     ed  both Replace: two questions (find,
+                                    replace by), then every one is
+                                    replaced.  Terminal: Ctrl-F,
+                                    Replace.
+
+MARKERS AND THE EQUATION / NOTE EDITOR
+--------------------------------------
+KEY                        AT  VER  WHAT
+Alt-F12 ; Ctrl-F12         ed  both Marker: on a marker, its panel;
+                                    elsewhere the Marker Commands
+                                    grid.  Ctrl-F12 is the terminal
+                                    key (also Ctrl-F, Marker).
+Up ; Down ; Left ; Right   gr  both Move in the grid (Up and Down wrap
+                                    round).
+Home ; End                 gr  both First, last command.
+a letter                   gr  both Go to the next command that begins
+                                    with that letter.
+Ins ; Enter                gr  both Choose the command.
+Esc                        gr  both Close the grid.
+Ins                        eq  both Keep the changes of a note,
+                                    comment or equation (NOTE EDIT,
+                                    EQUATION EDIT).
+Esc                        eq  both Restore the previous version.
+Ctrl-W                     eq  x11  Equation editor: a picture of the
+                                    equation (needs latex and dvipng);
+                                    any key closes it.  In a terminal:
+                                    a message.
+
+MACROS
+------
+KEY                        AT  VER  WHAT
+Alt-A ... Alt-Z ; Alt-0    ed  both Run the macro of that key (none
+... Alt-9                           defined: no action).  A macro on
+                                    Alt-1 ... Alt-9 or Alt-0 replaces
+                                    the outline key.
+Ctrl-F1                    ed  both End a macro recording (F12 Tools
+                                    Macros Learn).  F12 is not
+                                    recorded.
+
+FILES AND PRINTING
+------------------
+KEY                        AT  VER  WHAT
+Ctrl-S                     ed  both Save at once.  Menu: F12 File
+                                    Save.
+Ctrl-R                     ed  both Retrieve a file.  Menu: F12 File
+                                    Retrieve.
+Ctrl-Q                     ed  both Quit the editor (asks when the
+                                    document changed).  Menu: F12
+                                    Quit.
+Ctrl-P                     ed  both Print panel, final quality (asks
+                                    for a title page).  Menu: F12
+                                    Print Final; F12 Print Draft is
+                                    the draft panel.
+Esc                        ed  both While Print or Preview waits for
+                                    LaTeX: stop it.
+
+MENUS AND HELP
+--------------
+KEY                        AT  VER  WHAT
+F12                        ed  both The menu bar: File Global Edit
+                                    Print Tools Quit.
+Ctrl-F                     ed  both Commands list: every command that
+                                    has a function key, with its key
+                                    (for terminals that keep them),
+                                    and Alt-[, Alt-], the soft hyphen.
+Left ; Right               mn  both Previous, next entry (wraps
+                                    round).
+Home ; End                 mn  both First, last entry.
+Enter ; Ins ; Down         mn  both Choose the entry (open its
+                                    submenu).
+Esc                        mn  both Back one level; at the top, leave.
+F12                        mn  both Leave the menu.
+a letter                   mn  both Choose the entry that begins with
+                                    it (first letter).
+F1                         ed  both Help on the edit screen.
+Shift-F1 ; Ctrl-F1         ed  both Same as F1.
+F1                         hp  both Close help.
+Esc ; q                    hp  both Close help.
+Up ; Down                  hp  both Scroll a line.
+PgUp ; PgDn ; Space        hp  both Scroll a page.
+Tab ; Right                hp  both Next link.
+Shift-Tab ; Left           hp  both Previous link.
+Enter                      hp  both Follow the link.
+Backspace ; Ctrl-H         hp  both Back to the topic before; at the
+                                    first topic, close help.
+i                          hp  both Help index (a list of topics).
+
+PANELS, FIELDS AND LISTS
+------------------------
+KEY                        AT  VER  WHAT
+Ins                        pn  both Accept the panel.
+Esc                        pn  both Cancel the panel.
+Down ; Tab ; Enter         pn  both Next field.
+Up ; Shift-Tab             pn  both Previous field.
+Left ; Right               pn  both In text: one character; in a
+                                    choice: the previous, next choice.
+Home ; End                 pn  both Start, end of the text.
+Backspace ; Del            pn  both Delete a character; on a field
+                                    just entered, clear it.
+a character                pn  both Type in a text field; on a field
+                                    just entered, it replaces the
+                                    text.
+Space                      pn  both On a choice: the next choice.
+F2 ; Keypad + ; Alt-+      pn  both A list to pick from: files or
+                                    directories for a name, the
+                                    choices for a choice.  X11: Keypad
+                                    +; terminal: F2 or Alt-+.
+PgUp ; PgDn                pn  both Panels with several pages (Global
+                                    Format, Page, Marker): next,
+                                    previous page.
+Up ; Down                  ls  both Move in the list.
+Home ; End ; PgUp ; PgDn   ls  both First, last entry; a page up,
+                                    down.
+Enter                      ls  both Choose the entry.
+Esc                        ls  both Leave the list.
+a letter                   ls  both The next entry that begins with
+                                    it; in a list of 12 or fewer,
+                                    chosen.
+Enter                      ls  both One-line question: accept.
+Esc                        ls  both One-line question: cancel.
+Left ; Right ; Home ; End  ls  both Edit the one-line answer; the
+; Backspace ; Del                   first key replaces the old text.
+Enter ; Esc ; q ; Ctrl-Q   pg  both Close the pager.
+Up ; Down ; PgUp ; PgDn ;  pg  both Scroll the pager.
+Space ; Home ; End                  
+any key                    all both Close a message box.
+
+THE DOCUMENT MANAGER
+--------------------
+KEY                        AT  VER  WHAT
+Up ; Down                  dm  both Previous, next entry (wraps).
+Home ; End                 dm  both First, last entry.
+Enter ; Ins                dm  both Run the entry.
+a letter                   dm  both Select the next entry that begins
+                                    with it (Print, Preview share P).
+F1                         dm  both Help of the Document Manager.
+Esc                        dm  both Close a submenu (in the main menu
+                                    choose Quit).
+a letter                   dm  both The Editor without a file shows a
+                                    Document Manager list: a letter
+                                    chooses the entry at once (E is
+                                    Edit / Preview / Print Document).
+Ins                        dm  both Accept a form (Edit /
+                                    Preview / Print Document, Setup).
+Enter                      dm  both Next field; on the last field,
+                                    accept the form.
+Down ; Tab ; Up ;          dm  both Next, previous field.
+Shift-Tab                           
+Esc                        dm  both Cancel the form.
+F1                         dm  both Help on the form.
+F2 ; Keypad + ; Alt-+ ; +  dm  both On a file or directory field: a
+                                    list of them.
+Left ; Right ; Home ; End  dm  both Edit the field.
+; Backspace ; Del                   
+
+THE VIEWER
+----------
+KEY                        AT  VER  WHAT
+n ; N ; Space ; PgDn       vw  x11  Next page.
+p ; P ; PgUp               vw  x11  Previous page.
+Home ; End                 vw  x11  First, last page.
+g ; G                      vw  x11  Go to a page: type the number,
+                                    Enter goes, Esc cancels, Backspace
+                                    deletes a digit.
+Up ; Down ; Left ; Right   vw  x11  Pan 60 pixels.
++ ; = ; Keypad +           vw  x11  Zoom in by 25 percent.
+- ; Keypad -               vw  x11  Zoom out by 25 percent.
+0 ; Keypad 0 ; Keypad *    vw  x11  Zoom 100 percent.
+F1 ; ?                     vw  x11  Show, hide the key legend.
+q ; Q ; Esc                vw  x11  Close the viewer.
+
+FUNCTION KEYS, F1 TO F12, WITH SHIFT, CTRL AND ALT
+--------------------------------------------------
+KEY                        AT  VER  WHAT
+F1                         ed  both Help (the edit screen)
+Shift-F1                   ed  both Same as F1.
+Ctrl-F1                    ed  both Same as F1 (also ends a macro
+                                    recording).
+F2                         ed  both Split menu: Column, Block,
+                                    Section.
+Shift-F2                   ed  both Same as F2.
+Ctrl-F2                    ed  both Math: choose, highlight, Enter;
+                                    the result is pasted with F5.
+Alt-F2                     ed  both Append menu.
+F3                         ed  both Copy: choose, highlight, Enter.
+Shift-F3                   ed  both Same as F3.
+Ctrl-F3                    ed  both Copy to library.
+Alt-F3                     ed  both Join menu.
+F4                         ed  both Cut: choose, highlight, Enter.
+Shift-F4                   ed  both Same as F4.
+Ctrl-F4                    ed  both Cut to library.
+Alt-F4                     ed  both Delete: choose, highlight, Enter.
+F5                         ed  both Paste.
+Shift-F5                   ed  both Same as F5.
+Ctrl-F5                    ed  both Paste from library.
+Alt-F5                     ed  both Overtype on, off.
+F6                         ed  both Block format editor.
+Shift-F6                   ed  both Same as F6.
+Ctrl-F6                    ed  both Case: Upper, Lower, Capitalize;
+                                    choose, highlight, Enter.
+Alt-F6                     ed  both Set Attributes menu.
+F7                         ed  both Move: choose, highlight, Enter,
+                                    F5.
+Shift-F7                   ed  both Same as F7.
+Ctrl-F7                    ed  both Find the previous Print Error.
+Alt-F7                     ed  both Go To menu.
+Alt-F8                     ed  both Border: highlight columns, Enter, the
+                                    Border Layout panel.
+F8                         ed  both Table menu: Add column, Split
+                                    column here.
+Shift-F8                   ed  both Same as F8.
+Ctrl-F8                    ed  both Find the next Print Error.
+F9                         ed  both Search.
+Shift-F9                   ed  both Same as F9.
+Ctrl-F9                    ed  both Search again (text, Print Err.).
+Alt-F9                     ed  both Replace.
+F12                        ed  both The menu bar.
+Shift-F12                  ed  both Same as F12.
+Ctrl-F12                   ed  both Marker commands.
+Alt-F12                    ed  both Marker commands.
+Ctrl-Alt-F1 ...            ed  both Same as Alt-F2 ... Alt-F9, Alt-F12.
+Ctrl-Alt-F12 ;                      
+Shift-Alt-F1 ...                    
+Shift-Alt-F12                       
+Ctrl-Shift-F1 ...          ed  both Same as Ctrl-F1 ... Ctrl-F9, Ctrl-F12.
+Ctrl-Shift-F12                      
+
+OTHER CTRL AND ALT KEYS
+-----------------------
+KEY                        AT  VER  WHAT
+Alt-letter                 ed  both Alt-I and Alt-O are commands;
+                                    every other Alt-letter is a macro
+                                    key (it does nothing until a macro
+                                    is defined).
+
+KEYPAD AND TERMINAL
+-------------------
+KEY                        AT  VER  WHAT
+Keypad Enter               ed  x11  Same as Enter.
+Keypad Ins ; Keypad Del ;  ed  x11  NumLock off: the same as the named
+Keypad Home ; Keypad End ;          key, with the same modifiers.
+Keypad PgUp ; Keypad PgDn           
+; Keypad Up ; Keypad Down           
+; Keypad Left ; Keypad              
+Right                               
+Keypad 0 ... Keypad 9 ;    ed  x11  NumLock on: type the digit or the
+Keypad .                            point.
+Alt-key (terminal)         ed  term A terminal sends Alt-key as Esc
+                                    and the key.  To use Esc alone, press
+                                    it once and wait a moment, or
+                                    twice.
+
+SPELL AND THESAURUS
+-------------------
+KEY                        AT  VER  WHAT
+Ctrl-C                     ed  both Spell: check the word at the
+                                    cursor.
+F12 T S D ; F12 T S B ;    mn  both Spell: Document, Block, Section,
+F12 T S S ; F12 T S W               Word.
+A ; D ; I ; E ; G ; L ; Q  sp  both In the spell panel: Accept,
+                                    Define, Ignore, Edit, Guess, Line,
+                                    Quit (first letter, or Left, Right
+                                    and Enter).
+Ctrl-T                     ed  both Thesaurus: look up the word at the
+                                    cursor.
+Left ; Right ; Up ; Down ; th  both Thesaurus: walk the words and the
+Home ; End                          rows.
+PgUp ; PgDn ; Ctrl-Home ;  th  both Thesaurus: scroll; heading word;
+Ctrl-End                            last word on the screen.
+Enter ; Ctrl-T ; Ctrl-PgUp th  both Thesaurus: replace the word; look
+; Esc                               up the synonym (history); go back;
+                                    leave.  A letter opens the Look Up
+                                    box.
+
+THE MODIFIER RULES (terminal version)
+-------------------------------------
+  Cursor keys.  Left and Right: Ctrl wins over Shift, Alt is ignored.  Up,
+  Down, PgUp, PgDn: Ctrl and Alt are ignored; Shift has a meaning (section
+  moves).  Home and End: Shift wins over Ctrl, Alt is ignored.
+  Function keys.  Alt (alone, with Shift or with Ctrl) is the Alt-F table.
+  Ctrl-F1 (Learn), Ctrl-F3, F4, F5 (library), Ctrl-F10 (Undo), Ctrl-F11
+  (Redo) and F12 are special.  F10 and F11 have no command without Ctrl.
+  Ins, Del.  Shift, Ctrl and Alt are ignored: Ins appends a section (Shift-
+  Ins a subsection), Del deletes.
+  Letters.  Ctrl-letter is the control key (Ctrl-I is Tab, Ctrl-M and
+  Ctrl-J are Enter, Ctrl-H is the hanging indent).  Alt-letter is a macro
+  key, except Alt-I (Italics) and Alt-O (Overtype).
+
+MENU PATHS (letters: the first letter of an entry chooses it)
+-------------------------------------------------------------
+  F12 File: Save, Retrieve, New, Delete, Import, Export.
+  F12 Global: Format, Page, Typeface, Marker, Options, Named (Edit, Delete).
+  F12 Edit: Title, Structured or Unstructured, Section or Document.
+  F12 Print: Draft, Final, Preview (Document, Block, Section).
+  F12 Tools: Macros (Edit, Delete, Learn, Save, Retrieve), Library (Edit,
+  Delete, Save, Retrieve), Spell, Thesaurus, Autosort
+  (Section, Table), Count.
+  F12 Quit.
+

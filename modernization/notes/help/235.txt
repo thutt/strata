@@ -1,0 +1,25 @@
+
+-------------------- Import from 1-2-3/Symphony File Options -------------------
+
+Worksheet File Name: Enter the name of the worksheet you are importing. Make 
+                     sure you include the directory path if the file is not in 
+                     the working directory.
+
+Window Name:         If you are importing a Symphony file, enter the name of
+                     the SHEET, DOC, or FORM window being imported; a blank 
+                     setting will import the first window in the file. If you 
+                     are importing a 1-2-3 file, leave this setting blank. 
+
+Range Name:          Enter the range of data to be imported.  You can specify a
+                     range with a pre-defined name or the coordinates of the 
+                     range; for example, A1..D9 or A:A1..C:D9 for a three-
+                     dimensional range.  If you are importing an entire file 
+                     or window of a Symphony file, leave this setting blank.
+
+Document Name:       Enter a name for the document created. The .DOC extension
+                     is automatically added if none is specified. If you do 
+                     not specify a document name, the worksheet name is used 
+                     with the extension .DOC.
+
+--------------------------------------------------------------------------------
+      Import from 1-2-3/Symphony File      Keyboard Summary      Help Index

@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Cannot join <description> --
+
+If you pressed Join (Alt F3), there is no column, block, or section following
+the current column, block, or section.  Or, if you have selected Joined as the
+First Block Type, the headline and text blocks use different fonts, the blocks
+contain more than one column, or you have also set the Print prompt to Only
+Headlines or Only Text.
+
+
+-- Cannot join blocks with different number of columns --
+
+You cannot join blocks containing different numbers of columns. Use the Column
+and Table Editor to change the number of columns in one or more blocks.
+
+
+-- Cannot load <description> - missing <description> --
+
+Information needed to load an application cannot be found. Check that all files
+from the Manuscript disks are in the same directory on the hard disk.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

@@ -1,0 +1,25 @@
+
+-------------------------------- Hanging Indents -------------------------------
+Use hanging indents to create lists in which the first line has a character, 
+typically a bullet or number, that "hangs" in the left column. 
+
+--Procedure---------------------------------------------------------------------
+
+ On a Current Block Format or Block Format Editor panel, set a tab for the 
+  indent and set Indent to All but First.
+ Press Ins to accept the panel settings.
+ Type the character to "hang" (such as a number), press Tab, and type the text.
+ Press Append and select Block to add a new block with the same format for 
+  the next item (accelerator: Ctrl A).
+ Type the character, press Tab, and type the text.
+ After you finish entering the list, press Append and select Global-block to 
+  append a block with a global block format (accelerator: Ctrl O).
+--------------------------------------------------------------------------------
+# Ctrl H is the accelerator to set a hanging indent. It automatically sets a
+  tab at the cursor location and changes the line indent to All but First. To 
+  use Ctrl H, type the initial "hanging" characters, press Ctrl H, and type the
+  indented text. To add more items to the list, press Ctrl A, type the initial 
+  characters, and press Tab.
+--------------------------------------------------------------------------------
+    Current Block Format         Block Format Editor        Accelerators
+           Line Indents          Keyboard Summary           Help Index

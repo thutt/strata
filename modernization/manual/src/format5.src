@@ -1,0 +1,360 @@
+# Chapter 4, fifth part: Global, Page and Global, Typeface.
+# Part of the chapter source.
+
+.h2 Page [format-page]
+.ix Global Page
+.ix Page layout
+.ix Page layouts, the seven
+.ix Global Page Layout
+.ix Page layout settings
+.ix Layout of the page
+Global, Page sets the shape of the printed page: the paper, the four
+margins, the page number tag and, for the title page, how far down the page
+the text starts.  There are seven layouts, one panel each: the Global Page
+Layout, which holds for every page, and six panels for special pages (the
+title page, the table of contents, the first page, the even pages, the odd
+pages and the index).  The Preview and the Printer use the paper, the margins
+and the page number tag of the Global Page Layout and the Vertical Centering
+of the Title Page Layout.
+The Table of Contents Page Layout is kept with the document but the page of
+contents that a print can make ({n:print-contents}) has the margins of the
+other pages.
+
+.h3 How to reach the command [format-page-reach]
+.ix Page, reaching the command
+.ix Page layout settings, hint line
+Press {k:F12}, choose Global and then Page (the second entry; the hint line
+reads "Page layout settings"), as described in {x:format-global-menu}.  The
+first panel is the Global Page Layout.
+.pic pictures/format-page-global.png 5 Global Page Layout.
+The panels are a ring, like the fourteen of Global, Format: {k:PgUp} goes to
+the next layout and {k:PgDn} to the previous one, and the ring wraps from
+the last panel to the first.  {k:Ins} accepts all seven at once and
+{k:Esc} none ({n:format-panel-keys}).
+The panels follow one another from Global Page Layout to Index Page Layout.
+Between them come the layouts of the title page, the table of contents, the
+first page, the even pages and the odd pages.
+
+.h3 The fields [format-page-fields]
+.ix Left Margin
+.ix Right Margin
+.ix Top Margin
+.ix Bottom Margin
+.ix Page Number Tag
+.ix Vertical Centering
+.pic pictures/format-page-title.png 5 Title Page Layout.
+Every field is a text field (a row of dots) unless the table says that it
+is a choice.  Lengths are inches with up to three decimals, such as 1.250.
+.table 21 12 11 13
+Field | Values | Default | Panel
+Left Margin | length | 1.000 | all seven
+Right Margin | length | 1.000 | all seven
+Top Margin | length | 1.000 | all seven
+Bottom Margin | length | 1.000 | all seven
+Header | text | empty | all seven
+Footer | text | empty | all seven
+Header Indent | length | 0.000 | all seven
+Footer Indent | length | 0.000 | all seven
+Header Whitespace | length | 0.500 | all seven
+Footer Whitespace | length | 0.500 | all seven
+Page Number Tag | text | \1\ | all seven
+Paper Size | a list | Letter | Global
+Paper Bin | information | 1 | all seven
+Vertical Centering (%) | 0 to 100 | 33 | Title
+.end
+A panel of a special page shows, in square brackets, the value that it takes
+from the Global Page Layout for every field except the Header and the Footer,
+whose empty field means no header or footer on that page.  Put a value in
+the field to give the page a value of its own.  Paper Bin is an information
+field: the cursor skips it and it cannot be changed.
+{b:Margins.}  Left, Right, Top and Bottom Margin are the distance from
+the edge of the paper to the text.  A value is a number with an optional
+decimal point and at most three decimals; a letter, a sign or a fourth
+decimal is refused ({n:format-messages}).  There is no upper limit on the
+panel, but when the margins leave less than 2 inches of width or of height
+for the text, the Printer uses 1.000 inch for the two margins of that
+direction instead.
+
+{b:Page Number Tag.}  The first character after the first backslash says
+how the page numbers are written; a tag without a backslash, or one whose
+first letter is not one of those below, makes Arabic numbers.
+.table 14 40
+Tag | Page numbers
+\1\ | Arabic: 1, 2, 3 (the default).
+\i\ | Lower case roman: i, ii, iii.
+\I\ | Upper case roman: I, II, III.
+\a\ | Lower case letters: a, b, c.
+\A\ | Upper case letters: A, B, C.
+.end
+A roman numeral shows the numbers 1 to 3999; the page number 4000 is
+written 4000, whatever the tag.
+The number is printed alone, centered at the foot of every page.  The title
+page has no page number, and the numbering starts at 1 on the page after it
+({n:format-set-pagebreaks}).  A Page Number marker in the text prints the
+number of the page it is on, at that place.
+
+{b:Vertical Centering.}  On the Title Page Layout, a whole number from 0 to
+100 (anything else is rejected): the percent of the way down the page
+at which the blocks of the title page start.
+
+.h3 Page breaks and the title page [format-set-pagebreaks]
+.ix Page breaks
+.ix Keep Block on One Page
+.ix Title page
+.ix Pagination
+A page break happens in print when a Page Break marker says so (a page, an odd
+page or an even page: {n:markers}), when an Orientation marker changes the
+page, at each headline of the Page Break Level of the Global Format settings
+or of a higher level ({n:format-fields-spacing}), at the end of the title
+page, before the page of endnotes, and where the text fills a page.  A
+headline is kept with the lines that follow it (at
+least four lines of space are needed at the foot of a page, or the headline
+goes to the next page).
+
+{b:The title page.}  In a structured document the blocks that come before the
+first section (the text that Edit, Title edits: {n:edit}) are the title page.
+It is printed on a page of its own with no page number, its blocks are placed
+a given percent of the way down (the Vertical Centering of the Title Page
+Layout, 33 % by default), and the page numbers start at 1 on the next page.
+
+.h3 Paper size [format-page-paper]
+.ix Paper Size
+.ix Paper list
+.ix Paper, width and height
+.ix Letter
+.ix Legal
+.ix A4
+Paper Size on the Global Page Layout is a choice, with the list below.
+Choose with {k:Left}, {k:Right} or {k:Space}, or open the list with {k:F2}
+or {k:Alt-+} ({n:format-panel-keys}).  The Printer makes a page of the width
+and the height of the paper chosen; a document with no choice has Letter.
+.table 32 12 13
+Paper | Width in | Height in
+Letter (8 1/2 x 11 in) | 8.500 | 11.000
+Legal (8 1/2 x 14 in) | 8.500 | 14.000
+Fanfold A4 (8 1/2 x 12 in) | 8.500 | 12.000
+Half Letter (5 1/2 x 8 1/2 in) | 5.500 | 8.500
+Computer Paper (14 x 11 in) | 14.000 | 11.000
+Tabloid (11 x 17 in) | 11.000 | 17.000
+Newspaper (17 x 22 in) | 17.000 | 22.000
+A3 (297 x 420 mm) | 11.693 | 16.535
+A4 (210 x 297 mm) | 8.268 | 11.693
+A5 (148 x 210 mm) | 5.827 | 8.268
+B4 (250 x 352 mm) | 9.843 | 13.858
+B5 (176 x 250 mm) | 6.929 | 9.843
+Monarch Envelope (3 7/8 x 7 1/2 in) | 3.875 | 7.500
+Business Envelope (4 1/8 x 9 1/2 in) | 4.125 | 9.500
+DL Envelope (110 x 220 mm) | 4.331 | 8.661
+C5 Envelope (162 x 229 mm) | 6.378 | 9.016
+Number 9 Envelope (3 7/8 x 8 7/8 in) | 3.875 | 8.875
+C6/5 Envelope (114 x 229 mm) | 4.488 | 9.016
+C6, Yougata 2 Envelope (114 x 162 mm) | 4.488 | 6.378
+Yougata 4 Envelope (105 x 235 mm) | 4.134 | 9.252
+Custom (the size of the document) | its width | its length
+.end
+A document whose paper is none of these shows Custom, and the entry then
+reads the real size of the document, for example Custom (5 1/8 x 5 1/8 in) for
+a square card, or Custom (100 x 150 mm) for a postcard (the shorter side
+first, in millimetres when both sides are whole millimetres and
+in inches otherwise).  A size is matched by its numbers either way round, so a
+paper stored with its sides turned is the same paper, and a stored size that
+belongs to no named paper is never shown with the name of another one.  An
+envelope that is chosen in the list is stored with its long side as the width,
+because it lies in the printer that way: the Preview and the print show it
+with the long side across.  Choosing Custom keeps the size that the document
+has.  Leaving the panel with Ins when nothing was changed leaves the size as
+it was.
+
+{b:An envelope needs more than its size.}  When you choose an envelope the
+Editor also sets what an envelope needs, once, at the choice: the Left Margin
+becomes 0.276 inch (7 mm), the Top Margin the value that puts the first line
+7 mm from the top edge (0.219 inch for the type of 14 points), and the Right
+and Bottom Margin 0.500, so that the first glyph box of the first line stands
+7 mm from the left and the top edge of the envelope; the type becomes 14
+points when the document names no size of its own.  A margin that
+you changed in the same visit of the panel keeps the value that you typed.
+Choosing another paper later leaves the margins and the type as they are, and
+{k:Ctrl-Z} takes the whole choice back in one step.  The Printer sets in 14
+points any page that is an envelope: a page whose sides are each within 0.3
+inch of an envelope of the list, or whose long side is at least twice its
+short side (the short side 2.5 to 5 inches, the long side at most 11.5
+inches), so that an envelope that measures a quarter inch more than the list
+is also set in 14 points.  The print system is asked not to scale such a page
+(the option {c:print-scaling=none} of
+{c:lp}), because a scaled page has smaller type and a corner that has moved.
+The PDF and the arguments of {c:lp} are checked by tests; the result on
+paper is not.  If an envelope still prints wrongly, open the PDF that the Printer
+made (the Output File of the Print panel): when the PDF is right, with a page
+9 inches across, type of 14 points and the sender near the corner, the
+difference is in the print system, and the media of the printer for
+envelopes (the envelope size, with the manual feed as the paper source) is
+the first setting to look at.
+
+.h3 Header and Footer [format-page-headers]
+.ix Header
+.ix Footer
+.ix Running head
+.ix Page layout, header and footer
+The Header and the Footer are one line of text with up to three parts, the
+left, the center and the right part, separated by a bar:
+.code
+Chapter | \page\ | \section\
+.end
+Without a bar the line is the center part; with one bar it is the left part and
+the right part.  {c:\page\} is the Page Number marker and {c:\section\} the
+Section marker: the number of the page, in the style of the Page Number Tag,
+and the number and the headline of the section ({n:markers}).  The text is plain
+letters, digits and signs; at most three parts are allowed, and a bar cannot be
+part of the text.
+
+The Section marker has three forms, so that a header can show the section in
+the way you want:
+.table 18 12 27
+Form | Prints | Example on a page in section 3.2
+{c:\section\} | The number and the title (the default) | 3.2 Search
+{c:\sectionnumber\} | The number only | 3.2
+{c:\sectiontitle\} | The title only | Search
+.end
+The number is the tag of the headline as it is printed at the headline, with
+its punctuation, so a headline that is printed as {c:Part III.} gives
+{c:Part III.}.  The page shows the section whose headline is the first one on
+the page, or, when the page has no headline, the section of the page before.  A
+headline that has no tag (the numbering is off for its level) gives its title
+for all three forms, and the pages before the first headline show nothing.  A
+document that was made with a Section marker that has no choice prints the
+number and the title.
+
+A Section marker that stands in the text of a document, and not in a header or
+a footer, is changed like any marker: put the cursor on it and press
+{k:Ctrl-F12}.  Its panel has one field, {b:Show}, with the same three choices:
+Number and Title, Number Only and Title Only ({fig:format-section-marker}).
+.pic pictures/format-section-marker.png 5 The panel of a Section marker, with the choice Title Only. [format-section-marker]
+
+Every one of the seven panels has the two fields.  A page has the header and
+the footer of the layout that suits it: the Title Page Layout for the title
+page, the Table of Contents Page Layout for the pages of the contents, the First
+Page Layout for the first page of the text, the Even Page Layout for the even
+pages and the Odd Page Layout for the others.  A layout that has no header of
+its own takes the one of the Global Page Layout, and the panel shows that one
+in square brackets; leave the brackets as they are to keep it so.  An empty
+field on a layout means no header there, which is how a title page has none.
+Header Whitespace is the distance between the header and the text, and Footer
+Whitespace the distance between the text and the footer.  The Printer uses the
+values of the Global Page Layout and keeps both distances inside the margins.
+Header Indent and Footer Indent move the header and the footer in from the left
+margin of the text: the left part starts that far from the margin, the middle
+part is centered in what is left, and the right part stays at the right margin.
+A layout that has no indent of its own takes the one of the Global Page Layout.
+
+A header or a footer that holds more than this, such as bold letters or another
+marker, is shown on the panel and cannot be changed there.  A document in which
+no layout has any text prints as before: the page number is at the foot of every
+page but the title page ({n:print-elements}).
+.pic pictures/format-page-headfoot.png 5 The Global Page Layout of a document that has a header and a footer.
+.pic pictures/print-headfoot-page.png 5 A page printed with that header and footer.
+
+.h3 What the panel checks [format-page-checks]
+.ix Page layout, checks
+.ix Page Layout, message
+All seven panels are read when {k:Ins} is pressed.  A length must be a number
+such as 1.000 or 1.5 (digits, an optional point, at most three decimals), and
+Vertical Centering a whole number from 0 to 100.  The empty field is always
+good.  When a value is wrong, a box titled Page Layout shows which field and
+why (the messages are in {n:format-messages}), and the panel that holds the
+field is shown again; nothing is applied until every panel is right.  The
+Page Number Tag is not checked.  A Header or a Footer with more than three parts
+or with a letter that is not plain is refused too.  After {k:Esc} nothing is
+changed.
+
+.h2 Typeface [format-typeface]
+.ix Global Typeface
+.ix Typeface List
+.ix Font list
+.ix Font names
+.ix Font numbers
+Global, Typeface gives names to the twenty fonts of a document.  The
+formats do not choose a font by name but by number, 1 to 20 (Headline Font
+and Text Font on the Format panels, the Font of a named format and a Font
+marker), and this panel gives the name of each number.  The name is also
+what determines the face that the Printer uses ({n:format-set-typefaces}).
+
+.h3 How to reach the command [format-typeface-reach]
+Press {k:F12}, choose Global and then Typeface (the third entry; the hint
+line reads "Font assignments"), as described in {x:format-global-menu}.  The
+panel is the Typeface List.  It has no neighbors: {k:Ins} accepts and
+{k:Esc} cancels.
+.pic pictures/format-typeface.png 5 The Typeface List.
+
+.h3 The Typeface List [format-typeface-list]
+.ix Font 1 to Font 20
+.ix Intro head
+.ix Header/Footer, font name
+.ix Level 1 head
+.ix Level 2 head
+The panel has twenty text fields, Font 1 to Font 20.  A field holds the name
+of the font.  A name may be any text; the field scrolls when the name is
+longer than the field.  The last row, Printer, is an information field: it
+shows the printer name of the document and "Generic 10.0 pitch", and the
+cursor skips it.  The names that a font has when nothing was changed are
+these.
+.table 10 20 27
+Font | Default name | Used for
+1 | Intro head | A name for the font of an introduction.
+2 | Text | The default font of the text of every section.
+3 | Header/Footer | A name for the font of headers and footers.
+4 | Level 1 head | The default font of the headline of every section.
+5 | Level 2 head | A name for the font of second level headlines.
+6 to 20 | Font 6 to Font 20 | Free for your own use.
+.end
+The default headline font of the Global Format panel is font 4 and the
+default text font is font 2.  The panels of Global, Format, Level and Named
+show the fonts by their names, so a name changed here appears there at once;
+the choice list of a font field is the twenty names.  The File menu's
+Retrieve command can fetch the Typeface settings of another document, or of
+a template, without its text ({n:file}).
+
+The Document Manager has a list of its own, TeX Font Association ({n:str}),
+that names the LaTeX package for each font number, for the user and not for
+the document.  The Font field of the Keycap Format panel
+({n:format-marker}) shows the names of that list.
+
+.h3 Typefaces and the printed page [format-set-typefaces]
+.ix Typefaces
+.ix Fonts
+.ix Font family
+.ix Headline size
+.ix Font marker
+The formats pick a font by number: the Headline Font and Text Font fields of
+the Global Format and Level panels, the Font field of the Named panel and the
+Font marker inside a text ({n:markers}).  The panels show the font by its name,
+and a level shows [name] for the font it takes from the global setting.
+
+The screen does not use fonts.  The printed page has three kinds of face:
+roman, sans serif and typewriter, at 11 points (14 points when the paper is an
+envelope of the paper list, because an envelope is read from further away).  The
+kind is chosen by the
+{i:name} of the font, not by its number:
+.table 12 48
+Family | The name contains (any case)
+Typewriter | program, code, courier, mono, typewriter, fixed, listing, source
+Sans serif | head, title, sans, helv, arial, gothic (but not "Header")
+Roman | anything else
+.end
+The words are looked for in this order, the typewriter ones first.  By the
+default names Fonts 4 and 5 (Level 1 head, Level 2 head) and Font 1 (Intro
+head) are sans serif, Font 2 Text and Font 3 Header/Footer are roman, and so
+are the other fonts, and a font that you name Program is typewriter.  A name
+that is changed changes the family.  A headline is set in a larger size by its
+level: level 1 large, level 2 a little smaller, level 3 and deeper in the
+size of the text.
+
+.behavior A headline that takes the default font prints in the roman face,
+  even though the panel shows Font 4, Level 1 head.  Choosing the default
+  (Font 4) on the panel gives the default again.  Choose another font, or
+  rename a font, to get a different family.
+
+.caution A font name that contains one of the words that the Printer reads
+  (program, code, courier, mono, typewriter, fixed, listing, source for
+  the typewriter face; head, title, sans, helv, arial, gothic for the sans
+  serif face) changes how the text looks in print.  Naming font 2 "Text
+  (code)" would make all the text of the document typewriter text.

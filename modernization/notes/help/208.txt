@@ -1,0 +1,25 @@
+
+--------------------------- Import Worksheet Formats ---------------------------
+
+You can import a 1-2-3 or Symphony worksheet in one of five different formats:
+
+Table:    Imports each row into a block and each cell into a fixed-width 
+          column. Text longer than the column width wraps in the column.
+
+Column:   Imports each row into a block and each cell into a fixed-width 
+          column. Text longer than the column width extends until the next 
+          cell containing data is encountered.
+
+Tab:      Imports each row into a block using tabs to separate cells. Text
+          longer than the column width extends to the next cell containing data.
+
+Document: Imports each row that has data in only the left-most cell into a 
+          block. Each margin or tab change in the worksheet starts a new block 
+          in the document. All text wraps until an end-of-line character is 
+          encountered. Rows with data in cells other than the left-most cell 
+          are imported using Table format.
+
+Document: Same as Document format except that an end-of-line character is 
+Image     inserted at the end of each line. 
+--------------------------------------------------------------------------------
+     Import from 1-2-3/Symphony File       Keyboard Summary       Help Index

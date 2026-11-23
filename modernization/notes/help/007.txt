@@ -1,0 +1,25 @@
+
+---------------------------- Check Document Spelling ---------------------------
+
+Check Document Spelling can be accessed from the Document Manager or from 
+Menu (F10) Tools Spell in the editor.  From within the editor, Check Document 
+Spelling verifies the spelling of an entire document (excluding index entries)
+or individual blocks, sections, or words.  
+
+  +------------------------- Check Document Spelling ------------------------+
+  |                                                                          |
+  |                                                                          |
+  |            Working Directory:                                            |
+  |                                                                          |
+  |                Document Name:                                            |
+  |                                                                          |
+  |   Custom Spelling Dictionary:                                            |
+  |   Custom Spelling Dictionary:                                            |
+  |                                                                          |
+  |                 Auto Correct?                                            |
+  |                                                                          |
+  |                                                                          |
+  +------------------- Press Ins to Check Document Spelling -----------------+
+--------------------------------------------------------------------------------
+    Document Manager     Spell Word     Create Custom Spelling Dictionaries
+        Spell Menu              Keyboard Summary              Help Index

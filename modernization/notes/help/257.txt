@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Printer cannot print <description> --
+
+The specified printer cannot print graphics, PostScript files, multiple fonts on
+a single line, a special character, or portrait and landscape orientation on a
+single page.  For special characters, Manuscript will substitute a fall back 
+character for the character you requested.
+
+-- Printer driver configuration mismatch - use Setup printer? -- 
+
+The Setup printer options are different from the document printer options (the
+document printer is specified on the Typeface List panel). Press Y to use the 
+Setup printer or N to use the document printer. If you are printing or comparing
+documents the printer you select must match a printer that is on-line. If you
+are previewing a document you can select any printer.
+
+To eliminate the mismatch change the Setup printer options to match the document
+printer options.  Or, to change the document printer to match the Setup printer,
+press Space Bar at the Printer prompt on the Typeface List panel and select
+Primary or Secondary from the list of options.  NOTE: Changing the document
+printer will replace the current typeface list with the default typeface list 
+of the printer you select; any custom fonts from the current typeface list
+will be lost.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

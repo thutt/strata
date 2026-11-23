@@ -1,0 +1,25 @@
+
+--------------------------------- Window Adjust --------------------------------
+
+Window Adjust changes the size of the windows by adjusting the size of the 
+lower window.
+
+  # To enlarge the upper window,            # To enlarge the lower window, 
+    press Down until the window size          press Up until the window size 
+    is satisfactory, then press Enter.        is satisfactory, then press Enter.
+
+    ..........................                ..........................
+    .^^^^^^^^^^^^^^^^^^^^^^^^^                .^^^^^^^^^^^^^^^^^^^^^^^^^
+    . 3.4 Management Position                 . 3.4 Management Position 
+    .                                         .
+    .     The initial reaction                .     The initial reaction
+    .     merger proposal was                 ._________________________
+    .     negative. However, t                .   Thursday's Calendar
+    .     considerable support                .     Staff meeting      
+    ._________________________                .     Lunch with Estelle
+    .   Thursday's Calendar                   .     Prepare FGH report  
+    .     Staff meeting                       .     Pick up Dry Cleaning
+    .     Lunch with Estelle                  .     Dinner at Chasen's
+    ..........................                ..........................
+--------------------------------------------------------------------------------
+              Window          Keyboard Summary          Help Index

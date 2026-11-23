@@ -1,0 +1,25 @@
+
+----------------------------------- Tab Types ----------------------------------
+
+Manuscript has 6 tab types that you can set on a format panel's ruler.
++------------------------------------------------------------------------------+
+|*TABS.DOC      Attr: Normal         Pos: 1                   UNSTRUCTURED EDIT|
+|......................................^...........,.....................#...|
++------------------------------------------------------------------------------+
+  left-aligned   right-aligned     center       2,000     1.3       14 %
+                                            May 2, 1988  45.534   25.3 %
+                                               56,000      .99    0.25 %
+
+Left-aligned tabs () align all text flush left with the tab.
+
+Right-aligned tabs () align all text flush right with the tab.
+
+Center tabs (^) center all text around the tab.
+
+Comma tabs (,) align text or numbers on a comma.
+
+Decimal tabs (.) align numbers on a decimal point.
+
+Number tabs (#) align numbers on the last digit.
+--------------------------------------------------------------------------------
+       Tab-fill       Setting Tabs       Keyboard Summary       Help Index

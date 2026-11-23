@@ -1,0 +1,25 @@
+
+----------------------------------- Format Text --------------------------------
+Format (F6) Text assigns attributes to existing text in a block.
+
+--Procedure---------------------------------------------------------------------
+                                          +--------- Text Format -------+
+ Press Format and select Text.           |                             |
+ Highlight the text to format            |   Normal                    |
+  and press Enter.                        |   Bold                      |
+ Select the attributes from the          |   Italics                   |
+  Text Format panel.                      |   Underscore All            |
+ Press Ins to format the text.           |   Double Underscore All     |
+                                          |   Underscore Words          |
+---------------------------------         |   = Double Underscore Words |
+                                          |   Small Caps                |
+# You can select a combination of         |   Strikethrough             |
+  attributes.                             |   - Subscript               |
+                                          |   + Superscript             |
+# You can add attributes to the current   |   1 Printer Specific        |
+  column or block attributes or remove    |   2 Printer Specific        |
+  the current column or block             | v [Normal]                  |
+  attributes.                             +-----------------------------+
+--------------------------------------------------------------------------------
+     Highlighting         Format         Attributes         Changing Case
+                 Keyboard Summary                    Help Index

@@ -1,0 +1,25 @@
+
+------------------------------- Equation Keywords ------------------------------
+
+Functions
+----------------------------------------+---------------------------------------
+Name                   Keyword          | Name                  Keyword
+----------------------------------------+---------------------------------------
+Cosine                 cos              | Natural logarithm     ln
+Cosecant               cosec            | Logarithm             log
+Hyperbolic cosine      cosh             | Maximum               max
+Cotangent              cot              | Minimum               min
+Exponent               exp              | Modulo                mod
+Greatest common        gcd              | Secant                sec
+  denominator                           | Sine                  sin
+Inferior               inf              | Hyperbolic sine       sinh
+Limit                  lim              | Superior              sup
+Limit inferior         liminf           | Tangent               tan
+Limit superior         limsup           | Hyperbolic tangent    tanh
+----------------------------------------+---------------------------------------
+
+ Greek Letters      Diacriticals      Operators      Pointers      Attributes
+     Grouping Symbols     Large Operators     Miscellaneous     Format Keywords
+
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

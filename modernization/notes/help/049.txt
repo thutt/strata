@@ -1,0 +1,25 @@
+
+-------------------------------- Move Column Keys ------------------------------
+
+
+After highlighting the columns to move, use the following keys to move the 
+columns:
+
+  Right, Left  Moves column(s) right or left one column in the current block
+  Home, End    Moves column(s) to the first or last column in the current block
+
+
+Use the following keys to change the highlighted region of columns:
+
+  Shift Right    Moves the highlight left one column
+  Shift Left     Moves the highlight right one column
+
+--------------------------------------------------------------------------------
+
+# You can move columns only within the current block.  Use Cut and Paste to
+  move a column between blocks, or use the Column and Table Editor to move a
+  column that spans more than one block.
+
+--------------------------------------------------------------------------------
+  Move       Cut       Paste       Highlighting       Column and Table Editor
+                  Keyboard Summary                 Help Index

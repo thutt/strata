@@ -1,0 +1,25 @@
+
+------------------------------ Column and Table Editor -------------------------
+
+Use the Column and Table Editor to change or create column layouts.
+
+   +----------------------------------------------------------------------+
+   | Column Number: 1       Width: 10       Type: Fixed          Pos:1    |
+   | +----------+|+------------------~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+|
+   +----------------------------------------------------------------------+
+
+# The top line contains prompts for the column number, width, type, and current
+  cursor position. The second line displays a ruler along with column and gutter
+  indicators. A gutter is the extra space between two columns and is indicated 
+  with a single vertical line. Double vertical lines mark columns. You can use 
+  the prompts on the top line or the ruler on the second line to make 
+  adjustments to the column layout.
+
+# Columns can extend to 210 ruler units; the screen scrolls across the columns
+  automatically. However, make sure that the total table width is not wider than
+  the print area of the document. If you need to create a very wide table, try 
+  using a smaller typeface, relative ruler spacing, or the orientation marker 
+  if your printer supports mixed portrait and landscape printing.
+--------------------------------------------------------------------------------
+     Table     Table Editor Keys     Typeface     Relative Ruler Spacing
+     Orientation Marker              Keyboard Summary           Help Index

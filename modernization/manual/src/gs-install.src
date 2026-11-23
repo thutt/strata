@@ -1,0 +1,152 @@
+# Getting Started, part 2: installing.  A test compares the options with the
+# help of the install script.
+.h1 Installing Strata [installing]
+Strata is installed with the install script.  The script puts the programs, the
+help and the manuals under one directory, which is called the
+{b:prefix directory}, and installs the programs that Strata needs to run.
+Strata runs on Linux, and has been tested on Debian and Ubuntu.
+.h2 In short [install-short]
+The install script is delivered with the programs and installs them.  Run it
+from the directory that holds it.
+.h3 As an administrator [install-admin]
+The default prefix directory is {c:/usr}, which only an administrator can write:
+.code
+sudo scripts/strata-install
+.end
+.h3 In your home directory [install-home]
+Without administrator privileges the script installs into the directory {c:usr}
+in your home directory.  Nothing outside the prefix directory is written:
+.code
+scripts/strata-install
+.end
+The programs of the list in {x:prereqs} are optional for running Strata, so a
+missing one never stops the install: Strata is installed, and a warning at the
+end of the output lists each missing program, what is lost without it, and the
+{c:apt-get} command that an administrator runs.  Nothing about the missing
+programs is printed earlier, where it could scroll off the screen.  The option
+{c:--no-prereqs} installs Strata without looking for the programs and prints no
+warning.  To install into another directory that you own, give {c:--prefix};
+the same rules apply.
+.h3 Starting Strata after the install [install-start]
+Start the Document Manager.  After an install under {c:/usr} that is one
+command:
+.code
+/usr/bin/str
+.end
+The window version has {c:-x11} at the end of the name:
+.code
+/usr/bin/str-x11
+.end
+After an install in your home directory, give the directory of that prefix
+directory in front of the name:
+.code
+${{HOME}}/usr/bin/str
+.end
+.h2 The options of the install script [install-options]
+.table 24 52
+Option | What the option does
+{c:--prefix DIR} | Installs under the prefix directory DIR.  The default is
+ {c:/usr} for an administrator and {c:${{HOME}}/usr} for anybody else.
+{c:--destdir DIR} | Puts everything under DIR as well, to make a package.
+{c:--check} | Checks which of the programs that Strata requires are on the
+ system; nothing is installed.
+{c:--dry-run} | Reports what would be done; nothing is done.
+{c:--uninstall} | Removes what an install under the same prefix directory put
+ there.
+{c:--no-prereqs} | Installs Strata alone: the programs that Strata can use are
+ neither looked for nor installed, and no warning about them is printed.
+{c:--with-prereqs} | The usual behaviour: the programs that Strata can use are
+ looked for.  An administrator is asked, and the missing ones are installed; for
+ anybody else the install is made, and a warning at the end lists the missing
+ ones.
+{c:--yes} | Unattended: nothing is asked, and what was listed is installed.
+{c:--list-prereqs} | Shows which of the programs that Strata requires are
+ present and which are missing, for an administrator with the sizes of the
+ packages; nothing is installed.
+{c:--quiet} | Prints only warnings and errors.
+.end
+.h2 What is installed [installed]
+The prefix directory gets this layout.  The paths are relative to the prefix
+directory:
+.table 32 42
+Directory | What the directory is for
+{c:bin} | The programs: the Document Manager, the Editor, the Printer and the
+ Viewer, and the window versions of the Document Manager and the Editor.
+{c:share/strata} | The help file, and the manifest, which lists what the
+ install made.
+{c:share/strata/doc} | The documents of Strata, in the format of Strata: open
+ them in the Editor.
+{c:share/strata/pdf} | The manuals as PDF files, to print or to read.
+{c:share/strata/tutorial} | The documents that the Tutorial teaches with.
+{c:share/strata/templates} | The templates of the New command.
+{c:share/doc/strata} | The licence, the README and the known issues.
+.end
+At the end of an install a summary shows where each group of files went.
+.h3 Removing Strata [uninstalling]
+.code
+scripts/strata-install --uninstall --prefix ${{HOME}}/usr
+.end
+removes exactly the files that the manifest lists, and the directories that the
+install made once they are empty.  Files of your own in the prefix directory
+stay.  Packages that an administrator's install put in with {c:apt} stay,
+because other programs may use them.
+.h2 The programs that Strata needs [prereqs]
+All of these programs are optional for running Strata, and the table in
+{x:software} says what each one is for.  Printing and Preview need LaTeX, the
+equations in the window version need {c:dvipng}, the pictures in a print need
+ghostscript, and the spell check and the thesaurus need a spelling program and
+the thesaurus data.  The first step of the install script is a check of the
+system, which lists which of them are present and which are missing:
+.code
+What Strata needs to run:
+  present  LaTeX: Print to PDF, Preview and the equations on the screen
+  missing  dvipng: equations, keycaps and pictures in the window version
+  present  ghostscript: pictures in a print
+  present  spell check: aspell or hunspell
+  missing  thesaurus: Tools, Thesaurus
+.end
+What happens next depends on who runs the script.
+.h3 As an administrator [prereqs-admin]
+If something is missing, a table shows the packages that would be installed:
+the name, the version, the estimated download size and installed size, and what
+the package is needed for, with the totals.  The sizes are estimates from the
+index of packages of the system.  Nothing is installed before the table has
+been shown.  Then this question is shown:
+.code
+Install these packages? [y/N]
+.end
+Only {k:y} goes on.  Any other answer, or just {k:Enter}, stops the script
+before anything is installed, and the prefix directory is left as it was; to
+install Strata alone, run the script again with {c:--no-prereqs}.  The option
+{c:--yes} makes the install unattended: nothing is asked, and what was listed is
+installed.  A script without a terminal must have {c:--yes}, or nothing is
+installed.  The packages of all the programs are up to about 700 MB on a system
+that has no TeX Live; your system may need fewer.
+The packages are installed with {c:apt}, into the system, and they are there
+for every user.  On a fresh system the package index may be old, so that the
+mirrors no longer have some of the versions that the index names and the
+install fails with {c:404 Not Found}.  The script then offers to run
+{c:apt-get update} and to try again once; with {c:--yes} that is done without
+asking.  A failure of another kind, such as no free disk space, is reported as
+it is.
+.h3 Without administrator privileges [prereqs-user]
+Every one of these programs is optional, so a missing one never stops the
+install.  Strata is installed, the exit status is 0, and the last block of the
+output is a warning that begins with this line:
+.code
+Optional programs are missing:
+.end
+It lists each missing package with what is lost without it, and ends with the
+command that an administrator runs, for example:
+.code
+sudo apt-get install --no-install-recommends dvipng mythes-en-us
+.end
+When an administrator has installed them, Strata uses them at once; the install
+need not be run again.  The programs can also be installed by running the
+script as an administrator, after a question.  What only an administrator can
+set up is not installed: the print queues, the libraries of the window version
+and a viewer for PDF files.  A system that has no {c:apt} gets the same list,
+with the advice to install the packages with its own package manager.  The
+option {c:--no-prereqs} installs Strata without looking for the programs and
+prints no warning; Strata then starts, and a box names what each missing
+program is for.

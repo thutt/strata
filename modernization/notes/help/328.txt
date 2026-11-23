@@ -1,0 +1,25 @@
+
+------------------------------- Named Block Format -----------------------------
+
+Use the Named Block Format panel to create or edit master named block formats.
+
+  +--------------------------- Named Block Format ---------------------------+
+  |                                                                          |
+  | Retrieve Named Block:                                                    |
+  |              Save as:                                                    |
+  |--------------------------------------------------------------------------|
+  | Ruler                                              Pos: 1                |
+  | ------------------------------------------------------------------------ |
+  | Attributes:           Justification:                 Indent:             |
+  | Font:                                                                    |
+  |--------------------------------------------------------------------------|
+  | SPACING                             Block Indent (Left):                 |
+  |                                     Block Indent (Right):                |
+  |                                                                          |
+  | Vertical Centering:                 Winding Columns:                     |
+  | Keep Block on One Page?                                                  |
+  |                                                                          |
+  +------------------ Press Ins to Use Displayed Settings -------------------+
+
+--------------------------------------------------------------------------------
+    Named Block Overview     Named Menu     Keyboard Summary     Help Index

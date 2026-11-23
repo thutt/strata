@@ -1,0 +1,698 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+FEATURES THAT PROBABLY SHOULD BE IMPLEMENTED: A PROPOSAL
+=========================================================
+
+Written 2026-11-16, on the tree at commit 1e4c31c (branch port-to-c).  This
+is a proposal.  The owner decides what is built.  Every ranking below was
+made by the writer without asking, and each says why, so that the owner can
+change it.
+
+
+1. HOW THIS LIST WAS MADE
+-------------------------
+
+Sources, read together:
+
+  - Appendix G of the reference manual, "Features of the original that
+    Strata does not have" (manual/src/appnot.src and appnot1.src, taken
+    from git: git show d7a1981:modernization/manual/src/appnot.src).  The
+    appendix was removed from the manual; this document is where its
+    information is kept.
+  - docs/NOT-IMPLEMENTED.txt (written 2026-11-13, partly out of date now),
+    docs/KEYSTROKES.txt (the keys marked "no"), docs/MARKERS.txt,
+    docs/GLOBAL-MENU.txt, docs/PRINT-LATEX.txt and docs/TOOLS-MENU.txt.
+  - The program as it is today: the menu tables and panels of src/ui.c,
+    src/str.c, src/globalmenu.c, src/printmenu.c, src/filemenu.c and
+    src/latex.c, and a search for "not available", "not implemented",
+    "not decoded" and the dimmed entries.
+  - The open items of docs/WORKLIST.txt.  An entry that is already an
+    item there is named by the title of the item and is not repeated.
+
+Size of work, an estimate made from the code that was read:
+
+  S  a few functions in one or two files
+  M  several files, or a new panel with its tests and documents
+  L  a change of the data model, or a new module
+
+Recommendation:
+
+  IMPLEMENT  worth building soon, with the reason
+  LATER      worth building, not now: what is needed first is said
+  DROP       does not make sense today: why
+  OWNER      only the owner can decide
+
+
+2. WHAT APPENDIX G STILL SAYS, AND IS NOT TRUE ANY MORE
+-------------------------------------------------------
+
+Done since Appendix G was written.  None of these is a candidate.
+
+  Compare Document Versions     works (Document Manager chapter).
+  Undo and Redo                 work; Ctrl-Z is Undo now, so the line about
+                                Ctrl-Z "zoom a graphic" is gone.
+  If, Else and Endif            work (item "Conditional text that works").
+  Search direction              the Search panel has Direction and the
+                                choice Text or Print Error.
+  Spell check, Thesaurus        work; Tools, Spell and Thesaurus are not
+                                dimmed.
+  Macros and the library        work.
+  Error Log, Print Errors       work, with the banner of a failed print.
+  Line marker                   printed as a rule.
+  Page Number marker            printed in the body as the page number.
+  Filename, Pathname, Filedate  print the real file (item "Filename and
+  and Filetime                  Pathname markers in a Print").
+  Nonbreaking space             Ctrl-Shift-Space (item "No-break space
+                                command").
+  Section numbers in a print    equal the screen (item "Printed section
+                                numbers must equal Strata's section
+                                numbers").
+  Setup                         the driver, memory and sound fields are
+                                gone; Print To, Printer Queue, PDF
+                                Directory, PDF Viewer, Window Rows and
+                                Screen Colors are there.
+  Window height                 kept in the settings (item "Save the
+                                height of the window for the user").
+  Colours of the screen         configurable (item "Configurable screen
+                                colors").
+  PDF viewer (Open to print)    an entry of the Printer field.
+  F1 help                       Strata's own (item "Help (F1) written for
+                                Strata").
+
+Left out on purpose and decided (they stay out; see DROP below): the
+markers Worksheet, Markup, Escape Codes, Symbol and Screen; equations in
+the old equation language; the Batch Print Utility entry (the owner removed
+it from the Document Manager).
+
+
+3. THE RECOMMENDED ORDER OF THE IMPLEMENT ENTRIES
+-------------------------------------------------
+
+The order is by what a person who writes a long structured document of 700
+or more pages will miss first, then by cost.
+
+  1.  C1  Search and Replace options and the interactive Replace.  The
+      editor is used for this all day; today Replace changes every
+      occurrence at once with no way to say no.  M, Editor only, and no
+      other entry waits for it.
+  2.  B6  Page Break Level and the line and block spacing.  The user sets
+      them on the Format panels and nothing happens: a setting that is
+      shown and ignored costs trust.  S each, in the Printer.
+  3.  D3a The table of contents of the print.  BUILT: the Print panels
+      have Table of Contents? and Contents Levels.  A long document needs
+      it first of the three lists.  The headline tags are the same on the
+      screen and in the print.
+  4.  B5  Headers and footers, with the Page Number and Section markers
+      and the first, odd and even page layouts.  M to L.  DONE (alien-23):
+      printed with fancyhdr, typed in the Page panels.
+  5.  D1  Include.  BUILT: several authors each write a part in a file of
+      their own and a master document includes the parts (collaborative
+      editing, not a way to cut a long document).  M.
+  6.  D3b The index from the Index markers, and D3c the lists of figures
+      and tables from the Figure and Table markers.  M and S to M.
+  7.  B2  Repaginate and Go To a page, with the page count on the screen
+      (C4, C7 page keys).  L: the Editor must learn where the pages end.
+  8.  A1  Maintain Dictionaries (the entry is on the Document Manager menu
+      and says "not implemented"; the owner said it stays because it will
+      be built; item "Document Manager: Maintain Dictionaries").  M.
+  9.  A5  Initial Macro Set and Initial Library: the two Setup fields that
+      are shown and cannot be used.  S.
+  10. C8  The Case command (Upper, Lower, Capitalize) behind Ctrl-F6, and
+      the small keys that are one function each (C7).  S.
+
+Why 1 before 3 to 6: search is used in every session by every user, and a
+list in a print is used once a release.  Why 2 before 3: the cost is one
+macro in the preamble for each, and it removes the fields that do nothing.
+Why 7 is late: it is the only large one, and a preview already shows the
+pages.
+
+
+4. THE ENTRIES, BY AREA
+-----------------------
+
+Each entry has: what the user would do; what exists today; how the work is
+done without it; the size; what it depends on; the files it would touch;
+the recommendation with the reason.
+
+
+4.1 THE DOCUMENT MANAGER
+------------------------
+
+A1  Maintain Dictionaries  (the original: Maintain Spelling Dictionary)
+  User would:  add words to the personal word list, remove them, see the
+               list, for each language of the spell check.
+  Today:       the entry shows the box "Not implemented".  Define on the
+               check screen of Tools, Spell adds a word at once; many
+               words are added by editing the file "dictionary" in the
+               settings directory by hand.
+  Without it:  edit that file with any text editor.
+  Size:        M (a list panel in str.c, the file read and written, tests,
+               documents).
+  Depends on:  nothing; the personal list exists.  It also touches the
+               Setup language field.
+  Files:       src/str.c, the spell module, tests, manual (Document
+               Manager chapter).
+  IMPLEMENT:   the owner has said that the entry stays on the menu because
+               it will be built; it is the only notice-only entry left.
+               Worklist: "Document Manager: Maintain Dictionaries".
+
+A2  Batch Print Utility and command files
+  User would:  save the settings of a print in a file and run it later, or
+               run a series of documents.
+  Today:       the entry was removed from the Document Manager by the
+               owner.  "stred --print" prints from a shell.
+  Without it:  a shell script that calls "stred --print" for each document
+               is a batch print, and it is a better tool.
+  Size:        M.
+  DROP:        replaced by the command line, which a shell, cron or make
+               can drive.
+
+A3  Import from 1-2-3 and Symphony, DCA files, ThinkTank outlines, image
+    conversion, Document Downgrade
+  Today:       none of these exists.  File Import and Export read and write
+               text (UTF-8 and Latin-1 are choices).
+  Without it:  save the data as text in the other program; make pictures
+               as PNG or JPEG.
+  Size:        L each.
+  DROP:        they exist to work with programs and file formats of the
+               1980s.
+
+A4  Local Format Reset
+  User would:  take every local format out of a document at one stroke,
+               so that the global formats rule again.
+  Today:       nothing; the user resets each block.
+  Size:        S (walk the items and clear the format records).
+  LATER:       cheap, but it destroys work and needs a confirmation panel
+               and Undo to be safe.  Do it after the format settings are
+               all used (B6).
+
+A5  Initial Macro Set and Initial Library
+  User would:  name a macro set and a library that the Editor loads when
+               it starts.
+  Today:       both fields are shown in Setup, marked (n/a), and cannot be
+               set.
+  Without it:  Tools, Macros, Retrieve and Tools, Library, Retrieve at the
+               start of each session.
+  Size:        S (two settings keys, the load at start in macro.c).
+  Depends on:  the Setup panel (item "Document Manager: a better Setup").
+  Files:       src/str.c, src/config.c, src/macro.c, tests, manual.
+  IMPLEMENT:   a user who has macros wants them from the first key.  It
+               also removes two dimmed fields.
+
+A6  Maintain Download Fonts
+  DROP:        replaced by TeX Font Association, and the system and the
+               print queues manage printers and fonts now.
+
+A7  Setup of drivers, memory and sound
+  Today:       the fields are gone.  Done; not a candidate.
+
+
+4.2 THE EDITOR MENUS
+--------------------
+
+B1  Edit, Window  (two windows)
+  User would:  see two places of one document, or two documents, at once,
+               and move text between them.
+  Today:       the entry is dimmed.  A second Editor in a second terminal
+               and the library (Ctrl-F3, Ctrl-F4) do the work.
+  Size:        L: the Editor has one document, one cursor and one text
+               area; a second view needs both split.
+  LATER:       real value for a 700-page document (the text here, the
+               table there), but it changes the core of the Editor.  Do
+               it after Repaginate (B2), with Ctrl-W (switch windows).
+
+B2  Print, Repaginate and Clear-pages
+  User would:  see where each page ends, in the text, and clear the marks.
+  Today:       both entries are dimmed; page breaks are known only to TeX
+               when a print or a preview is made.
+  Without it:  Preview shows the pages; a Final print says the number of
+               pages.
+  Size:        L: the Printer must tell the Editor which item starts each
+               page (a map written by the run, for example from a label
+               at each block), and the Editor must keep it and draw it.
+  Depends on:  headers and footers (B5) change the page breaks, so build
+               B5 first; "Go To a page" (C4) and the page keys (C7) use
+               the same map.
+  Files:       src/latex.c, src/strprint.c, src/view.c, src/ui.c.
+  IMPLEMENT:   after B5.  It is the one large entry, and a long document
+               needs the page count and Go To a page.
+
+B3  File, Retrieve Named Block Settings Only
+  Today:       the choice is in the list in parentheses and says "Named
+               block settings are not decoded yet".
+  Size:        S to M (read the named format records of another file).
+  LATER:       low value: named block formats are rare, and the other
+               Retrieve choices cover the use.  Do it with the Global,
+               Named panels if anyone asks.
+
+B4  Global, Options: the fixed fields
+  Today:       Block Indicators, Display Even Justification, Display
+               +/- with Section Tags, Units, Line Weight (Borders) and
+               Line Weight (Other) are shown without brackets and cannot
+               be changed.
+  B4a Units (inches, centimetres, millimetres, points)
+      Size S to M (the lengths of the panels are in inches).  LATER:
+      useful outside the United States, but the panel fields need
+      their units shown and tested; do it with the format panels.
+  B4b Display +/- with Section Tags
+      Size S.  LATER: a nice hint in a long outline, cheap, low value.
+  B4c Block Indicators
+      DROP: the screen already draws a rule between blocks.
+  B4d Display Even Justification
+      DROP: the screen is a grid of cells; evenly spread text cannot be
+      shown on it.
+  B4e Line Weight (Borders, Other)
+      Size S once borders are drawn (C3).  LATER, with C3.
+
+B5  Global, Page: headers, footers and the page layouts
+  User would:  type a running head and a foot for the document, with the
+               Page Number and the Section markers in them; choose
+               another layout for the first, the even and the odd pages,
+               the table of contents and the index.
+  Today:       the fields Header and Footer show "..." and cannot be
+               edited; the layouts are stored and mostly ignored.  The
+               paper size, the margins and the page number style are
+               used.  Every page but a title page has its number at the
+               foot.
+  Without it:  put the text of a running head in the first block of each
+               part.
+  Size:        M to L: an editor for the header and footer text (the
+               editor of a note can be reused), a Printer writer for them
+               (the fancyhdr package of LaTeX does the work), the first,
+               odd and even layouts, tests with long documents.
+  Depends on:  nothing built; B2 and D3 want it first.
+  Files:       src/globalmenu.c, src/latex.c, src/ui.c (the text
+               editor), tests, manual (Page chapter, print chapters).
+  IMPLEMENT:   the Page Number and Section markers exist only to be used
+               in a header or a footer, and a book without running heads
+               is not finished.
+
+B6  Global, Format: the settings that are stored only
+  Today:       the panels have every field; Spacing, Page Break Level,
+               Page Number Level, First Block Type, Print, Ruler, Winding
+               Columns and the fonts are saved and read back and have no
+               effect when the page is made.
+  B6a Page Break Level (start a page at each section of a level and
+      above).  Size S (a clearpage before the headline).  IMPLEMENT: it
+      is the first thing a book needs; one rule in the writer.
+  B6b Line Spacing and Block Spacing.  Size S to M (baseline stretch and
+      the space between blocks, with the per-block override).  IMPLEMENT:
+      shown and ignored settings should not stay; Print Double Spaced
+      works, so the machinery is half there.
+      DONE (2026-11-16) for B6a and B6b.  A correction of this entry: the
+      five spacings of the document and of a level (Line, Headline,
+      Block, Subsection, Peer Section) already worked in a Final print;
+      what was ignored was the Line Spacing and the Block Spacing that a
+      block sets for itself (BSL and BSB, through a named format), and
+      that is what B6b now does.  B6a: a page starts at each headline of
+      the level and above, also in a Draft.
+  B6c Winding Columns and the Winding Column Layout panel (number of
+      columns, gutter, vertical rules, spacing for bottom alignment).
+      Size M to L (the multicol package, a panel, tests).  LATER: a
+      newspaper layout is rare in a technical document; Append, Column
+      makes side by side columns.
+  B6d Page Number Level, First Block Type, Print, the Ruler type
+      (10 or 12 characters to the inch).  Size S each.  DROP the Ruler
+      type (typewriter pitch of the original); LATER for First Block Type
+      and Page Number Level, with B5.
+  B6e Fonts of the levels (the Font fields of the level panels).  Size M.
+      OWNER: Strata has the Typeface panel and the Font marker; should
+      the level panels pick fonts for the headlines?
+
+B7  Print panels: the fields of the original
+  Print Quality                DROP: Draft and Final are two entries.
+  Print to File                DROP: a print is always a PDF file; the
+                               Output File field names it.
+  Merge Document Name          see D2.
+  Soft Hyphen Document Name,   DROP: TeX hyphenates by itself; see C5 for
+  Automatic Hyphenation        the soft hyphen key.
+  Forms Type, Paper Bin        DROP: the print queue chooses the paper.
+  Force Document Expansion     DROP.
+  Blank Page Contents          DROP.
+  Graphics Print Options       DROP: pictures are always printed.
+  Page Number of First Page    IMPLEMENT (S): a field and one counter
+                               setting; needed to print a volume of a book
+                               that starts at page 241.  Do it with B5.
+  Print (the parts: lists,     see D3.
+  index, error log)
+  Error Log Markers            DROP: the Print Error markers in the text
+                               do the work, with Next Error.
+
+B8  Document Print Summary
+  User would:  see, after a Final print, the pages, the errors and the
+               warnings in one box.
+  Today:       a message line says the pages; the Error Log lists the
+               errors.
+  Size:        S.
+  LATER:       small value, since the message and the Error Log say it.
+
+
+4.3 THE COMMANDS
+----------------
+
+C1  Search and Replace: the options
+  User would:  match case or not, match a whole word, search by attribute,
+               search for a tab, an end of line, a nonbreaking space or a
+               marker; and on Replace choose the case of the replacement
+               and say, at each hit: Replace, Once, Search, All or Quit.
+  Today:       Search has Direction (Forward or Backward) and the choice
+               Text or Print Error.  It ignores the case of letters and
+               finds the string inside a word.  Replace asks two
+               questions and changes every occurrence at once with the
+               case as typed, then says how many.
+  Without it:  make the string longer for a whole word; find each hit
+               with F9 and change it by hand.
+  Size:        M (two panels, a matcher with options, an interactive loop
+               with Undo, tests, documents).
+  Depends on:  Undo (done: one Replace All is one operation).
+  Files:       src/ui.c, src/editor.c, tests, manual (Edit chapter, Search
+               and Replace).
+  DONE:        built (worklist: "Search and Replace: the options and the
+               interactive Replace").  It was the most used command of the
+               Editor with the fewest options, and "replace all or nothing"
+               was dangerous in a long document.
+
+C2  Compose (Alt-F1)
+  User would:  type an accented or special character by a key sequence.
+  Today:       Alt-F1 says "Alt-F1: not available"; the key strip shows
+               the label Compose.  The keyboard layout and the system
+               compose key do the work; characters outside code page 437
+               become "?".
+  Size:        S for a table of the characters of code page 437; M with
+               UTF-8.
+  Depends on:  the item "UTF-8 instead of the code page (explore)".
+  OWNER:       either build it, or take the label off the key strip.  The
+               compose key of the system works in the terminal and in X11
+               for the characters that code page 437 has.
+
+C3  The table editor and the borders  (F8 and Alt-F8)
+  User would:  set the width of the columns of a table and their borders.
+  Today:       F8 offers Add column and Split column here.  Alt-F8 says
+               "not available"; the label Border is on the key strip.
+               Borders from a document of the original are kept and
+               printed as table lines; they are not drawn on the screen
+               and no command sets one.
+  Size:        M to L (a panel for column widths, border records, drawing
+               the borders on the screen in both programs, the Printer).
+  Depends on:  B4e, the line weights.
+  LATER:       technical documents have tables, but the F6 editor and the
+               Ruler cover layout today.  OWNER: build it, or take the
+               label Border off the key strip.
+
+C4  Go To a page
+  User would:  type a page number and go there.
+  Today:       Go To takes the start, the end, the next and the previous
+               section and a section by its number.  There is no page.
+  Size:        S once B2 exists.
+  Depends on:  B2.  IMPLEMENT with B2.
+
+C5  Hyphenation and the soft hyphen (Ctrl-Hyphen)   DONE (task 35: the soft
+               hyphen and a personal hyphenation list, docs/DICTIONARIES.txt)
+  User would:  mark a place where a long word or a long name may break.
+  Today:       nothing; TeX hyphenates words by itself by its rules.
+  Size:        S to M (a character or a marker that the writer turns into
+               a discretionary hyphen; keys and display).
+  LATER:       worth having for long identifiers and file names in a
+               technical document.  DROP the soft hyphen document and the
+               setting for automatic hyphenation: TeX has its own.
+
+C6  Graphics Zoom (Ctrl-Z)
+  DROP:        Ctrl-Z is Undo; the Viewer zooms the page from 25 to 800
+               percent.
+
+C7  Keys of the original that do not work
+  Ctrl-Enter (end of line, the cursor stays)     S.  LATER, low value.
+  Ctrl-PgUp and Ctrl-PgDn (previous, next page)  S with B2.  IMPLEMENT
+                                                 with B2.
+  Ctrl-G (text indent)                           S.  LATER: the message
+                                                 says "not implemented".
+  Ctrl-W (switch windows)                        with B1.  LATER.
+  Ctrl-M (virtual memory status)                 DROP: Ctrl-M is Enter.
+  Shift-Del (delete a section and its            DROP: Cut a section is
+  subsections)                                   Ctrl-L.
+  Keypad + in a marked area, and a letter in     S each.  LATER: both
+  a marked area (anchor, extend to the next      are speed keys; the area
+  occurrence)                                    can be moved with the
+                                                 cursor keys.
+  Ctrl-\ and two letters (a marker by its        S to M (a table of about
+  letters)                                       36 pairs).  LATER: a
+                                                 heavy marker user will
+                                                 like it; the marker list
+                                                 and Alt-F12 work.
+
+C8  The Case command (Ctrl-F6) and Math (Ctrl-F2)
+  User would:  change a highlighted text to upper case, lower case or
+               capitals of words (Case); Math is the label of Ctrl-F2.
+  Today:       both labels are on the key strip, and both keys say
+               "Ctrl-F2: not available" and "Ctrl-F6: not available".
+  Size:        S for Case (one function over a block or a word).
+  IMPLEMENT:   Case, because it is cheap and a shown label with no
+               command is a broken promise.
+  OWNER:       Math: what the original's Math does with numbers in a
+               marked area is not known well enough to copy; either say
+               what it should do or take the label off.
+
+C9  The alternative function key labels Compose, Border, Math: see C2,
+    C3 and C8.  One decision of the owner for the three labels is enough:
+    build them or take the labels off the key strip.
+
+
+4.4 MARKERS AND PICTURES
+------------------------
+
+D1  Include
+  User would:  put another document into the print at the place of the
+               marker, so that several authors, each editing a part in a
+               file of their own at the same time, make one work that one
+               print of the master shows whole.  (The owner: it is for
+               collaborative editing, not for long documents; Strata
+               handles 4000 pages in one document, but only one person
+               can edit a document at a time.)
+  Today:       BUILT (src/include.c; PRINT-LATEX.txt section 25).  The
+               Printer joins the parts into the stream before the writer
+               runs, in Final, Draft, Preview and part prints.
+  Without it:  File, Retrieve with "Retrieve and Insert after the Current
+               Section" puts a document into the text for good.
+  Size:        M (the Printer reads the file, joins its items and its
+               settings into the stream before the writer runs, as the
+               conditional text does with its filtered copy; a loop guard
+               for a file that includes itself; the positions of the
+               diagnostics; the messages "Invalid Include request"; a
+               test with a document of parts).
+  Depends on:  the conditional text code (done) for the stream filter.
+  Files:       src/latex.c, src/strprint.c, src/cond.c or a new module,
+               tests, manual (Include marker page).
+  BUILT:       the rules are in PRINT-LATEX.txt section 25: parts read
+               at print time, found beside the including document then in
+               the working directory, eight levels, a loop guard, the
+               master's Global Format, numbering and contents through the
+               parts, "Invalid Include request" with a notice at the
+               place, tests tests/incltest.c, tests/include.py and a block
+               of tests/smoke.py.
+
+D2  Merge and Print Merge
+  User would:  print one document once for each set of values of a merge
+               document (a form letter); put a value in the text with a
+               Merge marker.
+  Today:       the Merge marker is stored and printed as its label; the
+               Print panel has no merge document name.  Conditional text
+               has the variables (the panel Variables, --var).
+  Without it:  keep the letter and change the names with Replace, or call
+               the Printer once for each set with --var.
+  Size:        M to L (a merge document reader, a loop over the records,
+               one PDF with all the copies, the Merge marker as a value
+               of a variable).
+  Depends on:  the variables (done); decision of the owner about what a
+               merge document is (a document, or a CSV file).
+  OWNER:       the owner read the feature as mail merge and large print
+               jobs; the variables and "--var" already do half of it.
+               LATER if the owner says yes.
+
+D3  Index, Figure and Table markers, and the lists they make
+  User would:  get a table of contents, a list of figures, a list of
+               tables and an index in the print, each with its own layout.
+  Today:       the three markers are stored and edited and printed as
+               their labels; no list is made; the layout panels of the
+               contents and the index are stored only.
+  Without it:  write the list by hand; Cross-reference markers keep the
+               section numbers true.
+  D3a The table of contents.  Size S to M (LaTeX makes it from the
+      headlines, which already have the tag of the screen; the layout
+      panel of the contents; the Print field that asks for it).
+      BUILT (the Print fields Table of Contents? and Contents Levels; the
+      layout panel of the contents is not used; no marker: the original
+      asks for it in the Print check list, and so does Strata).
+  D3b The index.  Size M (the Index markers become entries; two runs of
+      LaTeX and an index program, makeindex, which the TeX distribution
+      has; the prerequisites list it; the index layout).  IMPLEMENT: the
+      markers are already in the documents.  BUILT (alien-24): the Print field
+      Index?, the index made in C and the page runs joined in LaTeX; makeindex
+      is not used; the index layout panel is not used.
+  D3c The lists of figures and tables.  Size S to M (the Figure and Table
+      markers with their captions, and a list for each).  IMPLEMENT with
+      D3a.  BUILT (alien-24): the Print fields List of Figures? and List of
+      Tables?.
+  Depends on:  B5 for the layout of the pages of the lists.
+  Files:       src/latex.c, src/printmenu.c (the fields), src/globalmenu.c
+               (layout panels), tests, manual.
+
+D4  The Section marker and the Page Number marker in headers and footers
+  See B5.  The Page Number marker already prints the page number in the
+  body.  The Section marker prints as its label.
+
+D5  The markers that were left out: Worksheet, Markup, Escape Codes,
+    Symbol, Screen
+  DROP:        decided.  A document that holds one keeps it unchanged.
+
+D6  Graphics file formats of the original (PIC, metafiles, scanner files,
+    printer description files)
+  DROP:        they exist for programs and printers of the time.  The
+               Picture marker takes PNG, JPEG, PDF and EPS.
+  A modern addition is not in Appendix G: SVG pictures.  LATER (S to M:
+  convert with a tool of the system into PDF when the file is read; add
+  the tool to the prerequisites).
+
+D7  Equations in the old language
+  DROP:        decided; they are a defect of a document and the Printer
+               reports them.
+
+
+4.5 HARDWARE, MEMORY AND THE SYSTEM
+-----------------------------------
+
+E1  Display adapters, monitors, keyboards, printers and their drivers,
+    virtual memory and its status panel
+  DROP:        the problems of machines of the time; the system and the
+               terminal or the X server deal with them.
+
+E2  A safe save (write to a temporary file, then rename)
+  See the items "Backup files and saving" and "Configurable backup depth
+  (numbered backups)".  Not a new candidate.
+
+E3  UTF-8 in the document, the mouse
+  See the items "UTF-8 instead of the code page (explore)" and "Mouse
+  operations (explore)".  Not repeated here.
+
+E4  A text file save mode (the .DOC file is binary)
+  DROP:        File, Export writes text, and Export as LaTeX exists.
+
+
+5. THE TABLE OF EVERYTHING
+--------------------------
+
+  Entry                                        Area      Size  Recommendation
+  -------------------------------------------- --------- ----  --------------
+  A1  Maintain Dictionaries                    Doc Mgr   M     IMPLEMENT (8)
+  A2  Batch Print Utility, command files       Doc Mgr   M     DROP
+  A3  Import 1-2-3, DCA, ThinkTank, images     Doc Mgr   L     DROP
+  A4  Local Format Reset                       Doc Mgr   S     LATER
+  A5  Initial Macro Set and Library            Doc Mgr   S     IMPLEMENT (9)
+  A6  Maintain Download Fonts                  Doc Mgr   -     DROP
+  B1  Edit Window (two windows)                Editor    L     LATER
+  B2  Repaginate, Clear-pages                  Editor    L     IMPLEMENT (7)
+  B3  Retrieve Named Block Settings Only       Editor    S-M   LATER
+  B4a Units                                    Options   S-M   LATER
+  B4b Display +/- with Section Tags            Options   S     LATER
+  B4c Block Indicators                         Options   -     DROP
+  B4d Display Even Justification               Options   -     DROP
+  B4e Line Weight (Borders, Other)             Options   S     LATER (with C3)
+  B5  Headers, footers, page layouts           Page      M-L   IMPLEMENT (4)
+  B6a Page Break Level                         Format    S     DONE
+  B6b Line and Block Spacing                   Format    S-M   DONE (a block's)
+  B6c Winding Columns and its layout panel     Format    M-L   LATER
+  B6d Page Number Level, First Block Type,     Format    S     LATER, Ruler
+      Ruler type                                               type DROP
+  B6e Fonts of the levels                      Format    M     OWNER
+  B7  Print Quality, Print to File, Forms,     Print     -     DROP
+      Blank Page, Graphics Print Options,
+      Error Log Markers, Force Expansion,
+      Soft Hyphen Doc, Automatic Hyphenation
+  B7  Page Number of First Page                Print     S     IMPLEMENT (with
+                                                               B5)
+  B8  Document Print Summary                   Print     S     LATER
+  C1  Search and Replace options               Command   M     IMPLEMENT (1)
+  C2  Compose (Alt-F1)                         Command   S-M   OWNER
+  C3  Table editor and borders (F8, Alt-F8)    Command   M-L   LATER, label:
+                                                               OWNER
+  C4  Go To a page                             Command   S     IMPLEMENT (with
+                                                               B2)
+  C5  Soft hyphen (Ctrl-Hyphen)                Command   S-M   LATER
+  C6  Graphics Zoom                            Command   -     DROP
+  C7  Ctrl-PgUp, Ctrl-PgDn                     Keys      S     IMPLEMENT (with
+                                                               B2)
+  C7  Ctrl-Enter, Ctrl-G, Ctrl-W, the area     Keys      S     LATER
+      keys, Ctrl-\ and two letters
+  C7  Ctrl-M, Shift-Del                        Keys      -     DROP
+  C8  Case (Ctrl-F6)                           Command   S     IMPLEMENT (10)
+  C8  Math (Ctrl-F2)                           Command   ?     OWNER
+  D1  Include                                  Marker    M     DONE (5)
+  D2  Merge and Print Merge                    Marker    M-L   OWNER, LATER
+  D3a Table of contents                        Marker    S-M   IMPLEMENT (3)
+  D3b Index                                    Marker    M     IMPLEMENT (6)
+  D3c Lists of figures and tables              Marker    S-M   IMPLEMENT (6)
+  D4  Section and Page Number in heads         Marker    -     see B5
+  D5  Worksheet, Markup, Escape, Symbol,       Marker    -     DROP
+      Screen
+  D6  Old graphics file formats                Picture   -     DROP
+  D6  SVG pictures (not in Appendix G)         Picture   S-M   LATER
+  D7  Old-language equations                   Picture   -     DROP
+  E1  Hardware, memory, drivers                System    -     DROP
+  E2  Safe save                                System    -     see worklist
+  E3  UTF-8, the mouse                         System    -     see worklist
+  E4  A text save mode                         System    -     DROP
+
+
+6. WHAT CAN BE BUILT AT THE SAME TIME
+-------------------------------------
+
+Two entries can be built at the same time on different machines when they
+touch different files.  By the files that each touches, from the lists
+above:
+
+  Editor only (src/ui.c, src/editor.c):
+      C1 Search and Replace; C8 Case.
+  Printer only (src/latex.c, src/strprint.c):
+      B6a Page Break Level; B6b Spacing; D1 Include; D3a, D3b, D3c the
+      lists and the index.  These five share latex.c, so build them one
+      after the other, or give each its own function and expect small
+      merge conflicts.
+  Document Manager only (src/str.c, src/config.c, src/macro.c):
+      A1 Maintain Dictionaries; A5 Initial Macro Set and Library.  Both
+      touch the menu and Setup code of str.c: one after the other.
+  Printer and Editor together (not disjoint from the others):
+      B5 headers and footers (globalmenu.c, latex.c, the text editor in
+      ui.c), and B2 with C4 and C7 (latex.c, view.c, ui.c).
+
+So the following sets are disjoint from each other and can run together:
+
+  Set 1: C1 (Search and Replace) and C8 (Case)            Editor
+  Set 2: B6a and B6b, then D3a, D3b, D3c, then D1         Printer
+  Set 3: A1 and A5                                        Document Manager
+
+B5 should start after Set 2 has made its changes to latex.c, and B2 after
+B5.  The manual sources of the three sets are different chapters (Edit,
+Print and markers, Document Manager), so the merges of the documents are
+small.  A change of any of them also changes pictures: the picture check
+(item "The picture check does not see the key strip") should be done first.
+
+
+7. QUESTIONS FOR THE OWNER, WITH THE ANSWER ASSUMED
+---------------------------------------------------
+
+  1. The three key labels Compose (Alt-F1), Border (Alt-F8) and Math
+     (Ctrl-F2).  Assumed: build Case now (C8); for the other three, take
+     the label off the key strip until the command exists, so that no key
+     shows a label it does not honour.
+  2. Merge (D2).  Assumed: later, with a merge document that is a CSV file
+     and the existing variables; not before the lists and Include.
+  3. Fonts of the levels (B6e).  Assumed: no; the Typeface panel and the
+     Font marker are enough.
+  4. Edit Window (B1).  Assumed: later, after Repaginate.
+
+These assumptions are only for the ranking above.  Nothing was built.

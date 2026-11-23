@@ -1,0 +1,248 @@
+ANTHROPOMORPHISM AUDIT OF THE MANUAL SOURCES
+
+Date of the audit: 22 November 2026.  The rules are checked by
+manual/checkeditorial.py (E30, E31 and E32, run by build.sh check-style) and
+tested by tests/editorial.py.
+
+THE RULES
+
+  1. Software is a mechanical device.  A program, a panel, a box, a bar, a
+     message line, TeX, LaTeX or a terminal does not say, ask, tell, want,
+     know, try, decide, refuse, understand, remember, forget, think, expect,
+     assume, prefer, like, help, see, notice, guess, hope, insist or learn.
+     E30 reports these verbs after a software subject (the Editor, the
+     Document Manager, the Printer, the Viewer, Strata, a program, a panel, a
+     box, a bar, a script, a system, TeX, LaTeX, a terminal, a checker, the
+     thesaurus, a server, a message line, a pop-up, a footer, a notice, a
+     message, a banner, Setup, Preview, the Error Log, and the commands
+     Quit, Macro, Retrieve, Delete, Save, Replace and Search) and after the
+     bare pronoun it.
+  2. A defect of the software is called a defect or an error, never a bug.
+     E31 reports the word in any source, in the program font too.
+  3. What may be written:
+       shows, draws, writes, reads, stores, keeps, returns, starts, stops,
+       lists, counts, sends, sets, opens, closes, prints, makes, reports,
+       prompts for, offers, puts a question, rejects, determines, requires.
+     A message line shows a text; a panel prompts for a value; a check
+     rejects a name; a rule determines a result.  Where the subject would
+     have to be a person, the sentence is written in the passive voice.
+     The model of the owner: "If any is missing, nothing is installed", not
+     "If any is missing, it installs nothing at all".
+  4. Not covered by the rules: a document, a table or a field that "says"
+     what it holds (the text says otherwise, the table says which); a person
+     or a service as the subject (a postal service asks for a place).
+
+BEFORE AND AFTER
+
+  The numbers are the hits of E30 in the sources of the Reference Manual
+  before the rewrite (the base of this job) and after it.  The rule E31 found
+  no hit before and none after.
+
+  Source             before after    Source             before after
+  edit-c.src             25     0    equations-a.src         4     0
+  edit-b.src             20     0    appcfg2.src             4     0
+  file3.src              19     0    str5.src                3     0
+  spell.src              15     0    print7.src              3     0
+  print1.src             14     0    edit-a1.src             3     0
+  appterm.src            14     0    view4.src               2     0
+  str4.src               12     0    str2.src                2     0
+  markers4.src           12     0    print5.src              2     0
+  file1.src               9     0    print4.src              2     0
+  edit.src                9     0    messages5.src           2     0
+  appcfg1.src             8     0    markers6.src            2     0
+  markers2.src            7     0    markers1.src            2     0
+  file2.src               7     0    format8.src             2     0
+  equations-d.src         7     0    view2.src               1     0
+  appcmd3.src             7     0    str1.src                1     0
+  appx11.src              6     0    print3.src              1     0
+  view1.src               5     0    messages4.src           1     0
+  print6.src              5     0    messages3.src           1     0
+  glossary.src            5     0    markers5.src            1     0
+  view3.src               4     0    markers3.src            1     0
+  print2.src              4     0    format6.src             1     0
+  format7.src             4     0    equations-t.src         1     0
+  format5.src             4     0    convert2.src            1     0
+  format3.src             4     0    convert1.src            1     0
+  file0.src               4     0    appcmd2.src             1     0
+  Total                 276     0
+
+  One hit is allowed: the table of messages quotes a message of the Printer
+  as the program prints it ("TeX refuses the equation (REASON), so it is
+  printed as text.", the file print6.src), and the allow file says so.
+
+  The sources of the Getting Started documents (gs-*.src) were rewritten
+  by another job.  E30 found 23 hits in them at the time; they are clean
+  now, and the temporary exemption of the gs- files is gone.
+
+THE PRONOUN
+
+  The bare it for a program cannot be found by a pattern: its noun is
+  somewhere in the sentence before.  The sentences in which it stood for a
+  program (start, end, reading and writing, and the like) were found by
+  hand and rewritten, in about 65 places.  Examples:
+
+     The Editor reads the two keys when it starts and loads the macro set
+     and the library before it reads the first key.
+   =>  The Editor reads the two keys at start and loads the macro set and
+     the library before the first key is read.
+
+     Strata is built to be used over a remote login: it writes only what
+     changed and asks nothing of the terminal that a text terminal does
+     not have.
+   =>  Strata is built to be used over a remote login: only what changed is
+     written, and nothing is requested of the terminal that a text
+     terminal does not have.
+
+     The Document Manager asks whether the new document is structured or
+     unstructured.
+   =>  A prompt of the Document Manager offers the choice between a
+     structured and an unstructured document.
+
+     the panel says "Typesetting..."   =>  the panel shows "Typesetting..."
+     the Editor refuses an equation    =>  an equation ... is rejected
+     TeX wants them (the packages)     =>  TeX requires them
+
+  About 660 places have it or they before a verb of any kind.  In nearly
+  all of them it stands for a key, a field, a marker, a list, a panel, a
+  file or a document ("it opens the checklist", "it starts empty", "it
+  holds the text"): the sentence says what the item does, with a verb of
+  the machine, and no person is needed.  The pronoun pass below looked at
+  all of them.
+
+THE PRONOUN PASS
+
+  The rule E32 of manual/checkeditorial.py finds what a pattern can find:
+  (1) it or they, in a sentence that has software for its subject or in
+  the sentence after it, with a bare or modal verb of a person or of
+  intention ("it would not help", "they say") or with allows, lets,
+  offers, ignores, recognizes, warns, complains, cares, chooses, picks or
+  insists; (2) software with a modal and such a verb ("a terminal cannot
+  see", "LaTeX would refuse", "Strata does not know").  A pronoun that is
+  the object of a verb ("remove it like any character") is not reported.
+  The software subjects are those of E30.  The rule looks at every source
+  of the product, like E30 and E31, and the file format sources are not
+  shipped and are not rewritten.
+
+  Allowed verbs for it and they: is, has, holds, shows, stands, begins,
+  starts, ends, needs (a dependency), takes, makes, prints, opens, closes,
+  keeps, replaces, finds, reads, writes, stores, counts, lists, sets, runs,
+  uses, draws, moves, changes, removes, belongs, follows, covers, works.
+  Not allowed: the verbs of E30, the same verbs after a modal, allows,
+  lets, offers, ignores, recognizes, warns, complains, cares, chooses,
+  picks, insists, and the adverbs silently, politely and helpfully.
+
+  Hits of E32 in the sources at the base of this job (the file format
+  sources, which are not shipped, had three more) and after the rewrite:
+
+     edit-b.src        4    0      file3.src         3    0
+     edit.src          3    0      view2.src         2    0
+     spell.src         2    0      appterm.src       2    0
+     appchar, file0, glossary, messages1, messages3, messages5, print4,
+     print6, print7, str5, view, view3, view4 (one each)     13    0
+     Total            29    0
+
+  The rule does not find every case: 11 more sentences were found by
+  reading the candidates (the pronoun with offers, chose, gives and
+  similar verbs, and software with never or would not, for example "the
+  panel offers", "the entries they chose", "they choose text", "the
+  Editor reports what it did, and what it refused to do").  They were
+  rewritten as well, in appcfg1, appterm, edit-b, edit-c, format6,
+  markers, markers5, messages, messages5 and view2.  README.txt and
+  docs/INSTALL-POLICY.txt had three more ("it installs nothing", "the
+  script does not try", "the script asks for --prefix"); the help text
+  of the Editor (help/*.txt) and manual/README.txt had none.
+
+  Examples:
+
+     A terminal cannot see a modifier key alone, so it always shows the
+     plain labels.
+   =>  A terminal does not report a modifier key alone, so the plain
+     labels are always shown.
+
+     A marker of a type that Strata does not know gives the message ...
+   =>  A marker of an unknown type gives the message ...
+
+     Save does not refuse such a document     =>  Save accepts such a document
+     LaTeX would refuse                       =>  LaTeX would reject
+     a word that it does not know             =>  a word that is not an option
+     the words that the checker does not know =>  the words that are not in
+                                                  the dictionary
+     Most terminals cannot tell X from Y      =>  Most terminals send the
+                                                  same code for X and Y
+     It installs nothing and needs no build directory
+                                              =>  Nothing is installed, and no
+                                                  build directory is needed
+
+  Left as it was: a few sentences in which it stands for a document ("it
+  says what they see", manual/README.txt) or for a person who is not
+  software; the allowed verbs above; and the quoted messages of the
+  programs.
+
+WHAT WAS NOT CHANGED
+
+  - The messages of the programs that the manual quotes exactly were
+    left in this part of the work; the part about the code (below)
+    changed the five of them that gave a program the acts of a
+    person, with the messages tables of the manual and the tests.
+  - The sources of the Strata File Formats (strata-file-format*.src): the
+    document is not shipped.
+  - The Tutorial and the cards (cheat.src, mathcheat.src): E30 and E31 run
+    over them and report nothing; their words were not rewritten.
+  - A comment in tests/keymap.py and the developer documents of docs/ other
+    than the six that the first part of the rule changed earlier.
+
+THE CODE
+
+  The rules of the manual also apply to the text that the code contains:
+  the comments and the string literals of the C sources, the comments and
+  the strings of the Python and shell scripts, the help text of the Editor
+  and the README files.  tests/codestyle.py finds the hits of the same
+  pattern as E30 (a verb of a person after a software subject or after the
+  bare pronoun it) and the word bug, with the subjects that only the code has
+  (lpinfo, a dictionary, a function, a routine, a parser, a handler, a module
+  and a callback).  A document, a table, a field or the header of a file that
+  "says" what it holds is not software: "the record PO of its header says so"
+  stays.
+
+  Hits before and after the rewrite:
+
+     Area                         before   after
+     src (C sources)                  39       0
+     tools (Viewer)                    6       0
+     tests (C and Python)            139       0
+     manual (build.sh, scripts)        3       0
+     help (the help of the Editor)    38       0
+     Total                           225       0
+
+  By verb: says 136, asks 37, refuses 24, tells 9, knows 8, decides 3,
+  sees 3, wants 2, tries 2, forgets 1.  The word bug had no hit.
+
+  Rewrites, the same as in the manual: says and tells became shows or
+  reports (the message line shows why), asks became prompts for or requests,
+  refuses became rejects, knows became holds or determines, decides became
+  determines, wants became requires.
+
+  The messages of the programs that changed (each is quoted in the manual and
+  in a test, and both were changed with it):
+     "LaTeX says: %s"                    "LaTeX reported: %s"
+     "lpinfo says:"                      "lpinfo reported:"
+     "The hyphenation dictionary says N words and has M"
+                                         "... dictionary gives N words ..."
+     "TeX refuses the equation (REASON), so it is printed as text."
+                                         "TeX rejects the equation ..."
+     "The picture data is larger than its header says"
+                                         "... larger than the size in its
+                                         header"
+  The passive "was refused" and "is refused" of the log lines and of the
+  messages stay: no actor is named, the manual uses them in the same way, and
+  the word is part of the output "refused: N" of strprint and of the
+  identifiers of the diagnostics (picture-refused and the like).
+
+  Not found by the pattern and therefore not rewritten: the pronoun it whose
+  noun is in an earlier sentence of a comment.  The clear cases were
+  rewritten by reading.  The test cannot find the rest.
+
+  The rules are tested by tests/codestyle.py, which runs in the unit tests
+  (make test).  It proves with samples that must fail that every group of the
+  pattern finds what it is for, and with samples that must pass that the
+  words of the machine are accepted.

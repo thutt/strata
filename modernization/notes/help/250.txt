@@ -1,0 +1,25 @@
+
+------------------------ Avoiding Virtual Memory Errors ------------------------
+
+
+# To help prevent virtual memory errors, keep your hard disk clean of old files.
+
+
+# Make sure you end each session by choosing Quit from the Document Manager. 
+  Be especially careful not to reboot your system after having gone to the
+  DOS prompt using the DOS command from within Manuscript; Manuscript is still
+  active in memory during this time.
+
+  Turning off the computer, rebooting before quitting Manuscript from the
+  Document Manager, or encountering an untimely power failure can prevent 
+  temporary files from being closed and may lose clusters of data. Lost clusters
+  take up valuable space on your hard disk.  To free up hard disk storage:
+
+   Delete the files in the TMP subdirectory of your Manuscript directory.
+
+   Use the DOS command CHKDSK/F to convert lost clusters to files so that you
+    can delete the files and regain disk space.  See your DOS manual for more 
+    complete instructions before performing a CHKDSK/F.
+                                                           
+--------------------------------------------------------------------------------
+  Out of Virtual Memory     Steps to Saving     Keyboard Summary     Help Index

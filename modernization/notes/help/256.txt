@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Picture is too small --
+
+One or more of the optional sizing settings is inappropriate to the picture
+file's native size.  Adjust the height, width, or scale, and retry.
+
+-- Please reset <description> --
+
+Caps Lock, Scroll Lock, and/or Num Lock is on.  You can turn these off or
+leave them on, depending on how you want the keyboard to operate (for 
+example, with Num Lock on the cursor arrow keys will act like a numeric 
+keypad).
+
+-- Please SAVE document IMMEDIATELY - out of virtual memory -- 
+
+The task being performed requires more virtual memory than is currently 
+allocated.  Save the file to retain any changes you may have made.  Refer to
+Appendix C of the Reference manual for information on how to change the 
+virtual memory configuration.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

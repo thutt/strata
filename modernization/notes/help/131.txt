@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- Number of columns exceeds suggested limit (30) -- 
+
+The recommended maximum number of columns to fit across a page is 30.  Use
+the Column and Table Editor to change the number or layout of the columns.
+
+
+-- Number of columns in worksheet doesn't match number in table -- 
+
+The number of columns in the worksheet you are trying to import is different 
+from the number of columns in the existing table.  Change the number of 
+columns in the worksheet or table or import the worksheet into a new table.
+
+
+-- Number out of acceptable range <description> -- 
+
+The number you have specified exceeds the acceptable limits.  Check Help or
+the Reference manual for acceptable entries and enter a new number.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

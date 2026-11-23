@@ -1,0 +1,32 @@
+.doc Quarterly report
+.contents 2
+.h1 Quarterly report
+This report describes the work of the third quarter and the plan for the
+fourth.  It is divided into three parts, and each part into short sections so
+that a reader can see the shape of the whole by looking at the headlines.
+
+.h1 Results
+The quarter ended with all the main goals met.  The details follow.
+.h2 Sales
+Sales grew by eleven percent over the second quarter.  The growth came mostly
+from the two new regions that opened in July.
+.h3 By region
+The north grew fastest.  The south was flat.
+.h3 By product
+The new line sold better than expected and the old line sold less.
+.h2 Costs
+Costs grew by four percent, less than the sales.
+.h2 People
+Three people joined and one left.
+
+.h1 Plan
+The plan for the fourth quarter has four items.
+.h2 Goals
+Keep the growth, hold the costs, and open one more region.
+.h2 Schedule
+The work starts in October and ends in December.
+.h2 Risks
+A late delivery of the new line is the main risk.
+
+.h1 Appendix
+The tables of figures are kept in a separate document.

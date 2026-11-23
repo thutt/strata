@@ -1,0 +1,16 @@
+# The source of the sample document "How Strata Was Made".  Run
+# tests/mkstory.py to make samples/story/strata-story.doc from it.  The
+# markup is that of manual/mkmanual.py with the two additions that
+# tests/mkstory.py describes (.quote and .tabcap).  The title page, the
+# contents, the index and the lists are made by the generator; the chapters
+# are the files that follow, in order.
+
+.include chapter-01.src
+.include chapter-02.src
+.include chapter-03.src
+.include chapter-04.src
+.include chapter-05.src
+.include chapter-06.src
+.include chapter-07.src
+.include chapter-08.src
+.include chapter-09.src

@@ -1,0 +1,360 @@
+; Markers: commands that stand in the text.
+= Markers
+~ Marker
+A marker is one item of the text that stands for something that is worked out
+when the document is printed: today's date, a page number, a note, a picture,
+an equation, a line, a reference to another section.  It takes one cell on the
+screen, the cursor stops on it, and it moves with the text when the text is
+cut, copied or moved.  Search does not find it.
+
+- {Alt-F12} (or {Ctrl-F12}) opens the [[Marker Commands]] table.  Choose a
+  marker
+  and fill in its panel.
+- With the cursor on a marker, the same key opens its panel again, to change it.
+- How a marker looks on the screen is set by its [[Display Modes|display
+  mode]].
+
+The markers: [[Author Marker]], [[Column Break Marker]], [[Comment Marker]],
+[[Counter Marker]], [[Cross-reference Marker]], [[Date and Time Markers]],
+[[Description Marker]], [[Conditional Text]], [[Equation Marker]], [[File
+Markers]], [[Font Marker]], [[Box Markers]], [[Keep Marker]], [[Keycap
+Marker]], [[LaTeX Marker]], [[Line Marker]], [[Note Marker]], [[Orientation
+Marker]], [[Page Break Marker]], [[Page Number and Section Markers]],
+[[Picture Marker]], [[Printer Marker]], [[Revision Marker]], [[Whitespace
+Marker]], [[Print Errors]].
+
+= Marker Commands
+~ Alt-F12
+~ Marker (Alt-F12)
+The table of the markers, in three columns.  Move with the arrow keys or press
+the first letter of a name, then {Ins} or {Enter}.  A marker that has a panel
+opens it; the others (Author, Column Break, Description, Else, Endif, Filename,
+Pathname, Printer and Revision) are put in at once.  {Esc} cancels.
+
+A name in parentheses is not allowed where the cursor is: Cross-reference is for
+a structured document only, and Page Number and Section are for headers and
+footers.  The message line then shows Invalid marker selection.  See
+[[Markers]].
+
+= Display Modes
+~ Marker Display Modes
+Each marker has a display mode that says how it looks on the screen:
+
+- Diamond: a diamond.
+- Name: a short name, such as [KEEP].
+- Short: the name of the marker.
+- Long: the name and what the marker holds, such as the date format.
+- Inline: the thing itself, where the screen can draw it (a picture, an
+  equation, a keycap or a LaTeX marker in the X11 version; the Short form
+  where the thing cannot be drawn).
+
+A note, comment, figure, font, index or table marker is drawn in the Short
+form until you choose another mode: [NOTE], [COM "text"], [FIG "name"],
+[FONT], [INDEX heading] or [TABLE "name"].
+
+Set the modes of all the markers in [[Marker Format]] with Global, Marker.
+
+= Author Marker
+~ Marker:Author
+Prints the author of the document, the name typed in the Author field of the
+Save panel.  No panel: it is put in at once.
+
+= Description Marker
+~ Marker:Description
+Prints the description of the document, from the Description field of the Save
+panel.  No panel: it is put in at once.
+
+= Printer Marker
+~ Marker:Printer
+Prints the name of the printer that the document was made for.  No panel.
+
+= Revision Marker
+~ Marker:Revision
+Prints the revision number of the document.  The number rises by one thousandth
+each time a changed document is saved.  No panel.
+
+= Column Break Marker
+~ Marker:Column Break
+Ends the page and starts the text that follows at the top of a new page.  Put it
+in a block of its own.  No panel.
+
+= Page Break Marker
+~ Marker:Page Break
+Ends the page and starts the text that follows on the next page, on the next odd
+page or on the next even page.  The field is Start Following Text on Next.  Put
+the marker in a block of its own.
+
+= Orientation Marker
+~ Marker:Orientation
+Turns the pages that follow from upright to sideways, or back.  The field
+Orientation has the two choices.  Use it for a wide table or picture.
+
+= Whitespace Marker
+~ Marker:Whitespace
+Leaves a vertical space.  The fields are the Size (vertical), the Unit, and the
+Treatment at End of Page, which says what to do when the space does not fit on
+the page.  Use it for room for a picture or a signature.
+
+= Line Marker
+~ Marker:Line
+Draws a line across the text.  With no String it is a plain rule; with a String
+it is a row of that character, such as asterisks or dots.  The fields are the
+String, the Length (RM, the right margin, if empty), the Weight and the Center.
+
+= Keep Marker
+~ Marker:Keep
+Keeps blocks together on one page.  The choices are Start (Fixed), Start
+(Floating) and End.  A region that does not fit on the rest of the page moves
+to the next page whole.  With Floating, the text that follows the End fills the
+rest of the page.  A Keep marker is never printed.  Put it in a block of its
+own, before the first block and after the last block of the region.
+
+= Font Marker
+~ Marker:Font
+~ Font
+~ Fonts
+Changes the family of type of the text that follows, to the end of the block.
+Choose a font from the list: the first entry, in brackets, is the font that the
+block has, and then come the fonts 1 to 20 with the names of the Typeface List.
+Put a second Font marker with the choice [Text] to go back.  See [[Typeface
+List]].
+
+= Keycap Marker
+~ Marker:Keycap
+Draws a key, a small box with a legend, in the line of text.  The fields are the
+Legend (such as Enter, F12 or Ctrl-S), the Foreground and Background shades
+(0.0 black to 100.0 white), the Scale and the Font.  A field that you leave at
+the bracketed value follows the Keycap Format of [[Marker Format]].
+
+= Comment Marker
+~ Marker:Comment
+A note to yourself or to the people who work on the document.  It is shown on
+the screen and printed only in a Draft print.  Its text is edited in a
+full-screen editor.  The fields are the Name and the time Created.
+
+= Note Marker
+~ Marker:Note
+A footnote at the foot of the page, a levelnote at the end of a section, or an
+endnote at the end of the document.  The Type field says which; the first
+choice, in brackets, takes the Primary Note Type of [[Marker Format]].  The text
+of the note is edited in a full-screen editor and may have several paragraphs.
+
+= Counter Marker
+~ Marker:Counter
+Prints the next number of a counter.  There are 99 counters, and each counts up
+to 4294967295 and stops there.  The fields are the
+Counter (1-99), Set Value (0 to 4294967295), and the Number Style (arabic,
+roman, letters).  A roman number shows 1 to 3999 and a letter number 1 and
+more: any other number is written in arabic digits.  The
+look of the number is set in Counter Format ([[Marker Format]]).
+
+= Cross-reference Marker
+~ Marker:Cross-reference
+Prints the tag, the headline, both, or the page number of another section.  The
+fields are the Section Number and the Style.  It works in a structured document
+only, and it stays right when sections are moved.
+
+= Equation Marker
+~ Marker:Equation
+A formula typeset as mathematics.  Its text is edited in an editor of its own
+({Ctrl-W} opens it) and is written in TeX math.  In the X11 version the
+equation is drawn on the screen; in the terminal version it shows as a label
+with its text.  See [[Writing Equations]].
+
+= Writing Equations
+~ Equation
+~ Equation Editor
+An equation is written in the math notation of TeX, and nothing else.  For
+example:
+
+| x^2 + y^2 = z^2
+| \frac{{a}}{{b}}      \sqrt{{x}}      \sum_{{i=1}}^{{n}} i      \alpha + \beta
+
+- A caret makes a superscript and an underscore a subscript; braces group what
+  belongs together.
+- \frac makes a fraction and \sqrt a root; words that begin with a backslash
+  are symbols and constructs, such as the Greek letters.
+- Text in the middle of a formula goes inside a text command.
+
+An equation that cannot be typeset is reported as a Print Error, with the
+message of the typesetting system.  See [[Equation Marker]], [[Print Errors]],
+[[Equation Symbols]] and [[Equation Problems]].
+
+= Equation Symbols
+~ Equation symbols
+Every symbol is a word that begins with a backslash.  These are the ones that
+are used most.  The Math Symbols card of the documentation shows every symbol
+and every construct, as it is printed, with the text to type beside it.
+
+- Greek letters: \alpha \beta \gamma \delta \epsilon \theta \lambda \mu \pi
+  \sigma \phi \omega, and the capitals \Gamma \Delta \Theta \Lambda \Pi \Sigma
+  \Phi \Omega.  A capital that looks like a Latin capital is typed as the
+  Latin letter.
+- Operators: + - \pm \times \div \cdot \cup \cap \oplus \otimes.
+- Relations: = \neq \equiv \approx \sim \leq \geq \in \subset.  Put \not
+  before a relation to negate it.
+- Arrows: \rightarrow \leftarrow \Rightarrow \Leftrightarrow.
+- Scripts, fractions and roots: x^2 x_i \frac{{a}}{{b}} \sqrt{{x}}
+  \binom{{n}}{{k}}.
+- Large operators: \sum \prod \int \lim; the limits are scripts, as in
+  \sum_{{i=1}}^{{n}}.
+- Brackets that grow with what they hold: \left( ... \right).
+- Accents: \hat{{x}} \bar{{x}} \vec{{x}} \dot{{x}}.
+- Space: \, \; \quad.
+- Matrices and cases: \begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}} and
+  \begin{{cases}}.
+- Other signs: \infty \partial \forall \exists.
+- Fonts: \mathbb{{R}} \boldsymbol{{x}} \text{{words}}.
+
+See [[Writing Equations]] and [[Equation Problems]].
+
+= Equation Problems
+~ Equation errors
+An equation that cannot be typeset keeps its label on the screen, such as
+[EQN x^], and is printed as the word EQUATION with its text in a box.  The
+print goes on and the PDF is made; the equation is listed as an error in the
+Error Log.  Open the equation and press {Ctrl-W}: the message is under the line
+"could not typeset the equation".
+
+- That TeX command is not allowed in an equation: take the command out.  The
+  commands that open, read or write files, define commands or change the kind
+  of a character are refused (input, include, openin, openout, read, write,
+  immediate, catcode, csname).
+- The equation is empty: write the formula, or delete the marker.
+- It took more than 5 seconds: the typesetting was stopped.  The formula is
+  too large or has a loop; make it smaller.
+- A message of TeX itself: the text is wrong at or just before the place that
+  it names.  The usual causes are a brace that is missing or extra ("Missing
+  {{ inserted"), a script without its argument (x^), two superscripts on one
+  thing ("Double superscript": group one, x^{{2^3}}), a sign & outside a
+  matrix (write \&), a \left without its \right, and a command that does not
+  exist ("Undefined control sequence").
+
+A formula that typesets is not always the formula that you meant: read the
+picture.  See [[Writing Equations]] and [[Equation Symbols]].
+
+= LaTeX Marker
+~ Marker:LaTeX
+Holds instructions for LaTeX that Strata has no marker for.  They are given to
+the typesetting system exactly as you typed them.
+In the X11 window a marker whose instructions make a piece of a line, such as
+the logo of TeX, a word in bold, a symbol or a formula, is shown as that piece
+in the line, as an equation is.  A marker that only sets something, opens or
+closes something, or makes a block (a page break, vertical space, a list, a
+table, verbatim text) is shown as its label by its display mode, and the
+message line shows why when the cursor is on it.  This is the display mode
+Inline, which is the default of the LaTeX marker; with another mode on the
+Marker Display Modes panel the marker is shown by that mode.
+
+= Picture Marker
+~ Marker:Picture
+Puts a picture from a file in the text.  The fields are the File Name, the
+Position, the Width, the Height and the Unit, the Scale, and the Name for the
+Table of Figures.  PNG, JPEG, PDF and EPS files can be used.  The file is not
+copied into the document; give its name, and keep the file where it is.
+A name that is not a full path is looked for next to the document, then in the
+working directory, then in the directory the program was started in.  A file
+that is not there, cannot be read or is not a picture makes the marker dim
+with the words file not found (or the other reason); the Printer prints a red
+box with the words Picture file not found, and the Error Log names the file.
+A picture keeps its colours: it prints in colour on a colour printer, in a
+Draft and in a Final print, and it shows in colour in the X11 window.  Print in
+Black and White? Yes prints it in greys.
+A picture is one line for the cursor: {Down} puts the cursor on it and the
+next {Down} on the line below.  In the X11 window the text slides by the height
+of the picture in a few quick steps.  A picture taller than the window is
+scrolled through with {PgDn} and {PgUp} first.
+
+= Date and Time Markers
+~ Marker:Date
+~ Marker:Time
+~ Marker:Filedate
+~ Marker:Filetime
+~ Date
+~ Time
+~ Filedate
+~ Filetime
+The Date and Time markers print the date and the time of the print.  Filedate
+and
+Filetime print the date and the time of the file on disk.  Each has a Format
+field, with words such as Month D, Year or H:MM am/pm; when it is empty the Date
+Format or the Time Format of [[Marker Format]] is used.
+
+= File Markers
+~ Marker:Filename
+~ Marker:Pathname
+The Filename marker prints the name of the document file, in capital letters.
+The Pathname marker prints its directory and name.  Neither has a panel.
+
+= Page Number and Section Markers
+~ Marker:Page Number
+~ Marker:Section
+Page Number prints the number of the page it is on, in the way that the Page
+Number Tag says.  Section prints the tag of the current section.  They can be
+used in headers and footers only.
+
+= Box Markers
+~ Marker:Figure
+~ Marker:Index
+~ Marker:Merge
+~ Marker:Table
+Figure, Index, Merge and Table hold a name and are printed as a small box
+with the name in it.
+
+- Figure and Table: the Name for the Table of Figures or of Tables.
+- Index: a Main Heading, a Subheading and a Reference Text for an index.
+- Merge: a Variable Name.
+
+A required field that is empty gives the message No string specified.  The
+Table marker is a different thing from the Table command, {F8}, which adds a
+column to a block.
+
+= Include Marker
+~ Marker:Include
+~ Include
+~ Master document
+~ Several authors
+Include puts the text of another document at its place in the print.  It is
+for a work that several authors write, each in a document of their own: a
+master document holds one Include marker for each part, and one print of the
+master is the whole work.
+
+- File Name: the name of the part.  {F2} lists the documents.  The name may
+  leave out .doc and may have a directory in front of it.
+- Put the marker alone in a block, in the last block of a section when the
+  part has sections of its own.
+- The part is looked for beside the document that holds the marker, then in
+  the working directory.
+- The print reads the saved part: save it first.
+- The Global Format of the master is used for the whole work.
+
+A part that cannot be used gives Invalid Include request in the Error Log, and
+a notice in square brackets is printed at the place.  See [[Print Errors]].
+
+= Conditional Text
+~ Marker:If
+~ Marker:Else
+~ Marker:Endif
+If, Else and Endif choose text.  The text after an If marker, up to the Else
+marker (or up to Endif), is printed when the Expression of the If is true.  The
+text between Else and Endif is printed when it is false.  Endif ends the
+condition.  None of the three is printed.
+
+= Print Errors
+~ Marker:Print Error
+~ Print Error (read only; Del removes it)
+~ Print Error
+~ Menu:Print:Next Error
+~ Menu:Print:Previous Error
+~ Menu:Print:Remove Error
+~ Menu:Print:Remove Print Errors
+A Print Error is a note that the Editor leaves in the text where a Print or a
+Preview found something wrong: a picture whose file is not there, an equation
+that does not typeset, a character that no font has.  It carries the message and
+the code.  You cannot make one by hand.
+
+- {Ctrl-F8} finds the next Print Error and {Ctrl-F7} the previous one.
+- {Del} removes the one under the cursor.
+- Remove Error and Remove Print Errors on the Print menu remove one or all.
+- Search can look for the next Print Error: set Find to Print Error in the
+  [[Search]] panel.

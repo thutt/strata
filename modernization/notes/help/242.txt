@@ -1,0 +1,25 @@
+
+------------------------------- Optional Settings ------------------------------
+
+Error Log Markers? Select Yes to print an error indicator in the document at 
+                   the end of lines that contain errors. Select No if you do
+                   not want error indicators in the document. Note: This setting
+                   applies only if Error Log is marked on the Print, Preview,
+                   or Compare Document panel.
+
+Force Document     Select Yes to print an entire structured document, including
+Expansion?         any collapsed sections. Select No to print the document in 
+                   its current state.
+
+Page Number        Enter the page number that you want on the first page of the
+of First Page:     document body.
+
+
+Blank Page         Select Nothing if you want blank pages to be entirely blank 
+Contents:          (no headers or footers). Select Headers/Footers if you want 
+                   headers and footers printed on any blank pages. Select "This
+                   page ..." to print the quoted sentence (without the quotes).
+                   Manuscript uses Font 2 from the Typeface List to print the 
+                   text.
+--------------------------------------------------------------------------------
+         Print Document          Keyboard Summary          Help Index

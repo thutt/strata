@@ -1,0 +1,355 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+EQUATIONS IN TEX SYNTAX (DESIGN)
+================================
+
+Status: the display of displayed and inline equations in the X11 version
+is implemented (section 13).  Everything else here is still design:
+printing and the Equation panel with its other fields.  The
+terminal version keeps the text of an Equation marker and draws it as a
+label ([EQN text]).
+
+1. Idea
+-------
+The Equation marker (type 9) holds its text as nested records, like a
+note.  The original read that text in its own equation language, which
+resembles TeX.  Strata defines the text of every equation to be TeX math
+syntax (see section 2), so that:
+
+  - printing (PRINT-LATEX.txt) writes the equation into the .tex file as
+    it is: $...$ for an inline equation and \[...\] for a displayed one;
+  - the editor can typeset the equation to an image in the background and
+    show it in the text, live, in the X11 version.
+
+The terminal version shows the label and the TeX source and does not draw
+images.  It is not deprecated by this: it keeps everything that does not
+need pictures.
+
+2. The text and compatibility
+-----------------------------
+Decision: the existing Equation marker (type 9) is reused as it is, and its
+text is TeX math.  There is no new marker type and no field that says which
+language the text is in.
+
+  - The program is nearly 40 years old and has not been supported for
+    decades, so there are no Manuscript files that have to keep working.
+  - Equations were only ever typeset by the original's print software, never
+    by its editor.  An equation in the old language that is found in a file
+    is edited and written again in TeX.
+  - Such an equation is not destroyed by loading and saving: the text is
+    kept byte for byte until someone edits it.  Until then it is shown as
+    the label, and if it is rendered the TeX error is shown under it.  The
+    samples with equations in the old language (sample5.doc and others) are
+    examples of this.
+  - Inline or displayed is not stored: it follows from where the marker
+    stands (rule below).  The position field (5) that DOC-FORMAT.txt lists
+    is neither read nor changed by Strata, so a file keeps whatever it had.
+
+The rule: an equation is DISPLAYED when it is on its own, and INLINE when
+it is not.
+
+  - "On its own" is judged per line of text.  A line is the tokens between
+    two end-of-line characters (1D) of a column, or from the start or to
+    the end of the column.  The equation is on its own when the only things
+    on its line, besides the marker, are spaces, tabs, attribute changes
+    and the end-of-line itself.  A block (one column) with a single
+    equation and nothing else is therefore displayed; so are two equations
+    on two lines of one block.
+  - An equation with any other text on its line, before or after it, is
+    inline: "where $x = 1$ is".  A full stop or a comma after an equation
+    that stands alone ("x = 1.") makes it inline; people who want a
+    displayed equation leave the punctuation out or put it in the TeX
+    text.  (Open question: allowing trailing punctuation.)
+  - Two equations on the same line are both inline.
+  - In a table (a block of several columns) each column is judged on its
+    own, so a column that holds only an equation shows it displayed.
+  - Typesetting: inline uses $\textstyle ...$ (or $...$), displayed uses
+    \[ ... \] with \displaystyle.  The renderer, the layout and the printer
+    use the same function, eqn_is_display(text, token), which looks at the
+    tokens of the column; it is evaluated when the layout is made, so
+    typing text next to an equation turns it from displayed to inline and
+    back at once.
+
+3. Editing
+----------
+  - Alt-F12, Equation (or Ctrl-F12) opens the marker panel of the other
+    markers with the text of the equation as one editable field, or the
+    note editor (note_editor in ui.c) for several lines.  There is no
+    position field: the equation is displayed or inline by where it stands.
+  - When the panel is accepted (Ins) the text is written to a file and the
+    renderer is started in the background (section 4).  The editing
+    session is not blocked.
+  - Syntax is checked by TeX, not by a parser of ours: an error shows the
+    first message of the log under the equation ("Missing } inserted"), as
+    the original did with its "Equation syntax error" messages.
+
+4. Rendering in the background
+------------------------------
+  - Input: the equation text only, in a fixed wrapper:
+
+        \documentclass[preview,border=1pt]{standalone}
+        \usepackage{amsmath,amssymb}
+        \begin{document}$\displaystyle <text>$\end{document}
+        (or \[ ... \] for a displayed equation, in a preview environment)
+
+    amsmath and amssymb are loaded so that the usual math works; no other
+    package is allowed in the first version.
+  - Engine: latex followed by dvipng, which gives a PNG with a transparent
+    background and reports the depth of the baseline (dvipng --depth), so
+    an inline equation can be set on the baseline of the text.  pdflatex
+    would need a PDF to PNG step (pdftoppm) and gives no depth.  The
+    printed document uses pdflatex (PRINT-LATEX.txt); the two do not
+    need to agree because both typeset the same TeX math.
+  - Size and colour: the image is made for the font size of the screen
+    cell (about 2 times the cell height for a displayed equation) at the
+    resolution of the X11 font, in the text colour of the window.  A
+    change of font or window scale makes new images.
+  - Cache: images are kept in ~/.cache/strata/eqn (or $XDG_CACHE_HOME) under
+    a name made of a hash of the text, the mode (inline or displayed), the
+    size and the colour.  An equation that was rendered once is shown at
+    once the next time the document is opened, and removing the directory
+    is harmless.
+  - Process: the renderer is a child process (fork and exec of a small
+    shell-free sequence: latex, then dvipng) started by Strata and polled
+    from the X11 event loop (the loop already wakes up on a timeout).
+    One job runs at a time per window, the others wait in a queue; a job
+    that runs more than 10 seconds is killed and the equation shows an
+    error.  When a job is done Strata invalidates the view and the image
+    appears.
+  - Lazy: only equations that are on the screen (or in the visible block)
+    are rendered; the rest are rendered when they scroll into view, or
+    when the document is printed.
+
+5. Display in the X11 version
+-----------------------------
+The screen is a grid of character cells (term.h).  An image does not fit a
+cell, so:
+
+  - Layout reserves rows for the equation: a displayed equation becomes a
+    line of its own whose height is the number of cell rows that cover the
+    image; an inline equation is given the cells that cover its width, in
+    the line, and the line is made taller when the image is taller.  Until
+    the image exists the equation has its one-row label, and when the
+    image arrives the layout is redone, so the text below moves once.
+    This is the main change to layout.c: a row may have a height of more
+    than one cell row.
+  - term.h gets an optional call, term_image(x, y, w_cells, h_cells,
+    image), implemented by the X11 backend with XPutImage or XRender (the
+    backend already draws text through Xft) and by the terminal backend as
+    a no-op.  The cell buffer holds blank cells where the image is, and
+    the backend draws the image after the cells.  Cursor movement in the
+    text treats the equation as one position, as it does for any marker.
+  - The picture is the equation as it will be printed, without the label.
+    The label (with the source) is shown while the cursor is on the marker
+    or while rendering is not finished, so that the source can always be
+    seen and edited.
+
+6. Printing
+-----------
+The equation is not rendered separately for print.  latex.c writes the TeX
+text into the document; eqn_is_display picks \[...\] or $...$; text in
+the original's language is set in a monospaced font.  Preview uses the
+same PDF.
+
+7. Terminal version
+-------------------
+The label stays, [EQN text] with the TeX source, in every display mode.
+Option: the Kitty or Sixel graphics protocols could show the same PNG
+files on terminals that support them; this is left out of the first
+version and does not change the design (term_image would be implemented in
+term.c too).
+
+8. Security
+-----------
+TeX can read and write files.  An equation comes from a document that may
+not be trusted, and its text goes to latex:
+
+  - run latex with shell escape off (-no-shell-escape) and with the
+    environment variables openin_any=p and openout_any=p, so that only
+    files below the working directory (the private temporary directory) can
+    be opened;
+  - the wrapper is fixed and the text is only the body; the strings
+    \input, \include, \openin, \openout, \read, \write, \immediate, \catcode
+    and \csname ... \endcsname with a file name are refused before the
+    text is written (a short list, to be tested against hostile samples);
+  - the temporary directory is made with mkdtemp (mode 0700) and removed
+    after the job; only the PNG and the log line are kept.
+
+  - Images that latex (or dvipng) returns are not to be trusted: the programs
+    may be compromised or may fail.  Every size, count and index that comes
+    from an image file is checked before it is used, so that no buffer can
+    overflow.  png.c refuses a picture (png_error gives the reason, which the
+    equation panel shows in place of the message of TeX) when:
+
+      - the signature is wrong, the file is longer than 32 MB (it is read
+        only up to that), a chunk length runs past the end of the file
+        (checked against what remains, never as pos + length), the end
+        chunk is missing, or the CRC of any chunk is wrong (a bad checksum
+        is refused: dvipng always writes good ones);
+      - IHDR is not the first chunk, is not exactly 13 bytes, or comes
+        twice; the width or height is zero or above 20000; the number of
+        pixels is above 8000000 (PNG_MAX_PIXELS, for example 4000 by
+        2000); the compression or filter method is not 0; the picture is
+        interlaced (Adam7 is not supported and is refused, never
+        misread); the colour type is not 0, 2, 3, 4 or 6; the bit depth is
+        not 1, 2, 4 or 8 for grey and palette pictures, or not 8 for the
+        others (16 bits is refused);
+      - PLTE comes twice or after the data, is empty, is not a multiple of
+        3 bytes, has more than 256 entries, or is in a grey picture; a
+        palette picture has no PLTE; tRNS has more than 256 bytes; a pixel
+        has a palette index beyond the entries;
+      - the zlib header is not deflate with a window of at most 32K and no
+        preset dictionary; a stored block has a bad length check; a Huffman
+        code is over-subscribed; the data has a distance beyond the data
+        made so far;
+      - the inflated data is not exactly height * (stride + 1) bytes, where
+        the stride is computed from the header with checked size_t
+        multiplications.  The inflater is given that size as its limit
+        before it allocates: it stops there, so a decompression bomb (a
+        stream of a few MB that inflates to GB) never allocates more than
+        the size the header allows, which is at most 32 MB (8000000
+        pixels at 4 bytes), and then the result (3 bytes per pixel, at
+        most 24 MB).  Nothing is allocated from a size that comes from the
+        file before it has been compared with these limits;
+      - any row has a filter type above 4 (all rows are checked before the
+        picture is allocated).
+
+    Trailing data after the end chunk is ignored (accepted), and so is a
+    second end chunk.
+
+  - The depth that dvipng reports (the baseline) is read as plain decimal
+    digits, at most seven; a sign, a letter, a fraction, an empty text or a
+    value above PNG_MAX_DEPTH (100000) is taken as 0.  The depth read from
+    the cached .dep file is also limited to the height of the picture.
+  - The picture handed to the terminal is only used with its own width and
+    height, and the number of cells a picture takes (the width, the rows
+    above the baseline and the rows below) is limited to 300 in each
+    direction.  The X11 painter checks its allocation.
+  - A picture that fails any check is treated as a failed equation: the
+    label stays in the text and the panel says why.  The tests are in
+    tests/pngtest.c (hostile pictures made at run time), and the same test
+    runs under the address and undefined behaviour sanitizers (the asan
+    build type).  See WORKLIST.txt.
+
+9. Prerequisites (README.txt lists them when this is built)
+-----------------------------------------------------------
+  texlive-latex-base       latex
+  texlive-latex-extra      the standalone class (kpsewhich standalone.cls)
+  texlive-latex-recommended
+                           amsmath (and the preview style)
+  dvipng                   the PNG with the baseline depth
+All are optional: without them the equation keeps its label.  On the
+machine this was written on latex, pdftoppm, dvisvgm, standalone.cls,
+preview.sty, amsmath.sty and dvipng are present.  dvisvgm and poppler-utils
+are alternatives for the image step (SVG scales without rendering again
+but the X11 backend would have to draw it).
+
+10. Tests
+---------
+  - latex.c / equation text: unit tests on the generated wrapper and on
+    the refusal of unsafe strings, with no TeX needed.
+  - Rendering: skipped when latex or dvipng is missing; otherwise a test
+    renders x^2 and checks for a PNG with a depth.
+  - Layout: a unit test with a fake image size checks the extra rows.
+  - X11: tests/xsmoke.py can look at the screen buffer for the reserved
+    rows (the image itself is not compared).
+
+11. Open questions
+------------------
+  - Whether punctuation right after an equation that stands alone keeps it
+    displayed.
+  - What the editor offers for an equation that does not typeset (a file
+    with the old language): the error under the label is the plan.
+  - The look of an equation that is being rendered (label, a grey box?).
+  - Whether the images should follow the colour of the text or be black.
+  - Image scaling when the X11 font size changes (new render or scale).
+
+12. Suggested order of work
+---------------------------
+  1. The Equation panel for the TeX text (no new field); the label.
+  2. The wrapper, the safety rules, the renderer and the cache, tested
+     without the display.
+  3. Printing the equation in latex.c.
+  4. Taller rows in layout.c and term_image in the X11 backend.
+  5. Lazy rendering and the queue; error display.
+
+
+13. What is implemented (X11)
+-----------------------------
+  - src/png.c: a small PNG reader (no library) for the images of dvipng.
+  - src/eqrender.c: eqr_request, eqr_peek, eqr_poll, eqr_error and
+    eqr_unsafe.  A job is a child process that runs latex (shell escape off,
+    openin_any=p, openout_any=p) and then dvipng in a private directory;
+    only one runs at a time and one is killed after 20 seconds.  Images and
+    error messages are cached in $XDG_CACHE_HOME/strata/eqn (or
+    ~/.cache/strata/eqn), named by a hash of the text, the mode, the
+    resolution and the colors.  The renderer is off unless latex and dvipng
+    are found in PATH.
+  - src/layout.c: eqn_is_display (the rule of section 2), and the layout of
+    a displayed equation whose picture is ready: rows of free cells (the
+    attribute DA_EQ), centred, as many as cover the picture.  Without a
+    picture the label is drawn as before.
+  - src/view.c: ed_draw draws those cells as TERM_IMAGE_CELL and hands the
+    picture to the terminal with term_image.  For an equation label that is
+    on the screen it asks for the picture (layout_eq_want), so only the
+    equations that are shown are rendered.
+  - src/termbuf.c and src/term_x11.c: term_image, term_gui_info and
+    term_set_idle.  The X11 backend paints each picture over the cells that
+    still hold TERM_IMAGE_CELL (a panel drawn over a picture stays on top)
+    and repairs the cells when a picture goes away.  While the renderer
+    is set up, term_getkey wakes every 200 ms to poll the jobs; when one has
+    finished the view is laid out again.
+  - src/ui.c: equations_init sets the resolution (7 times the cell height
+    in dpi), the colors of the window and the hooks; the terminal build
+    returns before that.
+  - Inline equations: the picture is made as $...$ (text style) and takes
+    cells in the line for its width.  Its baseline is put on the baseline
+    of the text row, using the depth that dvipng reports (the text baseline
+    is taken as 3/4 of the cell height).  When the picture is taller than
+    the row, rows of free cells come before and after the text row (the
+    row of text keeps its place among them), and the whole group is one
+    layout row for the cursor.  Word wrap moves a picture with the words
+    that follow the break.  A picture that does not fit in what is left of
+    the line starts the next line and the text goes on after it there (this
+    is not WYSIWYG and is meant to be); only a picture wider than the whole
+    line is clipped at the right edge.
+  - Moving: Up and Down pass over the rows that only hold a picture as one.
+    From the text of an inline equation they go to the line above or below;
+    a displayed equation is two stops, the equation and the end of its line.
+  - The cursor on an equation is a box around the whole picture (term.h,
+    term_cursor_box), so that it shows which equation is current.
+  - Ctrl-W in the equation editor (the status line says so): an enlarged
+    picture of the equation as it is being edited (three times the
+    resolution, in a panel of its own; a picture that is larger than the
+    window is made again smaller, once, so that all of it shows), or, when
+    latex could not typeset it, the message of latex and the lines it
+    prints with it.  Esc goes back to the editor.  The terminal version says
+    that viewing an equation needs X11.
+  - Global, Marker, Marker Display Modes, Equation: the mode Inline (the
+    default) draws the picture, the modes Short, Long, Diamond, Name and
+    Hidden show the marker or nothing.  The mode is kept in the file as the
+    header record OM9,<mode>; the terminal version always shows the markers.
+  - The two cases of use: an equation is typeset (1) when it is first on
+    the screen, and (2) after the Equation marker panel (Alt-F12) was
+    accepted, because the new text is a new picture request.
+
+Not done: printing equations in the .tex file, the Equation panel fields, a
+limit on the number of cached pictures in memory
+(128), and removing old files from the cache directory.
+
+Tests: tests/edtest.c (the rule, the text, the safety list and, when latex
+and dvipng exist, a real render) and tests/xsmoke.py (the pictures appear on
+first showing, after the editor, and inside a line of text).

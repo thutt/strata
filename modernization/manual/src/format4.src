@@ -1,0 +1,188 @@
+# Chapter 4, fourth part: the subjects that the fields of the Global Format
+# panels are about, each explained where it is set.  These sections belong
+# to Global, Format (format3).  Part of the chapter source.
+
+.h3 Justification [format-set-justification]
+.ix Justification
+.ix Left justification
+.ix Right justification
+.ix Center justification
+.ix Even justification
+.ix Ragged right
+The justification says how the rows of a block are lined up.
+.table 14 14 22
+Value | Screen | Printed page
+Left | Left | Ragged right
+Right | Right | Flush right
+Center | Centered | Centered
+Even | As Left | Both edges even
+.end
+It is set for the headlines and for the text (and for each level) on the
+Global Format and Level panels, for a block or a column with the {k:F6}
+panel ({n:format-local-block}) and for a named format
+({n:format-named}).  A new document has Even for its text.  Printed even
+justification leaves the last row of a line short; left justification lets
+the right edge be a little uneven.
+
+.h3 Indents [format-set-indents]
+.ix Indents
+.ix Indent
+.ix First
+.ix All but First
+.ix Left block indent
+.ix Block Indent
+.ix Hanging indent
+.ix Ctrl-H
+.ix Text indent
+.ix Indent per Level
+There are three kinds of indent and they are unrelated.
+.table 22 14 14
+Indent | Screen | Printed page
+Indent (lines) | Yes | Yes
+Left block indent | Yes | Yes
+Indent per Level | Yes | No
+.end
+{b:Indent} (None, First, All but First, All) says which rows of every line
+are indented: none, the first row, every row but the first, or all rows.  The
+amount is the first tab stop of the ruler of the block, or 5 cells when it has
+no stop.  It is set on the Global Format and Level panels (Headline Indent,
+Text Indent), on the Named panel (Indent) and by the {k:F6} question Indent.
+A cell is one character of the screen.  In print the unit is a ruler unit
+({n:format-fields-spacing}, Ruler): with the default Relative ruler the
+default indent of 5 is five eightieths of the width of the text, and at
+10/inch it is half an inch.
+
+{b:Left block indent} moves the whole block to the right by that many cells.
+It is set by the first {k:F6} question, "L: left block indent (ruler
+units)", and by the Block Indent (Left) field of the Named panel.  On the
+printed page the text of the block, and the table if it is one, starts that
+many ruler units from the left margin.  The block indent is not
+checked: a non-numeric entry means 0.
+
+{b:Indent per Level} (Global Format, spacing) indents the blocks of the
+sections of each level by that many units more than the level above, and the
+{b:Indent to Next Level} of a level panel does the same for the sections below
+that level alone: the indent of a section is the sum, over the levels above it,
+of the Indent to Next Level of the level, or the Indent per Level where the
+level sets none.  The headline and the text of a section are indented
+together, and so are its tables, boxes and pictures: a table starts at the
+indent of its section and ends at the right margin, so the last column is
+the narrower the deeper the section is.  The unit is the unit of the ruler
+({n:format-fields-spacing}); the screen draws the indent in cells and the printed page in the unit of the
+Ruler field.
+
+{b:Hanging indent.}  Type the characters that hang, such as a bullet and a
+tab or a number and a space, and press {k:Ctrl-H}.  The key sets the first tab
+stop of the block at the position of the cursor (counted from the block
+indent) and the Indent to All but First, as local settings of the block, and
+shows "Hanging indent set at 5" (the number is the position).  If the cursor
+is still at the left block indent the message is "Type the hanging characters
+first, then press {k:Ctrl-H}" and nothing changes.
+
+.h3 Tab stops [format-set-tabs]
+.ix Tabs
+.ix Tab stops
+.ix Ruler, tab stops
+.ix Left tab
+.ix Right tab
+.ix Center tab
+.ix Decimal tab
+.ix Number tab
+The tab stops are a list of positions, in cells, counted from the left block
+indent, each with an optional letter for its type.  The list is typed as
+text on the Ruler fields of the Global Format and Level panels, the Named
+panel and the {k:F6} question Tabs: {c:5,20R,40D}.
+.table 8 9 40
+Letter | Type | Text is placed
+(none), L | Left | Starting at the stop.
+R | Right | Ending at the stop.
+C | Center | Centered on the stop.
+D | Decimal | With its decimal point at the stop.
+N | Number | Ending at the stop.
+.end
+The positions are whole numbers; the stops are used in the order of the list,
+so type them in increasing order; 0 is ignored and so is the whole list when
+it is 0 or empty (0 in the {k:F6} question means "no tabs"); up to 24 stops
+are kept.  The first stop is also the amount of the Indent
+({n:format-set-indents}).  A tab pressed past the last stop is one cell wide;
+when the list is empty a tab goes to the next multiple of 5.
+
+In the ruler of the screen the stops are marked as shown in
+{x:format-screen-ruler}.  On the printed page each piece of text between tabs
+is placed at its stop; the stops of the same line are not exact for a
+proportional font.  A decimal stop looks for the first period or comma of the
+text that follows.
+
+.h3 Section tags [format-set-tags]
+.ix Section tags
+.ix Section Tag
+.ix Auto Numbering
+.ix Numbering of sections
+A section tag is the number or text that is printed in front of a headline.
+By default it is the numbers of the section and of all the sections above it,
+joined by points and followed by a blank: 1, 1.1, 1.1.6.  Two settings change
+it.  {b:Auto Numbering?} (Global Format, spacing) switches the tags off with
+No; the headlines then have no tag, on the screen and in print.
+{b:Section Tag} (a field of every Level panel) gives the tag of the headlines
+of that level a format of its own.  The format is text in which a code
+between backslashes stands for the number of the section among the sections
+of its own level (not the numbers above it):
+.table 10 50
+Code | Number written as
+\1\ | Arabic: 1, 2, 3
+\i\ | Lower case roman: i, ii, iii
+\I\ | Upper case roman: I, II, III
+\A\ | Upper case letters: A, B, C ... Z, AA
+\a\ | Lower case letters: a, b, c ... z, aa
+.end
+A roman numeral shows the numbers 1 to 3999: a number above that is written in arabic digits (4000 stays 4000).
+Any other character is written as typed, and the blanks at the end of the
+text are kept.  With the Level 1 tag "Part \I\. " the first section is "Part
+I. Memo", and with the Level 2 tag "(\a\) " its first subsection is "(a) What
+changes": the tag of a level replaces the numbers of the levels above, it
+does not follow them.  A level that has no Section Tag has the default, and
+so do levels 6 and deeper.  The same tags are on the screen and in print.
+The tag belongs only to a headline in a structured document and never to the
+headline of the root section, the title.  {x:markers} describes the
+Cross-reference marker, which prints the tag of a section.
+
+.h3 Spacing [format-set-spacing]
+.ix Spacing
+.ix Line spacing
+.ix Space between blocks
+.ix Space between sections
+.ix Whitespace in print
+.ix Single spacing
+.ix Draft and final spacing
+Spacing is counted in lines: 1.00 is one line, 1.50 is a line and a half.  It
+is set globally (Global Format, spacing) and for a level.  The screen does
+not draw any of it.  The printed page uses the five fields of the Format
+panels, in a final print only (a draft print, Print Draft, sets everything to
+1.00):
+.table 19 41
+Field | On the printed page
+Line Spacing | The lines of the block are stretched to that many lines.
+Headline Spacing | Space after a headline.
+Block Spacing | Space after a block or table.
+Subsection Spacing | Space before the first subsection headline.
+Peer Section Spacing | Space before the other headlines.
+.end
+For the four spaces the amount added is the value minus 1.00 of a line, and a
+value of 1.00 or less adds nothing: 1.50 puts half a line of space, 2.00 a
+whole line, 0.50 no space.  The line spacing is a stretch of the line distance
+of the block: 2.00 doubles it.  A level's own values win over the global ones,
+for the headline of that level (Headline, Subsection and Peer Section
+Spacing) and for the blocks that are in a section of that level (Line and
+Block Spacing).  Subsection Spacing applies to the first headline after a
+group of subsections opens, Peer Section Spacing to every headline that
+follows another one of the same group.
+
+A block can have a line spacing and a block spacing of its own, through a
+named format ({n:format-named}): the fields Line Spacing and Block Spacing of
+the Named Block Format panel are numbers of lines in the same way, and they
+win over the values of the level and of the document for the blocks that have
+that format.  A headline is not a block of that kind: it keeps the spacings
+of its level.  As for the others, a draft print sets the lines to one line
+and adds no space, and Print Double Spaced doubles the line spacing that the
+block has.  A page that a headline begins ({n:format-fields-spacing}) has no
+space at its top.

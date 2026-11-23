@@ -1,0 +1,25 @@
+
+-------------------------- Compare Document Versions ---------------------------
+
+
+
+Number of Deleted   To include portions of deleted text in the printout, type 
+Words to Keep:      the number of deleted words to include, from 1 to 50.  
+                    Type 0 to omit all deleted words.  Manuscript prints the
+                    number of words you specify from the beginning and end of
+                    each portion of deleted text separated with ellipsis 
+                    points (...).
+
+
+Ignore Punctuation? Select Yes to ignore all punctuation differences between 
+                    the documents. Select No to consider punctuation following
+                    a word as part of that word.
+
+
+Print Only          Select Yes to print only the pages with changes. Select No
+Changed Pages?      to print the entire document.
+
+
+
+--------------------------------------------------------------------------------
+      Compare Document Versions      Keyboard Summary      Help Index

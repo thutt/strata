@@ -1,0 +1,25 @@
+
+----------------------------- Virtual Memory Status ----------------------------
+ 
+The Virtual Memory Status panel displays the current allocation of virtual 
+memory.                                       Accelerator:  Ctrl M
+
+System memory:        The amount of RAM available for virtual memory.
+
+Virtual memory used:  The amount of virtual memory currently being used.
+
+Swap areas allocated: The amount of virtual memory being used in the swap 
+                      areas such as the hard disk.
+
+
+Other prompts also display the amount of virtual memory currently being used for
+specific Manuscript memory management functions.  For example, the Macro Set 
+prompt identifies the amount of virtual memory allocated for storing the current
+macro set.  This information is useful if you are running out of virtual memory
+and there is virtual memory allocated to macros.  You could remove some or all 
+of the macro set from memory to increase the amount of virtual memory available
+for other functions.
+
+     -- Refer to Appendix C of the Reference manual for more information --
+--------------------------------------------------------------------------------
+  Virtual Memory Setup    Virtual Memory Error    Keyboard Summary    Help Index

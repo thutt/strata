@@ -1,0 +1,744 @@
+# Chapter 6, first part: the map of printing, the Print menu, Draft, Final,
+# sending to a printer, the messages and the place of the print errors.
+# Included by the chapter file; headlines of level 2 and below only.
+
+.h2 How printing works in Strata [print-overview]
+.ix Printing, overview
+.ix Typesetting
+.ix CUPS, lp
+.ix Page breaks
+Strata typesets the pages of a document and, when a print queue is named,
+hands the result to the printer of the system.  Four pieces take part.
+.table 13 47
+Piece | Task
+The Editor | Owns the Print menu.  The part of the document that you ask for is printed, a wait panel is shown while the print runs and the result is reported.
+The Printer | The typesetter, which turns a document into a PDF file, or into
+ the pages of a Preview ({n:print-strprint}).
+The Viewer | Shows the pages of a Preview in a window ({n:print-dviview}).
+{c:lp} | The print command of the system.  The Editor uses it when the Printer
+ field of a panel names a queue.
+.end
+The command determines the result.
+.table 16 14 20
+You want | Use | Result
+A PDF file of the document | {k:F12}, Print, Final ({k:Ctrl-P}) with Printer
+ | File only | The PDF named in Output File
+A quick PDF to read through | {k:F12}, Print, Draft | A one-spaced PDF with
+ the comments printed and the pictures in color
+Paper | Final or Draft with a queue in Printer | {c:lp} sends the pages to the
+ queue; no PDF file is kept
+The print dialog of a program that shows PDF files | Final or Draft with PDF
+ viewer in Printer | The PDF, then a program of the machine opens it
+A look at the pages on the screen | {k:F12}, Print, Preview (Document, Block,
+ | Section) | The Viewer shows the typeset pages in a window
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: a file made from a shell or a script comes from the print mode
+of the Editor ({n:print-cli}); it gives the PDF, a line of text and an exit
+status.
+.endif
+{b:Draft} and {b:Final} make their pages the same way.  They differ in the
+settings that they use and in the fields of the panel ({n:print-draft} and
+{n:print-final}).  With File only or PDF viewer the PDF is the product: it is
+the Output File, and it can be printed again later without making it again.
+With a queue the pages are made, sent and deleted; no file is written next to
+the document and nothing puts the question whether to replace one.  {X:print-memory}.
+
+The pages are real pages: justified text with hyphenation, the margins and the
+paper size of the document, footnotes at the foot of the page, tables,
+pictures, equations and keycaps.  The page breaks and the line breaks are
+those of the typeset page, so the pages of a printed document are the pages
+of the PDF.  Printing and Preview need a TeX system on the machine
+({n:print-prereq}).
+
+What Strata has no marker for can still be printed: a LaTeX marker hands its
+text to the typesetter exactly as it was typed ({n:marker-latex}).
+
+.h2 The Print menu [print-menu]
+.ix Print menu, entries
+.ix F12 menu bar, Print
+.ix Ctrl-P
+.ix Menu path, Print
+.ix Draft, Final, Preview
+.ix Hint line, Print menu
+The Print menu is the fourth entry of the menu bar, after File, Global and
+Edit and before Tools.  It has seven entries: three for printing and four for
+the errors that a print finds.
+The hint line of the menu bar shows the hint of the highlighted entry.
+
+.h3 How to reach it
+.table 20 40
+Way | What it does
+{k:F12}, then {k:P} | Opens the menu bar and the Print menu.  The letter
+ chooses the entry by its first letter.
+{k:F12}, {k:Right} or {k:Left} to Print, {k:Enter} | The same, with the cursor
+ keys.
+{k:Ctrl-P} | Opens the Print Document panel directly: the same as Print,
+ Final.
+.end
+.pic pictures/print-menu.png 5.4 The Print menu with the hint line of Draft.
+
+.h3 The entries
+.table 10 8 8 24
+Entry | Letter | State | What it does
+Draft | {k:D} | Works | Makes a quick PDF and sends it to a printer if one is
+ named ({n:print-draft}).
+Final | {k:F} | Works | Makes the PDF with all that the document has, with
+ title page, copies and ranges, and sends it to a printer if one is named
+ ({n:print-final}).
+Preview | {k:P} | Works | A menu of three: Document, Block, Section ({n:print-preview}).
+Next Error | (cursor keys) | Works | Finds the next Print Error marker, as
+ {k:Ctrl-F8} does ({n:edit-c-find-error}).
+Previous Error | (cursor keys) | Works | Finds the previous one, as {k:Ctrl-F7}
+ does.
+Remove Error | (cursor keys) | Works | Takes out the Print Error marker under
+ the cursor.
+Remove Print Errors | (cursor keys) | Works | Takes out every Print Error
+ marker.
+.end
+The last four entries are reached with {k:Right} and {k:Enter}.  The row of
+the seven entries is wider than 80 columns: on a screen of 80 columns the last
+entry, Remove Print Errors, is on a second row, and the hint line is one row
+lower.  The markers are described in {x:print-errors}.
+When an entry is highlighted the hint line shows its text: "Print document in
+draft quality", "Print document in final quality" and "Document, Block,
+Section" for Preview.  The three entries of the Preview menu have "Preview
+entire document", "Preview the current block" and "Preview the current
+section".  The hints of the last four are "Find the next Print Error
+[Ctrl-F8]", "Find the previous Print Error [Ctrl-F7]", "Remove the Print Error
+under the cursor" and "Remove all the Print Errors".
+
+.h3 Esc and the other ways out
+{k:Esc} closes the menu one level at a time.  A panel is left with {k:Esc},
+which changes nothing, or accepted with {k:Ins}; the keys of the panels are
+those of {x:view-form-keys}.  Nothing is made until a panel is
+accepted.
+
+.h3 Print and Preview with no document open
+.ix Document Manager, in the Editor
+.ix Editor without a file
+The Editor with no file open shows a small Document
+Manager menu before it opens a document ({n:str-inside}).  Open a document
+with its entry Edit / Preview / Print Document; Print and Preview are then
+on the Print menu of the Editor.
+
+.h2 Draft [print-draft]
+.ix Draft
+.ix Draft Print panel
+.ix Print Current Section Only?
+.ix Print Double Spaced?
+.ix Output File
+.ix Printer, field of the Draft panel
+.ix F12, Print, Draft
+Draft is the quick print.  It makes the PDF with the same engine as Final,
+but in the way of a proof: one line spacing whatever the document says, no
+extra space between blocks, and the comments of the document printed
+with their author and time; the pictures are printed as in Final.  Comments are printed in a Draft only.
+A comment is printed in small typewriter type, in square brackets, as {c:[Comment
+by Ada Example, 2026-05-02 09:15: Check the date.]}.  Nothing else of the page
+is different from a Final.  The sample {c:sample-comments} has four comments: print
+it as a Draft and as a Final to see the difference.  It is in the directory
+{c:share/strata/samples/comments} of the directory where Strata is installed.
+
+.h3 How to reach it
+{k:F12}, {k:P}, {k:D}.  The menu path is Print, Draft.
+
+.pic pictures/print-draft-panel.png 5.4 The Draft Print panel.
+
+.h3 The panel
+The panel is titled {b:Draft Print}.  {k:Down}, {k:Tab} or {k:Enter} go to the
+next field and {k:Up} to the previous one; {k:Ins} accepts the panel and
+{k:Esc} cancels it.  The fields are, in order, these.
+.table 14 12 24
+Field | Values | Meaning
+Output File | A file name | The PDF that is made.  The default is the
+ document's name with its extension replaced by {c:-draft.pdf}, in the document's
+ directory ({c:report.doc} gives {c:report-draft.pdf}), so that a Draft does not
+ replace the final PDF.  When Setup names a PDF Directory that can be used,
+ the file is in that directory instead; if it cannot be used (it does not
+ exist, it cannot be written, or it is a relative path) the document's
+ directory is used and the message line reports this.  A name that you type is
+ kept as you typed it.  A document with no name gives {c:Untitled-draft.pdf} in
+ the directory where the Editor was started.  A name without a directory is in
+ that working directory.  {k:F2} or {k:Keypad +} in the field lists the PDF
+ files.  The field is inactive when Printer is a queue, because a queue keeps
+ no file: it stays in its place with its text dim, the cursor skips it
+ and nothing can be typed in it.  File only and PDF viewer make it active
+ again, with the text it had.
+Printer | File only, PDF viewer, a queue, System default printer | Where to
+ send the PDF.  A choice field: {k:Space} steps through the entries and goes
+ round from the last to the first, and the field takes no typed text.
+ File only makes the PDF and stops.  PDF viewer makes
+ the PDF and opens it in a program of the machine that shows PDF files, so
+ that you print it from the dialog of that program.  System default printer
+ sends the PDF to the queue that the system uses when none is named.  The
+ default follows Print To and Printer Queue of the Document Manager's Setup
+ ({n:str-setup-fields}); without them it is File only.  {k:F2} or
+ {k:Keypad +} lists File only, PDF viewer, the queues of the system and
+ System default printer.  {X:print-sending}.
+Copies | 1 to 99 | The number of copies, given to {c:lp}.  Default 1.  More than
+ one copy needs a queue.
+Print Double Sided? | Printer default, Yes, No | Yes requests two-sided output from {c:lp} on the long edge, No one-sided, Printer default gives {c:lp} no
+ option.  Needs a queue.
+Sort Output Pages? | Printer default, Yes, No | Yes has {c:lp} collate copies
+ (pages 1, 2, 3, 1, 2, 3 for three copies), No not to (1, 1, 1, 2, 2, 2).
+ Means something only for more than one copy.  Needs a queue.
+Print Current Section Only? | No (default), Yes | Yes makes the section the
+ cursor is in, with all the sections below it.  In an unstructured document
+ the part is the block the cursor is in.
+Print Double Spaced? | No (default), Yes | Yes doubles the line spacing of
+ every block.  It changes the PDF, so it works with File only too.
+Print from Page | A page number, or empty | The first page for {c:lp}.  A blank
+ field is page 1.  Needs a queue.
+to Page | A page number, or empty | The last page for {c:lp}.  A blank field is
+ the last page of the PDF.  Needs a queue.
+Error Log? | Yes (default), No | Yes ends the PDF with the Error Log when the
+ document has errors or warnings; No leaves the log out ({n:print-errlog}).
+ The errors are marked in the text either way, and the banner and the marks
+ of a failed print are on the pages either way ({n:print-failed}).
+Table of Contents? | Yes or No, as the document says | Yes puts a page of contents first,
+ with the headlines of the document and the page of each
+ ({n:print-contents}).  The field starts with the choice that the document
+ stores (Global, Format, fourth panel): Yes for a structured document that
+ has headlines.  A change is for this print only.
+Contents Levels | 1 to 99, as the document says | The deepest level of headline
+ that the contents list; 3 is shown when the document stores none.  Used only
+ when Table of Contents? is Yes.
+Index? | Yes or No, as the document says | Yes makes an index at the end of the PDF from
+ the Index markers of the document ({n:print-index}).  The field starts at
+ Yes when the document has an Index marker.
+List of Figures? | Yes or No, as the document says | Yes puts a list of the Figure markers
+ after the contents ({n:print-index}).
+List of Pictures? | Yes or No, as the document says | The same for the names of the
+ Picture markers.
+List of Tables? | Yes or No, as the document says | The same for the Table markers.
+Print in Black and White? | No (default), Yes | Yes prints every color of the
+ print as a grey, for a printer that has no color ({n:print-colors}).  It
+ changes the PDF, so it works with File only too.
+Print Status | (shown, not a field) | Present only when {c:lp} is not found: "{c:lp}
+ not found: only the PDF is made".
+.end
+{k:Space}, {k:Left} and {k:Right} change a choice field; the Printer field
+is one of them.  The first printing key typed in a text field replaces the
+whole value.  A page number is a
+whole number from 1 to 99999.
+
+.h3 What happens when the panel is accepted
+.ix Replace NAME?
+.ix The PDF cannot replace the document
+.ix There is no current section
+1. The panel is checked in the order of its fields.  The first value that is
+ refused shows a box with the reason and leaves the panel open (the
+ messages are in {n:print-messages}).
+2. If the Output File is shown and exists, the question "Replace NAME?" is
+ asked, with the name of the file without its directory.  No returns to the
+ panel.  A print to a queue makes no file and puts no question.
+3. The part to print is cut out: the section of the cursor with Print
+ Current Section Only? at Yes, otherwise the whole document without its
+ title page.  A Draft has no title page and no range of sections.  The
+ document in the editor is printed as it is in memory, with the changes that
+ are not saved; the file of the document is not touched.
+4. The wait panel of {x:print-progress} is shown while the Printer
+ and then {c:lp} work.
+5. The PDF is written to its place only when it is complete, and the old
+ file stays as it was until then.  The end message is shown ({n:print-messages}).
+If Print Current Section Only? is Yes and the cursor is in no section, a box
+titled "Print" says "There is no current section".
+
+.h3 Edges
+.table 19 41
+Case | What happens
+Empty document | A PDF of one empty page.
+Cursor on a marker | Nothing special; Print Current Section Only? uses the
+ section or block of the cursor.
+Unwritable directory | The panel is refused: "Cannot write in the directory
+ NAME".
+The document itself named as Output File | Refused: "The PDF cannot replace
+ the document".
+Document with unsaved changes | The text in the editor is printed, with the
+ changes.
+Block marked | The mark does not matter.
+.end
+
+.h2 Final [print-final]
+.ix Final
+.ix Print Document panel
+.ix Print Title Page?
+.ix Print from Section
+.ix to Section
+.ix Section range, print
+.ix F12, Print, Final
+Final is the print of the best quality that Strata has.  It typesets the
+document with all that it has: the line spacing and the spacing of blocks
+that the document asks for, the pictures, the title page, and no comments.
+It has the fields of Draft and three more: Print Title Page?, Print from
+Section and to Section.
+
+.h3 How to reach it
+{k:F12}, {k:P}, {k:F}, or {k:Ctrl-P} anywhere in the Editor.  The Document
+Manager has no entry for printing: open the document with Edit / Preview /
+Print Document ({n:str-edit}) and print it from the Editor.
+
+.pic pictures/print-final-panel.png 5.4 The Print Document panel (Final).
+
+.h3 The panel
+The panel is titled {b:Print Document}.  The fields are in this order.
+.table 14 12 24
+Field | Values | Meaning
+Output File | A file name | The PDF that is made.  The default is the
+ document's name with {c:.pdf} in the document's directory ({c:plan.doc} gives
+ {c:plan.pdf}), or in the PDF Directory of Setup when it can be used.  A document
+ with no name gives {c:Untitled.pdf} in the working directory.  The directory must
+ exist and be writable, and the PDF cannot replace the document.  {k:F2} or {k:Keypad +} lists the PDF files.
+ The field is inactive when Printer is a queue, as for Draft.
+Printer | File only, PDF viewer, a queue, System default printer | As for
+ Draft: a choice field.
+Copies | 1 to 99 | As for Draft.
+Print Double Sided? | Printer default, Yes, No | As for Draft.
+Sort Output Pages? | Printer default, Yes, No | As for Draft.
+Print Current Section Only? | No (default), Yes | Yes makes the section of the
+ cursor with its subsections (the block, in an unstructured document).  With
+ Yes the title page and the range of sections are not used.
+Print Title Page? | Yes (default), No | Yes makes the blocks before the first
+ level 1 section (the title page) the first page.  No leaves them out.  Only
+ the whole document has a title page: with Print Current Section Only? at Yes,
+ or with a range, none is made.
+Print Double Spaced? | No (default), Yes | Doubles the line spacing of every
+ block.
+Print from Section | A section number, or empty | The first section to print,
+ such as 2 or 1.2.  Empty means the first section.
+to Section | A section number, or empty | The last section to print; the
+ section is printed with its subsections.  Empty means to the end of the
+ document.
+Print from Page | A page number, or empty | As for Draft.
+to Page | A page number, or empty | As for Draft.
+Error Log? | Yes (default), No | As for Draft ({n:print-errlog}).
+Table of Contents? | Yes or No, as the document says | As for Draft; the contents come
+ after the title page ({n:print-contents}).
+Contents Levels | 1 to 99, as the document says | As for Draft.
+Index? | Yes or No, as the document says | As for Draft ({n:print-index}).
+List of Figures? | Yes or No, as the document says | As for Draft.
+List of Pictures? | Yes or No, as the document says | As for Draft.
+List of Tables? | Yes or No, as the document says | As for Draft.
+Print in Black and White? | No (default), Yes | As for Draft ({n:print-colors}).
+Print Status | (shown, not a field) | As for Draft.
+.end
+
+.h3 The table of contents [print-contents]
+.ix Table of contents
+.ix Contents, table of
+.ix Table of Contents?
+.ix Contents Levels
+A table of contents is a page that lists the headlines of the document.  It is
+made when the document is printed, from its headlines, and it is not in the
+text: a structured document that has a headline has it with nothing to set,
+because the document stores the level of its contents (Table of Contents Level
+on the fourth Global Format panel, {n:format-fields-lists}; 99 when it stores
+none, 0 for no contents).  Table of Contents? in the panel starts with that
+choice and a change of it is for one print.  The PDF has a page of contents
+after the title page (in a Draft, which has no title page, it is the first
+page).  Each line
+has the tag of the headline as the screen shows it, the title, a row of dots
+and the page on which the headline begins: a chapter appears as
+{c:1 Introduction . . . . . 1} and a section of the next level, indented, as
+{c:1.2 The scope . . . . . 3}.
+Contents Levels says how deep the list goes: 1 lists the chapters, 2 the
+chapters and their sections, and so on up to 99; a document that stores no
+level lists every level, and the field of the panel then shows 3.  A headline
+of a deeper level is in the text and not in the list.  The indent of the lines
+stops at the ninth level, and a tag of more than 30 characters, the tag of a
+section nested 15 levels deep or more, is broken after a point in the column
+of the tags.  The pages of the
+contents are numbered i, ii and so on, and the body starts again at page 1,
+so that the page numbers in the list are the page numbers of the body.  The
+page numbers are found when the document is typeset, which takes the
+Printer a second run; nothing is to be done for it.
+.h4 What it lists
+- Only the headlines of a structured document are listed.  A document with no
+ headline, or an unstructured one, has no contents page unless Table of
+ Contents? is set to Yes; the page then has one line that says so.
+- Print Current Section Only? and a range of sections list only the sections
+ that are printed, with the numbers that the screen shows, and the pages of
+ that print.
+- The title of a headline is its text; a picture, an equation or another
+ marker in it is left out of the list, except a LaTeX marker such as the logo
+ of a name, which is set as it is in the headline.
+- A Preview makes the contents page, as a Print does, from the settings of the
+ document.
+- The layout panel Table of Contents Page Layout of Global, Page does not
+ change this page: it has the margins of the other pages.
+
+.h3 The index and the lists [print-index]
+.ix Index?
+.ix List of Figures?
+.ix List of Tables?
+.ix Index, printed
+.ix List of figures, printed
+.ix List of tables, printed
+The Index, Figure, Picture and Table markers of a document ({n:marker-index},
+{n:marker-figure}, {n:marker-picture}) make an index and three lists when the
+document is printed: the list of figures from the Figure markers, the list of
+pictures from the names of the Picture markers, the list of tables from the
+Table markers.  Each of the four is {b:Automatic} unless the document says
+otherwise: it is made when the document has at least one marker of its kind,
+and not otherwise.  The document counts its markers as they are made and
+taken out, so a list turns on with the first marker and off with the last
+(Global, Format, fourth panel, {n:format-fields-lists}, shows the counts).  The
+choice of each list can be made On or Off there, and it is stored in the
+document.  Off keeps the list away although the document has markers; On with
+no marker makes nothing, because a list with no entry is not printed.  The
+fields Index?, List of Figures?, List of Pictures? and List of Tables? of the
+panels start with what the document says, and a change is for one print.  A
+marker whose list is made prints nothing at its place; when its list is off it
+is printed there as text.
+
+The index is at the end of the PDF, on a page of its own.  Its entries are the
+Main Headings, in alphabetical order with the case ignored; the entries that
+have a Subheading are under their main heading, indented, in alphabetical
+order too.  After each heading comes the page of every marker that has it,
+such as {c:Strata, 3, 7}; three pages or more that follow each other are
+written as a run, {c:Strata, 3-5} (with an en dash).  A Reference Text takes the
+place of the
+pages: {c:Map, See Strata}.  A marker with no main heading makes no entry.  The
+index has no winding columns.
+
+The lists are after the table of contents, on pages numbered i, ii and so on,
+each list on a page of its own: first the list of figures, with the name of
+every Figure marker, then the list of pictures, with the name of every Picture
+marker that has one, then the list of tables.
+Each line is the name, a row of dots and the page.  A document that has no
+marker of a kind gets no page for it.  The pages are
+found when the document is typeset, in a second run, as for the contents.  A
+print of a master document ({n:marker-include}) makes the index and the lists
+of the whole work.
+.pic pictures/print-index-page.png 5 The index, the last page of the print.
+.pic pictures/print-lists-page.png 5 The list of figures, with the page of each figure.
+
+.h3 The range of sections
+.ix Section number, in a panel
+.ix Range of sections
+A section number is the one shown on the screen: 1, 2.1, 2.1.2.  It is written
+as the tag appears in the text, with no trailing dot.  Only a structured
+document has sections.
+.table 20 40
+You enter | The part printed
+Both empty | The whole document (with the title page when Print Title Page? is
+ Yes).
+from 2.1, to empty | From the start of section 2.1 to the end of the document.
+from empty, to 2 | From the start of the document, with no title page, to the
+ end of section 2 (all its subsections included).
+from 2.1, to 2.1 | Section 2.1 and its subsections.
+from 3, to 2 | Refused: "The first section is after the last".
+from 9.9 | Refused: "Cannot find section number 9.9".
+.end
+A part that is cut out of the document keeps the numbers that its sections
+have on the screen: section 2.1 is printed as 2.1, with its subsections 2.1.1
+and so on.  The same is true of Preview ({n:print-preview}) and of Print
+Current Section Only?.  The page numbers of the part start at 1.
+
+.h3 Pages: a range for the printer
+{b:Print from Page} and {b:to Page} do not cut the PDF.  The PDF has all the
+pages, so that it can be printed again; the range goes to {c:lp} with its {c:-P}
+option when the file is sent ({n:print-sending}).  A "from" page
+after the end of the PDF is refused when the PDF is made: the PDF is kept
+and the message shows "The document has only 2 pages, so it has no page 5".
+
+.h3 What the panels keep [print-memory]
+.ix Print panel, remembered choices
+.ix Remembered printer
+After a print that is not cancelled, the Print panels (Draft and Final) keep
+the choices that are about the printer: Printer, Print Double Sided?, Sort
+Output Pages? and Print in Black and White?.  The next panel in the same
+session starts with them, and so does the next session: they are stored in the
+settings ({n:appcfg-format}, the keys {c:print_last_printer},
+{c:print_last_sides}, {c:print_last_sort} and {c:print_last_bw}).  The first
+time, and until something was printed, the panel starts with the Print To and
+Printer Queue of Setup.  A panel that is cancelled keeps nothing.
+.table 22 38
+Not kept | Why
+Output File | It belongs to this document and this print.
+Copies | It is 1 each time: the number of copies belongs to one job.
+Print from Page, to Page, the sections, Print Current Section Only? | They
+ belong to this print.
+Print Title Page?, Error Log?, Double Spaced?, the contents and the lists |
+ They belong to the document or to this print; the document's own choices are
+ read from the document first.
+.end
+When the kept printer is a queue that the system no longer reports, the field
+shows File only and the message line reports this; the panel opens as usual.  Two
+sessions that print at the same time: the one that writes last is kept.
+
+.h2 Colors in print [print-colors]
+.ix Colors in print
+.ix Print in Black and White?
+.ix Black and white print
+.ix Gray print
+A document holds no color: nothing in it states that a headline, a block, a
+marker or a border is red or blue, so a print has no color of that kind to
+show.  The colors of a print are the fixed ones that the Printer uses: the
+marks of the Print Error markers (red for an error, orange for a warning), the
+banner of a failed print ({n:print-failed}), the shades of grey of a keycap and
+the colors that a picture or an equation has of its own.  The colors of the
+screen that {b:Setup} lets you choose ({n:str-colours}) are for the screen only
+and are never printed.
+The field {b:Print in Black and White?} of the Draft and Final panels turns
+every color of the print, and of a Preview, into a grey of the same brightness
+(red becomes a dark grey, orange a lighter one), so that a printer with no
+color makes a clear page; a picture is printed in greys (a Preview keeps the
+colors of its pictures).  With No, the default, the print has its colors,
+and a picture that has color is printed in color.  A print in black and white of a document that has
+nothing in color (no error, no banner) is the same print.  A Draft and a Final
+print have the same rule.  The same choice for the command line is
+{c:--black-and-white}.
+
+.h2 Sending to a printer [print-sending]
+.ix lp
+.ix lpstat
+.ix Printer field, queue
+.ix File only
+.ix PDF viewer
+.ix PDF, open to print
+.ix Print queue
+.ix lp, options
+The Printer field is a choice field.  Its entries are File only, PDF viewer,
+each queue that CUPS knows, System default printer and Search for printers...
+({n:print-search}); it takes no typed text.  When a queue is chosen, the Editor sends the PDF to it with {c:lp} as
+soon as the PDF is whole.  With PDF viewer the Editor opens the PDF instead.
+.table 20 40
+Printer field | What happens
+File only | The PDF is made and the print
+ stops.  Copies, Print Double Sided?, Sort Output Pages? and the page range
+ have nothing to act on, so they are rejected: "More than one copy needs
+ a printer: name one in Printer" (the first words are "A page range", "Double
+ sided" or "Sort output pages" for the others).  Print Double Spaced? works,
+ because it changes the PDF.
+PDF viewer | The PDF is made and the Editor opens
+ it in a program of the machine that shows PDF files, so that you print it
+ from the dialog of that program or save it from there.  The Editor does not
+ wait for the program.  The message line shows where the PDF is and that it was
+ opened.  Copies, Print Double Sided?, Sort Output Pages? and the page range
+ are refused as they are for File only, because the dialog of the program has
+ its own: "More than one copy needs a printer: name one in Printer (the
+ program that opens the PDF has its own print dialog)".  Print Double Spaced?
+ works.  The setting {c:pdf_viewer} ({x:appcfg-key-pdf-viewer}) names another
+ program.  If no program that shows PDF files is found, or the machine has no
+ display, the PDF is saved and the message line reports this.
+A queue name | The PDF is made and sent to that queue.
+A queue name from the settings that the system does not report | Kept as the
+ value and shown as an entry; the PDF is sent to it.
+A name that is not a queue name (given on the command line, or in an old
+ settings file): a space, a slash, a quote, a comma, a backslash, a number
+ sign, a first minus or a character that is not printable ASCII | Refused:
+ "NAME is not the name of a printer queue".
+.end
+The default of the Printer field follows Print To and Printer Queue of Setup
+in the Document Manager ({n:str-setup-fields}): File only, PDF viewer, the
+queue, or System default printer for the queue that the system uses when none
+is named; without them it is File only.  When Print To is Printer and the
+system has no queue, the field is File only and the message line shows that no
+printer is available.  The entries are File only, PDF viewer, the queues that
+the command {c:lpstat -a} gives, System default printer and, last, Search for
+printers...  A queue that the settings name and the system does not report is
+an entry too, and is kept.
+.table 17 43
+Key | What it does
+{k:Space} | The next entry; after the last entry, File only.
+{k:Right}, {k:Left} | The next and the previous entry; they stop at the ends.
+{k:Keypad +}, {k:F2} | List the entries; {k:Enter} chooses one.
+.end
+The list is read from the system in the background when the Editor starts and
+again, in the background, when what it holds is older than 30 seconds, so a
+queue that you add while the Editor runs shows at the next opening of a
+panel.  A machine with no queues shows File only, PDF viewer and Search for
+printers... alone.
+
+.h3 Searching for printers [print-search]
+.ix Search for printers
+.ix Printer field, search for printers
+.ix lpinfo
+.ix lpadmin
+Step to Search for printers..., the last entry of the Printer field, with
+{k:Space} (or choose it in the list of {k:F2}) and press {k:Enter}, or accept
+the panel with {k:Ins}, to find a printer that has no queue yet.  The panel
+stays open and the field goes back to the entry that it had before.  The Editor
+runs {c:lpinfo -v}, which lists the devices that CUPS can reach, for at most
+ten seconds while a message reports this; {k:Esc} stops it at once.  The result
+is a list with each device of the network or of a USB port: its kind, its
+address (for example {c:socket://192.168.1.201:9100}), its make and model
+when the address has one, and the command that adds it, for example
+.table 26 34
+Device | Command
+A device that CUPS can use without a driver ({c:ipp}, {c:ipps},
+ {c:dnssd}) | {c:sudo lpadmin -p NAME -E -v ADDRESS -m everywhere}
+A {c:socket}, {c:lpd} or USB device | {c:sudo lpadmin -p NAME -E -v ADDRESS
+ -m DRIVER}, with the hint to find DRIVER in the list that {c:lpinfo -m}
+ prints
+.end
+The list shows the full path of {c:lpadmin} and {c:lpinfo}, because the directory
+of the programs for the administration of the system is not in the search
+path of an ordinary user on some systems.
+No queue is added by the Editor, and {c:lpadmin} or {c:sudo} is never run: the
+text only shows what to type in a terminal.  When nothing is found the list
+shows that the printer must be switched on and be on the same network as
+your machine; when {c:lpinfo} fails, for example because your user is not in
+the lpadmin group, the list shows its message.  The field keeps its value:
+Search for printers... is never the printer that a print goes to.
+After you add the queue, open the panel again: the queue is in the list.
+
+.h3 The options given to lp
+.table 26 34
+Field | Option of {c:lp}
+Printer | {c:-d QUEUE} (no {c:-d} for System default printer)
+Copies | {c:-n COPIES} (always given)
+Print Double Sided?  Yes | {c:-o sides=two-sided-long-edge}
+Print Double Sided?  No | {c:-o sides=one-sided}
+Sort Output Pages?  Yes | {c:-o collate=true}
+Sort Output Pages?  No | {c:-o collate=false}
+Print from Page, to Page | {c:-P FROM-TO} (a blank from is 1, a blank to is the
+ last page of the PDF)
+A page that is an envelope | {c:-o print-scaling=none}, so that the print system
+ does not scale the page ({n:format-page-paper})
+the name of the document | {c:-t NAME} (only when the document has a name)
+.end
+The last argument is the full path of the PDF.  Printer default gives no
+option, and the queue's own default is used.
+
+.if .STRATA_BUILD_TYPE # release
+.h3 Environment
+.ix STRATA_LP
+.ix STRATA_LPSTAT
+.table 15 45
+Environment variable | Meaning
+{c:STRATA_LP} | The program to run in place of {c:lp} (for a site that has another
+ print command, and for tests).  Without it {c:lp} is looked for in the system directories.
+{c:STRATA_LPSTAT} | The program to run in place of {c:lpstat} for the list of queues.
+{c:STRATA_LPINFO} | The program to run in place of {c:lpinfo} for the search for
+ printers.
+.end
+For developers: the environment variable {c:STRATA_STRPRINT} names the Printer
+to
+use in place of the one next to the Editor or in the system directories.
+.endif
+
+.h2 While a print runs [print-progress]
+.ix Wait panel
+.ix Print cancelled
+.ix Esc, in a print
+The Editor does not freeze while a print runs.  A wait panel, like the one of
+Preview, shows the stage and the progress.
+.table 26 34
+Stage line | Meaning
+Writing | The part of the document is being prepared.
+Running LaTeX (pass N) | The pages are being made.  A document that refers to
+ page numbers needs another round; the panel then shows "Another pass, for the
+ references."
+Page N of about M | The page now being made, and an estimate of the total.
+ When the total is exact the panel shows "Page N of M".
+Sending to the printer | {c:lp} is running.  The hint "Esc stops lp" is shown.
+.end
+A gauge with the percentage is shown under the stage.  {k:Esc} cancels:
+the print is stopped, nothing is written (a PDF that was there before stays
+as it was) and the message line shows "Print cancelled".  {k:Esc} while {c:lp} is
+running stops {c:lp}; the PDF was already made, and a box reports this and shows that
+the job may or may not have been queued.
+
+.h2 The messages of a print [print-messages]
+.ix Messages, Print
+.ix Wrote
+.ix LaTeX failed
+.ix lp failed
+.ix Print cancelled, message
+A good print ends with a message on the message line when nothing was sent,
+and with a box when {c:lp} was used, so that the answer of {c:lp} can be read in
+full.  A refused value shows a box of the panel; the panel stays open.  The
+messages that name a program of Strata are shown here with three dots in
+the place of its name.
+.table 31 29
+Message | Meaning
+Wrote /work/plan.pdf (12 pages) | The PDF is made and not sent.  The file
+ name is the full path.
+PRINT FAILED: Wrote /work/plan.pdf (12 pages).  3 errors and 1 warning. |
+ The PDF is made and not sent, and the document has errors: the print FAILED,
+ and every page has the banner and the marks ({n:print-failed}).  The text
+ goes on with the count; {x:print-errline} has the other forms.
+Wrote /work/plan.pdf (12 pages) and sent it to laser (request id is laser-17
+ (1 file(s))) | The PDF is made and {c:lp} took it.  The text in the last brackets
+ is the answer of {c:lp}.  Only a print that is asked to keep its PDF says
+ this.
+Sent to laser: 12 pages, 2 copies, double sided, sorted.  No PDF was kept |
+ A print to a queue: {c:lp} took the pages, and the PDF that was made for it
+ is deleted.  The line shows the copies, the sides and the order that were sent.
+{c:lp} failed (status N): TEXT  Nothing was sent and no PDF was kept: choose
+ File only to keep one. | {c:lp} ended with an error (TEXT is its own message) and
+ the PDF was deleted.  Choose File only to make the file, then print it with
+ another command.
+Print cancelled | {k:Esc} was pressed before {c:lp} ran.
+Cancelled while sending to QUEUE.  The PDF FILE was made; the print job may or
+ may not have been queued. | {k:Esc} while {c:lp} ran.
+Print stopped by a signal | The Editor was stopped from outside, for example
+ by a kill command.
+.end
+Messages of a panel that is refused (the panel stays open).
+.table 31 29
+Message | Cause
+No output file given | Output File is empty.
+NAME is a directory | Output File names a directory.
+Cannot find the directory DIR | The directory of Output File does not exist.
+Cannot write in the directory DIR | The directory cannot be written.
+The PDF cannot replace the document | Output File is the document's own path.
+Copies must be a number from 1 to 99 | Copies is not a whole number from 1 to
+ 99.
+Contents Levels is a number from 1 to 99 | Table of Contents? is Yes and the
+ level is not a whole number from 1 to 99.
+A page must be a number from 1 to 99999 | A page field is not a whole number
+ in range.
+The first page is after the last page | Print from Page is greater than to
+ Page.
+"NAME" is not the name of a printer queue | See {x:print-sending}.
+Search for printers only looks for printers: choose File only, PDF viewer or a
+ printer to print | The Printer field holds Search for printers... when the panel
+ is accepted ({n:print-search}).
+A page range needs a printer: name one in Printer | A page range with File
+ only.  The same message form for "More than one copy", "Double sided" and
+ "Sort output pages".
+Only a structured document has sections | A range of sections for an
+ unstructured document.
+Cannot find section number NUMBER | A section number that is not in the
+ document.
+The first section is after the last | The range of sections is empty or turned
+ round.
+There is no current section | (box titled "Print") Print Current Section Only?
+ and the cursor is in no section.
+.end
+Messages of a print that went wrong (a box).
+.table 31 29
+Message | Cause
+LaTeX failed: ! TEXT l.12 THE LINE | LaTeX stopped.  The first error line of
+ the TeX log and the line after it.  No PDF is written.
+Print failed: ... TEXT | Any other message of the Printer.
+Print needs ...: it was not found next to ... or in the system directories. | The
+ Printer is missing.
+Print needs LaTeX: {c:pdflatex} was not found in FOLDERS.  See ... | {c:pdflatex} is
+ missing ({n:print-prereq}).
+Cannot write the PDF: REASON | The PDF could not be put in its place.
+Wrote FILE.pdf (N pages) and opened it to print | PDF viewer: the PDF is made
+ and a program of the machine that shows PDF files was started.
+Wrote FILE.pdf but no PDF viewer was found: set one in Setup: it is saved |
+ PDF viewer: there is no such program, or the machine has no display, or
+ the setting {c:pdf_viewer} names a word processor, which is refused.  The PDF is
+ kept and the print is not a failure.
+Wrote FILE.pdf but the program of the setting {c:pdf_viewer} was not found: it is
+ saved | The setting names a program that is not there.
+Wrote FILE.pdf but the program that opens it could not be started: it is saved
+ | The program could not be run.
+Wrote FILE.pdf but lp was not found, so it was not sent to QUEUE.  Install
+ cups-client. | The PDF is made; {c:lp} is missing.
+{c:lp} failed (status N): TEXT  The PDF FILE was made. | {c:lp} ended with an error,
+ for example "lp: Error - The printer or class does not exist."  The PDF is
+ kept.
+The PDF FILE was made but was not sent.  TEXT | The page range does not fit
+ the PDF.
+The PDF FILE was made but {c:lp} did not answer within a minute. | {c:lp} was stopped
+ after a minute.
+The PDF FILE was made but {c:lp} could not be started. | {c:lp} could not be run.
+.end

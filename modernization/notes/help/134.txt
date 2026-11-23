@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+You received an error during a Manuscript process. Press any key to clear the 
+message and continue or follow the instructions displayed with the message.
+ 
+For further information on this error, refer to the Reference manual or 
+highlight the alphabetical range that includes the error message from the 
+following list. If the error message is not described on the first screen 
+display, press Enter to view the next screen. 
+ 
+  "Background color must ..."   -->   "Cannot load <description>"
+  "Cannot paginate ..."         -->   "Document has been modified..."
+  "Document printer..."         -->   "Footnote cannot fit on one ..."
+  "Formatted date/time ..."     -->   "Invalid If marker ..."
+  "Invalid If-Else-Endif ..."   -->   "Macro execution canceled ..."
+  "Make all columns ..."        -->   "No SHEET, DOC, or FORM ..."
+  "No unassigned font ..."      -->   "Overwrite existing ..."
+  "Overwrite modified ..."      -->   "Printer write error"
+  "Range not found ..."         -->   "Terminated with no changes"
+  "There is no hard disk ..."   -->   "Word is too long ..."
+  "Word is wider than ..."      -->   "Write error on device ..."
+
+--------------------------------------------------------------------------------
+                   Keyboard Summary                 Help Index

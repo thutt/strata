@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- Equation contains too many terms --
+
+The equation definition contains too many terms. Redefine the equation with 
+fewer terms and reprint the document.
+
+
+-- Equation syntax error -- 
+
+Part of the equation defined is incorrect.  See chapter 10 of the Reference
+manual for more information on defining equations.
+
+
+-- Error encountered during automatic hyphenation -- 
+
+Manuscript was unable to hyphenate the document. Recheck your hyphenation
+settings or hyphenation dictionary file and make sure that the hyphenation 
+files from the original Manuscript disks are in your Manuscript directory.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

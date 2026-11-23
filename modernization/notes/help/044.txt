@@ -1,0 +1,25 @@
+
+------------------------------------- Go To ------------------------------------
+
+Go To (Alt F7) moves the cursor to a specified section or page.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Go To.                              +------------- Go To -------------+
+ Enter the section number in the format    |                                 |
+  displayed in the Status line or the page  | Section Number:                 |
+  number in the format that is printed.     | or Page Number:                 |
+ Press Ins to go to the first character    |                                 |
+  in the specified section or page.         +--------- Press Ins to Go -------+
+ 
+--------------------------------------------------------------------------------
+# The Section Number prompt applies only to structured documents.
+
+# If the specified section is collapsed, all levels in that section are 
+  displayed, up to the requested section.
+
+# Page Number is applicable only if you have paginated the document using the 
+  Repaginate command or saved page breaks during preview or final print.
+--------------------------------------------------------------------------------
+Edit Section      Structured Documents      Repaginate      Collapse/Expand Keys
+Preview Document      Final Print Document      Keyboard Summary      Help Index

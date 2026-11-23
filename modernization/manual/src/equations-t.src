@@ -1,0 +1,927 @@
+# Chapter 9, third part: the command words of the math notation.
+
+.h2 Greek letters [eq-greek]
+.ix Greek letters
+The Greek letters are commands made of the English name of the letter. A name
+that begins with a small letter gives the small letter and a name that begins
+with a capital gives the capital. Where a capital Greek letter looks like a
+Latin capital (Alpha, Beta, Epsilon, Zeta, Eta, Iota, Kappa, Mu, Nu, Omicron,
+Rho, Tau, Chi) TeX has no command for it: type the Latin letter, which is set
+upright, as capitals of math are. A small Greek letter is set in the italic of
+math.  The names that begin with var give the second form of the letter that
+some fonts have; the names that are marked amssymb are there because the
+equation is typeset with the package amssymb.
+
+.h3 Lower case Greek letters [eq-greek-lowergreek]
+.table 12 15 31
+Source | Result | Meaning
+{c:\alpha} | {eq:\alpha} | alpha
+{c:\beta} | {eq:\beta} | beta
+{c:\gamma} | {eq:\gamma} | gamma
+{c:\delta} | {eq:\delta} | delta
+{c:\epsilon} | {eq:\epsilon} | epsilon (lunate form)
+{c:\varepsilon} | {eq:\varepsilon} | epsilon (variant, the form of the set
+ symbol)
+{c:\zeta} | {eq:\zeta} | zeta
+{c:\eta} | {eq:\eta} | eta
+{c:\theta} | {eq:\theta} | theta
+{c:\vartheta} | {eq:\vartheta} | theta (variant)
+{c:\iota} | {eq:\iota} | iota
+{c:\kappa} | {eq:\kappa} | kappa
+{c:\varkappa} | {eq:\varkappa} | kappa (variant, amssymb)
+{c:\lambda} | {eq:\lambda} | lambda
+{c:\mu} | {eq:\mu} | mu
+{c:\nu} | {eq:\nu} | nu
+{c:\xi} | {eq:\xi} | xi
+{c:\pi} | {eq:\pi} | pi
+{c:\varpi} | {eq:\varpi} | pi (variant)
+{c:\rho} | {eq:\rho} | rho
+{c:\varrho} | {eq:\varrho} | rho (variant)
+{c:\sigma} | {eq:\sigma} | sigma
+{c:\varsigma} | {eq:\varsigma} | sigma (final form)
+{c:\tau} | {eq:\tau} | tau
+{c:\upsilon} | {eq:\upsilon} | upsilon
+{c:\phi} | {eq:\phi} | phi
+{c:\varphi} | {eq:\varphi} | phi (variant)
+{c:\chi} | {eq:\chi} | chi
+{c:\psi} | {eq:\psi} | psi
+{c:\omega} | {eq:\omega} | omega
+{c:\digamma} | {eq:\digamma} | digamma (amssymb)
+.end
+
+.h3 Upper case Greek letters [eq-greek-uppergreek]
+.table 25 15 18
+Source | Result | Meaning
+{c:\Gamma} | {eq:\Gamma} | Gamma
+{c:\Delta} | {eq:\Delta} | Delta
+{c:\Theta} | {eq:\Theta} | Theta
+{c:\Lambda} | {eq:\Lambda} | Lambda
+{c:\Xi} | {eq:\Xi} | Xi
+{c:\Pi} | {eq:\Pi} | Pi
+{c:\Sigma} | {eq:\Sigma} | Sigma
+{c:\Upsilon} | {eq:\Upsilon} | Upsilon
+{c:\Phi} | {eq:\Phi} | Phi
+{c:\Psi} | {eq:\Psi} | Psi
+{c:\Omega} | {eq:\Omega} | Omega
+{c:\varGamma} | {eq:\varGamma} | Gamma in italics
+{c:\varDelta} | {eq:\varDelta} | Delta in italics
+{c:\varTheta} | {eq:\varTheta} | Theta in italics
+{c:\varLambda} | {eq:\varLambda} | Lambda in italics
+{c:\varXi} | {eq:\varXi} | Xi in italics
+{c:\varPi} | {eq:\varPi} | Pi in italics
+{c:\varSigma} | {eq:\varSigma} | Sigma in italics
+{c:\varUpsilon} | {eq:\varUpsilon} | Upsilon in italics
+{c:\varPhi} | {eq:\varPhi} | Phi in italics
+{c:\varPsi} | {eq:\varPsi} | Psi in italics
+{c:\varOmega} | {eq:\varOmega} | Omega in italics
+.end
+
+A capital Greek letter is upright by default.  The forms with var
+({c:\varGamma} and the others) are the slanted capitals; {c:\boldsymbol} ({n:eq-fonts}) makes any of them bold.
+
+.h2 Binary operators [eq-binary]
+.ix Binary operators
+A binary operator is a sign that stands between two things, as the plus sign
+does.  TeX puts a medium space on both sides of it, unless it stands at the
+start of the formula or follows another operator or a relation, in which case
+it is a sign of one operand (compare {eq:a-b} with {eq:-b}).  To have the sign
+without spaces, put it in a group ({c:a{{+}}b}, {n:eq-spacing}).  The signs
+that are marked amssymb are less usual ones.
+
+.table 17 15 26
+Source | Result | Meaning
+{c:+} | {eq:+} | plus
+{c:-} | {eq:-} | minus
+{c:\pm} | {eq:\pm} | plus or minus
+{c:\mp} | {eq:\mp} | minus or plus
+{c:\times} | {eq:\times} | multiplication cross
+{c:\div} | {eq:\div} | division sign
+{c:\cdot} | {eq:\cdot} | centered dot
+{c:\ast} | {eq:\ast} | asterisk operator
+{c:\star} | {eq:\star} | five pointed star
+{c:\circ} | {eq:\circ} | small circle
+{c:\bullet} | {eq:\bullet} | bullet
+{c:\cap} | {eq:\cap} | intersection
+{c:\cup} | {eq:\cup} | union
+{c:\uplus} | {eq:\uplus} | multiset union
+{c:\sqcap} | {eq:\sqcap} | square intersection
+{c:\sqcup} | {eq:\sqcup} | square union
+{c:\wedge} | {eq:\wedge} | logical and
+{c:\vee} | {eq:\vee} | logical or
+{c:\setminus} | {eq:\setminus} | set difference
+{c:\wr} | {eq:\wr} | wreath product
+{c:\diamond} | {eq:\diamond} | diamond operator
+{c:\oplus} | {eq:\oplus} | circled plus
+{c:\ominus} | {eq:\ominus} | circled minus
+{c:\otimes} | {eq:\otimes} | circled times
+{c:\oslash} | {eq:\oslash} | circled slash
+{c:\odot} | {eq:\odot} | circled dot
+{c:\bigcirc} | {eq:\bigcirc} | large circle
+{c:\triangleleft} | {eq:\triangleleft} | triangle left
+{c:\triangleright} | {eq:\triangleright} | triangle right
+{c:\bigtriangleup} | {eq:\bigtriangleup} | large triangle up
+{c:\bigtriangledown} | {eq:\bigtriangledown} | large triangle down
+{c:\amalg} | {eq:\amalg} | coproduct sign
+{c:\dagger} | {eq:\dagger} | dagger
+{c:\ddagger} | {eq:\ddagger} | double dagger
+{c:\boxplus} | {eq:\boxplus} | boxed plus (amssymb)
+{c:\boxminus} | {eq:\boxminus} | boxed minus (amssymb)
+{c:\boxtimes} | {eq:\boxtimes} | boxed times (amssymb)
+{c:\boxdot} | {eq:\boxdot} | boxed dot (amssymb)
+{c:\circledast} | {eq:\circledast} | circled asterisk (amssymb)
+{c:\circledcirc} | {eq:\circledcirc} | circled circle (amssymb)
+{c:\circleddash} | {eq:\circleddash} | circled dash (amssymb)
+{c:\dotplus} | {eq:\dotplus} | dot plus (amssymb)
+{c:\ltimes} | {eq:\ltimes} | left semidirect product (amssymb)
+{c:\rtimes} | {eq:\rtimes} | right semidirect product (amssymb)
+{c:\barwedge} | {eq:\barwedge} | bar wedge (amssymb)
+{c:\veebar} | {eq:\veebar} | vee bar (amssymb)
+{c:\curlywedge} | {eq:\curlywedge} | curly wedge (amssymb)
+{c:\curlyvee} | {eq:\curlyvee} | curly vee (amssymb)
+{c:\intercal} | {eq:\intercal} | intercalate (amssymb)
+{c:\divideontimes} | {eq:\divideontimes} | divide on times (amssymb)
+{c:\smallsetminus} | {eq:\smallsetminus} | small set difference (amssymb)
+{c:\Cap} | {eq:\Cap} | double intersection (amssymb)
+{c:\Cup} | {eq:\Cup} | double union (amssymb)
+.end
+
+To make a symbol that is not an operator behave like one, use {c:\mathbin}
+({n:eq-spacing}).
+
+.h2 Relations [eq-relations]
+.ix Relations
+A relation is a sign that says how two things stand to each other, such as the
+equals sign.  TeX puts a thick space on both sides of it.  The negation of a
+relation is made by putting {c:\not} in front of the command: {eq:\not\equiv}.
+Many relations have a ready made negation ({c:\neq}, {c:\notin}, {c:\nless}
+and others), which is better set than {c:\not}.  The relations that are marked
+amssymb are less usual ones.
+
+.table 18 15 25
+Source | Result | Meaning
+{c:=} | {eq:=} | equals
+{c:\neq} | {eq:\neq} | not equal
+{c:\equiv} | {eq:\equiv} | identical to
+{c:\not\equiv} | {eq:\not\equiv} | not identical (negation of any relation:
+ \not before it)
+{c:\approx} | {eq:\approx} | approximately equal
+{c:\sim} | {eq:\sim} | similar
+{c:\simeq} | {eq:\simeq} | similar or equal
+{c:\cong} | {eq:\cong} | congruent
+{c:\doteq} | {eq:\doteq} | approaches the limit
+{c:\propto} | {eq:\propto} | proportional to
+{c:<} | {eq:<} | less than
+{c:>} | {eq:>} | greater than
+{c:\le} | {eq:\le} | less than or equal
+{c:\ge} | {eq:\ge} | greater than or equal
+{c:\leq} | {eq:\leq} | less than or equal (same as \le)
+{c:\geq} | {eq:\geq} | greater than or equal (same as \ge)
+{c:\ll} | {eq:\ll} | much less than
+{c:\gg} | {eq:\gg} | much greater than
+{c:\prec} | {eq:\prec} | precedes
+{c:\succ} | {eq:\succ} | succeeds
+{c:\preceq} | {eq:\preceq} | precedes or equals
+{c:\succeq} | {eq:\succeq} | succeeds or equals
+{c:\subset} | {eq:\subset} | subset of
+{c:\supset} | {eq:\supset} | superset of
+{c:\subseteq} | {eq:\subseteq} | subset or equal
+{c:\supseteq} | {eq:\supseteq} | superset or equal
+{c:\sqsubseteq} | {eq:\sqsubseteq} | square subset or equal
+{c:\sqsupseteq} | {eq:\sqsupseteq} | square superset or equal
+{c:\in} | {eq:\in} | element of
+{c:\ni} | {eq:\ni} | contains as an element
+{c:\notin} | {eq:\notin} | not an element of
+{c:\perp} | {eq:\perp} | perpendicular
+{c:\parallel} | {eq:\parallel} | parallel
+{c:\mid} | {eq:\mid} | divides
+{c:\nmid} | {eq:\nmid} | does not divide (amssymb)
+{c:\vdash} | {eq:\vdash} | proves
+{c:\dashv} | {eq:\dashv} | is proved by
+{c:\models} | {eq:\models} | models
+{c:\asymp} | {eq:\asymp} | asymptotically equal
+{c:\bowtie} | {eq:\bowtie} | join
+{c:\smile} | {eq:\smile} | smile
+{c:\frown} | {eq:\frown} | frown
+{c:\leqslant} | {eq:\leqslant} | slanted less than or equal (amssymb)
+{c:\geqslant} | {eq:\geqslant} | slanted greater than or equal (amssymb)
+{c:\lesssim} | {eq:\lesssim} | less than or similar (amssymb)
+{c:\gtrsim} | {eq:\gtrsim} | greater than or similar (amssymb)
+{c:\lessgtr} | {eq:\lessgtr} | less than or greater than (amssymb)
+{c:\nless} | {eq:\nless} | not less than (amssymb)
+{c:\ngtr} | {eq:\ngtr} | not greater than (amssymb)
+{c:\nleq} | {eq:\nleq} | not less than or equal (amssymb)
+{c:\ngeq} | {eq:\ngeq} | not greater than or equal (amssymb)
+{c:\ncong} | {eq:\ncong} | not congruent (amssymb)
+{c:\nsim} | {eq:\nsim} | not similar (amssymb)
+{c:\nsubseteq} | {eq:\nsubseteq} | not a subset or equal (amssymb)
+{c:\subsetneq} | {eq:\subsetneq} | subset, not equal (amssymb)
+{c:\supsetneq} | {eq:\supsetneq} | superset, not equal (amssymb)
+{c:\nparallel} | {eq:\nparallel} | not parallel (amssymb)
+{c:\nvdash} | {eq:\nvdash} | does not prove (amssymb)
+{c:\approxeq} | {eq:\approxeq} | approximately equal or equal (amssymb)
+{c:\thickapprox} | {eq:\thickapprox} | thick approximately (amssymb)
+{c:\backsim} | {eq:\backsim} | reversed similar (amssymb)
+{c:\eqsim} | {eq:\eqsim} | equals similar (amssymb)
+{c:\triangleq} | {eq:\triangleq} | defined as (amssymb)
+{c:\therefore} | {eq:\therefore} | therefore (amssymb)
+{c:\because} | {eq:\because} | because (amssymb)
+{c:\between} | {eq:\between} | between (amssymb)
+{c:\pitchfork} | {eq:\pitchfork} | pitchfork (amssymb)
+{c:\Vdash} | {eq:\Vdash} | forces (amssymb)
+{c:\vartriangleleft} | {eq:\vartriangleleft} | normal subgroup of (amssymb)
+{c:\vartriangleright} | {eq:\vartriangleright} | contains as normal subgroup
+ (amssymb)
+{c:\trianglelefteq} | {eq:\trianglelefteq} | normal subgroup or equal
+ (amssymb)
+.end
+
+The sign < is the less than sign and > the greater than sign, typed as they
+are.  Do not use the angle brackets of the keyboard for the brackets of a
+vector: use {c:\langle} and {c:\rangle} ({n:eq-delimiters}).
+
+.h2 Arrows [eq-arrows]
+.ix Arrows
+The arrows are relations, so they have a thick space on both sides.  The names
+say the direction: left, right, up, down, and the long forms, whose names
+begin with long, are longer arrows. A name that begins with a capital
+(Rightarrow) is the double arrow. {c:\implies}, {c:\impliedby} and {c:\iff}
+are the long double arrows with more space round them, as used between
+statements.  Arrows that stretch over a label are in {x:eq-accents}
+({c:\xrightarrow}).
+
+.table 25 15 18
+Source | Result | Meaning
+{c:\leftarrow} | {eq:\leftarrow} | arrow left
+{c:\rightarrow} | {eq:\rightarrow} | arrow right
+{c:\to} | {eq:\to} | arrow right (same as \rightarrow)
+{c:\gets} | {eq:\gets} | arrow left (same as \leftarrow)
+{c:\leftrightarrow} | {eq:\leftrightarrow} | arrow both ways
+{c:\uparrow} | {eq:\uparrow} | arrow up
+{c:\downarrow} | {eq:\downarrow} | arrow down
+{c:\updownarrow} | {eq:\updownarrow} | arrow up and down
+{c:\Leftarrow} | {eq:\Leftarrow} | double arrow left
+{c:\Rightarrow} | {eq:\Rightarrow} | double arrow right
+{c:\Leftrightarrow} | {eq:\Leftrightarrow} | double arrow both ways
+{c:\Uparrow} | {eq:\Uparrow} | double arrow up
+{c:\Downarrow} | {eq:\Downarrow} | double arrow down
+{c:\Updownarrow} | {eq:\Updownarrow} | double arrow up and down
+{c:\longleftarrow} | {eq:\longleftarrow} | long arrow left
+{c:\longrightarrow} | {eq:\longrightarrow} | long arrow right
+{c:\longleftrightarrow} | {eq:\longleftrightarrow} | long arrow both ways
+{c:\Longleftarrow} | {eq:\Longleftarrow} | long double arrow left
+{c:\Longrightarrow} | {eq:\Longrightarrow} | long double arrow right
+{c:\Longleftrightarrow} | {eq:\Longleftrightarrow} | long double arrow both
+ ways
+{c:\implies} | {eq:\implies} | long double arrow right with space
+{c:\impliedby} | {eq:\impliedby} | long double arrow left with space
+{c:\iff} | {eq:\iff} | long double arrow both ways with space
+{c:\mapsto} | {eq:\mapsto} | maps to
+{c:\longmapsto} | {eq:\longmapsto} | long maps to
+{c:\hookleftarrow} | {eq:\hookleftarrow} | hook left
+{c:\hookrightarrow} | {eq:\hookrightarrow} | hook right
+{c:\leftharpoonup} | {eq:\leftharpoonup} | harpoon left up
+{c:\leftharpoondown} | {eq:\leftharpoondown} | harpoon left down
+{c:\rightharpoonup} | {eq:\rightharpoonup} | harpoon right up
+{c:\rightharpoondown} | {eq:\rightharpoondown} | harpoon right down
+{c:\rightleftharpoons} | {eq:\rightleftharpoons} | harpoons right over left
+{c:\nearrow} | {eq:\nearrow} | arrow north east
+{c:\searrow} | {eq:\searrow} | arrow south east
+{c:\swarrow} | {eq:\swarrow} | arrow south west
+{c:\nwarrow} | {eq:\nwarrow} | arrow north west
+{c:\leadsto} | {eq:\leadsto} | squiggle right (amssymb)
+{c:\rightsquigarrow} | {eq:\rightsquigarrow} | squiggle right (amssymb)
+{c:\twoheadrightarrow} | {eq:\twoheadrightarrow} | two heads right (amssymb)
+{c:\rightarrowtail} | {eq:\rightarrowtail} | tail right (amssymb)
+{c:\rightrightarrows} | {eq:\rightrightarrows} | two arrows right (amssymb)
+{c:\leftrightarrows} | {eq:\leftrightarrows} | arrows left and right (amssymb)
+{c:\rightleftarrows} | {eq:\rightleftarrows} | arrows right and left (amssymb)
+{c:\curvearrowright} | {eq:\curvearrowright} | curved arrow right (amssymb)
+{c:\circlearrowleft} | {eq:\circlearrowleft} | circle arrow left (amssymb)
+{c:\nrightarrow} | {eq:\nrightarrow} | no arrow right (amssymb)
+{c:\nRightarrow} | {eq:\nRightarrow} | no double arrow right (amssymb)
+{c:\nLeftrightarrow} | {eq:\nLeftrightarrow} | no double arrow both ways
+ (amssymb)
+{c:\Lsh} | {eq:\Lsh} | arrow up left (amssymb)
+{c:\Rsh} | {eq:\Rsh} | arrow up right (amssymb)
+{c:\looparrowright} | {eq:\looparrowright} | loop arrow right (amssymb)
+{c:\upuparrows} | {eq:\upuparrows} | two arrows up (amssymb)
+{c:\dashrightarrow} | {eq:\dashrightarrow} | dashed arrow right (amssymb)
+{c:\Rrightarrow} | {eq:\Rrightarrow} | triple arrow right (amssymb)
+.end
+
+.h2 Other symbols [eq-symbols]
+.ix Other symbols
+The symbols of this group are ordinary symbols: they take no space of their
+own.  The dots at the end are special in that the right one depends on the
+place: {c:\ldots} is on the base line (between commas), {c:\cdots} is at the
+middle of the line (between operators).  The dots with names that begin with
+dots (the amsmath dots) pick the kind by what follows them.
+
+.table 17 15 26
+Source | Result | Meaning
+{c:\infty} | {eq:\infty} | infinity
+{c:\partial} | {eq:\partial} | partial derivative
+{c:\nabla} | {eq:\nabla} | nabla
+{c:\forall} | {eq:\forall} | for all
+{c:\exists} | {eq:\exists} | there exists
+{c:\nexists} | {eq:\nexists} | there does not exist (amssymb)
+{c:\emptyset} | {eq:\emptyset} | empty set
+{c:\varnothing} | {eq:\varnothing} | empty set (amssymb)
+{c:\neg} | {eq:\neg} | logical not
+{c:\lnot} | {eq:\lnot} | logical not (same as \neg)
+{c:\angle} | {eq:\angle} | angle
+{c:\measuredangle} | {eq:\measuredangle} | measured angle (amssymb)
+{c:\sphericalangle} | {eq:\sphericalangle} | spherical angle (amssymb)
+{c:\triangle} | {eq:\triangle} | triangle
+{c:\vartriangle} | {eq:\vartriangle} | small triangle (amssymb)
+{c:\blacktriangle} | {eq:\blacktriangle} | black triangle (amssymb)
+{c:\square} | {eq:\square} | square (amssymb)
+{c:\blacksquare} | {eq:\blacksquare} | black square (amssymb)
+{c:\lozenge} | {eq:\lozenge} | lozenge (amssymb)
+{c:\blacklozenge} | {eq:\blacklozenge} | black lozenge (amssymb)
+{c:\bigstar} | {eq:\bigstar} | big star (amssymb)
+{c:\prime} | {eq:\prime} | prime
+{c:\backprime} | {eq:\backprime} | reversed prime (amssymb)
+{c:\hbar} | {eq:\hbar} | h bar
+{c:\hslash} | {eq:\hslash} | h slash (amssymb)
+{c:\ell} | {eq:\ell} | script l
+{c:\Re} | {eq:\Re} | real part
+{c:\Im} | {eq:\Im} | imaginary part
+{c:\aleph} | {eq:\aleph} | aleph
+{c:\beth} | {eq:\beth} | beth (amssymb)
+{c:\gimel} | {eq:\gimel} | gimel (amssymb)
+{c:\daleth} | {eq:\daleth} | daleth (amssymb)
+{c:\wp} | {eq:\wp} | Weierstrass p
+{c:\top} | {eq:\top} | top
+{c:\bot} | {eq:\bot} | bottom
+{c:\surd} | {eq:\surd} | radical sign
+{c:\imath} | {eq:\imath} | dotless i
+{c:\jmath} | {eq:\jmath} | dotless j
+{c:\complement} | {eq:\complement} | complement (amssymb)
+{c:\mho} | {eq:\mho} | inverted omega (amssymb)
+{c:\Finv} | {eq:\Finv} | turned F (amssymb)
+{c:\Game} | {eq:\Game} | turned G (amssymb)
+{c:\eth} | {eq:\eth} | eth (amssymb)
+{c:\checkmark} | {eq:\checkmark} | check mark (amssymb)
+{c:\maltese} | {eq:\maltese} | maltese cross (amssymb)
+{c:\circledR} | {eq:\circledR} | circled R (amssymb)
+{c:\circledS} | {eq:\circledS} | circled S (amssymb)
+{c:\diagup} | {eq:\diagup} | diagonal up (amssymb)
+{c:\diagdown} | {eq:\diagdown} | diagonal down (amssymb)
+{c:\clubsuit} | {eq:\clubsuit} | club
+{c:\diamondsuit} | {eq:\diamondsuit} | diamond
+{c:\heartsuit} | {eq:\heartsuit} | heart
+{c:\spadesuit} | {eq:\spadesuit} | spade
+{c:\flat} | {eq:\flat} | flat
+{c:\natural} | {eq:\natural} | natural
+{c:\sharp} | {eq:\sharp} | sharp
+{c:\backslash} | {eq:\backslash} | backslash
+{c:\ldots} | {eq:\ldots} | low dots
+{c:\cdots} | {eq:\cdots} | centered dots
+{c:\vdots} | {eq:\vdots} | vertical dots
+{c:\ddots} | {eq:\ddots} | diagonal dots
+{c:\dotsc} | {eq:\dotsc} | dots for a list of commas
+{c:\dotsb} | {eq:\dotsb} | dots for binary operators
+{c:\dotsm} | {eq:\dotsm} | dots for multiplication
+{c:\dotsi} | {eq:\dotsi} | dots for integrals
+{c:\dotso} | {eq:\dotso} | other dots
+.end
+
+The letter h with a bar is {c:\hbar}, and the dotless letters {c:\imath} and
+{c:\jmath} are for putting an accent on them ({n:eq-accents}).
+
+.h2 Superscripts and subscripts [eq-scripts]
+.ix Superscripts and subscripts
+The sign ^ raises what follows it to the superscript place and the sign _
+lowers it to the subscript place.  What is taken is the next character or the
+next group; to raise or lower more than one character, use braces.  Both signs
+can follow one thing, in either order.  The scripts of a script are smaller
+again, to three levels.  Scripts that stand before a thing are made by putting
+an empty group in front.  The results of this table are set in display size, as
+an equation that stands alone: the limits of a sum are above and below it.  In
+a line of text the same limits go at the side; the commands {c:\limits} and
+{c:\nolimits} change that for one operator.
+
+In the tables of this group the result is typeset with {c:\displaystyle} in
+front of the source, which is not shown, so that it has the form of an
+equation that stands alone.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:x^2} | {eq:\displaystyle x^2} | superscript of one character
+{c:x_i} | {eq:\displaystyle x_i} | subscript of one character
+{c:x_i^2} | {eq:\displaystyle x_i^2} | both (either order)
+{c:x^{{n+1}}} | {eq:\displaystyle x^{{n+1}}} | a group as superscript
+{c:x_{{ij}}} | {eq:\displaystyle x_{{ij}}} | a group as subscript
+{c:x^{{y^z}}} | {eq:\displaystyle x^{{y^z}}} | superscript of a superscript
+{c:a_{{i_j}}} | {eq:\displaystyle a_{{i_j}}} | subscript of a subscript
+{c:x^{{a}}_{{b}}} | {eq:\displaystyle x^{{a}}_{{b}}} | both with groups
+{c:x^2_3} | {eq:\displaystyle x^2_3} | each script takes one character without
+ braces
+{c:x'} | {eq:\displaystyle x'} | prime (an apostrophe is a prime)
+{c:x''} | {eq:\displaystyle x''} | double prime
+{c:f'(x)} | {eq:\displaystyle f'(x)} | derivative
+{c:x^\prime} | {eq:\displaystyle x^\prime} | prime as a command
+{c:{{}}^{{14}}_{{6}}\mathrm{{C}}} | {eq:\displaystyle
+ {{}}^{{14}}_{{6}}\mathrm{{C}}} | scripts on the left (an empty group first)
+{c:e^{{-x^2/2}}} | {eq:\displaystyle e^{{-x^2/2}}} | scripts that hold an
+ expression
+{c:\sum_{{i=1}}^{{n}}} | {eq:\displaystyle \sum_{{i=1}}^{{n}}} | limits of a
+ sum
+{c:\sum\nolimits_{{i=1}}^{{n}}} | {eq:\displaystyle
+ \sum\nolimits_{{i=1}}^{{n}}} | limits at the side
+{c:\int\limits_0^1} | {eq:\displaystyle \int\limits_0^1} | limits over and
+ under an integral
+{c:\lim_{{x\to 0}}} | {eq:\displaystyle \lim_{{x\to 0}}} | limit under the
+ word lim
+{c:\max_{{1\le i\le n}}} | {eq:\displaystyle \max_{{1\le i\le n}}} | limit
+ under max
+{c:\overset{{!}}{{=}}} | {eq:\displaystyle \overset{{!}}{{=}}} | a mark over a
+ symbol
+{c:\underset{{n\to\infty}}{{\lim}}} | {eq:\displaystyle
+ \underset{{n\to\infty}}{{\lim}}} | text under a symbol
+{c:\sideset{{_a^b}}{{_c^d}}\sum} | {eq:\displaystyle
+ \sideset{{_a^b}}{{_c^d}}\sum} | scripts on both sides of an operator
+.end
+
+The apostrophe is a prime and stands for the superscript {c:^\prime}; a second
+apostrophe makes a double prime. A script on something that is already
+scripted (x^2^3) is an error of TeX, with the message "Double superscript";
+put one of the two in a group.
+
+.h2 Fractions, binomials and roots [eq-fractions]
+.ix Fractions, binomials and roots
+{c:\frac} takes two arguments, the numerator and the denominator, and
+{c:\sqrt} one, the radicand; with the square brackets {c:[n]} before the
+argument it takes the n-th root.  The variants {c:\dfrac} and {c:\tfrac} force
+the display and the text size of the fraction, and {c:\cfrac} sets a continued
+fraction with full sized parts. {c:\binom} is the binomial coefficient: two
+arguments, no bar, between large parentheses.  The TeX forms {c:{{a \over
+b}}} and {c:{{n \choose k}}} also work: the command takes everything in the
+group, to the left and to the right.  The results are set in display size.
+
+The tables of this group typeset the result as {x:eq-scripts} says.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:\frac{{a}}{{b}}} | {eq:\displaystyle \frac{{a}}{{b}}} | fraction (two
+ groups)
+{c:\frac12} | {eq:\displaystyle \frac12} | fraction of two characters
+{c:\dfrac{{a}}{{b}}} | {eq:\displaystyle \dfrac{{a}}{{b}}} | fraction in
+ display size
+{c:\tfrac{{a}}{{b}}} | {eq:\displaystyle \tfrac{{a}}{{b}}} | fraction in text
+ size
+{c:\cfrac{{1}}{{1+\cfrac{{1}}{{x}}}}} | {eq:\displaystyle
+ \cfrac{{1}}{{1+\cfrac{{1}}{{x}}}}} | continued fraction
+{c:\frac{{x+1}}{{\frac{{y}}{{2}}}}} | {eq:\displaystyle
+ \frac{{x+1}}{{\frac{{y}}{{2}}}}} | fraction in a fraction
+{c:{{a \over b}}} | {eq:\displaystyle {{a \over b}}} | fraction by the TeX
+ word over
+{c:{{n \choose k}}} | {eq:\displaystyle {{n \choose k}}} | binomial by the TeX
+ word choose
+{c:\binom{{n}}{{k}}} | {eq:\displaystyle \binom{{n}}{{k}}} | binomial
+ coefficient
+{c:\dbinom{{n}}{{k}}} | {eq:\displaystyle \dbinom{{n}}{{k}}} | binomial in
+ display size
+{c:\tbinom{{n}}{{k}}} | {eq:\displaystyle \tbinom{{n}}{{k}}} | binomial in
+ text size
+{c:{{a \atop b}}} | {eq:\displaystyle {{a \atop b}}} | two lines with no bar
+{c:\genfrac{{(}}{{)}}{{0pt}}{{}}{{a}}{{b}}} | {eq:\displaystyle
+ \genfrac{{(}}{{)}}{{0pt}}{{}}{{a}}{{b}}} | general form: delimiters, bar,
+ style
+{c:\sqrt{{x}}} | {eq:\displaystyle \sqrt{{x}}} | square root
+{c:\sqrt{{x^2+y^2}}} | {eq:\displaystyle \sqrt{{x^2+y^2}}} | root of an
+ expression
+{c:\sqrt[3]{{x}}} | {eq:\displaystyle \sqrt[3]{{x}}} | cube root
+{c:\sqrt[n]{{a+b}}} | {eq:\displaystyle \sqrt[n]{{a+b}}} | root of any degree
+{c:\sqrt{{1+\sqrt{{1+x}}}}} | {eq:\displaystyle \sqrt{{1+\sqrt{{1+x}}}}} |
+ root in a root
+{c:\frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}} | {eq:\displaystyle
+ \frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}} | quadratic formula
+{c:x^{{1/2}}} | {eq:\displaystyle x^{{1/2}}} | slash fraction in a script
+{c:\frac{{\partial f}}{{\partial x}}} | {eq:\displaystyle \frac{{\partial
+ f}}{{\partial x}}} | partial derivative
+{c:\frac{{d}}{{dx}}\left(x^2\right)} | {eq:\displaystyle
+ \frac{{d}}{{dx}}\left(x^2\right)} | derivative of an expression
+.end
+
+In a line of text a fraction is small: its parts are set in the size of a
+script.  In an equation that stands alone the fraction is large.  Begin an
+inline equation with {c:\displaystyle} to get the large fraction in a line of
+text.
+
+.h2 Large operators and functions [eq-bigops]
+.ix Large operators and functions
+The large operators (sum, product, integral, union ...) are set larger in a
+displayed equation and have their limits above and below; in an inline
+equation they are small and the limits are at the side.  The limits are typed
+as a subscript and a superscript.  The names of the usual functions are
+commands: they set the name upright and put the right space round it, and the
+ones that have limits (lim, max, min, sup, inf, det, gcd, Pr and others) take
+their subscript underneath in a displayed equation.  The results of this table
+are set in display size.
+
+The tables of this group typeset the result as {x:eq-scripts} says.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:\sum} | {eq:\displaystyle \sum} | sum
+{c:\prod} | {eq:\displaystyle \prod} | product
+{c:\coprod} | {eq:\displaystyle \coprod} | coproduct
+{c:\int} | {eq:\displaystyle \int} | integral
+{c:\iint} | {eq:\displaystyle \iint} | double integral
+{c:\iiint} | {eq:\displaystyle \iiint} | triple integral
+{c:\oint} | {eq:\displaystyle \oint} | contour integral
+{c:\bigcup} | {eq:\displaystyle \bigcup} | large union
+{c:\bigcap} | {eq:\displaystyle \bigcap} | large intersection
+{c:\bigvee} | {eq:\displaystyle \bigvee} | large or
+{c:\bigwedge} | {eq:\displaystyle \bigwedge} | large and
+{c:\bigoplus} | {eq:\displaystyle \bigoplus} | large circled plus
+{c:\bigotimes} | {eq:\displaystyle \bigotimes} | large circled times
+{c:\bigodot} | {eq:\displaystyle \bigodot} | large circled dot
+{c:\biguplus} | {eq:\displaystyle \biguplus} | large multiset union
+{c:\bigsqcup} | {eq:\displaystyle \bigsqcup} | large square union
+{c:\sum_{{k=1}}^{{n}} k^2} | {eq:\displaystyle \sum_{{k=1}}^{{n}} k^2} | sum
+ with limits
+{c:\prod_{{i=1}}^{{n}} a_i} | {eq:\displaystyle \prod_{{i=1}}^{{n}} a_i} |
+ product with limits
+{c:\int_a^b f(x)\,dx} | {eq:\displaystyle \int_a^b f(x)\,dx} | integral with
+ limits
+{c:\oint_C \vec{{F}}\cdot d\vec{{r}}} | {eq:\displaystyle \oint_C
+ \vec{{F}}\cdot d\vec{{r}}} | contour integral
+{c:\iint_D f\,dA} | {eq:\displaystyle \iint_D f\,dA} | double integral over a
+ region
+{c:\bigcup_{{i\in I}} A_i} | {eq:\displaystyle \bigcup_{{i\in I}} A_i} | union
+ over an index set
+{c:\sum_{{\substack{{i<n\\ j<m}}}} a_{{ij}}} | {eq:\displaystyle
+ \sum_{{\substack{{i<n\\ j<m}}}} a_{{ij}}} | two lines of conditions
+{c:\sin x} | {eq:\displaystyle \sin x} | sine
+{c:\cos x} | {eq:\displaystyle \cos x} | cosine
+{c:\tan x} | {eq:\displaystyle \tan x} | tangent
+{c:\cot x} | {eq:\displaystyle \cot x} | cotangent
+{c:\sec x} | {eq:\displaystyle \sec x} | secant
+{c:\csc x} | {eq:\displaystyle \csc x} | cosecant
+{c:\arcsin x} | {eq:\displaystyle \arcsin x} | arc sine
+{c:\arccos x} | {eq:\displaystyle \arccos x} | arc cosine
+{c:\arctan x} | {eq:\displaystyle \arctan x} | arc tangent
+{c:\sinh x} | {eq:\displaystyle \sinh x} | hyperbolic sine
+{c:\cosh x} | {eq:\displaystyle \cosh x} | hyperbolic cosine
+{c:\tanh x} | {eq:\displaystyle \tanh x} | hyperbolic tangent
+{c:\coth x} | {eq:\displaystyle \coth x} | hyperbolic cotangent
+{c:\log x} | {eq:\displaystyle \log x} | logarithm
+{c:\ln x} | {eq:\displaystyle \ln x} | natural logarithm
+{c:\lg x} | {eq:\displaystyle \lg x} | logarithm to base 10
+{c:\exp x} | {eq:\displaystyle \exp x} | exponential
+{c:\lim_{{n\to\infty}} a_n} | {eq:\displaystyle \lim_{{n\to\infty}} a_n} |
+ limit
+{c:\limsup_{{n}} a_n} | {eq:\displaystyle \limsup_{{n}} a_n} | upper limit
+{c:\liminf_{{n}} a_n} | {eq:\displaystyle \liminf_{{n}} a_n} | lower limit
+{c:\max_{{i}} x_i} | {eq:\displaystyle \max_{{i}} x_i} | maximum
+{c:\min_{{i}} x_i} | {eq:\displaystyle \min_{{i}} x_i} | minimum
+{c:\sup_{{x}} f(x)} | {eq:\displaystyle \sup_{{x}} f(x)} | supremum
+{c:\inf_{{x}} f(x)} | {eq:\displaystyle \inf_{{x}} f(x)} | infimum
+{c:\det A} | {eq:\displaystyle \det A} | determinant
+{c:\gcd(a,b)} | {eq:\displaystyle \gcd(a,b)} | greatest common divisor
+{c:\deg p} | {eq:\displaystyle \deg p} | degree
+{c:\dim V} | {eq:\displaystyle \dim V} | dimension
+{c:\hom(A,B)} | {eq:\displaystyle \hom(A,B)} | homomorphisms
+{c:\ker f} | {eq:\displaystyle \ker f} | kernel
+{c:\arg z} | {eq:\displaystyle \arg z} | argument
+{c:\Pr(A)} | {eq:\displaystyle \Pr(A)} | probability
+{c:\operatorname{{sgn}} x} | {eq:\displaystyle \operatorname{{sgn}} x} | a
+ function name of your own
+{c:\operatorname*{{argmax}}_{{x}} f(x)} | {eq:\displaystyle
+ \operatorname*{{argmax}}_{{x}} f(x)} | own name with limits underneath
+{c:a \bmod b} | {eq:\displaystyle a \bmod b} | binary mod
+{c:a \equiv b \pmod n} | {eq:\displaystyle a \equiv b \pmod n} | congruence
+ with mod in parentheses
+{c:a \equiv b \mod n} | {eq:\displaystyle a \equiv b \mod n} | congruence with
+ mod and space
+{c:a \equiv b \pod n} | {eq:\displaystyle a \equiv b \pod n} | congruence with
+ parentheses only
+.end
+
+For a function that has no command, use {c:\operatorname{{name}}} (or
+{c:\operatorname*{{name}}} when it has limits underneath).  Do not type the
+letters of the name as they are: they would be set as variables ({eq:sin x}
+against {eq:\sin x}).  The package declaration that other documents use for it
+({c:\DeclareMathOperator}) is refused in an equation ({n:eq-refused}).
+
+.h2 Delimiters and their sizes [eq-delimiters]
+.ix Delimiters and their sizes
+A delimiter is a bracket, a bar or a similar sign.  The keyboard brackets are
+delimiters as they are.  The braces, which have a meaning of their own in the
+text, are typed {c:\{{} and {c:\}}}. {c:\left} and {c:\right} in front of a
+delimiter make a pair that is as large as what is between them; every
+{c:\left} needs its {c:\right} in the same group, and a dot ({c:\left.}) makes
+one side empty. {c:\big}, {c:\Big}, {c:\bigg} and {c:\Bigg} give four fixed
+larger sizes, and {c:\bigl} and {c:\bigr} (and the other l and r forms) tell
+the side so that the spacing is that of an opening and of a closing sign.
+{c:\middle} puts a delimiter between the other two that grows with them.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:( x )} | {eq:( x )} | parentheses
+{c:[ x ]} | {eq:[ x ]} | square brackets
+{c:\{{ x \}}} | {eq:\{{ x \}}} | braces (backslash needed)
+{c:\langle x \rangle} | {eq:\langle x \rangle} | angle brackets
+{c:\lvert x \rvert} | {eq:\lvert x \rvert} | absolute value bars
+{c:\lVert x \rVert} | {eq:\lVert x \rVert} | norm bars
+{c:\lfloor x \rfloor} | {eq:\lfloor x \rfloor} | floor
+{c:\lceil x \rceil} | {eq:\lceil x \rceil} | ceiling
+{c:| x |} | {eq:| x |} | vertical bars typed as they are
+{c:\| x \|} | {eq:\| x \|} | double bars
+{c:\vert x \vert} | {eq:\vert x \vert} | vertical bars by name
+{c:\Vert x \Vert} | {eq:\Vert x \Vert} | double bars by name
+{c:\ulcorner x \urcorner} | {eq:\ulcorner x \urcorner} | upper corners
+ (amssymb)
+{c:\big( x \big)} | {eq:\big( x \big)} | one size larger
+{c:\Big( x \Big)} | {eq:\Big( x \Big)} | two sizes larger
+{c:\bigg( x \bigg)} | {eq:\bigg( x \bigg)} | three sizes larger
+{c:\Bigg( x \Bigg)} | {eq:\Bigg( x \Bigg)} | four sizes larger
+{c:\bigl( x \bigr)} | {eq:\bigl( x \bigr)} | same as \big with the side told
+{c:\left( \frac{{a}}{{b}} \right)} | {eq:\left( \frac{{a}}{{b}} \right)} |
+ grows to fit
+{c:\left[ \frac{{a}}{{b}} \right]} | {eq:\left[ \frac{{a}}{{b}} \right]} |
+ square brackets that grow
+{c:\left\{{ \frac{{a}}{{b}} \right\}}} | {eq:\left\{{ \frac{{a}}{{b}}
+ \right\}}} | braces that grow
+{c:\left\langle \frac{{a}}{{b}} \right\rangle} | {eq:\left\langle
+ \frac{{a}}{{b}} \right\rangle} | angle brackets that grow
+{c:\left| \frac{{a}}{{b}} \right|} | {eq:\left| \frac{{a}}{{b}} \right|} |
+ bars that grow
+{c:\left\| \frac{{a}}{{b}} \right\|} | {eq:\left\| \frac{{a}}{{b}} \right\|} |
+ double bars that grow
+{c:\left\lfloor \frac{{a}}{{b}} \right\rfloor} | {eq:\left\lfloor
+ \frac{{a}}{{b}} \right\rfloor} | floor that grows
+{c:\left. \frac{{df}}{{dx}} \right|_{{x=0}}} | {eq:\left. \frac{{df}}{{dx}}
+ \right|_{{x=0}}} | one side empty (a dot)
+{c:\left( \frac{{a}}{{b}} \middle| \frac{{c}}{{d}} \right)} | {eq:\left(
+ \frac{{a}}{{b}} \middle| \frac{{c}}{{d}} \right)} | a delimiter in the middle
+ (e-TeX)
+{c:\left\uparrow x \right\downarrow} | {eq:\left\uparrow x \right\downarrow} |
+ arrows as delimiters
+.end
+
+A vertical bar typed on the keyboard is the vertical line.  Use {c:\lvert} and
+{c:\rvert} for absolute values (they have the right spacing) and {c:\lVert}
+and {c:\rVert} for norms.
+
+.h2 Accents, lines and braces [eq-accents]
+.ix Accents, lines and braces
+An accent is a command with one argument, the letter that gets it.  Accents
+over several letters ({c:\widehat}, {c:\widetilde}, {c:\overline}, the braces)
+stretch.  The arrows that stretch over text and take a label are
+{c:\xrightarrow} and {c:\xleftarrow}, which have the label as an argument, and
+a second label under the arrow in square brackets.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:\hat{{a}}} | {eq:\hat{{a}}} | hat
+{c:\check{{a}}} | {eq:\check{{a}}} | check
+{c:\tilde{{a}}} | {eq:\tilde{{a}}} | tilde
+{c:\acute{{a}}} | {eq:\acute{{a}}} | acute
+{c:\grave{{a}}} | {eq:\grave{{a}}} | grave
+{c:\dot{{a}}} | {eq:\dot{{a}}} | one dot
+{c:\ddot{{a}}} | {eq:\ddot{{a}}} | two dots
+{c:\dddot{{a}}} | {eq:\dddot{{a}}} | three dots (amsmath)
+{c:\breve{{a}}} | {eq:\breve{{a}}} | breve
+{c:\bar{{a}}} | {eq:\bar{{a}}} | bar
+{c:\vec{{a}}} | {eq:\vec{{a}}} | vector arrow
+{c:\mathring{{a}}} | {eq:\mathring{{a}}} | ring
+{c:\widehat{{abc}}} | {eq:\widehat{{abc}}} | hat over several letters
+{c:\widetilde{{abc}}} | {eq:\widetilde{{abc}}} | tilde over several letters
+{c:\overline{{abc}}} | {eq:\overline{{abc}}} | line over
+{c:\underline{{abc}}} | {eq:\underline{{abc}}} | line under
+{c:\overbrace{{a+b+c}}} | {eq:\overbrace{{a+b+c}}} | brace over
+{c:\underbrace{{a+b+c}}} | {eq:\underbrace{{a+b+c}}} | brace under
+{c:\overbrace{{a+b+c}}^{{3}}} | {eq:\overbrace{{a+b+c}}^{{3}}} | label on a
+ brace over
+{c:\underbrace{{a+b+c}}_{{3}}} | {eq:\underbrace{{a+b+c}}_{{3}}} | label on a
+ brace under
+{c:\overrightarrow{{AB}}} | {eq:\overrightarrow{{AB}}} | long arrow over
+{c:\overleftarrow{{AB}}} | {eq:\overleftarrow{{AB}}} | long arrow left over
+{c:\overleftrightarrow{{AB}}} | {eq:\overleftrightarrow{{AB}}} | double arrow
+ over
+{c:\underrightarrow{{AB}}} | {eq:\underrightarrow{{AB}}} | long arrow under
+{c:\xrightarrow{{f}}} | {eq:\xrightarrow{{f}}} | arrow that stretches over a
+ label
+{c:\xleftarrow[g]{{f}}} | {eq:\xleftarrow[g]{{f}}} | arrow with labels over
+ and under
+{c:\xrightarrow{{n\to\infty}}} | {eq:\xrightarrow{{n\to\infty}}} | arrow with
+ an expression
+{c:\stackrel{{def}}{{=}}} | {eq:\stackrel{{def}}{{=}}} | text over a relation
+{c:\overset{{*}}{{\to}}} | {eq:\overset{{*}}{{\to}}} | symbol over a symbol
+{c:\underset{{x}}{{\min}}} | {eq:\underset{{x}}{{\min}}} | symbol under a
+ symbol
+{c:\hat\imath} | {eq:\hat\imath} | accent on a dotless letter
+.end
+
+On an i or a j use {c:\imath} or {c:\jmath}, so that the dot does not collide
+with the accent.  The accents of text ({c:\'e} and the others) and letters with
+accents that are typed on the keyboard cannot be used in math: TeX stops with
+the message "Please use {c:\mathaccent} for accents in math mode" (and the
+characters above 127 are rejected by the printing program in any case).  For
+accented
+words in a formula put them in {c:\text}.
+
+.h2 Text and fonts [eq-fonts]
+.ix Text and fonts
+Letters in a formula are variables and are set in the math italic.  The font
+commands change that for their argument. {c:\text} sets its argument as text,
+in the font of the text round the equation and with real spaces; it is the
+command for words in a formula.  The font commands for math change the letters,
+digits and (for {c:\boldsymbol}) the symbols, but do not make words with
+spaces.  The size commands {c:\displaystyle}, {c:\textstyle}, {c:\scriptstyle}
+and {c:\scriptscriptstyle} choose the style of what follows them in the group.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:\mathrm{{d}}x} | {eq:\mathrm{{d}}x} | upright roman
+{c:\mathbf{{v}}} | {eq:\mathbf{{v}}} | bold
+{c:\mathit{{diff}}} | {eq:\mathit{{diff}}} | italic text (not the math italic)
+{c:\mathsf{{A}}} | {eq:\mathsf{{A}}} | sans serif
+{c:\mathtt{{A}}} | {eq:\mathtt{{A}}} | typewriter
+{c:\mathcal{{L}}} | {eq:\mathcal{{L}}} | script capitals
+{c:\mathbb{{R}}} | {eq:\mathbb{{R}}} | blackboard bold
+{c:\mathfrak{{g}}} | {eq:\mathfrak{{g}}} | Fraktur
+{c:\boldsymbol{{\alpha}}} | {eq:\boldsymbol{{\alpha}}} | bold symbol, Greek
+ included
+{c:\mathnormal{{x}}} | {eq:\mathnormal{{x}}} | the normal math italic
+{c:\text{{if }} x>0} | {eq:\text{{if }} x>0} | text in the font of the text
+ round it
+{c:\text{{ and }}} | {eq:\text{{ and }}} | text between formulas
+{c:\mbox{{for all }} x} | {eq:\mbox{{for all }} x} | text box, same effect as
+ \text outside scripts
+{c:\textrm{{rm}}} | {eq:\textrm{{rm}}} | text in roman
+{c:\textbf{{bold}}} | {eq:\textbf{{bold}}} | text in bold
+{c:\textit{{italic}}} | {eq:\textit{{italic}}} | text in italics
+{c:\textsf{{sans}}} | {eq:\textsf{{sans}}} | text in sans serif
+{c:\texttt{{mono}}} | {eq:\texttt{{mono}}} | text in typewriter
+{c:\operatorname{{Hom}}(A,B)} | {eq:\operatorname{{Hom}}(A,B)} | a word as an
+ operator
+{c:x \in \mathbb{{R}}^n} | {eq:x \in \mathbb{{R}}^n} | real n-space
+{c:\mathcal{{F}}\{{f\}}(\omega)} | {eq:\mathcal{{F}}\{{f\}}(\omega)} | script
+ with braces
+{c:\mathrm{{e}}^{{\mathrm{{i}}\pi}}+1=0} |
+ {eq:\mathrm{{e}}^{{\mathrm{{i}}\pi}}+1=0} | upright constants
+{c:\text{{area}} = \pi r^2} | {eq:\text{{area}} = \pi r^2} | word in a formula
+{c:f(x)=\begin{{cases}} 1 & \text{{if }} x>0 \\ 0 &
+ \text{{otherwise}}\end{{cases}}} | {eq:f(x)=\begin{{cases}} 1 & \text{{if }}
+ x>0 \\ 0 & \text{{otherwise}}\end{{cases}}} | text in a case table
+{c:\displaystyle\sum_{{i=1}}^n} | {eq:\displaystyle\sum_{{i=1}}^n} | display
+ style
+{c:\textstyle\sum_{{i=1}}^n} | {eq:\textstyle\sum_{{i=1}}^n} | text style
+{c:\scriptstyle x} | {eq:\scriptstyle x} | script size
+{c:\scriptscriptstyle x} | {eq:\scriptscriptstyle x} | script of script size
+{c:\boxed{{E=mc^2}}} | {eq:\boxed{{E=mc^2}}} | a frame
+{c:\fbox{{text}}} | {eq:\fbox{{text}}} | a frame round text
+{c:\smash{{\frac{{a}}{{b}}}}} | {eq:\smash{{\frac{{a}}{{b}}}}} | hide the
+ height and depth
+.end
+
+Bold Greek letters need {c:\boldsymbol}: {c:\mathbf} leaves the Greek letters
+as they are.  The letters of {c:\mathcal} and of {c:\mathbb} are meant for
+capitals (the small letters of them are not the ones wanted); {c:\mathfrak}
+has both cases.
+
+.h2 Spacing [eq-spacing]
+.ix Spacing
+TeX makes the space of a formula from the kind of each sign: an ordinary sign
+(a letter, a digit) has none, an operator has a medium space on both sides, a
+relation a thick space, a comma a thin space after it.  The spaces that you
+type are ignored.  To change the result there are fixed spaces ({c:\,}, {c:\:},
+{c:\;}, {c:\quad}, {c:\qquad}), a negative space ({c:\!}), and commands that
+blank an area of the size of their argument ({c:\phantom}, {c:\hphantom},
+{c:\vphantom}). {c:\mathbin}, {c:\mathrel}, {c:\mathop}, {c:\mathopen},
+{c:\mathclose}, {c:\mathord}, {c:\mathpunct} and {c:\mathinner} tell TeX what
+kind of sign the argument is, and so which space it gets. {c:\hspace} and
+{c:\vspace} are refused in a printed equation ({n:eq-refused}).
+
+.table 25 15 18
+Source | Result | Meaning
+{c:a\,b} | {eq:a\,b} | thin space (3/18 em)
+{c:a\:b} | {eq:a\:b} | medium space (4/18 em)
+{c:a\;b} | {eq:a\;b} | thick space (5/18 em)
+{c:a\!b} | {eq:a\!b} | negative thin space
+{c:a\ b} | {eq:a\ b} | space of the text font
+{c:a\quad b} | {eq:a\quad b} | one em
+{c:a\qquad b} | {eq:a\qquad b} | two em
+{c:a \thinspace b} | {eq:a \thinspace b} | thin space, the TeX name
+{c:a \medspace b} | {eq:a \medspace b} | medium space, the amsmath name
+{c:a \thickspace b} | {eq:a \thickspace b} | thick space, the amsmath name
+{c:a \negthinspace b} | {eq:a \negthinspace b} | negative thin space, the TeX
+ name
+{c:a \negmedspace b} | {eq:a \negmedspace b} | negative medium space
+{c:a \negthickspace b} | {eq:a \negthickspace b} | negative thick space
+{c:a \phantom{{xyz}} b} | {eq:a \phantom{{xyz}} b} | blank as wide and high as
+ its contents
+{c:a \hphantom{{xyz}} b} | {eq:a \hphantom{{xyz}} b} | blank as wide as its
+ contents
+{c:x\vphantom{{\frac{{1}}{{2}}}}} | {eq:x\vphantom{{\frac{{1}}{{2}}}}} | blank
+ as high as its contents
+{c:\mathstrut} | {eq:\mathstrut} | blank as high as a bracket
+{c:a~b} | {eq:a~b} | tie: a space of the text font
+{c:a\mathbin{{\#}}b} | {eq:a\mathbin{{\#}}b} | set a symbol as a binary
+ operator
+{c:a\mathrel{{R}}b} | {eq:a\mathrel{{R}}b} | set a letter as a relation
+{c:\mathop{{\mathrm{{Res}}}}_{{z=0}}} | {eq:\mathop{{\mathrm{{Res}}}}_{{z=0}}}
+ | set a word as an operator with limits
+{c:\mathopen{{[}}\mathclose{{]}}} | {eq:\mathopen{{[}}\mathclose{{]}}} | open
+ and close
+{c:\mathord{{+}}} | {eq:\mathord{{+}}} | set a sign as an ordinary symbol
+{c:\mathpunct{{;}}} | {eq:\mathpunct{{;}}} | set as punctuation
+{c:\mathinner{{\ldots}}} | {eq:\mathinner{{\ldots}}} | inner
+{c:a{{+}}b} | {eq:a{{+}}b} | a group makes the sign ordinary: no spaces
+{c:a+b} | {eq:a+b} | the spaces are made by the sign
+{c:a = b} | {eq:a = b} | the spaces that you type are ignored
+.end
+
+Between the integral and the differential use the thin space {c:\,}: {eq:\int
+f(x)\,dx} against {eq:\int f(x)dx}.
+
+.h2 Matrices, arrays and alignment [eq-structures]
+.ix Matrices, arrays and alignment
+The environments are begun with {c:\begin{{name}}} and ended with
+{c:\end{{name}}}; a row ends with two backslashes, and the cells of a row are
+separated by the sign &. The environments that are allowed in a printed
+equation are matrix, pmatrix, bmatrix, Bmatrix, vmatrix, Vmatrix, cases,
+array, aligned, gathered, split, smallmatrix and subarray; any other name
+makes the equation print in the long form ({n:eq-refused}).  The name split is
+on the list but is no use: it needs a displayed formula of amsmath round it,
+which an equation of Strata does not have, and TeX stops with the message
+"Package amsmath Error: {c:\begin}{{split}} won't work here"; use aligned in
+its place.  The matrix environments have no column specification: every column
+is centered. {c:array} has one, a letter for each column: c, l or r, and a bar
+for a vertical rule. {c:\hline} draws a horizontal rule. {c:aligned} aligns
+the rows at the sign & (an & before the sign), and {c:gathered} centers them.
+{c:cases} is a brace with a column of values and a column of conditions.  The
+results are set in display size.
+
+The tables of this group typeset the result as {x:eq-scripts} says.
+
+.table 25 15 18
+Source | Result | Meaning
+{c:\begin{{matrix}} a & b \\ c & d \end{{matrix}}} | {eq:\displaystyle
+ \begin{{matrix}} a & b \\ c & d \end{{matrix}}} | matrix, no delimiters
+{c:\begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}}} | {eq:\displaystyle
+ \begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}}} | matrix in parentheses
+{c:\begin{{bmatrix}} a & b \\ c & d \end{{bmatrix}}} | {eq:\displaystyle
+ \begin{{bmatrix}} a & b \\ c & d \end{{bmatrix}}} | matrix in square brackets
+{c:\begin{{Bmatrix}} a & b \\ c & d \end{{Bmatrix}}} | {eq:\displaystyle
+ \begin{{Bmatrix}} a & b \\ c & d \end{{Bmatrix}}} | matrix in braces
+{c:\begin{{vmatrix}} a & b \\ c & d \end{{vmatrix}}} | {eq:\displaystyle
+ \begin{{vmatrix}} a & b \\ c & d \end{{vmatrix}}} | determinant bars
+{c:\begin{{Vmatrix}} a & b \\ c & d \end{{Vmatrix}}} | {eq:\displaystyle
+ \begin{{Vmatrix}} a & b \\ c & d \end{{Vmatrix}}} | norm bars
+{c:\begin{{smallmatrix}} a & b \\ c & d \end{{smallmatrix}}} |
+ {eq:\displaystyle \begin{{smallmatrix}} a & b \\ c & d \end{{smallmatrix}}} |
+ small matrix for a line of text
+{c:\left(\begin{{smallmatrix}} a & b \\ c & d \end{{smallmatrix}}\right)} |
+ {eq:\displaystyle \left(\begin{{smallmatrix}} a & b \\ c & d
+ \end{{smallmatrix}}\right)} | small matrix with delimiters
+{c:\begin{{pmatrix}} 1 & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots
+ & 1 \end{{pmatrix}}} | {eq:\displaystyle \begin{{pmatrix}} 1 & \cdots & 0 \\
+ \vdots & \ddots & \vdots \\ 0 & \cdots & 1 \end{{pmatrix}}} | matrix with
+ dots
+{c:\begin{{array}}{{ccc}} a & b & c \\ d & e & f \end{{array}}} |
+ {eq:\displaystyle \begin{{array}}{{ccc}} a & b & c \\ d & e & f
+ \end{{array}}} | array: a letter per column, c l or r
+{c:\begin{{array}}{{lr}} x & 1 \\ yy & 22 \end{{array}}} | {eq:\displaystyle
+ \begin{{array}}{{lr}} x & 1 \\ yy & 22 \end{{array}}} | left and right
+ aligned columns
+{c:\begin{{array}}{{c|c}} a & b \\ \hline c & d \end{{array}}} |
+ {eq:\displaystyle \begin{{array}}{{c|c}} a & b \\ \hline c & d \end{{array}}}
+ | rules between columns and rows
+{c:\left(\begin{{array}}{{cc|c}} 1 & 0 & 2 \\ 0 & 1 & 3 \end{{array}}\right)}
+ | {eq:\displaystyle \left(\begin{{array}}{{cc|c}} 1 & 0 & 2 \\ 0 & 1 & 3
+ \end{{array}}\right)} | augmented matrix
+{c:\begin{{cases}} x & x\ge 0 \\ -x & x<0 \end{{cases}}} | {eq:\displaystyle
+ \begin{{cases}} x & x\ge 0 \\ -x & x<0 \end{{cases}}} | cases
+{c:|x|=\begin{{cases}} x & \text{{if }} x\ge 0 \\ -x & \text{{if }} x<0
+ \end{{cases}}} | {eq:\displaystyle |x|=\begin{{cases}} x & \text{{if }} x\ge
+ 0 \\ -x & \text{{if }} x<0 \end{{cases}}} | function by cases
+{c:\begin{{aligned}} a &= b+c \\ &= d \end{{aligned}}} | {eq:\displaystyle
+ \begin{{aligned}} a &= b+c \\ &= d \end{{aligned}}} | lines aligned at the
+ sign &
+{c:\begin{{aligned}} x &= 1 & y &= 2 \\ z &= 3 & w &= 4 \end{{aligned}}} |
+ {eq:\displaystyle \begin{{aligned}} x &= 1 & y &= 2 \\ z &= 3 & w &= 4
+ \end{{aligned}}} | two pairs of columns
+{c:\begin{{gathered}} a=b \\ c=d \end{{gathered}}} | {eq:\displaystyle
+ \begin{{gathered}} a=b \\ c=d \end{{gathered}}} | lines centered
+{c:\begin{{matrix}}a\\b\end{{matrix}}} | {eq:\displaystyle
+ \begin{{matrix}}a\\b\end{{matrix}}} | rows separated by two backslashes
+{c:\substack{{i<n\\ j<m}}} | {eq:\displaystyle \substack{{i<n\\ j<m}}} |
+ stacked lines under a limit
+{c:\begin{{subarray}}{{l}} i<n \\ j<m \end{{subarray}}} | {eq:\displaystyle
+ \begin{{subarray}}{{l}} i<n \\ j<m \end{{subarray}}} | stacked lines, left
+ aligned
+{c:\begin{{pmatrix}} \begin{{matrix}} 1 & 0 \\ 0 & 1\end{{matrix}} & 0 \\ 0 &
+ 2 \end{{pmatrix}}} | {eq:\displaystyle \begin{{pmatrix}} \begin{{matrix}} 1 &
+ 0 \\ 0 & 1\end{{matrix}} & 0 \\ 0 & 2 \end{{pmatrix}}} | matrix of matrices
+.end
+
+The environments of amsmath that make a whole displayed formula with its own
+number (equation, align, gather, multline, eqnarray) are not allowed: the
+equation is already displayed by Strata and is not numbered.  The command
+{c:\tag} makes TeX stop with an error.

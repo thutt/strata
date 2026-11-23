@@ -1,0 +1,25 @@
+
+--------------------------------- Justification --------------------------------
+
+Justification settings made on the local column or block (F6) and global format
+(F10 Format) panels affect the way text aligns with the margins when you print
+or preview a document.
+
+Left:   Aligns text with the left margin, leaving the right margin ragged.
+
+Right:  Aligns text with the right margin, leaving the left margin ragged.
+
+Center: Centers text between the margins.
+
+Even:   Aligns text with both the left and right margins. Even justification
+        is not ordinarily displayed on the screen, but is formatted during
+        final printing. You can display even justification on the screen by 
+        changing the Display Even Justification setting on the Menu (F10) 
+        Global Options panel to Yes.
+--------------------------------------------------------------------------------
+
+# The justification setting for the current block or column is displayed on the
+  Current Block or Column Format panel (F6) and on the expanded Status line.
+--------------------------------------------------------------------------------
+Global Format     Current Block Format     Current Column Format     Status Line
+      Ruler          Options          Keyboard Summary          Help Index

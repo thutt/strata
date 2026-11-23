@@ -1,0 +1,1407 @@
+# Chapter 3: Edit.  The chapter is kept in several sources: the first holds
+# the introduction, the edit screen, the keyboard, the modes and the menus; the
+# others hold the work on blocks and sections, and the other commands.
+.doc Edit
+.chapter 3
+.h1 Edit [edit]
+.ix Edit
+.ix Editor
+.ix Edit screen
+.ix Text area
+.ix Status line
+.ix Ruler
+.ix Message line
+.ix Key labels
+Edit is the part of Strata in which the text of a document is typed, read,
+changed and arranged.  It is the Editor, in its terminal version and in its
+X11 version, and it is where a document is shown whenever it is opened from
+the Document Manager ({n:str}).
+
+The chapter has two parts.  The first describes the screen, the keys, the
+modes and the menus.  The second describes the commands, by the thing that
+each one works on: blocks and columns; pieces of the document; sections;
+markers; search and replace; sort and count; macros and the library; the
+options; and Quit.
+
+The chapter in brief:
+.table 18 42
+Section | What it describes
+{x:edit-screen} | The screen: status line, ruler, text, key labels.
+{x:edit-keys} | Typing, special characters, deleting and moving.
+{x:edit-modes} | Structured, unstructured, section, title page.
+{x:edit-menus} | The {k:F12} menu bar, the pop-up lists and prompts.
+{x:edit-blocks} | Append a column, a block or a section; join.
+{x:edit-copy} | Copy, cut and delete a text, column, block or section.
+{x:edit-b-split} | Split a column, a block or a section.
+{x:edit-b-move} | Move a piece; promote and demote a section.
+{x:edit-b-paste} | Paste the clipboard.
+{x:edit-sections} | Contract, expand and Go To.
+{x:edit-b-outlines} | Show the document down to a level.
+{x:edit-b-marker} | Putting markers into the text.
+{x:edit-b-search} | Search.
+{x:edit-c-find-error} | Find Next Error, the second method of Search.
+{x:edit-b-replace} | Replace.
+{x:edit-b-sort} | Sort the sections or blocks.
+{x:edit-b-words} | Count the words.
+{x:edit-c-tools} | The macros and the library of the Tools menu.
+{x:edit-b-options} | The settings of the screen and the backup file.
+{x:edit-b-quit} | Leaving the Editor.
+.end
+
+.h2 The Edit Screen [edit-screen]
+.ix Edit screen
+.ix Screen of the editor
+.ix Text width
+.ix Screen size
+.pic pictures/edit-a-screen.png 5.5 The edit screen of a structured document: status line, ruler and text.
+The edit screen is where the text of a document is typed and revised.  It
+is reached by choosing Edit / Preview / Print Document in the Document Manager
+and giving the name of the
+document, or by Retrieve and New in the File menu.  A file that does not
+exist is created; a prompt of the Document Manager offers the choice between a
+structured and an unstructured document ({n:view-make-kind}).
+
+Every command of the Editor has a key, and nothing on the screen has to be
+pointed at.  The manual names the keys as they are written on the keys of a
+PC keyboard; where the terminal version cannot receive a key that the X11
+version can, the text says so and names the key that works in both.
+
+The screen is divided into rows, from the top:
+.table 14 46
+Row | What it holds
+Status line | One row, in the colors of the status line: file, attribute,
+ position, section, mode.
+Expanded line | One row, only when Expanded Status Line is Yes.
+Ruler | One row: the tab stops and the left indent of the column.
+Text area | All the rows that remain: the document.
+Key labels | Two rows with the labels of the function keys (when Display
+ On-Screen Help is Yes).
+.end
+The message line is not a row of its own.  When the key labels are shown a
+message of the Editor replaces the lower of the two label rows, in bold, for
+as long as the next key has not been pressed; when the labels are switched
+off, a message gets one row at the foot of the screen and the text area is
+one row longer while there is no message.  The next key clears the message.
+
+The Editor uses the whole terminal or window.  The text is laid out in at
+most 80 characters per line, whatever the width of the screen, and in at
+least 40: on a window of 100 columns the text area is 80 characters wide and
+the rest of every row is empty; on a window of 30 columns the text is laid out
+in 40 characters and the right part is cut.  A screen of 25 rows leaves 21
+rows for the text with the ruler and the key labels on and 20 with the
+expanded line.
+
+.h3 The Status Line [edit-status]
+.ix Status line fields
+.ix Modified document, asterisk
+.ix Attr
+.ix Pos
+.ix Sect
+.ix OVR
+.ix Mode, status line
+.ix STRUCTURED EDIT
+.ix UNSTRUCTURED EDIT
+.ix SECTION EDIT
+.ix TITLE PAGE EDIT
+The status line is the top row of the screen.  It shows what is true of the
+place where the cursor is.  From left to right:
+.table 13 47
+Field | Meaning
+Modified flag | An asterisk before the name of the file when the document
+ has been changed since it was last saved or retrieved; otherwise a blank.
+File name | The name of the document without its directory.  A document
+ that has no name yet shows (new).  The name is padded to 12 positions.  A
+ name that does not fit in the room that the line has left (at least 12
+ positions, at most 60) is shown by its end, with three periods in front, so
+ that the other fields keep their place.
+Attr: | The attribute of the text at the cursor: Normal, Bold, Italic,
+ Under, or a mix such as Bold Italic.
+Pos: | The position of the cursor, counted from 1 at the left edge of
+ the current column of the current block.
+Sect: | The number of the section that the cursor is in, such as 2 or
+ 2.1.2.  Shown in a structured document only.
+OVR | Shown while Overtype is on ({n:edit-b-overtype}).
+Mode | At the right edge: STRUCTURED EDIT, UNSTRUCTURED EDIT, SECTION EDIT,
+ or the name of an editor of a note ({n:edit-modes}).
+.end
+.h4 The modified flag
+The asterisk appears as soon as the document is touched: when a character
+is typed or deleted, when a block or a section is added, cut, pasted or
+joined, when the format of a block is changed and also when sections are
+contracted or expanded (the state of the sections is saved with the
+document).  It goes when the document is saved ({k:Ctrl-S}) and when another
+document is retrieved or begun.  Quit prompts for what to do when the asterisk
+is
+shown ({n:edit-b-quit}).  Autosave (on by default, every 120 seconds; the
+Setup of the Document Manager changes it) saves a changed document under its
+own name when the interval has passed, and the asterisk goes with it.
+.h4 Attr
+The attribute is the last attribute change that stands in front of the cursor
+in the column.  {k:Ctrl-B}, {k:Ctrl-U}, {k:Alt-I} and {k:Ctrl-N} put such a
+change into the text ({n:edit-typing}).  The names are Normal, Bold, Italic,
+Under (the underscore), Sub and Super (subscript and superscript, which a
+document from elsewhere can have) and Special (any other attribute); when
+several are on at once they are written one after the other, such as "Bold
+Italic".  The field does not show markers: the
+cursor on a marker shows the attribute of the text before it.
+.h4 Pos
+Pos counts the positions from the left edge of the column that the cursor is
+in: a headline begins to the right of its section tag, so the cursor on the
+first letter of the headline "1 Quarterly report" shows Pos: 3, and the
+indent of a paragraph counts in the same way.  A new column begins again
+at 1.  Pos is a position on the screen, not a count of characters: a tab
+that takes the cursor from position 6 to position 11 moves Pos by five.  The
+number can be as large as the width of the column.
+.h4 Sect
+The section number is built from the position of the section in the tree:
+the first top-level section is 1, its first subsection is 1.1, and so on.
+The numbers follow the tree when sections are added, moved, cut or
+pasted.  An unstructured document shows no Sect field, because the whole text
+is one section.  The headline of the section and its blocks all show the same
+number.
+.h4 The expanded line
+.ix Expanded Status Line
+.ix Just
+.ix Indent
+.ix L, left block indent
+.ix Headline, status line
+When Expanded Status Line is Yes in Global, Options ({n:edit-b-options}), a
+second row follows the status line and shows the format that applies to the
+block and column under the cursor, after all the levels of format have been
+resolved:
+.table 9 51
+Field | Values and meaning
+Just: | Left, Right, Center or Even: the justification of the column.
+Indent: | None, First, All but First or All: which lines are indented.
+L: | The left indent of the block, in characters.
+Headline | Shown when the block under the cursor is a headline.
+.end
+.code
+ report.doc   Attr: Normal       Pos: 3   Sect: 1              STRUCTURED EDIT
+ Just: Left    Indent: None           L: 0   Headline
+.end
+The switch is kept with the user's other settings, so the next session of
+the Editor starts in the same way.
+
+.h3 The Ruler [edit-ruler]
+.ix Ruler
+.ix Tab stops on the ruler
+.ix Left block indent on the ruler
+.ix Tab types
+The ruler is the row under the status line (or under the expanded line).  It
+is drawn in dots, one for each position, and shows the format of the column
+that the cursor is in: when the cursor moves to another column of the block,
+the ruler moves with it so that its first position is above the left edge of
+that column.  It cannot be switched off.
+.table 13 47
+Symbol | Meaning
+dot | A position of the column, with nothing set.
+small block | A position of the left indent of the block (the L: value).
+right arrowhead | A left tab stop: the text after the tab begins here.
+left arrowhead | A right tab stop: the text after the tab ends here.
+^ | A center tab stop.
+. | A decimal tab stop: the decimal point stands here.
+, | A decimal tab stop that uses the comma.
+# | A tab stop of the type N.
+.end
+The stops come from the format of the column (the tab stops of Global,
+Format or of the local format, {n:format}) and are counted from the
+left indent of the block.  The ruler of a headline can differ from that of a
+paragraph in the same document, because they have separate formats: in the
+sample document of the manual the headline has no tab stop and the text has
+one at position 5.  A tab typed with {k:Tab} goes to the next stop to the
+right of the cursor.
+
+.h3 The text area [edit-text-area]
+.ix Text area
+.ix End-of-line character
+.ix Tab character, display
+.ix Block rule
+.ix Section rule
+.ix Column separator
+.ix Highlight, display
+.ix Cursor, display
+.ix Dots for spaces
+.pic pictures/edit-a-flat.png 5 An unstructured document with a tab and the end-of-line characters.
+The text area shows the document from the line at the top down to the
+bottom of the screen.  The document is a column of blocks, and a block is
+made of one or more columns side by side ({n:view} explains the elements).
+Everything in the area is drawn from those elements:
+.table 17 43
+What is drawn | How it looks
+Text | In the text color; a line longer than its column wraps.
+End-of-line | A left arrowhead after the last character of each line.
+Tab | A right arrowhead, grey, where a tab was typed.
+Block rule | A thin line across the area between two blocks.
+Section rule | A double line over the headline of a section.
+Headline | In bold, after the section tag (1, 2.1 ...).
+Indent of a level | Three positions for every level of the section.
+Column separator | A dim colon between two columns of a block.
+Marker | In the form of its label, in a color of its own.
+Cursor | An amber block (X11) or the cursor of the terminal.
+Highlight | The area chosen for Copy, Cut, Move: the colors of the highlight.
+Fold mark | A + or * in the section rule ({n:edit-contract}).
+.end
+.h4 The end-of-line and tab characters
+The arrowheads that end a line and mark a tab are not text: they show the
+places where the document holds an end of line and a tab.  They are the
+default.  Global, Options has two settings for them: Display Tab &
+End-of-Line Characters? (Yes by default) and Display Dots for Spaces? (No by
+default), which draws a dot in place of every space ({n:edit-b-options}).
+Every block ends with an end-of-line character; an empty block is one
+arrowhead on a line.  Enter adds another one inside the block.
+.h4 The rules between the blocks
+Between two blocks the area draws a thin rule across the width of the text.
+In a structured document, the rule above the first block of a section (its
+headline) is double and starts three positions further to the right for each
+level of the section.  The double rule is also where the + or * of a
+contracted section is drawn.  An unstructured document has thin rules only.
+.h4 Several columns
+A block of several columns is drawn with its columns side by side, each
+column laid out in its own width, with a dim colon between two columns.
+The ruler and Pos follow the column that holds the cursor.
+.pic pictures/edit-a-blocks.png 5 A block of two columns.  The ruler is above the second column, where the cursor is.
+.h4 The cursor and the highlight
+The cursor is the one position where typing goes.  On the end-of-line
+character at the end of a column it is on the arrowhead.  While an area is
+highlighted for Copy, Cut, Delete or Move the area is drawn in the
+colors of the highlight and grows or shrinks as the cursor moves
+({n:edit-highlight}).
+.h4 What scrolls
+The text area scrolls by lines when the cursor reaches the edge: with a
+text area of nine rows or more the Editor keeps two rows between the cursor
+and the edge, so the lines above and below the cursor stay in view; with
+fewer rows the cursor can reach the edge.  {k:PgUp} and {k:PgDn} move the
+cursor by half the number of rows of the area, and the area follows.
+
+.h3 The key labels [edit-labels]
+.ix Key labels
+.ix Function key labels
+.ix Display On-Screen Help
+.ix On-screen help
+.ix Alt labels
+.ix Ctrl labels
+The two rows at the foot of the screen show what {k:F1} to {k:F12} do, six
+keys in each row.  They are on
+when Display On-Screen Help is Yes in Global, Options (the default).  The
+first row shows {k:F1}, {k:F3}, {k:F5}, {k:F7}, {k:F9} and {k:F11}, the second
+{k:F2}, {k:F4}, {k:F6}, {k:F8}, {k:F10} and {k:F12}.  A key that has no command
+has an empty label.
+In the X11 version the labels change while a modifier key is held down; a
+terminal does not report a modifier key by itself, so the usual labels are
+always shown.  The labels of the keys that have a command are:
+.table 8 8 12 16
+Key | None | Ctrl | Alt
+{k:F1} | Help | Learn |
+{k:F2} | Split | Math | Append
+{k:F3} | Copy | Lib Copy | Join
+{k:F4} | Cut | Lib Cut | Delete
+{k:F5} | Paste | Lib Paste | Overtype
+{k:F6} | Format | Case | Set Attr
+{k:F7} | Move | Prev Error | Go To
+{k:F8} | Table | Next Error | Border
+{k:F9} | Search | Again | Replace
+{k:F10} | | Undo |
+{k:F11} | | Redo |
+{k:F12} | Menu | Marker | Marker
+.end
+When the Shift key is held down all the labels are empty.  Alt wins over Ctrl
+and Ctrl over Shift when more than one is held.  {k:Alt-F1}, {k:Alt-F10} and
+{k:Alt-F11} have no label and no command: pressing one gives the message
+"Alt-F1: not available" (with the number of the key).
+{x:edit-key-tables} lists the command behind each label.
+
+.h2 Using the keyboard to edit [edit-keys]
+.ix Keyboard
+.ix Keys, editing
+.ix Keys, every one
+.ix Function keys
+.ix Terminal keys
+.ix X11 keys
+.ix Ctrl-F menu
+The tables below list the keys of the edit screen.  Where an entry says
+"terminal" the key is received by the terminal version only when the
+terminal sends it on: {c:xterm} and the terminals that follow it do, and some
+others do not, and then the key acts as the key
+without the modifier.  Some terminals and window managers keep keys for
+themselves; the last part of the section lists them and the keys that always
+work.  If a key does nothing useful in your terminal, run the Editor in the
+X11 version, or use Go To ({n:edit-goto}) and the Alt commands menu
+({n:edit-altmenu}).
+
+.h3 Typing Text [edit-typing]
+.ix Typing text
+.ix Characters, typing
+.ix Enter
+.ix Tab
+.ix Character set
+.ix Attributes, keys
+.ix Bold
+.ix Italics
+.ix Underscore
+.ix Normal text
+.ix Ctrl-B
+.ix Ctrl-U
+.ix Ctrl-N
+.ix Alt-I
+.ix Ctrl-H
+.ix Hanging indent
+Text is typed at the cursor.  A key that makes a character puts it into the
+text, in front of the cursor, and the cursor moves past it.  The text
+after it is pushed to the right (or, in Overtype mode, replaced; {n:edit-b-overtype}).  The text wraps by itself at the edge of the column; no
+key is pressed at the end of a line.
+.table 17 43
+Key | What it does
+A character | Inserted at the cursor.
+{k:Enter} | Ends the line: an end-of-line is put in, in the block.
+{k:Tab} | Puts in a tab; the text goes to the next tab stop.
+{k:Ctrl-B} | Bold on, or off if it is on.
+{k:Alt-I} | Italics on or off (see below).
+{k:Ctrl-U} | Underscore on or off.
+{k:Ctrl-N} | Normal text: all attributes off.
+{k:Alt-F6} | The menu Set Attributes.
+{k:Ctrl-H} | Hanging indent at the cursor.
+{k:Alt-F12} | The Marker command ({n:edit-b-marker}).
+{k:Alt-F5} | Overtype on or off.
+.end
+.h4 Enter
+{k:Enter} puts an end-of-line character into the text and starts a new line
+in the same block.  It does not start a new block, a new section or a new
+paragraph in the sense of the format: the block is one unit for Copy, Cut,
+Join and the formats, and the lines that Enter makes belong to it.  A new
+block is made with {k:Ctrl-A} or {k:Ctrl-O}, a block is split in two with
+{k:Ctrl-V} or {k:F2}, and a new section with {k:Ins} ({n:edit-append}).  In a
+headline {k:Enter} makes a second line in the headline block.
+.h4 Tab
+{k:Tab} inserts a tab character, drawn as an arrowhead, and the text that
+follows moves to the next tab stop of the ruler to the right of the
+position of the tab.  The width of the tab follows the ruler whenever the
+text is laid out again.
+.h4 Ctrl-Shift-Space
+{k:Ctrl-Shift-Space} types a nonbreaking space ({n:edit-nbsp}).
+.h4 Alt-_
+{k:Alt-_} (Alt with the hyphen key and Shift) types a soft hyphen ({n:edit-shy}).
+.h4 Attributes
+The attribute keys do not mark a piece of text; they put an attribute
+change into the text at the cursor, and everything after it, up to the next
+change, has the attribute.  Type {k:Ctrl-B}, then the words, then
+{k:Ctrl-B} again to have a bold phrase; or mark the end with {k:Ctrl-N}.
+The change takes no room on the screen: {k:Del} and {k:Backspace} can
+remove it, and Copy and Cut carry it with the text.  {k:Ctrl-I} is the
+Tab key in both versions, so {k:Alt-I} is the key for italics.  A macro that is defined on an Alt-letter takes that key
+first ({n:edit-c-macro-learn}), so a macro on {k:Alt-I} replaces italics.
+The menu Set Attributes ({k:Alt-F6}, and Set Attribute in the Alt commands
+menu) has the same four choices:
+.table 16 44
+Choice | Effect
+Normal | The same as {k:Ctrl-N}.
+Bold | The same as {k:Ctrl-B}.
+Italics | The same as {k:Alt-I}.
+Underscore Words | The same as {k:Ctrl-U}.
+.end
+.h4 Hanging indent
+{k:Ctrl-H} sets a hanging indent for the block: the cursor is placed after
+the characters that are to hang (a bullet and a space, a number and a
+period), and {k:Ctrl-H} makes the left edge of the following lines line up
+with the text after them.  The block gets a tab stop at the position of the
+cursor and the indent type All but First.  With the cursor at the start of
+the line the message is "Type the hanging characters first, then press
+{k:Ctrl-H}" and nothing changes; on success the message is "Hanging indent set
+at N".  In a terminal that sends {k:Ctrl-H} for the Backspace key, set the
+terminal to send the Delete code (127) for Backspace, which is what the Editor
+requires.
+
+.h4 Text indent
+.ix Text indent
+.ix Ctrl-G
+{k:Ctrl-G} puts the text indent character at the cursor.  The character shows
+as a dim arrow.  The lines that continue the paragraph begin below the place
+after the character, until the end of the paragraph; the print does the same.
+Type a number or a bullet, then {k:Ctrl-G}, then the text: the text then hangs
+under the first word.  Delete takes the character out like any other
+character.
+
+.h3 Typing special characters [edit-special-chars]
+.ix Special characters
+.ix Accented letters
+.ix Character set, PC
+.ix Code page 437
+.ix Copyright sign
+.ix Dash, typing
+.ix Dead keys
+The characters of a document are those of the PC character set, code page
+437 ({n:appchar} lists them).  A special character is typed like any other
+letter: with the key that the keyboard layout gives it.
+.table 25 35
+Where the character comes from | Result
+A key of the keyboard layout | The character, if the set has it.
+A dead key or a compose key of the system | In the terminal version the
+ same, once the system has put together the letter and sent it.  The X11
+ version cannot use dead keys and compose sequences; a key of the layout
+ that makes the letter does.
+A letter pasted in the terminal | The same as typing it.
+.end
+A character that the set does not hold is not put into the text.  The accented
+letters of Western Europe, the German sharp s, the Spanish
+inverted marks, the fractions one half and one quarter, the plus-minus sign,
+the degree sign and the micro sign are in the set, so both versions can type
+them.  The Greek letters of the set (the small letters alpha, delta,
+epsilon, pi, sigma, tau and phi, and the capitals Gamma, Theta, Sigma, Phi and
+Omega; the micro sign serves as the small mu), the infinity sign and the
+characters for boxes are in the set but the X11 version cannot type them from
+the keyboard; the terminal version takes them when they are pasted.  The
+other Greek letters, such as beta, small gamma, small theta and small omega,
+are not in the set and are lost.  The euro sign, the copyright and
+registered signs, the trademark sign and the typographic dashes and quotes
+are outside the set.  A symbol that the printed document
+needs and that the set lacks can be had with the Equation marker, which sets
+text in a mathematical style ({n:equations}), or with a Picture.
+
+A text that is pasted into the terminal version can lose the characters that
+the set does not have: look at the result when a text with special letters is
+pasted.
+
+.h3 Typing a Nonbreaking Space [edit-nbsp]
+.ix Nonbreaking space
+.ix Space, nonbreaking
+.ix Ctrl-Shift-Space
+.ix Words that stay on one line
+A nonbreaking space is a space that a line is never broken at.  Use it between
+the words that must stay on the same line: a title and a name ("Mr. Smith"), a
+number and its unit ("10 km"), the parts of a date, or a short word and the
+word that follows it.  Where an ordinary space lets the line end, the
+nonbreaking space moves both words to the next line.
+.table 23 37
+Point | Behavior
+Typing | Press {k:Ctrl-Shift-Space}.  The character is put in at the cursor
+ like any letter and, in overtype mode, replaces the character under the
+ cursor.  In a text field of a panel (for example the strings of Search and
+ Replace) the key types the same character.  In the X11 version {k:Ctrl-Space}
+ without {k:Shift} does nothing.  Most terminals send the
+ same code for {k:Ctrl-Shift-Space} and {k:Ctrl-Space} (and {k:Ctrl-@}); in the terminal
+ version all of them type the nonbreaking space.
+Keys of a terminal | A terminal that is set to report modified keys (the
+ setting is the terminal's, and its manual says how) sends
+ {k:Ctrl-Shift-Space} itself, and Strata takes it.  Without that setting
+ the three keys send the same code, and the result is the
+ same.
+On the screen | A small cap, like a bridge between the two words, so that it
+ can be told from a space.  It is moved over by the cursor keys as one
+ character.  The cap is only a mark on the screen: the print shows a space
+ that a line is never broken at.
+In a line | The line is not broken at it, on the screen and in the print.
+Pasting and Import | A no-break space that is pasted in the terminal, typed by
+ a keyboard layout that has the key for it, or read by Import (UTF-8 and
+ Latin-1 files have it) is the same character.
+Search and Replace | A search string that holds a nonbreaking space (typed with
+ {k:Ctrl-Shift-Space}) matches only a nonbreaking space; a string with a space
+ does not match one ({n:edit-b-replace}).  A replacement may hold it.
+Spell check and Thesaurus | It ends a word, like a space.
+Words and the count of words | It ends a word.
+Export | A nonbreaking space stays a nonbreaking space in a UTF-8 file, a
+ Latin-1 file and a file of the PC character set, and becomes a space in a 7
+ bit file ({n:file-export}).
+Macros | A macro keeps the key and plays it back.
+.end
+.h3 Typing a Soft Hyphen [edit-shy]
+.ix Soft hyphen
+.ix Hyphen, soft
+.ix Alt-_
+.ix Words, where they may be broken
+A soft hyphen marks a place where a word may be broken at the end of a line.
+Where TeX breaks a word in the wrong place, or does not know how to break it, type a
+soft hyphen at each place where it may be broken: pro-ject, or a name
+or a technical word.  The print breaks the word at a soft hyphen only when it is
+at the end of a line, and then prints a hyphen; elsewhere the word is whole and
+the mark is not seen.  A word with a soft hyphen is broken only where it has
+one.  For a word that comes again and again, the hyphenation list
+({n:str-spell-words-hyphen}) says it once for the whole print.
+.table 23 37
+Point | Behavior
+Typing | Press {k:Alt-_}, that is {k:Alt} with {k:Shift} and the hyphen key.  The
+ character is put in at the cursor like any letter and, in overtype mode,
+ replaces the character under the cursor.  A terminal sends the key as
+ {k:Esc} and the underscore, which needs the setting that makes {k:Alt} send
+ {k:Esc} ({n:appterm-esc}).  Where the terminal or the window manager does
+ not pass the key, press {k:Ctrl-F} and choose Soft hyphen (the last
+ entry, {n:view-ctrlf}); it works in every terminal.  {k:Alt--} without
+ {k:Shift} still contracts a section ({n:edit-contract}), and {k:Ctrl-/}
+ is Undo: neither types a soft hyphen.
+On the screen | A small triangle that points down, dim, between the two parts of
+ the word.  It takes one cell and the cursor moves over it as over one
+ character.  The screen never breaks a line at it: the mark shows where the
+ print may do it.  The triangle is only a mark on the screen.
+In the print | The word may be broken at it, and only at the soft hyphens that
+ the word has.  If the line does not end there, nothing is printed.
+Search and Replace | A search string goes through a soft hyphen of the text:
+ "hyphenation" finds "hy-phen-ation" with soft hyphens, and a replacement
+ takes the soft hyphens that were inside what was found.  Find at Soft Hyphen
+ finds them one by one, and Replace with Find at Soft Hyphen and an empty
+ replacement takes them all out ({n:edit-b-replace}).
+Spell check | The word is checked without its soft hyphens, so that a word that
+ is spelled right is not asked about because it is marked.
+Words and the count of words | A soft hyphen does not end a word and is not
+ counted as a character.
+Export | A soft hyphen is not written: a text file, the screen image and the
+ export for data have the word whole.
+Files | A soft hyphen is the character 1F in the text of a block,
+ as in other word processors of its kind; a document that has them can
+ be read and written again as it is.
+Macros | A macro keeps the key and plays it back.
+.end
+.h3 Deleting Text [edit-deleting]
+.ix Deleting text
+.ix Del
+.ix Backspace
+.ix Ctrl-D
+.ix Alt-Backspace
+.ix Delete a character
+.ix Delete a word
+.ix Delete a block
+.ix Cannot delete the only block
+.ix Cannot delete the only section
+.ix Nothing to join here
+These keys remove text without a highlight.  What is removed with a
+highlight is in {x:edit-copy}.
+.table 15 45
+Key | Removes
+{k:Del} | The character at the cursor.
+{k:Backspace} | The character before the cursor.
+{k:Ctrl-D} | The rest of the word and the spaces after it.
+{k:Alt-Backspace} | The word before the cursor.
+{k:Ctrl-K} | The block that holds the cursor (to the clipboard).
+{k:Ctrl-L} | The section that holds the cursor (to the clipboard).
+{k:Ctrl-X} | A piece of text, after highlighting (to the clipboard).
+{k:Alt-F4} | Text, column, block or section, after highlighting.
+.end
+.h4 Del
+{k:Del} removes the character at the cursor: a letter, a tab, an attribute
+change, a marker, or the end of a line inside the block (which joins the
+two lines).  At the end-of-line character that ends the last line of a
+column the key has a second meaning, which depends on what the block is:
+.table 25 35
+The cursor is at the end of | {k:Del} does
+An empty block of one column | Removes the block.
+A block of one column that has text | Joins the next block to it.
+The last column of a block of several | Joins the next block to it.
+A column that is not the last | Nothing.
+.end
+The join is the one of Join, Block ({n:edit-join}): the text of the next
+block follows the text of this one, the cursor stands at the place where they
+meet, and the next block disappears with its format.  When there is no next
+block in the section the message is "Nothing to join here".  When the empty
+block is the only block of its section the whole section is removed if it is
+possible; otherwise the message is "Cannot delete the only block" (in an
+unstructured document, or when the section has subsections) or "Cannot delete
+the only section" (when it is the only section of the document).  After the
+removal the cursor goes to the end of the section before it.
+.h4 Backspace
+{k:Backspace} removes the character before the cursor, whatever it is, and
+the cursor moves back.  At the start of the first column of a block of one
+column, whose previous item is a block of one column, the block is joined to
+the one before it (the text follows the text of the block before, and the
+cursor is at the junction).  The first paragraph after a
+headline is joined to the headline in the same way.  At the start of a headline, at the start
+of a column that is not the first, or when one of the two blocks has more than
+one column, nothing happens.
+.h4 Ctrl-D and Alt-Backspace
+{k:Ctrl-D} removes the word at the cursor from the cursor on, and the
+spaces and punctuation that follow it, up to the start of the next word.
+It does not take the end of the line.  On spaces, it removes the spaces up
+to the next word.  At an end of line that is not the last of the column it
+removes the end of line, joining the two lines.  {k:Alt-Backspace} removes
+backward: the spaces and punctuation before the cursor, then the word
+before them.  The cursor ends at the start of what was removed.
+.note For deleting, a word is a run of plain letters and digits.  For moving
+with {k:Ctrl-Left} and {k:Ctrl-Right} a word also contains accented letters
+and the other characters of the upper half of the set; so {k:Ctrl-D} stops at
+an accented letter where {k:Ctrl-Right} does not.
+
+.h3 Moving around the document [edit-moving]
+.ix Moving around
+.ix Cursor movement
+.ix Cursor keys
+.ix Arrow keys
+.ix Home
+.ix End
+.ix PgUp
+.ix PgDn
+.ix Ctrl-Left
+.ix Ctrl-Right
+.ix Ctrl-Home
+.ix Ctrl-End
+.ix Shift-Home
+.ix Shift-End
+.ix Shift-Up
+.ix Shift-Down
+.ix Shift-PgUp
+.ix Shift-PgDn
+.ix Shift-Left
+.ix Shift-Right
+.ix Word left
+.ix Word right
+.ix Beginning of document
+.ix End of document
+.ix Section keys
+The cursor is moved with the keys of the table.  The cursor is always on a
+block that can be seen: text hidden by Contract or by an outline, and text
+outside the section in Section edit, is passed over.
+.table 15 45
+Key | The cursor goes to
+{k:Left} | The previous character; across columns and blocks.
+{k:Right} | The next character; across columns and blocks.
+{k:Up} | The line above, in the same screen column.
+{k:Down} | The line below; on the last line, its end.
+{k:PgUp}, {k:PgDn} | Half a screen up, half a screen down.
+{k:Home} | The start of the screen line.
+{k:End} | The end of the screen line.
+{k:Ctrl-Left} | The start of the word before.
+{k:Ctrl-Right} | The start of the next word.
+{k:Ctrl-Home} | The start of the column.
+{k:Ctrl-End} | The end of the column.
+{k:Shift-Home} | The start of the document.
+{k:Shift-End} | The end of the document.
+{k:Shift-Up} | The headline of the section.
+{k:Shift-Down} | The headline of the next section.
+{k:Shift-PgUp} | The previous section of the same level.
+{k:Shift-PgDn} | The next section of the same level.
+{k:Shift-Left} | The previous column, then the parent section.
+{k:Shift-Right} | The next column, then the first subsection.
+{k:Alt-F7} | Go To: a section, the start or the end ({n:edit-goto}).
+{k:Alt-F8} | Border: lines around columns ({n:edit-c-border}).
+.end
+.h4 Left and Right
+{k:Left} moves back one character.  At the start of a column it goes to the
+end of the column before it in the same block; at the start of the first
+column it goes to the end of the last column of the block above.  {k:Right}
+is the same forward: at the end of a column it goes to the next column, and
+at the end of the last column to the first character of the next block.  At
+the start of the document and at its end the keys stay where they are.  An
+attribute change takes no room but is a character of the text: the cursor
+stops once on it, without moving on the screen.  A marker is one position of
+the text: the cursor stops on it.
+.h4 Up and Down
+{k:Up} and {k:Down} move one line of the screen.  The cursor keeps its
+screen column through a run of {k:Up} and {k:Down} keys, even when a short
+line lies in between, and returns to it on a long line; any other movement
+sets the column again.  In a block of several columns the cursor stays in
+its column while that column has lines.  At the first or the last line of a
+column it goes to the block above or below, into the column of that block
+that is nearest to the screen column.  {k:Down} on the last line of the
+document goes to the end of that line.  A displayed equation or picture is one
+line of the text ({n:edit-cursor-picture}).
+.h4 Home and End
+{k:Home} goes to the first character of the screen line and {k:End} to the
+last character of it.  A paragraph that wraps over four screen lines has four
+starts and four ends.  On the last line of a column, {k:End} stops on the
+end-of-line character.
+.h4 PgUp and PgDn
+{k:PgUp} and {k:PgDn} move up or down by half the height of the text area
+(a text area of three rows or fewer moves one row).  The keys move the
+cursor, and the text scrolls to follow it.  They stop at the first and the
+last line of the document.
+.h4 Words
+{k:Ctrl-Left} goes to the start of the word before the cursor (or to the
+start of the current word when the cursor is in the middle of it), and
+{k:Ctrl-Right} to the start of the next word.  A word is a run of letters,
+digits and characters of the upper half of the set.  At the start of a
+column {k:Ctrl-Left} acts as {k:Left}, and at the end {k:Ctrl-Right} as
+{k:Right}, so a run of the key goes through the whole document.
+.h4 Start and end of a column, of the document
+{k:Ctrl-Home} and {k:Ctrl-End} go to the first character and to the end of
+the column that holds the cursor.  {k:Shift-Home} and {k:Shift-End} go to the
+first character of the first block and to the end of the last block that can
+be seen.
+.h4 The section keys
+There is no key for the previous or the next page: the Printer makes the pages,
+and the Editor does not.  The keys with {k:Shift} move over the sections of a structured document;
+in an unstructured one they do nothing, except {k:Shift-Home} and
+{k:Shift-End}.  They pass over the sections that are hidden by an outline or
+by Section edit.
+.table 14 46
+Key | Rule
+{k:Shift-Up} | The headline of the current section.  On the headline, the
+ headline of the section before it in the text (any level).
+{k:Shift-Down} | The headline of the next section in the text (any level).
+ Stays at the last one.
+{k:Shift-PgUp} | The previous section of the same level that has the same
+ parent; stops at a section of a lower level.
+{k:Shift-PgDn} | The next such section.
+{k:Shift-Left} | In a block of several columns: the previous column.
+ Otherwise: the headline of the parent section.
+{k:Shift-Right} | In a block of several columns: the next column.
+ Otherwise: the first subsection, when there is one.
+.end
+.h4 The cursor and a picture [edit-cursor-picture]
+.ix Picture, moving the cursor over it
+.ix Cursor, over a picture
+A picture is one line of the text and one stop of the cursor, however many
+rows of the window it covers.  {k:Down} from the line above puts the cursor on
+the picture, where it stands on the first row of the image, and the next
+{k:Down} puts it on the line below; {k:Up} does the same the other way.  The
+end of line mark under the image is not a stop of {k:Up} and {k:Down}
+({k:Right} and {k:End} reach it).  The terminal shows a picture as one row with
+its name in brackets, so there is nothing more to it there.
+
+In the X11 window the text has to move by about the height of the image when
+the cursor goes onto a picture or off one.  The window does not leap by the
+whole height: it moves in steps of a few rows, 0.01 seconds apart, about
+0.1 seconds in all, and a key that you type meanwhile ends the steps
+at once and is handled.  The top edge of a picture that comes up from the
+bottom of the window shows first, and the window then slides as the cursor
+goes on past it.  A picture that is taller than the text area cannot be seen
+at once: while the cursor is on it {k:PgDn} and {k:Down} scroll down through
+its rows a window at a time, {k:PgUp} and {k:Up} back up, and only when its
+last or first row has been shown does the key leave the picture.
+
+.h3 The keys by kind [edit-key-tables]
+.ix Control keys
+.ix Alt keys
+.ix Ctrl-A
+.ix Ctrl-E
+.ix Ctrl-F
+.ix Ctrl-K
+.ix Ctrl-L
+.ix Ctrl-O
+.ix Ctrl-P
+.ix Ctrl-Q
+.ix Ctrl-R
+.ix Ctrl-S
+.ix Ctrl-V
+.ix Ctrl-W
+.ix Ctrl-X
+.ix Ctrl-Y
+.ix Ctrl-^
+.ix Ctrl-C
+.ix Ctrl-T
+The keys of the edit screen are listed once more, by the key, so that a key
+that was seen on a keyboard card can be found.  Every entry names the
+section that describes it.
+.h4 The function keys
+.table 8 24 17
+Key | What it does | Described in
+{k:F1} | Help on the edit screen | {n:view}
+{k:F2} | Split: column, block, section | {x:edit-b-split}
+{k:F3} | Copy | {x:edit-copy}
+{k:F4} | Cut | {x:edit-cut}
+{k:F5} | Paste | {x:edit-b-paste}
+{k:F6} | The format of the block | {n:format}
+{k:F7} | Move | {x:edit-b-move}
+{k:F8} | Table: add or split a column | {x:edit-append}
+{k:F9} | Search, with the methods Text and Print Error | {x:edit-b-search}
+{k:F12} | The menu bar | {x:edit-menus}
+.end
+{k:F8} opens a list of two choices, Add column and Split column here, that do
+what Append, Column and Split, Column do.
+.h4 The Alt function keys
+.table 12 20 28
+Key | What it does | Described in
+{k:Alt-F2} | Append | {x:edit-append}
+{k:Alt-F3} | Join | {x:edit-join}
+{k:Alt-F4} | Delete | {x:edit-delete}
+{k:Alt-F5} | Overtype on or off | {x:edit-b-overtype}
+{k:Alt-F6} | Set Attributes | {x:edit-typing}
+{k:Alt-F7} | Go To | {x:edit-goto}
+{k:Alt-F8} | Border | {x:edit-c-border}
+{k:Alt-F9} | Replace | {x:edit-b-replace}
+{k:Alt-F12} | Marker | {x:edit-b-marker}
+.end
+{k:Alt-F1}, {k:Alt-F10} and {k:Alt-F11} have no command.  Each gives the
+message "Alt-F1: not available", with the number of the key.
+.h4 The Ctrl function keys
+.table 13 19 28
+Key | What it does | Described in
+{k:Ctrl-F1} | Learn: starts the recording of a macro, and ends it | {x:edit-c-macro-learn}
+{k:Ctrl-F2} | Math: calculates the highlighted numbers | {x:edit-c-math}
+{k:Ctrl-F3} | Lib Copy | {x:edit-c-library-keys}
+{k:Ctrl-F4} | Lib Cut | {x:edit-c-library-keys}
+{k:Ctrl-F5} | Lib Paste | {x:edit-c-library-keys}
+{k:Ctrl-F6} | Case: upper, lower or capitalize | {x:edit-c-case}
+{k:Ctrl-F7} | Find the previous Print Error | {x:edit-c-find-error}
+{k:Ctrl-F8} | Find the next Print Error | {x:edit-c-find-error}
+{k:Ctrl-F9} | Search again | {x:edit-c-find-error}
+{k:Ctrl-F10} | Undo | {x:edit-b-undo}
+{k:Ctrl-F11} | Redo | {x:edit-b-undo}
+{k:Ctrl-F12} | Marker, as {k:Alt-F12} | {x:edit-b-marker}
+.end
+Lib Copy and Lib Cut work like Copy and Cut (the same list of four choices
+and the same highlight) and put the area into the library of the Tools menu
+as well as into the clipboard; Lib Paste pastes an entry of the library at the
+cursor, without changing the clipboard.
+.h4 The Ctrl letters
+.table 11 21 22
+Key | What it does | Described in
+{k:Ctrl-A} | Append a block, same format | {x:edit-append}
+{k:Ctrl-B} | Bold on or off | {x:edit-typing}
+{k:Ctrl-C} | Spell check of the word | {n:spell}
+{k:Ctrl-D} | Delete the word | {x:edit-deleting}
+{k:Ctrl-E} | The format of the block | {n:format}
+{k:Ctrl-F} | The Alt commands menu | {x:edit-altmenu}
+{k:Ctrl-G} | The text indent character | {x:edit-typing}
+{k:Ctrl-H} | Hanging indent | {x:edit-typing}
+{k:Ctrl-I} | Tab, in both versions; italics is {k:Alt-I} | {x:edit-typing}
+{k:Ctrl-K} | Cut the block | {x:edit-cut}
+{k:Ctrl-L} | Cut the section | {x:edit-cut}
+{k:Ctrl-N} | Normal text | {x:edit-typing}
+{k:Ctrl-O} | Append a block, global format | {x:edit-append}
+{k:Ctrl-P} | Print, Final | {n:print}
+{k:Ctrl-Q} | Quit | {x:edit-b-quit}
+{k:Ctrl-R} | Retrieve | {n:file}
+{k:Ctrl-S} | Save | {n:file}
+{k:Ctrl-T} | Thesaurus for the word | {n:spell}
+{k:Ctrl-U} | Underscore on or off | {x:edit-typing}
+{k:Ctrl-V} | Split the block | {x:edit-b-split}
+{k:Ctrl-W} | Equation editor: view | {n:equations}
+{k:Ctrl-X} | Cut text | {x:edit-cut}
+{k:Ctrl-Y} | Split the section | {x:edit-b-split}
+{k:Ctrl-Z} | Undo (also {k:Ctrl-/}) | {x:edit-b-undo}
+{k:Ctrl-^} | Section edit on or off | {x:edit-b-section}
+.end
+{k:Ctrl-C} checks the spelling of the word at the cursor and {k:Ctrl-T} shows
+synonyms of it ({n:spell}).  {k:Ctrl-Shift-Space} is not a letter: it types a
+nonbreaking space ({n:edit-nbsp}).  {k:Ctrl-W} works in the editor of an
+equation.  The
+keys {k:Ctrl-M} and {k:Ctrl-J} are Enter, and {k:Ctrl-I} is Tab.  In the
+terminal version {k:Ctrl-C}, {k:Ctrl-S}, {k:Ctrl-Q} and {k:Ctrl-Z} are keys of the Editor:
+they neither stop the program nor freeze the screen.
+.h4 The Alt keys
+.table 20 40
+Key | What it does
+{k:Alt-1} to {k:Alt-9}, {k:Alt-0} | Outline to a level, {x:edit-b-outlines}.
+{k:Alt--}, {k:Alt-+}, {k:Alt-*} | Contract, expand, outline a section.
+{k:Alt-[}, {k:Alt-]} | Promote, demote a section ({n:edit-b-move}).
+{k:Alt-<}, {k:Alt->}, {k:Alt-,}, {k:Alt-.} | The same, for terminals.
+{k:Alt-/} | Redo ({n:edit-b-undo}).
+{k:Alt-I} | Italics.
+{k:Alt-O} | Overtype on or off.
+{k:Alt-Backspace} | Delete the word before the cursor.
+Alt and a letter | A macro that has that letter (Tools, Macros).
+.end
+.h4 The keys of the cursor and of sections
+{k:Ins} appends a section, {k:Shift-Ins} a subsection ({n:edit-append}); the
+{k:Ctrl-V} and {k:Ctrl-Y} keys split ({n:edit-b-split}); the movement keys
+were listed in {x:edit-moving}.
+
+.h3 Keys that the terminal or the window manager keeps [edit-reserved]
+.ix Alt-F12, taken by the window manager
+.ix Shift-Ins, paste of the terminal
+.ix Ctrl-F, Alt menu
+.ix Terminal, keys not received
+.ix Window manager keys
+Some of the keys of the edit screen are used by the window manager or the
+terminal itself, and the Editor never receives them.  For each, Strata has
+another way.
+.table 19 13 28
+Key | Taken by | What to use
+{k:Alt-F12} | Many desktops | {k:Ctrl-F12}, {k:Ctrl-F}
+{k:Alt-F4} | Window managers | {k:Ctrl-F}, Delete
+{k:Shift-Ins} | Terminals (paste) | {k:Ctrl-F}, Sub-section
+{k:Alt-[} | Terminal: key prefix | {k:Alt-<}
+{k:Ctrl-^} | Some keyboards | Edit menu, Section
+{k:Ctrl-I} | Tab, in both versions | {k:Alt-I} for italics
+{k:Ctrl-Backspace} | Terminal ({k:Ctrl-H}) | {k:Alt-Backspace}
+{k:Keypad +} | Terminals | {k:Alt-+}, {k:Alt-=}
+.end
+.h4 The keypad
+In the X11 version the three keys of the numeric keypad with a plus, a minus
+and an asterisk are the keys of the outline: they work as {k:Alt-+},
+{k:Alt--} and {k:Alt-*}.  A terminal sends them as the plain characters,
+which would be typed into the text, so there the Alt keys are used.  In the
+X11 version {k:Keypad Enter} is {k:Enter}.  With Num Lock off the keys
+{k:Keypad Ins}, {k:Keypad Del}, {k:Keypad Home}, {k:Keypad End},
+{k:Keypad PgUp}, {k:Keypad PgDn}, {k:Keypad Up}, {k:Keypad Down},
+{k:Keypad Left} and {k:Keypad Right} are the keys that they are named after,
+with the modifiers that are held; with Num Lock on {k:Keypad 0} to
+{k:Keypad 9} and {k:Keypad .} type the digit or the point ({n:appx11}).  A
+terminal does not send the Alt key as a modifier; it sends {k:Esc} and then
+the key.  Press {k:Esc} alone, or twice, to close a list ({n:appterm-esc}).
+.h4 Keys that repeat other keys [edit-c-keyequiv]
+.ix Shift-F1 to Shift-F12
+.ix Ctrl-Alt-F1
+.ix Ctrl-Shift-F1
+.ix Shift-Alt-F1
+.ix Ctrl-Up
+.ix Ctrl-Down
+.ix Alt-Left
+.ix Ctrl-Shift-Left
+.ix Ctrl-Shift-Home
+.ix Alt-Shift-Home
+.ix Ctrl-Ins
+.ix Alt-Ins
+.ix Modifier keys, combinations
+.ix Keys with the same meaning
+Some combinations of Shift, Ctrl and Alt with a cursor key, with Ins or with
+a function key do what a simpler key does.  The table lists the combinations
+that a user is likely to press; the keys that have a command of their own are
+in the tables above.
+.table 24 36
+Key | What it does
+{k:Shift-F1} to {k:Shift-F12} | Nothing: Shift has no function key command.
+{k:Ctrl-Alt-F1} to {k:Ctrl-Alt-F12}, {k:Shift-Alt-F1} to
+ {k:Shift-Alt-F12} | The same as {k:Alt-F1} to {k:Alt-F12}.
+{k:Ctrl-Shift-F1} to {k:Ctrl-Shift-F12} | The same as {k:Ctrl-F1} to
+ {k:Ctrl-F12}.
+{k:Ctrl-Up}, {k:Ctrl-Down}, {k:Alt-Left}, {k:Alt-Right}, {k:Alt-Up},
+ {k:Alt-Down}, {k:Alt-PgUp}, {k:Alt-PgDn}, {k:Alt-Home}, {k:Alt-End} |
+ The same as the key without the modifier.
+{k:Ctrl-Shift-Left}, {k:Ctrl-Shift-Right} | Ctrl wins: one word left or
+ right.
+{k:Ctrl-Shift-Home}, {k:Ctrl-Shift-End}, {k:Alt-Shift-Home},
+ {k:Alt-Shift-End} | Shift wins: the start or the end of the document.
+{k:Ctrl-Ins}, {k:Alt-Ins} | The same as {k:Ins}.
+{k:Shift-Del}, {k:Ctrl-Del}, {k:Alt-Del} | The same as {k:Del}: one
+ character.  Use {k:Ctrl-L} to cut a section.
+{k:Ctrl-Backspace} | The same as {k:Backspace}.  Use {k:Alt-Backspace} to
+ remove a word.
+.end
+
+.h2 Modes of the Editor [edit-modes]
+.ix Modes
+.ix Structured edit
+.ix Unstructured edit
+.ix Section edit
+.ix Title edit
+.ix Note edit
+.ix Equation edit
+.ix Editors of notes
+.ix Press Ins to Save Changes or Esc to Restore Previous Version
+.ix Library Contents Edit
+The word at the right end of the status line shows in which mode the Editor
+is.  The mode changes which keys have an effect and what the Edit menu
+offers.
+.table 20 40
+Mode | When
+STRUCTURED EDIT | A document with sections.
+UNSTRUCTURED EDIT | A document without sections.
+SECTION EDIT | One section of a structured document.
+TITLE PAGE EDIT | The title page, in a window of its own.
+NOTE EDIT, and others | A note, comment, equation or library entry.
+.end
+
+.h3 Structured and Unstructured Edit [edit-b-structured]
+.ix STRUCTURED command
+.ix UNSTRUCTURED command
+.ix Structured mode
+.ix Unstructured mode
+.ix Enter structured mode
+.ix Enter unstructured mode
+.ix Unstructured is not offered for a document of several sections
+.ix Change mode of a document
+A structured document is a tree of sections.  Every section has a
+headline, which is its first block, then more blocks of text, and then its
+subsections.  The sections are numbered from their place in the tree, and
+the status line shows the number.  All the keys of this chapter work.  A new
+document, made with File, New, is structured with one empty section unless
+the template that you name is of an unstructured document
+({n:view-make-kind}).
+
+An unstructured document is blocks in a row, with no sections, no
+headlines and no numbers: a letter, a memo, a list.  The status line has no
+Sect field, the rules between the blocks are thin, and the keys of
+sections do nothing, or the nearest thing: {k:Ins} and {k:Shift-Ins} append
+a block of the global format (the same as {k:Ctrl-O}), {k:Ctrl-L} does
+nothing, {k:Alt-1} to {k:Alt-9} and the keys that contract and expand give the
+message "Collapse/expand works in structured documents", Go To has the section
+number 1 only and the lists of Copy, Cut, Move and Delete have no Section
+choice.
+
+One kind is turned into the other from the Edit menu ({k:F12}, Edit); the entry
+depends on the document and there is no key:
+.table 13 47
+Entry | Hint and when it is offered
+Structured | "Enter structured mode".  Offered in an unstructured document.
+ The letter {k:S} chooses it.
+Unstructured | "Enter unstructured mode".  Offered in a structured document
+ that has just one section with no subsections.  The letter {k:U} chooses it.
+.end
+Structured makes the whole text of the document one section.  The first block
+of the text is the headline of that section, so that the first line of the
+text is now numbered 1 and is shown as a headline.  Nothing else is changed:
+all the other blocks stay as they are, after the headline, in the one section.
+The status line shows "Sect: 1" and STRUCTURED EDIT, the cursor goes to the
+start of the document, and the document is marked as changed.  After this the
+commands of sections (Append section, the level keys, Split, Join,
+outlines and the others) work.
+
+Unstructured turns a structured document that has one section and no
+subsections into a plain document: the headline stays as the first block (and
+is no longer a headline), and the numbers go.  The cursor goes to the start.
+The title page is not touched.  The commands that need sections give a
+message and change nothing: {k:Ctrl-^} shows "Only a structured document has
+sections", and Autosort, Section shows "Sections exist only in structured
+documents".  The Edit menu has no Section entry.  Unstructured
+never throws text away.
+.caution To make a document of many sections unstructured, make it one
+section with no subsections first (Join, Section, or Cut and Paste).  Then
+the entry Unstructured is offered.  Until then the entry is not in the Edit
+menu, the letter {k:U} does nothing and there is no message.
+
+.h3 Section Edit [edit-b-section]
+.ix SECTION EDIT
+.ix DOCUMENT edit
+.ix Edit current section only
+.ix Edit entire document
+.ix Section Edit mode
+.ix Ctrl-^
+.ix SECTION EDIT status
+.ix Only a structured document has sections
+.ix There is no current section
+Section lifts the section that the cursor is in out of the document, with
+all its subsections, so that only that part is shown and edited.  The rest of
+the text is out of sight, and it cannot be reached with the cursor keys until
+the mode is left with Document, the same entry under its other name.  The
+two commands are one entry on the Edit menu that changes its name, and one
+key, {k:Ctrl-^}.  They exist only in a structured document.
+.table 21 39
+Way | What it does
+{k:F12}, Edit, Section | Enters Section Edit mode.  The hint line shows "Edit
+ current section only [Ctrl-^]".  The letter {k:S} chooses it.
+{k:F12}, Edit, Document | Leaves the mode.  The hint line shows "Edit entire
+ document [Ctrl-^]".  The letter {k:D} chooses it.
+{k:Ctrl-^} | Does the one that applies: enters the mode when it is off and
+ leaves it when it is on.
+.end
+{k:Ctrl-^} is typed as {k:Ctrl-Shift-6} on most keyboards ({k:Ctrl-6} on some);
+on a keyboard that does not pass it, use the menu.  {k:Esc} does not leave the
+mode.
+.pic pictures/edit-b-section-edit.png 5 Section Edit mode on the section 2.1.
+The status line shows SECTION EDIT in place of STRUCTURED EDIT, and the
+section number of the section being edited is on it as always (Sect: 2.1).  The
+text area shows the headline of the section, its blocks and all its
+subsections, indented as in the whole document, with their numbers unchanged:
+a section numbered 2.1 is still 2.1, not 1.
+.table 14 46
+Point | Behavior
+Which section | The one that the cursor is in at the time of the command.
+ When the cursor is in a block of the body of a section, it is that section;
+ when it is in a headline, it is the section of that headline.  A subsection
+ that is chosen has its own subsections, but not its parent or its siblings.
+The cursor | Stays where it is; it is always inside the visible part.
+Cursor keys | The movement keys stop at the edges of the visible section.
+ The section keys work inside it.
+Editing | The editing commands work on the visible text: typing, Delete,
+ Copy, Cut, Paste, Move, Split, Join, Append, and Sort of the subsections.
+Replace, Count | They work on the whole document, not only on the shown
+ section.
+Save | The whole document is saved, not only the section shown.
+Outlines | The keys that contract and expand work on the sections that are
+ shown.
+Edit menu | The entry reads Document while the mode is on.  Title is there
+ as usual; Unstructured is offered too when the whole document is one
+ section.
+.end
+.table 28 30
+Message | When
+Only a structured document has sections | {k:Ctrl-^} in an unstructured
+ document.
+There is no current section | The command in a document that has no section
+ at the cursor: only the text before the first headline, or an empty
+ document.
+.end
+Leaving the mode shows everything again, with the cursor where it was, and
+changes nothing in the document: the mode is a view, it is not saved with the
+document and does not mark it as changed.  Section Edit is used to work on a
+part of a long document without the rest getting in the way: to move around a
+chapter with the section keys, to sort its subsections ({n:edit-b-sort}), or
+to keep from deleting something else by mistake.  Because the numbers are
+those of the whole document, a cross reference in the part keeps its number.
+
+.h3 Title Page Edit [edit-b-title]
+.ix TITLE command
+.ix Title page
+.ix TITLE PAGE EDIT
+.ix Edit title page
+.ix Press Ins to Save Changes
+.ix Restore Previous Version
+.ix Cover page
+.ix Print Title Page
+.pic pictures/edit-a-title.png 5 Title Page Edit: the title page is an editor of its own.
+Edit, Title ({k:F12}, Edit, Title; the letter {k:T}; the hint is "Edit title
+page") opens the title page of the document in an editor of its own, so that
+the page can be typed and changed without being part of the text.  The title
+page is the first page of a printed document: a block or several blocks, with
+the same tools as the text (formats, attributes, markers, columns).  It is
+the first entry of the Edit menu in every kind of document.
+
+The status line shows TITLE PAGE EDIT on the right, and the name of the
+document is replaced by (new) when the document had no title page; the
+message line shows "Press Ins to Save Changes or Esc to Restore Previous
+Version".  The page is a small document of its own: it has no sections and
+the commands that need them do not work.  The {k:F12} menu works inside it and it
+has the same Edit menu as an unstructured document.
+.table 17 43
+Key | Effect
+{k:Ins} | Keeps the changes: the page is put back into the document, and
+ the editor ends.  ({k:Ins} is not Append section here.)
+{k:Esc} | Throws the changes away and goes back to the text, with the page
+ as it was.  Esc in a highlight cancels only the highlight.
+All the other keys | The keys of editing work as in the text: typing,
+ Delete, Backspace, Return, Tab, the attribute keys, Copy, Cut, Paste, Move,
+ Split, Join, Append block, the block format editor, Marker, Search and
+ Replace.
+.end
+.table 24 36
+Page that is | Result
+Not empty | Its blocks are put in the document as the title page.
+Empty (one block with no text and no formats), or no blocks | The title
+ page is removed: when there was one, it goes, and the document has none
+ again.
+Had a title page and is changed | Its blocks are replaced by the new ones.
+.end
+A document that had no title page opens the editor with an empty page to type
+into.  The title page is not shown among the text and is not counted in the
+numbers of the sections: the first section of the text is still 1.  The
+document is marked as changed when the page is kept.  If the page that was
+typed cannot be read back (a message box titled "Title Page" with the
+reason), the old page is left as it was and the editor ends.
+
+The page is part of the document when it is printed: the panel of Print,
+Final has the question "Print Title Page?" and the preview panel has "Preview
+Title Page?" ({n:print}).  Search, Replace and Count work on the title page
+like on the text.
+
+.h3 Windows [edit-b-window]
+.ix Window
+.ix Windows, two
+.ix Edit, Window
+.ix Zoom-up
+.ix Zoom-down
+.ix Switch (window)
+Edit, Window shows two documents on the screen at the same time, each in a
+window of its own.  A window has its own status line, expanded line and ruler,
+and its own text.  The cursor is in one window; the commands work on the
+document of that window.  The entries of Edit, Window are:
+.table 14 44
+Entry | Effect
+Open | Splits the screen in two and opens a second window with a new unstructured document.  The cursor goes to the new window.  Retrieve a document in it, or write a new one.  The entry is available when one window is open.
+Close | Closes the window of the cursor.  A document with unsaved changes prompts with "Save and close", "Discard changes and close" or "Cancel".  The other window fills the screen.
+Adjust | Changes the size of the windows.  {k:Up} moves the line between the windows up one row and {k:Down} moves it down one row; {k:Enter} keeps the size and {k:Esc} puts it back.
+Zoom-up | The window of the cursor fills the screen.  The other window stays open and is hidden.
+Zoom-down | The two windows share the screen again.
+Switch | Moves the cursor to the other window.  When a window fills the screen, the other one takes its place.
+.end
+.pic pictures/edit-b-window-menu.png 5 Edit, Window: the entries, with Open chosen and its meaning on the line below.
+.pic pictures/edit-b-window-open.png 5 After Open the screen is shared by two windows, each with its own status line, ruler and document.
+A window is at least five rows high.  Copy ({k:F3}) or Cut ({k:F4}) in one window
+and Paste ({k:F5}) in the other carry text, blocks, columns or sections from
+one document to the other: the clipboard goes with the cursor.  Quit
+({k:Ctrl-Q}) puts a question about the unsaved changes of both documents.  Autosave saves
+the document of the window of the cursor only.
+
+.h3 Notes, Comments, Equations and the Library
+The text of a note, comment or equation marker, and the text of an entry of
+the library of the Tools menu, are edited in the same way as the title
+page: a second editor opens on the text alone, the status line shows the
+kind of text and the word EDIT (NOTE EDIT, COMMENT EDIT, EQUATION EDIT,
+LIBRARY CONTENTS EDIT), and {k:Ins} keeps the text while {k:Esc} throws the
+changes away.  All the editing keys of this chapter work in those editors,
+with these exceptions: {k:Ins} and {k:Esc} are theirs (so a section cannot
+be appended with {k:Ins} in them: use the {k:Ctrl-O} key for a block), the
+document of a note is unstructured, and Quit and Save are better left
+alone until the editor of the note has been closed.  While a highlight is on,
+{k:Ins} and {k:Esc} belong to the highlight, not to the editor of the note.
+The editor of an equation has a key of its own, {k:Ctrl-W}, which shows the
+equation as it is typeset ({n:equations}).
+
+.h2 The menus [edit-menus]
+.ix Menu bar
+.ix F12
+.ix Menu bar keys
+.ix MENU, label of the menu bar
+.ix Pop-up lists
+.ix Pop-up list keys
+.ix Prompt line, single
+.ix Enter accepts, Esc cancels
+.ix Pop-up input
+Strata has two kinds of menu on the edit screen: the menu bar that {k:F12}
+opens, with the menus of the commands of the program, and the small
+pop-up lists and prompts that the editing commands open themselves.
+
+.h3 The F12 Menu Bar [edit-menubar]
+.ix F12 menu bar
+.ix Menu bar, keys
+.ix Edit menu
+.pic pictures/edit-a-menubar.png 5.5 The menu bar opened with F12: the label of the bar is MENU, the bar names the menus and the second line explains the one selected.
+.pic pictures/edit-a-menubar-tools.png 5.5 The menu bar with Tools selected: the second line says what the selected entry holds.
+{k:F12} puts a bar over the top two rows of the screen.  The first row names
+the menus: File, Global, Edit, Print, Tools and Quit.  The second row
+explains the entry that is selected.  At the right end of the first row is
+the label of the bar: MENU, and, as submenus open, MENU-EDIT, MENU-TOOLS and
+so on.  When the entries of a menu do not all fit in the first row, as with
+the Print menu on a screen of 80 columns, the rest continue on a second row
+and the explanation moves one row down.  The text under the bar is not moved.
+.table 20 40
+Key | What it does
+{k:Left}, {k:Right} | The previous or the next entry; round at the ends.
+{k:Home}, {k:End} | The first or the last entry.
+{k:Return}, {k:Ins}, {k:Down} | Opens the submenu, or runs the entry.
+A letter | The entry that starts with it: selected and opened at once.
+{k:Esc} | Back one level; at the top, closes the bar.
+{k:F12} | Closes the bar from any level.
+.end
+{k:Down} does not move down: the submenus are rows of words like the bar,
+and Down opens or runs the entry.  The entries are:
+.table 7 53
+Menu | Entries
+File | Save, Retrieve, New, Delete, Import, Export ({n:file}).
+Global | Format, Page, Typeface, Marker, Options, Named (Edit, Delete).
+Edit | Title, Structured or Unstructured, Section or Document, and Window
+ (Open, Close, Adjust, Zoom-up, Zoom-down, Switch: {n:edit-b-window}).
+Print | Draft, Final, Preview (Document, Block, Section), and the Print
+ Error entries Next Error, Previous Error, Remove Error and Remove Print
+ Errors ({n:print}).
+Tools | Macros, Library, Spell, Thesaurus, Autosort, Count, Undo, Redo.
+Quit | Leave the Editor ({n:edit-b-quit}).
+.end
+The bar of the menus fits in 80 columns.  The row of the entries of a menu
+that is wider than that, as the Print menu is, goes on a second row and the
+hint line is one row lower; {k:Right} reaches every entry and the hint line
+shows which one is chosen.  The letters of the entries are: Edit {k:T}, {k:S},
+{k:U}, {k:D} (Title, Section or Structured, Unstructured, Document); Tools
+{k:M}, {k:L}, {k:S}, {k:T}, {k:A}, {k:C}, {k:U}, {k:R} (Macros, Library, Spell,
+Thesaurus, Autosort, Count, Undo, Redo); Autosort {k:S} and {k:T} (Section,
+Table).
+
+Most of the editing commands are keys and are not on the menu bar: Append is
+{k:Alt-F2}, Copy {k:F3}, Cut {k:F4}, Delete {k:Alt-F4}, Go To {k:Alt-F7} and
+Join {k:Alt-F3}; the keys that contract and expand are {k:Alt--}, {k:Alt-+}
+and {k:Alt-*}.  The other commands, and where to reach them, are:
+.table 23 8 27
+Command | Menu | Keys
+Count | Tools, Count | none
+Marker | None | {k:Alt-F12}, {k:Ctrl-F12}
+Move | None | {k:F7}; section level {k:Alt-[} {k:Alt-]}
+Options | Global, Options | none
+Outlines | None | {k:Alt-1} to {k:Alt-9}, {k:Alt-0}
+Overtype | None | {k:Alt-F5}, {k:Alt-O}
+Paste | None | {k:F5}, {k:Ctrl-F5}
+Quit | Quit | {k:Ctrl-Q}
+Replace | None | {k:Alt-F9}
+Search | None | {k:F9}
+Section/Document | Edit, Section or Document | {k:Ctrl-^}
+Sort | Tools, Autosort | none
+Split | None | {k:F2}, {k:Ctrl-V}, {k:Ctrl-Y}, {k:F8}
+Structured/Unstructured | Edit, one of them | none
+Title | Edit, Title | none
+.end
+.h4 The Edit menu
+The entries depend on the document:
+.table 26 34
+The document is | The Edit menu offers
+Unstructured | Title, Structured, Window
+Structured, and it can be made unstructured (it is one section with nothing
+ below it) | Title, Unstructured, Section, Window
+Structured, and it cannot be made unstructured | Title, Section, Window
+Being edited in Section edit, and it can be made unstructured | Title,
+ Unstructured, Document, Window
+Being edited in Section edit, and it cannot | Title, Document, Window
+.end
+Each entry is described in {x:edit-modes}: Title in {x:edit-b-title},
+Structured and Unstructured in {x:edit-b-structured}, Section and Document in
+{x:edit-b-section}.
+
+.h3 The Alt Commands Menu [edit-altmenu]
+.ix Alt commands, menu
+.ix Ctrl-F, the menu of the Alt commands
+.ix Alt commands menu
+.ix Commands list
+{k:Ctrl-F} opens a list titled Commands with every command that stands on a
+key such as {k:F3}, {k:Ctrl-F9} or {k:Alt-F8}, each with its key, and three more commands whose keys a terminal may not
+pass ({k:Alt-[}, {k:Alt-]} and the soft hyphen).  It works in every terminal,
+where many of the keys with {k:Alt} or {k:Ctrl} do not arrive.  Choose with
+{k:Up}, {k:Down}, {k:Home}, {k:End}, {k:PgUp} and {k:PgDn}, and run with
+{k:Return} or {k:Ins}; the first letter of an entry goes to the next entry that begins
+with it; {k:Esc} closes the list.  The list scrolls: it has thirty-four
+entries.
+.table 25 36
+Entry | The key it stands for
+{c:Help (F1)} | {k:F1}
+{c:Split (F2)} | {k:F2}
+{c:Copy (F3)} | {k:F3}
+{c:Cut (F4)} | {k:F4}
+{c:Paste (F5)} | {k:F5}
+{c:Format (F6)} | {k:F6}
+{c:Move (F7)} | {k:F7}
+{c:Table (F8)} | {k:F8}
+{c:Search (F9)} | {k:F9}
+{c:Menu (F12)} | {k:F12}
+{c:Learn (Ctrl-F1)} | {k:Ctrl-F1}
+{c:Math (Ctrl-F2)} | {k:Ctrl-F2}
+{c:Lib Copy (Ctrl-F3)} | {k:Ctrl-F3}
+{c:Lib Cut (Ctrl-F4)} | {k:Ctrl-F4}
+{c:Lib Paste (Ctrl-F5)} | {k:Ctrl-F5}
+{c:Case (Ctrl-F6)} | {k:Ctrl-F6}
+{c:Prev Error (Ctrl-F7)} | {k:Ctrl-F7}
+{c:Next Error (Ctrl-F8)} | {k:Ctrl-F8}
+{c:Search Again (Ctrl-F9)} | {k:Ctrl-F9}
+{c:Undo (Ctrl-F10)} | {k:Ctrl-F10}
+{c:Redo (Ctrl-F11)} | {k:Ctrl-F11}
+{c:Marker (Ctrl-F12)} | {k:Ctrl-F12}
+{c:Append (Alt-F2)} | {k:Alt-F2}
+{c:Join (Alt-F3)} | {k:Alt-F3}
+{c:Delete (Alt-F4)} | {k:Alt-F4}
+{c:Overtype (Alt-F5)} | {k:Alt-F5}
+{c:Set Attribute (Alt-F6)} | {k:Alt-F6}
+{c:Go To (Alt-F7)} | {k:Alt-F7}
+{c:Border (Alt-F8)} | {k:Alt-F8}
+{c:Replace (Alt-F9)} | {k:Alt-F9}
+{c:Marker (Alt-F12)} | {k:Alt-F12}
+{c:Promote section (Alt-[)} | {k:Alt-[}
+{c:Demote section (Alt-])} | {k:Alt-]}
+{c:Soft hyphen (Alt-_)} | {k:Alt-_}
+.end
+
+.h3 The pop-up lists [edit-popups]
+.ix Pop-up list
+.ix Pop-up menu
+.ix Selection list
+.ix First letter selects
+The commands Append, Copy, Cut, Move, Delete, Join, Split, Go To, Set
+Attributes, the {k:F8} Table list and the Alt commands menu open a small box
+with a title and a list of choices.  The keys are the same for all of them.
+.table 15 45
+Key | What it does
+{k:Up}, {k:Down} | The previous or the next choice; no wrap at the ends.
+{k:Home}, {k:End} | The first or the last choice.
+{k:PgUp}, {k:PgDn} | A page up or down, when the list is longer than the box.
+{k:Return}, {k:Ins} | Takes the selected choice.
+{k:F1} | Help for the list.
+A letter | The next choice that starts with the letter; with 12 choices or
+ fewer it is taken at once.
+{k:Esc} | Closes the list; nothing is done.
+.end
+The first letter is a quick way to a command: {k:Alt-F2} then {k:C} appends a
+column, {k:Alt-F2} then {k:P} a peer section, {k:F3} then {k:S} copies a section.
+When two choices start with the same letter, the key takes the first after
+the one that is selected, and the second press the other.  The box of
+Append and Split opens with Block selected, the box of Set Attributes with
+Bold selected, the others with the first choice.
+
+.h3 The prompts [edit-prompts]
+.ix Prompt
+.ix Input prompt
+.ix Enter accepts, Esc cancels
+The commands that need a word or a number (Go To, Section number) open a box
+with a title, a line of text, a field of dots and the words "Enter accepts,
+Esc cancels".  The field shows the value that the command offers, drawn as a
+selected entry; Go To offers none, so its field is empty.  The
+panels with several fields, such as Search and the panels of the markers, are
+forms: {k:Down}, {k:Tab} and {k:Enter} go to the next field, {k:Up} to the
+previous one, {k:Ins} accepts and {k:Esc} cancels ({n:view-form-keys}).
+.table 15 45
+Key | What it does
+A character | Replaces the whole field with it, the first time; then
+ inserts.
+{k:Backspace} | Empties the field the first time; then deletes backward.
+{k:Del} | Deletes the character at the cursor.
+{k:Left}, {k:Right} | Move in the field; the value is kept.
+{k:Home}, {k:End} | The start and the end of the field.
+{k:Enter} | Accepts the value.
+{k:Esc} | Cancels the command.
+.end
+Because the first character replaces the old value, a value that is to be
+changed a little is edited by pressing a movement key first, which keeps it.
+
+.include edit-a1.src
+.include edit-b.src
+.include edit-c.src

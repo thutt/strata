@@ -1,0 +1,460 @@
+# Appendix C: Special Characters.  The tables list the characters that a
+# Strata document can hold, with the way each one is typed, drawn and
+# printed, and the conversions of Import and Export.
+.doc Strata Reference: Special Characters
+.chapter C
+.h1 Special Characters [appchar]
+.ix Special characters
+.ix Character set
+.ix Appendix C
+.ix Code page 437
+.ix IBM Extended ASCII
+This appendix is the table of every character that a Strata document can
+hold, and the rules that decide which of them can be typed, how they print
+and how they change when text goes in or out through Import and Export.
+How to type a character is described in {x:edit-special-chars}; this appendix
+gives the facts that the description rests on.
+
+{x:appchar-set} names the character set and shows it as the Editor and the
+Printer show it.  {x:appchar-ascii}, {x:appchar-control} and {x:appchar-high}
+are the tables, one for each kind of character: the letters and signs of
+ASCII, the pictures (faces, card suits, arrows), and the accented letters,
+signs of money and mathematics, Greek letters and box characters.  Each row
+names the character, gives its Unicode value, and shows whether it can be
+typed and how it prints.  The remaining sections cover the uses of a
+character: {x:appchar-type} says which characters can be typed,
+{x:appchar-draw} lists the marks that the Editor shows by itself,
+{x:appchar-print} gives the way a character is printed, and {x:appchar-pages}
+the code pages of Import and Export.
+
+.h2 The character set of Strata [appchar-set]
+.ix Character set of the document
+.ix CP437
+.ix 256 characters
+A Strata document can hold 256 different characters.  They are the characters
+of the PC character set that is known as code page 437 (IBM Extended ASCII),
+the first value of the field Character Set of the Import and Export panels.
+Whatever the encoding of the system, a character of a document looks the
+same in every place that the document is shown.
+.table 13 47
+Kind | What is there
+Space | The space, shown by a mark when Display Dots for Spaces is Yes.
+Pictures | Faces, card suits, arrows, the paragraph and section signs
+ | ({n:appchar-control}), and a picture of a house.
+ASCII | The printable characters of ASCII, from the space to the tilde
+ | ({n:appchar-ascii}).
+Upper half | The letters of Western Europe with accents, signs of money
+ | and of mathematics, the Greek letters of mathematics, and the
+ | characters for boxes and blocks ({n:appchar-high}).
+.end
+The two versions of the Editor show the same set.  They draw each character
+as the Unicode character that has the same shape (the column Unicode of the
+tables), with the font of the terminal or of the X11 window.  A font that
+lacks one of the characters shows a gap, or a box, in its place, and nothing
+in the document is changed by that.
+.pic pictures/appchar-screen.png 5 The character set in the Editor.
+The picture is a document made for this appendix: it shows all 256 characters
+in rows of sixteen, in the order of the tables.  The arrow at the end of each
+row is the mark of the Editor for the end of the line ({n:appchar-draw}).
+.note The set is fixed.  A document that must contain a character from
+  outside it, such as Greek capital delta, the euro sign or a Chinese
+  character, carries it as an equation ({n:equations}) or as a picture ({n:markers}, Picture).
+
+.h2 The printable characters of ASCII [appchar-ascii]
+.ix ASCII characters
+.ix Printable characters
+These are the characters that every keyboard makes.  They print as
+themselves, except for twelve of them that TeX uses for its own purposes
+({n:appchar-print}).
+.code
+Space            the space
+Digits           0 1 2 3 4 5 6 7 8 9
+Capital letters  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+Small letters    a b c d e f g h i j k l m n o p q r s t u v w x y z
+Signs            ! " # $ % & ' ( ) * + , - . / : ; < = > ? @
+                 [ \ ] ^ _ ` { | } ~
+.end
+
+.h2 The pictures [appchar-control]
+.ix Pictures, faces, suits and arrows
+.ix Faces, card suits and arrows
+.ix Tab, end-of-line and text indent characters
+.ix Code 7F, house
+The set holds a group of pictures: faces, card suits, a bullet, notes,
+arrows, triangles, the paragraph and section signs, and a house.  The list
+item bullet of a document is one of them.  The table gives for each picture
+its Unicode value, its name, and what the Printer does with it (the column
+"Printed as" is explained in {n:appchar-print}: a "TeX symbol" is set with a
+command of TeX, and a value in brackets is the placeholder that the Printer
+writes when no font has the character).
+.table 8 30 22
+Unicode | Name of the picture | Printed as
+U+263A | white smiling face | a TeX symbol
+U+263B | black smiling face | a TeX symbol
+U+2665 | black heart suit | a TeX symbol
+U+2666 | black diamond suit | a TeX symbol
+U+2663 | black club suit | a TeX symbol
+U+2660 | black spade suit | a TeX symbol
+U+2022 | bullet | a TeX symbol
+U+25D8 | inverse bullet | [U+25D8]
+U+25CB | white circle | a TeX symbol
+U+25D9 | inverse white circle | [U+25D9]
+U+2642 | male sign | [U+2642]
+U+2640 | female sign | [U+2640]
+U+266A | eighth note | a TeX symbol
+U+266B | beamed eighth notes | [U+266B]
+U+263C | white sun with rays | [U+263C]
+U+25BA | black right-pointing triangle | a TeX symbol
+U+25C4 | black left-pointing triangle | a TeX symbol
+U+2195 | up down arrow | a TeX symbol
+U+203C | double exclamation mark | a TeX symbol
+U+00B6 | pilcrow sign | the letter
+U+00A7 | section sign | the letter
+U+25AC | black rectangle | a TeX symbol
+U+21A8 | up down arrow with base | [U+21A8]
+U+2191 | upwards arrow | a TeX symbol
+U+2193 | downwards arrow | a TeX symbol
+U+2192 | rightwards arrow | a TeX symbol
+U+2190 | leftwards arrow | a TeX symbol
+U+221F | right angle | [U+221F]
+U+2194 | left right arrow | a TeX symbol
+U+25B2 | black up-pointing triangle | a TeX symbol
+U+25BC | black down-pointing triangle | a TeX symbol
+U+2302 | house | [U+2302]
+.end
+.note The pictures cannot be typed in the Editor ({n:appchar-type}).  When a
+  plain text file is imported, a control character is not kept as a picture
+  but is written as two characters, the sign {c:^} and the letter, so that
+  the character {k:Ctrl-A} becomes {c:^A} ({n:file}, Import).
+
+.h2 The accented letters, signs and box characters [appchar-high]
+.ix Characters of the upper half
+.ix Accented letters
+.ix Box drawing characters
+.ix Greek letters in the set
+.ix Table of the character set
+The upper half of the set.  The columns "X11" and "Term" say whether the
+character can be typed in the X11 version and in the terminal version
+({n:appchar-type}); the column "Unicode" is the character that the screen and
+the output files use.  The letters and the signs of money and of mathematics
+come first and last; the characters for boxes and blocks are in the middle.
+.ix Latin letters with accents
+.table 7 5 5 39
+Unicode | X11 | Term | Name of the character
+U+00C7 | yes | yes | latin capital letter c with cedilla
+U+00FC | yes | yes | latin small letter u with diaeresis
+U+00E9 | yes | yes | latin small letter e with acute
+U+00E2 | yes | yes | latin small letter a with circumflex
+U+00E4 | yes | yes | latin small letter a with diaeresis
+U+00E0 | yes | yes | latin small letter a with grave
+U+00E5 | yes | yes | latin small letter a with ring above
+U+00E7 | yes | yes | latin small letter c with cedilla
+U+00EA | yes | yes | latin small letter e with circumflex
+U+00EB | yes | yes | latin small letter e with diaeresis
+U+00E8 | yes | yes | latin small letter e with grave
+U+00EF | yes | yes | latin small letter i with diaeresis
+U+00EE | yes | yes | latin small letter i with circumflex
+U+00EC | yes | yes | latin small letter i with grave
+U+00C4 | yes | yes | latin capital letter a with diaeresis
+U+00C5 | yes | yes | latin capital letter a with ring above
+U+00C9 | yes | yes | latin capital letter e with acute
+U+00E6 | yes | yes | latin small letter ae
+U+00C6 | yes | yes | latin capital letter ae
+U+00F4 | yes | yes | latin small letter o with circumflex
+U+00F6 | yes | yes | latin small letter o with diaeresis
+U+00F2 | yes | yes | latin small letter o with grave
+U+00FB | yes | yes | latin small letter u with circumflex
+U+00F9 | yes | yes | latin small letter u with grave
+U+00FF | yes | yes | latin small letter y with diaeresis
+U+00D6 | yes | yes | latin capital letter o with diaeresis
+U+00DC | yes | yes | latin capital letter u with diaeresis
+U+00A2 | yes | yes | cent sign
+U+00A3 | yes | yes | pound sign
+U+00A5 | yes | yes | yen sign
+U+20A7 | no | yes | peseta sign
+U+0192 | no | yes | latin small letter f with hook
+U+00E1 | yes | yes | latin small letter a with acute
+U+00ED | yes | yes | latin small letter i with acute
+U+00F3 | yes | yes | latin small letter o with acute
+U+00FA | yes | yes | latin small letter u with acute
+U+00F1 | yes | yes | latin small letter n with tilde
+U+00D1 | yes | yes | latin capital letter n with tilde
+U+00AA | yes | yes | feminine ordinal indicator
+U+00BA | yes | yes | masculine ordinal indicator
+U+00BF | yes | yes | inverted question mark
+U+2310 | no | yes | reversed not sign
+U+00AC | yes | yes | not sign
+U+00BD | yes | yes | vulgar fraction one half
+U+00BC | yes | yes | vulgar fraction one quarter
+U+00A1 | yes | yes | inverted exclamation mark
+U+00AB | yes | yes | left-pointing double angle quotation mark
+U+00BB | yes | yes | right-pointing double angle quotation mark
+U+2591 | no | yes | shade
+U+2592 | no | yes | medium shade
+U+2593 | no | yes | dark shade
+U+2502 | no | yes | box vertical
+U+2524 | no | yes | box vertical and left
+U+2561 | no | yes | box vertical single and left double
+U+2562 | no | yes | box vertical double and left single
+U+2556 | no | yes | box down double and left single
+U+2555 | no | yes | box down single and left double
+U+2563 | no | yes | box double vertical and left
+U+2551 | no | yes | box double vertical
+U+2557 | no | yes | box double down and left
+U+255D | no | yes | box double up and left
+U+255C | no | yes | box up double and left single
+U+255B | no | yes | box up single and left double
+U+2510 | no | yes | box down and left
+U+2514 | no | yes | box up and right
+U+2534 | no | yes | box up and horizontal
+U+252C | no | yes | box down and horizontal
+U+251C | no | yes | box vertical and right
+U+2500 | no | yes | box horizontal
+U+253C | no | yes | box vertical and horizontal
+U+255E | no | yes | box vertical single and right double
+U+255F | no | yes | box vertical double and right single
+U+255A | no | yes | box double up and right
+U+2554 | no | yes | box double down and right
+U+2569 | no | yes | box double up and horizontal
+U+2566 | no | yes | box double down and horizontal
+U+2560 | no | yes | box double vertical and right
+U+2550 | no | yes | box double horizontal
+U+256C | no | yes | box double vertical and horizontal
+U+2567 | no | yes | box up single and horizontal double
+U+2568 | no | yes | box up double and horizontal single
+U+2564 | no | yes | box down single and horizontal double
+U+2565 | no | yes | box down double and horizontal single
+U+2559 | no | yes | box up double and right single
+U+2558 | no | yes | box up single and right double
+U+2552 | no | yes | box down single and right double
+U+2553 | no | yes | box down double and right single
+U+256B | no | yes | box vertical double and horizontal single
+U+256A | no | yes | box vertical single and horizontal double
+U+2518 | no | yes | box up and left
+U+250C | no | yes | box down and right
+U+2588 | no | yes | full block
+U+2584 | no | yes | lower half block
+U+258C | no | yes | left half block
+U+2590 | no | yes | right half block
+U+2580 | no | yes | upper half block
+U+03B1 | no | yes | greek small letter alpha
+U+00DF | yes | yes | latin small letter sharp s
+U+0393 | no | yes | greek capital letter gamma
+U+03C0 | no | yes | greek small letter pi
+U+03A3 | no | yes | greek capital letter sigma
+U+03C3 | no | yes | greek small letter sigma
+U+00B5 | yes | yes | micro sign
+U+03C4 | no | yes | greek small letter tau
+U+03A6 | no | yes | greek capital letter phi
+U+0398 | no | yes | greek capital letter theta
+U+03A9 | no | yes | greek capital letter omega
+U+03B4 | no | yes | greek small letter delta
+U+221E | no | yes | infinity
+U+03C6 | no | yes | greek small letter phi
+U+03B5 | no | yes | greek small letter epsilon
+U+2229 | no | yes | intersection
+U+2261 | no | yes | identical to
+U+00B1 | yes | yes | plus-minus sign
+U+2265 | no | yes | greater-than or equal to
+U+2264 | no | yes | less-than or equal to
+U+2320 | no | yes | top half integral
+U+2321 | no | yes | bottom half integral
+U+00F7 | yes | yes | division sign
+U+2248 | no | yes | almost equal to
+U+00B0 | yes | yes | degree sign
+U+2219 | no | yes | bullet operator
+U+00B7 | yes | yes | middle dot
+U+221A | no | yes | square root
+U+207F | no | yes | superscript latin small letter n
+U+00B2 | yes | yes | superscript two
+U+25A0 | no | yes | black square
+U+00A0 | yes | yes | no-break space
+.end
+
+.h2 Which characters can be typed [appchar-type]
+.ix Typing special characters
+.ix Characters that are dropped
+.ix Pasted text, characters lost
+The columns X11 and Term of the table in {x:appchar-high} say which characters
+of the upper half a key or a paste delivers in each version.  The ASCII
+characters can be typed in both.  The pictures of {x:appchar-control} cannot
+be typed in either.  A character that is not in the set is not inserted.  How
+the keyboard and the paste of the terminal deliver characters, and what to do
+for a character that the set lacks, is in {x:edit-special-chars}.
+A no-break space that is typed or pasted is inserted as a no-break space;
+{k:Ctrl-Shift-Space} types one ({n:edit-nbsp}).  {k:Alt-_} types a soft hyphen
+({n:edit-shy}), the place where a word may be broken.
+
+.h2 The characters that the Editor draws by itself [appchar-draw]
+.ix Marks of the Editor
+.ix Tab mark
+.ix End-of-line mark
+.ix Marker diamond
+.ix Dots for spaces
+.ix Section rules
+The Editor shows some characters on the screen that are not in the text.
+They show how the document is made up.
+.table 20 12 27
+Mark | Unicode | Shown for
+A diamond | U+2666 | A marker that is shown in the form of its mark.
+A right triangle | U+25BA | The tab (in the ruler too), when the option of
+ | | marks is on.
+A left triangle | U+25C4 | The end of a line (the key {k:Enter}), when the
+ | | same option is on.
+An arrow to the right | U+2192 | The text indent character.
+A small dot | U+00B7 | A space, when Display Dots for Spaces is on.
+A cap | U+2229 | A no-break space ({n:edit-nbsp}).
+A small triangle that points down, dim | U+25BC | A soft hyphen ({n:edit-shy}).
+Single and double rules | U+2500, U+2550 | The lines between sections and
+ | | blocks.
+Vertical lines | U+2502, U+2551 | The sides of boxes, tables and panels.
+.end
+The rules and the marks are not part of the text.  A screen image made by
+Export ({n:file}) has no rules between the blocks, but it has the borders
+that a block was given, drawn with the box characters of the character set.
+.if .STRATA_BUILD_TYPE # release
+For developers: a text file made by the Editor in its text mode ({n:convert})
+has no rules between the blocks either.  When a document itself holds box
+characters, the text mode writes the single and double horizontal lines as
+{c:-} and the other box characters as {c:+}.
+.endif
+
+.h2 How characters print [appchar-print]
+.ix Printing characters
+.ix Characters in print
+.ix [U+XXXX], placeholder
+.ix Missing characters
+What a character becomes in print depends on its class.
+.table 20 40
+Class | What is printed
+Text (ASCII) | The character itself.
+Letters and signs of Latin-1 | The character.
+Box and block characters | The character, as a box drawing character.
+Symbols | A drawn symbol, in the table that follows.
+All others | The placeholder, {c:[U+XXXX]}, in a small typewriter type.
+.end
+.ix Symbols, drawn in print
+The symbols that print as drawings are these.
+.table 31 29
+Characters | Set as
+White and black smiling faces (U+263A, U+263B) | A small face, white or black.
+Hearts, diamonds, clubs, spades (U+2665, U+2666, U+2663, U+2660) | The suits.
+Bullet (U+2022) | A bullet.
+White circle (U+25CB) | A circle.
+Eighth note (U+266A) | A musical note.
+Right and left triangles (U+25BA, U+25C4) | Solid triangles that point
+ | right and left.
+Up down arrow (U+2195) | An arrow up and down.
+Double exclamation mark (U+203C) | Two exclamation marks.
+Black rectangle (U+25AC) | A short thick rule.
+Arrows (U+2191, U+2193, U+2192, U+2190, U+2194) | Arrows: up, down, right,
+ | left, left and right.
+Triangles (U+25B2, U+25BC) | Solid triangles that point up and down.
+Florin sign (U+0192) | The florin sign.
+Greek letters (U+03B1, U+0393, U+03C0, U+03A3, U+03C3, U+03C4, U+03A6, U+0398,
+ U+03A9, U+03B4, U+03C6, U+03B5) | Alpha, capital gamma, pi, capital sigma,
+ | sigma, tau, capital phi, capital theta, capital omega, delta, phi,
+ | epsilon.
+Mathematical signs (U+221E, U+2229, U+2261, U+2265, U+2264, U+2248, U+2219,
+ U+221A) | Infinity, intersection, identical to, greater or equal, less or
+ | equal, almost equal, a centered dot, the root sign.
+Raised n, black square (U+207F, U+25A0) | A raised n, a solid square.
+.end
+Thirteen characters are in none of the classes: the inverse bullet, the inverse
+white circle, the male and female signs, the beamed eighth notes, the white sun
+with rays, the up down arrow with base, the right angle, the house, the peseta
+sign, the reversed not sign and the top and bottom halves of the integral
+sign.  They print as the placeholders {c:[U+25D8]}, {c:[U+25D9]},
+{c:[U+2642]}, {c:[U+2640]}, {c:[U+266B]}, {c:[U+263C]}, {c:[U+21A8]},
+{c:[U+221F]}, {c:[U+2302]}, {c:[U+20A7]}, {c:[U+2310]}, {c:[U+2320]} and
+{c:[U+2321]}, in this order.
+.pic pictures/appchar-print.png 5 The set printed, with the placeholders.
+The Printer reports each character that was printed as a placeholder once, in
+the warning "No font has the character U+XXXX; it is printed as [U+XXXX]"
+({n:print-errors}).  The no-break space prints as a
+space that a line is never broken at.  Every character of ASCII prints as
+itself, also a percent sign or a backslash.
+.note The set is printed with the fonts of the TeX installation (the list is in
+  {x:appcfg-fonts}).  A font that lacks a character prints a gap,
+  and this is not detected: only the characters that no font of the document has
+  are named in the placeholder.
+
+.h2 The code pages of Import and Export [appchar-pages]
+.ix Code pages, conversion
+.ix Import, code page
+.ix Export, code page
+.ix Question mark, characters changed to
+.ix Bullet written as asterisk
+The Import and Export panels of the File menu ({n:file}) have a field
+Character Set with seven values.  A document always holds the characters of
+code page 437, so a conversion is made for every other value, character by
+character.  For the value IBM Extended ASCII (CP 437) there is no conversion.
+A character of ASCII is the same in all the sets.  When the other set has no
+character of the same shape, the character is written as a question mark.
+.table 24 36
+Value | Import: file to document
+96 Character ASCII (7 Bit) | A character that is not ASCII is read as the
+ character that remains when its eighth bit is cleared, so an accented letter
+ becomes another character: a letter, a sign or a picture, by its code.  Use
+ a code page for such a file.
+IBM Multilingual (CP 850) | 45 characters of the page become question marks:
+ most capital letters with an accent, the letters with a tilde or a stroke,
+ the copyright and registered signs, a few other signs, and the paragraph and
+ section signs, which the set has as pictures that an import never makes.
+Portuguese (CP 860) | 16 characters become question marks: the capital
+ letters with an accent and the letters with a tilde.
+Norwegian/Danish (CP 865) | 3 characters become question marks: the o with
+ a stroke (small and capital) and the currency sign.
+UTF-8 | Each character of the file that the document can show is kept;
+ any other character becomes a question mark and is counted
+ ({n:file-import-charset}).
+Latin-1 | The characters from U+00A0 to U+00FF that the document can show
+ are kept; the others become question marks and are counted.
+.end
+.table 24 36
+Value | Export: document to file
+96 Character ASCII (7 Bit) | Accented letters lose the accent (an e with
+ an acute accent is written as e).  One half and one quarter are written
+ as {c:1}, the raised n as {c:n}, the raised 2 as {c:2}, the no-break space
+ as a space.  Every other character of the upper half, including the Greek
+ letters and the shade and block characters, becomes a question mark; the box
+ characters of a screen image become + - = and {c:|} (90 of the 128 are
+ question marks).
+IBM Multilingual (CP 850) | 45 characters become question marks: the Greek
+ letters, the mathematical signs, the raised n, the peseta sign, the
+ reversed not sign, the half blocks and the box characters that mix single
+ and double lines.
+Portuguese (CP 860) | 16 characters become question marks: several letters
+ with a diaeresis or a ring above, the ae ligatures, the i and u with a
+ circumflex, the yen sign, the florin sign and the reversed not sign.
+Norwegian/Danish (CP 865) | 3 characters become question marks: the cent
+ sign, the yen sign and the right-pointing double angle quotation mark.
+UTF-8 | Every character is written as the same character in UTF-8;
+ nothing is lost.
+Latin-1 | The characters from U+00A0 to U+00FF are written as they are;
+ every other character above ASCII becomes a question mark, and so does the
+ house (the picture after the tilde in the first half of the set).
+.end
+In every Export, whatever the set, the bullet of a list item is written as an
+asterisk.  A picture of the first group of the set ({n:appchar-control}) that
+is in the text is written by Export as the character itself.
+.ix Export, bullet
+.caution The conversion is made character by character and is not undone: a
+  question mark that was written for a character that the target set lacks
+  stays a question mark when the file is read again.  Keep the document, and
+  do not use an exported file as the only copy of a text that has
+  characters outside ASCII.
+
+.h2 Characters in the other files of Strata [appchar-files]
+.ix Characters in files
+.ix UTF-8 in files
+.table 24 36
+File | Character set
+The list of words of the spell check | UTF-8.  A letter of the set is written
+ as its Unicode character; a letter that the set lacks is read as a question
+ mark.
+The files of the thesaurus | UTF-8 or a code page, as the file says in its first
+ line; words that have a letter that the set lacks are dropped.
+A text file made by Export | The character set chosen (a code page, UTF-8 or
+ Latin-1), with a Carriage Return and a Line Feed at the end of each line.
+.end

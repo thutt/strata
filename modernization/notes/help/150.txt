@@ -1,0 +1,25 @@
+
+------------------------------- Keyboard Summary -------------------------------
+
+
+The following help screens provide a quick reminder of how Manuscript uses the 
+keyboard.  Refer to chapter 12 in the Reference manual for the location of 
+specific keys on your computer or to the Quick Reference guide for complete
+information on key usage.
+
+
+
+   Accelerators                                   Move Keys
+   Column and Table Editor Keys                   Panel Keys
+   Command Keys                                   Preview Keys
+
+
+
+   Cursor-Movement Keys                           Ruler and Tab Keys
+   Expand/Collapse Section and Level Keys         Special Character Keys
+   Function Keys                                  Text Editing Keys
+   Highlighting Keys                              
+
+
+--------------------------------------------------------------------------------
+                                   Help Index

@@ -1,0 +1,25 @@
+------------------------------- Equation Keywords ------------------------------
+Attributes     
+--------------------------------------------------------------------------------
+Character   Use
+--------------------------------------------------------------------------------
+#R or #r    Prints string in roman font.  Use for characters that are not 
+            being used as variables.
+                           
+#F or #f    Prints string in roman font and separates it from the rest of the 
+            equation by function spacing. Use for function names that are not 
+            predefined in the equation language.
+                           
+#I or #i    Prints string in italic.  Use before a predefined function name
+            to make it a variable.
+
+#B or #b    Prints string in bold.
+
+#C or #c    Prints string in bold italic.
+
+#S or #s    Prints string in script; cannot use with other attributes.
+--------------------------------------------------------------------------------
+Function Names    Greek Letters    Diacriticals    Operators   Pointers
+     Grouping Symbols     Large Operators     Miscellaneous     Format Keywords
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

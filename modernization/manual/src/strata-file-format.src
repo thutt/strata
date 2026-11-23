@@ -1,0 +1,405 @@
+# Strata File Formats: a document of its own, for people who write programs
+# that make or read the files of Strata.  The text is kept in three parts: the
+# document file (this part and the next) and the other files of Strata (the
+# last part).
+.doc Strata File Formats
+.h1 Strata File Formats [appfmt]
+.center
+Every kind of file that Strata reads or writes
+.center
+Version @VERSION@
+.center
+Logic Magicians Software
+.center
+{latex:\lmslogo[0.8]}
+
+.ix File formats
+.ix Formats, file
+.ix Byte layout
+.ix Document file format
+This document describes, byte by byte, every kind of file that Strata reads
+or writes: the document file and the three files that share its container
+(the template, the macro set and the library), the backup, the files that
+the program keeps for the user, the data of the spell check and the thesaurus,
+the pictures that a document may name, the help file and the text files that
+Export writes.  Chapter 10 of the Reference Manual says how the formats of
+other programs can be brought in; this document says what the formats of Strata
+themselves are.
+
+Most readers need only the table of the next section, which says which file
+is which.  A reader who writes a program that makes or reads documents needs
+the whole of {x:appfmt-doc}: it is complete enough to write a
+document that Strata loads.
+
+.h2 The files at a glance [appfmt-glance]
+.ix Files, table of kinds
+.ix Extensions of files
+.table 16 11 26 17
+File | Extension | Written by | Described in
+Document | .DOC | Save, Autosave | {x:appfmt-doc}
+Template | .SET | Save Global Settings Only | {x:appfmt-set}
+Backup | .BAK01 | Save, with Backups Kept | {x:appfmt-bak}
+Macro set | .MAC | Tools, Macros, Save | {x:appfmt-mac}
+Library | .LIB | Tools, Library, Save | {x:appfmt-lib}
+Settings | config | Setup, Options | {x:appfmt-strata-config}
+Font list | fonts | TeX Font Association | {x:appfmt-strata-fonts}
+Word list | dictionary | Define of the spell check, Maintain Dictionaries | {x:appfmt-strata-dict}
+Hyphenation list | hyphenation | Maintain Dictionaries, Tab | {x:appfmt-strata-hyph}
+Text | any | Export, the text mode | {x:appfmt-textout}
+LaTeX | {c:.tex} | Export, the Printer | {x:appfmt-latex}
+.end
+The extensions in the table are the ones that the commands add when a name is
+typed without one (Reference Manual, chapter 2, {x:file-names-ext}); every
+command accepts any
+other name.
+
+.h2 Conventions of this document [appfmt-conv]
+.ix Hexadecimal bytes
+.ix CR LF
+.ix NUL byte
+.ix Record, file format
+.ix Code page 437 in files
+.ix Bytes, notation
+A byte is written as two hexadecimal digits when its value matters, as 1D, or
+as the character that it is when it is a printable character of ASCII.  CR is
+the byte 0D, LF the byte 0A, and NUL the byte 00.  CR LF is the pair that
+ends a line in the container.  "Text" means bytes of the character set of
+Strata, code page 437 (Reference Manual, appendix C); the files are never
+translated, whatever
+the system is.
+.table 22 48
+Word | Meaning
+Record | A run of bytes that ends with CR LF.  The first byte is the type.
+Header | The records that come before the line {c:*B}.
+Body | The records from the line {c:*B} to the line {c:*E}.
+Section | A part of the structure of a document, with its headline.
+Block | A paragraph of the text; it may be divided into columns.
+Column | The text of a block between two column breaks.
+Marker | An object in the text: a date, a picture, a note.
+Property | A record that sets one value of a format.
+.end
+A number in a record is written as decimal digits.  A length is in thousandths
+of an inch unless the text says otherwise ({c:3000} is three inches); a
+spacing is in hundredths ({c:150} is 1.5 lines); a position of a tab is a
+number of character cells counted from 0.  A text value in a record ends with
+a NUL, which is written before the CR LF.
+
+.h2 The document file [appfmt-doc]
+.ix .DOC file
+.ix Document file, container
+.ix *R2, *B, *E
+The document file is the container of every file that Strata makes of a
+document.  It is the Strata document format.  It is made of records, in two
+parts, a header and a body.
+.code
+*R2                      the first record: the release
+...                      the header records
+*B1                      the start of the body (1 structured, 0 flat)
+...                      the records of sections, blocks, columns, texts
+*E                       the last record; the file ends with CR LF
+.end
+.h3 Records [appfmt-rec]
+.ix Records of the document file
+.ix T record, text
+.ix Scanning a text record
+Records are separated by CR LF.  The first byte of a record is its type.
+Every record is a line of bytes, with one exception: a text record, whose first
+byte is T, holds the text of one column and may itself hold CR LF, because
+the markers in the text hold whole records inside.  A text record is read
+sequentially, byte by byte, by these rules, and ends at the NUL that they find;
+the NUL is followed by CR LF.  A reader that splits the file at every CR LF
+breaks the markers.
+.table 14 56
+Byte read | What the scan does
+01 | Skips the next byte (the escape).
+10 or 12 | Skips the two bytes that follow (the operands of a tab or of
+ an attribute
+ change).
+13 and a close parenthesis | The end of a marker: the depth goes down by one.
+13, digits, ( | The start of a marker: the depth goes up by one.
+00 at depth 0 | The end of the record.
+Any other byte | Skipped.  A byte 00 inside a marker does not end the record.
+.end
+.behavior Strata checks only that the file begins with the two bytes {c:*R}.
+The third byte is not looked at: a file that begins {c:*R1} or {c:*R3} is
+read as release 2.  A file that has no {c:*R} at its start is refused with the
+message "not a Strata document (missing *R)", and a text record that has
+no NUL end gives "damaged document: a piece of text has no end".  A document
+that has no {c:*B} record or no {c:*E} record is cut short and is refused.
+.h3 Limits of a document [appfmt-limits]
+.ix Limits of a document
+.ix Documents, size limits
+.ix Damaged documents
+A document file may be cut short, damaged or made to do harm, so Strata
+reads it with limits and refuses a file that goes beyond one of them, with a
+message that names the limit.  The document that is open is never changed by
+a refused file.  The limits are far above any document a person writes.
+.table 40 30
+Limit | Value
+The size of the file | 32 MB
+Blocks, sections and level marks together | 500000
+Markers in the programs at one time | 1000000
+Records of the header | 20000
+Property records of one block or one column | 2000
+Columns of one block | 5000
+Digits of a number in a property record | 7
+Digits of the type number of a marker | 6
+.end
+A record that holds a text, which ends with a NUL byte, may hold any digits.
+A marker whose type number has more than six digits is not a marker: its
+bytes are text.  A file that is a directory, a device or a pipe is refused,
+and so is a file that changes while it is read.
+.h3 The header [appfmt-header]
+.ix Header records
+.ix Records of the header
+.ix Global settings, stored
+The header holds the settings of the whole document.  A record is written only
+when its value is not the default, so that a new document has a short header.
+The order of the records is fixed and Strata keeps it, as far as it is known.
+A record that Strata does not understand is kept as it was found, in its place,
+and written back unchanged.
+.table 12 40 18
+Record | Meaning | Value
+*R2 | The release of the format; the first record. | none
+MD | The description of the document: at most 250 characters, none of them a control character; a longer one or one with a control character makes the document refuse to open. | text, NUL
+MA | The author of the document. | text, NUL
+MR | The revision, in thousandths. | 1007 is 1.007
+PML PMR PMT PMB | Margins of the page layout. | thousandths
+PHI PFI | Indent of the header, of the footer. | thousandths
+PHW PFW | White space of the header, of the footer. | thousandths
+PP | The page number tag of the document. | text, NUL
+PD PT | The date and the time format of the page. | text, NUL
+P<n>... | The six page layouts, below. | as the global ones
+PHB PFB | The header and the footer of the document. | blocks follow
+F... | The global format of sections, below. | see the table
+FN | A named block format: FN name NUL ... FN NUL. | records
+DP | The paper: DP0,8500,11000. | n,width,height
+DF | A typeface definition. | see below
+NT N... | The Note Format. | see below
+YCL | The level of the table of contents that a print makes: 0 for none, 1 to 99. | YCL99
+YI | Settings that are kept and not understood. | YIWN2
+ZN... | The number of markers of each kind that has a list, below. | see the table
+OC OH OM OT | The Marker Format and the counters. | see below
+OKF OKB OKS OKT | The Keycap Format. | see below
+DC DD DE DN | The printer of the document. | kept
+.end
+.h4 The page layouts: PML, P1 to P6, PHB, PFB [appfmt-header-page]
+.ix Page layout records
+.ix Header and footer records
+.ix PHB, PFB
+The records PML, PMR, PMT and PMB are the margins of the global page layout in
+thousandths of an inch (PML1250 is 1.25 in).  The records PHI, PFI, PHW and PFW
+(the indent and the white space of the header and of the footer), PP (the tag
+of the page number, as {c:\1\} or {c:\i\}), PD and PT (the date and time
+formats) belong to the same layout.  The layouts of the other pages carry the
+number of the page style in front: P1 is the Title Page, P2 the Table of
+Contents, P3 the First Page, P4 the Even Pages, P5 the Odd Pages and P6 the
+Index.  Behind it comes the code that the global layout has: P1ML, P3FB1 and
+so on.  Besides these, the records below are met.
+.table 12 58
+Record | Meaning
+P<n>C | The vertical centering of the title page, in per cent (P1C33).
+P<n>P | The page number tag of that page (P1P\i\ NUL: lower case roman).
+P<n>Q | Not understood (P3Q1); kept.
+P<n>HB P<n>FB | HB0 means that the page style has no header; HB1 says that
+ | the records of the header follow at once, as one S record and its blocks
+ | (the same records as a body; the three columns CF J0, J2 and J1 are the
+ | left, the centre and the right part).  FB is the same for the footer.
+PHB PFB | The header and the footer of the whole document: a record of three
+ | letters, then S and the blocks, up to the next PFB or the next record of
+ | another kind.  The headers and the footers are written back as they were.
+.end
+.h4 Global and level formats: F [appfmt-header-format]
+.ix F records, global format
+.ix Format records
+.ix Headline and text format
+A record F<code><value> sets a global format; F<level><code><value> sets the
+same for sections of that level (level 1 to 5).  The codes are those of the
+panel Global Format (Reference Manual, chapter 4); the first letter says
+whether the setting is
+for headlines (H) or for text (T) or the whole section (S).
+.table 14 56
+Record | Meaning
+FHA FTA | Attributes of headline and text blocks: 1 bold, 4 italic, 16
+ | underscore words (the sum of the values).
+FHJ FTJ | Justification: 0 left, 1 right, 2 center, 3 even.
+FHI FTI | Line indent: 0 none, 1 first, 2 all but first, 3 all.
+FHF FTF | Font: a number from 1 to 20.
+FHT FTT | The tab stops, as a list of positions (FTT5).
+FSL FSH FST FSC FSS | Spacing in hundredths: line, headline, block,
+ | subsection, peer section (FSH150 is 1.50).
+FI | Indent per level (FI3).
+FL | Level settings: FLP page break level, FLG page number level, FLA 0
+ | when Auto Numbering is off, FLN the number of levels that are numbered.
+FB | First block type: FB2 is Joined.
+FP | Print: FP1 is Only Headlines.
+FU | Ruler: FU2 is 10 characters to the inch.
+FWN | The number of winding columns.
+FWG | The gutter between winding columns, in thousandths of an inch.
+FWR | The rule between winding columns: 1 single, 2 double, 3 wide.
+F<n>G | The tag of the sections of level n, as {c:\1\.} or {c:\I\.}; text, NUL.
+F<n>I | Indent to the next level, for level n.
+FZM | Line numbering: 0 off, 1 pagewise, 2 running, 3 running that starts
+ | again at each section of the first level.  Left out for 0.
+FZE | A number on every n-th line, from 1 to 99.  Left out for 1.
+FZS | The side of the numbers: 0 left, 1 right, 2 outer, 3 inner.
+FZZ FZY | The size of the number: 0 tiny, 1 script, 2 footnote size; its
+ | font: 0 sans serif, 1 roman, 2 typewriter.
+FZF | The format of the number: 0 arabic, 1 roman, 2 capital roman.
+FZD | The distance of the number from the text, in hundredths of an inch.
+ | Left out for 15.
+FZQ | FZQ1: the lines of a displayed equation are numbered too.
+FZLF FZLP | The list of the Figure markers and of the Picture markers: 1 on, 0 off.
+ | Left out for automatic: the list is made when the document has a marker.
+FZLT FZLI | The same for the Table markers and for the index.
+.end
+The counts of the markers are written just before the *B record, and only for
+a document that has them: one that was loaded with none and has had no marker
+of these kinds edited is written as it was read.
+.table 10 60
+Record | Meaning
+ZNF ZNP | The number of Figure markers and of Picture markers in the text: a
+ | number of up to seven digits.  Left out for 0.
+ZNT ZNI | The number of Table markers and of Index markers.
+ZNX | The kinds whose count is not exact, as the sum of 1 (figures), 2
+ | (pictures), 4 (tables) and 8 (index).  A reader counts those kinds again.
+.end
+A reader may count the markers itself and ignore these records.  The count of a
+kind that has no record, or is named by ZNX, is made when the document is read,
+in one pass.
+The values 1, 4 and 16 of the attributes are those of the file; the panels
+show them by name.  The Editor and the Printer act on bit 1 (bold), bit 4
+(italic) and on bit 2 or bit 16 (underscore); the other bits are kept and not
+acted on.  The same bits are used by the attribute token of the text
+({x:appfmt-text}).
+.h4 Named formats, typefaces, notes and markers [appfmt-header-other]
+.ix Named block format records
+.ix DF records
+.ix OM records
+.ix OT records
+.ix N records, note format
+.table 14 56
+Record | Meaning
+FN name | The start of a named format; the records that follow are B-records
+ | (BFA, BFJ, BFT...) up to the record FN with no name.  A block uses a
+ | named format with the record BG name NUL (below).
+DF<n>N | The name of the font n (text, NUL): DF6NZed NUL.
+DF<n>S | The typeface of the font: DF19S2,1,39,27490,100.
+OC | The cross-reference format: OC2 headline, OC3 both.
+OH | OH1: show hidden markers.
+OM<t>,<m> | The display mode m of the marker of type t: 0 diamond, 1 name,
+ | 2 short, 3 long, 4 hidden.  Left out for the default mode
+ | ({x:appfmt-markers}).
+OT<n>N | The description of counter n (1 to 99), text, NUL.
+OT<n>T | The tag of counter n, text, NUL: {c:\1\.} (arabic), {c:\i\}, {c:\I\},
+ | {c:\A\} and {c:\a\}.  Without the records, counter 1 is Numeric with
+ | {c:\1\.} and counter 2 is Alphabetic with {c:\A\.}.
+OKF OKB OKS OKT | The Keycap Format: foreground and background in tenths
+ | (0 to 1000), scale in thousandths, font number.  Left out for the
+ | defaults 0, 1000, 1000 and 2.
+NT | The primary note type: NT2 levelnotes, NT3 endnotes.
+N<k>R N<k>N | The reference tag and the note tag of the kind k (1 footnote,
+ | 2 levelnote, 3 endnote); text, NUL.
+N<k>X N<k>Y | The attributes of the reference tag and of the note tag.
+N<k>SL N<k>ST N<k>SN | Line, block and note spacing in hundredths.
+NS<k> | The separator bar, in thousandths (NS13500 is 3.500 in).
+NZ<k> | NZ11: renumber the notes of the kind 1.
+NB | The position of the notes: 0 after text, 1 bottom of page.
+NL | The note level of the levelnotes.
+NE | The title of the endnote page; text, NUL.
+N<k>FA FJ FI FF | Attributes, justification, indent, font of the notes.
+.end
+.note The records that Strata writes are, in the order of the file: the
+  release, the description, the author, the revision, the global page records,
+  the layouts, the formats, the named formats, DP, DF, NT, YC, YI and then
+  OC, OH, OM, OT and the keycap records.
+.h3 The body [appfmt-body]
+.ix Body of the document
+.ix S record, section
+.ix Plus and minus records
+.ix SE record, fold state
+.ix Structured and unstructured body
+.ix *B record
+The body begins with the record {c:*B1} for a structured document and
+{c:*B0} for an unstructured one and ends with {c:*E}.  Its grammar is
+.code
+body     := ( S | SE n | + | - | block )* "*E"
+block    := B-record* column+
+column   := C-record* T-record
+.end
+and the records are these.
+.table 12 58
+Record | Meaning
+S | The start of a section.  Its first block is the headline.
+SE n | A section, with the fold state n: 0 open, 1 the headline and the
+ | subsections, 2 collapsed.  Strata writes SE for the sections that it read
+ | as SE and S for the others.
++ | The start of a group of subsections.
+- | The end of the group.
+B... | A block property, before the first T of the block.
+C... | A column property, before the T of that column.
+T text NUL | The text of one column.
+B | A bare B ends a block and starts the next one.
+*E | The end of the body.
+.end
+A column that has CW<n> (the width in cells) is followed by another column of
+the same block; the last column of a block has no CW.  A bare B record is
+written when the last column of the block before had a CW, because without it
+the end of that block would not show.  S, +, - and *E also end a block.
+The sections of a structured document with two parts, the first having two
+subsections, are written so (each S is followed by its blocks):
+.code
+S                  the root: no blocks
++
+S  blocks          section 1
++
+S  blocks          section 1.1
+S  blocks          section 1.2
+-
+S  blocks          section 2
+-
+.end
+A structured document is {c:S + S blocks ... -}: the root section holds no
+blocks and its group of subsections (between + and -) holds the sections of
+level 1, and a section of level n holds a group of its own for its sections of
+level n+1.  The depth of the section is its level.  The smallest structured
+body is {c:S + S T text -}.  An unstructured document is a single S, followed
+by blocks.
+.h4 Block and column properties [appfmt-props]
+.ix Block properties
+.ix Column properties
+.ix BF, BL, BG records
+.ix CW, CF, CB records
+.table 12 58
+Record | Meaning
+BF<c><v> | A block format: the same codes and values as the F records (BFA1,
+ | BFJ0, BFT1,3,5, BFF19).
+BL<n> | The left indent of the block, in cells.
+BG name | The named format of the block (text, NUL).
+BS | Spacing (BSB125: 1.25).
+BT BB | Spacing above and below (20 or 250).
+BW | Winding columns (BWN2: two columns), the gutter (BWG500: half an inch)
+ | and the rule (BWR1: 0 none, 1 single, 2 double, 3 wide) of the block or of its
+ | named format, and records of unknown meaning (BWA2).
+BM BC BV BR | Values 0 to 52, 1, 50 or 100, 3 to 15.
+CW<n> | The width of the column in cells.
+CF<c><v> | A column format, the same codes as BF (CFJ2: centered).
+CB<m>,<f> | The border of the column: m has two bits for each side (0 none, 1 single, 2 double, 3 wide): top 1, bottom 4, left 16, right 64, so that all double is 170; f is 1 when the borders connect, else 0.
+CL CR | The gap on the left and on the right, in cells.
+BT BB | The Top and the Bottom Gutter of a bordered block, in thousandths of an inch.
+BH | The Shading of a block, in percent of grey (0 to 100).
+BZG<f> | On the headline of a section: a run of section numbers begins here. The section is number 1 of its level, the sections after it on the level go on from it in the style of the format f (the same codes as a Section Tag: {c:\1\}, {c:\i\}, {c:\I\}, {c:\A\} and {c:\a\}; an empty format for no tag), and the sections below it show that style in the numbers above them (A.1, A.2.1). The run ends at the next section of the level that has the record. This reference manual numbers its chapters 1 to 11 and its appendices A to F in this way.
+CT CV | Values such as 12, 8, 1 and 50.
+.end
+A format value is found in this order: the column's CF, the block's BF, the
+named format that the block uses, the format of the headline or the text for
+the level of the section (F<level>H.. or F<level>T..), the global format
+of the headline or text (FH.. or FT..), the built-in default.  The first
+block after an S is the headline.
+No record is known to hold a colour: the attribute bytes of the text have the
+bits 1 (bold), 4 (italic) and 16 (underscore) and no other that the documents
+use, and the records of a block or a column that are not understood (BM BC BV
+CT CV) have values that do not look like a palette.  A reader keeps them as
+they are.
+.include strata-file-format1.src
+.include strata-file-format2.src

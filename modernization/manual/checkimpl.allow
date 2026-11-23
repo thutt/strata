@@ -1,0 +1,74 @@
+# Phrases that may stay, one per line, matched without regard to case.
+# Each phrase is plain English for a user, not a detail of the code.
+function key
+function keys
+key function
+# Equations chapter: variables and functions of mathematics.
+a letter is a variable
+several variables
+as variables
+letters in a formula are variables
+operators and functions
+the usual functions
+for a function that has no command
+function name of your own
+function by cases
+function defined in cases
+# Conditional text: the code of a message of the Error Log.
+if-structure
+# Environment variables are set by the user.
+environment variable
+# The commands of the installation steps name the build directory.
+source scripts/setup -b release /tmp/strata
+# The install under a directory of the user: the prefix is named in the
+# commands of the installation steps.
+$HOME/usr/install
+${HOME}/usr/install
+# The check of the thesaurus data that the user may run.
+ls /usr/share/mythes/th_en_US_v2.dat
+# The file format document is for people who write converters.
+skip: strata-file-format.src
+skip: strata-file-format1.src
+skip: strata-file-format2.src
+# Conversion, Messages, Glossary: the code page is a value of the Character Set field.
+the code page
+# Setup: the PDF Directory and the PDF Viewer take a full path, a path that
+# starts with ~/ for the home directory of the user, and a relative path that
+# is refused; the user types them.
+a path that starts with ~/
+starts with ~/
+or ~/ and a path
+no relative path such as ./viewer
+for example "found: /usr/bin/evince"
+# Lines that include the parts of a chapter (convert, messages).
+# Conversion and Messages: the text of messages that the user sees.
+unterminated text record
+# Used in edit-b.src: a field of the marker panel Merge.
+Variable Name
+# APPS: appcfg1.src, appcfg2.src: example settings that show a directory.
+workdir=/home/ann/docs
+workdir=/home/ann/book
+# Messages: texts that the programs show, quoted as they are.
+cannot make a temporary directory
+No temporary directory for latex
+See README.txt for the
+Cannot make a pipe
+# STRVIEW: view3.src: the hint of the menu entry Tools, Macros, Learn.
+Record keystrokes as a macro
+# STRVIEW: str3.src, str5.src: the text of messages that the user sees.
+Preview: cannot make a temporary directory
+Cannot make a temporary directory
+# Glossary: the files of the user that the entries name.
+~/.strata/config
+~/.strata/fonts
+~/.strata
+# markers5.src and markers.src: the panel field of the Merge marker is named Variable Name.
+Variable Name
+# GETTING STARTED: the programs are started by their paths in the install, and
+# the user is told where the install puts them.
+/usr/bin/
+share/strata/strata.hlp
+share/doc/strata/README.txt
+share/doc/strata/KNOWN-ISSUES.txt
+cp -r /usr/share/strata/tutorial
+text indent: not implemented

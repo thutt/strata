@@ -1,0 +1,54 @@
+# Chapter 2: File.  The chapter is kept in four sources that this file reads:
+# the concepts (file0), the templates, backups and revisions (file1), the
+# commands Save and Retrieve (file2) and the commands New, Delete, Import
+# and Export, the messages and the examples (file3).
+.doc Strata Reference: File
+.chapter 2
+.h1 File [file]
+.ix File menu
+.ix Files, chapter overview
+.ix F12, File
+.ix Disk files
+A Strata document is stored in a file on the disk.  The File menu holds the
+commands that move documents between the Editor and the disk: Save writes the
+document, Retrieve reads one, New starts a new document, Delete removes a
+file, and Import and Export exchange plain text with other programs.  All six
+commands have a panel of the same kind and follow the same rules for names,
+directories and checklists.
+
+Strata uses the file system of the operating system: a file is a name in a
+directory, a directory is reached by a path, and a path that begins with a
+slash starts at the root.  Strata adds a few conventions: the extension that
+a command gives to a name that has none, the checklists that show what is in
+a directory, the backup file, the template, and the revision number of a
+document.
+
+.h2 How the chapter is organized [file-organization]
+The chapter describes the shared objects first and the commands second,
+because the six commands share most of their rules.
+.table 19 41
+Part | Sections
+The objects that the commands work on | {X:file-types} names the three
+ | types of file.  {X:file-workdir} describes the working directory that
+ | every panel shows first, {x:file-names} the rules for file names, and
+ | {x:file-checklist} the lists that the key {k:F2} opens.  {X:file-panels}
+ | gives the keys that are valid in every File panel, so that the entries
+ | of the commands need not repeat them.
+The things that a document carries | {X:file-templates}, {x:file-backup}
+ | and {x:file-revision}.
+The commands, in the order of the menu | {X:file-save}, {x:file-retrieve},
+ | {x:file-new}, {x:file-delete}, {x:file-import} and {x:file-export}.
+ | Each begins with the ways to reach it and its panel, and ends with the
+ | messages and the borderline cases of that command.
+Reference and practice | {X:file-messages} lists the messages of the File
+ | commands, and {x:file-examples} gives a few worked examples.
+.end
+The File commands belong to the Editor.  The Document Manager opens a
+document with its own command, Edit / Preview / Print Document
+({n:str-edit}), and starts the Editor on the file; from then on the commands
+of this chapter apply.
+
+.include file0.src
+.include file1.src
+.include file2.src
+.include file3.src

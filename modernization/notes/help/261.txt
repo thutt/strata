@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Save modified document? --
+
+You are attempting to leave the editor or close a window without saving a 
+modified document. Press Y to save the edited document, N to keep the last 
+saved version of the file, or Esc to cancel the operation.
+
+
+-- Selected menu option not currently available -- 
+
+The option you have selected is not currently available.  For more information,
+see chapter 4 of the Reference manual about Window command options, chapter 7
+about preview options, or chapter 9 about macro options.
+
+
+-- Soft hyphen error --
+
+A word in the document uses soft hyphens incorrectly. Check for words with 
+leading or final hyphens (such as -harpoon or harpoon-) or entries with more 
+than one hyphen in the same place (such as har--poon).
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

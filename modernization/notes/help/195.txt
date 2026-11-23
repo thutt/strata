@@ -1,0 +1,25 @@
+
+--------------------------- Marker Index (continued) ---------------------------
+Marker        Abbr   Description
+--------------------------------------------------------------------------------
+Keycap        ky     Print a graphic representation of a keycap.
+Line          ln     Print a horizontal line.
+Markup        ma     Enter special formatting codes.
+Merge         me     Merge changing data in copies of a document.
+Note          no     Enter a footnote, levelnote, or endnote.
+Orientation   or     Change the orientation between portrait and landscape.
+Page Break    pb     Break the page and force text to start on next page.
+Page Number   pg     Print the page number.
+Pathname      pa     Print the complete file path name.
+Picture       pi     Print a graphics image in document.
+Printer       pr     Print the name of the printer that printed the document.
+Revision      re     Print revision number from the New File/Save File panel.
+Screen        sc     Print a graphics image of a screen display.
+Section       se     Print the specified section tag and/or headline.
+Symbol        sy     Enter a special printer symbol.
+Table         ta     Define a table name for the Table of Tables.
+Time          ti     Print the current time.
+Whitespace    ws     Specify an area of blank space to leave on a page.
+Worksheet     wk     Import data from a 1-2-3 or Symphony worksheet.
+--------------------------------------------------------------------------------
+          More Markers     Markers     Keyboard Summary     Help Index

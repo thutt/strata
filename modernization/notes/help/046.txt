@@ -1,0 +1,25 @@
+
+---------------------------------- Border Layout -------------------------------
+
+The Border Layout panel contains the prompts that assign border lines to the
+highlighted area.  As you select a border types (None, Single, Double, or Wide)
+the graphic image in the middle of the panel illustrates the borders selected.
+You can change the border line weight on the Menu (F10) Global Options panel.
+
+      +-------------------------- Border Layout --------------------------+
+      |      All: None                              Top Gutter: 0.000 in  |
+      |  Outside: None                           Bottom Gutter: 0.000 in  |
+      |                           .............                           |
+      |                           :     .     :                           |
+      |                           :...........:                           |
+      |                           :     .     :                           |
+      |                           :...........:                           |
+      |                                                                   |
+      |                             Top: None                             |
+      |     Left: None           Inside: None            Right: None      |
+      |                          Bottom: None                             |
+      |  Connect Borders? Yes                          Shading: None      |
+      +-------------------------------------------------------------------+
+
+--------------------------------------------------------------------------------
+         Border       Options        Keyboard Summary       Help Index

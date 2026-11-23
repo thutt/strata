@@ -1,0 +1,25 @@
+
+------------------------------ Options (continued) -----------------------------
+
+Display On-Screen Help?      Select No to turn off the display of on-screen 
+                             help across the bottom of the screen. The help
+                             information includes function keys, highlighting 
+                             keys, and Column and Table Editor keys.
+
+Display Tab & End-of-Line    Select Yes to display tab and end-of-line 
+characters?                  characters. Select No to hide them.
+
+Display Dots for Spaces?     Select Yes to display a dot for each blank space.
+                             Select No to leave spaces blank.
+
+Display Even Justification?  Select Yes to display even justification for all
+                             portions of a document that have Justification set
+                             to Even. Select No not to display even 
+                             justification.
+
+Display +/- with Section     Select Yes to display + or - as part of the section
+Tags?                        tags (+ for sections with text blocks or sub-
+                             sections; - for sections with only headline 
+                             blocks).  The + and - do not print.
+--------------------------------------------------------------------------------
+    Options         Justification         Keyboard Summary         Help Index

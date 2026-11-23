@@ -1,0 +1,25 @@
+
+---------------------------------- Screen Capture ------------------------------
+Screen Capture is a memory-resident utility that captures screen images and 
+saves them to files on disk.
+
+---Procedure--------------------------------------------------------------------
+
+ To start Screen Capture, make sure you are at the DOS prompt of the Manuscript
+  directory and type SCR followed by Enter.
+ To capture a screen image, run your application and make sure the screen you 
+  want to capture is displayed.  
+ Press Shift PrtSc to activate Screen Capture.
+ Type a file name (without an extension) for the graphic image and press Ins.
+ Use Right, Left, Up, and Down to define the area of the screen to save. Press
+  Space Bar to move the cursor between the upper left and lower right corners.
+ Press Ins to create the graphic image file.
+
+--------------------------------------------------------------------------------
+# Type SCR HELP at the DOS prompt for information about command options or see 
+  SCR.DOC for information on running with different graphics monitors.
+# Screen Capture assigns the file extension .SCT for text screens and .SCG for
+  graphics screens.
+# Use the Screen marker to include screen image files in a Manuscript document.
+--------------------------------------------------------------------------------
+       Screen Marker             Keyboard Summary            Help Index

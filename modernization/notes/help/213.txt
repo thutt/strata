@@ -1,0 +1,25 @@
+
+-------------------------------- Replace Options -------------------------------
+
+
+
+
+Attributes:  Select No Change if the replacement string should take on the 
+             attributes of the string it replaces.  Select a specific 
+             attribute if the replacement string should maintain that 
+             attribute regardless of the found string's attribute.
+
+
+
+
+Case:        Select No Change if the replacement string should take on the case
+             of the string it replaces.  For example, if the string found is 
+             uppercase, the replacement string is inserted in uppercase.  Select
+             Exact if the case of the replacement string should always be 
+             exactly as it is typed at the With prompt.
+
+
+
+
+--------------------------------------------------------------------------------
+ Replace    Replace Strings    Search Options    Keyboard Summary    Help Index

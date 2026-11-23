@@ -1,0 +1,25 @@
+
+------------------------------- Font Load Modes --------------------------------
+Use the Specify Font Load Modes option from the Maintain Download Fonts menu to
+display a panel for each of the typefaces in the font directory. These panels 
+display the font name, point size (for HP printers), attribute, character set, 
+and load mode. You can change the load mode on these panels by pressing Space 
+Bar, selecting a load mode option, and pressing Ins. The load mode options are:
+
+Unassigned:  These fonts are not downloaded and are unavailable in Manuscript.
+             Use this mode to exclude specific fonts in your font directory
+             from Manuscript's Typeface List.
+
+Pre-Load:    These fonts must be either already resident in the printer or 
+             downloaded by using the Load "Pre-Load" Fonts menu option on
+             the Maintain Download Fonts menu.
+
+First Print: Each of these fonts is downloaded the first time you print a 
+             document that has that font in the Typeface List. The font stays 
+             resident in the printer after the document is printed.
+
+Every Print: Each of these fonts is downloaded each time you print a document 
+             that has that font in the Typeface List; however, the font does 
+             not stay resident in the printer.
+--------------------------------------------------------------------------------
+ Maintain Download Fonts     Typeface List     Keyboard Summary     Help Index

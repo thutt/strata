@@ -1,0 +1,313 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+LATEX MARKERS DRAWN AS PICTURES (DESIGN)
+========================================
+
+Status: implemented in the X11 version of the Editor.  The terminal
+version is not changed: it draws no pictures.
+
+CHANGE OF 21 NOVEMBER 2026 (the rule of the owner, which replaces the
+setting of the first design where the two disagree): the LaTeX marker has
+the display mode Inline, like the Equation, the Picture and the Keycap, and
+Inline is the DEFAULT mode of the type.  The X11 Editor draws a LaTeX marker
+as a picture only when its mode is Inline; in every other mode (Short, Name,
+Long, Diamond, Hidden) it is drawn by that mode and no job is started.  When
+the picture is not made (LaTeX not installed, an error, 5 seconds, no ink,
+too large) the marker is drawn in its SHORT form, and the message line says
+"LaTeX marker drawn as Short: REASON".  The same rule holds for the
+Equation, the Picture and the Keycap (KEYCAP-FALLBACK.txt).  The setting
+"Draw LaTeX Markers As Pictures?" and its record OLP do not exist any more:
+a document with OLP is read, the record is ignored and it is not written
+again.  The Printer setting latex_markers=no (which forbids the printing of
+LaTeX markers) is kept: the Editor draws no picture for a marker that
+setting does not allow, and says so.  The terminal Editor draws a marker
+whose mode is Inline in its Short form.
+
+SECOND CHANGE OF 21 NOVEMBER 2026 (the rule of the owner, which replaces the
+table of commands that were never drawn): "Can not you send it to LaTeX and
+let it error out?  If it produces text, treat it as a graphic and render
+it."  The table is gone.  There is one rule (section 1), and the Editor
+does not look at what the text says.
+
+1. The one rule
+---------------
+The text of a LaTeX marker (type 41, MARKERS.txt) is given to LaTeX alone,
+typeset in a box.  Then:
+
+  - when LaTeX reports an error, the marker is drawn in its Short form, the
+    first line of the error is the reason ("LaTeX says: Undefined control
+    sequence.") and a warning with the place of the marker (block and line)
+    is written to the Error Log;
+  - when the job takes more than 5 seconds, the marker is drawn in its Short
+    form ("it took more than 5 seconds");
+  - when the result has no ink, the marker is drawn in its Short form ("it
+    makes nothing visible"): a marker that only sets a state, makes a
+    definition, breaks a page, or makes only space gives nothing to see;
+  - otherwise the result is a picture and it is drawn.
+
+What the text says is not looked at.  A page break, vertical space, a
+section command or a definition either makes LaTeX report an error or
+leaves nothing visible in a box of its own, so the marker is drawn in its
+Short form without any list of commands that are refused beforehand.  A
+marker that has ink and also has vertical space, such as
+\vspace{3ex}\stratalogo[3]\vspace{3ex}, is drawn as a picture of the part
+that has ink.  The marker is for a piece of text of a line; the space
+between blocks belongs in a Whitespace marker, and the generators of the
+manual and of the story sample put the space of the title page in
+Whitespace markers (the text of the LaTeX marker is only
+\stratalogo[3]).
+
+The height of the picture is not limited.  A picture that is taller than the
+lines around it is a block and is drawn like a Picture marker that is tall:
+on rows of its own (section 5).  The author sees what the print will be.
+
+2. The decision
+---------------
+One step before the job: the comments of the text (from a percent sign to
+the end of the line) are taken out and the lines are joined with one space
+(src/latexmark.c); a text that is longer than 900 bytes after that is not
+sent ("its text is too long to draw as a picture"), and an empty text is
+drawn in the Short form ("it is empty").  Everything else is the job
+(eqrender.c, display 4): pdflatex on the text alone, with the preamble of
+the Printer, in a box; the box is shipped as a page of exactly its size
+plus one point of border; pdftoppm makes the PNG.  The reasons that the
+Editor keeps are the ones in section 7.
+
+The safety of the job is not a rule about the meaning of the text and
+stays: pdflatex runs with -no-shell-escape, openin_any=p and openout_any=p,
+by its full path, in a private temporary directory (mode 0700), in a process
+group of its own that is stopped when it takes more than 5 seconds.
+
+The Printer has its own rule for the markers: a document or a setting can
+forbid them (the setting latex_markers=no, the option --no-latex-markers):
+then no text of a marker is given to LaTeX.  The Editor follows it: with
+that setting every LaTeX marker is drawn in the Short form.
+
+3. What the Editor draws, a table
+---------------------------------
+Each text is the text of one LaTeX marker, alone in a line "NN [marker]
+end".  P means a picture, S means drawn in the Short form.  The test
+tests/xlmpic.py makes this table from a document, under Xvfb, and checks
+that what the Editor draws is what the table says.  The S lines at the end
+are what LaTeX does with texts that a table used to refuse beforehand: an
+error, or nothing visible.
+
+  P  \TeX{}
+  P  \LaTeX{}
+  P  \strata
+  P  $\alpha+\beta$
+  P  {\bfseries Bold}
+  P  \emph{emphasised}
+  P  $\frac{a}{b}$
+  P  \fbox{box}
+  P  \rule{1cm}{2pt}
+  P  \textsc{Caps}
+  P  \textcolor{red}{red}
+  P  \bfseries Hello
+  P  \parbox{2cm}{a b c d e f g h i j k l m n o p q r s t u v w x}
+  P  \newcommand{\zz}{y}\TeX{}
+  P  \setcounter{page}{5}\TeX{}
+  P  $$x$$
+  P  \vspace{3ex}\strata\vspace{3ex}
+  P  \strata\bigskip
+  P  \stratalogo[0.5]
+  P  \vspace{3ex}\stratalogo[0.5]\vspace{3ex}
+  S  \hrule
+  S  \section{Intro}
+  S  \begin{verbatim}
+  S  \end{verbatim}
+  S  {
+  S  }
+  S  {\bfseries unclosed
+  S  \usepackage[utf8]{inputenc}
+  S  \begin{figure}
+  S  \begin{itemize}
+  S  \begin{tabular}{ll}
+  S  \ifx a b
+  S  \undefinedmacroxyz
+  S  \input{/etc/hostname}
+  S  \immediate\write18{echo hi}
+  S  \newpage
+  S  \vspace{2ex}
+  S  \newcommand{\x}{y}
+  S  \setcounter{page}{5}
+  S  \bfseries
+  S  \rule{0pt}{0pt}
+  S  \hspace{1cm}
+  S  \hphantom{ink}
+  S  \par
+  S  \vfill
+
+4. The tallest and the widest picture
+-------------------------------------
+There is no height limit of the rule.  The picture job makes at most 4000
+by 4000 pixels, as the job of a Picture marker does (pdftoppm -W and -H);
+a picture that would be larger is refused with "it is larger than 4000 by
+4000 pixels".  The layout reserves at most 300 rows and 300 columns of cells
+for a picture (EQ_MAX_CELLS in ui.c), as for every picture.  The time of the
+job is limited to 5 seconds.
+
+5. The picture
+--------------
+Made like a keycap or an equation: a job of eqrender.c (display 4), in the
+background, one job at a time, polled from the event loop of the window.
+
+  - Document: the head is the preamble of the Printer at the text size of
+    the document (latex_snippet_head in latex.c: the same packages, the
+    symbols, the macros of the Printer, the Strata name and logo, without
+    the page geometry, the headers and the other things that belong to the
+    pages).  Math mode is not assumed: the text is set as it stands.
+  - The text is set in a box of its own (\hbox) in the color of the text of
+    the window, and its width, height and depth are written to the log of
+    LaTeX.  The box is shipped as a page of exactly its size plus one
+    point of border, on the color of the window, and pdftoppm makes the
+    PNG, as for the keycaps.  The depth of the box below the baseline is
+    kept with the picture, so that the picture stands on the baseline of
+    the text.
+  - Size: the text size of the document (the record PS, 11 points by
+    default) is the size of one line of the window, so the picture has the
+    size that the same text has in the printed line relative to the other
+    text.  The picture is made at the resolution of the window text,
+    scaled by 10 over the text size.
+  - Place: a picture that needs at most four rows in its line (the rows
+    above and below the baseline included) is a word of the line: baseline
+    aligned, and the line grows only as far as the picture needs.  A picture
+    that needs more rows is a block (eqn_is_display in layout.c: the same
+    layout as a displayed equation or a tall Picture marker): the text
+    before the marker ends its line, the picture takes rows of its own,
+    centred, and the text after the marker goes on in the line below it.  A
+    picture is never more than 300 cells wide or high (EQ_MAX_CELLS in
+    ui.c); one that does not fit in what is left of the line starts the
+    next line.
+  - Cache: in memory and in the cache directory of the equations
+    (~/.cache/strata/eqn), by a key made of the display, the resolution,
+    the colors, the text size and the text of the marker.  Changing the
+    text or the text size makes a new key; the same text in two markers is
+    made once; a document that is opened again shows the pictures at once.
+    The key of a LaTeX marker has the number of the rule (r2 since the one
+    rule of section 1): a refusal that an earlier rule kept in the cache,
+    such as a block taller than two lines, must not hold a marker in the
+    Short form after the rule has changed.
+  - Never waits for a key: the job runs in a child process; until the
+    picture is ready the marker is drawn by its settings, and the window is
+    drawn again when it is.  Only markers that are on the screen are asked
+    for.
+  - Limits: a job that takes more than 5 seconds is stopped with all its
+    child processes and its temporary directory is removed; the marker
+    stays drawn by settings and the reason ("latex took more than 5
+    seconds") is kept.  The files are made in a private temporary
+    directory (mode 0700) that the Editor makes before the job.
+  - Safety: pdflatex runs with -no-shell-escape, openin_any=p and
+    openout_any=p, by its full path (src/sysprog.c), in a private
+    temporary directory and a process group of its own.  A command that
+    would read or write a file outside the directory, or run a program, is
+    stopped by those settings (LaTeX reports the error and the marker is
+    drawn in the Short form); the text is not looked at beforehand.
+  - The cursor: the picture is one object, like an equation or a picture
+    (PICTURE-CURSOR.txt): one key onto it and one key off it, and a box
+    surrounds it when the cursor is on it.  The picture of a block is one
+    stop of the cursor for all its rows.
+
+6. The display mode
+-------------------
+Global Format, Marker Display Modes panel (page 2 of 3): the mode of the type
+LaTeX is Diamond, Name, Short, Long, Hidden or Inline, Inline by default.  A
+mode other than Inline is kept in the document as the record OM41,N (the
+default is not written).  The old setting "Draw LaTeX Markers As Pictures?"
+(record OLP, written only when it was No) is read and dropped.  The terminal
+Editor ignores the mode Inline and draws the Short form.  A marker whose mode
+is Hidden stays hidden: its picture is not asked for.  Changing the text of
+the marker makes a new key, so the picture is refreshed.
+
+7. When it cannot be drawn
+--------------------------
+In each of these cases the marker is drawn by its display mode, with no
+dialog and no delay (in the Short form; with the mode Short, Name, Long,
+Diamond or Hidden no picture is tried at all):
+
+  - LaTeX (pdflatex and pdftoppm) is not installed (the test removes the
+    program folders with STRATA_PROGRAM_DIRS, tests/progpath.py);
+  - the Printer setting forbids LaTeX markers;
+  - the text is empty, or too long (900 bytes after the comments are taken
+    out);
+  - LaTeX reports an error: the first line of the message of LaTeX is
+    written to the log of the run as a warning with the place of the marker
+    (block and line), and it is the message line when the cursor is on the
+    marker ("LaTeX marker drawn as Short: LaTeX says: Undefined control
+    sequence.");
+  - the job takes more than 5 seconds ("it took more than 5 seconds");
+  - the result has no ink, or the box has no width ("it makes nothing
+    visible");
+  - the picture is larger than 4000 by 4000 pixels.
+
+The reasons that are not an error of LaTeX are written to the log as debug
+messages, once for each text.  They are in the message line when the cursor
+is on the marker.
+
+8. Tests
+--------
+  - tests/lmtest.c: the preparation of the text (comments, lines, the
+    length).  Nothing in the text is refused beforehand, so there is no
+    table to check.
+  - tests/xlmpic.py (Xvfb): the table of section 3 with what the Editor
+    draws for each text (ink: a picture; an error or no ink: the Short
+    form), including the markers that a table used to refuse; a marker with
+    the TeX logo is a picture whose pixels differ from the label and equal
+    the picture of the cache, which matches a reference render of the text;
+    an error draws the Short form and is in the log with its place; a page
+    break is given to LaTeX, which reports an error; LaTeX missing draws the
+    Short form; the cache is used on the second draw (the compiles are
+    counted by a stand-in of pdflatex); a slow stand-in (sleeps 20 seconds)
+    never holds a key for more than 0.3 seconds and is stopped at 5 seconds;
+    the modes Diamond, Name, Long and Hidden start no job; a picture that is
+    taller than four rows is a block on rows of its own, the lines around it
+    are not overlapped, it has ink, and the cursor passes it in a few keys;
+    the logo of the title page of the story sample is a picture; the
+    terminal Editor is unchanged.
+  - tests/lmsetting.py: the mode in the panel, the record OM41, the old
+    record OLP read and dropped, the terminal Editor.
+  - The mutations that were tried against each check are in the report.
+
+9. Decisions
+------------
+  - (Replaced on 21 November 2026.)  The first design had a Yes or No
+    setting in the Marker Format panel.  The owner asked for the rule of
+    the Equation, the Picture and the Keycap: the display mode Inline, the
+    default, and the Short form when the picture fails.
+  - (Replaced on 21 November 2026.)  The first design had a table of the
+    commands, environments and switches that are never drawn as pictures.
+    The owner asked for one rule: give the text to LaTeX, and draw what has
+    ink.  The table, its documentation and the reasons that came from it
+    ("it opens a block" and the like) are gone; the reasons are now what
+    LaTeX said, "it makes nothing visible", "it took more than 5 seconds"
+    and "it is larger than 4000 by 4000 pixels".
+  - Hidden stays hidden: a person who set the mode to Hidden does not want
+    to see the marker.
+  - The picture takes the text size of the document and is scaled to the
+    window text, so that a logo is as large on the screen, relative to the
+    words around it, as it is on the page.
+  - There is no height limit.  A picture that is taller than four rows is a
+    block on rows of its own, as a tall Picture marker is: the author sees
+    what the print will be.  The limit of the size is that of the picture
+    job (4000 by 4000 pixels), the same as that of a Picture marker, and the
+    layout limit of 300 cells.
+  - Vertical space belongs in a Whitespace marker.  The generators of the
+    manual and of the story sample put the space around the logo of the
+    title page in Whitespace markers of 7.3 points, and the LaTeX marker
+    holds only \stratalogo[3].  (A marker that also holds vertical space is
+    still drawn when it has ink.)
+  - An error of LaTeX goes to the log as a warning, with the place; any
+    other reason goes as a debug message.  Neither opens a dialog.

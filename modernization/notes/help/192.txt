@@ -1,0 +1,25 @@
+
+------------------------------------ Compose -----------------------------------
+
+Use Compose (Alt F1) to display and print special characters, including tab fill
+characters, foreign letters, and currency symbols.  For example E, c, u, and L.
+
+--Procedure---------------------------------------------------------------------
+
+ Press Compose.
+ Type a two-character compose sequence.
+
+--------------------------------------------------------------------------------
+
+# Some monitors or printers cannot display or print some compose characters. In
+  such cases, Manuscript displays or prints a best-guess "fallback" character 
+  or characters in its place.  Also, it is possible that your screen display
+  and printed output may look different for some compose characters depending
+  on your system's capabilities.  
+
+# See Appendix B in the Reference manual for a lst of all compose sequences.
+
+# Special characters are also available using the Equation and Symbol markers.
+--------------------------------------------------------------------------------
+   Common Compose Sequences         Symbol Marker        Tab Fill Characters
+                 Keyboard Summary                      Help Index

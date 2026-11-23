@@ -1,0 +1,25 @@
+
+------------------------------ Command Key Summary -----------------------------
+
+
+       +---+---+                    +---+---+                  +---+---+
+  Help |F1 |F2 | Split      Compose |Alt|Alt| Append     Learn |Ctl|Ctl| Math
+       |   |   |                    |F1 |F2 |                  |F1 |F2 |
+       +---+---+                    +---+---+                  +---+---+
+  Copy |F3 |F4 | Cut           Join |Alt|Alt| Delete       Lib |Ctl|Ctl| Lib
+       |   |   |                    |F3 |F4 |             Copy |F3 |F4 | Cut
+       +---+---+                    +---+---+                  +---+---+
+ Paste |F5 |F6 | Format    Overtype |Alt|Alt| Set          Lib |Ctl|Ctl| Case
+       |   |   |                    |F5 |F6 | Attr       Paste |F5 |F6 |
+       +---+---+                    +---+---+                  +---+---+
+  Move |F7 |F8 | Table        Go To |Alt|Alt| Border           |Ctl|Ctl|
+       |   |   |                    |F7 |F8 |                  |F7 |F8 |
+       +---+---+                    +---+---+                  +---+---+
+Search |F9 |F10| Menu       Replace |Alt|Alt| Marker           |Ctl|Ctl|
+       |   |   |                    |F9 |F10|                  |F9 |F10|
+       +---+---+                    +---+---+                  +---+---+
+
+
+
+--------------------------------------------------------------------------------
+                     Keyboard Summary            Help Index

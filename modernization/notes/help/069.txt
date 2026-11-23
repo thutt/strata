@@ -1,0 +1,25 @@
+
+---------------------------------- File Export ---------------------------------
+
+File Export writes the current document or section to an ASCII text file.
+
+---Procedure--------------------  +---------- Export ASCII Text File ----------+
+                                  |                                            |
+ Press Menu.                     | Working Directory:                         |
+ Select File Export.             |                                            |
+ Enter the ASCII text file name. | ASCII File Name:                           |
+ Select the export options you   |                                            |
+  want.                           |   Options: v Export a Screen Image         |
+ Press Ins to export the         |              Export Data Only              |
+  document to an ASCII file.      |                                            |
+                                  |              96 Character ASCII   (7 Bit)  |
+--------------------------------  |            v IBM Extended ASCII   (CP 437) |
+                                  |              IBM Multilingual     (CP 850) |
+                                  |              Portuguese           (CP 860) |
+                                  |              Norwegian/Danish     (CP 865) |
+                                  |                                            |
+                                  |            v Export Entire Document        |
+                                  |              Export Current Section        |
+                                  +---------- Press Ins to Export File --------+
+--------------------------------------------------------------------------------
+              File           Keyboard Summary           Help Index

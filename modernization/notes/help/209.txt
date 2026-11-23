@@ -1,0 +1,25 @@
+
+------------------------------- Custom Page Style ------------------------------
+
+
+The following prompts are found on the custom table and index style panels.
+
+Page Title:       Enter a title to print across the top of the first index or 
+                  table page and press Enter. 
+
+Title Font:       Select a font for the title.  This font is used only for 
+                  the title, not for the text.
+
+Title Attributes: Select attributes for the title. These attributes are used 
+                  only for the title, not for the text.
+
+
+--------------------------------------------------------------------------------
+
+There are also prompts for each type of table and the index on the specific 
+table and index page layout panels.
+
+
+--------------------------------------------------------------------------------
+   Font        Attributes        Table of Contents        Table of Figures
+   Table of Tables         Index         Keyboard Summary         Help Index

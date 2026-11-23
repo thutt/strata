@@ -1,0 +1,64 @@
+.chapter 2
+.h1 Probing the old program [probing]
+The old program shows what it does only when it runs.  A script ran it in
+DOSBox-X, an emulator of a DOS machine, and recorded keys, screens and prints.
+No machine code of the old program was disassembled, and none was
+copied.{fn:What was used: the manuals and the on-line help of the old program,
+once the help file had been decoded as data; its sample documents; and the
+names and messages that its program files hold as plain data, which showed how
+its files are laid out.  What was observed: the program itself, run in the
+emulator described in this chapter and driven by a script that pressed keys and
+measured what appeared on the screen and in the print, one question at a time.
+No machine code of the old program was disassembled.}
+.h2 Set-up [probing-setup]
+The set-up has four parts.
+1. A scratch DOS drive: the install disks in one folder, the sample documents
+in another, never the working folder of the project.
+2. A private X display (Xvfb) with all output of the emulator in a file.
+3. {c:xdotool} sends keys and {c:xwd} captures the window.  80 columns are 540
+pixels wide, so one cell is 6.75 pixels, which resolves a single character,
+rule or highlight.
+4. One line of the emulator configuration, {c:parallel1=file file:PATH.prn
+timeout:3000}, attaches the parallel port to a file.
+
+The Generic driver writes plain text.  The Apple LaserWriter driver writes
+PostScript, in which each string after a move to a point is text at a known
+position in units of 1/300 inch.  The studies of layout and colour recovered
+fonts, text and positions of whole prints from such files.
+.h2 Findings [probing-learned]
+{Tab:settled} lists questions that the probes settled and that changed the
+program.
+.tabcap settled Questions settled by the probes
+.table 30 34
+Question | Answer
+Are stored tab widths a layout fault? | No.  The old program lays a tab out
+ | again from the tab stops.
+How wide is a table column? | Its own width plus the empty cells at its
+ | left and right.
+Is there a default level indent? | No.  Without a setting sections are not
+ | indented.
+Is there a border on columns? | Yes.  Box lines fill the empty cells
+ | beside the columns.
+.end
+The first guess for the level indent, 3 cells, was wrong; a probe of a document
+without a setting showed no indent.  The notes keep the wrong guess with its
+correction.
+.if .STRATA_BUILD_TYPE # release
+.h2 Defects of the set-up [probing-trouble]
+Four defects cost time and changed later probes.
+- After every dialog the window needs a mouse click to regain the focus.
+- {k:Ctrl-F2} (Math) and {k:Ctrl-F6} (Case) never reached the old program.  The
+  study of Math quotes the help text and says "not probed".
+- Files made after the emulator started stay invisible to the menu of the
+  dictionaries until it restarts.
+- In the Border Layout panel {k:Backspace} must clear a number field before
+  typing replaces its text.
+.endif
+.h2 Limits of the probes [probing-limits]
+A probe shows the cases that were tried.  The notes tag each statement by its
+evidence: seen on the screen or in a file, read in the help of the old
+program, inferred, or guessed.  Features that were never tried stay open
+questions in the notes.
+.note The manuals of release 1 of the old program were available as text.  The
+  manual of release 2 was not, only its help file.  Questions that only that
+  manual could answer stay open.

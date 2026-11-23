@@ -1,0 +1,23 @@
+.doc Memo about the new filing system
+.h1 Memo
+To: All staff
+
+From: The records office
+
+Date: 12 November 2026
+
+Subject: The new filing system
+
+.h2 What changes
+From the first of December every document is kept in one place, the shared
+directory named {c:records}, and no longer in the private directories of the
+people who wrote them.  Each document has a short name that begins with its
+year, such as {c:2026-budget}, so that the directory sorts itself.
+
+.h2 What to do
+- Move the documents that you still use into the new directory.
+- Give each one a name that begins with the year.
+- Remove the old copies when you have checked the new ones.
+
+.h2 Questions
+Ask the records office.  We will answer within one working day.

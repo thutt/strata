@@ -1,0 +1,84 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+THE FILE MENU
+=============
+THE EDIT MENU
+=============
+
+F12, Edit.  Every entry was compared with the original program
+(Manuscript 2.1 running under DOSBox-X).  The entries depend on the
+document:
+
+  structured document:     Title  Section  Window
+  one section only:        Title  Unstructured  Section  Window
+  unstructured document:   Title  Structured  Window
+  while editing a section: Title  Document  Window
+
+The collapse, expand, promote and demote commands, which this program once
+had on this menu, are not on it in the original.  They stay on their keys.
+
+Title
+-----
+Edit title page.  The title page is a section of its own in front of the
+text: a record "=1", then an S record and the blocks of the page, then the
+text.  In a structured document the text starts with another S record
+and the "+" that opens the sections:
+
+    =1
+    S                      the title page
+    T... T...
+    S                      the root of the text
+    +
+    S  ...  -
+
+An unstructured document has the same: "=1", the S and blocks of the page,
+and then the S and blocks of the text.
+
+The original keeps the title page out of the text.  Edit, Title opens a
+box headed Title Page Edit, status TITLE PAGE EDIT, with the text "Press
+Ins to Save Changes or Esc to Restore Previous Version" at the bottom.  The
+page is edited as a document of its own, like a note.  Strata does the
+same, and no longer shows the title page among the text.  A document that
+has no title page gets an empty one to type into; if the page is left empty
+the "=1" and the section are not written.  (The original's behaviour for an
+emptied page was not tried.)
+
+The section numbers do not count the title page.  Print and Export treat
+the title page as part of the document (Print, Final has "Print Title
+Page?").
+
+Structured and Unstructured
+---------------------------
+Structured turns an unstructured document into a structured one: the whole
+text becomes one section, whose first block is the headline ("1 Alpha ..."
+in the original's MK2.DOC), and the status line says STRUCTURED EDIT.  The
+header record "*B0" becomes "*B1" and the body gains "S + S ... -".
+
+Unstructured goes back.  The original offers it only while the document is
+a single section with nothing below it; a document of several sections has
+no such entry.  Strata does the same.
+
+Section and Document (Ctrl-^)
+-----------------------------
+"Edit current section only [Ctrl-^]".  Only the section the cursor is in,
+with the sections below it, is shown; the rest of the text is out of
+sight, and the status line says SECTION EDIT.  The entry then changes to
+Document, "Edit entire document [Ctrl-^]", which brings back the text.
+Ctrl-^ does the same from the keyboard.  Escape does not leave the mode.
+
+Window
+------
+"Open/Close, Adjust, Zoom, Switch": the original can show several windows
+of the document.  It is dimmed: Strata has no windows yet.

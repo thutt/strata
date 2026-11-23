@@ -1,0 +1,25 @@
+
+----------------------------------- File Types ---------------------------------
+
+In Manuscript there are three types of document files: document, template, and 
+backup.
+
+
+# Document files contain the body of the document (text) and its format 
+  settings.  You can specify any file extension for a document file.  Any file
+  saved without an extension is assumed to be a document file and is assigned
+  the .DOC extension. 
+
+# Template files contain basic format settings and/or text that you 
+  want to use in many documents. To create a template file, save the document 
+  with the extension .SET. 
+
+# Backup files are copies of document or template files as they existed before
+  you last changed and saved the document.  On the Menu (F10) Global Options 
+  panel, use the Maintain Backup File prompt to create backup files automati-
+  cally.  To save a backup file after reading it into the editor, you must 
+  rename it with a valid document file name extension.
+
+
+--------------------------------------------------------------------------------
+  Template Files      Options      File      Keyboard Summary      Help Index

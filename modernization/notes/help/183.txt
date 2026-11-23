@@ -1,0 +1,25 @@
+
+----------------------------------- Endnotes -----------------------------------
+
+The following prompts are unique to the Endnotes Format panel.
+
+
+Note Page Title:   Enter a title for the first endnote page.
+
+                            
+Title Font:        Select a font for the title of the endnote page. The font
+                   is used only for the title, not for the notes.  Set the note
+                   text font globally on the Endnote Format panel or locally
+                   when editing the note either on the Current Block Format 
+                   panel or by using the Font marker.
+
+
+Title Attributes:  Select attributes for the title of the endnote page. These 
+                   attributes are used only for the title, not for the notes.
+                   Set the note text attributes globally on the Endnote Format
+                   panel or locally when editing the note either on the Current
+                   Block Format panel or by using text attributes.
+
+--------------------------------------------------------------------------------
+  Font     Attributes     Note Format     Current Block Format     Font Marker
+           Keyboard Summary               Help Index

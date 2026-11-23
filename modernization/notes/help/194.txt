@@ -1,0 +1,25 @@
+--------------------------------- Marker Index ---------------------------------
+Marker        Abbr   Description
+--------------------------------------------------------------------------------
+Author        au     Print the author's name from the New File/Save File panel.
+Column Break  cb     Start winding text in the next column.
+Comment       co     Display comments on screen but do not print them.
+Counter       c1..c9 Use an automatically incrementing counter.
+Cross-ref.    xr     Print a cross-reference to another section.
+Date          da     Print the current date.
+Description   de     Print file description from the New File/Save File panel.
+Else          el     Mark beginning of text to print when If marker is false.
+Endif         en     End an If/Else marker statement.  
+Equation      eq     Print an equation.
+Escape Codes  es     Enter special printer escape codes.
+Figure        fi     Define a figure name for the Table of Figures.
+Filedate      fd     Print the date the file was created or last modified.
+Filename      fn     Print the file name.
+Filetime      ft     Print the time the file was created or last modified.
+Font          fo     Change the font setting of text.
+If            if     Begin a conditional merge statement.
+Include       in     Insert another file in a document. 
+Index         ix     Define an index entry.
+Keep          ke     Keep a region together on a page.
+--------------------------------------------------------------------------------
+          More Markers     Markers     Keyboard Summary     Help Index

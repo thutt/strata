@@ -1,0 +1,25 @@
+
+------------------------- Delete Unassigned Font Files -------------------------
+
+Use the Delete Unassigned Font Files on the Maintain Download Fonts menu to 
+delete unassigned, duplicate, unreadable, or unmatched character set fonts. 
+(Duplicate fonts are fonts with the same typeface, size, and attribute but 
+different character sets.)
+
+After selecting this option a message displays the number of unassigned and 
+duplicate fonts in the current font directory.
+
+
+All:   Select All to delete all unassigned and duplicate fonts.
+
+Query: Select Query to display more information before deciding whether or not
+       to delete the font.  A message displays each font's file name, font name 
+       and description, and whether the file is a duplicate or unassigned.  
+       Press Y to delete the font, N to retain the font, or A to delete all 
+       remaining unassigned fonts.
+
+No:    Select No to cancel the command.
+
+
+--------------------------------------------------------------------------------
+Maintain Download Fonts     Unassigned Fonts     Keyboard Summary     Help Index

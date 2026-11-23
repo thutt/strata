@@ -1,0 +1,25 @@
+
+---------------------------- Maintain Dictionaries -----------------------------
+
+Use Maintain Dictionaries on the Document Manager to create or change a custom
+spelling or hyphenation dictionary.
+
+
+  +------------------------- Maintain Dictionaries --------------------------+
+  |                                                                          |
+  |                                                                          |
+  |           Convert Document to Spelling Dictionary                        |
+  |           Add Document to Spelling Dictionary                            |
+  |           Convert Spelling Dictionary to Document                        |
+  |                                                                          |
+  |           Convert Document to Hyphenation Dictionary                     |
+  |           Add Document to Hyphenation Dictionary                         |
+  |           Convert Hyphenation Dictionary to Document                     |
+  |                                                                          |
+  |                                                                          |
+  +---------------------- Press Ins to Select Action ------------------------+
+
+
+--------------------------------------------------------------------------------
+          Document Manager                          Creating Custom Dictionaries
+          Keyboard Summary                                  Help Index

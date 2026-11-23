@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Tab error (<description>) --
+
+A tab error has been encountered.  If there are more tabs in the text than are 
+set on the ruler, extra tab characters in the text are ignored.  If a tab occurs
+after the text wraps, the tab is ignored (tabs can only occur prior to an 
+automatic line wrap).  Also, depending on the font size, the text may extend 
+past the tab location.  In such cases, change the tab or the font and reprint.
+
+                
+-- Terminated with changes saved -- 
+
+You selected Quit while spell checking a document from within the editor. 
+Changes made during spell checking will remain in your document.
+
+
+-- Terminated with no changes --
+
+You selected Quit to quit spell checking the document without saving any changes
+to the document.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

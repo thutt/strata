@@ -1,0 +1,25 @@
+
+------------------------------- Document Manager -------------------------------
+
+The Document Manager is the first panel you see each time you run Manuscript 
+from DOS.  The Document Manager displays the following document handling 
+functions:
+
+  Edit Document ................... Create and edit a document.
+  Print Document .................. Print a formatted document.
+  Preview Document ................ Preview a formatted document.
+  Check Document Spelling ......... Spell check a document.
+  Maintain Dictionaries ........... Create and edit custom dictionaries.
+  Compare Document Versions ....... Compare versions of a document.
+  Import from 1-2-3/Symphony File . Import worksheets from 1-2-3 and Symphony.
+  File Conversion Utilities ....... Import and export files from other programs.
+  Batch Print Utility ............. Create, edit, and run batch print files
+  Maintain Download Fonts ......... Manage download fonts.
+  Setup ........................... Configure the program to your needs.
+  Quit ............................ Return to DOS.
+
+Highlight the option you want by using the cursor-movement keys or pressing the
+first letter of the option.  Press Enter to complete the selection.
+
+--------------------------------------------------------------------------------
+         DOS Command Line           Keyboard Summary          Help Index

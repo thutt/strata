@@ -1,0 +1,31 @@
+.doc Tables in sublevels probe
+.numbering on
+.h1 Level one
+Text of level one, a paragraph long enough to show where the left margin of this level is.
+
+.table 12 12 12
+Col A | Col B | Col C
+t1 a | t1 b | t1 c
+t1 d | t1 e | t1 f
+.end
+
+.h2 Level two
+Text of level two, a paragraph long enough to show where the left margin of this level is.
+
+.table 12 12 12
+Col A | Col B | Col C
+t2 a | t2 b | t2 c
+t2 d | t2 e | t2 f
+.end
+
+.h3 Level three
+Text of level three, a paragraph long enough to show where the left margin of this level is.
+
+.table 12 12 12
+Col A | Col B | Col C
+t3 a | t3 b | t3 c
+t3 d | t3 e | t3 f
+.end
+
+.h1 Level one again
+Text of the second section of level one.

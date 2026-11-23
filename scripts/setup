@@ -1,0 +1,230 @@
+# Strata is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Strata.  If not, see <https://www.gnu.org/licenses/>.
+# Copyright (c) 2026 Logic Magicians Software
+
+# scripts/setup -- Strata developer environment.
+# SOURCE this file; never execute it.
+#
+#   source scripts/setup /tmp/strata
+#       (from the project directory; or  source setup ...  from here)
+#   source scripts/setup -b release /tmp/strata
+#   source scripts/setup -b asan -o /tmp/strata
+#   source scripts/setup /tmp/strata/release    (the same as -b release)
+#
+# BUILD_ROOT (also -o/--bod) is the directory that holds all the builds.
+# The products of a build go to BUILD_ROOT/<type>, where the type is
+# debug (the default), release or asan, so that builds of several types
+# can be present at the same time.  A BUILD_ROOT whose last path component
+# is a build type means that type, in the directory above it.
+#
+# The build directory must be OUTSIDE the source tree.  Nothing is
+# exported, and the shell is left untouched, when the check (or any other
+# validation) fails.
+#
+# Exports   STRATA_HOST_OS     linux
+#           STRATA_DIR         the source tree: <project>/modernization
+#           STRATA_ROOT        the project directory (holds scripts/, the
+#                              source tree and the original media)
+#           STRATA_BUILD_TYPE  debug | release | asan
+#           STRATA_BUILD_ROOT  the directory that holds the builds
+#           STRATA_BUILD_DIR   the directory of this build type:
+#                              STRATA_BUILD_ROOT/<type>
+#           STRATA_HELP        the help file that the build makes:
+#                              STRATA_BUILD_DIR/strata.hlp
+#           STRATA_TEMPLATES   the templates of the source tree:
+#                              <project>/modernization/templates, so that a
+#                              program that runs in place from the build
+#                              directory lists the templates as an installed
+#                              one does (the other STRATA_ variables of the
+#                              programs are for the tests and for people who
+#                              want a non-default setting: a developer needs
+#                              none of them)
+#           PATH               this scripts/ directory prepended once
+# Functions strata-show-config, strata-set-build-type TYPE,
+#           strata-check-build-dir DIR
+#
+# Linux, bash or zsh.  (Modelled on the Oberon project's scripts/setup.)
+
+function _strata_usage {
+    echo "usage: source scripts/setup" \
+         "[-b|--build-type debug|release|asan] [-o|--bod] BUILD_ROOT"
+    echo "       e.g.  source scripts/setup /tmp/strata"
+    echo "       the build goes to BUILD_ROOT/<build type>"
+}
+
+# Succeeds only for a directory outside the source tree and outside the
+# project directory.  Symlinks and '..' are resolved first; the directory
+# need not exist yet.
+function strata-check-build-dir {
+    local want="${1}" root="${2:-${STRATA_ROOT}}" target
+    if [ -z "${want}" ]; then
+        echo "setup: no build directory given" >&2
+        return 1
+    fi
+    target=$(realpath -m -- "${want}") || {
+        echo "setup: cannot resolve '${want}'" >&2
+        return 1
+    }
+    case "${target}/" in
+        "${root}"/*)
+            echo "setup: refusing to put the build in the source tree:" >&2
+            echo "       ${target} is inside ${root}" >&2
+            echo "       choose a directory outside it," \
+                 "e.g. /tmp/strata" >&2
+            return 1;;
+    esac
+    case "${root}/" in
+        "${target}"/*)
+            echo "setup: refusing a build directory that contains the" \
+                 "source tree:" >&2
+            echo "       ${target} contains ${root}" >&2
+            return 1;;
+    esac
+    printf '%s\n' "${target}"
+}
+
+function strata-show-config {
+    echo "Strata build environment"
+    echo "  STRATA_HOST_OS    = ${STRATA_HOST_OS}"
+    echo "  STRATA_DIR        = ${STRATA_DIR}"
+    echo "  STRATA_ROOT       = ${STRATA_ROOT}"
+    echo "  STRATA_BUILD_TYPE = ${STRATA_BUILD_TYPE}"
+    echo "  STRATA_BUILD_ROOT = ${STRATA_BUILD_ROOT}"
+    echo "  STRATA_BUILD_DIR  = ${STRATA_BUILD_DIR}"
+    echo "  STRATA_HELP       = ${STRATA_HELP:-<not found>}"
+    echo "  STRATA_TEMPLATES  = ${STRATA_TEMPLATES:-<not found>}"
+}
+
+# Switch build type in this shell: the build directory becomes the
+# directory of that type under the build root.
+function strata-set-build-type {
+    local t="${1}"
+    case "${t}" in
+        debug|release|asan) ;;
+        *) echo "setup: build type must be debug, release or asan" >&2
+           return 1;;
+    esac
+    export STRATA_BUILD_TYPE="${t}"
+    export STRATA_BUILD_DIR="${STRATA_BUILD_ROOT}/${t}"
+    export STRATA_HELP="${STRATA_BUILD_DIR}/strata.hlp"
+    strata-show-config
+}
+
+function _strata_setup {
+    local self sdir dir root bod btype base target
+    if [ -n "${BASH_VERSION:-}" ]; then
+        self="${BASH_SOURCE[0]}"
+        if [ "${self}" = "${0}" ]; then
+            echo "setup: this file must be sourced:" \
+                 "source scripts/setup BUILD_DIR" >&2
+            return 1
+        fi
+    elif [ -n "${ZSH_VERSION:-}" ]; then
+        eval 'self="${(%):-%x}"'
+    else
+        echo "setup: needs bash or zsh" >&2
+        return 1
+    fi
+    case "$(uname -s)" in
+        Linux) ;;
+        *) echo "setup: only Linux has been tested" \
+                "(uname -s = $(uname -s))" >&2
+           return 1;;
+    esac
+    # this scripts/ directory
+    sdir=$(cd "$(dirname -- "${self}")" && pwd -P) || return 1
+    # the project directory
+    root=$(cd "${sdir}/.." && pwd -P) || return 1
+    # the source tree
+    dir="${root}/modernization"
+    if [ ! -d "${dir}/src" ]; then
+        echo "setup: cannot find the source tree at ${dir}" >&2
+        return 1
+    fi
+
+    bod=""; btype=""
+    while [ ${#} -gt 0 ]; do
+        case "${1}" in
+            -b|--build-type)
+                [ ${#} -ge 2 ] || {
+                    echo "setup: ${1} needs a value" >&2
+                    return 1
+                }
+                btype="${2}"; shift 2;;
+            --build-type=*)
+                btype="${1#--build-type=}"; shift;;
+            -o|--bod)
+                [ ${#} -ge 2 ] || {
+                    echo "setup: ${1} needs a value" >&2
+                    return 1
+                }
+                bod="${2}"; shift 2;;
+            --bod=*)
+                bod="${1#--bod=}"; shift;;
+            -h|--help)
+                _strata_usage; return 0;;
+            -*)
+                echo "setup: unknown option '${1}'" >&2
+                _strata_usage >&2
+                return 1;;
+            *)
+                if [ -n "${bod}" ]; then
+                    echo "setup: more than one build directory given" >&2
+                    return 1
+                fi
+                bod="${1}"; shift;;
+        esac
+    done
+    if [ -z "${bod}" ]; then
+        echo "setup: no build directory given" >&2
+        _strata_usage >&2
+        return 1
+    fi
+
+    # validate everything before exporting anything
+    target=$(strata-check-build-dir "${bod}" "${root}") || return 1
+    base=$(basename -- "${target}")
+    case "${base}" in
+        debug|release|asan)
+            # The directory names a build type: the root is above it.
+            [ -n "${btype}" ] || btype="${base}"
+            target=$(dirname -- "${target}");;
+    esac
+    [ -n "${btype}" ] || btype="debug"
+    case "${btype}" in
+        debug|release|asan) ;;
+        *) echo "setup: build type must be debug, release or asan" \
+                "(got '${btype}')" >&2
+           return 1;;
+    esac
+
+    export STRATA_HOST_OS=linux STRATA_DIR="${dir}" STRATA_ROOT="${root}"
+    export STRATA_BUILD_TYPE="${btype}" STRATA_BUILD_ROOT="${target}"
+    export STRATA_BUILD_DIR="${target}/${btype}"
+    case ":${PATH}:" in
+        *":${sdir}:"*) ;;
+        *) export PATH="${sdir}:${PATH}";;
+    esac
+    # The build writes the help file into the build directory.
+    export STRATA_HELP="${STRATA_BUILD_DIR}/strata.hlp"
+    # The templates of the source tree, so that a program run in place
+    # finds them (an installed program finds them next to itself).
+    export STRATA_TEMPLATES="${STRATA_DIR}/templates"
+    strata-show-config
+}
+
+if ! _strata_setup "${@}"; then
+    unset -f _strata_setup _strata_usage
+    return 1 2>/dev/null || exit 1
+fi
+unset -f _strata_setup _strata_usage

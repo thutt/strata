@@ -1,0 +1,584 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+MANUSCRIPT 2.X .DOC FILE FORMAT
+===============================
+
+Derived from the 24 sample documents plus the on-line manual. The reader/writer
+in src/msdoc.c loads and saves all 24 byte-for-byte (make test), and every
+structured sample has balanced +/-. Confidence tags: [V] verified against the
+samples/manual, [I] inferred, [?] unknown (kept verbatim).
+
+The same container is used for .DOC documents, .SET templates (header only),
+.LIB library files and .MAC macro files.
+
+0. The version of the file format
+----------------------------------
+
+The first record of a file is *R<n>: n is the version of the file format.
+Files of version 2 have *R2 (a library file *R2h: lower case letters after
+the number are flags and are kept).  The current version is 3 (*R3, defined
+once as STRATA_FILE_FORMAT in src/build_type.h; src/msdoc.h has the lowest
+that is read, STRATA_FILE_FORMAT_MIN = 2, and DOC_FIRST_RECORD).
+
+  - The programs read versions 2 to 3 and write only version 3.  Reading a
+    version 2 file and saving it writes version 3: there is no downgrade.
+  - docver_check (src/msdoc.c) checks the first record before anything else
+    of the file is read.  Three errors: the file is not a document of this
+    software (no first record *R<n>); the file version is below 2 or is
+    damaged (not a number, negative or empty), an unsupported format: "The
+    file version is N.  This software reads versions 2 to 3." (a damaged
+    value is shown in quotation marks); the file version is above 3: "The
+    file is version N.  This software reads up to version 3."
+  - The Editor, the Document Manager (Compare Document Versions, Restore
+    Backup) and the Printer read documents with the one reader, so they
+    report the same three errors.  --version of every program prints a
+    second line, "file format 3".
+  - THE SPECIAL BACKUP.  When the Editor loads a file of an older version
+    (2) it saves a copy of the file next to it, V<old-version>-<name>
+    (memo.doc gives V2-memo.doc, standard.set gives V2-standard.set), once:
+    a special backup that exists is never written again.  If it cannot be
+    written the load is refused with an error and the original is not
+    touched.  A save over an existing file of an older version makes the
+    special backup first (the Save and Save As of the Editor).  The numbered
+    backups and the backup limit never touch a special backup.  Restore
+    Backup lists it (marked V2, after the numbered backups); restoring it
+    writes the original file as it is, with the version number it has, and
+    leaves the special backup in place.
+  - The number is incremented by one each time the format changes in an
+    incompatible way, at most once between two releases.  An incompatible
+    change needs a new major version of the software.
+  - Tests: tests/vertest.c (the first record, the writer, the special
+    backup, the list and the restore), tests/fileversion.py (the programs).
+
+1. Lexical structure
+--------------------
+
+  - The file is a sequence of records separated by CR LF. [V]
+  - A record's first byte is its type. Most are text lines; a T record holds
+    document text and is the only kind that can contain CR LF, because markers
+    nest whole records inside it (see Sec.5). So the reader scans a T record
+    *sequentially* rather than splitting on CR LF. [V]
+  - A T record ends at the first NUL that is not inside a marker. The NUL is
+    followed by CR LF. [V]
+  - Character set is IBM CP437; text is not translated. [V]
+  - File layout:
+
+    *R2                      header records ...
+    ...
+    *B<n>                    body (n = 1 structured, 0 unstructured)
+    ...body records...
+    *E                       end; the file ends with CR LF after it
+
+2. Header records (before *B)
+-----------------------------
+
+  - *R<n>: the version of the file format, 3 now (section 0); 2 for the files
+    of the earlier programs [V]
+  - MR<n>: the revision in thousandths: 1007 is revision 1.007.  Saving a
+    document that has changed adds one; a new document is 1000.  Written
+    without a NUL [V]
+  - MD<text>NUL: document description (New File and Save File panels) [V].
+    Strata (task 30): at most 250 characters (DOC_MAX_DESC), no control
+    character (below 20 or 7F); the loader refuses a document with a longer
+    one or with one (as for the other limits, recovery stops there), the panels
+    refuse to take one, and the list of templates shows it (doc_peek_description
+    reads the first 16 KB only).  No file of the samples has a description
+    over 38 characters or with a control character
+  - MA<text>NUL: document author (the same panels) [V]
+    The order of these records is MD, MA, MR [V]
+  - PM{L,R,T,B}<n>: page margins [I]
+  - PP\1\NUL, P1P\i\NUL, P2P\i\NUL: page-number formats: \1\ decimal, \i\ lower
+    roman, \I\ upper roman, \A\ letters (read.me, "incrementing backslash
+    commands") [V]
+  - P1...P4 + HB<n>/FB<n>: per-page-style header/footer; HB1 is followed by that
+    many embedded blocks [I]
+  - F<kind><code><value>: global format. kind: H headline blocks, T text blocks,
+    S spacing, W widow/orphan, L, U, I indent-per-level (FI3 = 3, confirmed by
+    the Global Format help) [V/I]
+  - F<level><kind><code><value>: the same, for sections of that level (F2TT3:
+    level-2 text, tab stop 3) [V]
+  - FN<name>NUL ... FN NUL: named block format definition: enclosed B...
+    records; blocks reference it with BG<name>NUL [V]
+  - F<level>G<format>NUL: section tag format (F1GPart \I\. ) [V]
+  - BZG<format>NUL: a block record (Strata only) on the HEADLINE block of a
+    section: a numbering run begins at that section.  The section is number 1
+    of its level, the sections after it on the level go on from it in the
+    style of the format (the same codes as the F<level>G format: \1\ \i\ \I\
+    \A\ \a\, other characters as typed, an empty format means no tag), and
+    the sections below show the style of the run in the numbers above them
+    (A.1, A.2.1).  The run ends at the next section of the level with a BZG
+    record.  A document that has none is numbered as before (the original
+    ignores the record).  The manual uses it: chapters 1 to 11 are one run
+    (\1\ ), the appendices A to F another (\A\ ), and the title page, the
+    contents, the index and the list of figures a run with no tag.
+    tests/numrun.py.
+  - FZM, FZE, FZS, FZZ, FZY, FZF, FZD, FZQ: line numbering, global only
+    (Strata; docs/LINENUMBERING-LATEX.txt).  FZM the mode (0 off, 1
+    pagewise, 2 running, 3 running that starts again at each section of
+    level 1), FZE a number on every n-th line (1 to 99), FZS the side (0 left,
+    1 right, 2 outer, 3 inner), FZZ the size of the number (0 tiny, 1 script,
+    2 footnote size), FZY its font (0 sans serif, 1 roman, 2 typewriter), FZF
+    its format (0 arabic, 1 roman, 2 capital roman), FZD its distance from the
+    text in hundredths of an inch (15), FZQ 1 when the lines of a displayed
+    equation are numbered.  Each record is left out for its default, which
+    is the first value above except FZE 1 and FZD 15; without FZM the lines
+    are not numbered.  The letter N is not used: FN is a named format [I]
+  - FZLF, FZLP, FZLT, FZLI: the choice of the list of the Figure markers, of
+    the Picture markers, of the Table markers and of the index (Strata;
+    docs/AUTOLISTS.txt): 1 on, 0 off; left out for automatic, which is the
+    default (the list is made when the document has a marker of the kind).
+    Global only, with the other F records.
+  - ZNF, ZNP, ZNT, ZNI<n>: the number of Figure, Picture, Table and Index
+    markers in the text (Strata; docs/AUTOLISTS.txt), a decimal number of 1
+    to 7 digits, just before *B (before ZP).  A kind with no marker has no
+    record.  ZNX<n>: the sum of 1, 2, 4 and 8 for the kinds whose count is
+    not exact (figures, pictures, tables, index): a reader counts those
+    kinds again.  Written only for a document that was read with counts or
+    whose markers of these kinds were edited; a document with none, read and
+    not edited, is written byte for byte as it was.  A reader may ignore all
+    of them and count the markers itself.
+  - ZP<item>,<col>,<tok>,<row>: where the Editor left the cursor when the
+    document was saved (Strata only; docs/CURSOR-POSITION.txt).  Four
+    decimal numbers of at most seven digits, the last record of the header,
+    just before *B, without a NUL; left out when the cursor is at the start
+    of the text.  item is the index of the item with the cursor, col the
+    column, tok the token, row the screen row of the cursor line.  A record
+    of any other form is ignored.  The original ignores it; Strata does not
+    keep it among the settings (Doc.vp_*), so Retrieve, Include and the
+    parts for printing do not copy it [?]
+  - DP<paper>,<w>,<h>: paper: 0,8500,11000 = 8.5x11 in (thousandths) [I]
+    The index is the entry of the paper list that the Page panel offers (16 is
+    Custom); a stored size that is not the size of that entry (either way
+    round) is read as the paper of the size or as Custom.  An envelope is
+    stored with its long side as the width (DP13,9500,4125), the way it lies
+    in the printer; the Paper Size panel stores the four envelope entries so.
+  - PS<points>: the size of the text in points (Strata only): 8, 9, 10, 11,
+    12, 14, 17 or 20; any other number is ignored.  Without it a document whose
+    paper is an envelope entry of the list (12 to 15) is set in 14 points and
+    every other document in 11.  The templates and samples of the envelopes
+    have it (14; 11 for the German window envelope, 12 for the European C5).
+    The original does not have it.
+  - PO2: a part of a document that Preview and Print make (Strata only): the
+    part starts after a landscape orientation marker.  Written by the Editor
+    in the temporary file of the part, just before *B; a document that is
+    saved has none.
+  - N<k>R, N<k>N, N<k>X, N<k>Y, N<k>S?, NS<k>, NZ<k>, NB, NL, NE, NT: the
+    Note Format (docs/NOTE-FORMAT.txt) [V]
+  - YCL<n>: the level of the table of contents that a print makes: 0 for
+    none, 1 to 99 (the probe of the original, docs/CONTENTS-INDEX-PROBE.txt:
+    the four prints of one document with YCL0, 1, 2 and 5).  Strata reads
+    it; a document with no record is read as 99 (docs/AUTOLISTS.txt).  A
+    new document has YCL99.
+  - YI...: unknown (YIWN2) [?]
+  - OKF<tenths>, OKB<tenths>, OKS<thousandths>, OKT<font number>: the
+    Keycap Format (Global, Marker): the foreground, background, scale and
+    font that a Keycap marker without a value of its own takes.  Left out for
+    the defaults 0.0, 100.0, 1.000 and font 2 (Text); OKF200 OKB800 OKS1500
+    OKT7 is 20.0, 80.0, 1.500 and Font 7.  The original writes them after
+    YIWN2 [V]; their place among OC, OH, OM and OT is not known, Strata writes
+    them after OT [?]
+  - DF<n>...: typeface definitions (DF1NIntro head, DF4N...); with DP, the
+    records that Retrieve Typeface Settings Only replaces [V]
+  - DC, DD, DE, DN: the printer (DNGeneric, DEgeneric.pd); the original adds
+    them when it saves a document that has none [V]
+
+Template files (.SET) are complete documents: a header of settings and a body
+that is the starting text (the Template of the New File panel).  A file saved
+with Save Global Settings Only has the full header and an empty body, "*B1"
+followed at once by "*E".  Retrieve Global Settings replaces the header
+records except *R, *B and MR; Retrieve Body Only replaces the body.  See
+FILE-MENU.txt.
+
+Property codes inside F..., B..., C... records share a vocabulary:
+
+  - A<n>: attributes bit mask, the table below (1 bold, 4 italics, 2
+    underscore words); [I]
+  - F<n>: font number; [I]
+  - J<n>: justification: 0 left, 1 right, 2 centre, 3 even; [V] (Justification
+    help; CFJ0/2/1 = L/C/R header triple)
+  - I<n>: line indent: 0 none, 1 first, 2 all-but-first (hanging), 3 all; [V]
+    (Line Indents help)
+  - T<list>: tab stops: comma-separated positions, each optionally followed by a
+    type letter (Right, Centre, Decimal, ,, #); 0 = none; [V], 0-based positions
+
+3. Body grammar
+---------------
+
+    body     := ( S | + | - | block )* "*E"
+    block    := B-record* column+           ; a bare "B" begins a new block
+    column   := C-record* T-record
+
+  - S: start of a section; its first block is the headline; [V]
+  - + / -: open / close a group of subsections that follow the section's own
+    blocks. S ... blocks ... + S ... - ; [V]
+  - B...: block property records, before the block's first T; [V]
+  - C...: column property records, before that column's T; [V]
+  - T...NUL: one column's text; [V]
+
+Rules: [V]
+
+  - A column record set containing CW<n> (width in character cells) means
+    *another column of the same block follows*; a column with no CW is the
+    block's last.
+  - A bare B record ends any block in progress and begins a new one. It is
+    written when the previous block's last column had CW (otherwise the boundary
+    would be ambiguous).
+  - S, +, -, *E also end a block in progress.
+  - A structured document is S + S <blocks> ... -; the root S has no blocks and
+    its +...- group holds the top-level sections. The nesting depth of a section
+    is its level (the first real section is level 1).  The format sets no limit
+    to the depth (the original read 3000 levels: docs/SECTION-DEPTH.txt); the
+    levels 1 to 99 have a section number, deeper sections have none. Unstructured documents are
+    a single S followed by blocks.
+  - The minimal structured body is S + S T... -. [V]
+
+Block properties: BF<code><value> format (see table above), BL<n> left block
+indent [V], BG<name>NUL named format [V], BS B<n> / BT/BB line and block spacing
+[I], BWN<n> winding columns (1 to 9) [I], BWG<n> the gutter in thousandths of
+an inch and BWR<n> the rule between the columns (0 none, 1 single, 2 double, 3
+wide) [S: Strata's own, as FWG, FWR and F<n>WG, F<n>WR; a block or a named
+format may carry them], BM<n>, BC1, BV [?]. Column properties: CW, CF<code>
+[V], CB<mask>,<flag> border [V: probed in the original], CL, CR (gaps; CL1 and
+CR1 are written when the left or the right side has a border), CT, CV [?].
+The mask has two bits for each side, 0 none, 1 single, 2 double, 3 wide: top
+bits 0-1 (1), bottom 2-3 (4), left 4-5 (16), right 6-7 (64); all four double
+is 170, all single 85.  The flag is 1 for Connect Borders Yes, 0 for No (the
+value 0 is Strata's choice, not seen).  Block records of the Border Layout
+panel: BT<n> and BB<n> the Top and the Bottom Gutter in thousandths of an
+inch (BT is not seen: Strata's choice), BH<percent> the Shading (not seen:
+Strata's choice).
+
+Resolution order for any format property (implemented in fmt_resolve):
+
+  1. the column's CF<code>; 2. the block's BF<code>; 3. the block's named
+     format; 4. headline/text global format for its level
+     (F<level>H.../F<level>T...);
+  5. the headline/text global format (FH.../FT...); 6. built-in defaults.
+     Headline blocks are the first block after an S.
+
+4. Text payload (the bytes of a T record)
+-----------------------------------------
+
+  - 20-FF: a character (CP437); [V]
+  - 1D: end-of-line ("Enter"); every block's text ends with 1D; an empty block
+    is just 1D. Several lines in one block = several 1D.; [V]
+  - 01 c: literal character c (escape, used for control-range glyphs such as the
+    bullet 01 07); [V]
+  - 10 f n: tab: fill character f (usually space), then n = *total cells - 1*.
+    The text is laid out by the format's tab stops; n is a cached width. Total
+    cells = next stop - current column.; [V] (254/265 reproduced)
+  - 12 m f: attribute change: absolute attribute mask m (00 = normal) and flags
+    byte f.  The table of the attributes (fixed in task 26: Strata had written
+    underscore as the mask 10, which is superscript here, and printed the note
+    references of a document of the original underlined):
+      mask 01 bold; 02 underscore words (what Ctrl-U and Set Attributes write);
+      04 italics; 08 subscript; 10 superscript; 20 strikethrough; 40 printer
+      specific 1.
+      flags 01 printer specific 2; 02 underscore all; 04 double underscore
+      words; 08 small caps; 10 double underscore all; 80 a state bit (kept,
+      no effect on the look).
+    Print: \uline, \uuline, \textsubscript, \textsuperscript, \sout, \textsc;
+    the printer specific ones print as plain text and are kept in the file.
+    On the screen the underscores draw underlined; subscript and superscript
+    stay plain (a cell cannot be raised).  [V]
+  - 13 <type>( ... 13 ): marker, see Sec.5; [V]
+  - 1A: text-indent character (Ctrl-G): continuation lines align after it until
+    the next 1D; [V] (Text Indents help; counter+1A lists)
+  - 1C: appears once at the start of each document's first block; [?]
+  - 1E: non-breaking space (scr<NBSP>key=prtsc, Space<NBSP>Bar); [V]
+  - 1F: soft hyphen, a place where a word may be broken (typed with
+    Ctrl-Hyphen in the original; the byte seen in the listing of a hyphenation
+    dictionary, docs/DICTIONARIES.txt section 3).  Strata keeps it as a control
+    token, writes it back as 1F, shows a dim triangle (CP437 1F), writes \- in
+    the print, and leaves it out of every export.  The loader takes it like any
+    other byte below 20 (no limit applies: it is not a record end and not a
+    text indent); tests/shy.py checks the round trip.  [V]
+  - other 00-1F: opaque, preserved
+
+5. Markers
+----------
+
+13 <decimal type> ( *payload* 13 ). The payload is opaque to the editor; it
+nests: markers can contain whole records (a note/footnote is a marker whose
+payload holds S / T... records), which is why the scanner tracks depth. Where an
+operand byte could equal 13, the tab/attribute/escape operand rules are applied
+first. [V]
+
+The marker types and their fields [V].  The type numbers were found by
+creating each command of the original's Marker Commands menu (Alt-F10) in the
+original program and reading the bytes it wrote.  The payload of a marker is
+a list of records.  Notes, comments and equations begin with their text as
+nested S / T records.  Every other record is one field of the marker's panel:
+the first byte is the field's number, and the rest is its value.  A text
+value ends with a NUL byte before the CRLF; a number is written as decimal
+digits.  A field that has its default value is left out.  Fields are written
+in order of their numbers, which is not always the order of the panel.
+
+  type  command           fields (number: meaning)
+  ----  ----------------  -------------------------------------------------
+     1  Note              nested text; 1: type (footnote when left out, 2
+                          levelnote, 3 endnote)
+     2  Cross-reference   XN: section number (text, such as 3.1); XT: what is
+                          printed: left out the default (Tag), 1 Tag,
+                          2 Headline, 3 Both, 4 Page Number (Strata only).
+                          The panel refuses a number
+                          that is not a section of the document ("Cannot
+                          find section number") and shows that section's
+                          tag and headline.  Structured documents only.
+     3  Index             2: main heading, 3: subheading, 4: reference text;
+                          1: page number attributes
+     4  Keep              1: 0 start fixed (left out), 1 start floating, 2 end
+     5  Author            none
+     6  Comment           nested text; 1: initials (text); Strata: 1 is the
+                          name of the author and 2 the time it was made
+                          (text, such as 2026-11-11 10:00)
+     7  Date              1: format (text); default Month D, Year
+     8  Description       none
+     9  Equation          nested text, or 1: file name instead of text;
+                          2: width; 3: height; 4: scale (thousandths);
+                          5: position (1 floating, 2 in text; fixed has
+                          no record); 6: name for the table of figures
+                          (text).  The Print/Preview field of the panel is
+                          an action and is not stored
+    10  Worksheet         not used by Strata; its fields are stored as found
+                          (1: file name; 4: when to import)
+    11  Figure            1: name for the table of figures (text)
+    12  Filedate          1: format (text)
+    13  Filename          none
+    14  Filetime          1: format (text)
+    15  Font              1: font number
+    16  Include           1: document name (text)
+    17  Counter           1: counter 1 to 99 (1 when left out;
+                    the original has 1 to 9); 2: start value
+                          (Strata: the value the counter is set to, 0 to
+                          4294967295); 3: number
+                          style (Strata only: 1 arabic, 2 lower case roman,
+                          3 upper case roman, 4 upper case letters, 5 lower
+                          case letters)
+    18  Line              1: string; 2: length; 3: weight; 4: center
+                          (lengths are thousandths of an inch; no length
+                          means to the right margin, shown RM)
+    19  Merge             1: variable name; 2: delete blank lines (Yes when
+                          left out)
+    20  Markup            not used by Strata; its fields are stored as found
+                          (1: code, text)
+    21  Escape Codes      not used by Strata; its fields are stored as found
+                          (1: hexadecimal digits, text)
+    22  Page Number       none (header and footer only)
+    23  Page Break        1: 0 page (left out), 1 odd page, 2 even page
+    24  Pathname          none
+    25  Picture           1: file name; 2: width; 3: height; 4: scale;
+                          5: position; 6: name for the table of figures
+    26  Printer           none
+    27  Revision          none
+    28  Section           S: show (Strata's own, task 29): none or 1 number and
+                          title, 2 number only, 3 title only (header/footer only)
+    29  Table             1: name for the table of tables (text)
+    30  Time              1: format (text); default H:MM am/pm
+    31  Whitespace        1: size (thousandths of a length, inches in the
+                          original); 2: treatment (0 Crop at End of Page,
+                          1 Place All on Next Page, left out, 2 Float to Next
+                          Page); U: unit (Strata only: none inches, 1 cm,
+                          2 mm, 3 pt, 4 bp, 5 pc, 6 dd, 7 cc, 8 sp, 9 em,
+                          10 ex)
+    32  Symbol            not used by Strata; its fields are stored as found
+                          (1: symbol code, 2: symbol name, text)
+    33  If                1: expression (text)
+    34  Else              none
+    35  Endif             none
+    36  Orientation       1: orientation (no record: that of the document,
+                          1 portrait, 2 landscape)
+    37  Keycap            1: legend; 2: foreground and 3: background in tenths
+                          (a field that is left out is the value of the
+                          Keycap Format: OKF, OKB, OKS, OKT); 4: scale in
+                          thousandths; 5: font number
+    38  Screen            not used by Strata; its fields are stored as found
+                          (1: file name; 2: width; 3: height; 4: scale)
+    39  Column Break      none
+
+The counters: the header holds, for counter n (1 to 99; Strata, the original
+has 1 to 9), the records
+OT<n>N (the description, a text ending in NUL) and OT<n>T (the tag, a text
+ending in NUL, such as \1\. where \1\ is the number).  The style of the
+number in a tag is \1\ arabic, \i\ lower case roman, \I\ upper case roman,
+\A\ upper case letters and, in Strata, \a\ lower case letters.  Without
+records counter 1 is "Numeric" with the tag \1\. and counter 2 is
+"Alphabetic" with the tag \A\. (seen on the panel of the original).
+
+Numbers: a width of 3 inches is written 3000, a keycap foreground of 10.0 is
+written 100, and a scale of 2 is written 2000.  The symbol names are the ones
+in the Special Symbols table of the Reference manual (- -- --- ---- (c) tm (r)
+and so on); (c) is stored as code 440, - as the name -, and -- as code 1 with
+the name --.  The codes 374 and 368 have not been matched to a name.
+
+How the original draws markers: a bracketed label such as [AUTHOR], [CB],
+[PB], [C1], [WS 3 in], [LN Length:2 in], [INCLUDE "file"], [IF "x"],
+[Key: ENTER], [PIC file], [SCREEN file], [Start Keep (Fixed)], [End Keep],
+[MERGE "v", Delete:Yes]; the evaluated value for dates and times; and a
+single marker character for notes, comments, figures, tables, indexes and
+fonts.  The Status line shows the type of the marker under the cursor.
+
+6. Version notes
+----------------
+
+MR1006/MR1023/MR1028 and the *R2 line suggest the writer stamps a format
+revision. Release 1 files differ (MSRDDOC1/MSWRDOC1/MS2TO1 convert between
+them); only release 2 was studied.
+
+7. Compatibility rule used by stred
+-----------------------------------
+
+Anything not understood is stored as raw bytes in the position where it was
+found (header lines, unknown block/column properties, marker payloads, opaque
+control bytes) and written back unchanged. Tab widths are recomputed only for
+blocks that were edited.
+
+8. Damaged and hostile files: what the readers check
+-----------------------------------------------------
+
+A document, a macro set, a library, a help file or a text to import may be
+cut short by a full disk, damaged by a bad medium, or made by someone who
+wants the program to fail.  The readers must refuse such a file with a message
+a person can read and must never crash, hang or allocate a lot of memory for
+it.  The model is the PNG reader (EQUATIONS.txt, section 8).  The document
+that is open is never changed by a refused file: every caller of doc_load
+keeps its document until the new one is whole.
+
+8.1 What the file may claim, and what it controls
+
+The container has no length fields.  A record ends at CR LF, a T record at
+the first NUL outside a marker, so nothing in a document claims a size that
+the reader could trust before looking at the bytes.  What can be large is what
+the bytes make:
+
+  The size of the file (fstat)   one buffer of size+1 bytes; limit 32 MB,
+                                 checked before the buffer is made.
+  The number of records          the line lists (header, block and column
+                                 properties) and the item list; limits below.
+  The length of a T record       one token of 4 bytes for each byte of text;
+                                 bounded by the size of the file (a legal
+                                 document of 32 MB in one paragraph takes
+                                 about 200 MB while it is loaded).
+  The number of markers          one entry of the marker table each (24 bits
+                                 of table index, so 16 million at most);
+                                 limit 1000000 alive at once.
+  The digits of a marker type    an int; a type of more than 6 digits is not
+                                 a marker (both scanners agree), so the
+                                 number cannot overflow.
+  The numbers of property        read with integer functions all over the
+  records                        programs; at most 7 digits in a record that
+                                 is not a text (a record that ends with NUL).
+  CW (the width of a column)     digits only, else the column has no width.
+  *B<n>                          one digit, or the 7 digit limit above.
+  Columns of a block             one column record each; limit 5000.
+  Nesting of markers             a counter; the payload of a marker is kept
+                                 as bytes and not parsed at load, so there is
+                                 no recursion at load.  Include parts nest at
+                                 most 8 deep (PRINT-LATEX.txt, section 25).
+
+8.2 The limits (src/msdoc.h)
+
+  DOC_MAX_BYTES        32 MB             the size of the file
+  DOC_MAX_ITEMS        500000            sections, level marks and blocks
+  DOC_MAX_MARKERS      1000000           markers alive in the programs
+  DOC_MAX_HEADER       20000             records of the header
+  DOC_MAX_PROPS        2000              property records of a block or column
+  DOC_MAX_COLUMNS      5000              columns of one block
+  DOC_MAX_DIGITS       7                 digits of a number in a record
+  DOC_MAX_MTYPE_DIGITS 6                 digits of the type of a marker
+
+A 4000 page document has about 12 MB, 160000 blocks and 40000 markers.  The
+worst file that is still accepted needs about 200 MB (one huge paragraph);
+the worst file that is refused needs 85 MB before the limit is found (500000
+empty blocks), measured by tests/loadtest.c.
+
+8.3 What is refused, with the message
+
+  not a Strata document (missing *R)
+  damaged document: a piece of text has no end
+  damaged document: it is cut short, the start of the text is missing
+  damaged document: it is cut short, the end of the document is missing
+  damaged document: a number in the settings has too many digits
+  damaged document: more than 20000 lines of settings
+  damaged document: more than 2000 lines of settings for one block
+  damaged document: more than 5000 columns in one block
+  document too large: more than 500000 blocks and sections
+  document too large: more than 1000000 markers
+  file too large (the limit is 32 MB)
+  this is a directory, not a file / this is not a regular file
+  file changed while it was read / cannot open file / read error
+
+A document with no *E record is refused although the old reader took it: the
+text of a file that ends in the middle is the sign of a disk that was full,
+and a program that opens it as whole would save it back without the rest.
+The backup (FILE-MENU.txt) holds the last whole version.  Trailing data after
+*E is kept and written back as it is.  Unknown record types are kept as they
+are.
+
+8.4 One reader for whole files (src/readfile.c)
+
+readfile_all and readfile_text read a whole regular file for the documents
+(32 MB), the macro sets (1 MB), the import of a text (32 MB), the help file
+(16 MB), the files of the LaTeX engine (64 MB) and the check of a picture
+(256 MB).  They open with O_NONBLOCK, so that a named pipe does not make the
+program wait for a writer, refuse everything that is not a regular file, take
+the size from fstat and refuse a file over the limit before any memory is
+made, and refuse a file that grows while it is read.  The import of a text
+stops when the document would get more than DOC_MAX_ITEMS blocks.  The
+personal dictionary is read up to 1000000 words.  Lines that are read with
+fgets into a buffer of fixed size (configuration, dictionaries, logs) cannot
+overflow it; an over long line is cut or refused where it matters
+(dictlist.c).
+
+8.4a Recovery (src/msdoc.c doc_recover, src/recoverui.c)
+
+The refusal above is the rule for every reader.  The Editor (Retrieve, the
+open dialog and the file named on its command line) goes one step further for a
+document that is cut short or damaged AFTER a readable beginning: it makes the
+part that can be read and offers it.  Recovered: every complete block and
+section before the first record that is wrong (a piece of text with no end, a
+number with too many digits, the end of the file with no end record or no begin
+record), the header records that can be read (a *B0 is supplied when the file
+ends before the begin record), the columns that are whole of a block that is
+cut, and the end record *E, which is supplied.  Not recovered: what stands after
+the bad record (the reader does not look for another place to go on).  Not
+offered, and refused as before: no *R record, a file over a limit (size, items,
+markers, header lines, property lines, columns), a directory, a pipe, a file
+that is not regular.  The recovered document has the name NAME.recovered.doc
+(NAME.recovered2.doc and so on; the folder of the file, else the working
+directory), is marked as changed and never has the name of the file, which is
+not opened for writing, moved or removed.  strprint and stred --print have the option
+--recover.  The memory is that of the load of the same file (tests/recovertest.c
+measures both).
+
+8.5 Tests
+
+tests/loadtest.c makes the damaged files itself and runs each load in a child
+process: every cut of a good document at every byte, the file types (empty,
+text, random bytes, a named pipe, a directory, files of 32 MB plus one byte
+and of 5 GB, both sparse), counts over every limit, numbers of 7 to 23 digits
+in the header, in a block record and in a column width, a marker type of 5000
+digits, 200000 nested, unclosed and stray markers, every record type byte, and
+the shared reader itself.  The test measures the peak memory of the child
+(under 100 MB for every case) and fails on a signal, a hang (alarm) or a
+leak.  tests/recovertest.c cuts four documents of tests/data at every record
+boundary and one byte further, puts a bad record in the middle, and checks the
+recovered blocks against the original by text, the names, that the file is not
+changed, the limits and the memory; the smoke test drives the box.  It also loads and saves again, byte for byte, every document of
+tests/data and of the samples.  The build type asan runs it with the address
+and undefined behaviour sanitizers; it found the overflow of the marker type
+number.

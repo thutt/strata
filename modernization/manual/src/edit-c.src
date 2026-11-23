@@ -1,0 +1,572 @@
+# Chapter 3, last part: the Print Error method of Search and the macros and
+# the library of the Tools menu.  The markers that the method finds are
+# described in chapter 5 (markers-errors) and made by Print and Preview
+# (chapter 6, print-errors).
+
+.h2 Find Next Error [edit-c-find-error]
+.ix Find Next Error
+.ix Find Previous Error
+.ix Next Error
+.ix Previous Error
+.ix Search method
+.ix Search, Find
+.ix Search again
+.ix Ctrl-F9
+.ix Ctrl-F8
+.ix Ctrl-F7
+.ix Remove Error
+.ix Remove Print Errors
+.ix Print Error, find
+Find Next Error is the second method of Search.  Where the method Text looks
+for a string of characters ({n:edit-b-search}), the method Print Error looks
+for the next Print Error marker ({n:markers-errors}): the notes that Print and
+Preview leave in the text at each place where the document could not be
+typeset as it is written ({n:print-errors}).  Use it after a Print or a
+Preview: go from one marker to the next, read the message, correct the
+document there, and go on; when the last one is mended, print again.
+
+.h3 How to reach it
+.table 23 37
+Way | What it does
+{k:Ctrl-F8} | Find the next Print Error.  Chooses the method Print Error and the
+ direction Forward.
+{k:Ctrl-F7} | Find the previous Print Error.  Chooses the method Print Error and
+ the direction Backward.
+{k:Ctrl-F9} | Search again: repeats the last search with its method and
+ direction.  After {k:Ctrl-F8} it finds the next error, after {k:Ctrl-F7} the
+ previous one; after a search for text, the next or previous match.
+{k:F9} | The Search panel, with the fields Search for, Find, Direction, Match
+ Case, Whole Word and Attribute.
+{k:F12}, Print, Next Error | The same as {k:Ctrl-F8}.
+{k:F12}, Print, Previous Error | The same as {k:Ctrl-F7}.
+{k:F12}, Print, Remove Error | Take out the Print Error marker under the cursor.
+{k:F12}, Print, Remove Print Errors | Take out every Print Error marker.
+.end
+The four entries are the fourth to the seventh of the Print menu
+({n:print-menu}), after Draft, Final and Preview.
+They are reached with {k:F12}, {k:P} and the cursor keys.  The menu bar
+is wider than a screen of 80 columns, so the entries that do not fit
+(Remove Error and Remove Print Errors) continue on a second row; every
+entry is whole, and the name of the mode stays alone at the right end of
+the first row.  The hint line shows which entry is chosen and shows "Find
+the next Print Error [Ctrl-F8]", "Find the previous Print Error [Ctrl-F7]",
+"Remove the Print Error under the cursor" and "Remove all the Print Errors".
+Search itself is reached with the keys and the panel; Find Next Error also
+with the Print menu.
+
+{k:Ctrl-F7}, {k:Ctrl-F8} and {k:Ctrl-F9} are commands of their own.  When the
+terminal version does not receive them, the Print menu and the Search panel do
+the same.
+
+.h3 The Search panel
+The panel is titled {b:Search}.  It is a form like the panels of the menus:
+{k:Down}, {k:Tab} and {k:Enter} go to the next field, {k:Up} to the previous
+one, {k:Space}, {k:Left} and {k:Right} change a choice, {k:Ins} accepts and
+{k:Esc} cancels ({n:view-form-keys}).  In the terminal version it
+looks like this.
+.code
+ +-------------------------- Search --------------------------+
+ |  Search for: ......................................        |
+ |                                                            |
+ |        Find: [Print Error]                                 |
+ |                                                            |
+ |   Direction: [Forward]                                     |
+ |                                                            |
+ |   Attribute: [Any]                                         |
+ |                                                            |
+ |     Ins accepts, Esc cancels                               |
+ +------------------------------------------------------------+
+.end
+Match Case and Whole Word do not show while Find is Print Error.
+.pic pictures/edit-c-search-panel.png 5 The Search panel (F9) with Find at Print Error.
+.table 10 16 33
+Field | Values | Meaning
+Search for | Up to 79 characters | The string for the method Text.  The field
+ begins with the string used last, and the first printing key typed
+ replaces it.  The method Print Error does not need it; a string that is
+ typed is kept all the same for the next Text search and for Replace.
+Find | Text (default), Print Error, Tab, End of Line, Nonbreaking Space,
+ Marker, Soft Hyphen | The method.  Text finds the string, Print Error finds
+ the next Print Error marker; the others find a tab, an end of line, a
+ nonbreaking space, a marker or a soft hyphen ({n:edit-b-search}).
+Direction | Forward (default), Backward | Forward looks after the cursor and
+ goes on from the start of the document; Backward looks before the cursor
+ and goes on from the end.
+Match Case | No (default), Yes | Yes needs the same case of letters.  Only
+ for Find at Text.
+Whole Word | No (default), Yes | Yes needs a text that does not touch a letter
+ or a digit.  Only for Find at Text.
+Attribute | Any (default), Plain, Bold, Italics, Underscore | Finds only text
+ with that attribute.
+.end
+The panel opens with the method and the direction that were chosen last, by
+the panel or by {k:Ctrl-F7} and {k:Ctrl-F8}: after {k:Ctrl-F7} it shows Print
+Error and Backward.  Accepting it makes the choice stay, and searches at
+once.  With Find at Text and an empty Search for, nothing is searched; the
+choices are kept.  {k:Esc} changes nothing.
+
+.h3 What it does
+The cursor goes to the first marker after the cursor, in the order of the
+document (before the cursor for the previous one) and is put on the marker.
+A marker under the cursor is not found again.  The status line shows the new
+place, and the message line shows
+.code
+Print error 3 of 4: MESSAGE [code]
+.end
+the place of the marker among all of them in the document, counted from the
+start, and its message and code.  The message line is cut at the width of
+the window; {k:Alt-F12} on the marker shows all of the text
+({n:markers-errors}).  On the pages of the print the same fault has a label
+with its number in the Error Log ({n:print-failed}); the two numbers are the
+same when the whole document was printed and has not been changed since.  A
+fault that has no place in the document (an error that cannot be
+traced to a block) has an entry in the Error Log and the banner, but no
+marker, so the markers may be fewer than the entries.
+.table 23 37
+Case | What happens
+After the last marker, going forward | The search goes round to the first and
+ the message begins "Wrapped to the start.", then "Print error 1 of 4: ...".
+Before the first, going backward | The same the other way: "Wrapped to the
+ end.  Print error 4 of 4: ...".
+Only one marker, the cursor on it | It is found again, with the wrap message.
+No marker in the document | The cursor stays and the message line shows "No
+ print errors".
+.end
+
+.h3 Search again
+{k:Ctrl-F9} repeats the last search with the method and the direction that
+were chosen.  For Print Error it finds the next marker (the previous one when
+the direction is Backward).  For Text it searches in the direction chosen for
+the string of the last Search or Replace, and the message is "Found" or
+"Not found: " and the string.  With no string yet, the message line shows
+"Nothing to search for: use Search (F9) first".
+
+.h3 Taking markers out
+Remove Error takes out the marker under the cursor and shows "Print Error
+removed"; with the cursor on anything else the message line shows "The cursor
+is not on a Print Error".  Remove Print Errors takes out all of them and shows
+"4 print errors removed" ("1 print error removed"), or "No print errors" when
+there
+were none.  {k:Del} with the cursor on a marker and {k:Backspace} just after
+it take out that marker as well.
+
+.h3 Messages of Find Next Error
+.table 28 30
+Message | Meaning
+Print error N of M: MESSAGE [code] | The cursor is on the Nth of M markers.
+Wrapped to the start.  Print error 1 of M: ... | The search went round the end.
+Wrapped to the end.  Print error M of M: ... | The search went round the start.
+No print errors | None in the document (also from Remove Print Errors).
+Print Error removed | Remove Error did its work.
+The cursor is not on a Print Error | Remove Error with the cursor elsewhere.
+N print errors removed | Remove Print Errors took out N markers.
+Nothing to search for: use Search ({k:F9}) first | {k:Ctrl-F9} before any text search.
+Found | The text was found.
+Found: the search wrapped to the start of the document | The text was found after the search went round the end of the document.
+Found: the search wrapped to the end of the document | The same, backward, round the start.
+Not found: STRING | The text is not in the document.
+.end
+
+.h2 Case [edit-c-case]
+.ix Case
+.ix Upper case
+.ix Lower case
+.ix Capitalize
+.ix Ctrl-F6
+{k:Ctrl-F6} changes the case of letters.  A box offers {b:Upper}, {b:Lower} or
+{b:Capitalize}; then, as for Copy, a second box prompts for what to change
+(Text,
+Column, Block or Section), the unit is highlighted with the cursor keys, and
+{k:Enter} makes the change; {k:Esc} cancels.  If you press {k:Enter} at once on
+Text, with nothing highlighted, the word under the cursor is changed.
+.pic pictures/edit-c-case-menu.png 5 The box of Case: Upper, Lower and Capitalize.
+.pic pictures/edit-c-case-unit.png 5 The second box of Case, which prompts for what to change.
+.table 10 50
+Choice | What it does
+Upper | Every letter becomes a capital.
+Lower | Every letter becomes a small letter.
+Capitalize | The first letter of each word becomes a capital and the other
+ | letters small letters.  A word is letters, digits and apostrophes, so
+ | {c:don't} becomes {c:Don't} and {c:well-known} becomes {c:Well-Known}.
+.end
+Only letters change.  Digits, spaces, tabs, ends of lines, attributes and
+markers (the Print Error ones too) stay as they are.  A word that begins with
+a digit keeps its small letters in Capitalize: {c:3rd} stays {c:3rd}.  The letters are those of
+the PC character set: the pairs of A to Z, and of the letters with an accent
+that it has in both cases (the e with an acute accent, the umlauts of a, o and
+u, the ring a, the cedilla c, the ligature ae and the tilde n).  The other
+letters with an accent, and the German sharp s, have no other case in the
+character set and stay.  The change is one operation for {b:Undo} ({k:Ctrl-/}),
+named Case.  The messages are in {x:msg-editor-line}.
+.h2 Border [edit-c-border]
+.ix Border
+.ix Border Layout
+.ix Alt-F8
+.ix Borders of columns
+.ix Gutter
+.ix Shading
+{k:Alt-F8} puts lines around columns and blocks.  The message line prompts you
+to highlight the column or columns with the cursor keys (the highlight runs
+from
+where the cursor was when you pressed the key to where it is now, over the
+columns and the blocks between the two) and to press {k:Enter}; {k:Esc}
+cancels.  The panel {b:Border Layout} then opens.
+.table 23 37
+Field | What it sets
+All | Every border: the four sides of each column, and the lines between the
+ | columns.  None, Single, Double or Wide.
+Outside | The four outer sides of the highlight.
+Top, Bottom | The top and the bottom of every column.
+Left, Right | The left side of the first column and the right side of the last.
+Inside | The lines between the columns; n/a for one column.
+Top Gutter, Bottom Gutter | The space above and below the blocks, in inches
+ | with up to three decimals (0.250).
+Connect Borders? | Yes makes the borders of the blocks close up.
+Shading (%) | The share of grey in the area, 0 to 100.
+.end
+.pic pictures/edit-b-border-panel.png 5 The Border Layout panel, with the top and the bottom double.
+{k:Ins} uses the settings that you changed; {k:Shift-Ins} uses every setting.
+All is applied first, then Outside and Inside, and the sides last, so that a
+side that you set wins over All.  A gutter with more than three decimals is
+refused: {c:Invalid number (no more than 3 decimal places allowed)}.  A shading
+below 0 or above 100 is refused: {c:Shading must be from 0 to 100}.  The change
+is one operation for {b:Undo}, named Border.  Borders are written in the file.
+The screen shows them at once, in the gap at each side of
+a column and on the row above and below the block: a thin line for Single, a
+double line for Double and a bold double line for Wide.  Where lines meet it
+draws the corner, the tee or the crossing that the character set has for them: a
+corner at the four corners of a table, a tee where the side of a column meets
+the line between two rows, and a crossing where two lines cross (the line
+between two rows goes on across a column that has no border, so the side of a
+bordered column next to it makes a crossing there and not a tee), in single,
+double and mixed forms (where a single line meets a double one the set has no
+character for every case, and the heavier line is drawn).  A terminal that
+cannot show them gets a plus sign, a hyphen, an equals sign for a double line
+and a vertical bar.  The text does not move,
+they follow the columns and the lines of a block that wraps, a folded section
+hides them, and {b:Undo} and {b:Redo} take them away and bring them back.  The
+Printer draws them on the page too ({n:print-borders}).
+.table 28 26
+Message | When
+Border: N changes | The panel was accepted ("Border: 1 change" for one).
+Cancelled | The panel was cancelled with {k:Esc}.
+There is no block to put a border on | The highlight holds no block.
+There is no column to put a border on | The highlight holds no column.
+.end
+.h3 Borders on several columns and rows [edit-c-border-many]
+.ix Borders on several columns and rows
+.ix Border, highlight of several rows
+The highlight of Border is a rectangle.  Press {k:Alt-F8}, then move the
+cursor with {k:Shift-Right} and {k:Shift-Left} to take in more columns and
+with {k:Down} or {k:Up} to take in more rows (blocks).  Every column of the
+rectangle is shown highlighted, and the settings of the panel go to all of
+them.  The panel opens with what the highlighted columns have: a field where
+they all agree shows that value, and a field where they differ shows n/a (or,
+for a gutter or the shading, is empty).  A field that you leave at n/a or empty
+changes nothing, even with {k:Shift-Ins}, so the columns that differed keep
+what they had.  The document is marked as changed once and a single
+{b:Undo} takes back the borders of the whole rectangle.  With nothing
+highlighted beyond the cursor, the panel works on the one column as before.
+
+.pic pictures/edit-c-border-table.png 5 The table of the example, before any border.
+
+As an example, take a table of three columns and five rows in which the top
+row has a single border on every side except the bottom, where it has a
+double line, and the other four rows have a single border on every side
+except the top.
+1. Put the cursor in the first column of the first row and press
+   {k:Alt-F8}.  Press {k:Shift-Right} twice, to take in the three columns,
+   and {k:Enter}.
+2. Set All to Single and Bottom to Double, and press {k:Ins}.
+3. Put the cursor in the first column of the second row and press
+   {k:Alt-F8}.  Press {k:Shift-Right} twice and {k:Down} three times, to take
+   in the four remaining rows, and {k:Enter}.
+4. Set Left, Inside, Right and Bottom to Single, leave Top as it is (None),
+   and press {k:Ins}.
+.pic pictures/edit-c-border-highlight.png 5 The first two rows highlighted over their three columns: the rectangle that Border works on.
+
+.pic pictures/edit-c-border-example.png 5 The table of the example after the two steps.
+
+Top is left alone in step 4 because the rows have no top border; to take away
+a top border that was there before, set Top to None.
+The line between the first row and the second is the bottom of the first row,
+and the top of the second row has none, so one double line is drawn there.
+Where two neighbors disagree about a line that they share (the bottom of one
+row and the top of the next), the Editor and the Printer both draw the
+stronger one, and a double or
+wide line wins over a single one.
+
+.pic pictures/print-border-page.png 5 A table whose cells have a double border, as it is printed.
+.h2 Math [edit-c-math]
+.ix Math
+.ix Calculator
+.ix Ctrl-F2
+{k:Ctrl-F2} calculates the numbers in the document.  As for Copy, a box prompts
+for what to calculate (Text, Column, Block or Section), the unit is highlighted
+with the cursor keys, and {k:Enter} calculates; {k:Esc} cancels.  The result is
+put on the clipboard, so that {b:Paste} ({k:F5}) puts it in the text; paste it
+before you cut or copy anything else.  The message line shows {c:Result: 14}.
+The
+document is not changed, so there is nothing to undo.  Text with nothing
+highlighted has no numbers: the message line prompts you to highlight them.
+.pic pictures/edit-c-math-unit.png 5 The box of Math, which prompts for what to calculate.
+.pic pictures/edit-c-math-result.png 5 The result of four prices on the message line.
+.table 17 43
+In the highlight | What Math does
+Numbers | Whole numbers and decimals of up to 100 digits.  The decimal
+ | separator is the period; a comma is one too when it stands between digits
+ | of a number that has no period ({c:1,5}).  A comma in a number that has a
+ | period is left out ({c:1,234.50}).
+Operators | In the order of their precedence: parentheses (), the exponent ^
+ | (a whole number), negation -, multiplication and division * and /,
+ | addition and subtraction + and -.
+% | Divides the number before it by 100.
+e or E | A power of ten, as in {c:1.5e3} (1500) or {c:2E-2}; the sign may be
+ | there.
+No operator | Numbers with no operator between them are added: {c:2 3}
+ | gives 5, and {c:2 3 * 4} gives 14.
+Other characters | Ignored: letters, signs of money and the like.
+.end
+The numbers of several columns or blocks are taken from left to right and from
+top to bottom.  The arithmetic is exact: {c:0.1 + 0.2} is 0.3.  The result has
+as
+many decimals as it needs, without a zero at the end, and at most 100 digits
+({c:1 / 3} gives 0.333... with 100 threes); a result with more than 100 digits
+before the point is written with a power of ten ({c:1E+100}).  A division by
+zero
+is refused with {c:Cannot divide by zero} and the clipboard is not changed.  A
+number of more than 100 digits, or an expression that is not good, such as
+parentheses that do not match, is refused with {c:Cannot calculate: the
+expression is not good}; a text with no number gives {c:There is no number to
+calculate}.  The message line shows a long result from its right end, with
+three periods in front; the clipboard holds the whole result.  The messages
+are in {x:msg-editor-line}.
+.h2 Tools: Macros and Library [edit-c-tools]
+.ix Tools, Macros
+.ix Tools, Library
+.ix Macros
+.ix Library
+.ix Macro key
+.ix Alt-letter macro
+.ix Keystrokes of a macro
+.ix Macro set
+.ix Library entry
+.ix Lib Copy
+.ix Lib Cut
+.ix Lib Paste
+.ix Copy to Library
+.ix Paste from Library
+The first two entries of the Tools menu keep two stores that live as long as
+the Editor runs, whichever document is being edited: the macros, and the
+library.  A macro is a recorded series of keys that runs again when {k:Alt}
+and its key are pressed.  The library holds named pieces of text, blocks and
+sections that can be pasted into any document.  Both can be saved to a file
+and retrieved from one.  The other entries
+of the menu are described with Autosort ({n:edit-b-sort}), Count
+({n:edit-b-words}) and, for Spell and Thesaurus, {n:spell}.
+
+Every panel of this section is closed with {k:Ins}, which accepts it, or
+{k:Esc}, which cancels it.  In a field that names an entry, a file or a
+directory, {k:Keypad +} or {k:F2} shows a list to choose from.
+
+.h3 Tools, Macros, Learn [edit-c-macro-learn]
+.ix Learn, macro
+.ix Define Macro
+.ix Ctrl-F1, end of a macro
+{k:F12}, Tools, Macros, Learn starts the recording of a macro; so does
+{k:Ctrl-F1}.  The panel Define Macro prompts for three fields; accepting it
+starts the recording, and the message line shows
+"Defining Alt-K: press Ctrl-F1 to end" (K is the macro key).
+.table 20 40
+Field | What it holds
+Macro Key: Alt- | One letter or one digit.  A letter is kept as a capital, so
+ that {k:Alt-q} and {k:Alt-Q} are the same macro.  Anything else is refused with "The
+ macro key is a letter or a digit".  A key that already has a macro is
+ recorded anew.
+Description | A line of text that says what the macro is for.  May be empty.
+Include in Macro Set? | No or Yes.  The initial value is No.  A macro that
+ is not included still runs while the Editor runs, but Save leaves it out of
+ the file.
+.end
+Until {k:Ctrl-F1} is pressed, every key is kept, in menus and panels too, and
+it also does what it always does.  The one exception is {k:F12}, the key of the
+menu bar, which is never kept.  {k:Ctrl-F1} ends the recording and is not
+part of the macro.  {k:Shift} is not kept: {k:Shift-Down} is recorded as {k:Down}.  To
+run the macro, press {k:Alt} and its key ({k:Alt-Q} for the example).  The macro
+keys are {k:Alt-A} to {k:Alt-Z} and {k:Alt-0} to {k:Alt-9}; A macro on a key that
+is also a command ({k:Alt-I}, {k:Alt-O}, {k:Alt-1} to {k:Alt-9}) is run instead
+of the command for as long as the macro exists.
+A macro keeps the keys, not the names of the entries that were chosen.  Because
+{k:F12} is never kept, a macro cannot open the menu bar.  The keys {k:F10} and
+{k:F11} are kept like the others.
+
+.h3 Tools, Macros, Edit [edit-c-macro-edit]
+.ix Macro Edit
+.ix Keystrokes, edit
+{k:F12}, Tools, Macros, Edit looks at a macro and changes it.  A small panel,
+Macro Edit, prompts for the Macro Key first; the second panel, Macro Edit again,
+has four fields:
+.table 20 40
+Field | What it holds
+Macro Key: Alt- | The key, as above.  Changing it makes a copy under the new
+ key.
+Description | The line of text.
+Keystrokes | The recorded keys as one line of text.  A character is itself.
+ The less-than sign is written twice.  Any other key is its name in angle
+ brackets: {c:<Enter> <Tab> <Esc> <BkSp> <Ins> <Del>}
+ {c:<Up> <Down> <Left> <Right> <Home> <End> <PgUp>}
+ {c:<PgDn>}, {c:<F1>} to {c:<F11>} and {c:<NBSP>} (the nonbreaking space);
+ with Alt- or Ctrl- in front of the name a key that was pressed with Alt or Ctrl, such as {c:<Alt-Q>},
+ {c:<Ctrl-B>} or {c:<Ctrl-Right>}.  A line that cannot be read is refused
+ with a notice that begins "The keystrokes are not understood" and explains
+ the angle brackets.
+Include in Macro Set? | No or Yes: the macro is written by Save or not.  A
+ macro that is not there yet starts with No.
+.end
+The message line then shows "Macro Alt-K has N keystrokes".
+
+.h3 Tools, Macros, Delete [edit-c-macro-delete]
+.ix Delete Macro
+{k:F12}, Tools, Macros, Delete prompts in the panel Delete Macro for one field and
+then "Delete the macro Alt-K?".
+.table 16 44
+Field | What it holds
+Macro Key: Alt- | The key of the macro to delete: one letter or digit.
+.end
+With no macro a message box shows "There are no macros", and a key that has
+none is answered by the box "No such macro".  The message line shows "Deleted".
+
+.h3 Tools, Macros, Save [edit-c-macro-save]
+.ix Save Macro Set
+{k:F12}, Tools, Macros, Save writes the macros that are included into a macro file
+The panel Save Macro Set has five fields.
+.table 17 43
+Field | What it holds
+Working Directory | The directory of the file ({n:file-workdir}); it becomes the
+ working directory of the Editor.
+File Name | The name of the file.  A name with no period gets the extension
+ {c:.mac}.  It must be given: "File must be specified (File Name)".
+Description | A line of text kept in the file.
+Author | The author, kept in the file.
+Revision | A number with up to three decimals, such as 1.000.  When it is not
+ a number above 0 the revision is the old one plus 0.001, or 1.000 the first
+ time.
+.end
+When the file exists, a prompt reads "Overwrite old version on disk?".  The
+message line shows "Saved" and the path.
+
+.h3 Tools, Macros, Retrieve [edit-c-macro-retrieve]
+.ix Retrieve Macro Set
+{k:F12}, Tools, Macros, Retrieve reads a macro file.  The macro set of the
+Setup field Initial Macro Set is read in the same way when the Editor starts
+({n:str-setup-fields}).  The panel Retrieve Macro Set
+has three fields.
+.table 17 43
+Field | What it holds
+Working Directory | The directory of the file.
+File Name | The name; the extension {c:.mac} is added to a name with no period.
+Options | One of two choices, below.
+.end
+.table 27 34
+Options | Effect
+Overwrite Current Macros | All macros that are in memory are deleted first.
+Merge with Current Macros | The macros of the file are added; a macro of the
+ file replaces one of the same key.
+.end
+All macros that are read have Include in Macro Set?  Yes.  The message line shows
+"Retrieved N macros".  A file that is not a macro set gives "That file is not
+a macro set", a file that cannot be read "Cannot read the file".
+
+.h3 Tools, Library, Edit [edit-c-library-edit]
+.ix Library Entry
+.ix Library, edit an entry
+{k:F12}, Tools, Library, Edit looks at a library entry, changes it, or makes a new
+one.  First a small panel, Library Entry, prompts for the Entry Name (the list of
+{k:Keypad +} or {k:F2} shows the names that exist).  Then the panel Library
+Entry has four fields:
+.table 19 41
+Field | What it holds
+Entry Name | The name.  A new name makes a copy of the entry; the entry of the
+ old name stays.  An empty name is refused: "Enter the name of the entry".
+Description | A line of text.
+Contents | Shown as ...: the contents are not typed here.  After the panel a prompt reads "Edit the contents of the entry?" and, when the answer is yes, the contents open in the editor (a section is not edited: it can only be
+ pasted or deleted).
+Include in Library? | No or Yes.  An entry that exists starts with Yes, a new
+ one with No.  Accepting a name with No removes the entry of that name.
+.end
+The entries are kept in alphabetical order.  The message line shows how many
+entries the library has.
+
+.h3 Tools, Library, Delete [edit-c-library-delete]
+.ix Delete from Library
+{k:F12}, Tools, Library, Delete prompts in the panel Delete from Library for one
+field and then "Delete the library entry NAME?".
+.table 10 50
+Field | What it holds
+Entry Name | The name of the entry to delete ({k:Keypad +} or {k:F2} lists
+ them).
+.end
+With an empty library a message box titled Delete from Library shows "The
+library has no entries", and a name that does not exist is answered by the box
+"No such library entry".
+
+.h3 Tools, Library, Save [edit-c-library-save]
+.ix Save Library
+{k:F12}, Tools, Library, Save writes the library to a library file, which is a
+document.  The panel Save Library has five fields.
+.table 17 43
+Field | What it holds
+Working Directory | The directory of the file ({n:file-workdir}).
+File Name | The name of the file.  A name with no period gets the extension
+ {c:.lib}.  A missing name gives "No file name specified".
+Description | A line of text kept in the file.
+Author | The author, kept in the file.
+Revision | A number with up to three decimals, such as 1.000.  When it is not
+ a number above 0 the revision is the old one plus 0.001, or 1.000 the first
+ time.
+.end
+When the file exists, a prompt reads "Overwrite old version on disk?" before the write.
+
+.h3 Tools, Library, Retrieve [edit-c-library-retrieve]
+.ix Retrieve Library
+{k:F12}, Tools, Library, Retrieve reads a library file.  The library of the
+Setup field Initial Library is read in the same way when the Editor starts
+({n:str-setup-fields}).  The panel Retrieve Library
+has three fields.
+.table 17 43
+Field | What it holds
+Working Directory | The directory of the file.
+File Name | The name; the extension {c:.lib} is added to a name with no period.
+Options | One of two choices, below.
+.end
+.table 28 30
+Options | Effect
+Overwrite Current Library Entries | The entries in memory are deleted first.
+Merge with Current Library Entries | The entries are added to the others.
+.end
+The message line shows "Retrieved N library entries".  A file that is not a
+library gives "That file is not a library".
+
+.h3 Copy to Library and Paste from Library [edit-c-library-keys]
+.ix Lib Copy
+.ix Lib Cut
+.ix Lib Paste
+.ix Ctrl-F3
+.ix Ctrl-F4
+.ix Ctrl-F5
+{k:Ctrl-F3} (Lib Copy) and {k:Ctrl-F4} (Lib Cut) take the highlighted text,
+column, block or section as {k:F3} and {k:F4} do ({n:edit-copy}, {n:edit-cut})
+and then ask for a library entry in the panel Copy to Library:
+.table 19 41
+Field | What it holds
+Entry name | The name of the entry.  Empty: "Enter a name for the entry".  When
+ the name exists, a prompt reads "Replace the entry that has this name?".
+Description | A line of text.
+Include in Library? | Yes at first.  With No nothing is kept and the message
+ line shows "Not included in the library".
+.end
+{k:Ctrl-F5} (Lib Paste) prompts in the panel Paste from Library for the Entry name
+and pastes the entry at the cursor as {k:F5} does ({n:edit-b-paste}); the
+clipboard of {k:F3} and {k:F4} is not changed.  With an empty library a message box titled
+Paste from Library says "The library has no entries"; an unknown name is
+answered by the box "No such library entry".  Any key closes a message box.

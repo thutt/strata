@@ -1,0 +1,64 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+STRATA C CODING STYLE
+=====================
+
+These rules apply to every C file in src/ and tests/.  The layout rules are
+encoded in .clang-format; the compiler enforces the rest.
+
+Layout
+------
+  - Indentation is 4 spaces.  No tabs.  Lines are at most 80 columns.
+  - A function declaration or definition puts the return type, including any
+    '*' for a pointer type, on a line of its own.  The name starts the next
+    line, followed by the parameters up to column 80.  Parameters that do
+    not fit continue on a new line, aligned with the first parameter.
+  - Two blank lines separate function declarations and definitions.
+  - Vertical whitespace separates logical groups of statements: after the
+    local declarations, around if/for/while/switch blocks, and before the
+    final return of a function.
+  - One statement per line.
+  - Every if, else, for, while and do uses braces, even for one statement.
+  - '&&' and '||' end a line; they never begin one.
+  - One declaration per statement ("int a; int b;", never "int a, b;").
+
+Expressions
+-----------
+  - A condition is a true boolean expression: "if (p != NULL)",
+    "if (n != 0)", "if (*s != '\0')", "if (strcmp(a, b) == 0)".  Never
+    "if (p)".  Predicates that return bool (is_digit() and friends) are used
+    directly.
+  - Casts are avoided.  The few conversions C cannot do without one live in
+    src/util.h as small checked helpers (usz, uns, isz, iun, slen, lsz, u8,
+    chr, u16, cstr, bytes, plen) and the rest of the program calls those.
+    Fix a type before reaching for a cast.
+  - <ctype.h> is not used; util.h has ASCII is_digit, is_alpha, is_alnum,
+    is_space, to_upper and to_lower.
+
+Compiler
+--------
+The Makefile builds with -std=c11 and a long list of warnings (see WARN in
+the Makefile: -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion
+-Wshadow -Wswitch-default -Wswitch-enum -Wformat=2 and more) and -Werror.
+A warning is a build failure.  Every switch has a default label.
+
+Tools
+-----
+  - clang-format -i src/*.c src/*.h tests/*.c   applies the layout rules
+    (the project does not require clang-format to build).
+  - make V=1 shows the full compiler command lines; the default output is
+    one short line per file.

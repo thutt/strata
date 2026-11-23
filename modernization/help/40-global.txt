@@ -1,0 +1,182 @@
+; The Global menu: settings of the whole document.
+= Global Menu
+~ Menu:Global
+The Global menu holds the settings of the whole document: Format, Page,
+Typeface, Marker, Options and Named.  The settings are saved with the document.
+The ones of Options are yours and are kept for every document.
+
+See [[Global Format]], [[Page Layout]], [[Typeface List]], [[Marker Format]],
+[[Global Options]], [[Named Block Format]].  Panels that belong to a group
+show the next panel with {PgUp} and the previous with {PgDn}; {Ins} applies
+them all and {Esc} cancels them all.
+
+= Global Format
+~ Menu:Global:Format
+~ Level 1 Format
+~ Level 2 Format
+~ Level 3 Format
+~ Level 4 Format
+~ Level 5 Format
+These panels set how headlines and text look.  There are thirteen in a ring:
+the global settings have three (headline and text, spacing, line numbering),
+and each of the levels 1 to 5 has two (headline and text, spacing).  A section
+of level 6 or deeper takes the global settings.
+
+- Headline and text: the Attributes, Justification, Indent, Font and Ruler (tab
+  stops) of the headlines and of the text.
+- Spacing: Line Spacing, Headline Spacing, Block Spacing, Subsection Spacing and
+  Peer Section Spacing (numbers of lines), Indent per Level, Auto Numbering?
+  for the section tags, and Page Break Level: a page starts at each section of
+  that level and of the levels above it (0 is none).
+  Page Number Level: the page number starts again at 1 at each section of that
+  level and of the levels above it (0 is one run through the document).
+  Print: only the headlines or only the text in the print (the Editor shows
+  all).
+  Winding Columns: 1 to 9 snaking columns in the print; F2 on the field opens
+  the Winding Column Layout (gutter and vertical rules).  See
+  [[Winding Column Layout]].
+  First Block Type Joined: the headline and the first text of a section in one
+  paragraph in the print (refused with a line in the Error Log when the fonts
+  differ, a block has columns, or Print is not Headlines and Text).
+  Ruler: the size of a ruler unit in the print (1/80 of the text width, or 1/10,
+  1/12, 1/15 inch).  A level's Indent to Next Level adds up from level to level.
+- Line numbering: numbers for the printed lines.
+
+The level panels set the same things for the sections of that level only.  A
+setting that a block or a named format gives wins over these.  See
+[[Block Format Editor]], [[Named Block Format]].
+
+= Page Layout
+~ Menu:Global:Page
+~ Global Page Layout
+~ Title Page Layout
+~ Table of Contents Page Layout
+~ First Page Layout
+~ Even Page Layout
+~ Odd Page Layout
+~ Index Page Layout
+The Page panels set the paper and the margins.  The Global Page Layout has Left
+Margin, Right Margin, Top Margin and Bottom Margin (inches, such as 1.250),
+the Page Number Tag and the Paper Size.  The other panels are for the title
+page, the table of contents, the first page, the even and odd pages and the
+index.
+
+- The Page Number Tag says how the page numbers are written: \1\ for 1, 2, 3,
+  \i\
+  for i, ii, iii, \I\ for I, II, III, \a\ and \A\ for letters.  A roman
+  number shows 1 to 3999; above that the number is arabic.
+- Header and Footer are one line: the left, centre and right parts separated by
+  |, for example Chapter | \page\ | \section\ .  \page\ is the page number
+  and \section\ the headline of the section.  A layout with none of its own
+  shows the Global one in brackets; an empty field is no header there.  See
+  [[Headers and Footers]].
+- On the Title Page Layout, Vertical Centering is a percent from 0 to 100: how
+  far down the page the title starts.
+- If the margins leave less than 2 inches for the text, the Printer uses 1 inch
+  for them.
+
+A panel rejects a value that is not a number.  See [[Print]].
+
+= Headers and Footers
+~ Header
+~ Footer
+Each Page panel has a Header and a Footer.  The line has up to three parts
+separated by |: left, centre and right.  Without | it is the centre; with one
+| it is the left and the right part.  \page\ is the Page Number marker and
+\section\ the Section marker, which prints the number and the title of the
+first section on the page ("3.2 Search"), or of the one before it.  Use
+\sectionnumber\ for the number only ("3.2") and \sectiontitle\ for the title
+only ("Search").  A headline with no number gives its title.
+
+The title page uses the Title Page Layout, the contents the Table of Contents
+Page Layout, the first page of the text the First Page Layout, and the other
+pages the Even or the Odd Page Layout.  A layout with none of its own takes the
+Global one.  A document with no text in any header or footer prints as before,
+with the page number at the foot.  See [[Page Layout]].
+
+= Winding Column Layout
+~ Winding Column Layout
+The panel behind Winding Columns of Global Format, of a level and of the Named
+Block Format (F2 or Keypad + on the field; in the Named Block Format an empty
+gutter and [] leave the gutter and the rule to the level and the document).
+Number of Columns is 1 to 9: the printed text of the
+document, the level or the block flows down one column and winds to the top of
+the next.  Gutter Size is the space between the columns, in inches such as
+0.250.  Vertical Rules is None, Single, Double or Wide: a line between the
+columns.  Headlines, the title page and tables keep the full width.  Ins keeps
+the panel, Esc leaves it.  See [[Global Format]].
+
+= Typeface List
+~ Menu:Global:Typeface
+Strata keeps twenty font names.  The Typeface List shows them: Font 1 to Font
+20.  A format picks one by its number, and the Printer uses the name to choose
+a family of type: a name that holds a word such as program, code, courier or
+mono gets the typewriter family, a name with head, title, sans, helv, arial or
+gothic gets the sans serif family, and any other name gets the roman family.
+The size and the style of the name are not used.  See [[Global Format]],
+[[Font Marker]].
+
+= Marker Format
+~ Menu:Global:Marker
+~ Counter Format
+~ Footnote Format
+~ Levelnote Format
+~ Endnote Format
+~ Marker Format:Display Hidden Markers?
+~ Marker Format:Date Format
+~ Marker Format:Time Format
+These panels set the markers, in a ring that {PgUp} and {PgDn} move through.
+
+- Marker Format: Display Hidden Markers? (show the markers that have the mode
+  Hidden), the Primary Note Type (Footnotes, Levelnotes or Endnotes), and the
+  Date Format and the Time Format that the date and time markers use when their
+  own format is empty.
+- Marker Display Modes: how each marker looks on the screen (see [[Display
+  Modes]]).
+- Counter Format: the format of the counters.
+- Footnote Format, Levelnote Format and Endnote Format: the look of the notes.
+- Keycap Format: the shades and the size that a [[Keycap Marker]] takes when it
+  has no values of its own.
+
+See [[Markers]].
+
+= Keycap Format
+The Keycap Format panel gives the values that a Keycap marker without a value of
+its own takes: the Foreground shade of the legend and the line, the Background
+shade of the fill, the Scale and the Font.  A shade is from 0.0 (black) to 100.0
+(white).  See [[Keycap Marker]].
+
+= Global Options
+~ Menu:Global:Options
+~ Options
+These settings are yours and are kept for every document.
+
+- Expanded Status Line? shows more on the status line.
+- Display On-Screen Help? shows the function keys at the bottom of the screen.
+- Display Tab & End-of-Line Characters? and Display Dots for Spaces? show the
+  characters that do not print.
+- Backups Kept (0 to 99) is how many numbered backups a save keeps of the older
+  version of a document ([[Backup Files]]).  A lower number asks first.
+
+The other fields are shown dimmed: they have one value in this version.
+
+= Named Block Format
+~ Menu:Global:Named
+~ Menu:Global:Named:Edit
+~ Menu:Global:Named:Delete
+~ Retrieve Named Block
+~ Delete Named Block
+A named block format is a group of settings that you give a name: the
+attributes, the justification, the indent, the tab stops, the left block
+indent, the font, the line spacing and the block spacing, and the winding
+columns (F2 on Winding Columns opens the Winding Column Layout: the number of
+columns, the gutter and the rule between them).  A block that has the name
+takes them.
+
+- Edit: choose (new) or a name, fill in the panel and {Ins}.  A field that is
+  left
+  empty is left to the other levels of the format.  Give a name in Save as.
+- Delete: choose a name and answer Yes.
+
+Up to 40 names are listed.  See [[Block Format Editor]], [[Global Format]],
+[[Winding Column Layout]].

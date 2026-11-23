@@ -1,0 +1,441 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+THE SPELL CHECK
+===============
+
+F12, Tools, Spell (Document, Block, Section, Word), Ctrl-C and the Document
+Manager's Check Document Spelling.  NOTE: the owner removed the Check Document
+Spelling entry (and its panel) from the Document Manager of Strata, because
+the spell check is an activity of the Editor; "stred --spell" stays as a mode
+of the Editor for tests and scripts, and the parts of this file that describe
+the Document Manager panel describe the earlier product.  The original's
+behavior was probed in
+Manuscript 2.1 under DOSBox-X with small documents; every finding is marked:
+
+  [V]  seen in the original (a screenshot or the bytes of a file)
+  [H]  read in the help file (topics 007, 008, 009, 240, 260, 263, 268, 277,
+       280, 302, 352 and 355 of strata.hlp, decoded with tools/hlp.py)
+  [?]  a guess, because it was not tried or not seen
+
+The decompiled manuals of the owner's documentation were not available; the
+Release 2 manual is not among them (MARKERS.txt says so too).
+
+The original's dictionary files (american.spl and the .SPC files) were not
+decoded: Strata does not need them.  It has no dictionary and no suggestion
+engine of its own.  The words are checked by aspell or hunspell, which are
+programs that already exist (section 3).
+
+
+1. The original
+===============
+
+1.1 The menu path and the options
+---------------------------------
+  - [V] F12, T (Tools), S (Spell) shows a second line of the menu:
+    "Document, Block, Section, Word".  The letters d, b, s and w choose.
+    The same menu line says Macros, Library, Spell, Thesaurus, Autosort,
+    Worksheet, Count for Tools.
+  - [V][H] Ctrl-C is the accelerator of Word.
+  - [V] Document opens the panel Check Document Spelling (1.2).  Block asks
+    first for the blocks: the top lines say "Use arrow keys to highlight
+    block(s); then press Enter." and the bottom lines "Move highlight:
+    Up,Down one block   Home,End begin or end of section   Change direction:
+    Gray-+"; the mode on the status line is MENU-TOOLS-SPELL-BLOCK.  Enter
+    then opens the same panel.  [?] Section asks for the sections in the
+    same way; it was not tried.
+  - [V] The text that is checked is the text in the editor, saved or not:
+    a new document that was never saved was checked.  [?] The check begins at
+    the first highlighted block.
+  - [H] The help says that the whole document is checked, "excluding index
+    entries", or individual blocks, sections or words.
+  - [V] The Document Manager has Check Document Spelling (the fourth entry)
+    and Maintain Dictionaries.  Setup of the Document Manager has the item
+    "Dictionary Language: American English" ([H] topic 280: "the language to
+    be used by the spell checker and for hyphenation").
+
+1.2 The panel Check Document Spelling
+-------------------------------------
+Both in the editor and in the Document Manager [V]:
+
+      Working Directory: C:\MS\
+          Document Name: C:\MS\SP1.DOC      (in the Document Manager a name)
+  Custom Spelling Dictionary: CUSTOM.SPC
+  Custom Spelling Dictionary:
+          Auto Correct? Yes
+  ----- Press Ins to Check Document Spelling -----------------  DEFAULT
+
+  - [V] DEFAULT at the right of the bottom line is the name of the settings
+    (default.set).  The editor's panel does not show the working directory
+    in the help picture [H]; the real one does [V].
+  - [V] The panel keeps its values during the session: a name that was typed
+    for the custom dictionary was there the next time.  Space changes
+    Auto Correct? from Yes to No [V].  The first custom dictionary is
+    CUSTOM.SPC at the start.
+  - [H] "Enter the names of the custom dictionaries you are using in addition
+    to the main spelling dictionary.  The extension .SPC is assumed.  You can
+    use up to two different custom dictionaries.  You will need to use a
+    custom dictionary if you want to make any additions or changes to a
+    dictionary; you cannot make changes to the main dictionary."
+  - [V] A custom dictionary that does not exist asks, when Ins is pressed:
+    "Create dictionary (C:\MS\MYDIC.SPC)? Press Y to confirm, N to cancel".
+  - [H] Auto Correct: "Select Yes if you want all remaining occurrences of a
+    word to be corrected automatically after the first occurrence."
+
+1.3 The screen for a word that is not in the dictionary
+-------------------------------------------------------
+[V] Two lines on the top are a bar (reverse video) with the commands:
+
+  Accept  Define  Ignore  Edit  Guess  Line  Quit
+  Accept word as correct
+
+The command that is chosen is shown in normal video; the second line says
+what it does.  Below: a blank line, then "Unknown word: quikc" (the word in
+reverse video).  A rule, then the text of the document with the word in
+reverse video (the line before the line of the word is the first one shown;
+a tab is drawn as a triangle and a marker as a diamond).  A rule, then a
+reverse video block at the bottom:
+
+  Document:     C:\MS\SP1.DOC
+  Section:      Body
+  Dictionaries: AMERICAN.SPL
+                CUSTOM.SPC
+
+  - [V] Keys: the first letter of a command chooses it; Left and Right move
+    the choice and Return takes it.  Ins did nothing in the list of
+    suggestions where Return chose.  Esc did nothing on the bar.  [H] says
+    Ins accepts an edited word or line.
+  - [H] Accept: accepts the word exactly as it appears and marks it in the
+    rest of the document as correct, but does not enter it in a custom
+    dictionary.  [V] The second occurrence of an accepted word was not
+    shown.
+  - [H] Ignore: accepts the word but continues to flag it as misspelled if it
+    appears in other locations.  [V] Ignore, then the second zzq was shown
+    again.
+  - [H] Define: enters the word in a custom dictionary; a lower case word is
+    entered in lower case and with an initial capital, any other as it is.
+    [V] With one custom dictionary Define goes on at once.  The file
+    custom.spc had "Wrold" and "wrold" after Define of wrold: plain text,
+    one word on a line, lines ended by CR LF, a Ctrl-Z (1A) at the end.  The
+    later occurrences of the word were not shown.  With two custom
+    dictionaries the bar says "Select dictionary: CUSTOM.SPC MYDIC.SPC" and a
+    line "Correct word:" with the word is below "Unknown word:"; the word
+    went to the dictionary that was chosen (and "Zzq", "zzq" were written).
+  - [V] Edit: the bar becomes blank, and under "Unknown word:" a line
+    "Correct word:" holds the word, in reverse video, with a cursor.  Typing
+    inserts at the cursor.  Return takes the word, which replaces the word
+    in the text; the check goes on with the next word (the new word is not
+    checked again).  [?] Esc goes back to the commands.
+  - [V][H] Guess: the bar shows the suggestions in a row ("quick  quicks
+    quirk"), the second line says "Select word".  Left and Right choose,
+    Return takes the word, Esc goes back to the commands.  A word that has
+    no suggestion shows "No alternatives found" on the bar (and Esc goes
+    back).  The word that is chosen replaces the word and the check goes
+    on.  The suggestions take the capitals of the word ("Capitaal": Capital).
+  - [V] When there is exactly one suggestion and it only differs in case
+    from the word (the original knew "Tab" and not "tab"), the bar says
+    "Accept correction? Yes No", with the "Correct word:" line; Esc was No.
+  - [V] Auto Correct = Yes: after a word was replaced (by Guess or by Edit)
+    every later occurrence of the same word was replaced at once without a
+    question.  [?] The same is true when the word was chosen with Edit.
+  - [V][H] Line: the bar is blank and the line of the word (the text between
+    two line ends of the block) is an edit field in the text area; Esc
+    cancels.  [H] Ins uses the corrected line.
+  - [V] Quit: with corrections that were made by Auto Correct, the bar asks
+    "Continue with auto corrections? Yes No".  [?] Yes makes the rest.
+  - [V] No count is shown at any time (no number of words, errors or
+    corrections).
+  - [V] The end is a small box in the middle: "Spell Check completed" and
+    "Press any key to exit"; after Quit "Spell Check terminated".  When no
+    word was changed (and none was defined or accepted [?]) a middle line
+    "No spelling errors found" is added.
+  - [H] "Terminated with changes saved: you selected Quit while spell
+    checking a document from within the editor.  Changes made during spell
+    checking will remain in your document."  From the Document Manager: [H]
+    "Save corrected document?  Changes have been made to the document during
+    spell checking.  Press Y to save the changes or N to cancel the changes."
+
+1.4 Spell Word (Ctrl-C and Tools, Spell, Word)
+----------------------------------------------
+[V][H] A box with the title Spell Word, the word of the cursor, then either
+"Spelled correctly" and "Press any key to continue", or "Not found in
+dictionary", the line "Suggested alternatives:" with the words in a row (the
+first one highlighted) and "Press Ins to select word".  Left and Right
+choose, Ins replaces the word in the document (the document is marked as
+changed, "*" before its name), Esc cancels.  A word of more than 65
+characters: the box says "Word is too long - maximum length is 65 characters"
+[V] ([H] topic 268: "the word you are trying to spell check is longer than 65
+characters").  The cursor can be anywhere in the word [V].  [?] On a space
+the word before it is taken.
+
+1.5 What a word is
+------------------
+[V] (all seen, with Ignore through a document of such words):
+
+  - A word ends at a space, at a tab, at a change of an attribute (the word
+    xqzt with the letters qz in bold was three words: x, qz, t, and qz was
+    the unknown one), at a marker and at the end of a line.
+  - Punctuation at the two ends is not a part of the word: 'qqe' is qqe,
+    "qqg." is qqg, "qqs-" is qqs, "-qqt" is qqt, "(qql)" is qql.
+  - Punctuation inside is a part of it: qqa.qqb, qqc-qqd (a hyphen), qqf's,
+    qqh,qqi, qqj/qqk, qqm_qqn and qqv@qqw are one word each (and the
+    original asked for the whole word dont-stop, and gave suggestions for
+    the whole word).
+  - A letter followed by digits is a word that is always unknown: qqo1,
+    Strata3, x2y.  A run that begins with a digit (1qqp, 3rd) is not
+    looked at.
+  - Capitals do not matter for a word that is known: FOX and Fox were right
+    when fox is.  It's and isn't were right.
+  - A word of more than 65 characters is skipped without a message in the
+    check of a document [V]; Ctrl-C refuses it (1.4).
+
+1.6 The text that is checked
+----------------------------
+  - [V] The nested text of a note (a footnote) is checked at the place of its
+    marker, in the order of the text: "Befor", then the words of the note,
+    then "Aftr".  While a word of the note is shown, "Section:" says "Body
+    (Note)" and the text area shows only the text of the note.
+  - [H] Index entries are not checked.  [?] The text of equations, of file
+    names and of other markers is not offered; these are not text of the
+    document.  [?] The text of a comment is checked like that of a note.
+    [?] Headers and footers are not checked.
+
+1.7 What happens to the document
+--------------------------------
+  - [V] The replacement keeps the attributes: a bold run "qz" became "quiz"
+    in bold (the bytes 12 01 00 q u i z 12 00 00 of the file).
+  - [V] The document is marked as changed after a replacement ("*" before
+    its name on the status line); Ctrl-C replacing a word did that too.
+  - [V] After a check that ended with the end message the cursor was where it
+    was before the check.  [?] After Quit it was at the first character.
+  - [V] A document that was changed by the check can be saved with F12, File,
+    Save (the bytes were there).  The check did not save by itself.
+
+1.8 The custom dictionary and the main dictionary
+-------------------------------------------------
+  - [V] The main dictionary is AMERICAN.SPL (in the directory of the program;
+    a copy is in the install directory spell/).  It cannot be changed [H].
+  - [V] The custom dictionary is a text file with the extension .SPC in the
+    working directory; the first one is called CUSTOM.SPC (the file that is
+    in the kit has one byte, a Ctrl-Z).  It is created when its name is
+    typed and Y is pressed (1.2).  Lines are ended by CR LF; the end is 1A.
+    Define writes the word with an initial capital first and then in lower
+    case when the word is in lower case [V].
+  - [H] Maintain Dictionaries (Document Manager): Convert Document to
+    Spelling Dictionary, Add Document to Spelling Dictionary, Convert
+    Spelling Dictionary to Document (and the same for hyphenation
+    dictionaries).  The rules of a document that is made into a dictionary
+    (topic 277): words are separated by a space, a tab or a line end; use
+    capitals and punctuation only if a word must appear that way; lower case
+    words are also added with an initial capital.  This is not done by
+    Strata (see section 6).
+
+
+2. What Strata does
+===================
+Strata follows the original in the menus, the panel, the screens and the keys
+of section 1, with these differences, which come from using aspell or
+hunspell and a personal word list (agreed with the project owner):
+
+  - There is no custom dictionary of the original and no main dictionary
+    file.  The words come from aspell or hunspell, with the dictionary of the
+    language, and the user's own words are in ~/.strata/dictionary (3.3).
+    The panel Check Document Spelling therefore shows only one line,
+    "Custom Spelling Dictionary:", which is that file and cannot be edited,
+    and it asks nothing about the creation of a dictionary.  Define puts the
+    word in this file at once, never asking for a name or a dictionary.
+  - The panel in the editor has: Document Name, Custom Spelling Dictionary,
+    Dictionary Language (with the program in brackets) and Auto Correct?.
+    It has no working directory (the editor has the name of the document in
+    full).  The Document Manager (str) has Working Directory, Document Name,
+    Custom Spelling Dictionary (the file) and Auto Correct?.
+  - The language is the Dictionary Language of Setup in str (the original
+    has the item and so has str): a code such as en_US (the original said
+    American English).  It is the line spell_language= of ~/.strata/config;
+    en_US is the default.
+  - The word list is different from the original's.  What is unknown is what
+    aspell says, and aspell knows other words than American.spl (for example
+    it does not know "ok", and it knows "tab").  Words with a digit inside
+    are flagged by Strata itself, as the original did.
+  - The suggestions are those of the checker (the first twelve), not the
+    original's.  The bar shows as many as fit; Left and Right scroll.
+  - The two lines of the bottom block are the document, the section and the
+    dictionaries: the language with the name of the program (aspell) and the
+    file of the personal word list.
+  - Line is an edit field in a popup (popup_input) and not in the text area.
+    Tabs and markers cannot be changed with it; Strata says so.
+  - Maintain Dictionaries is not done (see 6).
+
+
+3. Design
+=========
+
+3.1 The programs
+----------------
+  src/spell.c, spell.h     the word finder, the replacement, the personal
+                           list, the child process with the checker and the
+                           walk through the text.  No screen output.
+  src/spellui.c, spellui.h the panels and screens (the bar, the word, the
+                           text, the bottom block, Spell Word).
+  src/ui.c                 F12, Tools, Spell, Ctrl-C and the highlight of
+                           Block and Section (OP_SPELL, as for Autosort).
+  src/main.c               stred --spell FILE [--auto yes|no]: the check of
+                           a file.
+  src/str.c                Check Document Spelling and the Dictionary
+                           Language of Setup.
+  src/config.c, config.h   spell_lang (the line spell_language=).
+
+3.2 The checker as a child process
+----------------------------------
+The program is found in PATH: first the one that the environment variable
+STRATA_SPELL names (a name or a path, for the tests and for the user: if it
+is set and is not a program, nothing else is tried), then aspell, then
+hunspell.  It is started with pipes as
+
+  aspell -a -d LANG --encoding=utf-8
+  hunspell -a -i utf-8 -d LANG
+  PROGRAM -a -d LANG                   (any other name)
+
+and speaks the ispell protocol:
+
+  - the first line of the program is a greeting ("@(#) International Ispell
+    ..."); when it is not there in 8 seconds, or the program ended, the
+    dictionary of the language is not installed and a message says so.
+  - "!" is sent first (terse mode: only the wrong words are answered).
+  - A line that begins with ^ is a line of text; ^ keeps the program from
+    taking a word as a command.  The answer is the lines of the wrong words
+    ("& word count offset: sug1, sug2", "? word 0 offset: ...", "# word
+    offset"), then a blank line.  The offset counts the ^, so it is one more
+    than the position in the line.
+  - "@word" tells the program that a word is right (the words of the personal
+    list are sent so when the check begins).
+  - The text is sent in UTF-8; Strata's text is CP437 and is converted both
+    ways.  A suggestion that has a character with no place in CP437 is
+    dropped.
+
+The check of a document is made in small steps.  A piece of text (a column of
+a block, up to the marker of a note) gives its words; the words that need
+the checker are sent as lines of about 1500 bytes at most, separated by
+spaces; the answers are read as they come.  Nothing is waited for longer
+than a moment: spellrun_next takes a budget in milliseconds, returns SR_BUSY
+when it is over, and the panel polls the keyboard between the calls (Esc
+quits).  The whole document is never sent at once, and nothing is read
+ahead past the piece of text that is being checked, so that a word that was
+replaced is not stale in the answers.
+
+For twain.doc (15 MB, 48128 blocks) the first unknown word comes at once, and
+the longest wait of the editor between two calls was 40 ms (the budget);
+the check of the whole document with every word ignored took 26 s with
+aspell, almost all of it aspell's own time (the walk through the text alone
+is 0.4 s, debug build).  The numbers are printed by the test (edtest).
+
+A word that the checker reports in a part (aspell checks dont-stop as dont and
+stop and says "dont") is a word of Strata as a whole, and the suggestions are
+put into the word: don't-stop.
+
+3.3 The personal word list
+--------------------------
+~/.strata/dictionary (STRATA_HOME names another directory, as for the other
+settings): plain text, one word on a line, UTF-8, written through
+config_write_file (mode 0600, a temporary file and a rename, directory 0700),
+as typed.  A word in lower case also stands for the word with an initial
+capital (the help says so for the original); any other entry is only that
+word.  Strata filters with it itself and also sends the words with "@".
+Accept is for the rest of the check only.
+
+3.4 The walk, and nested text
+-----------------------------
+The items of the document from the first to the last (the whole document, the
+highlighted blocks or the highlighted sections) are taken in order, block by
+block and column by column.  A marker with nested text (a note or a comment;
+not an equation) ends the piece of text: its text is loaded as a small
+document of its own (the way the note editor does), is checked, and is put
+back into the marker (tok_marker_set) when it was changed, before the check
+goes on after the marker.  Notes can be nested to a depth of four.
+
+A word is found by spell_find_word (1.5).  A replacement (spell_replace_word)
+changes the character tokens of the word only, so the attribute tokens round
+it stay.  The tokens of the words that come after it in the same piece of text
+move with it, and so does the cursor of the editor (spellrun_track).  Auto
+Correct is a table of pairs (from, to): a word that comes again and is in the
+table is replaced when it is met.  Quit with a table that is not empty asks
+the question of the original and, for Yes, goes on through the rest of the
+text with no checker.
+
+The editor's view is made again at the end, and the cursor is put right
+(ed_fix_cursor).  The cursor stays where it was; if the word it was in was
+replaced it is at the start of the new word.
+
+3.5 When nothing can check
+--------------------------
+When no program is found, F12, Tools, Spell, Ctrl-C and Check Document
+Spelling of str show a popup: "No spelling checker found: install aspell with
+aspell-en (or hunspell with hunspell-en-us)."  The editor works as before.
+When the program does not start for the language, the message names the
+program and the language.
+
+3.6 The Document Manager
+------------------------
+Check Document Spelling in str asks for the working directory, the document
+and Auto Correct?, and starts stred --spell --auto yes|no FILE (as Preview
+starts stred --preview).  stred --spell loads the file, shows the same screens
+and, when the document was changed, asks "Save corrected document?" (the
+original's message).  The Document Manager shows what the checker says in the
+terminal of the child, so nothing of it is kept in str.
+
+
+4. Tests
+========
+  - tests/edtest.c: the word finder (the punctuation, the digits, an attribute
+    change, a tab, a marker, a line end, the long word, the word at the
+    cursor), the replacement with the attributes kept, the personal list and
+    its file, and the walk through tests/data/spell.doc with the fake checker
+    (the order of the hits, the replacement of a part, Auto Correct, Accept,
+    the note, the range of items, Line, the context, and that the checker got
+    lines and not the document).  One part uses the real checker when aspell
+    or hunspell is in PATH and says so when it is not; with twain.doc
+    (../sample.docs/twain.doc, or SPELL_TWAIN) it prints the speed and
+    the longest wait (SPELL_TWAIN_MS limits the time, 15000 by default).
+  - tests/fakespell.sh: the checker that gives fixed answers (STRATA_SPELL).
+  - tests/smoke.py: the menus, the panel, every command of the bar, the end
+    messages, the notes, Block and Section, Ctrl-C, no checker, the language,
+    stred --spell, the Document Manager panel and the Setup item; one test
+    with the real aspell, skipped without it.
+
+
+5. What the probes could not tell
+=================================
+  - Section (which blocks are checked, the highlight).
+  - Whether Esc in Edit and Line goes back to the commands; what Quit, Yes
+    does; the letters y and n in the questions.
+  - The exact rule for "No spelling errors found" (nothing replaced, or
+    nothing defined and accepted as well).
+  - Comments, headers, footers, and the check in a structured document.
+  - The place of the cursor after Quit.
+
+
+6. What is left
+===============
+  - Maintain Dictionaries: the three conversions of spelling dictionaries (the
+    lists are plain text and can be edited with any editor).  A list of the
+    earlier program in the old code page is imported with its accents (task
+    35, R4): a file with a byte that is not UTF-8 is read as code page 437.
+  - The second custom dictionary.  The hyphenation dictionary is done as a
+    personal hyphenation list (task 35): the panel Maintain Dictionaries has it
+    behind Tab, and F3 reads a .HYC file; see docs/DICTIONARIES.txt.
+  - The checks of headers and footers.
+  - A progress display while the checker works for a long time with no
+    unknown word.

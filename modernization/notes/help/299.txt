@@ -1,0 +1,25 @@
+
+------------------------- Manuscript Document Downgrade ------------------------
+
+Manuscript Document Downgrade converts a Manuscript Release 2 document to a
+Release 1 document.  This procedure is necessary if you want to edit a Release
+2 document in Release 1.  The reason is that the file formats are different and
+there are features available in Release 2 that are not available in Release 1.
+
+  +---------------------- Manuscript Document Downgrade ------------------+
+  |                                                                       |
+  |          Working Directory:                                           |
+  |                                                                       |
+  |    Release 2 Document Name:                                           |
+  |                                                                       |
+  |    Release 1 Document Name:                                           |
+  |                                                                       |
+  +----------------------- Press Ins to Downgrade Document ---------------+
+
+# Enter the name of the Release 2 document to convert, including the file 
+  extension if it is other than .DOC.  Be sure to specify the full path 
+  name if it is not in the current working directory.
+# Enter a name for the Release 1 document to create.  Release 1 documents must
+  have a .DOC extension; if you do not specify an extension, .DOC is assumed.
+--------------------------------------------------------------------------------
+       File Converison Utilities        Keyboard Summary       Help Index

@@ -1,0 +1,17 @@
+.doc Strata showcase
+.h1 Showcase of Strata features [showcase]
+This document uses what Strata can do in a page: a keycap such as {k:Ctrl-S}, an equation such as {eq:x^2+y^2=z^2} inside a line of text, a footnote{fn:A footnote is a marker that holds text; it is printed at the foot of the page.} and a reference to another section, {ref:figures}.
+.h2 Keys and equations
+Press {k:F12} to open the menu, then {k:Right} to choose Print.  The sum of the first n whole numbers is {eq:\frac{{n(n+1)}}{{2}}}, and Euler's identity is {eq:e^{{i\pi}}+1=0}.
+.space 0.3
+.h2 A picture and a table [figures]
+.pic pictures/sample.png 3.0 A picture of 24 by 16 cells, drawn by a program.
+.table 12 12 12
+Marker | Shown as | Printed as
+Keycap | a box | a rounded key
+Footnote | [NOTE] | a note at the foot
+Equation | an image | typeset TeX
+.end
+.pagebreak
+.h2 The last page
+This text is on a new page, because the page break above is a marker that starts one.  In a printout the section numbers and the footnote number are made when the pages are made.

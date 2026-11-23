@@ -1,0 +1,25 @@
+-------------------------------- Border Options --------------------------------
+
+The following border options can be specified on the Border Layout panel:
+
+All:               Assign a border to all sides of the area.
+
+Outside:           Assign a border to the outside (top, bottom, left, and
+                   right sides) of the area.
+
+Top/Bottom:        Assign a border to the corresponding side of the area.
+Left/Right
+
+Inside:            Assign a border to all inside sides. Any area that 
+                   has more than one column or one block has inside sides.
+
+Top/Bottom Gutter: Determine the amount of space between the text and the 
+                   top or bottom of each row in the table. 
+
+Connect Borders?   Yes connects the borders of all highlighted blocks and 
+                   columns. Connected blocks have common borders.
+
+Shading            Assign a gray scale value for background shading.
+# You can change the weight of the printed borders on the Options panel.
+--------------------------------------------------------------------------------
+     Border          Options           Keyboard Summary          Help Index

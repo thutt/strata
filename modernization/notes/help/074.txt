@@ -1,0 +1,25 @@
+
+------------------------------- Custom Paper Size ------------------------------
+
+Use the custom Paper Size panel to enter a paper size not included in the 
+options list at the Paper Size prompt.
+
+            +------------------- Paper Size ------------------+
+            |                                                 |
+            |                 Width: 8.500 in                 |
+            |                                                 |
+            |                Length: 11.000 in                |
+            |                                                 |
+            +------ Press Ins to Use Displayed Settings ------+
+
+--Procedure---------------------------------------------------------------------
+
+ Move the cursor to the Paper Size prompt on the Global Page Layout panel.
+ Press Space Bar to display the Paper Size panel.
+ Highlight Custom and press Ins to display the Paper Size panel.
+ Enter a paper width and length.  Enter the units of measurement (in, cm, mm
+  or pt) if different from the units set on the Options panel.
+ Press Ins.
+
+--------------------------------------------------------------------------------
+Paper Settings     Page Layout     Options     Keyboard Summary      Help Index

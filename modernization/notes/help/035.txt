@@ -1,0 +1,25 @@
+
+----------------------------------- Format -------------------------------------
+
+Format (F6) controls the appearance of regions of text, columns, blocks, or
+sections in a document.
+
+
+  Format a region of                             Format blocks (in the    
+  characters in the                              current section in
+  same block.                                    Structured mode).       
+        |                                               |  
+        +-----------+                   +---------------+   
+                    |                   |               
+               +------------------------------------------+
+               |   Text     Column     Block    Section   |
+               +------------------------------------------+
+                   +----------+                    |
+                   |                               +-------+
+     Format columns (in the             Format sections at the same level.
+     current section in                 (This selection is available only 
+     Structured mode).                  in Structured mode.)
+
+--------------------------------------------------------------------------------
+      Format Text      Format Column      Format Block      Format Section
+      Global Format             Keyboard Summary            Help Index

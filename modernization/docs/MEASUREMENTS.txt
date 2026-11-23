@@ -1,0 +1,809 @@
+MEASUREMENTS: MEMORY, TIME AND DISK OF STRATA
+=============================================
+
+Why this file exists.  The owner's review of the prerequisites document (the
+comments 7, 20, 21 and 24 of docs/PREREQ-REVIEW.txt) asked that every
+statement about memory, speed and disk be measured, with sizes that a writer
+understands (pages and words) and not "small".  This file holds the
+measurements.  The script that made them is tests/measure.py (a benchmark; the
+smoke runner never starts it).
+
+THE PAGE IS 500 WORDS.  The owner (comment 24 on the story sample) found that
+a page of the generated test documents was 735 words, about half as large
+again as a typed page of 500 words.  Task 42 made every measurement again with
+500 words to a page (WORDS_PER_PAGE of tests/measure.py), on a machine that was
+quiet, with the sizes in pages of the first measurement.  The tables below
+are the new measurement.  The measurement with 735 words to a page is kept at
+the end of this file, in the part BASELINE: THE 735 WORDS PER PAGE MEASUREMENT;
+its numbers are not comparable with these (another page, another machine).
+A size of N pages has about 500 N words.  The Printer lays out about 735 words
+on a page of the default layout, so the PDF of N pages of 500 words has about
+0.68 N pages; the tables say both ("pages" is always the page of 500 words and
+"PDF pages" the pages that the Printer made).
+
+THE SHORT ANSWER (for the prerequisites text)
+---------------------------------------------
+
+  - A 100 page report (50,000 words) needs about 5 MB of memory in the
+    terminal version and about 14 MB in the X11 version, and about 5 and 15 MB
+    after you have moved around it and saved it.
+  - A 1,000 page book (500,000 words) needs about 20 MB to open (29 in the
+    X11 version) and 28 to 38 MB after scrolling to the end and saving.
+  - The largest document that could be made, the whole Mark Twain collection
+    (2.6 million words, 5,258 pages of 500 words, 3,625 pages that the Printer
+    makes, a 14.8 MB file), needs about 95 MB to open (104 in the X11
+    version) and 145 to 155 MB after scrolling to the end, searching and
+    saving (217 to 227 MB before the memory work).  It opens in 0.6
+    seconds (terminal) or 1.1 seconds (X11), and a search across it takes
+    0.5 seconds.
+  - The memory is about 6.4 times the size of the file when the document is
+    opened, about 8.5 times after the whole document has been laid out, and
+    about 9.8 times after a save (6.4, 12.8 and 14.6 times before the memory
+    work).  It grows in step with the document: twice the pages need about
+    twice the memory.  There is no sign of a blow-up.  A save takes a little
+    longer than before (656 ms against 593 ms at 5,258 pages, the build
+    before the memory work; see AFTER THE MEMORY REDUCTIONS).
+  - Printing to a PDF takes about half a second for a letter and 14 seconds for
+    the whole collection (3,625 PDF pages); the Printer and LaTeX need 51 MB
+    up to
+    2,000 pages and 87 MB for the whole collection.
+  - The installed programs, the documents and the templates take 5.4 MB.  The
+    manuals as PDF files take 3.7 MB more, and the sample documents 0.1 MB.
+  - The programs LaTeX, ghostscript, the spell checker and the thesaurus,
+    which a machine may lack, are 126 packages: a download of 191 MB and about
+    660 MB installed (Debian, counted from a base system; not counted again).
+  - Recommended (derived from these numbers, not measured): for any document
+    up to the size of the whole collection, 256 MB of free memory and 700 MB of
+    free disk (the prerequisites included) are enough in both versions.  The
+    Editor needs at most 155 MB for such a book (the X11 version, after a
+    save; the terminal version 145 MB; the print needs 87 MB); for a 1,000
+    page book 64 MB is enough.
+
+HOW IT WAS MEASURED
+-------------------
+
+The machine: Intel Core i7-6700HQ (4 cores, 8 threads, 2.6 GHz, at most 3.5
+GHz by the setting of this machine), 15 GB of memory, Ubuntu 26.04 (Linux 7.0),
+release builds of 2026-11-20.  This is NOT the machine of the first measurement
+(an AMD Ryzen 7 7840HS): it is slower, so the times are about twice those of the
+baseline at the end of this file for the same code.  That is why the builds of
+before the memory work and of the memory work only were built and measured
+again here (commits 9a329148, cc32d06b3), and the pairs of the tables are
+from the same machine and the same hour.  Nothing else ran while the timings
+did: before each phase the load average of the minute was below 0.3 (the
+script waits for it); during the runs it was 0.30 on the average, which is the
+measuring script itself, and at most 0.52 (terminal), 0.48 (X11) and 1.09 (the
+Printer, which starts LaTeX).  One leftover process of an earlier job (an
+emulator that took about a fifth of a processor) was found and stopped after
+the first timing run; every timing was then made again, and the results of the
+first run (which differed by less than a tenth) are not used.  The files were
+in the memory cache of the system (a cold disk was not measured).
+
+The documents.  They are made from the Mark Twain text of the owner
+(twain.txt, which was only read).  A page is 500 words (WORDS_PER_PAGE of
+tests/measure.py): a document of N pages holds the first paragraphs that make
+500 N words; the word counts below are real.  The Printer makes about 0.68 N
+pages of the default layout of such a document (checked: the 1,812,586 word
+document of "3625 pages" prints as 2,492 PDF pages, 727 words to a PDF page;
+the whole collection, 2,628,948 words, prints as 3,625 PDF pages).  Every size
+exists in two forms: a plain document (one block for each paragraph) and a
+structured document (a section for every 25 pages).  The one page document is a
+letter of 380 words.  The Twain text holds 2,628,948 words that the generator
+takes, which is 5,258 pages of 500 words, so the sizes 1 to 3625 pages of the
+first measurement all exist, and one size more: the whole collection (5,258
+pages, made with the request 5500).  Each document ends with a word that
+occurs once; the search looks for it from the start.
+
+The runs.  Every measure is the median of three runs, each in a fresh process.
+The memory is the peak resident memory of the process (VmHWM of /proc), read
+after each step, so each column includes the ones before it.  The time of a
+step is the time from the key until the program has written nothing to the
+screen and used no processor time for 0.15 seconds (terminal), or has used no
+processor time for 0.4 seconds (X11, in a private virtual display; its times
+move in steps of 50 ms).  The steps are: start the program until the first
+screen is drawn (open), Ctrl-End, a search from the start to the end for a word
+that is found only at the very end, and a save after typing one character.
+The Printer was run to a PDF with the error log off; its memory is the largest
+of the Printer and of everything it started (pdflatex).
+
+A fault of the script was found and mended on the way: in the X11 run the
+search leaves the Replace? prompt on the screen, which took the typed character
+and the Ctrl-S, so the save was never made (save_ok was false in every run,
+and the save column showed the time of nothing).  The run now presses Escape
+after the search; save_ok is true in every run of the tables below.
+
+The three runs agree closely: the memory within 1 MB and the times within
+about 10 percent, with rare outliers (one run of the open of the 2000 page
+plain document took 301 ms against 234 ms for the structured one).  Below 100
+pages the memory of the program itself (3 to 5 MB) is larger than that of the
+document.
+
+THE TABLES
+----------
+
+In each memory and time cell, the left number is the plain document and the
+right number the structured one.  "pages" is the page of 500 words; the
+last row is the whole collection (5,258 pages).
+
+THE TERMINAL VERSION
+
+Memory (peak resident, megabytes) after each step; plain document / structured
+
+  pages    words   open        at the end  after search after save
+      1      380   3/3         3/3         3/3         3/3
+     10     5138   3/3         3/3         3/3         3/3
+     50    25098   4/4         4/4         4/4         4/4
+    100    50035   5/5         5/5         5/5         5/6
+    500   250007   11/11       13/13       14/14       15/15
+   1000   500034   20/20       25/25       26/26       28/28
+   2000  1000008   37/37       49/49       51/51       56/56
+   3625  1812586   66/66       88/88       91/91       100/100
+   5258  2628948   95/95       126/126     131/131     145/145
+
+Time in milliseconds (median of three runs); plain / structured
+
+  pages    words   open        end         search      save
+      1      380   14/10       1/1         4/4         3/3
+     10     5138   12/17       1/1         7/7         7/6
+     50    25098   30/30       3/3         16/17       19/19
+    100    50035   45/47       6/5         28/29       34/34
+    500   250007   141/142     23/23       116/118     139/137
+   1000   500034   193/196     47/46       174/177     199/201
+   2000  1000008   301/234     90/88       259/261     307/312
+   3625  1812586   460/413     142/145     396/407     486/486
+   5258  2628948   601/629     171/169     530/533     656/661
+
+THE X11 VERSION
+
+Memory (peak resident, megabytes) after each step; plain document / structured
+
+  pages    words   open        at the end  after search after save
+      1      380   13/13       13/13       13/13       13/13
+     10     5138   13/13       13/13       13/13       13/13
+     50    25098   13/13       14/14       14/14       14/14
+    100    50035   14/14       15/15       15/15       15/15
+    500   250007   20/20       23/23       24/24       25/25
+   1000   500034   29/29       35/35       36/36       38/38
+   2000  1000008   47/47       59/59       61/61       66/66
+   3625  1812586   76/76       98/98       101/101     110/110
+   5258  2628948   104/104     136/136     141/141     155/155
+
+Time in milliseconds (median of three runs); plain / structured
+
+  pages    words   open        end         search      save
+      1      380   530/528     37/37       27/27       37/37
+     10     5138   529/529     37/37       29/30       36/37
+     50    25098   528/528     37/37       27/26       37/38
+    100    50035   532/533     36/37       73/73       87/87
+    500   250007   629/628     87/87       123/124     187/188
+   1000   500034   679/679     87/87       173/174     238/237
+   2000  1000008   779/777     138/138     274/274     338/339
+   3625  1812586   928/928     188/187     425/425     539/539
+   5258  2628948   1077/1129   187/187     525/575     690/690
+
+THE PRINTER (a PDF through LaTeX)
+
+  pages    words  PDF pages  seconds (plain/struct.)  peak MB (p/s)  PDF MB
+      1      380         1       0.6/ 0.6               50/ 51         0.0
+     10     5138        10       0.6/ 0.6               50/ 51         0.1
+     50    25098        37       0.7/ 0.7               51/ 50         0.2
+    100    50035        70       0.8/ 0.9               51/ 51         0.3
+    500   250007       336       1.9/ 1.9               50/ 51         1.3
+   1000   500034       679       3.2/ 3.2               51/ 51         2.5
+   2000  1000008      1377       5.9/ 5.9               51/ 51         4.9
+   3625  1812586      2492      10.3/10.3               61/ 61         8.7
+   5258  2628948      3625      14.4/14.6               87/ 87        12.6
+
+A print needs 50 MB up to 2,000 pages: that is pdflatex itself (51 MB at
+1 page); the Printer holds the document only at the largest sizes.
+
+
+AFTER THE MEMORY REDUCTIONS (task 32; docs/MEMORY.txt)
+------------------------------------------------------
+
+Measured again on 2026-11-20 on this machine, release builds, on the owner's
+Mark Twain text, plain documents, the median of three runs of a fresh Editor
+each.  BEFORE is the build of commit 9a329148 (the main line before the
+memory work) and AFTER the build of this task (the tip of the main line: the
+memory work and the one-run save).  A page is 500 words; the 3625 page
+document is a 10.2 MB file (the whole collection, 5,258 pages, 14.8 MB).
+
+Memory (peak resident, megabytes) of the terminal Editor: before / after
+
+  pages   open         end          search       save
+   100   4.5/  4.6    6.3/  5.1    6.5/  5.2    6.9/  5.4
+   500  10.8/ 10.9   19.5/ 13.4   20.0/ 13.8   22.3/ 15.0
+  1000  19.5/ 19.5   37.2/ 24.9   38.0/ 25.8   42.7/ 28.4
+  2000  37.2/ 37.3   73.1/ 48.9   74.8/ 50.6   84.5/ 55.9
+  3625  65.8/ 65.9  131.1/ 87.5  134.2/ 90.6  152.3/100.4
+  5258  94.6/ 94.6  189.6/126.2  194.0/130.7  216.6/144.8
+
+X11 Editor, memory (peak resident, megabytes): before / after
+
+  pages   open         end          search       save
+   100  14.1/ 14.2   16.3/ 15.0   16.5/ 15.1   16.8/ 15.3
+   500  20.4/ 20.4   29.5/ 23.3   29.9/ 23.8   32.2/ 24.9
+  1000  29.0/ 29.1   47.1/ 34.9   47.9/ 35.8   52.6/ 38.2
+  2000  46.7/ 46.8   83.0/ 58.8   84.7/ 60.6   94.2/ 65.7
+  3625  75.5/ 75.6  141.2/ 97.5  144.2/100.6  162.1/110.2
+  5258 104.1/104.2  199.6/136.2  204.1/140.7  226.6/155.0
+
+Time in milliseconds (median of three runs), terminal Editor: before / after
+
+  pages   open         end          search       save
+   100   26/  45    14/   6    29/  28    31/  34
+   500  143/ 141    64/  23   116/ 116   130/ 139
+  1000  192/ 193   124/  47   176/ 174   189/ 199
+  2000  289/ 301   177/  90   263/ 259   290/ 307
+  3625  464/ 460   253/ 142   407/ 396   457/ 486
+  5258  605/ 601   325/ 171   536/ 530   593/ 656
+
+The time of a save, in milliseconds, of the three builds (terminal Editor, after
+typing one character):
+
+  pages   before   memory work only   final
+   100      31           32             34
+   500     130          130            139
+  1000     189          190            199
+  2000     290          293            307
+  3625     457          451            486
+  5258     593          598            656
+
+What was measured:
+  - The memory after a save is 33 percent lower on the largest document
+    (217 -> 145 MB at 5,258 pages), 34 percent at 3625 pages (152 -> 100 MB) and
+    34 percent at 1000 pages (43 -> 28 MB); at the end of the document it is
+    33 percent lower at 3625 pages (131 -> 88 MB).  The memory at the open is
+    the same (the Undo copy is made at the first key).
+  - The build cc32d06b3 has the memory work and the first version of the
+    save (the files msdoc.c, undo.c and editor.c are those of commit 7524f420a,
+    the memory work alone).  The first measurement found that build slower
+    to save, 278 -> 345 ms at 3625 pages.  It is NOT slower here: 451 ms
+    against 457 ms for the build before the memory work at 3625 pages, 190
+    against 189 at 1000 pages.  The finding of the first measurement did not
+    repeat on this machine with 500 word pages (the second machine of the
+    survey had a different text; nothing more is known).  The final build
+    takes 486 ms at 3625 pages and 199 ms at 1000, a little MORE than the
+    build before the memory work (457 and 189 ms, 6 percent at 3625 pages):
+    the tip of the main line has later changes besides the one-run save, so
+    the difference is not charged to the save alone.
+  - Moving to the end of the document is faster (253 -> 142 ms at 3625 pages);
+    the open and the search take the same time.
+  - The X11 Editor needs about 10 MB more than the terminal one (9.5 to 10.1
+    MB in all the sizes from 100 pages, plain documents), before and after
+    the change.
+  - Documents of 50 pages and fewer: the figures are between 3 and 14 MB and
+    vary by about 1 MB from run to run; they are not worth a table row.
+
+PRINTING WITH SEVERAL PASSES (task 32)
+--------------------------------------
+
+The earlier prints were plain text, which LaTeX settles in one run.  These
+documents (tests/measure.py multipass) are structured documents of the sizes
+10, 100, 500, 1000 and 3600 pages (of 500 words) with every feature that makes
+LaTeX run again: a table of contents (--contents 3, all levels), an index (one
+entry in 12 blocks), a list of figures and a list of tables, cross references to
+sections (the tag and the headline, and the page of the section), a header
+with the Section marker and a footer with the page number, a footnote in
+every 25th block and a long table (a row for every 4 pages).  The Printer was
+run with --contents 3 --index --list-figures --list-tables to a PDF; it
+runs LaTeX again while the labels move, up to three times (run_passes in
+src/strprint.c).
+
+  pages  doc KB  PDF pages  passes  seconds  seconds per pass   peak MB (tree)
+     10     28        12       2      1.4   0.8 0.7                    50.8
+    100    281        74       2      2.2   1.1 1.1                    51.0
+    500   1404       352       2      5.6   2.7 2.7                    51.6
+   1000   2810       703       2      9.8   4.8 4.7                    52.1
+   3600  10184      2535       3     47.8   15.5 15.5 15.4             58.8
+
+What was checked in the text of each PDF (pdftotext), for every size: the
+table of contents has a row for every headline (8, 16, 80, 160 and 576
+headlines: each appears at least twice, in the contents and in the text);
+every index entry (5, 48, 245, 490 and 1764 entries) is in the index; every
+figure and every table of the lists is there; every cross reference prints
+(2, 20, 98, 196 and 706 of them: no "??", no "[no section]" in any PDF: 0 of
+each); every row of the long table and every footnote is in the text.  The
+print settles: two passes up to 1000 pages, three at 3600 pages, and the last
+pass leaves nothing to run again.  No fault was found.
+The time is that of LaTeX: the passes of a size take about the same time each
+(the table of contents and the index are written in the first pass and read in
+the next).  The peak memory is that of pdflatex alone (51 to 52 MB) up to 1000
+pages; at 3600 pages the Printer itself (the document and the LaTeX text) is the
+largest process, 59 MB.  The documents are made by the script, which is the
+repeat of the measurement; the structure is chapters of 25 pages with three
+sections each.
+
+DISK
+----
+
+The install script was run with the build directory of the release build into
+a private prefix, without the prerequisites.  The sizes in kilobytes:
+
+  whole prefix                                5,452
+    programs (bin)                            3,032
+      str                                       410   Document Manager
+      stred                                     817   Editor
+      strprint                                  372   Printer
+      dviview                                   152   Viewer
+      str-x11 and stred-x11                 425 and 831   X11 version
+    documents of Strata (.doc files)          2,220
+    templates (letters and envelopes)            32
+    licence and README                           64
+
+The manuals as PDF files (made from the documents with the Printer, which is
+what a reader prints or views): reference manual 2,240 (660 pages), file
+format 188 (19 pages), tutorial 232 (9 pages), Getting Started 296 (7 pages),
+prerequisites 132 (5 pages), the two cheat cards 112 and 136, math card 332:
+3,668 in all.  The sample documents (tests/samples) are 100.  The complete
+release with the manuals as PDF and the samples is therefore about 9.2 MB.
+The installed tree does not hold the PDF files or the sample documents today
+(the install changes of the worklist add them); they are counted here as the
+owner asked for the full size.
+
+Working space.  A document that is saved keeps up to three backups (the
+default), so a 15 MB document takes up to 60 MB of disk.  A print writes a
+LaTeX file of about 3.6 MB for 1,000 pages (of 500 words) and a PDF of 2.5 MB
+(679 PDF pages; 12.6 MB for the whole collection, 3,625 PDF pages).
+
+The prerequisites.  On a computer that has none of the programs that the
+Printer needs, the install script with --with-prereqs fetches
+texlive-latex-base, texlive-latex-recommended, texlive-latex-extra,
+texlive-pictures, texlive-plain-generic, lmodern, dvipng, ghostscript, hunspell
+with its English dictionary, and mythes-en-us.  Counting the packages that apt
+adds for them to a Debian base system (apt-get --print-uris and the
+Installed-Size of each package, with no recommended packages): 126 packages, a
+download of 191 MB, installed 661 MB.  The largest are texlive-latex-extra
+(95 MB), texlive-pictures (81 MB), texlive-plain-generic (67 MB), texlive-base
+(45 MB) and lmodern (33 MB).  The table that the script prints on the machine
+of the user is the exact figure for that machine.  The machine of this
+measurement has all of them already, so its own table was empty.
+
+WHAT WAS NOT MEASURED
+---------------------
+
+  - A cold disk (the first start after a boot): the files were cached.
+  - Slow computers: only this one.  The memory does not depend on the speed.
+  - Documents with pictures or equations: the documents are text.  Pictures
+    and equations cost the Printer more time (LaTeX runs for each picture) and
+    memory.  The table of contents, the index, the lists, cross references,
+    footnotes and a long table were measured in task 32 (PRINTING WITH
+    SEVERAL PASSES above).
+  - Print and Preview in the window, and the Viewer (dviview): only the
+    Printer to a PDF.
+  - Documents of more than 5,258 pages (the whole collection), or with a very
+    deep or very wide tree of sections
+    of sections (the structured documents had chapters of 25 pages).
+  - Wayland and a real X server: the X11 version ran in a virtual display
+    (Xvfb), which draws in memory; a real display adds the time of the
+    graphics driver, and a remote display adds the network (the lag item of
+    docs/WORKLIST.txt: a display forwarded with ssh -Y is slow).
+  - The painting of the terminal: the times of the terminal version are the
+    time until the Editor has written the screen, and not the time that a
+    terminal program takes to paint it.
+
+PROBLEMS FOUND
+--------------
+
+None.  The memory and the times grow in step with the size of the document,
+from 1 to 3,625 pages.  One figure was worth a note: after a save the memory is
+about 13 percent above the memory after the search (221 against 196 MB for
+3,625 pages).  Task 32 found the cause (the buffer of the save, which grew by
+doubling) and reduced it, together with the largest part of the memory, the
+copy that Undo keeps of the whole document (docs/MEMORY.txt).
+
+REPEATING THE MEASUREMENT
+-------------------------
+
+    source scripts/setup -b release /tmp/strata
+    scripts/strata-build
+    python3 -I -B tests/measure.py gen twain.txt /tmp/m/docs \
+        1,10,50,100,500,1000,2000,3625,5500
+    python3 -I -B tests/measure.py term /tmp/strata/release /tmp/m/docs \
+        /tmp/m/res-term.jsonl 3
+    python3 -I -B tests/measure.py x11 /tmp/strata/release /tmp/m/docs \
+        /tmp/m/res-x11.jsonl 3
+    python3 -I -B tests/measure.py print /tmp/strata/release /tmp/m/docs \
+        /tmp/m/res-print.jsonl 3
+    python3 -I -B tests/measure.py multipass /tmp/strata/release /tmp/m/mp \
+        /tmp/m/res-mp.jsonl 10,100,500,1000,3600
+    python3 -I -B tests/measure.py disk /tmp/strata/release /tmp/m/prefix
+    python3 -I -B tests/measure.py report /tmp/m/res-term.jsonl
+
+The before columns need a build of commit 9a329148 and cc32d06b3 (git worktree
+add DIR COMMIT, then the same setup and build in another build directory);
+measure the same documents with each.  compare shows two result files side by
+side; text makes a text from our own documents when the collection of the owner
+is not there.  The memory breakdown (docs/MEMORY.txt) is made with the counting
+malloc: python3 -I -B tests/memdrive.py SHIM.so STRED DOC DUMP, then
+tests/memsites.py DUMP BINARY.
+The x11 runs need Xvfb and xdotool.  STRATA_HOME and TMPDIR should point into a
+scratch directory.  The machine must be quiet (load average below 0.3).
+
+
+BASELINE: THE 735 WORDS PER PAGE MEASUREMENT (2026-11-18, kept as it was)
+==========================================================================
+
+Everything below this line is the text of this file before task 42: a page of
+735 words, the machine of the owner (AMD Ryzen 7 7840HS).  It is kept for the
+record.  Its numbers are NOT the numbers of the tables above and no text of
+the manuals or of the story quotes them.
+
+MEASUREMENTS: MEMORY, TIME AND DISK OF STRATA
+=============================================
+
+Why this file exists.  The owner's review of the prerequisites document (the
+comments 7, 20, 21 and 24 of docs/PREREQ-REVIEW.txt) asked that every
+statement about memory, speed and disk be measured, with sizes that a writer
+understands (pages and words) and not "small".  This file holds the
+measurements.  The script that made them is tests/measure.py (a benchmark; the
+smoke runner never starts it).  The first measurement changed nothing in the
+programs; task 32 (docs/MEMORY.txt) then reduced the memory of the Editor, and
+its figures are in the sections AFTER THE MEMORY REDUCTIONS and PRINTING WITH
+SEVERAL PASSES at the end of the tables.  The tables before them are the first
+measurement (the owner's machine and text) and are the baseline.
+
+THE SHORT ANSWER (for the prerequisites text)
+---------------------------------------------
+
+  - A 100 page report needs about 5 MB of memory in the terminal version and
+    about 11 MB in the X11 version, and about 6 and 12 MB after you have
+    moved around it and saved it.
+  - A 1,000 page book needs about 28 MB to open (34 MB in the X11 version) and
+    41 to 48 MB after scrolling to the end and saving.
+  - The largest document that could be made, the whole Mark Twain collection
+    (2.6 million words, 3,625 printed pages, a 15 MB file), needs about 95 MB
+    to open (102 in the X11 version) and 145 to 153 MB after scrolling to the
+    end, searching and saving (220 to 226 MB before the memory work).  It
+    opens in a quarter of a second (terminal) or two thirds of a second
+    (X11), and a search across it takes under 0.2 seconds.
+  - The memory is about 6.2 times the size of the file when the document is
+    opened, about 8.3 times after the whole document has been laid out, and
+    about 9.5 times after a save (6.5, 13 and 15 times before the memory
+    work).  It grows in step with the document: twice the pages need about
+    twice the memory.  There is no sign of a blow-up.  A save takes
+    about as long as before (267 ms against 278 ms at 3,625 pages).
+  - Printing to a PDF takes a fraction of a second for a letter and 5
+    seconds for 3,625 pages; the Printer and LaTeX need 35 MB up to 1,000
+    pages and 87 MB at 3,625 pages.
+  - The installed programs, the documents and the templates take 5.4 MB.  The
+    manuals as PDF files take 3.7 MB more, and the sample documents 0.1 MB.
+  - The programs LaTeX, ghostscript, the spell checker and the thesaurus,
+    which a machine may lack, are 126 packages: a download of 191 MB and about
+    660 MB installed (Debian, counted from a base system).
+  - Recommended (derived from these numbers, not measured): for any document
+    up to the size of a 3,600 page book, 512 MB of free memory and 700 MB of
+    free disk (the prerequisites included) are enough in both versions.
+    After task 32 the Editor needs at most 153 MB for such a book (the
+    X11 version, after a save; the terminal version 145 MB; the print needs
+    90 MB), so 256 MB of free memory is enough; for a 1,000 page book 64 MB
+    is enough.
+
+HOW IT WAS MEASURED
+-------------------
+
+The machine: AMD Ryzen 7 7840HS (16 threads), 15 GB of memory, Debian 13
+(Linux 6.12), a release build of 2026-11-18, load average 0.2 at the start,
+nothing else running that mattered.  The files were in the memory cache of the
+system (a cold disk was not measured).  The times are therefore those of a
+fast machine with a warm cache; a slower computer takes longer in proportion
+to its processor, and a hard disk adds its read time.
+
+The documents.  They are made from the Mark Twain text in sample.docs (the
+owner's file; it was only read).  A page is 735 words: that is what the
+Printer makes of this text at the default layout (checked: the 735,110 word
+document prints as 1,014 pages).  The word counts below are real, and the
+page counts are the pages of the PDF that the Printer made.  Every size exists
+in two forms: a plain document (one block for each paragraph) and a structured
+document (a section for every 25 pages, about 140 of them in the largest).
+The 1 page document is a letter of 380 words.  The text does not hold enough
+words for 4,500 pages: the whole file prints as 3,625 pages, so that is the
+largest size.  Each document ends with a word that occurs once; the search
+looks for it from the start.
+
+The runs.  Every measure is the median of three runs, each in a fresh process.
+The memory is the peak resident memory of the process (VmHWM of /proc), read
+after each step, so each column includes the ones before it.  The time of a
+step is the time from the key until the program has written nothing to the
+screen and used no processor time for 0.15 seconds (terminal), or has used no
+processor time for 0.4 seconds (X11, in a private virtual display).  The steps
+are: start the program until the first screen is drawn (open), Ctrl-End, a
+search from the start to the end for a word that is found only at the very
+end, and a save after typing one character.  The Printer was run to a PDF
+with the error log off; its memory is the largest of the Printer and of
+everything it started (pdflatex).
+
+The three runs agree closely: the memory mostly within 2 MB and the times
+within about 10 percent, with rare outliers.  Below 100 pages the memory of
+the program itself (3 to 5 MB) is larger than that of the document, and the
+runs differ by a few megabytes.
+
+THE TABLES
+----------
+
+In each memory and time cell, the left number is the plain document and the
+right number the structured one.  The pages are those of the printed PDF.
+
+THE TERMINAL VERSION
+
+Memory (peak resident, megabytes) after each step; plain document / structured
+
+  pages    words   open        at the end  after search after save
+     1      380      3/3         3/3         3/3         3/3
+    13     7388      3/5         3/5         3/5         4/6
+    52    36880      4/4         5/6         5/6         6/6
+   101    73506      7/7        10/10       10/10       10/10
+   495   367526     15/17       27/29       28/30       31/33
+  1014   735110     29/31       55/57       56/58       62/64
+  2022  1470046     57/56      110/108     112/111     124/124
+  3625  2628948     96/95      191/190     196/194     221/220
+
+Time in milliseconds (median of three runs); plain / structured
+
+  pages    words   open        end         search      save
+     1      380      4/4         0/1         1/1         6/6
+    13     7388      3/5         1/2         2/3         6/7
+    52    36880     10/10        4/3         7/6        12/14
+   101    73506     12/12        6/5         9/9        17/18
+   495   367526     36/37       18/19       26/26       47/48
+  1014   735110     70/69       31/31       44/44       82/84
+  2022  1470046    130/131      60/61       87/89      158/159
+  3625  2628948    228/235     108/108     153/156     276/287
+
+THE X11 VERSION
+
+Memory (peak resident, megabytes) after each step; plain document / structured
+
+  pages    words   open        at the end  after search after save
+     1      380      9/9         9/9         9/9         9/9
+    13     7388      9/11       10/11       10/11       10/12
+    52    36880     10/10       11/12       12/12       12/12
+   101    73506     11/11       14/14       14/14       15/14
+   495   367526     21/21       34/33       34/34       37/37
+  1014   735110     36/36       62/63       64/64       69/70
+  2022  1470046     61/61      114/114     117/116     130/130
+  3625  2628948    102/100     197/196     202/201     227/226
+
+Time in milliseconds (median of three runs); plain / structured
+
+  pages    words   open        end         search      save
+     1      380    511/510      32/30       16/18       28/32
+    13     7388    514/508      30/28       17/16       30/28
+    52    36880    515/510      31/28       19/16       31/31
+   101    73506    516/515      30/31       17/17       30/30
+   495   367526    512/513      28/29       67/67       78/79
+  1014   735110    512/511      80/80       68/67      130/130
+  2022  1470046    562/562      80/80      118/117     181/180
+  3625  2628948    662/662     130/131     168/168     331/331
+
+THE PRINTER (a PDF through LaTeX)
+
+  pages    words   seconds (plain/structured)  peak megabytes   PDF size MB
+     1      380      0.2/0.2                      34/32           0.0
+    13     7388      0.2/0.2                      33/34           0.1
+    52    36880      0.2/0.2                      34/34           0.2
+   101    73506      0.3/0.3                      34/34           0.4
+   495   367526      0.8/0.8                      34/33           1.8
+  1014   735110      1.5/1.6                      34/35           3.6
+  2022  1470046      2.9/2.9                      49/49           7.1
+  3625  2628948      5.1/5.1                      87/87          12.6
+
+
+AFTER THE MEMORY REDUCTIONS (task 32; docs/MEMORY.txt)
+------------------------------------------------------
+
+Measured again on 2026-11-18 on the machine maude (AMD Ryzen 7 7840HS, 15 GB),
+release builds, on the owner's Mark Twain text, plain documents, the median of
+three runs of a fresh Editor each.  BEFORE is the build of commit 9a329148 (the
+main line before the memory work) and AFTER the final build (the memory work
+and the one-run save), both measured now, on the same documents.  A page is
+735 words; the 3625 page document is a 15.2 MB file.  (The second machine
+measured the memory work on a text made from our own documents and found a
+save of 207 -> 132 MB at 3625 pages; the Twain text has more and shorter
+blocks, so the figures here are the ones to quote.)
+
+Memory (peak resident, megabytes) of the terminal Editor: before / after
+
+  pages   open         end          search       save
+   100   7.2/  5.2   9.8/  5.9   9.9/  6.0  10.3/  6.3
+   500  14.9/ 15.0  27.4/ 18.2  27.9/ 18.8  30.9/ 20.7
+  1000  30.5/ 28.5  56.5/ 36.4  57.8/ 37.8  63.8/ 41.5
+  2000  55.6/ 56.7 107.9/ 73.3 110.6/ 76.0 124.5/ 84.1
+  3625  96.4/ 94.5 191.5/125.9 196.3/130.9 220.1/144.8
+
+X11 Editor, memory (peak resident, megabytes): before / after
+
+  pages   open         end          search       save
+   100  11.0/ 11.0  13.9/ 11.9  14.0/ 12.1  14.6/ 12.3
+   500  22.7/ 20.7  35.5/ 24.2  36.0/ 24.9  38.7/ 26.7
+  1000  34.2/ 34.2  60.5/ 42.4  61.8/ 43.8  67.7/ 47.7
+  2000  62.4/ 62.3 115.0/ 79.2 117.6/ 82.0 130.8/ 89.8
+  3625 102.3/102.2 197.6/134.0 202.4/138.9 226.3/152.8
+
+Time in milliseconds (median of three runs), terminal Editor: before / after
+
+  pages   open         end          search       save
+   100   13/  12    6/   3    9/   9   16/  17
+   500   36/  37   19/   7   25/  26   48/  46
+  1000   66/  68   33/  11   46/  45   86/  82
+  2000  128/ 128   61/  21   87/  85  159/ 153
+  3625  224/ 227  106/  34  152/ 150  278/ 267
+
+The time of a save, in milliseconds, of the three builds (terminal Editor, after
+typing one character):
+
+  pages   before   memory work only   final
+   100        16           18        17
+   500        48           58        46
+  1000        86          106        82
+  2000       159          200       153
+  3625       278          345       267
+
+What was measured:
+  - The memory after a save is 34 percent lower on the largest document
+    (220 -> 145 MB) and 35 percent on 1000 pages (64 -> 42 MB); at the end of
+    the document it is 34 percent lower (192 -> 126 MB).  The memory at the open
+    is the same (the Undo copy is made at the first key).
+  - The memory work alone made a save SLOWER: 278 -> 345 ms at 3625 pages (+24
+    percent), 86 -> 106 ms at 1000 pages.  The cause: the buffer of a save was
+    made exact by a first run over every token of the document that only
+    counted the bytes (88 ms at 3625 pages, 25 ms at 1000 pages), and then a
+    second run that wrote them (121 ms).  The first run is gone: the buffer now
+    starts at an estimate that costs a pass over the blocks and not the tokens,
+    the bytes are made in ONE run, and the buffer is cut to the file at the end
+    (the part of it that was never written is not resident).  A save now takes
+    267 ms at 3625 pages, 82 ms at 1000 pages: a little less than before the
+    memory work, and the memory after a save is the same.  The saved files are
+    the same bytes (17 of 17 documents).
+  - Moving to the end of the document is faster (106 -> 34 ms at 3625 pages);
+    the open and the search take the same time.
+  - The X11 Editor needs 4 to 8 MB more than the terminal one (3.7 to 8.1 MB
+    in all the sizes, plain and structured), before and after the change.
+  - Documents of 50 pages and fewer: the figures are between 3 and 7 MB and
+    vary by about 2 MB from run to run (the same document gives 2.8 and 4.7 MB
+    in two runs of the same build); they are not worth a table row.
+
+PRINTING WITH SEVERAL PASSES (task 32)
+--------------------------------------
+
+The earlier prints were plain text, which LaTeX settles in one run.  These
+documents (tests/measure.py multipass) are structured documents of the sizes
+10, 100, 500, 1000 and 3600 pages with every feature that makes LaTeX run
+again: a table of contents (--contents 3, all levels), an index (one entry in
+12 blocks), a list of figures and a list of tables, cross references to
+sections (the tag and the headline, and the page of the section), a header
+with the Section marker and a footer with the page number, a footnote in
+every 25th block and a long table (a row for every 4 pages).  The Printer was
+run with --contents 3 --index --list-figures --list-tables to a PDF; it
+runs LaTeX again while the labels move, up to three times (run_passes in
+src/strprint.c).
+
+  pages  doc KB  PDF pages  passes  seconds  seconds per pass   peak MB (tree)
+     10      40        15      2       1.5   0.8  0.7                50.7
+    100     413       106      2       2.6   1.3  1.2                50.7
+    500    2066       513      3      11.2   3.7  3.6  3.6           51.5
+   1000    4130      1022      3      20.3   6.6  6.6  6.6           52.0
+   3600   14881      3673      3      68.6   22.4 22.0 22.2          87.2
+
+What was checked in the text of each PDF (pdftotext), for every size: the
+table of contents has a row for every headline (8, 16, 80, 160 and 576
+headlines: each appears at least twice, in the contents and in the text);
+every index entry (7, 72, 360, 720, 2592 entries) is in the index; every
+figure and every table of the lists is there; every cross reference prints
+(3, 29, 144, 288, 1037 of them: no "??", no "[no section]" in any PDF: 0 of
+each); every row of the long table and every footnote is in the text.  The
+print settles: two passes up to 100 pages, three from 500 pages, and the last
+pass leaves nothing to run again.  No fault was found.
+The time is that of LaTeX: the three passes of a size take the same time each
+(the table of contents and the index are written in the first pass and read in
+the next).  The peak memory is that of pdflatex alone (51 to 53 MB at 100 and
+3600 pages when it was run on the same file) up to 1000 pages; at 3600 pages
+the Printer itself (the document and the LaTeX text) is the largest process,
+87 MB.  The documents are made by the script, which is the repeat of the
+measurement; the structure is chapters of 25 pages with three sections each.
+
+DISK
+----
+
+The install script was run with the build directory of the release build into
+a private prefix, without the prerequisites.  The sizes in kilobytes:
+
+  whole prefix                                5,452
+    programs (bin)                            3,032
+      str                                       410   Document Manager
+      stred                                     817   Editor
+      strprint                                  372   Printer
+      dviview                                   152   Viewer
+      str-x11 and stred-x11                 425 and 831   X11 version
+    documents of Strata (.doc files)          2,220
+    templates (letters and envelopes)            32
+    licence and README                           64
+
+The manuals as PDF files (made from the documents with the Printer, which is
+what a reader prints or views): reference manual 2,240 (660 pages), file
+format 188 (19 pages), tutorial 232 (9 pages), Getting Started 296 (7 pages),
+prerequisites 132 (5 pages), the two cheat cards 112 and 136, math card 332:
+3,668 in all.  The sample documents (tests/samples) are 100.  The complete
+release with the manuals as PDF and the samples is therefore about 9.2 MB.
+The installed tree does not hold the PDF files or the sample documents today
+(the install changes of the worklist add them); they are counted here as the
+owner asked for the full size.
+
+Working space.  A document that is saved keeps up to three backups (the
+default), so a 15 MB document takes up to 60 MB of disk.  A print writes a
+LaTeX file of about 5.5 MB for 1,000 pages and a PDF of 3.6 MB (12.6 MB for
+3,625 pages).
+
+The prerequisites.  On a computer that has none of the programs that the
+Printer needs, the install script with --with-prereqs fetches
+texlive-latex-base, texlive-latex-recommended, texlive-latex-extra,
+texlive-pictures, texlive-plain-generic, lmodern, dvipng, ghostscript, hunspell
+with its English dictionary, and mythes-en-us.  Counting the packages that apt
+adds for them to a Debian base system (apt-get --print-uris and the
+Installed-Size of each package, with no recommended packages): 126 packages, a
+download of 191 MB, installed 661 MB.  The largest are texlive-latex-extra
+(95 MB), texlive-pictures (81 MB), texlive-plain-generic (67 MB), texlive-base
+(45 MB) and lmodern (33 MB).  The table that the script prints on the machine
+of the user is the exact figure for that machine.  The machine of this
+measurement has all of them already, so its own table was empty.
+
+WHAT WAS NOT MEASURED
+---------------------
+
+  - A cold disk (the first start after a boot): the files were cached.
+  - Slow computers: only this one.  The memory does not depend on the speed.
+  - Documents with pictures or equations: the documents are text.  Pictures
+    and equations cost the Printer more time (LaTeX runs for each picture) and
+    memory.  The table of contents, the index, the lists, cross references,
+    footnotes and a long table were measured in task 32 (PRINTING WITH
+    SEVERAL PASSES above).
+  - Print and Preview in the window, and the Viewer (dviview): only the
+    Printer to a PDF.
+  - Documents of more than 3,625 pages, or with a very deep or very wide tree
+    of sections (the structured documents had chapters of 25 pages).
+  - Wayland and a real X server: the X11 version ran in a virtual display
+    (Xvfb), which draws in memory; a real display adds the time of the
+    graphics driver, and a remote display adds the network (the lag item of
+    docs/WORKLIST.txt: a display forwarded with ssh -Y is slow).
+  - The painting of the terminal: the times of the terminal version are the
+    time until the Editor has written the screen, and not the time that a
+    terminal program takes to paint it.
+
+PROBLEMS FOUND
+--------------
+
+None.  The memory and the times grow in step with the size of the document,
+from 1 to 3,625 pages.  One figure was worth a note: after a save the memory is
+about 13 percent above the memory after the search (221 against 196 MB for
+3,625 pages).  Task 32 found the cause (the buffer of the save, which grew by
+doubling) and reduced it, together with the largest part of the memory, the
+copy that Undo keeps of the whole document (docs/MEMORY.txt).
+
+REPEATING THE MEASUREMENT
+-------------------------
+
+    source scripts/setup -b release /tmp/strata
+    scripts/strata-build
+    python3 -I -B tests/measure.py gen sample.docs/twain.txt /tmp/m/docs
+    python3 -I -B tests/measure.py term /tmp/strata/release /tmp/m/docs \
+        /tmp/m/res-term.jsonl 3
+    python3 -I -B tests/measure.py x11 /tmp/strata/release /tmp/m/docs \
+        /tmp/m/res-x11.jsonl 3
+    python3 -I -B tests/measure.py print /tmp/strata/release /tmp/m/docs \
+        /tmp/m/res-print.jsonl 3
+    python3 -I -B tests/measure.py disk /tmp/strata/release /tmp/m/prefix
+    python3 -I -B tests/measure.py report /tmp/m/res-term.jsonl
+
+Task 32 added three more: text makes a text from our own documents when the
+collection of the owner is not there, compare shows two result files side by
+side, and multipass makes and prints the documents of the several-pass table:
+
+    python3 -I -B tests/measure.py text /tmp/m/text.txt 2900000
+    python3 -I -B tests/measure.py gen /tmp/m/text.txt /tmp/m/docs
+    python3 -I -B tests/measure.py compare /tmp/m/before.jsonl \
+        /tmp/m/after.jsonl
+    python3 -I -B tests/measure.py multipass /tmp/strata/release /tmp/m/mp \
+        /tmp/m/res-mp.jsonl 10,100,500,1000,3600
+
+The x11 runs need Xvfb and xdotool.  STRATA_HOME and TMPDIR should point into
+a scratch directory.

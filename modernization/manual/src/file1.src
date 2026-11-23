@@ -1,0 +1,331 @@
+# Chapter 2, part 1: templates, backups, revisions.
+.h2 Templates [file-templates]
+.ix Template
+.ix Templates, why
+.ix DEFAULT.SET
+.ix Boilerplate text
+.ix Standard form
+A template is a document that stands for a kind of document.  It carries the
+global format settings, the page layouts, the typefaces and the marker
+settings that every document of that kind should have, and it can carry
+standard text: the headings of a memo (Date, From, To, Subject), the numbered
+sections of a contract, the title page of a report.  The New command names a
+template, and the new document begins as a copy of it.  The template itself
+is not changed.
+.pic pictures/file-new.png 5 The New File panel, with the Template field.
+.h3 Making a template file [file-templates-create]
+.ix Template, creating
+.ix Save Global Settings Only
+.ix Template with text
+There are two ways to make a template.
+.table 4 57
+Step | What to do
+1 | Set up a document the way you want all documents of a kind to be: the
+ | formats of the Global menu, the page layouts, the typefaces and the
+ | marker settings.  Choose File, Save, move to Options and choose Save
+ | Global Settings Only.  Type a name for the Document Name (without an
+ | extension, the program adds {c:.set}).  The file that is written has all
+ | the settings and no text.
+2 | If the template should also give a starting text, write that text in the
+ | document, choose File, Save with the option Save Entire Document, and
+ | give the name an extension of {c:.set}, for example {c:memo.set}.  The file
+ | is a complete document, and the Editor does not mind its name.
+.end
+.caution The Document Name field of the Save panel begins with the name of the
+  document.  If you choose Save Global Settings Only and do not change the
+  name, the name has an extension ({c:.doc}) and is used as it is: the document
+  file is then replaced by a file that has the settings and no text.  The
+  question "Overwrite old version on disk?" is asked, and its first answer is
+  Yes.  Type a new name before you choose that option.
+A template can be improved like any document: retrieve it, change it and save
+it again.  A document that already exists can be given the settings of a
+template with Retrieve Global Settings or Retrieve Typeface Settings Only
+({n:file-retrieve}), without losing its text.
+.h3 Starting a document from a template [file-templates-use]
+.ix Template, using
+.ix New File, Template
+Choose File, New.  Type the name of the new document in Document Name, and in
+the field Template the name of the template, with its extension, for example
+{c:memo.set}; {k:F2} on that field lists the templates of the working
+directory.  When there are templates in the directories of the list below, New
+first shows that list ({n:file-new-list}) and puts the one that you choose in
+the field Template.  The new document has the settings and the text of the
+template.
+The fields Description and Author are put in the document when they are not
+empty, and blank ones keep those of the template.  {fig:file-new-description}
+shows the panel after a template was chosen from the list and a description
+was typed.  The field Revision is the
+revision of the new document, 1.000 unless you type another.  The template
+field is not given an extension: {c:memo} is not found if the file is
+{c:memo.set}.
+.pic pictures/file-new-description.png 5 The New File panel, with the template of the list and a description typed. [file-new-description]
+.h3 Where the templates are looked for [file-templates-path]
+.ix Template, search path
+.ix STRATA_TEMPLATES
+.ix Template directory
+The name in the Template field is looked up in this order, and the first
+place that has a file of that name, without regard to the case of the
+letters, is used.
+.table 5 55
+Step | Place
+1 | If the name contains a slash, exactly that path (relative to the
+ | directory in which the Editor was started, not to the Working Directory).
+2 | The Working Directory of the panel.
+3 | The directory named by the environment variable {c:STRATA_TEMPLATES}, if
+ | it is set.
+4 | The directory {c:templates} of the settings.
+5 | The directory {c:share/strata/templates} beside the programs.
+6 | The directory in which the program file of the Editor is.
+.end
+The list that New shows ({n:file-new-list}) is made from three directories: the
+one named by {c:STRATA_TEMPLATES}, the directory {c:templates} in the directory of
+the settings ({c:~/.strata/templates}), and the directory
+{c:share/strata/templates}
+of the installation.  The place that the settings are kept in, {c:~/.strata},
+is not searched for the name typed in the field.  See
+{x:appcfg-search-templates} for the rule in the chapter on the configuration.
+If no file is found and the name is {c:DEFAULT.SET}, which is the name that
+the field has when the panel opens, the built-in settings are used: a box
+titled "New document type" offers the entries Structured and Unstructured, and
+an empty document of the kind that you choose is made.  Any
+other name that is not found gives the message "Cannot find the template
+file".  A file that is found but is not a document gives its reading error
+with the title "Template".  So a person who wants every new document to have
+the same settings puts a file called {c:DEFAULT.SET} in the working
+directory, or in the directory of {c:STRATA_TEMPLATES}, and does not have to
+type the name.
+.h2 Backup files [file-backup]
+.ix Backup file
+.ix Backups Kept
+.ix .BAK
+.ix Backup, numbered
+.ix Previous version of a file
+.ix Global, Options, backup
+A backup keeps a previous version of a document.  Save keeps up to 99 backups;
+the setting Backups Kept (0 to 99, three by default) gives the number.  The
+backups are numbered files in a directory named {c:.backup} in the directory
+of the document, so that they do not fill the directory of the documents.  A
+backup holds the document as it was before a Save.  Backup 1 is always the
+newest and the highest number the oldest.
+.table 14 46
+Document | Backups
+{c:report.doc} | {c:.backup/report.bak01}, {c:.backup/report.bak02} and so on
+{c:REPORT.DOC} | {c:.backup/REPORT.BAK01}, {c:.backup/REPORT.BAK02} and so on
+{c:my.report.doc} | {c:.backup/my.report.bak01} and so on
+{c:memo.txt} | {c:.backup/memo.txt.bak01} and so on
+.end
+The number has two digits, so that the backups stay in order in a list of
+files.
+.h3 The directory .backup [file-backup-folder]
+.ix Backup, directory .backup
+.ix .backup, the directory
+The directory is made when the first backup of a document is made, in the directory
+of the document and with the mode that a new directory gets (the
+{c:umask} of the account determines).  A document that has not changed makes no
+backup and no directory, and with Backups Kept at 0 no directory is made.  The
+checklists of files do not show the directory; to look into it, type its name in a
+Document Name field.  If the directory cannot be made or written (the directory is
+read-only, or a file called {c:.backup} is in the way), the document is still
+saved, no backup is made, and the message line shows why.  If the directory is on
+another disk than the document (it is a mount point), the old document is
+copied into it instead of being linked.
+.note Earlier versions of Strata left the backups beside the document, as
+  {c:report.bak01}.  The programs do not move or remove these files, and the
+  first Save in the new way does not ask about them.  The panel Restore Backup
+  lists them, marked {c:old}, and restores them.  They can be moved into the
+  directory {c:.backup} or removed by hand.
+.h3 Choosing how many backups are kept [file-backup-option]
+.ix Backups Kept
+.ix Backup, how many
+The number is the field {b:Backups Kept (0 to 99)} of the panel Options of the
+Global menu in the Editor, and the field {b:Backups Kept (0 to 99)} of Setup in
+the Document Manager.  It is a setting of the user and not of the document: it
+is kept in the file {c:~/.strata/config} as {c:backups=3}, for instance, and
+read when the Editor starts.  With the value 0 no backup is made.  The value 1
+keeps the version before the last save.  Without a settings file the value is
+{b:3}.  The number does not apply to the special backup of an older file
+({n:file-backup-special}), which stays.
+
+When the number is lowered (from 5 to 2, say) and the panel is accepted, a box
+is shown first.  The box shows which backups are removed ({c:Backups Kept: 5 to
+2.
+The backups numbered 3, 4 and 5 are removed, in every folder .backup, the
+next time each document is saved with a backup or a backup is restored; no other
+time.}) and that {k:Y} keeps the change and {k:N} or {k:Esc} keeps the old
+number.  The programs cannot visit every directory, so the extra backups of a
+document go at its next save.  With {k:N} the rest of Setup is saved all the
+same.  Raising the number, or leaving it, puts no question.  With the value 0 the
+box shows that no more backups are made and that the backups that exist are
+not touched.
+.caution Every backup is a whole copy of the document.  A document of 2
+  megabytes with 99 backups takes about 200 megabytes of disk.  Choose the
+  lowest number that the work allows.
+.h3 When a backup is made [file-backup-when]
+.ix Backup, when made
+.ix Backup, name of
+.ix Backup, Ctrl-S
+.ix Backup, Autosave
+.ix Backup, unchanged document
+The backups are made by Save Entire Document and by {k:Ctrl-S}, just before the
+new version replaces the file, under these rules.
+.table 29 31
+Condition | Rule
+Backups Kept is 0 | No backup; the backups that exist stay as they are.
+There is no file of that name on disk | No backup (there is nothing to keep).
+The document has not changed: the file on | Nothing is written and no backup is
+ disk holds exactly what Save would write | made or moved.  The message line shows
+ | so.
+Save Global Settings Only, Extract | No backup (only Save Entire Document
+ Current Section | makes them).
+Autosave | No backup; see {x:file-backup-autosave}.
+The backups are 1 to the number kept | Backup 1 is moved to 2, 2 to 3 and so on;
+ | the oldest is removed; the version on
+ | disk becomes backup 1.
+A number is missing in the series | The backups below the gap move up into
+ | it; no backup is removed.
+The directory .backup cannot be made | The document is saved, no backup is made,
+ or written | and the message line shows why.
+Backups Kept was lowered | The backups above the new number are
+ | removed at the next save that makes a
+ | backup, or at a restore.
+.end
+The backup is a copy of the file that is on the disk, not of the text in the
+Editor.  The new version is written completely before any backup is moved, and
+only then does it replace the document, so that a complete document is on the
+disk at every moment.  If a step fails (the directory is not writable, the disk
+is full, a backup cannot be moved) a message reports this, the changes stay in
+the Editor, and the document and its backups are as they were.  In a directory
+that
+is not writable, a document that may be changed is saved in its place and
+no backup is made.  The question "Overwrite old version on disk?" of the Save
+panel is about the document file; the backups are moved without a question.
+.note The backup is the version before the last Save, not the version at the
+  start of the editing session.  With Backups Kept at 3, the last three saved
+  versions are the backups.  Autosave replaces the document on the disk but
+  makes no backup, so after an Autosave backup 1 can be the version of the
+  last Autosave.  To keep a version, save it under another name, as in the
+  example in {x:file-examples}.
+.h3 Using a backup [file-backup-use]
+.ix Backup, restoring
+.ix Retrieving a backup
+.ix Restoring a document
+To go back to a backup, use the entry {b:Restore Backup} of the Document
+Manager.  Choose the document; the panel lists its backups, newest first, with
+the number, the date and time, the size and the first words of each (the old
+ones beside the document are marked {c:old}).  Choose a backup: {b:View the
+text} shows its text in a pager that you leave with {k:Esc}, and {b:Restore
+this backup} prompts, in a box, for {k:Y} or {k:N} ({k:Esc} is {k:N}).  A
+restore
+is a swap, not an overwrite: the present document becomes backup 1, the backups
+below the one that was restored move up by one, and the chosen text becomes the
+document, with its mode and owner as far as they can be kept.  With one backup
+kept the document and the backup change names.  A backup that holds the same
+text as the document changes nothing, and the panel reports this.  A restore
+keeps
+at least one backup whatever Backups Kept says, and removes the backups above
+that number.  If the document is open in an Editor, that Editor keeps the old
+text until the document is loaded again.  The steps are in an order in which a
+failure loses no text: if one fails after the document was replaced, the old
+document is the file {c:.backup/.swapNNN} that the message names.
+
+File, Retrieve with the name of the backup typed in full,
+{c:.backup/report.bak01}, also reads it; the backup then becomes the current
+document with that name.  A Save onto a backup is refused, so a backup cannot be damaged by
+mistake: {k:Ctrl-S} and File, Save with the name of a backup write nothing, and
+the document stays changed.  A name is the name of a backup when its extension
+is {c:.bak} or {c:.bak} and digits, such as {c:report.bak01}, in capitals or in
+lower case, or when the file is in a directory that is named {c:.backup}.  To keep
+your changes, use File, Save with another name.
+.ix Backup, refused Save
+.h3 The special backup [file-backup-special]
+.ix Backup, special
+.ix Special backup
+.ix Backup, older version of a file
+.ix File versions, special backup
+When a file of an older version ({n:file-versions}) is loaded into software
+that writes a newer version, the Editor saves a special backup of it when the
+load is finished.  The special backup preserves the file as it was on the
+disk, so that the older software can still read it.  It is saved next
+to the file, not in the directory {c:.backup}, and its name has the form
+{c:V<old-version>-<filename>.<extension>}: the letter V, the version of the
+file, a hyphen, and the name of the file with its extension.
+.table 22 38
+File | Special backup
+{c:memo.doc} | {c:V2-memo.doc}, when the file is version 2
+{c:standard.set} | {c:V2-standard.set}, when the file is version 2
+.end
+If the special backup already exists, it is not written again, so the first
+one stays as it was.  If it cannot be written (the directory cannot be
+written to, or the disk is full), the load is refused, a message shows why,
+and the file is not touched.
+The special backup is permanent.  The setting Backups Kept does not count it
+and does not remove it, the numbered backups ({n:file-backup}) never move it,
+and it can be removed only by hand.  The panel Restore Backup lists it with
+the backups of the document.  Restoring it writes the file back as it was, with
+whatever version number it carries: a special backup of version 2
+restores a document of version 2.
+.h3 Autosave and the files [file-backup-autosave]
+.ix Autosave
+.ix Autosave Interval
+.ix Autosave, revision
+Autosave is a setting of the Document Manager (Setup: Autosave, Yes or No, and
+Autosave Interval (Seconds), 1 to 86400; Yes and 120 by default) kept in
+{c:~/.strata/config}.  The Editor does not show it on its Options panel.  When
+Autosave is Yes and the document has unsaved changes, the Editor saves it under
+its name when the interval has passed since the first unsaved change, without a
+question and without a panel.  It does what {k:Ctrl-S} does, but it makes no
+backup, so that the backups of the versions that you saved are not pushed out
+by versions that you did not ask to save.  It raises the revision by one (see
+{n:file-revision}).  A document that has no name is not saved.
+.if .STRATA_BUILD_TYPE # release
+For developers: the options {c:--autosave yes|no} and {c:--autosave-seconds N}
+of the Editor override the settings for one run.
+.endif
+.h2 Revision, description and author [file-revision]
+.ix Revision
+.ix Description of a document
+.ix Author of a document
+.ix Revision number
+.ix Description marker
+.ix Author marker
+.ix Revision marker
+Every document has three pieces of information that are kept with its settings
+and shown on the panels Save File and New File: the description (a line that
+says what the document is), the author, and the revision.  The markers
+Description, Author and Revision put them into the text when it is printed.
+.table 13 47
+Item | Rules
+Description | Any text.  A new document has none, unless one was typed on a
+ | New panel.
+Author | Any text.
+Revision | A number with three decimals, such as {c:1.007}.  A new document
+ | is {c:1.000}.
+.end
+.h3 The rule for the revision [file-revision-rule]
+.ix Revision, rule
+.ix Revision, typed
+.ix Save, revision
+A Save raises the revision number when the document has changed, and leaves
+it when the document has not.
+.table 34 26
+Situation at Save | Revision written
+The Revision field is as it was shown, and | Raised by one thousandth
+ the document has been changed since it was | (1.000 gives 1.001).
+ last saved, or the Description or the |
+ Author was changed on the panel |
+The Revision field is as it was shown, and | Unchanged.
+ nothing was changed |
+The Revision field was typed over with | That number, as typed.
+ another number |
+{k:Ctrl-S}, document changed | Raised by one.
+{k:Ctrl-S}, nothing changed | Unchanged.
+Autosave | As {k:Ctrl-S}.
+.end
+The number in the panel is read as digits, a point and up to three more digits:
+{c:2} is 2.000, {c:1.5} is 1.500 and {c:1.0005} is refused with "Not a valid
+revision number".  Negative numbers and letters are refused.  The Revision
+field of the New
+panel is always used for the new document, so that the revision of the
+template is not carried over.  If a Save fails, the revision and the changed
+flag are put back as
+they were.

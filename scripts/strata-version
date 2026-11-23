@@ -1,0 +1,89 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Prints the version of Strata, which is the name of the branch that the
+# source tree is built from (see docs/VERSIONING.txt):
+#
+#     strata-version [--manual] [SOURCE-ROOT]
+#
+#   a branch named x.y.z                  x.y.z
+#   any other branch                      BRANCH SHA   (the short SHA)
+#   a detached HEAD that has the tag
+#     vx.y.0                              x.y.0
+#   anything else (no git repository, git not installed, a detached HEAD
+#     without a release tag)              UNSUPPORTED BUILD CONFIGURATION
+#
+# The option --manual prints the version that the title page of the manuals
+# shows: the number for a release or a defect branch and for a checkout of
+# a release tag, and the word development for every other branch, so that
+# the documents that are committed do not change with the name of a branch
+# or with the SHA of a commit.
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+unsupported="UNSUPPORTED BUILD CONFIGURATION";
+manual="no";
+
+if [ "${#}" -gt 0 ] && [ "${1}" = "--manual" ]; then
+    manual="yes";
+    shift;
+fi
+
+root="${1:-$(cd "$(dirname "${0}")/.." && pwd)}";
+
+
+# Prints the version for the branch or tag that the checkout is on.
+function version_of
+{
+    local branch
+    local sha
+    local tag
+    local top
+
+    command -v git >/dev/null 2>&1 || return 1;
+    top="$(git -C "${root}" rev-parse --show-toplevel 2>/dev/null)" ||
+        return 1;
+
+    # A tree that is only inside another repository is not a checkout of
+    # its own: the top of the repository has to be the root.
+    [ "$(cd "${top}" && pwd -P)" = "$(cd "${root}" && pwd -P)" ] || return 1;
+
+    sha="$(git -C "${root}" rev-parse --short HEAD 2>/dev/null)" || return 1;
+    branch="$(git -C "${root}" symbolic-ref --short -q HEAD 2>/dev/null)" ||
+        branch="";
+
+    # A name that has a character outside the usual ones is not passed on
+    # to a shell line as it is.
+    branch="$(printf '%s' "${branch}" | tr -c 'A-Za-z0-9._/+-' '_')";
+
+    if [ -n "${branch}" ]; then
+        if [[ "${branch}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "${branch}";
+        elif [ "${manual}" = "yes" ]; then
+            echo "development";
+        else
+            echo "${branch} ${sha}";
+        fi
+
+        return 0;
+    fi
+
+    tag="$(git -C "${root}" tag --points-at HEAD 2>/dev/null |
+           grep -E '^v[0-9]+\.[0-9]+\.0$' | head -n 1)" || tag="";
+
+    if [ -n "${tag}" ]; then
+        echo "${tag#v}";
+
+        return 0;
+    fi
+
+    return 1;
+}
+
+if ! version_of; then
+    echo "${unsupported}";
+fi
+
+exit 0;

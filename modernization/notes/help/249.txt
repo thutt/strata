@@ -1,0 +1,25 @@
+
+----------------------------- Out of Virtual Memory ----------------------------
+
+
+The Out of Virtual Memory message indicates one of the following conditions:
+
+
+# The sources of virtual memory needed to save, print, or continue editing 
+  your file have been exhausted. That is, the actual amount of virtual memory
+  available in the swap area is less than the total size that you specified in
+  Virtual Memory Setup.
+
+
+# More memory than is currently allocated through Virtual Memory Setup is 
+  needed to run Manuscript.  Further errors may be prevented by increasing 
+  the Total Size specification during Setup. Refer to Appendix C in the
+  Reference manual for details.
+
+
+The Virtual Memory Status panel (Ctrl M) provides information on how virtual 
+memory is being allocated.
+
+--------------------------------------------------------------------------------
+     Virtual Memory Setup         Total Size         Virtual Memory Status
+     Steps to Saving     Avoiding Errors     Keyboard Summary     Help Index

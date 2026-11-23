@@ -1,0 +1,25 @@
+
+-------------------------------- Page Numbers ----------------------------------
+
+Use the Page Number marker to specify the location of page numbers and any
+associated text in a header or footer.
+
+Use the page number tag to define the format (printed appearance) of a page 
+number.  This formatted number is printed at the location of the Page Number
+marker and is used by Manuscript for all automatic page number operations (such
+as entries in the table of contents and index) and for values in the Go To 
+page and Print from Page/to Page prompts.
+
+Page number tags can include a combination of text and any of the following 
+backslash commands that set the numbering style for page numbers.  They can 
+also include the Section marker.
+
+Backslash Command     Prints
+----------------------------------------------------------------------------
+\1\                   Arabic numbers, for example 1, 2, 3
+\a\ or \A\            Lowercase or uppercase letters, for example A, B, C
+\i\ or \I\            Lowercase or uppercase roman numerals, for example i, ii
+
+--------------------------------------------------------------------------------
+Section Format   Global Page   Page Number Marker   Page Number Starting Value
+                 Keyboard Summary                   Help Index

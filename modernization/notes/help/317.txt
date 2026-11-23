@@ -1,0 +1,25 @@
+
+------------------------------- Paste from Library -----------------------------
+
+Use Lib Paste (Ctrl F5) to paste a library entry into a document.
+
+---Procedure--------------------------------------------------------------------
+
+ Position the cursor where you want     +------ Paste from Library -------+
+  to paste the library entry.            |                                 |
+                                         |  Entry name:                    |
+ Press Lib Paste.                       |  Description:                   |
+                                         |                                 |
+ Enter the name of the library entry    +---- Press Ins to Paste Entry ---+
+  to paste (the description will be
+  displayed so you can confirm your choice).
+  Press Gray + to list existing entries.
+
+ Press Ins to paste the entry.
+--------------------------------------------------------------------------------
+
+If the cursor is in the first position of a column, block, or section, the 
+pasted material is inserted at the cursor position; otherwise, it is pasted 
+after the current column, block, or section.
+--------------------------------------------------------------------------------
+  Library Overview     Lib Copy     Lib Cut     Keyboard Summary    Help Index

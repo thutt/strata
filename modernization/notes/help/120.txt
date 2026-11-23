@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Invalid marker selection -- 
+
+The marker you selected is not available in the current document location.  See
+chapter 8 for information on valid marker locations.
+
+-- Invalid number (<description>) --
+
+The number you entered on a panel or in a mathematical expression is not valid.
+Check the Reference manual for legal entries and enter a new number.
+
+-- Invalid page number range --
+
+The page range specified on the Print, Preview, or Compare Document panel is 
+invalid. Make sure the first number is less than the second number and that the
+pages exist in the document. Reenter the pages to print and retry the operation.
+
+-- Invalid paper bin number -- 
+
+The paper bin number specified on the Page Layout panels is not valid for your
+printer.  Change the paper bin number or printer selection and reprint the file.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

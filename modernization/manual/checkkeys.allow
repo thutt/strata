@@ -1,0 +1,5 @@
+# Phrases that look like keys in the sources of the manual and are not.
+# One phrase per line; the case is not looked at.
+Alt-F commands
+# The text that a tutorial step has the reader type in a field is not a key.
+Type {c:Ctrl-S} in the field

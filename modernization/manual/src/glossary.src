@@ -1,0 +1,259 @@
+.doc Strata Reference: Glossary
+.chapter F
+.h1 Glossary [glossary]
+# The terms of this manual in alphabetical order.  Each entry ends with the
+# place that describes the term.  One entry is one line because the
+# directive takes one line.
+This glossary defines the terms that the manual uses.  Each entry says where
+the term is described in full.  The entries are in alphabetical order.
+
+.h2 A
+.term Accelerator | A Ctrl letter that does at once what a menu or a function key does in several steps, such as {k:Ctrl-S} for Save.  See {x:view-accel}.
+.term Alt commands menu | The list that {k:Ctrl-F} opens, headed Commands, with one entry for every command that has a function key and its key, for terminals that do not pass the function keys with Alt or Ctrl to a program.  See {x:view-ctrlf}.
+.term Alternate screen | The second screen that the terminal version switches the terminal to when it starts, so that what was on the terminal comes back when the Editor ends.  See {x:appterm-leave}.
+.term AltGr | The right Alt key of many keyboard layouts, which gives the third level of the keys; the X11 version reads it as a way to type special characters.  See {x:appx11-keys}.
+.term Append | The command ({k:Alt-F2}) that adds a new column, block, section or subsection next to the current one; the box of choices depends on whether the document is structured.  See {x:edit-append}.
+.term ASCII characters | The plain characters with which the terminal version draws its screen when the terminal cannot read UTF-8 (or when the field Terminal Characters of Setup reports this): lines as - = and |, corners as +, blocks as #. See {x:appterm-charset}.
+.term Attribute | The look of a run of characters: normal, bold, italic or underscore, or a mix such as bold italic.  The attribute is the most local format there is.  See {x:view-text}.
+.term Author | The name of the person who wrote a document, kept in the header of the file and printed in place of an Author marker.  See {x:file-revision}.
+.term Auto Correct | A field of the spell check panel.  When it is Yes, each correction that you make is remembered and made again, without a stop, when the same word comes again.  See {x:spell-autocorrect}.
+.term Auto Numbering | A setting of the Global menu that gives the headlines of a structured document their section tags.  With Auto Numbering to Level N, a section deeper than level N has no tag.  See {x:format-set-tags}.
+.term Autosave | A setting that makes the Editor save a changed document that already has a name once the autosave interval has passed.  The document is written under its own name, as {k:Ctrl-S} does.  See {x:file-backup-autosave}.
+.term Autosave interval | The number of seconds between the first unsaved change and an autosave; 120 unless the Setup panel or the settings say otherwise.  See {x:appcfg-key-seconds}.
+.h2 B
+.term Backup file | A copy of a document as it was on the disk before a Save, kept as a numbered file such as report.bak01 (the newest) in the directory .backup next to the document.  Save keeps as many as Backups Kept says.  See {x:file-backup}.
+.term Backups Kept | The setting, 0 to 99 and 3 by default, of Setup and of Global, Options that says how many numbered backups Save keeps.  See {x:file-backup-option}.
+.term Banner | The line "PRINT FAILED - N ERRORS - THIS PRINT IS INACCURATE" in large bold red capitals that the Printer puts on every page of a failed print.  See {x:print-failed}.
+.term Block | A unit of related text such as a paragraph, a headline, a list item or a table row.  Most formats are set for a block and most commands work on one.  See {x:view-block}.
+.term Block Format Editor | The series of prompts that {k:F6} or {k:Ctrl-E} opens to set the left indent, the justification, the indent of the lines, the attribute and the tabs of one block or column.  See {x:view-local-formats}.
+.term Bold | An attribute of text, set with {k:Ctrl-B}.  See {x:view-text}.
+.term Border | A line that the Editor draws on the screen between elements: a single line between blocks, a double line above a headline, a dotted line between columns.  See {x:view-section-shape}.
+.term Border command | The command of {k:Alt-F8} that puts lines around the columns of a block and sets their gutters; its panel is Border Layout.  See {x:edit-c-border}.
+.term Box | In print, the label of a marker set in a small typewriter face inside a thin frame.  The Printer makes one for a marker that has no printed form of its own.  See {x:markers-printed}.
+.h2 C
+.term Case | The command of {k:Ctrl-F6} that changes letters to upper case, to lower case, or to a capital at the start of each word.  See {x:edit-c-case}.
+.term Character set | The 256 characters of the PC code page 437, in which the text of every document is held; the other sets are used only by Import and Export.  See {x:appchar-set}.
+.term Checklist | A list of the files or directories of one directory, opened with {k:Keypad +} or {k:F2} in a field that names a file or a directory, from which the name is taken.  See {x:view-checklist}.
+.term Clipboard | The one place that holds the last text, column, block or section that was copied, cut or moved, so that Paste can put it into the document.  See {x:edit-copy}.
+.term Collapse | To hide the text and the subsections of a section so that only its headline shows.  See {x:edit-contract}.
+.term Colors panel | The second page of Setup, reached with {k:PgUp}, on which the foreground and background color of every kind of text are chosen, for the terminal version and for the X11 version.  See {x:str-colours}.
+.term Column | A vertical part of a block.  Every block has at least one; a table row is a block with a column for each cell.  See {x:view-column}.
+.term Column Break | A marker that ends the page where it stands, as a Page Break does.  See {x:marker-column-break}.
+.term Comment | A marker that holds text for the people who work on the document.  It shows on the screen and is printed in a Draft only.  See {x:marker-comment}.
+.term Comparison report | The list of what is different between two documents, made by Compare Document Versions of the Document Manager: blocks inserted, removed, changed or moved, and sections added, removed, moved or put on another level.  See {x:str-compare-report}.
+.term Conditional text | Text that is printed for one use of a document and not for another, chosen by an If marker and the variables that are given.  See {x:marker-if}.
+.term Config | The text file {c:~/.strata/config} that holds the settings of the user, one key and value to a line.  See {x:appcfg-format}.
+.term Contract | To collapse a section; the opposite of Expand.  See {x:edit-contract}.
+.term Control panel | The rows at the top of the Edit screen: the status line, the expanded status line when it is on, and the ruler.  See {x:edit-status}.
+.term Copy | The command ({k:F3}) that puts a copy of text, a column, a block or a section into the clipboard and leaves the document unchanged.  See {x:edit-copy}.
+.term Counter | A marker that prints the next number of a counter, for numbered items that are not sections.  There are 99 counters, each with its own count and style.  See {x:marker-counter}.
+.term Cross-reference | A marker that prints the tag, the headline or the page number of another section, so that the reference stays right when sections move.  Only a structured document may have one.  See {x:marker-cross-reference}.
+.term Ctrl-^ | The key that shows one section alone and brings the whole document back.  See {x:view-section-mode}.
+.term Cursor | The block that shows where typing goes.  It stops on a marker as it does on a letter.  See {x:view-cursor}.
+.term Cut | The command ({k:F4}) that removes text, a column, a block or a section from the document and puts it into the clipboard.  See {x:edit-cut}.
+.h2 D
+.term Date | A marker that prints the date of the print, written in the style that its panel names.  See {x:marker-date}.
+.term Default colors | The colors that the programs are delivered with: yellow text on a blue ground.  The option {c:--default-colors}, or the variable {c:STRATA_DEFAULT_COLORS}, starts a program with them.  See {x:str-colours}.
+.term Delete | The command ({k:Alt-F4}) that removes text, a column, a block or a section without putting it into the clipboard.  As a File command it removes a file from the disk.  See {x:edit-delete}.
+.term Demote | To move a section one level down, with {k:Alt-]}.  Its subsections move with it.  See {x:view-outline-keys}.
+.term Description | A line of text in the header of a document that says what it is, printed in place of a Description marker.  See {x:file-revision}.
+.term Diamond | The display mode in which a marker shows as a single diamond on the screen.  See {x:markers-screen}.
+.term Display mode | The way a marker looks on the screen: Diamond, Name, Short, Long or Inline.  Global, Marker sets the mode for the whole document.  See {x:markers-screen}.
+.term Document | A file with the extension {c:.doc}: the text of the document, its body, and all its settings, its header.  See {x:file-types-doc}.
+.term Document Manager | The menu program that starts Strata: a document is opened in the Editor, where it is edited, spell checked, previewed and printed, and Strata is set up from it.  See {x:str}.
+.term Draft | The quick print: a PDF made like a proof, with one line spacing, no extra space between blocks and the comments of the document printed.  See {x:print-draft}.
+.h2 E
+.term Edit Document | The entry of the Edit menu that brings the whole document back after Section Edit.  See {x:edit-menubar}.
+.term Edit menu | The menu of {k:F12} that holds Title, Structured or Unstructured, Section or Document, and Window.  See {x:edit-menubar}.
+.term Edit / Preview / Print Document | The entry of the Document Manager that opens a document in the Editor, where it is edited, previewed and printed.  See {x:str-edit}.
+.term Editor | The program in which you write and format documents; it is described by {n:view} and {n:edit}.  See {x:view-tools}.
+.term Endnote | A kind of note whose text is printed on a page of its own at the end of the document.  See {x:marker-note}.
+.term Environment variable | A named setting that the shell gives to a program, such as {c:TMPDIR} or {c:STRATA_HOME}.  See {x:appcmd-env}.
+.term Equation | A marker that holds a formula in TeX math, typeset as mathematics when the document is printed and drawn as a picture on the X11 screen.  See {x:eq-what}.
+.term Error Log | The last page of a PDF or of a Preview that lists the errors and warnings that the Printer found, each with its place in the document.  See {x:print-errlog}.
+.term Even page | A choice of the Page Break marker: the text that follows starts on the next page that has an even number.  See {x:marker-page-break}.
+.if .STRATA_BUILD_TYPE # release
+.term Exit status | The number that a program leaves for the shell when it ends; 0 means that it succeeded.  See {x:msg-exit}.
+.endif
+.term Expand | To show the hidden text and subsections of a collapsed section again.  See {x:edit-contract}.
+.term Expanded status line | A second row under the status line that describes the format of the block under the cursor.  It is on when Expanded Status Line is Yes in Global, Options.  See {x:view-expanded}.
+.term Export | The File command that writes a document as a text file, in one of two forms, in a character set that you choose, or as the LaTeX file of Print.  See {x:file-export}.
+.h2 F
+.term F12 | The key that opens the menu bar.  See {x:edit-menubar}.
+.term Failed print | A print that has errors: its PDF or Preview is made but is inaccurate, and every page carries the banner and the marks. A print that made no file at all is another thing, see {x:print-nofile}.  See {x:print-failed}.
+.term File name | The name of a document.  When it has no extension, a command adds {c:.doc}, or {c:.set} for a template.  See {x:file-names-ext}.
+.term File version | The number of the file format that a document, template, library file or macro file carries; 3 is the current version.  See {x:file-versions}.
+.term Filedate | A marker that prints the date of the file on the disk.  See {x:marker-filedate}.
+.term Filename | A marker that prints the name of the file, in capital letters.  See {x:marker-filename}.
+.term Filetime | A marker that prints the time of the file on the disk.  See {x:marker-filetime}.
+.term Final | The print of the best quality: the line spacing, pictures and title page that the document asks for, and no comments.  See {x:print-final}.
+.term Find Next Error | The method of Search that moves the cursor to the next Print Error marker.  See {x:edit-c-find-error}.
+.term Font list | The file {c:~/.strata/fonts}, which says which LaTeX font each of the twenty font numbers of a document stands for.  See {x:appcfg-fonts}.
+.term Font marker | A marker that changes the family of type of the text that follows it, to the end of the block.  See {x:marker-font}.
+.term Footer message | The line in bold at the bottom of a screen of the Document Manager that shows what happened; it stays until the next key.  See {x:str-messages-footer}.
+.term Footnote | A kind of note whose text is printed at the foot of the page on which the note marker stands.  See {x:marker-note}.
+.term Format | The settings that say how text looks: its justification, indents, tabs, attribute, fonts and page layout.  They are global or local. See {x:view-formatting}.
+.term Function key | One of {k:F1} to {k:F12}, which runs a command alone or with Ctrl or Alt.  The labels at the foot of the screen show the commands.  See {x:view-fkeys}.
+.h2 G
+.term Global format | A setting made on the Global menu for the whole document. A local format overrides it.  See {x:view-global-formats}.
+.term Global menu | The menu of {k:F12} with the panels Format, Page, Typeface, Marker, Options and Named.  See {x:format-global-menu}.
+.term Go To | The command ({k:Alt-F7}) that moves the cursor to the start or end of the document or to a section: a numbered one, the next or the previous.  See {x:edit-goto}.
+.h2 H
+.term Hanging indent | An indent set with {k:Ctrl-H} after the hanging characters, such as a bullet and a space: the block gets a tab stop at the cursor and the indent type All but First.  See {x:view-local-formats}.
+.term Header | The part of a document file that comes before its text: the settings, the description, the author and the revision.
+.term Headline | The first block of a section; it holds the title of the section and is numbered by the Editor.  See {x:view-section}.
+.term Help | The key {k:F1}, which shows the help topic that belongs to what is on the screen.  See {x:view-help}.
+.term Help viewer | The window across the foot of the screen that shows the help file, opened with {k:F1}.  See {x:str-help}.
+.term Highlight | The reverse video that shows the text that a command is about to work on, set by moving the cursor and accepted with {k:Enter}.  See {x:view-highlight}.
+.term Hint line | The second row of the menu bar, which says what the selected entry does.  See {x:edit-menubar}.
+.term Hyphenation list | Your own list of words with the places where each may be broken at the end of a line, in the file {c:hyphenation} of the settings directory; Maintain Dictionaries shows it with {k:Tab}, and the Printer gives it to TeX. See {x:str-spell-words-hyphen}.
+.h2 I
+.term Import | The File command that reads a text file into the document at the cursor, in a character set that you choose.  See {x:file-import}.
+.term Include | A marker that names another document, so that the print puts the text of that document at its place: the way for several authors to write one work, each in a document of their own.  See {x:marker-include}.
+.term Indent | The space at the left of a block or of its lines, set in the Block Format Editor or on the Global Format panels.  See {x:format-set-indents}.
+.term Index | The list at the end of a print that gives the page of every Index marker, in alphabetical order.  See {x:print-index}.
+.term Initial Library | The Setup field that names a library file that the Editor loads at start.  See {x:str-setup-fields}.
+.term Initial Macro Set | The Setup field that names a macro file that the Editor loads at start.  See {x:str-setup-fields}.
+.term Inline | The display mode in which a marker shows as its picture on the line of text in the X11 version.  The Equation, the Picture, the Keycap and the LaTeX marker have it, and it is their default.  Where the picture cannot be made, and in the terminal version, the marker shows in its Short form.  See {x:markers-screen}.
+.term Italic | An attribute of text, set with {k:Alt-I}.  See {x:view-text}.
+.h2 J
+.term Join | The command ({k:Alt-F3}) that joins two columns, blocks or sections into one.  See {x:edit-join}.
+.term Justification | The way the lines of a block are set against the margins: Left, Right, Center or Even.  See {x:format-set-justification}.
+.h2 K
+.term Keep | A marker pair, Start and End, that keeps the blocks between them on one page.  It is never printed.  See {x:marker-keep}.
+.term Key labels | The two rows at the foot of the screen that name what {k:F1} to {k:F12} do; they change when Ctrl or Alt is held in the X11 version.  See {x:edit-labels}.
+.term Keycap | A marker that draws a key as a small rounded box with a legend, in the line of text; the manual uses it for the name of every key.  See {x:marker-keycap}.
+.term Keypad + | The plus key of the numeric keypad.  It opens the checklist of a field that names a file, a directory or a printer.  See {x:str-browse}.
+.h2 L
+.term Landscape | A choice of the Orientation marker that turns the pages that follow it sideways.  See {x:marker-orientation}.
+.term LaTeX | The typesetting system that the Printer uses to make the pages of a PDF or a Preview.  See {x:print-overview}.
+.term LaTeX marker | A marker that holds instructions for LaTeX, which the Printer writes into the print exactly as they were typed.  See {x:marker-latex}.
+.term LaTeX file | The file that Print and Preview give to LaTeX, which Export a LaTeX File saves with its pictures in a directory beside it.  See {x:file-export-latex}.
+.term Latin-1 | The ISO 8859-1 character set of the western languages, a Character Set of Import and Export; the accented letters and the no-break space are kept, anything else becomes a question mark.  See {x:file-import-charset}.
+.term Left block indent | The space of the left margin of a block, set in the Block Format Editor and shown on the ruler.  See {x:format-set-indents}.
+.term Level | The depth of a section in the outline: the main sections are level 1, their subsections level 2, and so on.  See {x:view-levels}.
+.term Level format | The settings that the headlines of one level have on the Global Format panels, apart from the other levels.  See {x:format-fields-levels}.
+.term Levelnote | A kind of note whose text is printed at the end of the section in which the note marker stands.  See {x:marker-note}.
+.term Library | A second store of pieces of text, filled with {k:Ctrl-F3} or {k:Ctrl-F4}, used with {k:Ctrl-F5} and kept in a file with the extension {c:.lib}.
+.term Line | A marker that draws a horizontal rule, or a row of one or more repeated characters.  See {x:marker-line}.
+.term Line numbering | The numbers in the margin of the printed lines, set on the third Global Format panel: pagewise, running or at each section, on every line or every n-th, on either side.  See {x:format-fields-linenum}.
+.term Local format | A format that belongs to some text, a column or a block, and overrides the global format.  See {x:view-local-formats}.
+.term Long | The display mode in which a marker shows on the screen the text that it prints, such as a number or a tag.  See {x:markers-screen}.
+.term Long form | The printed text of a marker in the Box that the Printer makes for it.  See {x:markers-printed}.
+.h2 M
+.term Macro | A recorded run of keystrokes that is played back with {k:Alt} and a letter. A macro is made with Tools, Macros, Learn and kept in a set with the extension {c:.mac}.
+.term Macro set | A file with the extension {c:.mac} that holds macros, written by Tools, Macros, Save and read by Tools, Macros, Retrieve.
+.term Maintain Dictionaries | The entry of the Document Manager that shows your own words for the spell check, and with {k:Tab} your hyphenation list, and lets you add, delete, import and export them.  See {x:str-spell-words}.
+.term Mark of an error | The small label, E3 on red for an error or W3 on orange for a warning, that the Printer puts on a page at the place of a fault.  The number is that of the entry of the Error Log.  It is not the Print Error marker, which is in the text.  See {x:print-failed}.
+.term Marker | An item of the text, other than a letter, that is carried out when the document is printed: a date, a note, an equation, a picture.  See {x:markers-what}.
+.term Marker Commands | The table of the markers that {k:Alt-F12} or {k:Ctrl-F12} opens.  See {x:edit-b-marker}.
+.term Master document | A document that holds Include markers that name the documents of the parts of a work that several authors write, so that one print is the whole work.  See {x:authors}.
+.term Math | The command of {k:Ctrl-F2} that calculates the numbers in a highlighted part of the document and puts the result on the clipboard.  See {x:edit-c-math}.
+.term Menu bar | The bar that {k:F12} puts over the top rows: File, Global, Edit, Print, Tools and Quit.  See {x:edit-menubar}.
+.term Message line | The bottom row of the screen on which the Editor shows what was done or why a command was rejected. A message stays until the next key.  See {x:view-message}.
+.term Mode | A state of the Editor shown at the right of the status line, such as STRUCTURED EDIT, UNSTRUCTURED EDIT or SECTION EDIT. See {x:edit-modes}.
+.term Modified flag | The asterisk before the name of the file on the status line that shows that the document has changed since it was saved.  See {x:edit-status}.
+.term Move | The command ({k:F7}) that cuts something so that Paste can put it elsewhere.  See {x:edit-b-move}.
+.term MyThes | The pair of text files, an index and the data, that the thesaurus reads.  See {x:spell-requirements}.
+.h2 N
+.term Name | The display mode in which a marker shows as its name on the screen.  See {x:markers-screen}.
+.term Named format | A named group of block settings kept in the header of a document and given to a block by its name; Global, Named changes or deletes it.  See {x:format-named}.
+.term Nonbreaking space | A space that a line is never broken at, typed with {k:Ctrl-Shift-Space}.  See {x:edit-nbsp}.
+.term Note | A marker that holds the text of a footnote, a levelnote or an endnote; the text is edited in a full editor of its own.  See {x:marker-note}.
+.h2 O
+.term Odd page | A choice of the Page Break marker: the text that follows starts on the next page that has an odd number.  See {x:marker-page-break}.
+.term Options | The panel of the Global menu with the screen and backup settings of the user.  See {x:format-options}.
+.term Orientation | A marker that turns the pages that follow it to Portrait or Landscape.  See {x:marker-orientation}.
+.term Outline | The view of a structured document that shows only the headlines down to a chosen level, set with {k:Alt-1} to {k:Alt-9}.  See {x:edit-b-outlines}.
+.term Overtype | The mode in which typed characters replace the characters under the cursor, switched with {k:Alt-F5}; OVR shows on the status line.  See {x:edit-b-overtype}.
+.h2 P
+.term Page | The panel of the Global menu that sets the margins, the page number tag and the paper.  See {x:format-page}.
+.term Page Break | A marker that ends the page: an ordinary, an odd or an even page break.  See {x:marker-page-break}.
+.term Panel | A box of fields, one to a line, with its label in bold at the left; {k:Ins} accepts it and {k:Esc} cancels it.  See {x:view-form}.
+.term Paste | The command ({k:F5}) that puts the clipboard into the document at the cursor.  See {x:edit-b-paste}.
+.term Path name | The name of a file with the directories before it; one that begins with a slash is taken as it is, and any other is placed in the working directory.  See {x:file-names-path}.
+.term Pathname | A marker that prints the path of the document.  See {x:marker-pathname}.
+.term PDF | The file that Print makes with the Printer, through LaTeX, and that can be sent to a printer queue.  See {x:print-overview}.
+.term Peer section | A section of the same level as the current one, added after it with {k:Ins}.  See {x:edit-append}.
+.term Personal word list | The file dictionary in the settings directory, one word to a line, to which Define of the spell check adds the words that you keep, and which Maintain Dictionaries shows and changes.  See {x:str-spell-words}.
+.term Picture | A marker that puts a picture from a PNG, JPEG, PDF or EPS file into the text.  The document holds the name of the file, not the picture.  See {x:marker-picture}.
+.term Pop-up list | A small box with a title and a list of choices, opened by commands such as Append and Copy.  See {x:edit-popups}.
+.term Portrait | The upright page; the choice of the Orientation marker that is the default.  See {x:marker-orientation}.
+.term Preview | The command that typesets a part of the document with LaTeX and shows its pages in the Viewer, without keeping a file.  See {x:print-preview}.
+.term Print Error | A marker, made only by the Editor, that marks a fault found by Print or Preview and carries the message of the Printer.  See {x:markers-errors}.
+.term Print in Black and White | The field of the Print panels that prints every color of the print, pictures included, as a grey.  See {x:print-colors}.
+.term Print menu | The menu of {k:F12} with Draft, Final, Preview, Next Error, Previous Error, Remove Error and Remove Print Errors.  See {x:print-menu}.
+.term Printer | The program that makes a PDF, or the pages of a Preview, from a document, through LaTeX. See {x:print-strprint}.
+.term Printer field | The field of the Print panel that names the CUPS queue to which the PDF is sent; File only keeps the PDF. See {x:print-sending}.
+.term Printer marker | A marker that prints the name of the printer of the document.  See {x:marker-printer}.
+.term Promote | To move a section one level up, with {k:Alt-[}.  See {x:view-outline-keys}.
+.term Prompt | A box with a label, a line for the answer and the reminder Enter accepts, Esc cancels.  See {x:edit-prompts}.
+.h2 Q
+.term Question | A box with a list of choices whose title is the question, such as Document has unsaved changes.  See {x:view-question}.
+.term Queue | The name of a printer of the print system of the machine to which the PDF is sent.  See {x:print-sending}.
+.term Quit | The last entry of the menu bar, also {k:Ctrl-Q}.  It leaves the Editor, and prompts first when the document has unsaved changes.  See {x:edit-b-quit}.
+.h2 R
+.term Recovered document | The new document, named {c:NAME.recovered.doc}, that holds the part that could be read of a file that was cut short or damaged.  See {x:file-recover}.
+.term Red status area | The red first line of the Viewer's status bar, "PRINT FAILED - N errors - THIS PREVIEW IS INACCURATE", shown when the print failed.  See {x:print-viewer-status}.
+.term Replace | The command ({k:Alt-F9}) that changes a string into another, asking at each place or changing all of them at once.  See {x:edit-b-replace}.
+.term Restore Backup | The entry of the Document Manager that brings back a backup of a document, as a swap of the document and the backup.  See {x:str-restore}.
+.term Retrieve | The File command that loads a document from the disk into the Editor.  See {x:file-retrieve}.
+.term Revision | A note in the header of a document that says which version it is, printed by a Revision marker.  See {x:file-revision}.
+.term Ruler | The row under the status line that shows the left indent and the tab stops of the column that holds the cursor.  See {x:edit-ruler}.
+.h2 S
+.term Running head | The line of text, with a left, a center and a right part, that is printed at the top of every page of a layout; the Footer is the same at the foot.  See {x:format-page-headers}.
+.term Save | The File command, and {k:Ctrl-S}, that writes the document to the disk.  See {x:file-save}.
+.term Search | The command ({k:F9}) that moves the cursor to the next occurrence of a string, ignoring case.  See {x:edit-b-search}.
+.term Search again | The key {k:Ctrl-F9}, which repeats the last search with its method and direction.  See {x:edit-b-search}.
+.term Section | A group of blocks with one headline block and, below, its subsections.  It is the unit that you move when you rearrange a report.  See {x:view-section}.
+.term Section Edit | The mode in which only the section that holds the cursor, with its subsections, is shown; entered with {k:Ctrl-^}.  See {x:view-section-mode}.
+.term Section marker | The marker of a header or footer that prints the number, the title or both of the section on the page.  See {x:format-page-headers}.
+.term Section tag | The number that the Editor puts before a headline, such as 2.1.2. See {x:format-set-tags}.
+.term Settings directory | The directory {c:~/.strata}, or the one that {c:STRATA_HOME} names, which holds the config and the fonts files.  See {x:appcfg-dir}.
+.term Setup | The entry of the Document Manager with the settings of the user: the printer, the language of the spell check, the working directory, autosave and the like.  See {x:str-setup}.
+.term Shell escape | The ability of LaTeX to run a program from the text it reads; a print never allows it, so the text of a LaTeX marker cannot run a program.  See {x:marker-latex}.
+.term Short | The display mode in which a marker shows on the screen as a short text.  See {x:markers-screen}.
+.term Soft hyphen | A character that marks a place where a word may be broken at the end of a line, typed with {k:Alt-_}; the print breaks the word only there, and only when the line ends there.  See {x:edit-shy}.
+.term Sort | The commands of Tools, Autosort, that order the subsections of a section by their headlines or the highlighted blocks by their first columns.  See {x:edit-b-sort}.
+.term Special backup | The copy of a file that the Editor saves beside it, as {c:V2-memo.doc}, when a file of an older version is loaded.  See {x:file-backup-special}.
+.term Special variable | A variable whose name begins with a period, such as .{c:STRATA_BUILD_TYPE}, that Strata gives itself and the user cannot give.  See {x:marker-special-variables}.
+.term Spell check | The command of Tools, Spell that finds the words that are not in the dictionary and lets you correct, keep or skip each one.  See {x:spell-check}.
+.term Split | The command ({k:F2}) that cuts a column, a block or a section in two at the cursor.  See {x:edit-b-split}.
+.term Status line | The top row of the screen, which shows the file name, the attribute, the position, the section and the mode.  See {x:edit-status}.
+.term Structured | A document that is a tree of sections; the status line shows STRUCTURED EDIT. See {x:view-modes}.
+.term Subsection | A section inside another, of the next lower level.  See {x:view-section}.
+.h2 T
+.term Tab stop | A place on the ruler to which {k:Tab} moves the cursor.  It is left, right, center or decimal. See {x:format-set-tabs}.
+.term Table of contents | A page that a print makes after the title page, with the headlines of the document and the page of each; the level is stored in the document.  See {x:print-contents}.
+.term Tag | The number of a section as the Editor writes it before its headline.  See {x:format-set-tags}.
+.term Template | A document, with the extension {c:.set} or {c:.doc}, that stands for a kind of document. A new document begins as a copy of it; New lists the templates with their descriptions.  See {x:file-templates}.
+.term Terminal version | The version of the Editor and the Document Manager that draws on a text terminal. See {n:appterm}.
+.term TeX | The typesetting program on which LaTeX stands.  Equations are written in its math notation.  See {x:eq-what}.
+.term Text | The characters in a column; the smallest element of a document.  See {x:view-text}.
+.term Text block | A block of a section that is not its headline.  See {x:view-block}.
+.term Thesaurus | The command ({k:Ctrl-T}) that shows the synonyms of the word at the cursor and lets you replace the word.  See {x:spell-thesaurus}.
+.term Time | A marker that prints the time of the print.  See {x:marker-time}.
+.term Title page | A section of its own in front of the text, edited with Edit, Title.  See {x:edit-b-title}.
+.term Tools menu | The menu of {k:F12} with Macros, Library, Spell, Thesaurus, Autosort, Count, Undo and Redo.  See {x:edit-menubar}.
+.term Typeface | The panel of the Global menu that names the twenty fonts of a document.  See {x:format-typeface}.
+.h2 U
+.term Underscore | An attribute of text, set with {k:Ctrl-U}.  See {x:view-text}.
+.term Undo | Taking back the last change to the document, with {k:Ctrl-/}; Redo ({k:Alt-/}) makes it again.  See {x:edit-b-undo}.
+.term Unstructured | A document that is a run of blocks with no sections; the status line shows UNSTRUCTURED EDIT. See {x:view-modes}.
+.term UTF-8 | The encoding of characters that the terminal version needs from a terminal and that Import and Export can use as a Character Set; a character that a document cannot show becomes a question mark on Import.  See {x:convert-import-utf8}.
+.h2 V
+.term Variable | A name with a text value, given when a document is edited or printed, that the If markers of the document are compared with.  See {x:marker-variables}.
+.term Verbatim | Exactly as typed: the text of a LaTeX marker is written into the print verbatim, with nothing changed, escaped or wrapped.  See {x:marker-latex}.
+.term Viewer | The program that shows the pages of a Preview in an X11 window.  See {x:print-dviview}.
+.h2 W
+.term Wait panel | The box that shows the stage and the progress while a print or a Preview runs.  See {x:print-progress}.
+.term Whitespace | A marker that leaves a vertical space of a given height in the text.  See {x:marker-whitespace}.
+.term Winding columns | Columns in which the printed text of a block, a level or the document flows down one column and winds to the top of the next; the number, the gutter and the vertical rules are set in the Winding Column Layout panel.  See {x:format-fields-spacing}.
+.term Word | A run of characters ended by a blank, a marker or a change of attribute.  See {x:view-text}.
+.term Word count | The Tools, Count command that shows the number of words in the document.  See {x:edit-b-words}.
+.term Working directory | The directory in which a File command looks for a file and in which it makes a file whose name has no directory.  See {x:file-workdir}.
+.term Wrap around | What Search and Replace do at the end of the document: they go on from its start and stop where they began, and the message line reports this.  See {x:edit-b-search} and {x:edit-b-replace}.
+.h2 X
+.term X11 version | The version of the programs that draws in an X11 window.  See {n:appx11}.
+.h2 Z
+.term Zoom | The size of the page in the Viewer, shown on its status bar.  See {x:appx11-viewer-bar}.

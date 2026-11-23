@@ -1,0 +1,428 @@
+COLOUR IN DOCUMENTS: STUDY OF THE ORIGINAL AND A DESIGN FOR STRATA
+==================================================================
+
+Date: 2026-11-17.  Written for the owner's decision of the same day: colour
+in documents is wanted.  Task 22 had found that no field of a document is a
+colour (docs/WORKLIST.txt, the item "Print: a document with colours prints
+with colours").  This study asks what the original product (release 2.1,
+run in DOSBox-X 2025.02.01 under Xvfb on the owner's install kit) does about
+colour, and designs the feature for Strata.
+
+Every statement tagged [P] was probed in the original, [M] comes from the
+original's manuals (documentation/original/manuals-1.0, text made with
+pdftotext -layout), [S] is a fact about Strata, [D] is a design decision.
+
+
+1. THE ANSWER IN SHORT
+----------------------
+
+  1. The original has NO general colour feature.  A document cannot say
+     "this text is red" or "this block is green".  [P][M]
+  2. It has exactly one mechanism that ends in colour: two TEXT ATTRIBUTES
+     named "Printer Specific" 1 and 2 (the manual: "Printer", "Printer
+     Dependent").  What they mean is decided by the PRINTER DRIVER that is
+     chosen in Setup:
+       - on five colour-ribbon printer drivers they select the ribbon
+         colour (the Setup of the driver has a colour list for each of
+         them);
+       - on the PostScript driver (Apple LaserWriter) the first prints the
+         text as an outline and the second prints it on a light grey box;
+       - on the other drivers they do nothing visible.
+     [P][M]
+  3. The colours are NOT stored in the document.  The document stores only
+     the two attribute bits; the colour of each lives in the Setup file of
+     the program (MS.VAL) with the printer driver.  [P]
+  4. The colour screen of the original is not a document feature either: it
+     colours elements by kind (normal text, bold, headlines, markers,
+     borders, menus) and shows every attribute other than bold in one
+     alternate tone.  The two Printer attributes look like italics on the
+     screen.  [P]
+  5. The records of the document that nobody understood (BM, BC1, BV, CT,
+     CV, YC, YI) were looked at again.  They are NOT colours (section 4.6).
+     Their meaning was not found; the study says what was tried.
+  6. Strata's attribute table disagrees with the original (section 5): the
+     original's mask 02 is "Underscore Words" and 10 is "Superscript";
+     Strata writes underscore as 10.  This must be fixed together with the
+     colour work, because the colour attributes live in the same byte.
+
+Recommendation (section 6): build colour in two parts.  Part A gives the two
+original attributes a meaning (two colours of the document, chosen in the
+Print panels) and fixes the attribute table.  Part B adds free colour: any
+of the 16 palette colours for any run of text, stored in a Strata marker
+that the original reads as an unknown marker.  Both parts show on the screen
+and print with xcolor.  The print setting Print in Black and White already
+turns every colour into a grey.
+
+
+2. EVIDENCE FROM THE MANUALS [M]
+--------------------------------
+
+  - Reference, "Attributes" (Format settings, page 4-33): the attributes
+    that can be assigned are Normal, Bold, Underscore, Italics; "these
+    additional attributes are also available for text: Subscript,
+    Superscript, Strikethrough, Printer.  The Printer attribute turns on a
+    printer-specific attribute (see the Hardware section)."  The picture
+    of the Text Format panel on the same page lists the attribute choices
+    No Change, Normal, Bold, Underscore, Italics, Subscript, Superscript,
+    Strikethrough, Printer and the case choices No Change, UPPER, lower,
+    Proper.
+  - Quick Reference: SET ATTR is Alt-F6, "changes text attributes as you
+    type".  Reference "Set Attribute" (page 4-52): press SET ATTR, select
+    the attributes from the checklist, press Ins.
+  - Reference, Hardware section, the printers that mention colour (all of
+    them speak of the Printer attribute, never of a colour for a block, a
+    column or a headline):
+      Diablo 630: "prints in black and red if your printer has a
+        black/red ribbon.  Select this option at the same time that you
+        select your printer driver."
+      Epson EX-800: "prints text in two colors: primary and secondary.
+        Graphics always appear in the primary color."
+      NEC Pinwriter PS: "selects color printing if you have a Pinwriter
+        PS and a special ribbon.  At setup you can select one of eight
+        primary colors and one of eight secondary colors (see Selecting a
+        Printer Driver in Getting Started).  All characters formatted with
+        the printer attribute print in the secondary color.  Graphics
+        always print in the primary color."
+      NEC Spinwriter 3550: "prints text in red if you have a red/black
+        ribbon."
+      Okidata ML192, ML193 (and ML292/293): "You can print your document
+        in two colors by using the Printer attribute (see Set Attribute in
+        section 4).  Graphics always appear in the primary color."  Set the
+        printer's own Color option to anything but black ribbon.
+  - Getting Started, "Selecting a Printer Driver" (page 1-14): after the
+    driver is chosen "you may be prompted to select additional printer
+    options" in a panel; press Ins to use them.
+  - Reference, the picture drawing section: colour of a PIC file is
+    converted to hatch patterns, line colour is ignored by some drivers,
+    "solid colour fill" is translated into shades of grey (the pictures
+    are a different feature; they do not give documents a colour).
+  - The word "colour" in the manuals otherwise appears only in the names of
+    the display drivers (IBM Color Graphics) and in these printer notes.
+    There is no screen-colour setting and no document colour command.
+
+
+3. WHAT WAS PROBED IN THE ORIGINAL [P]
+--------------------------------------
+
+Method: a copy of the install kit as a scratch DOS drive (never the kit),
+DOSBox-X on its own Xvfb display, keys by xdotool, screenshots by xwd, the
+parallel port sent to a file (parallel1=file file:PATH timeout:3000).  The
+probe document COLP.DOC is a copy of the sample CNS.DOC with text typed in
+the original's editor.
+
+3.1 The Set Attributes menu (Alt-F6) of release 2.1, in order:
+      Normal; Bold; Italics; Underscore All; Double Underscore All;
+      Underscore Words; = Double Underscore Words; Small Caps;
+      Strikethrough; - Subscript; + Superscript; 1 Printer Specific;
+      2 Printer Specific; [Normal]
+    So the Printer attribute of the manual is two attributes in release 2.1.
+
+3.2 What each entry writes.  Each was chosen alone, a word was typed, the
+    menu was used again to go back to Normal, the document was saved, and the
+    bytes were read.  The token is 12 m f (docs/DOC-FORMAT.txt, section 4):
+      entry                    mask m   flags f (low bits)
+      Bold                      01       -
+      Underscore Words (Ctrl-U) 02       -     (Ctrl-U gives 12 02 00)
+      Italics                   04       -
+      Subscript                 08       -
+      Superscript               10       -
+      Strikethrough             20       -
+      1 Printer Specific        40       -
+      2 Printer Specific        00       01
+      Underscore All            00       02
+      Double Underscore Words   00       04
+      Small Caps                00       08
+      Double Underscore All     00       10
+    The high bit 80 of the flags byte is set on every token except the very
+    first one that follows a text with no attribute: it is a state bit, not
+    an attribute (80 is written when the token returns to Normal after an
+    attribute).  The bits 20 and 40 of the flags and 80 of the mask are never
+    written.  Choosing 1 and 2 together writes 12 40 01.
+    Cross check: the sample documents contain only the tokens
+    (00,00) (00,08) (00,80) (00,82) (01,00) (01,80) (04,00) (04,80) (10,00).
+    The token (10,00) always stands before a marker of type 32, which is a
+    note reference: superscript.  (00,08) wraps the keycap words of scr.doc:
+    small caps.  The old guess "16 is underscore" (docs/OPEN-QUESTIONS.txt)
+    was wrong.
+
+3.3 Setup of a colour printer driver: Document Manager, Setup, Primary Print
+    Driver, Epson EX-800.  The driver's options panel has four fields:
+      Text Color
+      Printer Dependent-1 Color
+      Printer Dependent-2 Color
+      Graphics Color
+    each a list of seven colours: Black, Red, Blue, Violet, Yellow, Orange,
+    Green.  The default of every field is Black.  Apple LaserWriter has no
+    colour field (Graphics Density, Page Orientation, Printer Stacks Paper,
+    Download Specification File).  Only the file MS.VAL of the program
+    differed after Setup; the saved document does not carry the colours.
+
+3.4 Print to the parallel-port file with the Epson EX-800 driver, Printer
+    Dependent-1 Red, Printer Dependent-2 Orange.  The Epson colour command is
+    ESC r n.  The text printed as
+      Centennia ESC r 1 AAAABBBBend ESC r 0 l Park
+    and a word with attribute 1 alone as ESC r 1, a word with attribute 2
+    alone as ESC r 5.  So the seven names map to the printer codes Black 0,
+    Red 1, Blue 2, Violet 3, Yellow 4, Orange 5, Green 6 (the ribbon of a
+    dot-matrix printer: its "red" is magenta ink).  Text with both
+    attributes (AAAA in a run with attribute 1 and BBBB with 1 and 2) is
+    printed in the colour of attribute 1: attribute 1 wins.  After the run
+    the driver sends ESC r 0 (back to the text colour).
+
+3.5 Print with the Apple LaserWriter driver (PostScript).  The prologue the
+    original sends defines, in its own comments:
+      "outline show - first printer attribute":  the text is drawn as a
+         stroked outline of its character paths;
+      "graybox show - second printer attribute": a box filled with 90 per
+         cent grey is drawn behind the text, then the text is shown;
+      "combinations of PD1 and PD2": both.
+    Strings are shown with the procedures ps, us and ups.  So on this
+    driver the Printer attributes are text effects, not colours.
+
+3.6 Screen.  The original's editor ran on "Alternate Color Graphics".  Pixel
+    counts of the glyph colours of the twelve attribute entries (a1 to a12)
+    and of normal text: normal text is the grey 170,170,170; Bold is bright
+    white 255,255,255; all the other eleven entries, including both Printer
+    attributes, show the same pattern (the grey replaced by one alternate
+    tone).  The panel pictures are drawn with coloured box lines and the
+    status line is inverse; element colours (headlines, markers, borders)
+    are fixed by kind.  The user cannot set them.  (DOSBox-X draws the glyphs
+    with colour fringes, so the palette index of the alternate tone was not
+    read; only that all non-bold attributes share it.)
+
+3.7 The Print Document panel of release 2.1 has "Graphics Print Options"
+    (Print Text, Print Borders, Print Pictures, Print Equations) and a
+    Printer line (Primary or Secondary driver).  No colour choice is in it.
+
+3.8 What was NOT established
+    - the meaning of BM, BC1, BV, CT, CV, YC and YI (section 4.6);
+    - the palette index of the alternate tone of the original's screen;
+    - how the five colour drivers other than the Epson EX-800 name their
+      colour lists (the manual says eight colours for the Pinwriter PS; the
+      probe used the only colour driver that is installed in the kit's
+      driver directories: epex800);
+    - what the Okidata and Diablo drivers do with the colour options (read
+      only, [M]).
+
+
+4. THE UNKNOWN RECORDS
+----------------------
+
+4.1 BM<n> (block): 0, 8, 9, 10, 11, 15, 16 in the sample files.  In the
+    header and footer blocks of every sample that has them BM is 0 (see
+    docs/DOC-FORMAT.txt; task 23).  No colour panel exists that could write
+    it; the values 8 to 16 are small integers (a mode word), not a palette
+    of 16 colours in the sense of the VGA table (the value 0, black, is
+    the value of header blocks that have no format at all).
+4.2 BC1: marks ordinary text blocks.  4.3 BV: seen rarely.  4.4 CT, CV:
+    column records, not seen in CNS.
+4.5 YCL99 and YIWN2 (header): written by the original into every document.
+    They did not change when the Setup colours or attributes changed.
+4.6 Conclusion: none of them is a colour, because the original has no
+    command or panel that sets a colour in a document, and because the one
+    place where the original stores colours (the printer driver options) is
+    the Setup file.  To find their meaning one would change each panel field
+    of the Format panels in turn; that was not done here because it does not
+    bear on the colour decision.
+
+
+5. STRATA TODAY [S]
+-------------------
+
+  - Attribute table: src/msdoc.h has ATTR_BOLD 01, ATTR_ITALIC 04 and
+    ATTR_UNDER 10 ("partially inferred").  Reading treats the mask 12
+    (02 or 10) as underscore (src/layout.c:990, src/view.c:881,
+    src/latex.c:1049, src/search.c:27).  Writing: Ctrl-U writes 10.  The
+    original reads 10 as Superscript.  Consequences: a Strata document with
+    an underscore shows as superscript in the original; the note reference
+    marks of the original's documents (10 before a marker) print underlined
+    in Strata.  All other masks and flags are kept verbatim and have no
+    effect.
+  - The Set Attributes menu (Alt-F6) has Normal, Bold, Italics, Underscore
+    Words (manual/KEYS.txt).
+  - Screen colours: src/color.c and color.h, the Colors panel of Setup, 16
+    kinds (CK_NORMAL ... CK_CURSOR), VGA palette names; separate settings
+    for the terminal and X11; the terminal reduces to 16 or 256 colours.
+  - The Printer loads xcolor already; the setting Print in Black and White?
+    (task 22) writes \PassOptionsToPackage{gray}{xcolor}.
+  - Markers: Strata-only marker types already exist (39, 41); the original
+    shows an unknown marker as a diamond and prints nothing for it
+    (docs/DOC-FORMAT.txt, section 5).  Free marker numbers: 38, 40, 42 and
+    up.
+
+
+6. DESIGN FOR STRATA [D]
+------------------------
+
+6.1 Principles
+    - Colour belongs to TEXT first (the owner wants "colour in documents";
+      the original's only colour is text).  Block, column, border and
+      background colours are later items (section 8).
+    - Files must stay readable by the original: a document made by Strata
+      with colour must open in the original, lose its colour, keep every
+      other record; a document of the original with the Printer attributes
+      must open in Strata and show and print them as colours.
+    - The screen is for editing; colours show where the screen can show
+      them.  The print is the result.
+    - A document without colour must print and save byte for byte as
+      before.
+
+6.2 PART A: the two Printer attributes are two colours (size M)
+    Attribute table fix (first, because everything depends on it):
+      - src/msdoc.h: ATTR_BOLD 01, ATTR_UNDERW 02, ATTR_ITALIC 04,
+        ATTR_SUB 08, ATTR_SUPER 10, ATTR_STRIKE 20, ATTR_PD1 40 (mask), and
+        the flags FLAG_PD2 01, FLAG_UNDER_ALL 02, FLAG_DUNDER_W 04,
+        FLAG_SMALLCAPS 08, FLAG_DUNDER_ALL 10, FLAG_STATE 80.
+      - Ctrl-U (underscore words) writes 02.  Reading takes 02 as underscore
+        and 10 as superscript.  The printer and the screen draw superscript
+        (and subscript 08, strikethrough 20, small caps flag 08, the
+        underscore flags) if the format code can: at least superscript,
+        subscript and the underscores; strikethrough and small caps if
+        cheap.  A document of the original must print its note references
+        raised, not underlined.
+      - Tests and documents of tests/data that rely on 10 as underscore
+        are corrected (grep the data for 12 10; the 55 samples carry it
+        only in front of note markers).
+    Colour attributes:
+      - The Set Attributes menu (Alt-F6) gains two entries after
+        Underscore Words: Colour 1 and Colour 2 (the bits PD1 and PD2;
+        the manual calls them colours and never names the original).  The
+        menu of Strata keeps its checklist; Colour 1 and Colour 2 can be
+        chosen with the others.  No new key; macros and Learn
+        record them as the other attribute keys do.
+      - Where the two colours are chosen: the Draft and Final print panels
+        (and the command line: --colour1 NAME, --colour2 NAME) get two
+        fields, Colour 1 and Colour 2, a pick list of the 16 VGA colour
+        names; the defaults are red and blue.  They are kept with the other
+        print settings (the way Print in Black and White? is kept).  A
+        document prints its Colour 1 text in the first colour, Colour 2 in
+        the second; both on one run print in Colour 1 (as the original: 1
+        wins).
+      - Screen: the two attributes use two new colour kinds of the Colors
+        panel of Setup, "Colour 1" and "Colour 2" (CK_COLOUR1, CK_COLOUR2;
+        defaults the same red and blue as the print), so that the user
+        sees which text is which; with no colours on the terminal they
+        are drawn like italics (the original's rule: all non-bold
+        attributes look alike) and the status line says "Attr: Colour 1".
+      - Print: src/latex.c writes \textcolor[HTML]{RRGGBB}{...} inside the
+        attribute run (the run machinery at latex.c:1049); the palette of
+        the 16 names is the VGA table of color.c (RGB values); the print
+        setting Print in Black and White? greys it by xcolor gray as now.
+        Colour 1 or 2 inside a headline: the text is coloured in the body,
+        in the table of contents, the lists and the index the entry is
+        plain (decision: contents are references, not copies).
+    Part A is complete by itself: documents of the original that use the
+    Printer attributes print in two colours, and the Editor can set them.
+
+6.3 PART B: free colour (size M to L; do after part A)
+    The attribute byte has no room for sixteen colours (three free bits at
+    most) and an unknown control byte could confuse the original's reader.
+    Use the established way: a Strata-only marker.
+      - Marker type 42, named Colour.  Payload: field 1, a text value: the
+        colour as six hex digits RRGGBB ("AA0000"), written the way the
+        existing text fields of markers are written (see f_keycap in
+        src/marker.c: the field byte, the value, NUL).  A Colour marker
+        with no field 1 ends the colour: from the marker on, text has the
+        colour of its format again.
+      - A Colour marker holds from where it stands to the next Colour
+        marker, the end of the block, or the end of the column (it does not
+        cross a block), as the attribute tokens do.
+      - How the user makes it: the command Set Colour on Alt-F9 or on the
+        marker menu (Alt-F12, MARKER, Colour) if Alt-F9 is taken (check
+        manual/KEYS.txt): the selection works like Set Attributes: with a
+        highlight the colour applies to the highlighted text (a start
+        marker before and an end marker after: one operation for Undo);
+        with no highlight it sets the colour of the text typed next.  The
+        panel lists the 16 palette colours with their names and a sample;
+        the entry "Normal" ends the colour.  A custom RRGGBB can be typed in
+        a field (#rrggbb accepted as in the Colors panel).
+      - Screen: the text of the run is drawn in the colour (the foreground
+        of the cell; the background of the line is not changed): X11 and
+        true-colour terminals show the exact colour; 256 colours the
+        nearest; 16 colours the nearest of the 16 (color_nearest16); with
+        no colours the text is unchanged (the marker diamond still shows).
+        The colours of the screen Colors panel (the kinds) are not the
+        document's colours (they stay separate: said once in the manual).
+        Contrast: a document colour equal to the screen background is
+        drawn with the foreground of the kind instead (color.h has
+        COLOR_CONTRAST_LOW).
+      - Print: \textcolor[HTML]{RRGGBB}; Print in Black and White? greys
+        it; Draft prints colour as Final (the owner's Draft rule is "same
+        as Final but with the fast fonts": say it in the manual).
+      - Save and Retrieve keep the markers as every other marker.  The
+        original shows them as diamonds and prints nothing for them: the
+        colour is lost, nothing else.
+    Colours of Part A and Part B on the same text: the marker colour wins
+    over the attribute colour.
+
+6.4 Interactions
+      - Undo and Redo: a colour change is one operation (the marker
+        insertion or the attribute token change, as Case is one).
+      - Search and Replace: markers are not text; the search skips the
+        Colour markers; an attribute search is not offered.
+      - Case (Ctrl-F6): changes the letters; markers and attributes stay.
+      - Include: the colour state does not cross a block; a part prints with
+        its own markers; the Colour 1 and 2 colours are the master's print
+        settings.
+      - Compare Document Versions: the text compare ignores markers as for
+        the other markers; a changed colour is not a difference (documented).
+      - Table of contents, lists, index (tasks 22 to 25): the entries are
+        plain text; colour never appears in them.
+      - Headers and footers (task 23): a header with Colour attributes is a
+        "header with other content" that the panel shows read-only (as it
+        does for other attributes); it prints with the colour.
+      - Equations, keycaps and pictures keep their own colours.
+      - Limits: 16 named colours in the panel plus any RRGGBB; a block may
+        hold at most 200 Colour markers (the loader limits apply:
+        docs/DOC-FORMAT.txt section 8).
+      - The file format document and Appendix B of the manual gain the
+        rows: the attribute table (3.2), marker 42, and the print fields.
+
+6.5 What is NOT done (and why)
+      - Background colour, block colour, column colour and border colour:
+        no original model to follow and no record; they are separate items
+        if wanted (a record per block, BG-like).
+      - Colours stored in Setup per printer (the original's way): Strata
+        keeps the two colours with the print settings so that a printed
+        document does not depend on one machine's Setup.
+      - Interpreting BM, BC1, BV, CT, CV, YC, YI: unrelated to colour.
+
+6.6 Order of work, sizes and files
+      A1 attribute table fix and tests (S): msdoc.h, editor.c (Ctrl-U),
+         layout.c, view.c, latex.c, search.c, compare.c, tests/data files.
+      A2 colour attributes: menu, record, screen kinds, print (M): ui.c,
+         editor.c, view.c, color.c, color.h, config.c (the kinds' keys),
+         str.c (Colors panel gains two kinds), latex.c, printmenu.c,
+         printjob.c, printcli.c, strprint.c, stred.c.
+      B1 marker 42, panel, command, Undo (M): marker.c, markerlist, ui.c,
+         editor.c, new src/colourmenu.c.
+      B2 screen drawing and print (M): view.c, layout.c, latex.c.
+      Tests, documents: as the task file says.  Total about two to three
+      days of work; Part A alone is one day.
+
+
+7. TESTS THE DESIGN NEEDS (summary; the task file has the list)
+---------------------------------------------------------------
+
+  A document without colour: print LaTeX identical, saved file identical
+  (96 documents of tests/data and the samples).  A colour document: the PDF
+  page rendered, the pixel colours sampled (red where Colour 1 is red).  Each
+  check must FAIL when the feature is switched off (the mutation rule), and
+  must not use an input that already holds the expected result (the Border
+  checks of task 25 passed vacuously for this reason).
+
+8. OPEN QUESTIONS FOR THE OWNER
+-------------------------------
+
+  1. Is "two colours like the original" (Part A) enough for the first
+     release, with free colour (Part B) later?  The design lets Part A ship
+     alone.
+  2. Strata's names for the two attributes: "Colour 1" and "Colour 2" (the
+     manual cannot say "Printer Specific").  Agreed?
+  3. Block and background colour: wanted?  (Not in the original.)
+  4. The attribute table fix changes what Strata writes for underscore from
+     10 to 02.  Strata documents written earlier with Ctrl-U are marked
+     with 10 and will then read as superscript; the project is unreleased
+     and the test data is the only affected set.  Acceptable?
+  5. Draft prints colours (decision above); the owner may want Draft in
+     black and white by default: a one-line change.

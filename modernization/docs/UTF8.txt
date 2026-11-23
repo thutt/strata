@@ -1,0 +1,904 @@
+UTF-8 FOR THE TEXT OF STRATA DOCUMENTS: A STUDY
+===============================================
+
+Status: study and recommendation.  Nothing in src/ or tools/ was changed.
+The experiments are in results/experiments/ (README.txt there).  Every
+statement below is marked with where it comes from:
+
+  [code]   read in the source of this project (file named)
+  [doc]    read in a document of this project (file named)
+  [tried]  measured or run on this machine during the study
+  [est]    an estimate or a judgement of the author, not a measurement
+
+What was not tried is said so.  The machine: Debian, TeX Live 2026
+(pdfTeX 1.40.29, XeTeX 0.999998, LuaHBTeX 1.24.0), 635 font files listed
+by fontconfig of which 302 are Noto, the aspell program with an English
+dictionary, and the hunspell dictionary files en_US (the hunspell program
+itself was not found in PATH).
+
+
+1. THE PLAIN ANSWER
+-------------------
+
+The owner asked: "This should allow all other languages to use the
+processor, right?"
+
+Not by itself.  UTF-8 makes the characters of every language storable
+in a document.  A language can use the processor only when its text can
+also be
+
+  - typed       (keyboard input, input methods),
+  - shown       (screen: fonts, cell width, shaping, direction),
+  - edited      (cursor, Delete, Backspace, Search, word and sentence
+                 breaks work on what a reader calls a character),
+  - broken into lines (rules differ: no spaces in Chinese, Japanese, Thai),
+  - typeset     (the Printer: fonts, direction, line breaking,
+                 hyphenation), and
+  - checked     (a dictionary and a thesaurus for that language).
+
+Some scripts need far more work than others:
+
+  Easy      Latin with accents, Greek, Cyrillic (one code point per
+            character, left to right, spaces between words).  This is
+            the European languages.  UTF-8 plus the work of stage 1
+            below makes them fully usable.
+  Medium    Chinese, Japanese, Korean: a character takes two cells on a
+            screen, there are no spaces between words, line breaking has
+            rules, and typing needs an input method.  Stage 2.
+  Hard      Arabic and Hebrew (right to left, a mixed line has two
+            directions, Arabic letters change shape), Devanagari and
+            the other Indic scripts, Thai (several code points make one
+            visible character, shapes change, no spaces between words).
+            Stage 3.  The study recommends that these are first made
+            correct in the printed output and only later in the
+            Editor window (section 12).
+
+UTF-8 is necessary for all of them and enough for none.  The rest of
+this document goes through each layer: what works now, what must change,
+what it costs.
+
+
+2. HOW TO READ THE COSTS
+------------------------
+
+The costs are sizes of work in the code that exists, not days.  S is a
+change in a few functions of one file; M is a change that reaches several
+files or a new module of a few hundred lines; L is a change in the data
+model that every module that touches text must follow, or an item that
+needs a design decision first.  [est] throughout.
+
+The code that touches text, by size [code]: msdoc.c 2168 lines (reader
+and writer), editor.c 2416, layout.c 1394, ui.c 3119, term.c 631,
+termbuf.c 288, term_x11.c 1376, latex.c 4181, spell.c 2339,
+thesaurus.c 1108, macro.c 891, fileops.c 1200, export.c 544.
+cp437_uni (the table from CP437 to Unicode) is used in 9 files; TK_CHAR
+is used in 10 files.
+
+
+3. THE FILE FORMAT (docs/DOC-FORMAT.txt, src/msdoc.c)
+-----------------------------------------------------
+
+3.1 What it is now
+
+  - "Character set is IBM CP437; text is not translated." [doc]
+  - A text record (T) holds the text of one column up to a NUL.  Bytes 20
+    to FF are characters; 1D is the end of a line; 01 c is a literal c
+    (used for the glyphs of the control range, such as the bullet 01 07);
+    10 f n is a tab; 12 m f an attribute; 13 starts a marker, which
+    nests whole records; 1A, 1C, 1E and others are opaque controls. [doc]
+  - The reader builds tokens of 4 bytes (kind, esc, a, b; a TK_CHAR has
+    its byte in a).  The text is a list of tokens, so the Editor never
+    takes a byte of a document as a unit of its own: it takes a token.
+    [code: msdoc.h]
+  - The header is a list of records.  The first is *R2.  The reader checks
+    only that the file starts with "*R"; it does not read the digit.
+    [code: msdoc.c parse_doc]
+  - Unknown records are kept as raw bytes and written back unchanged.
+    [doc: DOC-FORMAT.txt section 7]
+
+3.2 What the documents hold today [tried]
+
+  hibytes (experiments) read 94 documents (the manual, the samples of
+  the owner, the sample documents of the project, the templates) with the
+  reader of the Editor: 1,908,026 text tokens.  Text bytes 80 to FF:
+  48 tokens in 23 documents (bytes 81, 82, 85, 94: u with diaeresis,
+  e acute, a grave, o with diaeresis).  677 tokens are stored as 01 c.
+  No tab has a fill or width operand of 80 to FF; 63 attributes have the
+  flags byte 80; 1 header record and 1 marker payload hold a byte of
+  80 to FF.  So the documents that exist barely use the upper half of
+  CP437 (48 of 1.9 million characters), and the risk of moving them is
+  small.  The risk is in the operand bytes, below.
+
+3.3 Do the bytes of the structure clash with UTF-8?
+
+  UTF-8 has these byte classes: 00-7F one byte; C2-F4 the first byte of
+  a sequence; 80-BF the later bytes.  Every byte of a sequence of 2 to
+  4 bytes is 80 or higher.
+
+  - Structure bytes 00 to 1F (NUL, 01, 10, 12, 13, 1A, 1C, 1D, 1E, CR,
+    LF) can never be part of a UTF-8 sequence.  There is no clash, and a
+    reader can still scan a T record sequentially for 13 and NUL. [code]
+  - Operand bytes can be 80 or higher: the second byte of a tab (width),
+    and the flags byte of an attribute (80 seen 63 times).  After 10 and
+    12 the reader takes the operand first, so a reader that obeys that
+    rule is safe.  But the record as a whole is then NOT valid UTF-8, and
+    a program that validates a file from end to end (a file viewer, a
+    version control tool, an editor of another maker) will say that it
+    is not UTF-8.  [tried: u8core, test "Upgrade of one T record"]
+  - A tab written 10 f n with the fill character f of 80 or more would
+    be read as a sequence start by a UTF-8 reader, so in the new format a
+    fill character should be written as a code point in UTF-8 (the fill
+    is 20 in every document read) or the operand rule must be kept as
+    it is.  No document uses it.
+  - The byte 7F is the house glyph in CP437 (U+2302) but DEL in UTF-8;
+    the upgrade must write U+2302, not 7F.  [est from the CP437 table]
+  - The byte FF is the no-break space of CP437.  The table cp437_uni of
+    the Editor maps FF to U+0020 (and also 00 and 20 to U+0020), so
+    223 of the 224 bytes 20-FF map back to themselves.  An upgrade must use
+    U+00A0 for FF.  This is a defect of the table for this purpose, not
+    of printing today.  [tried: hibytes]
+  - Bytes below 20 that are glyphs, written 01 c: the bullet 01 07 becomes
+    U+2022 (a normal character in a UTF-8 file).  The 01 escape remains
+    needed only for a control code point that must not be taken as
+    structure.  [est]
+
+3.4 The three choices of the worklist
+
+  A. Keep the format, convert on load and save.  Every character that is
+     not in CP437 is lost at the first save (shown as ?).  This makes the
+     Editor able to read UTF-8 text files (Import) but does not make
+     documents hold other languages.  It is the cheapest and does not
+     answer the owner.  Cost S.
+
+  B. A new format version with a flag "text is UTF-8".  Old files read as
+     CP437 with the table, and are written back as they were (CP437)
+     unless the owner converts them.  A file with the flag holds UTF-8.
+     Cost M for the reader and writer, but see 3.5.
+
+  C. A mapping layer (a table from code points to private bytes 80-FF
+     per document).  It keeps the file unchanged, but a document that
+     uses 400 characters needs a table, the table has to travel in the
+     file, and no other program can read the result.  Not recommended.
+
+  Recommendation: B.
+
+3.5 How the flag is stored, and what the other programs do
+
+  - What an older program that reads the existing document format does
+    with a flag cannot be tried: no such program is on this machine, and
+    the format document says only release 2 was studied
+    [doc: DOC-FORMAT.txt section 6].  The study cannot say that it
+    refuses an unknown record or a changed *R digit.  [not tried]
+  - What the present Strata does: it reads only "*R", so a file that says
+    *R3 or has a new header record is read as CP437.  A UTF-8 file is then
+    shown as CP437 glyphs, one for each byte, and is written back
+    unchanged if the text is not edited (the tokens hold the bytes).
+    [code, and u8core test of the token round trip]
+  - Choice of flag.  The records of the 94 documents begin with *R, MR,
+    MD, MA, PM, PP, P1-P5, F.., FN, DP, DC, DD, DE, DF, DN, N.., O.., YC,
+    YI and so on [tried].  A new header record, written once after *R2
+    (for example a record that begins with a letter that no document
+    uses), is the choice that keeps every other record as it is and that
+    the existing reader keeps as raw bytes.  Changing the digit of *R is
+    shorter but is the one change that the existing program is most
+    likely to look at; the study cannot tell what it does.  Recommend the
+    new record, and a name for it only after the owner decides.
+  - Which one a document is.  The Editor says it in the Status line (the
+    word CP437 or UTF-8 in the line that has the name and the Attr
+    field) and in the Save File and Global panels as a field "Character
+    set".  A document opened as CP437 is saved as CP437 until the owner
+    selects UTF-8 (a conversion that cannot lose anything).  A character
+    that is not in CP437 typed in a CP437 document asks: convert the
+    document to UTF-8, or refuse the character.  [est]
+  - Library files (.LIB), macro files (.MAC) and templates (.SET) use the
+    same container [doc: DOC-FORMAT.txt section 1], so each has the
+    same flag and the same question when text is moved between a CP437
+    and a UTF-8 file (a clip is converted on insert).
+
+3.6 Other text in the format
+
+  The description (MD) and author (MA) records, the file names of Include
+  and Picture markers, the legends of Keycap markers, the strings of Line
+  and Date markers, the names of Named formats, and the nested records
+  of notes and comments are all text in the same bytes.  They are all
+  CP437 today, so the flag must apply to the whole file, not only to
+  T records.  The file names of the markers are looked up in the file
+  system of the machine, which is UTF-8 on this system; how a CP437 byte
+  in such a name is turned into a file name today was not examined.
+
+  Cost of section 3: reader and writer M; the table fix S; the flag and its
+  panels M.
+
+
+4. THE TEXT BUFFER AND EVERY PLACE THAT TREATS A BYTE AS A CHARACTER
+-------------------------------------------------------------------
+
+The Editor holds tokens, and tokens are 4 bytes.  The test program u8core
+holds a code point in the three bytes esc, a and b of a new token kind
+(21 bits are needed, 24 are there), keeps sizeof(Tok) at 4 (checked with a
+static assertion) and so keeps the memory of a large document the same
+[tried].  So the buffer does not grow.  What follows is every place found
+that takes a token for a character, and what it needs.
+
+  Where                  Today [code]                      Must change
+  ---------------------  --------------------------------  --------------
+  Token (msdoc.h)        a is the CP437 byte               code point in
+                                                           esc,a,b: S
+  Cursor movement        one token per step                by cluster (a
+                                                           base and its
+                                                           marks): M
+  Backspace              deletes one token                 one code point
+                                                           (as typed): S
+  Delete                 deletes one token                 one cluster: M
+  Column counts, ruler,  one token is one cell (layout.c,  cell width of
+  table                  LRow and Cell keep a CP437 ch     the code point
+                         in a byte per cell; layout.h)     (0, 1, 2): L
+  Tabs                   tab stops are counted in cells    follow the cell
+                                                           width: M
+  Blocks, selection      by token                          no change if
+                                                           tokens stay the
+                                                           unit
+  Search, Replace        needle is a char string and each  needle becomes
+                         token is compared after an        code points;
+                         ASCII only to_lower (editor.c     fold with a
+                         ceq, match_at)                    table: M
+  Word, letter tests     is_alpha/is_alnum are ASCII;      Unicode letter
+  (Thesaurus, Delete     tok_letter adds CP437 80-A5       table: M
+  Word)                  (editor.c)
+  Sort                   sort_weight uses ASCII to_lower   collation: M
+                         (editor.c)                        (see 10)
+  Compose                Alt-F1 is not implemented         design it for
+                         [doc: NOT-IMPLEMENTED.txt]        Unicode: M
+  Markers                payload is raw bytes in a table   same flag as the
+                         outside the token                 file: S
+  Undo                   the Editor has no undo            nothing
+                         [doc: NOT-IMPLEMENTED.txt]
+  Library, clipboard     copies of tokens (tok_dup)        convert on
+                                                           insert: S
+  Keyboard macro         keys are int; a character key     see 5.3: M
+  recorder               above 255 is dropped (macro.c)
+
+What u8core measured on the sample text in 12 lines of 12 scripts [tried]:
+
+  - Counting the sample lines: Latin, Greek, Cyrillic, Hebrew and Arabic
+    have as many cells as code points (82, 75, 89, 52, 92); Chinese 32
+    code points are 64 cells; Japanese 52 are 102; Korean 37 are 65;
+    Devanagari 87 code points make 70 clusters and Thai 57 make 44.  So
+    code points, cells and clusters are three different numbers for the
+    last five scripts, and the Editor today has one number.
+  - Edit test: the text e, U+0301 (combining acute), x.  Backspace after
+    the accent removes the accent only; Delete before the e removes the
+    e and its accent as one cluster.  Both can be done in a few lines.
+  - The table of widths of the project agrees with the libc wcwidth for
+    all code points that matter for the sample text (the numbers above are
+    the same under both: the columns "cells" and "libc" of the output
+    are equal in every line).  The tables differ on 53,592 of the code
+    points 20 to 2FFFF, of which the first ones are the C1 control codes;
+    the table of the project was not made complete.  [tried]  A real
+    table (from the C library or generated from Unicode data) is needed.
+  - Damaged UTF-8 (a lone continuation byte, cut sequences, an overlong
+    form, a surrogate, a value above 10FFFF, then a good 4 byte
+    character): 18 bytes of input gave 15 code points, 9 of them damaged
+    sequences shown as U+FFFD.  A
+    reader that shows U+FFFD and keeps going does not hang or lose the
+    rest of the line.  [tried]
+
+Cost of section 4: M for the editing functions, L for layout.c because
+a cell is no longer one token and one byte (a wide character takes two
+cells, a combining mark takes none).  The part of layout.c that holds
+rows (LRow, LF_TEXT/LF_DENSE/LF_NEAR/LF_WIDE) stores the character of a
+cell in a byte, and so changes to 16 or 32 bits or reads it from the text
+(LF_TEXT already does that). [code]
+
+
+5. KEYBOARD INPUT
+-----------------
+
+5.1 The terminal [code: term.c; tried: termkeys.sh]
+
+  - The terminal version reads a UTF-8 lead byte of C0 or more, takes
+    1 continuation byte for C0-DF and 2 for E0 and more, and then maps the
+    code point to CP437 with cp_to_437.  If the code point has no CP437
+    place the key is dropped (K_NONE).
+  - The defect of the four byte character, tried: typing a, e acute, a
+    smiley (U+1F600, bytes F0 9F 98 80), b, a Chinese character, c, alpha
+    and d into the Editor gave the text "a e-acute C-cedilla b c alpha d".
+    The smiley became C-cedilla: the lead F0 is treated as a three byte
+    lead (need is 2 for any lead of E0 or more), the fourth byte 80 is then
+    read as a key of its own and 80 is the CP437 C-cedilla.  The Chinese
+    character was dropped without a message.  The fix for the defect is S
+    (need is 3 for F0 and more) and is useful before any other step.
+  - The locale: no program of the project calls setlocale [code: grep].
+    The libc functions of case and width (towlower, wcwidth) need
+    setlocale with a UTF-8 locale; C.UTF-8 exists on this machine and
+    u8core used it [tried].  Whether the machines of the owner's users
+    have a UTF-8 locale was not examined.  The terminal output already
+    is UTF-8 whatever the locale is (term_present writes every cell with
+    utf8_encode) [code].
+
+5.2 X11 [code: term_x11.c]
+
+  - Keys are read with XLookupString, which returns Latin-1 bytes in the
+    locale of the program; a byte of A0 or more goes through
+    latin1_to_437.  There is no input method: no XOpenIM, XCreateIC,
+    Xutf8LookupString or XFilterEvent.  So dead keys of a European
+    keyboard may work if the keyboard map gives the Latin-1 letter
+    directly [not tried], but Chinese, Japanese and Korean cannot be
+    typed, and neither can anything outside Latin-1.
+  - What must change: setlocale, XSetLocaleModifiers, XOpenIM and an
+    input context for the window, XFilterEvent in the event loop, and
+    Xutf8LookupString (it returns UTF-8 for a composed text).  For CJK,
+    the input method draws a pre-edit string: the style "over the spot"
+    or "root" is simplest, since the Editor window then needs no change.
+    Cost M.  Not tried: it needs an input method (ibus, fcitx) that is
+    not on this machine [est: not checked].
+
+5.3 Key values and macros [code: term.h, macro.c]
+
+  - A key is an int: the low 16 bits are the key (a character below 256 or
+    a special key from 0x0F00 and 0x1000 up) and the bits from 0x10000 are
+    the modifiers (KM_SHIFT, KM_CTRL, KM_ALT).  A code point of 0x0F00 to
+    0x11FF (Tibetan, Myanmar, Hangul Jamo) would be taken for a special key
+    (K_RESIZE, K_UP, ..., K_F1), and a code point above FFFF would meet
+    the modifier bits.  The key values must be moved: the special keys
+    and the modifiers to values above 0x10FFFF.  Every user of K_ is
+    touched, but each change is the same.  Cost M.
+  - The macro file stores a character key as one byte (32 to 255); a
+    character key above 255 is skipped without a message (macro_encode).
+    A UTF-8 macro file needs the same flag as a document.  Cost S to M.
+
+
+6. THE SCREEN
+-------------
+
+6.1 The terminal [code: termbuf.c, term.c; the box drawing tried]
+
+  - The cell buffer keeps one 16 bit code point and one 8 bit attribute per
+    cell (u16(cp) in term_putu).  A code point above FFFF (some CJK, all
+    emoji, and the characters of historic scripts) is cut: this is a
+    limit of the buffer, not of the terminal.  There is no way to say that
+    a cell is the second half of a wide character, no zero width cell for a
+    combining mark, and no place for a cluster that has a base and two
+    marks.
+  - The terminal draws what it is sent and decides the width itself.
+    Strata writes each cell as one UTF-8 character at a cursor position
+    that it computed.  If the terminal thinks a character is wide and
+    Strata thinks it is one cell, every cell to the right moves by one;
+    if both agree, a wide character needs a blank cell after it in the
+    buffer.  Whether a given terminal agrees with wcwidth for a given
+    character is not something the program can ask (a few terminals answer
+    a cursor position report, which could be used as a test at start); not
+    tried, because a document cannot hold such a character until the
+    work is done.
+  - Combining marks: how a terminal draws a mark that is written after its
+    base with no cell of its own was not tried.
+  - The lines and boxes of the Editor (menus, panels, the Document Manager
+    frame) are drawn with CP437 characters through term_put (a byte), which
+    are converted to U+25xx by cp437_uni at once.  The program writes UTF-8
+    already, so the boxes keep working with no change as long as term_put
+    exists for the program's own drawing: the user interface keeps using
+    the byte API and only the document text uses term_putu with a code
+    point.  Tried: the Editor draws them as box characters in tmux today
+    (the Document Manager frame was seen).  Cost S.
+  - Reverse video, the cursor (a solid block with its own character), the
+    keycap box and the underline all assume one cell per character (draw
+    functions of term_x11.c; the terminal path uses attributes).  They
+    follow the width.
+
+6.2 X11 [code: term_x11.c; tried: fc-list, fc-match]
+
+  - The default is Xft with "DejaVu Sans Mono" in four styles and one
+    fallback font, "DejaVu Sans", chosen by XftCharExists for each
+    character; if neither has the character the first is used, and the
+    glyph is a box or nothing.  STRATA_X11_XFT chooses another family.
+    The path without Xft uses 16 bit core fonts (XDrawImageString16).
+  - Each character is drawn alone at x*cell width.  So a wide character
+    is drawn into one cell, and Arabic and Indic letters cannot be joined
+    or reordered: shaping needs a run of text, not one character.
+  - Coverage (fontconfig on this machine) [tried].  DejaVu Sans covers
+    Greek, Cyrillic, Hebrew and Arabic letters; it has no CJK, Devanagari
+    or Thai.  DejaVu Sans Mono has Greek, Cyrillic, Arabic and the box
+    characters, and fc-list found no Hebrew in it (its mono families with
+    Hebrew: 2).  For a Chinese character fc-match chose "Noto Sans Mono
+    CJK JP", for Hebrew FreeMono; the program does not ask fontconfig:
+    it opens two fonts by name.  So Greek and Cyrillic and Hebrew show
+    with the fallback that exists; CJK, Devanagari and Thai would show
+    nothing until the fallback asks fontconfig for a font with the
+    character (FcFontMatch with a charset, or FcFontSort) and caches it.
+    Cost M.
+  - Cell width of the fallback font: the glyphs of a proportional fallback
+    are not as wide as the cell; they are drawn at the cell's left edge, so
+    a letter of DejaVu Sans looks spaced out or touches its neighbour.
+    CJK glyphs are drawn at two cells.  [est from the code; not tried]
+
+Cost of section 6: terminal S for the buffer (32 bit cp, a flag for the
+second cell of a wide character, a list of marks); X11 M.
+
+
+7. SCRIPTS THAT NEED MORE THAN A CODE POINT FOR A CHARACTER
+-----------------------------------------------------------
+
+7.1 What each needs, and the order of support
+
+  Script group                 Needs from the Editor           Stage
+  ---------------------------  ------------------------------  -----
+  Latin (with accents),        One cell per code point; a      1
+  Greek, Cyrillic, Armenian,   composed and a decomposed form
+  Georgian                     of an accent must both work
+                               (e + U+0301; Vietnamese needs
+                               marks on one base)
+  Chinese, Japanese, Korean    Cells of width 2; line breaking 2
+                               with no spaces; input method
+  Combining marks in the       Zero width cells; cursor and    2
+  scripts above (accents)      Delete by cluster
+  Hebrew, Arabic               Bidirectional order; cursor     3
+                               in a mixed line; Arabic
+                               shaping (4 forms of a letter,
+                               ligatures)
+  Devanagari and other Indic   Clusters of several code        3
+  scripts, Thai                points; reordering; shaping;
+                               Thai needs a dictionary to
+                               find words
+
+7.2 Right to left (Arabic, Hebrew)
+
+  - The order of the letters in the file is the order in which they are
+    typed (logical order).  The order on the page is another (visual).
+    A line that mixes Latin text, numbers and Hebrew has several runs, each
+    with its own direction; the rule is the Unicode bidirectional
+    algorithm.  The cursor moves in logical order but appears to jump at
+    the edge of a run.  The Editor would need the algorithm (its tables
+    are large; the C library has none) or a library (FriBidi), which the
+    task says not to take without the owner.
+  - Tried: LuaLaTeX with babel and bidi=basic set Hebrew and Arabic in a
+    40 mm measure in the right order, broke the lines, and put an English
+    sentence with a Hebrew word in the middle of a line in a good order
+    (experiments, t7).  XeLaTeX without a bidi package put the words of the
+    Hebrew line in the left to right order (t3, t5): a line that reads
+    wrong from the right.  polyglossia is installed and was not tried.
+
+7.3 Shaping and combining (Arabic, Indic, Thai)
+
+  - Tried: the Arabic text set by XeLaTeX and LuaLaTeX with Noto Naskh
+    Arabic appears joined (t3, t4, t7); the Devanagari and Thai lines
+    appear with their marks and signs around the consonants.  This was
+    judged by looking at the PDF pages; nobody who reads these scripts
+    checked them, so "correct" is not claimed.  The engines use HarfBuzz
+    (LuaHBTeX) or the shaper of XeTeX with the font.
+    The terminal and X11 drawing of the Editor use one character a cell
+    and cannot do this [code].
+  - Thai has no spaces between words.  Tried: XeLaTeX with the Thai text
+    in 40 mm and no line breaker gave lines wider than the measure (t5);
+    with \XeTeXlinebreaklocale "th" it broke the lines
+    between words (t5).  So the engine can do it with the ICU data of the
+    system, with nothing in Strata.
+
+7.4 Wide characters (Chinese, Japanese, Korean)
+
+  - Tried: XeLaTeX without xeCJK did not break a Chinese line, the line
+    went past the margin (t5, t3: Japanese line); with xeCJK in 40 mm the
+    Chinese and Japanese lines break between characters and the Korean
+    line breaks at spaces (t6).  The rules about marks that may not
+    begin or end a line (kinsoku) belong to xeCJK; whether each one holds
+    in the PDF was not checked.  xeCJK is installed; luatexja is
+    not (kpsewhich).  The CJK package of pdfLaTeX is not installed.
+  - Fonts: Noto Serif CJK in three languages (SC, JP, KR) and Noto Sans
+    CJK, IPA Gothic, Droid Sans Fallback.  The same code point has
+    different glyphs in Chinese, Japanese and Korean fonts, so the
+    language of the text selects the font (see 9).
+
+7.5 What the study recommends
+
+  Support, in this order:
+    1. Stage 1: scripts of one code point per character (section 12).
+    2. Stage 2: wide characters, combining marks, and the input method.
+    3. Stage 3a: Hebrew and Arabic, Indic scripts and Thai typeset
+       correctly by the Printer, stored in the file, shown in the Editor
+       in logical order, one code point per cell, with a mark on the
+       Status line that says that the screen is not the page.
+    4. Stage 3b: a visual Editor for right to left text.  Do it only if
+       the owner wants users of those languages to work in the Editor
+       window; it is the largest item and needs a library or a large
+       table.
+  Only to be shown correctly in the output: Arabic shaping, the Indic
+  scripts and Thai.  Their correct drawing on the screen is not needed to
+  make a correct page.
+
+
+8. THE PRINTER (src/latex.c, docs/PRINT-LATEX.txt)
+--------------------------------------------------
+
+8.1 What it does now [code, doc]
+
+  - The preamble is pdfLaTeX with fontenc T1, inputenc utf8 and lmodern
+    "so the preamble does not depend on fonts of the system".  Each
+    character is written by put_cp437: a TeX special is escaped; ASCII is
+    written as it is; a character that is Latin-1 or in the box block
+    U+2500-259F, or in the table symdefs, goes out as UTF-8 for inputenc;
+    any other is written \strmiss{XXXX}, prints [U+XXXX] in a small
+    typewriter font and is told in the Error Log as "a character no font
+    has".  char_known decides.
+  - The route of the Preview is "latex" (DVI), drawn by dviview.
+
+8.2 What pdfLaTeX does with the sample text [tried: t1, t2]
+
+  - Greek, Cyrillic, Hebrew, Arabic, Chinese, Japanese and Devanagari
+    fail with the preamble of the Printer: 397 errors "Unicode character
+    ... not set up for use with LaTeX" and a page of Latin text with holes
+    (t1).  The accented Latin letters come out.
+  - With babel for Greek and Russian (t2): 137 errors.  The log says
+    "Encoding scheme LGR unknown" and "T2A unknown": the font encodings
+    for Greek and Cyrillic are not installed here.  So even stage 1 is
+    not possible with pdfLaTeX on this machine without more TeX packages
+    (the packages that hold the LGR and T2A encodings and their fonts).
+
+8.3 XeLaTeX and LuaLaTeX with fontspec and Noto fonts [tried: t3-t7]
+
+  - All seven scripts come out on one page of PDF with no error in both
+    engines (t3, t4).  The fonts used are listed in the README of the
+    experiments.
+  - Missing glyphs: 11 in XeLaTeX and 42 in LuaLaTeX.  They are of two
+    kinds.  (1) The full stop (U+002E) is not in Noto Serif Hebrew, so a
+    Hebrew sentence that ends with a period shows a box.  (2) A line that
+    has Hebrew or Arabic in the middle of Latin text, with the main font,
+    shows boxes for the Hebrew letters, because the font of the line has
+    none.  The engines do not change font by themselves for one character.
+    So the Printer must split the text into runs of one script and write
+    the font of each run (a segmenter that is the counterpart of the cluster
+    code of the Editor), or use the fallback of luaotfload (not tried).
+    Cost M.
+  - bidi: see 7.2.  Line breaking of CJK and Thai: see 7.3 and 7.4.
+  - Equations: TeX math stays.  Not tried with unicode-math.  The manual
+    chapter on equations (46 pages) printed with the same page count
+    in both engines after the swap below, but 367 lines of 1910 differ with
+    XeLaTeX and 162 with LuaLaTeX; the cause was not examined (the math
+    fonts are the obvious suspect).
+
+8.4 What each choice does to the pages that exist [tried: engine-compare.sh]
+
+  The test took the 27 documents of the reference manual, produced the
+  .tex with the Printer (strprint --tex-only), changed only the preamble
+  (swapengine.py: Latin Modern as OpenType through fontspec, TeX ligatures
+  off so that a typed " and -- are not changed) and ran XeLaTeX and
+  LuaLaTeX; the baseline is the PDF of the Printer today.
+
+    Engine    Pages same   Pages whose text is   Lines that differ
+              in all 27    identical (of 790)    (of 27,821)
+    XeLaTeX   yes          711                   497  (1.8 percent)
+    LuaLaTeX  yes          696                   343  (1.2 percent)
+
+  The page count of every document is the same (790 pages in all).  The
+  text of about 10 to 12 percent of the pages differs on some line (the
+  figures are after reading the typographic apostrophe as a plain one,
+  which is a setting of the font and not of the line breaking).  The cause
+  of the line differences was not examined; font metrics and kerning of the
+  OpenType font against the Type 1 font are the likely reason [est].  So
+  the page counts are kept, but not the line breaks, if the engine is
+  changed for the manual.
+
+  Recommendation: do not change the route for a document that has no
+  character outside CP437 (a CP437 document, and a UTF-8 document with
+  only such characters, goes to pdfLaTeX as today): the manual and the
+  documents that exist then print as they do now, with no difference at
+  all.  Use LuaLaTeX (or XeLaTeX with xeCJK for CJK) only for a
+  document that has a character that pdfLaTeX route cannot set.  The
+  engine is chosen by Strata from the content, and the Print panel says
+  which one.  Change the route for everything only if the owner agrees
+  that line breaks of the existing documents may move.
+
+8.5 Languages in TeX [tried: kpsewhich, language.dat]
+
+  - babel (with Lua) and polyglossia are installed.  The hyphenation
+    patterns on this machine are English only: language.dat of this TeX
+    Live lists english and the dummy languages.  Other languages break
+    lines without hyphenation until the patterns are installed.
+  - A language of a part of the text is written \foreignlanguage{..}{..}
+    or the block-level equivalent.  That needs the language of a block
+    (section 9).
+  - Cost: the writer of the preamble and of the text by script runs M;
+    the choice of the engine and the check for the engine at Print S.
+
+Cost of section 8: M to L.  The risk to the pages that exist is nil if the
+recommendation is followed.
+
+
+9. THE LANGUAGE OF A DOCUMENT, A SECTION OR A BLOCK
+---------------------------------------------------
+
+The worklist says that the format has a language for hyphenation and the
+dictionary.  What was found [doc, code, tried]:
+
+  - docs/DOC-FORMAT.txt has no language record.  The 94 documents have no
+    header record that names a language (records seen: section 3.5).
+  - The only language of the project is a setting of the user: Dictionary
+    Language in Setup, stored as spell_language= in ~/.strata/config, a
+    code such as en_US; its use for hyphenation is not implemented
+    (Hyphenation is listed in docs/NOT-IMPLEMENTED.txt).  [doc: SPELL.txt,
+    NOT-IMPLEMENTED.txt; code: config.c, spell.c]
+
+So a per-block or per-section language does not exist and must be added:
+a new property record (a block record and a global header record for the
+default) whose code is chosen from the codes that are not in use (the B
+records seen in the documents are BF, BG, BL, BM, BN, BR, BS and BW), with
+a language tag such as de or ar.  Without the property the Editor uses the
+setting of the user, as today.  The language drives four things: which
+dictionary Spell uses, which hyphenation and babel language the Printer
+writes, which CJK font (Chinese, Japanese or Korean glyphs of the same code
+point) is used, and which rules apply to case (Turkish).  Cost M, and it is
+an extension of the format, so it gets the same flag question as 3.5.
+Strata keeps a record it does not know as raw bytes [doc: DOC-FORMAT.txt
+section 7]; what an older program does with one was not tried.
+
+
+10. SPELL, THESAURUS, SORT, CASE, SEARCH, WORDS
+-----------------------------------------------
+
+10.1 Spell Check [doc: SPELL.txt; code: spell.c; tried]
+
+  - The program is aspell or hunspell, started with UTF-8 (aspell
+    --encoding=utf-8, hunspell -i utf-8).  The text is converted from
+    CP437 to UTF-8 on the way out (spell_to_utf8) and back on the way in; a
+    suggestion that has no place in CP437 is dropped.  With UTF-8 text the
+    two conversions go away and the dropped suggestions come back.  Cost S.
+  - The word test of the Editor (a letter is ASCII or CP437 80-A5) needs
+    the Unicode letter table.
+  - Dictionaries on this machine: aspell has an English dictionary,
+    hunspell has en_US.  A user of another language installs the
+    dictionary of the language (hunspell-xx or aspell-xx); Strata
+    already starts the program with the language code and says when the
+    dictionary is not installed [doc: SPELL.txt, code: spell.c].
+  - The language of the dictionary is today one for the user (section 9).
+  - For Chinese, Japanese and Thai there is no word list to check against
+    in these programs: Spell Check does not apply to them.  [est]
+
+10.2 Thesaurus [doc: THESAURUS.txt]
+
+  - The data of the machine is English; a UTF-8 word read from a newer
+    file is converted to CP437 and a word with a letter outside CP437 is
+    dropped.  With UTF-8 text that goes away; the data of other languages
+    (MyThes) are separate files per language.  Cost S.
+
+10.3 Case, sort and search [tried: u8core]
+
+  - Search ignores case with an ASCII fold only.  Five test searches on
+    short strings (capital E-acute against a lower case e-acute, a Greek
+    word, a Cyrillic word, and plain ASCII): the ASCII fold found 0 for the
+    accented, Greek and Cyrillic words and 1 for ASCII; with libc towlower
+    the three found 1.  Searching a composed e-acute against an
+    e plus combining acute found 0 with both: it needs normalization
+    (NFC or NFD) or a comparison by cluster, and the C library has no
+    normalization function.
+  - Case of single code points under the libc functions (towupper and
+    towlower in C.UTF-8, 14 code points tried): e-acute, Cyrillic zhe,
+    Greek sigma and the Turkish dotless and dotted i convert one to one;
+    the ASCII functions of the project change none of them.  Four cases
+    cannot be done by a function from code point to code point: U+00DF
+    (sharp s) in
+    upper case is two letters SS; U+03C2 and U+03C3 (the two lower
+    case forms of sigma) are both lower case of U+03A3, and the right one
+    depends on the position in the word; U+0130 and U+0131 depend on the
+    language (Turkish); U+1E9E has U+00DF as lower case but U+00DF has
+    no one-code-point capital.  So upper/lower/capitalize need a table
+    that can answer with more than one code point and a language, or they
+    keep the one to one rule and document it.
+  - The commands Upper, Lower and Capitalize are not in the key list or
+    in the menu documents of the project [doc: grep of KEYSTROKES.txt,
+    EDIT-MENU.txt]; only Search, Replace and Sort need case today.
+  - Sort: the order of the existing documents' sort (hyphen, underscore,
+    space, then letters without case) is kept for ASCII; for other letters
+    a collation by language is needed (the C library has strcoll and
+    wcscoll with a locale, which was not tried).
+  - Word and sentence breaks: the Editor knows a word as a run of letters
+    with an inner apostrophe or hyphen (editor.c tok_in_word).  For
+    Latin, Greek and Cyrillic the Unicode letter table is enough.  For
+    CJK and Thai the Unicode rules say where a line may break, not where
+    a word ends; a dictionary or the ICU data of the system (as XeTeX
+    uses it) is needed.  Not done in stage 1.
+  - Tables.  The task asks whether the C library or tables of the
+    project.  The C library gave towlower, towupper, wcwidth and the
+    ranges of the sample correctly (u8core), but only with
+    setlocale and a UTF-8 locale on the machine, and it has no
+    normalization, no bidi, no break rules.  A table of the project for
+    case folding and widths, generated once from the Unicode data files
+    and checked in as C source, is about 2 to 4 thousand lines [est] and
+    works without locale.  Recommend: the C library with a UTF-8 locale for
+    stage 1 and a table of the project only if a machine without the
+    locale matters.  No big library without the owner's word.
+
+
+11. IMPORT, EXPORT, CONVERSIONS AND THE TESTS
+---------------------------------------------
+
+  - Import and Export have a Character Set field: IBM Extended ASCII
+    (CP 437), 96 Character ASCII, CP 850, CP 860, CP 865 [doc:
+    FILE-MENU.txt; code: fileops.c charset_to_437 and charset_from_437].  A
+    letter that the Editor cannot show becomes ?.  With UTF-8 the field
+    gets UTF-8 (and Latin-1 and the Windows code page of Latin-1 are a
+    small addition), and the other sets become converters to Unicode
+    instead of to CP437 (a table each).  Export of plain text to a UTF-8
+    file is the simplest item of all.  Cost S to M.
+  - The other export, of laid out lines (export.c put_utf8), writes
+    UTF-8 already from CP437.  put_utf8 uses a buffer of 3 bytes for
+    utf8_encode; a code point above FFFF needs 4, so that buffer (and the
+    same in the X11 dump in term_x11.c) must be made 4.  Found by
+    reading; it can overflow as soon as a code point above FFFF reaches
+    them.
+  - The Conversion chapter of the reference manual describes the existing
+    document format and the plain text conversions; the chapter is
+    changed only when the owner decides (section 13).
+  - Tests with a high byte: the sample documents (48 characters), and five
+    test sources have escapes or bytes of 80 to FF (lxtest.c, perrtest.c,
+    mkprintdata.py, preview.py, smoke.py, found by a pattern search that can
+    miss some).  The test run of the project saves its 24 sample documents
+    byte for byte [doc: DOC-FORMAT.txt]; that must go on being so for a
+    CP437 file, which is why a CP437 document stays CP437 on save.  The
+    test suite was not run (no product code was changed).
+  - Round trip checked [tried]: a T record with a tab (operand 80), an
+    attribute (flags 80), a bullet 01 07, box characters and FF written
+    as CP437 -> read as CP437 -> written as UTF-8 -> read as UTF-8 gives
+    the same 13 tokens; the record grows from 20 to 27 bytes.
+
+
+12. THE STAGED RECOMMENDATION
+-----------------------------
+
+Stage 0 (small, useful on its own, no format change)
+  - Fix the keyboard defect of the four byte character in term.c.
+  - Fix cp437_uni for FF (U+00A0) in the conversion use.
+  - Make the 3 byte buffers 4 bytes.
+  - Add UTF-8 and Latin-1 to the Character Set of Import and Export.
+  Cost S.  Risk: none to documents.  What changes: Import and Export can
+  read and write UTF-8 text; what is outside CP437 is still lost.
+
+Stage 1 (UTF-8 in the file and on the screen for one code point per
+character; the European languages, Greek, Cyrillic)
+  - The format flag; the token holds a code point; the layout and the
+    screen buffer widen; the key values move; the keyboard of the terminal
+    reads all lengths; X11 gets an input method and a font fallback from
+    fontconfig; setlocale; Search folds case by libc; Spell and Thesaurus
+    lose the conversion; the Printer picks XeLaTeX or LuaLaTeX for a
+    document that needs it and keeps pdfLaTeX for the rest; the
+    Preview shows the PDF in that case (8 and 13); the language of a
+    block or document becomes a property.
+  Cost: L in all (the model of cell and key, the Printer and Preview), with
+  M for most of the pieces.  Risk to documents: the CP437 document is
+  untouched until converted, and the conversion is without loss.  Risk to
+  tests: every test that holds a high byte of CP437 text (the five found)
+  must be run in both the CP437 and the UTF-8 form; the layout code has the
+  larger risk.  What is lost or changes: a UTF-8 file cannot be read by
+  an earlier Strata, and perhaps not by an older program that reads the
+  existing document format (not tried); the sizes of a file grow (a
+  CP437 letter such as e acute takes 2 bytes, a box character 3).
+  Result: Latin, Greek and Cyrillic users can type, see, edit, search,
+  print and spell-check in their language.
+
+Stage 2 (wide characters and combining marks)
+  - Cell width 0, 1, 2 in the layout and the screen, a second-cell flag,
+    clusters for cursor and Delete, the input method for CJK, the line
+    breaking rules (a break after any ideograph, kinsoku), xeCJK in the
+    Printer, a per-language CJK font.  Cost L.  Risk: the layout.
+    Result: Chinese, Japanese and Korean are usable, in the Editor's
+    monospaced cells (the printed page is proportional).
+
+Stage 3 (right to left and shaping)
+  3a. Print them correctly (bidi=basic in LuaLaTeX, shaping by the engine,
+      Thai break locale), store them, show them in logical order in the
+      Editor.  Cost M after stage 2.
+  3b. A visual Editor for right to left text and for shaping on the screen
+      (the bidi algorithm, clusters drawn by a shaper such as HarfBuzz).
+      Cost L, needs a library: the owner decides.
+
+A reasonable first decision for the owner is stage 0, then stage 1.  Stage 1
+is useful by itself.  Stages 2 and 3 should not be started until a user of
+those languages is known and can test, because the Editor window is the
+part that is hardest to make right and cannot be checked by the author.
+
+
+13. THE VIEWER AND THE PREVIEW
+------------------------------
+
+  - Preview runs "strprint part.doc --dvi" (the "latex" engine, DVI) and
+    shows the DVI with dviview [doc: PRINT-LATEX.txt section 15; code:
+    preview.c].
+  - dviview reads TFM metrics for characters 0 to 255, draws Type 1 glyphs
+    through FreeType from the pdftex.map and the encoding files, or PK
+    bitmaps, and reads virtual fonts [doc: tools/dviview/REPORT.txt; code:
+    font.c].  It has no OpenType or TrueType path.
+  - Tried: the LuaTeX DVI of the sample (t4 as DVI) shows a box for every
+    glyph: "no TFM file for font [/usr/share/fonts/truetype/noto/
+    NotoSerif-Regular.ttf]" and the same for Hebrew, Thai, Devanagari and
+    the CJK collection; the XeTeX output (xdv) is rejected as "not a DVI
+    file (version 2)".  So the viewer shows no text typeset by the new
+    route.
+  - And the "latex" DVI route itself cannot set Greek or Cyrillic on this
+    machine for the reason of 8.2.
+  - Choices: (a) Preview for a document that needs the new route shows
+    the PDF: this machine has poppler (pdfinfo, pdftotext, pdftoppm were
+    used here); a viewer of PDF pages in the program is new work;
+    xdg-open of the PDF is the way of the first design [doc:
+    PRINT-LATEX.txt, the design part];
+    (b) give dviview a path for TrueType and OpenType through FreeType by
+    font file name, which means reading the font names that XeTeX and
+    LuaTeX write in the file and reading glyph numbers instead of
+    characters; the shaped text is already positioned by the engine, so
+    the work is the font reader and the glyph numbers.  XDV needs an
+    extra reader.  (a) is simpler.  Cost M for (a), L for (b).
+  - The preview of a CP437 document does not change.
+
+
+14. MESSAGES, HELP AND TRANSLATION
+----------------------------------
+
+  - Every source file, documentation file and manual source of the project
+    is ASCII [tried: a search for bytes above 7F found none], and the
+    messages of the programs are English.  The help sources (help/*.txt)
+    are ASCII text of at most 80 columns [doc: src/help.h].
+  - UTF-8 in the document changes nothing in the messages.  What it gives
+    to a translation is the possibility to write the translated words in
+    the user's script.  The translation itself is a separate step: the
+    strings of ui.c, the panels, the menus, the help and the manual would be
+    moved out of the code into per language tables; the width of a translated
+    label in cells must fit the panels (a wide character takes two); and the
+    help file format must carry UTF-8.  Do not mix the two: the document
+    stage does not need a translated interface, and a translated interface
+    does not need a UTF-8 document unless the names in it have such letters.
+
+
+15. DOCUMENTS (the reference manual, README, appendices)
+--------------------------------------------------------
+
+  - Until the owner decides, the reference manual and the README say
+    nothing about this.  They were not changed.
+  - After the decision to go on: the file format appendix (the flag, the
+    two character sets, what an older program does), the special characters
+    appendix (the set is Unicode, CP437 is the set of older files), the
+    Conversion chapter (the Character Set choices of Import and Export) and
+    Setup (the character set of a new document, the language, the input
+    method and fonts of the X11 version).  The documentation names no
+    program.
+
+
+16. RISKS AND WHAT WOULD BE LOST
+--------------------------------
+
+  - Files: a UTF-8 file is not read by earlier versions of Strata (they
+    would show it as CP437 glyphs) and may not be read by an older program
+    that reads the existing document format (not tried).  A CP437 file
+    stays readable.
+  - Pages: no change to existing documents if the Printer keeps the
+    pdfLaTeX route for them (8.4); a change of the engine for all would
+    move 1.2 to 1.8 percent of the lines of the manual and keep the page
+    counts.
+  - Tests: those with high bytes; the byte-for-byte round trip for a CP437
+    document; every layout test (the cell becomes wider).
+  - Memory: the token stays 4 bytes; a clip and a macro file grow a little.
+  - The Editor window for the hard scripts will not be right for a long
+    time, and the study says so rather than promise it.
+
+
+17. DECISIONS FOR THE OWNER
+---------------------------
+
+  1. Go on with stage 0 now?  (It changes no document.)
+  2. Choose B (a flag, new format version) for stage 1?
+  3. Keep pdfLaTeX for the documents that need no new character, and let
+     Strata choose XeLaTeX or LuaLaTeX for the others?  (Recommended.)
+  4. Is a Preview that shows the PDF acceptable for those documents?
+  5. How the flag is written (a new header record, section 3.5), and the
+     name of the language record.
+  6. Is stage 3b (a visual right to left Editor) wanted, with a library?
+  7. May the C library with a UTF-8 locale be the source of case and width
+     tables for stage 1?
+
+
+18. WHAT WAS NOT TRIED
+----------------------
+
+  An older program and how it treats a flag; an input method (XIM, ibus,
+  fcitx); dead keys on X11; how real terminals draw wide and combining
+  characters; XeLaTeX with polyglossia for right to left text; LuaLaTeX
+  CJK line breaking; fallback fonts of luaotfload; Chinese, Japanese and
+  Korean text in the Editor window (a document cannot hold it yet); the
+  Editor with the cell buffer widened; spell checkers for other
+  languages; the full test suite; the cause of the line differences in the
+  manual under the other engines.

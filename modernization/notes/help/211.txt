@@ -1,0 +1,25 @@
+
+------------------------------ Custom Index Style ------------------------------
+
+Main Heading Font:     Select the font for main headings.
+                     
+Subheading Font:       Select the font for subheadings.
+                      
+Attributes:            Select the attributes for the main headings and 
+                       subheadings.
+
+Page Number/Reference  Select the global attributes for the page number or 
+Attributes:            reference text entries in the index.
+
+Indent to Subheading:  Enter the number of ruler units to indent subheadings 
+                       from main headings.
+                    
+Separator Text:        Enter the text to separate the index entry and the page
+                       number.
+                     
+Winding Columns:       Enter the number of winding columns you want in the 
+                       printed index (from 1 to 9). If you do not want winding 
+                       columns, enter 1.
+--------------------------------------------------------------------------------
+     Font          Attributes          Winding Columns          Index Style
+                   Keyboard Summary                  Help Index

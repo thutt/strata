@@ -1,0 +1,133 @@
+# Chapter 10, part 2: dictionaries, messages, examples.
+.h2 Word lists and dictionaries [convert-dict]
+.ix Dictionaries, conversion
+.ix Personal word list
+.ix Word list, from a document
+.ix Word list, as a document
+The words that the user adds to the spell check are a text file, the personal
+word list, in the directory of the settings ({c:~/.strata/dictionary}), so the work on a list of words is done
+with text, as the table says.  The checks of the spelling are made by a
+program of the machine, and its own dictionaries are not changed by Strata.
+.table 24 36
+To | What to do
+Make a list of words from a document | Write the words one to a block in a
+ document, and export it with Export Data Only; the file has one word on
+ each line.  Copy the file to the personal word list, which is plain text
+ in UTF-8.
+Add the words of a document to the list | Import that file with
+ Maintain Dictionaries ({n:str-spell-words-import}), or add its lines to
+ the end of the personal word list.
+Make a document of the list | Import the personal word list with Preserve
+ Line Endings and the Character Set UTF-8; each word is a line.  A letter
+ of the list that the document cannot show becomes a question mark.
+Remove a word | Use Maintain Dictionaries ({n:str-spell-words}), or delete its
+ line from the file.
+.end
+.caution The personal word list belongs to the user that owns the settings
+  directory.  A file that is not owned by the user, or a directory that is
+  not, is not used ({n:appcfg}).  Copy the file with the mode of an
+  ordinary file of your own; the program makes it private by itself.
+.h2 Messages of the conversions [convert-messages]
+.ix Messages, Import and Export
+.ix Conversion messages
+These are the messages that the conversions of this chapter can show, with the
+place where they appear.  The messages of the panels are listed again in
+{x:file-messages} and those of the Printer in {n:appcmd}.  A message is
+given as it is written; the part in capitals stands for the name of a file.
+.table 26 34
+Message | Meaning and what to do
+No file name specified | The field ASCII File Name of Import or Export
+ is empty.  Type a name; the panel stays open.
+Import failed: cannot open file | The file does not exist or cannot be
+ read.  The name is looked for in the Working Directory unless it is a path.
+Import failed: this is a directory, not a file | The name is the name of a
+ directory.  Type the name of a file.
+Import failed: read error | The file was read only in part.  Try again; look
+ at the disk.
+Imported FILE | The text of the file is in the document at the cursor.
+Imported; N characters not kept | The same, for UTF-8 or Latin-1: N characters
+ of the file have no place in the document and are question marks.
+Overwrite old version on disk? | Export: the file exists; Yes replaces it.
+Export failed: cannot write FILE | The directory does not exist or is not
+ yours, or the disk is full.
+Export failed: write error | The text was not written completely.
+Exported FILE | The file was written.
+Retrieve failed: The file is not a document of this software. | Retrieve was
+ given a file that is not a document, such as a text file.  Use Import for
+ text.
+Retrieve failed: cannot open file | Retrieve was given a name that does not
+ exist or cannot be read.
+damaged document: a piece of text has no end | The document file is cut or
+ damaged.  Use the backup ({n:file}, {n:file-backup}).  The other messages
+ about a damaged or too large file are in {x:file-retrieve}.
+Import failed: file too large (the limit is 32 MB) | The text file is larger
+ than a document can be.  Split it.
+Imported only the first part: a document has at most 500000 blocks | The text
+ file has more paragraphs than a document can hold; the first ones were
+ imported.
+.end
+.h2 Examples [convert-examples]
+.ix Examples, conversion
+.ix Conversion examples
+Each example gives the input, the steps and the result.
+.h3 A table of three rows, in and out [convert-examples-table]
+.ix Example, table import and export
+A file of three rows, with a Tab between three cells in each:
+.code
+Item TAB Qty TAB Price
+Bolts TAB 12 TAB 3.50
+Nuts TAB 100 TAB 0.25
+.end
+Import with Preserve Line Endings gives one block of three lines with tabs.
+Export Data Only writes it back as the same three lines with the tabs, and
+a fourth, empty line (the empty line that the end of the last line leaves in the
+block).  Export of a screen image, with the default ruler of one stop at 5,
+writes
+.code
+Item Qty Price
+Bolts 12 3.50
+Nuts 100 0.25
+.end
+because a tab past the last stop is one cell wide.  With the ruler of the text
+set to the stops 12 and 22 the same Export writes
+.code
+Item        Qty       Price
+Bolts       12        3.50
+Nuts        100       0.25
+.end
+which is the table in columns.  The ruler is set by the field Text Ruler of
+Global Format, or by the key {k:F6} for one block ({n:format}).
+.h3 A text with accents from a modern system [convert-examples-utf8]
+.ix Example, UTF-8 text with accents
+A letter that was written on a system that uses UTF-8 has the word "caf" with
+the e that has the acute accent, and the Spanish word for year, which has the
+n with the tilde.  It also has the euro sign.
+1. File, Import: the file of the letter, Options Ignore Line Endings, Character
+ Set UTF-8.  The accented e and the n with the tilde come in as they are.  The
+ euro sign has no place in the document: it is a question mark, and the
+ message line shows "Imported; 1 character not kept".
+2. Edit, and save the document.  Replace the question mark by the word EUR.
+3. To send it back, Export with Export Data Only and Character Set UTF-8.  The
+ file has the accented letters as they were.
+.h3 A report to a plain text file [convert-examples-text]
+.ix Example, document to text
+Task: a report that is a structured document is to be read in a mail
+program.
+1. File, Export: give the name of the text file, set Options to Export a Screen
+ Image and the Character Set to UTF-8, and accept with {k:Ins}.  A mail program
+ of today reads the file without conversion.
+2. Look at the file.  The lines are at most 79 characters long, the headlines
+ have their section numbers where the document has numbers, and the columns of
+ a block are side by side.
+3. For a text that the mail program wraps itself, export with Export Data Only
+ instead: the cells of a table are each on a line of their own, the tabs are
+ tabs and the blocks have no blank line between them
+ ({n:convert-export}).
+.h3 A document to a PDF without sending it [convert-examples-pdf]
+.ix Example, PDF of a document
+A document is to be a PDF for a colleague, with no printer touched.  Use
+{k:F12}, Print, Final with the field Printer left empty: the PDF is made with
+the settings of the Print panel and the file is named in Output File
+({n:print-final}).  When the document is to be typeset again from the TeX
+source, Export a LaTeX File
+({n:file-export-latex}) writes the source.

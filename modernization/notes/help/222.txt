@@ -1,0 +1,25 @@
+
+------------------------------- Equation Keywords ------------------------------
+
+Grouping Symbols
+--------------------------------------------------------------------------------
+                         Name                   Keyword
+--------------------------------------------------------------------------------
+                         Parenthesis            ( )
+                         Bracket                #[ #] 
+                         Brace                  { }
+                         Vertical               (| |) or (^ ^)
+                         Double Vertical        (|| ||) or (^^ ^^)
+                         Floor                  (_ _)
+                         Ceiling                (/ /)
+                         Angle                  (< >)
+                         Null                   #( #)
+--------------------------------------------------------------------------------
+
+              Example equation:  d - #[a + 3x#]    ->    d - [a + 3x]
+
+--------------------------------------------------------------------------------
+Function Names    Greek Letters    Diacriticals    Operators    Pointers
+      Attributes      Large Operators      Miscellaneous      Format Keywords
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

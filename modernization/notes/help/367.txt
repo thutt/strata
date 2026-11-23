@@ -1,0 +1,25 @@
+
+------------------------- Marker Display Mode Descriptions ---------------------
+
+Display Mode       Displays                             Example
+--------------------------------------------------------------------------------
+Diamond            Diamond character                    
+Name               Abbreviated name of marker type      [PIC]
+Short Form         Abbreviated name and major options   [PIC filename.pic]
+Long Form          Full name and all options            [PICTURE filename.pic,
+                                                         Width:2 in]
+Hidden             No marker displayed                  
+
+--------------------------------------------------------------------------------
+# Use the Global display mode prompt if you want to use the same display modes
+  for all types of markers on the edit screen.
+
+# Press Ctrl D on the Marker Display Modes panel to reset all display modes to
+  Manuscript's default display modes.
+
+# Hidden markers do not display on screen, but occupy a "hidden space" that the
+  cursor recognizes as you move across a line.  For example, if you are using
+  Right to move across a line and you need to press Right twice to move a
+  single space, there is a hidden marker at that location.
+--------------------------------------------------------------------------------
+Marker Display Modes    Display Hidden Markers    Keyboard Summary    Help Index

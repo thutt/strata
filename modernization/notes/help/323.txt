@@ -1,0 +1,25 @@
+
+------------------------------------ Go To Page --------------------------------
+
+Use Menu (F10) Page Go To in preview to preview a specific page in the document.
+
+Accelerators:  Ctrl PgDn goes to the next page
+               Ctrl PgUp goes to the previous page
+               Go To (Alt F7) displays the Go To Page panel
+
+---Procedure--------------------------------------------------------------------
+
+ In preview, press Menu.                 +---------- Go To Page ---------+
+ Select Page Go To.                      |                               |
+ Enter a specific page number and        |  Page Number:                 |
+  press Ins.                              |                               |
+                                          +-- Press Ins to Change Pages --+
+
+--------------------------------------------------------------------------------
+# When you enter a page number, be sure to enter Manuscript's formatted version
+  of the page number.  For example, if you have defined a page number tag of
+  \i\ on the Global Page Layout panel and you want to preview the sixth
+  page in the document, enter vi on the Go To Page panel.
+
+--------------------------------------------------------------------------------
+   Preview Document     Global Page Layout     Keyboard Summary     Help Index

@@ -1,0 +1,25 @@
+
+------------------------------ Block Format Editor -----------------------------
+
+
+The Block Format Editor (Ctrl E) is a quick way to change the most commonly used
+format settings for the current block.
+
+
++------------------------------------------------------------------------------+
+| L: [0]    Attr: [Normal]    Just: [Left]    Indent: [None]    Pos: 1  R: [0] |
+|                                                                              |
+| --------------------------------------------------------------------------- |
++------------------------------------------------------------------------------+
+
+
+# To display the Block Format Editor, position the cursor in the block to format
+  and press Ctrl E. 
+
+# To format multiple blocks simultaneously, use Format Block (F6).
+
+# Ctrl D resets all Block Format Editor settings to their defaults.
+
+
+--------------------------------------------------------------------------------
+   Format Block       Ruler Tab Keys       Keyboard Summary       Help Index

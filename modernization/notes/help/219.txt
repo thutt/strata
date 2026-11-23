@@ -1,0 +1,25 @@
+
+------------------------------- Equation Keywords ------------------------------
+Relational Operators
+----------------------------------------+---------------------------------------
+Name                   Keyword          | Name                  Keyword
+----------------------------------------+---------------------------------------
+Equal                  =                | Subset                subset
+Not equal              =/               | Proper subset         psubset
+Congruent              =~               | Superset              superset
+Approximately                           | Proper superset       psuperset
+  equal                ~  or  ~~        | Belongs to            in 
+Dot equal              =.               | Not belong to         notin
+Identical              ==               | Such that             such
+Not identical          ==/              | And                   and 
+Greater                >                | Or                    or
+Greater/equal          >=               | Exclusive or          xor
+Much greater           >>               | Not                   not 
+Less                   <                | Implies               =>
+Less/equal             <=               | Equivalent            <=>
+Much less              <<               | Relation              | or rel
+----------------------------------------+---------------------------------------
+ Function Names     Greek Letters     Diacriticals    Pointers    Attributes
+     Grouping Symbols     Large Operators     Miscellaneous     Format Keywords
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

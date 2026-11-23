@@ -1,0 +1,25 @@
+
+-------------------------- Setting Paper Size and Bins -------------------------
+
+
+Paper Size
+
+At the Paper Size prompt on the Global Page Layout panel, select the paper size
+for printing your document. Several choices are typically available, including
+a custom option, depending on the printer you have specified on the Setup panel.
+
+--------------------------------------------------------------------------------
+
+Paper Bin
+
+At the Paper Bin prompt on the Page Layout panels, select the paper bin you 
+want the printer to use when printing your document. You can specify different
+bins for different pages of a document. For example, you can print the first 
+page on letterhead and the remaining pages on plain paper.
+
+If you specify a bin that doesn't exist, the printer uses bin #1.  If you have
+only one bin, enter 1.
+
+
+--------------------------------------------------------------------------------
+   Global Page    Custom Paper Size    Setup    Keyboard Summary    Help Index

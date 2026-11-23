@@ -1,0 +1,25 @@
+
+------------------------------- Hyphenation Settings ---------------------------
+
+Maximum Consecutive               Type the maximum number of consecutive
+Hyphenated Lines:                 hyphenated lines.  For example, type 2 to
+                                  have no more than 2 hyphenated lines in a row.
+
+Minimum Consecutive               Type the minimum number of consecutive 
+Unhyphenated Lines:               unhyphenated lines.  For example, type 2 to 
+                                  make sure that at least two unhyphenated 
+                                  lines will occur before another line is 
+                                  hyphenated.
+
+Minimum Characters in Word:       Type the number of characters in the shortest
+                                  word you want hyphenated.
+
+Minimum Characters Before Hyphen: Type the minimum number of characters you
+                                  want before a hyphen in a hyphenated word.
+
+Minimum Characters After Hyphen:  Type the minimum number of characters you
+                                  want after a hyphen in a hyphenated word.
+
+
+--------------------------------------------------------------------------------
+      Hyphenation Settings           Keyboard Summary           Help Index

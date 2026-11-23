@@ -1,0 +1,25 @@
+--------------------------------------------------------------------------------
+--------------------------------- H - E - L - P --------------------------------
+--------------------------------------------------------------------------------
+
+Welcome to Lotus Manuscript's on-line help facility.  You can ask for help at
+almost any time by pressing Help (F1).
+                             
+  Each Help screen displays information about the task you were performing 
+  just before you pressed Help. You can also select additional topics,
+  displayed in bold on the help screens, for more information.
+
+          
+Use these keys to select additional help:
+
+  Left and Right move the highlight left or right one topic.
+  Home and End move the highlight to the first or last topic.
+  Enter displays the help screen for the highlighted topic.
+  Backspace displays the last screen viewed. Continue pressing Backspace to 
+    go back through the Help screens one at a time.
+  Esc returns to where you were before you pressed Help.
+  
+For more Help, highlight one of the topics below and press Enter.
+
+--------------------------------------------------------------------------------
+         Error Messages          Keyboard Summary          Help Index

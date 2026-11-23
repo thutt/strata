@@ -1,0 +1,185 @@
+TABLES IN THE SUBLEVELS OF A STRUCTURED DOCUMENT: THE ORIGINAL AND STRATA
+=======================================================================
+
+Status: a probe, and one fix of the Printer (src/latex.c).  The probe was run
+on 2026-11-22.  Every statement is marked:
+
+  [tried]     seen in the original or in Strata during this probe
+  [repo]      read in this repository (code, tests, docs)
+  [not tried] not looked at; said so
+
+The question (owner): a printed structured document indents its sublevels,
+which is right; but the tables in the sublevels printed over the whole width
+of the page.  Is that how the original worked?
+
+THE SHORT ANSWER
+----------------
+
+No.  The original indents a table together with the text of its sublevel:
+the table starts at the left margin of its level and ends at the right margin
+of the page, so a table in a deeper level is not wider, only its last column
+is narrower.  It does the same for a boxed paragraph and for a picture.
+[tried]  Strata did that for boxed paragraphs and pictures already, but
+printed a table from the left margin of the page (and ended it at the right
+margin of the level minus the indent, so it was also shifted to the left of
+its own text).  [tried]  That was a fault of the Printer and is fixed
+(section 5).
+
+1. HOW THE PROBE WAS MADE
+-------------------------
+
+1.1 The original [tried]
+
+  The original ran unmodified in DOSBox-X on an Xvfb display of its own, on a
+  scratch copy of the installation media (never in the source tree); keys by
+  xdotool, screens by xwd.  Two print drivers were used, both sent to a file
+  by the parallel port of the emulator:
+    - the Generic driver (plain text: positions of characters, no borders);
+    - the Apple LaserWriter driver (PostScript, with borders and pictures),
+      chosen in Setup (Primary Print Driver).  The PostScript was turned into
+      a PDF with ghostscript and measured like a PDF of Strata.
+  The Editor of the original was run too, to see its own screen.
+
+1.2 The probe documents [tried]
+
+  docs/probe/tabprobe.src is written in the source format of manual/
+  mkmanual.py (python3 -I -B manual/mkmanual.py tabprobe.src tabprobe.doc):
+  sections of three levels (1, 1.1, 1.1.1), each with a text block and a table
+  of three columns (12 12 12 cells wide); the table has a header row with a
+  double line at its bottom.  docs/probe/tabprobe.doc is the result.  The
+  original opened it and printed it at the first try.
+  docs/probe/tables-boxprobe-orig.doc has the same three levels with a boxed
+  paragraph (a Note) and a Picture marker (a file of the original's own
+  sample disk, CD2.GMF) in each level.  It is made by docs/probe/
+  mkorigbox.py from the generator's output: the generator writes a record
+  for the numbering of captions (ZNP3) when the document has figures, and the
+  original refuses a document that has it ("Invalid file"), so the picture
+  blocks are put in by the script.  docs/probe/boxprobe-strata.src is the same
+  document for Strata (a PNG picture, a caption).
+  Real documents: the sample cns5drft.doc of the original's disks (6 nested
+  sections, tables with borders) printed with both programs.  The
+  Strata documents (the Getting Started document, samples/story/
+  strata-story.doc and the Reference Manual) were printed with Strata only
+  (the original does not read their picture files and the numbering record).
+  [tried]
+  The reference of the original's own manual on this point was not read (its
+  manuals are not in this copy of the repository).  [not tried]
+
+2. WHAT THE ORIGINAL DOES [tried]
+---------------------------------
+
+2.1 The screen of the original's Editor (docs/probe/tables-orig-editor-1.png
+    and -2.png): the table of level 1.1 starts under the first character of
+    the text of 1.1 (a few pixels in, the width of the cell border and its
+    space) and ends at the same right edge as the table of level 1; the
+    columns with a stated width keep it and the last column takes what is
+    left.
+
+2.2 The Generic driver (docs/probe/tables-orig-tabprobe-generic.txt): the
+    text of level 1 begins in column 11, level 2 in column 14, level 3 in
+    column 17 (the characters of the file counted from 1); the first
+    character of the cells of the tables begins one column to the right of
+    the text of its level, in every level (12, 15, 18).
+
+2.3 The PostScript driver (docs/probe/tables-orig-tabprobe.png and
+    tables-orig-boxprobe.png): the tables, the boxed paragraphs and the
+    pictures start at the left margin of their level.  Measurements follow.
+
+3. WHAT STRATA DID BEFORE THE FIX, AND DOES NOW [tried]
+-------------------------------------------------------
+
+  The probe document was printed with the Printer (strprint FILE -o OUT.pdf),
+  before the fix (docs/probe/tables-strata-tabprobe-before.png) and after
+  (-after.png).  The edges are the first and the last dark pixel in the row
+  of the header cells in a picture of the page at 220 dpi.
+
+4. THE MEASUREMENTS (points from the left edge of the page; Letter paper,
+   text 72 to 540; the original 1 pt less at the right because its lines are
+   drawn inside the edge) [tried]
+-----------------------------------------------------------------------
+
+  The original, PostScript driver, probe document tabprobe:
+
+     level   text margin   table left   table right   width of the text
+       1        72.0          73.0         538.7           466.7
+       2        93.6          94.6         538.7           445.1
+       3       115.2         116.2         538.7           423.5
+
+  Strata before the fix:
+
+       1        72.0          72.0         539.3           467.3
+       2        93.6          72.0         517.7           445.7
+       3       115.2          72.0         496.1           424.1
+
+  Strata after the fix:
+
+       1        72.0          72.0         539.3           467.3
+       2        93.6          93.6         539.3           445.7
+       3       115.2         115.2         539.3           424.1
+
+  The width of a table: in both programs the columns that have a width keep
+  it and the last column (which has none in these documents) takes what is
+  left up to the right margin.  A table of which all the columns have a width
+  is as wide as the widths say; Strata scales all the columns down in one
+  proportion when they are wider than the room that is left.  [tried for the
+  first; the original with all columns given a width and a sum wider than the
+  room: not tried]
+
+  Boxed paragraph and picture (the document boxprobe), left and right edge of
+  the box of the paragraph; the left end of the picture:
+
+     level   original: box         original: picture    Strata: box
+       1       72.3 to 538.7         starts at 74.9       72.0 to 539.7
+       2       93.9 to 538.7         starts at 96.5       93.6 to 539.7
+       3      115.5 to 538.7         (page 2)             115.2 to 539.7
+
+  The picture of the original is put at the left of its level (a left
+  aligned block); that of Strata is centred in the width of its level (the
+  centre moves right by half the indent: 306 pt at level 1, 317 pt at level
+  2).  Both are indented with the level; the difference is the alignment
+  that the document says, not the indent.
+
+  A real document, cns5drft, the table ESTIMATES in section 4.2 (level 2):
+  the original starts it at the text of 4.2 and ends it at the right margin
+  (docs/probe/tables-orig-cns5drft-p4.png).  Strata before the fix started
+  it left of its text and ended it 6 pt before the right margin
+  (tables-strata-cns5drft-before.png); after the fix it starts at the text
+  and ends at the right margin (-after.png).  Other differences of this table
+  (the row that spans the columns, the fonts, the line breaks of the cells)
+  are not part of this question.
+
+5. THE FIX (src/latex.c, put_tabhead) [repo]
+--------------------------------------------
+
+  The Printer already moved the table to the indent of its level
+  (\setlength{\LTleft}{...}) and made its columns narrower by the indent.  The
+  table environment was started as longtable[l], and the longtable package
+  sets its left space to zero for the option l, so the indent was thrown
+  away.  Now the longtable has no option: its default leaves the left and the
+  right space as the Printer set them.  A table in a Keep part (set one
+  tabular per row) already had the indent.
+  Test: tests/tabindent.py prints the probe document tabprobe.src and reads the
+  edges of the three tables from a picture; it fails with the Printer before
+  the fix (6 checks).  It is in tests/smokerun.py.
+
+6. WHAT STAYS [tried]
+---------------------
+
+  The Getting Started document (46 pages), the story sample (21 pages) and the
+  Reference Manual (742 pages) print with the same number of pages before and
+  after the fix; no word of any of them goes past the right margin that did
+  not before (the Reference Manual has 6 such words in both, on its sheets
+  that are wider than the page; the Getting Started document has one word of a
+  table, ~/.tmux.conf, that touches the right border of its cell, 0.8 pt past
+  the margin, where before the whole table stood 25 px too far left).  The
+  manual text on the indent of tables is in the chapter on the format
+  panels (Indent per Level).
+
+7. NOT TRIED
+------------
+
+  - A page printer driver other than Apple LaserWriter (PCL).
+  - A table in the original whose columns all have widths that add up to
+    more than the room of a deep level.
+  - The sorted order of the print and the contents of the original with
+    tables in them.

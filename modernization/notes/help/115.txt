@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Header/footer is too large to print --
+
+There is not enough room on the page to print the document body with the 
+header and/or footer.  Change the page margins or edit the header or footer.
+
+-- Help not available; the MSHELP.HLP file is invalid --
+
+The MSHELP.HLP file is not valid.  Recopy MSHELP.HLP from your original 
+Manuscript disks into your Manuscript directory.
+
+-- Incorrect disk. Please insert correct disk and press any key to continue. --
+
+The incorrect disk was inserted during automatic installation. Make sure that
+the name on the label of the disk in the diskette drive matches the name 
+displayed on the screen.
+
+-- Internal error # <number> (<description>) --
+
+An internal error has occurred in the software. Record the number and 
+circumstances and inform Lotus Product Support.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

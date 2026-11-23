@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+
+-- Unsupported file format (<description>) -- 
+
+The file format contains information that is not supported by Manuscript.
+Re-create the original file and retry the operation.
+
+-- Warning: CONFIG.SYS may have too few files specified --
+
+Your CONFIG.SYS must have FILES=20 and BUFFERS=10.  You can copy or append the 
+CONFIG.SYS file included on the Manuscript program disks to your hard disk's 
+main directory. See Getting Started in the Getting Productive manual or 
+Appendix F in the Reference manual for details.
+
+-- Winding columns not allowed --
+
+Winding columns are not allowed in headers, footers, notes, or comments.
+
+-- Window is not SHEET, DOC, or FORM type (window: <filename>) --
+
+The window you specified is not a SHEET, DOC, or FORM window, so no data can
+be imported. Reenter the window name or leave the name blank and Manuscript 
+will use the first sheet, doc, or form window in the worksheet.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

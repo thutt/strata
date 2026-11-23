@@ -1,0 +1,25 @@
+
+------------------------------------ Window ------------------------------------
+  
+The Menu (F10) Edit Window commands are useful for editing two documents during
+the same edit session.  
+
+
+  Open a new window in the             Expand the current window to 
+  lower half of the screen or          full screen or collapse the current 
+  close the current window.            window to a portion of the screen.
+        |                              (Ctrl Z)
+        +-----------+                           +-----+
+                    |                           |
+           +----------------------------------------------------------+
+           |  Open/Close     Adjust     Zoom-up/Zoom-down     Switch  |
+           +----------------------------------------------------------+
+                               |                                 |        
+                 +-------------+                         +-------+        
+                 |                                       |                
+    Change the current window's size            Move the cursor to          
+    using the Up and Down arrow keys.           the other window.  (Ctrl W)
+
+--------------------------------------------------------------------------------
+     Open/Close          Adjust          Zoom-up/Zoom-down          Switch
+             Edit Menu        Keyboard Summary        Help Index

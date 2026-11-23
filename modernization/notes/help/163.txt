@@ -1,0 +1,25 @@
+
+---------------------- Setting the Table of Contents Level ---------------------
+
+The Table of Contents Level prompt on the Table of Contents Page Layout panel
+specifies how many section levels to include in the Table of Contents.
+
+Example: Table of Contents Level: 2   -----+
+                                           |
+     :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+     ::                        Table of Contents
+     ::  1 Level 1 heading ..................................... 1
+     ::     1.1 Level 2 heading ................................ 2
+     ::     1.2 ................................................ 3
+     ::  2 Another level 1 heading ............................. 6
+     ::     2.1 Level 2 heading................................. 7
+
+# You can change the format of the table of contents on the Table of Contents 
+  Style panel under the Global Table of Contents Page Layout panel.
+# To print the table of contents, be sure that Table of Contents is selected
+  under Print on the Print Document panel.
+# To include/exclude a specific section in the table of contents that would
+  otherwise be excluded/included, use the Include in Table of Contents prompt 
+  on the Current Section Format panel (F6 Section).
+--------------------------------------------------------------------------------
+Print Document    Global Page    Section Format    Keyboard Summary   Help Index

@@ -1,0 +1,25 @@
+
+---------------------------------- Note Format ---------------------------------
+
+                           +------------------- Endnote Format ----------------+
+                          +------------------ Levelnote Format ----------------+
+                         +------------------- Footnote Format -----------------+
+--Procedure------------  |                                           Pos: 1    |
+                         | .................................................. |
+ Press Menu.            |                                                     |
+ Select Global Marker.  | Attributes:      Justification:     Indent:         |
+ Move the cursor to the | Font:                                               |
+  Note Format prompt and |-----------------------------------------------------|
+  press Space Bar.       | SPACING                                             |
+ Enter the settings     |                                                     |
+  you want.              |      Reference Tag:              Attribute:         |
+ Use PgUp and PgDn to   |           Note Tag:              Attribute:         |
+  move between panels.   |-----------------------------------------------------|
+ Press Ins to accept    |      Separator Bar:             Note Level:         |
+  your settings.         |           Renumber?        Note Page Title:         |
+                         |  Position of Notes?             Title Font:         |
+-----------------------  |                            Title Attribute:         |
+                         +--------- Press Ins to Use Displayed Settings -------+
+
+--------------------------------------------------------------------------------
+   Marker Format        Note Marker        Keyboard Summary        Help Index

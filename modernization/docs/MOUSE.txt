@@ -1,0 +1,280 @@
+MOUSE OPERATIONS: A STUDY
+=========================
+
+This is the result of the exploration in the worklist item "Mouse
+operations (explore)".  No program, test or manual was changed.  What was
+tested is marked TESTED; what comes from reading the code is marked CODE;
+what comes from general knowledge of terminals is marked KNOWLEDGE.
+
+1. What exists today
+--------------------
+
+  - The X11 Editor selects only KeyPress, KeyRelease, Expose,
+    StructureNotify and FocusChange events (src/term_x11.c, the call of
+    XSelectInput; handle_event handles Expose, ConfigureNotify, KeyPress,
+    KeyRelease, FocusOut, ClientMessage and MappingNotify).  TESTED in
+    Xvfb: xwininfo lists exactly these events for the window, and after
+    xdotool clicks of buttons 1, 4, 5 (with and without Ctrl) and a double
+    click the window is pixel for pixel identical (xwd and cmp).  Two Down
+    keys, as a control, change it.
+  - The X11 window can be resized in height now (vertical resize, saved
+    height; the width is fixed).  The old line "resizable X11 window" in
+    docs/NOT-IMPLEMENTED.txt was out of date.
+  - The terminal Editor turns on no mouse reporting (src/term.c sends only
+    the alternate screen, ?1049, and the cursor, ?25).  Its decoder
+    (parse_csi, term_getkey_raw) knows no mouse sequence.  TESTED in a
+    pty: if a terminal did report the mouse, the bytes would be taken for
+    keys.  For example ESC [ < 65 ; 20 ; 5 M is read as ESC, '[', then
+    the typed characters "<65;20;5M", which are inserted into the
+    document and set the modified mark.  So reporting must never be on
+    unless the decoder is taught the sequences first.
+  - The Viewer (tools/dviview/src/main.c) selects KeyPress, Expose and
+    StructureNotify only.  Scrolling is by the arrow keys (60 pixels),
+    pages by Prior, Next, Home and End, zoom by plus and minus.  TESTED:
+    wheel and click leave the window identical; the arrow keys change it.
+    The wheel does nothing today.
+  - The tests cannot send a mouse event: tests/tui.py writes bytes to a
+    pty and could send a report sequence, but only tests/xsmoke.py (Xvfb
+    and xdotool) can make real X11 buttons.
+
+2. Scrolling
+------------
+
+  What the events are.
+  - X11: the wheel is button 4 (up) and 5 (down), a press and a release.
+    The modifiers are in the state field: Shift 0x1, Ctrl 0x4, Alt 0x8.
+    TESTED with xev in Xvfb.
+  - Terminal, with modes 1000 and 1006 (SGR) on.  TESTED in a real xterm
+    (version 398, driven with xdotool) by a small program that turns the
+    modes on and records the bytes:
+        left, middle, right press and release:
+            ESC [ < 0 ; 15 ; 8 M   then ESC [ < 0 ; 15 ; 8 m   (1 and 2)
+        wheel up      ESC [ < 64 ; 15 ; 8 M     (no release is sent)
+        wheel down    ESC [ < 65 ; 15 ; 8 M
+        Ctrl + wheel up    ESC [ < 80 ; 15 ; 8 M    (64 + 16)
+        Alt  + wheel down  ESC [ < 73 ; 15 ; 8 M    (65 + 8)
+        Shift + wheel      nothing is sent: xterm keeps Shift for its own
+                           selection and scrolling.
+    The numbers after the code are the column and row, counted from 1.
+    With only mode 1000 on (the old encoding) the bytes are
+        ESC [ M, then three bytes: 32+code, 32+column, 32+row,
+    for example wheel down is ESC [ M 'a' then two position bytes.  That
+    form breaks above column 223 and is also confused with UTF-8 input:
+    use 1006 only.  With no mode on, this xterm sent nothing for the wheel
+    in the alternate screen.
+  - Which terminals report the wheel with 1000 and 1006 (KNOWLEDGE, not
+    tested): xterm, gnome-terminal and other VTE terminals, konsole,
+    kitty, alacritty, foot, iTerm2, Windows Terminal, tmux (it passes
+    them on when its own mouse option is on, and sends them to the
+    program only then), the Linux console (not without gpm, and not
+    SGR).  Some terminals also offer "alternate scroll" (mode 1007),
+    which turns the wheel into Up and Down keys in the alternate screen
+    without reporting: that needs no code and is already useful, but it
+    is the terminal's setting, not ours.
+
+  What to do (CODE).
+  - Editor text area: a wheel step moves the view by 3 rows (the first
+    line shown, e->top, in src/view.c), and a step with Ctrl or Alt moves
+    by half a screen.  The cursor does NOT have to move with the view; but
+    the next key that moves the cursor calls ed_scroll_to_cursor and the
+    view jumps back.  So the cursor must be put inside the visible rows
+    after a wheel step (the same effect as the keys Up and Down).  This
+    is the simple and the expected behaviour in editors.  It is a small
+    function: about 40 lines in ui.c.
+  - Scrolling panels (lists, the help viewer, the Document Manager lists,
+    the Viewer of a Preview): each of them has its own loop that calls
+    term_getkey(-1) (widgets.c, str.c, menu.c, ui.c).  The cheapest way
+    is to turn the wheel into the keys they already know: a wheel step
+    becomes three K_UP or K_DOWN and a Ctrl step a K_PGUP or K_PGDN, in
+    the low level (term_getkey_raw), before any loop sees it.  Then every
+    list, the help viewer and the Document Manager scroll without any
+    change in them.  Cost: about 30 lines in term.c and term_x11.c.
+  - Menus: recommended is that the wheel does nothing in a menu (and in a
+    panel that is not a list).  A wheel that moves the highlight of a
+    menu is a surprise: one step too many and Enter runs a command.  With
+    the translation to keys above, the wheel would move the highlight;
+    so the translation must be made only where the caller says that it
+    wants it (a flag set by the list and help loops), not in the low
+    level for all.  Decision made here: the flag.
+  - The Viewer (dviview) is a separate program: add ButtonPressMask and
+    the buttons 4 and 5 in handle_event; scroll_y changes by
+    SCROLL_STEP, and a step with Ctrl goes to the previous or next page.
+    About 20 lines, no relation to the Editor code.  It is the cheapest
+    first step and a good test of the whole idea.
+
+3. Cursor placement by a click
+------------------------------
+
+  The mapping from a cell to a document position EXISTS already (CODE):
+  - view_line_cells (src/view.c) builds, for one screen line, an array of
+    Cell with the fields ch, attr and tok.  tok is the index of the token
+    of the block's column text that the cell shows, or -1 for a cell that
+    shows no token (blank, the column separator, the rule of a section
+    line).  ed_draw uses the same array for the highlight.
+  - A screen line is a VLine: kind (0 text, 1 or 2 a rule line), item (the
+    block) and row.  The line number is e->top + screen row - the first
+    text row (text_y0 in ui.c).
+  - ed_cursor_screen is the inverse: from the cursor to a cell.  A click
+    needs this function turned around: from screen row and column to
+    (item, col, tok).  It is: take the VLine, call view_line_cells, find
+    the column c whose range [colx, colx + colw) holds the cell, read
+    tok of the cell; if tok is -1 take the nearest token to the left in
+    that row (a click after the end of a short line puts the cursor at
+    the end of the row: tok1 of the LRow).
+  - Columns: colx and colw of the block (BView) tell the column; a click
+    on a separator goes to the nearest column.
+  - Tables: they are blocks with several columns; the same rule works.
+  - Folded sections: the lines of a folded section are not in the view,
+    so there is nothing to click.  A click on the section rule line
+    (kind 2) could toggle the fold, as the fold key does: optional.
+  - Wrapped lines: each LRow has tok0 and tok1, so the row of a wrapped
+    line is found by the VLine's row, and the click works.
+  - Keycap and equation images in X11: an image covers several cells; the
+    cells carry the tok of the token that is the image (lrow_cell for
+    rows that are not plain text), so a click on an image puts the cursor
+    at its token.  The display equation is the one case that has to be
+    tried by hand: a click inside the image of an equation could mean
+    "edit this equation" in the original; here it should only put the
+    cursor on it.  Decision made here: only the cursor.
+  - Size: one function in view.c (ed_pos_at, about 60 lines) and one
+    case in handle_key_inner for a new key code K_MOUSE (about 30 lines):
+    the mouse event is delivered to the same place as the keys, with the
+    cell in a global or an event queue next to the key queue in
+    termbuf.c (keyq).  Not tested in running code: the study did not
+    write the function.  The risk that it is wrong for some layout is
+    low because ed_draw and the click use one array.
+  - What is missing: the highlight mode.  Every command acts on a
+    highlight that is started by a key (the keypad plus) and extended by
+    the cursor keys.  A click during a highlight would move its end:
+    that is what the cursor keys do, so the click can call the same move
+    function.  A click when a menu or a panel is open belongs to that
+    loop, not to the Editor (see below).
+  - Clicks in the status line, the message line and the key strip: ignore
+    them in stage 1.  A click on a key of the strip that does what the key
+    does is easy later (the strip has its own column table,
+    key_strip_columns in view.c), and is a good second use.
+  - Menus, lists and panels: a click on an item of a menu or a list would
+    select it, and a second click or Enter runs it.  Each loop would need
+    its own geometry (they are drawn by separate code in widgets.c and
+    menu.c): that is the large part of the work, many small changes.  Not
+    recommended in the first stages.
+  - Double click: the Editor has no unit that a double click would select
+    (a word is not a unit in its commands; the units are Text, Column,
+    Block, Section, chosen from a menu).  Not worth doing.
+
+4. Pasting and selection
+------------------------
+
+  - X11 has PRIMARY (the text that is selected, pasted with the middle
+    button) and CLIPBOARD (copied explicitly).  To take part, the Editor
+    window must own the selection (XSetSelectionOwner), answer
+    SelectionRequest (with the target STRING or UTF8_STRING, and INCR for
+    large texts), and to paste it must send XConvertSelection and handle
+    SelectionNotify.  That is about 200 lines, an event loop that today
+    knows nothing of this, and a test with xclip or xsel.
+  - The Editor's own block commands and the library (Cut, Copy, Move,
+    Paste in the library, F5) are not connected to the X11 selections:
+    they work on its own highlight and its own library.  A paste from the
+    desktop would insert text as typed characters (it must use the
+    Editor's character set, code page 437, and drop what it cannot show).
+    A copy to the desktop would make the library text the CLIPBOARD, so
+    it could be pasted into another program.
+  - In the terminal, the terminal's own selection and paste already work
+    when reporting is OFF: the user selects with the mouse and pastes
+    with the middle button or Ctrl-Shift-V, and the text comes as typed
+    keys (the Editor takes it key by key).  Bracketed paste (ESC [ ?
+    2004 h, and the text between ESC [ 200 ~ and ESC [ 201 ~) would let
+    the Editor take a paste as one operation and one undo step.  TESTED
+    not: the study did not run it.  It needs about 40 lines in term.c.
+  - The cost of turning reporting on in a terminal: the terminal's own
+    selection stops working; the user must hold Shift to select or paste
+    (TESTED: xterm sent nothing for Shift + wheel).  That removes the
+    one thing that terminal users do with the mouse today.  Therefore
+    reporting must NOT be on by default.  Recommended: off by default, a
+    setting in the setup (Options) that turns it on, saved with the
+    other settings, and in the manual one sentence that says that Shift
+    gives the terminal's own selection back.  X11 has no such cost: the
+    Editor owns its window, so the mouse is simply available there.
+
+5. Keys, modifiers and the function-key work
+--------------------------------------------
+
+  - Modifiers: the wheel with Ctrl or Alt is delivered in both versions
+    (TESTED).  Shift is not delivered by xterm; do not give Shift a
+    meaning.  Use Ctrl for "by half a page" and nothing with Alt, because
+    Alt and a key run a macro in the Editor (handle_key_inner calls
+    macro_play first).
+  - Macros record keys only (termbuf.c keyrec).  A mouse event must not be
+    recorded: a click depends on the screen, and a macro that replays a
+    click would be wrong.  Deliver the mouse outside the recorded path,
+    or skip K_MOUSE in the recorder.  The wheel translated to keys would
+    be recorded as keys: either is acceptable, but say it in the manual.
+  - The Esc prefix idea (Esc and a key for the function keys) is not
+    affected: ESC [ < is a prefix that the decoder can tell from ESC
+    followed by '[' typed by hand because parse_csi sees '<' next, and the
+    sequence always comes complete in one write.  The delay of 40 ms in
+    term_getkey_raw for a lone ESC stays the same.
+  - The key strip and F12 (the menu key) do not change.  Nothing here
+    needs a new key, so the key strip, the keystroke tables and the
+    function-key work are not touched.
+
+6. Recommendation
+-----------------
+
+  Stage 1: the wheel, X11 first (about 1 day).
+    - Viewer: buttons 4 and 5 (main.c, about 20 lines).
+    - Editor, X11: ButtonPressMask; buttons 4 and 5 move the view by 3
+      rows, with Ctrl by half a screen; the cursor is kept inside the view
+      (term_x11.c about 40 lines, ui.c about 40).
+    - The lists, the help viewer and the Document Manager lists scroll
+      with the wheel through the translation into keys, with the flag,
+      so that menus ignore it (term_x11.c, termbuf.c, widgets.c).
+    - Test: tests/xsmoke.py sends button 5 with xdotool and checks that
+      the first line shown changed.
+  Stage 2: click to place the cursor, X11 (about 2 days).
+    - ed_pos_at in view.c, K_MOUSE, a click in the highlight mode moves
+      its end.  Clicks on menus, lists and panels are ignored.
+    - Test: xsmoke clicks on known cells of a sample with columns, a
+      table and a wrapped line, and checks Pos in the status line.
+  Stage 3: the terminal version (about 2 days).
+    - A decoder for ESC [ < b ; x ; y M and m in parse_csi (about 40
+      lines), a setting to turn modes 1000 and 1006 on, off at exit and at
+      suspend, and the same stage 1 and 2 functions.  Tests in tests/tui.py
+      become possible by writing the report sequences to the pty.
+    - Off by default (section 4).
+  Stage 4, only if wanted: X11 PRIMARY and CLIPBOARD (about 200 lines and
+      a test with xclip) and bracketed paste in the terminal.
+
+  Not worth doing: text selection by dragging (every command works on a
+  highlight made with keys, and a drag has no good meaning inside
+  columns, tables and folded sections); double and triple click; clicks
+  in menus, panels and the strip (many small changes, much risk); the
+  wheel to move a menu highlight; the mouse in a macro.
+
+  Risks.
+    - The terminal's own selection is lost when reporting is on: hence the
+      setting, off by default.
+    - Report bytes taken for typed text when the mode is on but the
+      decoder is not complete: the decoder must come before the mode,
+      and a malformed report must be dropped, not typed.
+    - Users who work only with the keyboard are not affected: nothing
+      changes for them, and every command stays on a key.
+    - The tests: only xsmoke can make real buttons, and the click tests
+      depend on the font and the cell size.  Use the status line (Pos)
+      to check, not pixels.
+    - If any stage is built the documents must be changed as the worklist
+      item lists (the manual, the help, docs/KEYSTROKES.txt, README.txt,
+      docs/NOT-IMPLEMENTED.txt) and the text must say exactly what works.
+
+  What the owner must decide.
+    1. Is stage 1 (the wheel) wanted, and in which order, X11 first?
+    2. Is the terminal version wanted at all, given the loss of the
+       terminal's selection (stage 3), and if so is the setting off by
+       default?  The recommendation here is yes, off.
+    3. Should a click on a function key of the strip run the key?
+    4. Are X11 PRIMARY and CLIPBOARD wanted (stage 4), or is the
+       terminal's own paste enough?
+
+Experiment files (kept in the scratch area, not committed): a program
+that turns on the modes and records bytes, a driver with xdotool, and a
+Python script that sends the report sequences to the Editor in a pty.

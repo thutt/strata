@@ -1,0 +1,25 @@
+
+------------------------------ Custom Index Style ------------------------------
+
+Use the Index Style panel to customize the format of the index pages.
+
+           +---------------------- Index Style -------------------+
+           | Page Title:                                          |
+           | Title Font:                                          |
+           | Title Attributes:                                    |
+           |                                                      |
+           | Main Heading Font:                                   |
+           |        Attributes:                                   |
+           |   Subheading Font:                                   |
+           |        Attributes:                                   |
+           | Page Number/Reference Attributes:                    |
+           |                                                      |
+           | Indent to Subheading:                                |
+           |                                                      |
+           | Separator Text:                                      |
+           |                                                      |
+           | Winding Columns:                                     |
+           +--------- Press Ins to Use Displayed Settings --------+
+
+--------------------------------------------------------------------------------
+             Global Page         Keyboard Summary         Help Index

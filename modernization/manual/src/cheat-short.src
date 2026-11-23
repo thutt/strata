@@ -1,0 +1,110 @@
+# The card of the first forty keys of Strata: one landscape page, three
+# panels.  Every key on it is on the key reference leaflet and in the key
+# list of the manual.  A key is always a keycap.
+.doc Strata The First Forty Keys
+.landscape
+.margins 0.2
+.keyscale 1.0
+.numbering off
+.linespace 1.3
+.h1 Strata: the first forty keys
+.panels 33 35 33
+= MOVE
+{k:Left} {k:Right} | One character left, right.
+
+{k:Up} {k:Down} | One line up, down.
+
+{k:PgUp} {k:PgDn} | Half a screen up, down.
+
+{k:Home} {k:End} | Start, end of the line.
+
+{k:Ctrl-Left} {k:Ctrl-Right} | One word left, right.
+
+{k:Alt-F7} | Go To a section.
+
+= TYPE AND DELETE
+{k:Enter} | End the line.
+
+{k:Tab} | Insert a tab.
+
+{k:Del} | Delete the character under the cursor.
+
+{k:Backspace} | Delete the character before.
+
+= LOOK OF THE TEXT
+{k:Ctrl-B} | Bold on, off.
+
+{k:Alt-I} | Italics on, off.
+
+{k:Ctrl-U} | Underscore on, off.
+
+{k:Ctrl-N} | Normal text.
+.next
+= COPY AND MOVE TEXT
+{k:F3} | Copy: choose Text, Column, Block or Section, then move the cursor
+ over it.
+
+{k:F4} | Cut: the same.
+
+{k:F7} | Move: the same.
+
+{k:Enter} | Accept the highlight.
+
+{k:Esc} | Cancel it.
+
+{k:F5} | Paste at the cursor.
+
+= SEARCH
+{k:F9} | Search.
+
+{k:Alt-F9} | Search and replace.
+
+= BUILD THE DOCUMENT
+{k:Ctrl-A} | Append a block.
+
+{k:F2} | Split here.
+
+{k:Ins} | Append a section.
+
+{k:Shift-Ins} | Append a subsection.
+
+{k:Alt-1} | Show the headlines to level 1.
+
+{k:Keypad +} {k:Keypad -} | Expand, collapse the section.
+.next
+= FILES
+{k:Ctrl-S} | Save.
+
+{k:Ctrl-R} | Retrieve a file.
+
+{k:Ctrl-P} | Print.
+
+{k:Ctrl-Q} | Leave the Editor.
+
+= MENUS AND HELP
+{k:F12} | The menu bar.
+
+{k:Esc} | Back out of a menu or a panel.
+
+{k:F1} | Help.
+
+{k:Alt-F12} | Markers: pictures, notes, keycaps and equations.
+
+= IN A PANEL
+{k:Up} {k:Down} | Between fields.
+
+{k:Ins} | Accept the panel.
+
+{k:Esc} | Cancel it.
+
+= WHEN A TERMINAL KEEPS A KEY
+{k:Ctrl-F} | A list of every command with a function key.
+
+{k:Ctrl-F12} | The markers, as {k:Alt-F12}.
+
+{k:Alt-+} {k:Alt--} | Expand, collapse, as the keypad keys.
+
+{k:Alt-F2} | The Append menu: Sub-section is {k:Shift-Ins}.
+
+More keys: the key reference, {c:cheat.doc}.
+.end

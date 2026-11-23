@@ -1,0 +1,25 @@
+
+--------------------------------- File Settings --------------------------------
+
+The Save File and New File panels contain three prompts that you can use to 
+annotate your documents: Description, Author, and Revision.
+
+
+Description: Enter a description of the document. Manuscript displays the 
+  description when you press Gray + twice at a file name prompt.
+
+Author: Enter the author's name.
+
+Revision: Use the displayed revision number or enter a new one.  The revision
+  number is automatically updated each time you save the file.
+
+
+# Use the Description, Author, and Revision markers to insert the current entry
+  in a document.
+
+  Example:  Enter in text     ->    This proposal was prepared by [Author].
+            Prints as         ->    This proposal was prepared by John B. Dent.
+
+--------------------------------------------------------------------------------
+        Save File            New File            Markers            File
+                 Keyboard Summary                Help Index

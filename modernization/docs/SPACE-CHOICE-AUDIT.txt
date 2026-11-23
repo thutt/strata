@@ -1,0 +1,149 @@
+SPACE-CHOICE-AUDIT: THE SPACE BAR IN EVERY FIELD
+================================================
+
+Rule: a field that has a bounded and known set of values (a
+choice: Yes or No, a list, the Printer, the family of a font)
+is changed by the space bar: Space takes the next value and
+goes round from the last to the first.  Left, Right, F2 and
+the plus keep working.  A text, number or name field takes the
+space as a character.  A list that is built when the panel
+opens (the print queues) is stepped through as far as it is
+there; the entries that come later are stepped through when
+they have come.
+
+How it is done: all choice fields of the Editor are one kind
+(WF_CHOICE in src/widgets.c) and take Space in the widget; the
+panels of the Document Manager (src/str.c) take it in their
+choice_key.  A field that is given a list gets Space with no
+code of its own.  Before this audit two fields of the
+Document Manager had a fixed set of values and no list, so they
+were typed: Install Now and Family of TeX Font Association.
+They are choices now.  No other field was found.
+
+COUNTS (made from the tables of the source by this program)
+-----------------------------------------------------------
+Marker panels (src/marker.c), 22 panels:
+  choice 13 (Space steps them), number 12, text 20
+Global Format panels (src/globalmenu.c), one definition of
+each field (the panel of a level repeats the definitions):
+  50 format fields and 14 page-layout fields: choice 24, number 29,
+  text 6, info 5
+Other panels (the table below, one row may name several
+fields): 72 rows: choice 35, list 2, number 8, text 14, name 9, info 4
+
+Space already changed every field of kind choice or list
+above except the two of TeX Font Association, which are the
+only fields that changed with this audit.
+
+THE TABLE OF THE OTHER PANELS
+-----------------------------------------------------------
+Panel                      Kind     Field(s)
+Print, Final / Draft       list     Printer
+Print, Final / Draft       choice   Print Double Sided?
+Print, Final / Draft       choice   Sort Output Pages?
+Print, Final / Draft       choice   Print Current Section Only?
+Print, Final / Draft       choice   Print Title Page?
+Print, Final / Draft       choice   Print Double Spaced?
+Print, Final / Draft       choice   Error Log?
+Print, Final / Draft       choice   Table of Contents?
+Print, Final / Draft       choice   Index?
+Print, Final / Draft       choice   List of Figures?
+Print, Final / Draft       choice   List of Pictures?
+Print, Final / Draft       choice   List of Tables?
+Print, Final / Draft       choice   Print in Black and White?
+Print, Final / Draft       name     Output File
+Print, Final / Draft       number   Copies
+Print, Final / Draft       number   Contents Levels
+Print, Final / Draft       text     Print from Section
+Print, Final / Draft       text     to Section
+Print, Final / Draft       number   Print from Page
+Print, Final / Draft       number   to Page
+Print, Final / Draft       info     Print Status
+Print, Preview             choice   Preview Title Page?
+Print, Preview             choice   Error Log?
+Print, Preview             text     Preview from Section
+Print, Preview             text     to Section
+Search                     choice   Find
+Search                     choice   Direction
+Search                     choice   Match Case
+Search                     choice   Whole Word
+Search                     choice   Attribute
+Search                     text     Search for
+Replace                    choice   Find
+Replace                    choice   Match Case
+Replace                    choice   Whole Word
+Replace                    choice   Attribute
+Replace                    choice   Replacement Case
+Replace                    choice   Ask at Each
+Replace                    text     Search for
+Replace                    text     Replace with
+Border                     choice   Top, Bottom, Left, Right, Inside (5 fields)
+Border                     choice   Connect Borders?
+Border                     number   Top Gutter, Bottom Gutter
+Border                     number   Shading (%)
+Save / Save As             choice   Options
+Save / Save As             name     Working Directory, Document Name
+Save / Save As             text     Description, Author, Revision
+New / Get / Import / Expor choice  
+    Options, Character Set, Scope, Check Validity (4 fields, 2 more in the
+    Import panel)
+New / Get / Import / Expor name     Working Directory, File Name, Template
+New / Get / Import / Expor text     Description, Author, Revision
+Macros                     choice   Include in Macro Set?, Options (retrieve)
+Macros                     text    
+    Macro Key: Alt-, Description, Keystrokes, Author, Revision
+Macros                     name     Working Directory, File Name
+Library                    choice   Include in Library?, Options (retrieve)
+Library                    text     Description, Author, Revision
+Library                    name    
+    Name of an entry (a list of the entries, a new name may be typed)
+Spelling                   choice   Auto Correct?
+Spelling                   info    
+    Document Name, Custom Dictionary, Dictionary Language
+Compare / Dictionaries / R name    
+    Working Directory, the document and file names
+Global, Fonts              name     Font 1 to Font 20 (a name of a typeface)
+Global, Options            info     Block Indicators and the five other rows
+Global, Options            text    
+    Date Format, Keycap Foreground, Background, Scale, C1 to C9 Description
+Global, Columns            number   Number of Columns, Gutter Size
+Document Manager, Setup    choice   Autosave
+Document Manager, Setup    list    
+    Print To, Printer Queue, Paper for New Documents, Terminal Characters
+Document Manager, Setup    number  
+    Backups Kept, Autosave Interval, Undo Levels, Window Rows
+Document Manager, Setup    text     Dictionary Language (a code such as en_US)
+Document Manager, Setup    name    
+    Working Directory, PDF Directory, PDF Viewer, Macro Set, Library, Editor
+    program, Help File
+Document Manager, TeX Font choice   Family (new)
+Document Manager, TeX Font choice   Install Now (new)
+Document Manager, TeX Font text    
+    Name, LaTeX Package, Package Options, CTAN Archive, Map File
+Document Manager, TeX Font info     Font Number, Installed
+Document Manager, New / Te name    
+    Document Name, Working Directory, Template, Description, Author, Variables
+
+Does Space change it?  Yes for every row of kind choice and
+list; no for number, text, name (the space is typed) and info
+(no cursor).
+
+FIELDS THAT DO NOT TAKE SPACE AS THE NEXT VALUE, AND WHY
+-----------------------------------------------------------
+text, number and name fields: Space is a character that can be typed.
+Font 1 to Font 20 (Global, Fonts): A name of a typeface: the list of known
+    ones is a convenience and a user may type another name.
+Library entry name: A new entry may be named: the list is of the entries that
+    exist.
+Dictionary Language (Setup): A code such as en_US; the dictionaries that are
+    installed are not listed by the program.
+Date Format, Keycap values: A pattern or a number, not a list.
+info fields: Only shown: no cursor.
+
+TESTS
+-----------------------------------------------------------
+tests/spacechoice.py drives the Document Manager and the Editor
+(Family and Install Now, Autosave, Print Double Sided?, Error
+Log?, the Printer, a typed space in Copies and in a text field)
+and fails when the handling of Space is off or does not go
+round.  tests/xspacechoice.py does the same in the X11 Editor.

@@ -1,0 +1,25 @@
+
+--------------------------------- Cross-reference ------------------------------
+
+Use the Cross-reference marker to reference another section in a document.
+                                     +------------ Cross-reference ------------+
+--Procedure------------------------  |                                         |
+ Enter the text that should appear  | Section Number:                         |
+  before the tag; for example,       |          Style:                         |
+  Please refer to.                   |-----------------------------------------|
+ Press Marker.                      |                                         |
+ Select Cross-reference.            |    Section Tag:                         |
+ Enter the Section Number.          |       Headline:                         |
+ Select the cross-reference style.  +-- Press Ins to Use Displayed Settings --+
+ Press Ins to enter the marker.
+--------------------------------------------------------------------------------
+
+# Section Number: Type the section number of the referenced section. Always use
+  the decimal section number as displayed in the Status line (for example, 
+  1.2.1.1), regardless of the section tag format.
+# Style: Press Space Bar and select the cross-reference style. Section tags must
+  be displayed in the document body for tags to appear in cross-references.
+# Section Tag and Headline: These prompts display the actual section tag and 
+  headline of the cross-referenced section.
+--------------------------------------------------------------------------------
+Global Cross-reference Marker Format    Marker    Keyboard Summary    Help Index

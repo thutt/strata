@@ -1,0 +1,966 @@
+ENVELOPE SIZES AND ADDRESS POSITIONS: THE STUDY BEHIND THE ENVELOPE TEMPLATES
+=============================================================================
+
+Written 2026-11-18 for the owner's request: look up the envelope sizes of the
+countries of Europe, Asia, North America and South America and compare them
+with the paper size and the page layout that the templates use; and make a
+set of country or region templates for the sizes and positions that can be
+verified.  The templates are made by
+tests/mktemplates.py (the committed copies are in templates/); the positions
+used in this document were MEASURED on a PDF printed from each template (the
+boxes of ink, in millimetres from the top left corner of the page).
+
+How to read this document: every number says where it comes from.  A number
+that two good sources contradict, or that no source gave, is listed under
+"Not verified" and no template was changed because of it.  The web was
+searched in standard mode; the texts of several standards are sold (DIN 676,
+DIN 680, DIN 5008, NF Z 10-011, SN 010 130, GB/T 1416, JIS S 5502) and were
+not read: the figures come from postal operators and secondary sources.
+
+
+1.  WHAT WAS DONE
+-----------------
+
+  - Sizes and address rules were looked up for the countries of the request
+    (Section 2 and 3).
+  - Every envelope template and both letter templates were printed and
+    measured, and compared with the numbers found (Section 4).
+  - The German sender line was 100.6 mm long, the address field of DIN 5008
+    is 85 mm wide: fixed, it is 81.0 mm now.
+  - The set of envelope templates grew from 5 to 14 (Section 7), and on
+    2026-11-18 to 16 (Section 9): North America 3, United Kingdom 3, Germany
+    1, France 1, continental Europe 3, Latin America 1, Australia 2, Japan
+    2.  The German template is now called
+    envelope-de-din5008-dl.  Every size of a template is checked in the
+    tests against the size of the source (not against the generator), and the
+    place of the address against the rules that were found.
+  - What was left out, and why, is in Section 7.  What is not verified is in
+    Section 6.
+
+
+2.  THE SIZES  (millimetres, width by height, the envelope lying wide)
+----------------------------------------------------------------------
+
+  The C series of ISO 269 (withdrawn in 2009 without replacement, and still
+  the everyday standard in most of the world), as printed in the Wikipedia
+  article "Envelope" and by Royal Mail (guide of 2026-04-21), Australia Post
+  (PreSort Letters guide) and GOST R 51506-99 (Russia):
+
+      Name     Size         Holds
+      C6       162 x 114    A4 folded twice, or A6 flat
+      DL       220 x 110    A4 folded in three (also called E65)
+      C6/5     229 x 114    A4 folded in three (Switzerland and others)
+      C5       229 x 162    A5 flat, or A4 folded once
+      C4       324 x 229    A4 flat
+      B6       176 x 125
+      B5       250 x 176
+      C3       458 x 324
+
+  Country by country:
+
+  Country        Sizes in common use                        Source
+  -------------  -----------------------------------------  ---------------
+  Germany        DL 220 x 110, C5, C4, C6/5; window 90 x    briefmarkenmesse
+                 45 mm in DL and C4 (DIN 680, text not      essen.de (window
+                 read)                                      size)
+  France         DL, C5, C4, C6; windows 35 mm (3 lines)    laposte.fr (the
+                 to 45 mm (4 or 5 lines) high, 90 to 100    advice of La
+                 mm wide                                    Poste); GPV
+                                                            France
+  United         DL 220 x 110, C5 229 x 162, C6 162 x 114;  Royal Mail,
+  Kingdom        letters 140 x 90 minimum, 240 x 165        Guide for Clear
+                 maximum (recommended)                      Addressing 2026
+  Italy, Spain,  ISO C series and DL                        ISO 269; no
+  Netherlands,                                              country source
+  Sweden,                                                   was read
+  Poland
+  Switzerland    C6/5 229 x 114, C5 229 x 162, windows      shop listings
+                 on the left or on the right                (digitec, Swiss
+                                                            Post shop)
+  Russia         C6, DL, C5, C4 as in ISO 269; windows in   GOST R 51506-99
+                 the address zone allowed
+  Japan          Nagagata 3: 235 x 120   Nagagata 4: 205 x  Japan Post table
+                 90   Nagagata 40: 225 x 90   Kakugata 2:   of JIS S 5502:2010
+                 332 x 240   Kakugata 20: 324 x 229
+                 Kakugata 3: 277 x 216   Yougata 2: 162 x
+                 114   Yougata 4: 235 x 105  (Nagagata 6:
+                 220 x 110 and Yougata 0 to 7 as listed by
+                 Wikipedia)
+  China          No. 5: 220 x 110 (the DL size)             DevExpress
+                 PRC4 208 x 110, PRC7 230 x 160 and the     documentation;
+                 others as in the PWG list                  PWG 5101.1 via
+                                                            Wikipedia
+  India          Letters from 140 x 90 to 458 x 324 mm (+- India Post rules
+                 2 mm); an older page lists 229 x 162 and   (two pages that
+                 324 x 229; 9 x 4 inch (229 x 102) is the   disagree)
+                 common retail size, not an official one
+  South Korea,   no source found                            -
+  Singapore
+  Australia      DL 220 x 110 (the window DL is standard    Australia Post
+  New Zealand    for retail letters), C5 229 x 162          PreSort Letters
+                                                            guide
+  United States  No. 10 (business) 241 x 105 (9 1/2 x 4     Wikipedia list
+                 1/8 in), No. 11 264 x 114, No. 9 225 x 98, of North
+                 Monarch (7 3/4) 191 x 98, No. 6 3/4 165 x  American sizes
+                 92; A2 146 x 111, A6 165 x 121, A7 184 x
+                 133, A8 206 x 140, A9 222 x 146, A10 241 x
+                 152 (invitations and cards)
+  Canada         The same American sizes.  Letters from    Canada Post,
+                 140 x 90 (minimum) to 245 x 156 (standard "Acceptable
+                 maximum, up to 50 g, 5 mm thick); larger  letter sizes"
+                 up to 380 x 270 x 20 are non-standard
+                 (more postage).  By arithmetic of the
+                 limits (not stated by Canada Post): No.
+                 10, No. 9 and Monarch fit the standard
+                 size, C5 (162 high) does not.
+  Mexico         Letter paper (216 x 279) and the American  concepto.de (the
+                 formats are customary; no postal source    paper formats of
+                 for envelopes was found                    Latin America)
+  Brazil         Correios: letters and envelopes from 140   Correios, CEPNet
+                 x 90 mm; sizes near the standard ones      technical guide
+                 count as normal format (the other source   (2021); Melhor
+                 says 160 x 110 minimum: they disagree)     Envio, Bling
+  Argentina,     DL called the "sobre americano", 110 x     Eurosender,
+  Chile,         220 mm; listings in Chile show 105 x 228   consumoteca.com,
+  Colombia, Peru and 107 x 228 as well (the sizes vary by   Mercado Libre
+                 maker); no postal source was found         (Chile)
+
+  Japan, vertical addressing: the common Japanese envelopes (Nagagata) are
+  addressed in vertical writing.  The Printer and the Editor have no
+  vertical text, so no Japanese envelope template is proposed (Section 7).
+
+
+3.  WHERE THE ADDRESS GOES
+--------------------------
+
+  Germany (DIN 676 and DIN 5008).
+    - The address field is 85 mm wide and 45 mm high and starts 20 mm from
+      the left edge of the sheet (Macwelt, "Know-how Normsatz", quoting DIN
+      676; Briefmarkenmesse Essen; ausbildung.de).
+    - The distance from the top edge of the sheet is 45 mm in Macwelt and
+      Briefmarkenmesse Essen and 50 mm in monsterdealz.de and other guides
+      (for form B; form A starts higher, at 32 mm in monsterdealz).  The
+      sources contradict each other; 50 mm may be the value of the edition
+      of 2020.  NOT VERIFIED.
+    - The sender (the return address line) may stand in the top 5 mm of the
+      field, in small type (Macwelt).  The address must stand exactly in the
+      window and at least 3 mm from its edge (Macwelt).
+    - The window of a DL or C4 envelope is 90 mm wide and 45 mm high
+      (Briefmarkenmesse Essen).  Its distance from the left and bottom edges
+      was not found; a postal rule keeps the lowest 15 mm of the envelope
+      free (one source): NOT VERIFIED.
+    - Macwelt gives the DL envelope as 188 x 218 mm: that is not the ISO
+      size (220 x 110) and is taken as an error of that article.
+
+  United Kingdom (Royal Mail, Guide for Clear Addressing, 2026-04-21, read in
+  full).
+    - Delivery address block: at least 15 mm from the top, left and right
+      edges and at least 18 mm from the bottom edge; landscape; the last line
+      of the geographic address more than 50 mm from the top edge; no part
+      more than 125 mm above the bottom edge; at most 64 characters a line;
+      one block only.
+    - The indicia area is the top right corner: 40 mm high and 75 mm from the
+      right edge (a little more for the larger designs); the address block
+      must stay out of it.
+    - Return address on the front, top left corner, no lower than 28 mm from
+      the top edge, no closer than 12 mm to the delivery address; on the back
+      within 40 mm of the top.
+    - Windows: at least 15 mm from the left, right and top and at least 18 mm
+      from the bottom edge; at most 50 percent of the surface; rectangular
+      with rounded corners on the front.
+
+  France (La Poste, NF Z 10-011, SP 8855).
+    - At most 6 lines of 38 characters; the last line in capitals; no
+      punctuation from line 4 on (La Poste, SP 8855 volume 2, version 1.14).
+    - The press mailing specification (SP 8855 volume 4, version 1.14, for
+      publications) puts the address zone at least 20 mm from the right edge
+      and from the bottom edge, the top of its first line at most 120 mm from
+      the bottom edge, and its left edge at least half the width from the
+      left edge.  It is a rule for publications in bulk, not for a business
+      letter, and is NOT VERIFIED for ordinary letters.
+    - The positions in NF Z 10-011 itself were not read (it is sold).
+
+  United States (Domestic Mail Manual 202, archived edition of 2016-01-17).
+    - Address inside the optical character reader area: at least 1/2 inch
+      (12.7 mm) from the left and right edges, the area reaching 2 3/4
+      inches (69.9 mm) up from the bottom edge, and not lower than 5/8 inch
+      (15.9 mm) from the bottom edge.  The current edition was not read.
+
+  Canada (Canada Post, Machineable Mail, current page).
+    - The address window is placed in the address zone, 100 mm from the
+      right side of the item; 7 mm to 10 mm of clear space around the address
+      block; 7 mm between windows.  The wording leaves open whether the
+      block lies within 100 mm of the right edge or begins 100 mm from it:
+      NOT VERIFIED.
+
+  Brazil (Correios, CEPNet guide, 2021): the address is read by machine
+    (CEP, postal code, in the address block); no distance from the edges was
+    read.  NOT VERIFIED.
+
+  Not found: Mexico, Argentina, Chile, Colombia, Peru, Australia, Russia,
+  Switzerland, Japan (horizontal), China, India, South Korea, Singapore
+  (window and address zone distances).
+
+
+4.  THE COMPARISON WITH THE TEMPLATES  (measured in a printed PDF, mm)
+-----------------------------------------------------------------------
+
+  (Measured before the decisions of 2026-11-18: the positions of the German
+  envelope, of letter-a4 and of the French envelope changed; see Section 9.)
+
+  Page size of each envelope template against the standard size:
+
+      Template            Page printed    Standard      Same
+      envelope-us-ca-10   241.3 x 104.8   241 x 105     yes (9 1/2 x 4 1/8)
+      envelope-uk-c5      229.0 x 162.0   229 x 162     yes
+      envelope-uk-dl      220.0 x 110.0   220 x 110     yes
+      envelope-de-din5008-dl      220.0 x 110.0   220 x 110     yes
+      envelope-fr-dl      220.0 x 110.0   220 x 110     yes
+
+  Position of the blocks (x0, y0) to (x1, y1), from the top left corner:
+
+  envelope-us-ca-10
+    sender     (12.2, 12.7) - (52.8, 25.4)
+    recipient  (102.6, 51.8) - (146.3, 68.8)
+    Against DMM 202: left and right more than 12.7 mm; the bottom of the
+    address at 36.0 mm from the bottom edge (needed: 15.9 mm or more); the
+    top of the address at 51.8 mm from the top edge, below the 34.9 mm line
+    that is 69.9 mm up from the bottom.  No difference.
+
+  envelope-uk-c5
+    sender     (11.4, 11.9) - (52.3, 24.1)
+    recipient  (109.0, 69.8) - (141.0, 91.4)
+    Against Royal Mail: the sender ends at 24.1 mm (limit 28 mm); the
+    address is 109.0 mm from the left, 88.0 mm from the right, 70.6 mm from
+    the bottom (needed 15, 15, 18); the first line is at 69.8 mm and the last
+    at about 88 mm, more than 50 mm from the top.  No difference.
+
+  envelope-uk-dl
+    sender     (11.2, 9.9) - (51.8, 22.1)
+    recipient  (99.1, 45.0) - (130.0, 61.7)
+    Against Royal Mail: the sender ends at 22.1 mm (limit 28 mm) and is 47 mm
+    from the address block (needed 12 mm); the address is 48.3 mm from the
+    bottom edge; the last line starts at about 58 mm, more than 50 mm from
+    the top; the top of the block (45.0 mm) is below the indicia area (40
+    mm).  No difference.
+
+  envelope-de-din5008-dl
+    sender line (19.3, 51.8) - (119.9, 55.1)  before the correction
+                (19.3, 51.8) - (100.3, 55.1)  after it
+    recipient   (19.3, 58.2) - (51.1, 75.4)
+    The field of DIN 5008 is 85 mm wide from 20 mm: it ends at 105 mm.  The
+    sender line reached 119.9 mm, 14.9 mm past the field and 9.9 mm past a
+    90 mm window that starts at 20 mm (it would have been cut off by the
+    window frame).  DIFFERENCE 1, FIXED (Section 5).  The left edge of the
+    ink (19.3 mm) is the 20 mm of the field within 0.7 mm: same.  The
+    recipient lines are inside the field.  The vertical positions (the
+    sender line at 51.8 mm and the recipient from 58.2 mm) agree with a
+    window that starts about 50 mm from the top; that window position is NOT
+    VERIFIED, so nothing was changed.
+
+  envelope-fr-dl
+    sender     (11.2, 9.9) - (48.3, 22.1)
+    recipient  (99.1, 49.8) - (142.7, 62.0)
+    Against the press specification of La Poste: right edge 77.3 mm from the
+    right (needed 20 mm), bottom 48.0 mm (needed 20 mm), the top of the
+    first line 60.2 mm above the bottom (limit 120 mm); the left edge of the
+    address is 99.1 mm from the left, the specification wants half the width,
+    110 mm: DIFFERENCE 2, 10.9 mm.  It is a rule of the specification for
+    publications; whether it applies to a business letter is NOT VERIFIED,
+    so nothing was changed.  The sample address has 3 lines of fewer than 38
+    characters, in capitals (as La Poste asks): same.
+
+  letter-us (215.9 x 279.4 mm) and letter-a4 (210 x 297 mm)
+    letter-us:  sender (114.3, 26.4) - (154.9, 43.7)
+                recipient (25.4, 50.3) - (61.0, 67.8)
+    letter-a4:  sender (115.1, 26.4) - (155.7, 43.7)
+                recipient (25.7, 50.3) - (61.0, 67.8)
+    The papers are US Letter and A4: same as the countries use (A4 in all
+    the countries of Section 2 except the United States, Canada and some
+    countries of Latin America; Canada uses Letter).
+    A4 folded in three goes into a DL envelope.  The address block of
+    letter-a4 against the field of DIN 5008 (20 mm from the left, 85 x 45
+    mm): inside it in both readings of the top edge, with 5.7 mm to the left
+    edge of the field; with the top of the field at 45 mm the block is 5.3 mm
+    below it; with the top at 50 mm it is only 0.3 mm below it (the rule of 3
+    mm from the window edge would then be broken).  DIFFERENCE 3, only if the
+    value 50 mm is right (NOT VERIFIED).  The same block on letter-us is at
+    the same place; the windows of US window envelopes were not found.
+
+
+  The nine templates added later (measured in the same way, boxes of ink):
+
+      Template                 Page            Sender block      Recipient
+      envelope-us-ca-9         225.4 x 98.4    (11.4,12.7)-      (96.0,46.0)-
+                                               (52.1,25.4)       (139.7,62.7)
+      envelope-us-ca-monarch   190.5 x 98.4    (11.9,12.7)-      (88.1,46.0)-
+                                               (52.8,25.4)       (131.8,62.7)
+      envelope-uk-c6           162.0 x 114.0   (10.2,9.9)-       (69.1,47.8)-
+                                               (51.1,22.1)       (100.1,64.8)
+      envelope-eu-dl           220.0 x 110.0   (11.2,9.9)-       (99.1,45.0)-
+                                               (51.8,22.9)       (130.3,57.7)
+      envelope-eu-c5           229.0 x 162.0   (11.4,11.9)-      (109.0,69.8)-
+                                               (52.3,24.9)       (141.0,87.6)
+      envelope-eu-c65          229.0 x 114.0   (8.6,9.9)-        (100.3,45.0)-
+                                               (49.5,22.9)       (131.3,57.7)
+      envelope-latam-dl        220.0 x 110.0   (11.2,9.9)-       (99.1,45.0)-
+                                               (52.1,22.9)       (129.0,56.9)
+      envelope-au-dl           220.0 x 110.0   (11.2,9.9)-       (99.1,45.0)-
+                                               (49.0,22.1)       (141.5,56.9)
+      envelope-au-c5           229.0 x 162.0   (11.4,11.9)-      (109.0,69.8)-
+                                               (49.5,24.1)       (151.1,86.9)
+
+  All nine pages have the size of the source within 0.1 mm.  The two North
+  American sizes meet the reading area of the Postal Service (the recipient
+  at 35.7 mm from the bottom edge for both, needed 15.9; the top of the
+  address 46.0 mm from the top, the limit 69.9 mm up from the bottom is at
+  28.5 mm).  The seven others meet the margins of Royal Mail (15 mm from the
+  top, left and right and 18 mm from the bottom, the last line of the address
+  more than 50 mm from the top edge, the sender no lower than 28 mm from the
+  top).  For the United Kingdom that is a rule of the postal service; for the
+  other countries it is a LAYOUT that meets the only complete rule set that
+  was read, and the national rule of those countries is NOT VERIFIED
+  (Section 6, item 11).
+
+
+5.  WHAT WAS CHANGED
+--------------------
+
+  tests/mktemplates.py
+    - The sender line of envelope-de-din5008-dl: "Strata GmbH - Hauptstr. 1 -
+      12345 Musterstadt" (81.0 mm printed; it was 100.6 mm, 14.9 mm past the
+      DIN field).
+    - The German template is renamed from envelope-de-dl to
+      envelope-de-din5008-dl.
+    - Nine envelopes are added: envelope-us-ca-9, envelope-us-ca-monarch,
+      envelope-uk-c6, envelope-eu-dl, envelope-eu-c5, envelope-eu-c65,
+      envelope-latam-dl, envelope-au-dl, envelope-au-c5.  Each has a
+      description (at most 250 characters) with the country or region, the
+      size and what the paper is.  The sizes that the Paper Size list does
+      not have (No. 9, C6, C6/5) use the paper Custom with their width and
+      height.
+  templates/: the 14 envelopes and the 2 letters, made again with the
+    generator; the old envelope-de-dl.doc is removed.
+  tests/templates.py
+    - SOURCES: the size of every envelope in millimetres from the sources, the
+      size text that the description must name and the rule set; the printed
+      page must have the size of the source within 0.6 mm (a wrong size in
+      the generator fails).
+    - The recipient must meet the rule set of its template: Royal Mail
+      margins, the reading area of the Postal Service, the DIN field; the
+      sender no lower than 28 mm and not closer than 12 mm to the recipient.
+    - The folder of templates holds the generator's templates and no other
+      (a renamed template leaves no old file); 12 to 20 envelopes.
+  tests/installtest.py: the installed folder holds exactly the 16 templates
+    of the generator, with mode 644 and in the manifest; the New list of the
+    installed Editor shows all 16 names and the description of the chosen
+    one.
+  manual/src/file3.src: the table of the shipped templates, the table of the
+    places of the address and a paragraph that says to take the template of
+    the same size where a country has none of its own.
+  docs/FILE-MENU.txt names the set.
+
+  Mutations (each run: change the generator, make the templates again, run
+  python3 -I -B tests/templates.py, restore):
+    M1  us-ca-9 narrower by 5 mm              -> fails (the size)
+    M2  uk-c6 recipient 18 mm higher          -> fails (the Royal Mail check)
+    M3  us-ca-monarch recipient 34 mm lower   -> fails (the Postal Service)
+    M4  the size left out of the description of eu-c65 -> fails
+    M5  the C5 envelopes 5 mm lower           -> fails (the size)
+
+
+6.  NOT VERIFIED  (no template was changed for these, and none was made)
+------------------------------------------------------------------------
+
+  1.  (DECIDED 2026-11-18, Section 9.1: 45 mm; the 50 mm is the window.)
+      DIN 5008 form B: the top of the address field at 45 mm or at 50 mm.
+  2.  DIN 680: the window of the DL envelope, its distance from the left and
+      the bottom edge (only its size, 90 x 45 mm, was found).
+  3.  (DECIDED 2026-11-18, Section 9.2.)  The positions of NF Z 10-011 for La
+      Poste (letters).  The specification of La Poste gives half the width
+      for the left edge of the address; the template used 99 mm and uses
+      113 mm now.
+  4.  Canada Post: whether the address block lies within 100 mm of the right
+      edge.  The current DMM of the United States (the 2016 edition was
+      read).
+  5.  GB/T 1416-2021 (China): No. 5 (220 x 110) is certain through another
+      source; the other numbers of the standard were not read.  No Chinese
+      template (the position of the postcode boxes was not found).
+  6.  JIS S 5502 itself: the sizes are from the table of Japan Post.  The
+      Japanese templates of Section 9.4 follow the text of Japan Post and the
+      windows of the japanlco files of KOMA-Script; the figures of the
+      standard were not read (sold).
+  7.  SN 010 130 (Switzerland): sizes from shop listings only.
+  8.  South Korea and Singapore: nothing found.  India: two pages of India
+      Post disagree on the sizes; no Indian template.
+  9.  Window position in US window envelopes (No. 10 with a window), and in
+      the window envelopes of any country but Germany (and there only the
+      width).
+  10. Mexico, Argentina, Chile, Colombia, Peru: no postal source for the
+      envelope sizes and positions was found; the sizes in Latin America come
+      from retail sources (the "sobre americano" 110 x 220 mm; Chile also
+      sells 105 x 228 and 107 x 228) and, for Brazil, from the Correios guide
+      (minimum 140 x 90 mm).  Brazil: the figure of the minimum is
+      contradicted by two blogs (160 x 110 mm).
+  11. The position of the address in envelope-eu-*, envelope-latam-dl and
+      envelope-uk-c6 and of the sender in all of them is a layout that meets
+      the rules of Royal Mail (read in full) and the address field of DIN
+      5008; it is NOT the national rule of Italy, Spain, the Netherlands,
+      Sweden, Poland, Switzerland, Russia or Latin America (none was found;
+      Section 9.3).  The Australian templates meet the rule of Australia Post
+      (read on 2026-11-18, Section 9.3).
+  12. Royal Mail guide: window figures are from the guide of 2026; an older
+      document says the same (15 mm and 18 mm).
+
+
+7.  THE SHIPPED SET AND WHAT WAS LEFT OUT
+-----------------------------------------
+
+  Shipped (16 envelopes and 2 letters, a list that can be scanned in New;
+  grouped by region here; Japan was added on 2026-11-18):
+
+    North America   envelope-us-ca-10, envelope-us-ca-9,
+                    envelope-us-ca-monarch
+    Latin America   envelope-latam-dl
+    United Kingdom  envelope-uk-c5, envelope-uk-c6, envelope-uk-dl
+    Germany         envelope-de-din5008-dl
+    France          envelope-fr-dl
+    Europe          envelope-eu-c5, envelope-eu-c65, envelope-eu-dl
+    Australia       envelope-au-c5, envelope-au-dl
+    Japan           envelope-jp-yougata-4, envelope-jp-yougata-2
+    Letters         letter-a4, letter-us
+
+  Left out, and why:
+    - Japan, nagagata and kakugata (the long and the square envelopes): the
+      common ones are addressed in vertical writing, which the Editor and the
+      Printer do not have.  The Western-style envelopes (yougata) addressed
+      horizontally are shipped (Section 9.4).
+    - China (No. 5 to 7): the sizes are known only for No. 5 (the DL size);
+      the position of the postcode boxes was not found.  China's No. 5 is
+      served by envelope-eu-dl in size.
+    - India, South Korea, Singapore, New Zealand: no sizes or positions that
+      two sources agree on (India), or no source (the others).  New Zealand
+      uses the ISO sizes; the Australian templates have the same sizes.
+    - Mexico, Argentina, Chile, Colombia, Peru: no source for the positions;
+      envelope-latam-dl has the common size, the sobre americano.
+    - A C5 template for Latin America and Canada: no source says they use it
+      (in Canada a C5 is above the standard letter size).
+    - C4 (324 x 229 mm, A4 flat) and a German C5 or C6/5 window envelope:
+      the position of the window (DIN 680) and the rules for large letters
+      were not found.
+    - Further American sizes (No. 6 3/4, No. 11, A2 to A10): not business
+      envelopes, or the position rules of the Postal Service for them were not
+      read; they can be made with the Paper Size list and the Custom size.
+
+  Positions that need the owner's word or a source: (a) letter-a4: the
+  recipient block down by 5 mm if the 50 mm of DIN 5008 is confirmed; (b)
+  envelope-fr-dl: the recipient 110 mm from the left if the press rule is
+  meant to apply.
+
+
+8.  SOURCES
+-----------
+
+  Royal Mail, Guide for Clear Addressing (2026-04-21)
+    https://royalmailtechnical.com/rmt_docs/User_Guides_2026/
+    Guide_For_Clear_Addressing_21042026.pdf
+  La Poste, SP 8855 volume 2 (Adressage des plis) and volume 4 (Signaletique
+  du pli), version 1.14
+    https://lastation.laposte.fr/sites/p8_u1/files/2026-07/
+  Japan Post, the conditions of an envelope that meets JIS S 5502:2010
+    https://www.post.japanpost.jp/service/create/guideline/jis_envelope.html
+  Wikipedia, "Envelope" (ISO 269, JIS, PWG list for China, North America)
+    https://en.wikipedia.org/wiki/Envelope
+  GOST R 51506-99 (Russia, envelope sizes)
+    https://ru.wikisource.org/wiki/GOST_R_51506-99
+  Macwelt, "Know-how Normsatz" (DIN 676 address field)
+    https://www.macwelt.de/article/957112/know-how-normsatz.html
+  Briefmarkenmesse Essen, guides on addressing and DIN 5008 form B
+    https://www.briefmarkenmesse-essen.de/versenden/briefumschlag-adressieren/
+  monsterdealz.de, envelope sizes 2026 (form A and B)
+    https://www.monsterdealz.de/magazin/briefumschlag-groessen
+  USPS, Domestic Mail Manual 202 (archive of 2016-01-17)
+    https://pe.usps.com/archive/html/dmmarchive20160117/202.htm
+  Canada Post, machineable mail best practices (windows)
+    https://www.canadapost-postescanada.ca/cpc/en/support/articles/
+    machineable-mail-best-practices/windows.page
+  Australia Post, PreSort Letters service guide
+    https://auspost.com.au/content/dam/auspost_corp/media/documents/
+    presort-letters-service-guide.pdf
+  India Post, domestic letter rules
+    https://app.indiapost.gov.in/enterpriseportal/mails/domestic-mail/
+    domestic-letter
+  Canada Post, acceptable letter sizes
+    https://www.canadapost-postescanada.ca/cpc/en/support/kb/sending/
+    sending-faq/how-big-or-small-can-a-letter-be
+  Correios, CEPNet technical guide for sorting and addressing (2021)
+    https://www.correios.com.br/enviar/correspondencia/arquivos/nacional/
+  Eurosender and consumoteca.com (the sobre americano, 110 x 220 mm);
+  Mercado Libre Chile listings (105 x 228 and 107 x 228 mm)
+  concepto.de (the paper formats of Latin America)
+    https://concepto.de/?p=41977
+  DIN, entry of DIN 680 (window envelopes, edition 2008-02)
+    https://www.dinmedia.de/en/manuscript-procedure/din-680/99122626
+  Swiss shop listings of C6/5 and C5/6 window envelopes (digitec.ch)
+
+
+9.  DECISIONS OF 2026-11-18  (the owner: figure the open questions out;
+    horizontal Japanese envelopes: yes)
+-----------------------------------------------------------------------
+
+9.1  DIN 5008 form B: the address field begins 45 mm from the top of the
+     letter.  The 50 mm of other guides is the top of the WINDOW on the
+     ENVELOPE.
+  - The Bavarian regulation BayAGO Anlage 2 (a copy of the layout of DIN 676)
+    says that form B has a letterhead field of 45 mm and form A one of 27 mm
+    (the address field lies below it: 45 mm and 27 mm from the top).  Macwelt
+    and Briefmarkenmesse Essen say 45 mm.  The guides that say 50 mm
+    (monsterdealz.de, a handout of Wirtschaftsdeutsch) give the window of the
+    envelope: the DL window of DIN 680 is 90 by 45 mm, 20 mm from the left and
+    15 mm from the bottom edge (data sheets of printers of window envelopes:
+    flyerdevil.de, wir-machen-druck.ch); an envelope is 110 mm high, so the
+    window begins 110 - 15 - 45 = 50 mm from the top edge of the envelope.  A
+    letter folded in three by DIN 5008 (fold marks at 105 and 210 mm) is 105
+    mm high, so it rests 5 mm lower in the envelope than its top edge and the
+    field of 45 mm (45 + 5 = 50 mm) is in the window.  Both numbers are
+    right; they are two different edges.
+  - The address zone of the field begins 17.7 mm below its top (five lines
+    of 8 point above it; the first is the return line): 62.7 mm from the top
+    of the letter.  Two guides give another count of the lines of the zone
+    (three lines in an older edition); the 2020 guide says five.  The text of
+    DIN 5008 was not read (sold).
+  - Changed: the recipient of letter-a4 moved from 50.3 mm to 62.7 mm from the
+    top of the sheet (the date and the lines after it move with it).  The
+    German envelope (the letter in the middle of the envelope: 5 mm of play
+    across): text 25 mm from the left edge, the return line 54 mm and the
+    recipient 67.7 mm from the top, all of it 3 mm or more inside the window.
+  - Tests (tests/templates.py): the window of DIN 680 and the folded letter
+    are computed from the numbers of the sources; the recipient of letter-a4
+    is in the address zone and, for every place of the folded letter in the
+    envelope (10 mm of play across, 5 mm up and down), 3 mm or more inside the
+    window.
+
+9.2  La Poste: the address of an envelope goes in the right half.
+  - The only document of La Poste with figures that was read is the
+    specification of the pli (SP 8855 volume 4, version 1.13 and 1.14):
+    the address zone is 20 mm or more from the right edge (D3) and from the
+    bottom edge (D4), the top of its first line 120 mm or less above the
+    bottom edge (D5), its left edge half the width or more from the left edge
+    (D6), and the sender block is at the top left (RG 4-7).  It is written for
+    items in bulk (courier industriel and the press), and NF Z 10-011 is sold.
+  - Decision: apply it to the template for ordinary letters too.  It is the one
+    rule of La Poste with numbers, it costs nothing (an address in the right
+    half is where every reading machine looks) and it also meets any narrower
+    rule.  envelope-fr-dl: the recipient moved from 99 mm to 113 mm from the
+    left edge; the description says that La Poste asks for it.
+  - Test: the address is half the width or more from the left edge, 20 mm or
+    more from the right and the bottom edge, its first line 120 mm or less
+    above the bottom edge; the sender is at the top left.
+
+9.3  The templates of continental Europe, Latin America and Australia.
+  - Australia (Australia Post, PreSort Letters guide, section 2.5.1 for the
+    articles up to C5, read in full on 2026-11-18): the barcode and delivery
+    address are 15 mm or more from the bottom edge, 100 mm or less up from
+    it, 10 mm or more from the left and the right edge and out of the postage
+    zone (90 mm wide from the top right corner, 40 mm down; the return
+    address must not infringe it).  envelope-au-dl and envelope-au-c5 meet it
+    as they are; the tests now check exactly this rule set and the
+    descriptions say so.
+  - Continental Europe (eu-dl, eu-c5, eu-c65) and Latin America (latam-dl): no
+    national rule was found.  KEPT, none pulled: the sizes are certain, the
+    layout meets the margins of Royal Mail, and the description now says in
+    plain words that the layout keeps the margins of Royal Mail and that no
+    national rule was found, so it does not mislead.  The pull of a template
+    would remove the only template of that size.
+  - envelope-uk-c6: unchanged, it meets Royal Mail.
+
+9.3a Changes that touch several templates: the descriptions of eu-dl, eu-c5,
+     eu-c65 and latam-dl are 197 to 201 characters (the limit is 250); the
+     tests check the limit.
+
+9.4  Horizontal Japanese envelopes (yougata).
+  - Sizes (Japan Post, JIS S 5502:2010 table, read on 2026-11-18): Yougata 2
+    162 x 114 mm, Yougata 4 235 x 105 mm (the others of the table: Yougata 1
+    176 x 120, Yougata 6 190 x 98; nagagata and kakugata sizes as in Section
+    2).  Paper (japanlco files of KOMA-Script): Yougata 2 takes A5 folded in
+    half or A4 folded in four, Yougata 4 takes A4 folded in three.
+  - Position: the left window of the standard, from the lco files of
+    KOMA-Script for Chou and You 3 and 4 (window 90 x 45 mm, 22 or 25 mm from
+    the left edge, 12 mm from the top); Japan Post's rules for writing
+    horizontally (the page of the envelope manners of Japan Post): the postal
+    code at the top left, the address below it starting about two characters
+    from the left edge, the sender on the BACK in the lower third.  So the
+    templates have no sender block.
+  - envelope-jp-yougata-4: size 235 x 105 mm; the recipient (postal code
+    first) 28 mm from the left and 15 mm from the top, inside the window and
+    3 mm from its edges; test: the ink is 3 mm or more inside the window.
+  - envelope-jp-yougata-2: size 162 x 114 mm; the address starts 10 mm (about
+    two characters) from the left edge and 15 mm from the top.  The standard
+    gives no window for this size and Japan Post's figures are in images that
+    were not available as text: the vertical position (15 mm) is by analogy
+    with the Yougata 4 and is NOT VERIFIED.
+  - Left out: Nagagata 3 and 4 and the Kakugata (they are addressed
+    vertically; a horizontal address on them is not in any rule that was
+    found), Yougata 1 and 6 (no rule), and the sender on the back (the
+    Editor prints one side of an envelope).  The address text of the templates
+    is in ASCII (a template description and sample text are ASCII); replace it
+    by your own.
+  - Not verified: the figures of JIS S 5502 and of the Japan Post pages that
+    are images (the horizontal address zones, 'yoko-gaki'); the sizes come
+    from the text table of Japan Post and the windows from KOMA-Script.
+
+9.5  Sources of these decisions
+    BayAGO Anlage 2 (the layout of the letter, form A and B)
+      https://www.gesetze-bayern.de/Content/Pdf/BayAGO-ANL_2?all=False
+    Macwelt, Briefmarkenmesse Essen, monsterdealz.de (Section 8); printers'
+    data sheets of the window of the DL envelope: flyerdevil.de and
+    wir-machen-druck.ch (druckvorgaben, briefumschlag DIN lang mit Fenster)
+    La Poste, SP 8855 volume 4 (signaletique du pli), versions 1.13 and 1.14
+      https://lastation.laposte.fr/sites/p8_u1/files/2024-07/
+    Australia Post, PreSort Letters service guide, section 2.5
+      https://auspost.com.au/content/dam/auspost_corp/media/documents/
+      presort-letters-service-guide.pdf
+    Japan Post, conditions of an envelope that meets JIS S 5502:2010 (the table
+    of sizes)
+      https://www.post.japanpost.jp/service/create/guideline/jis_envelope.html
+    Japan Post, the manual of postal codes and bar codes, windows (p43, p44)
+    KOMA-Script, japanlco-en (the Japanese envelopes and their windows)
+      https://ctan.math.washington.edu/tex-archive/macros/latex/contrib/
+      koma-script/doc/japanlco-en.tex
+
+
+10.  THE SAMPLE ENVELOPES  (the owner, 2026-11-19, worklist W54: "sample
+     envelope documents with a variety of envelope styles")
+
+10.1  What they are
+  There is one sample for each of the 16 envelope templates, in
+  samples/envelopes/ of the source tree (sample-envelope-NAME.doc, NAME the
+  name of the template).  A sample is the document that New makes from its
+  template, with the address of a person or a company that does not exist,
+  written as the country of the envelope writes it: the attention line and
+  ZIP+4 in the United States, the postal code of Canada, capitals in France,
+  the province after the town in Italy, the colony in Mexico, the postal
+  code first and "sama" in Japan.  The paper, the named formats and the
+  places of the blocks are those of the template, so a sample prints where
+  its template does.  A sample has a description of its own ("Sample: ..."),
+  and it is a document, not a template: the list of New does not show it.
+
+10.2  Where they are  (decision)
+  The folder is samples/envelopes/.  manual/samples belongs to the manual
+  (the documents of its pictures and of the Tutorial) and tests/samples to
+  the tests (they are installed as share/strata/samples/*): a sample that a
+  user is meant to open has a folder of its own.  The install puts them in
+  share/strata/samples/envelopes/ (the manifest and the list of files of the
+  Getting Started document name them), and a build folder has a link of that
+  name to the folder of the source tree, as it has for the templates
+  (Makefile, templates-link), so that a program run in place finds them with
+  no variable.
+
+10.3  How they are made and checked
+  tests/mksamples.py makes them, from the template generator
+  (tests/mktemplates.py envelope(), which takes the description and the lines
+  of the sender and of the recipient as arguments); there is no date in them
+  and two runs make the same bytes.  tests/envsamples.py (in the smoke) checks
+  that the folder is what the generator makes, that every sample opens in the
+  Editor, prints to one page of the size of its envelope with the address in
+  the zone of its style (tests/envzones.py: the numbers of the sources of
+  Section 8 and 9, not those of the generator), that none names a product of
+  another maker, and that the manual lists every sample and has its pictures.
+  tests/installtest.py checks the installed copies.  The test found one fault
+  in the first version of a sample: the return line of the German sample ran
+  0.4 mm out of the window of DIN 680; it is shorter now.
+
+11. THE PAPER OF AN ENVELOPE IN THE PAGE PANEL, AND THE PREVIEW
+---------------------------------------------------------------
+(2026-11-19, two owner reports: the paper of the US number 9 envelope was
+shown as a letter size, and the Preview of an envelope was not shown the
+right way up.)
+
+The paper.  The Paper Size field of Global, Page is a choice in a list of
+named papers (src/globalmenu.c, papers[]).  The list stays as it is: its
+order is the number that the DP record stores first, so inserting an entry
+would change every saved document.  The number 9 envelope, C6, C65 and the
+two Japanese sizes are not in the list; they are stored as the last entry,
+Custom, with their real width and length (DP16,8875,3875 for the number 9).
+The text of the Custom entry was the fixed words Custom (8.5 in x 11 in), so
+every one of them looked like a letter sized paper.  Now:
+  - the field takes the paper of the stored size, either way round (an
+    envelope is stored long side first, the list gives the short side
+    first); a stored size that no named paper has is Custom, never the paper
+    of the stored index; a record with an index and no size has the paper of
+    the index;
+  - the Custom entry names the real size: the shorter side first, in
+    millimetres when both sides are whole millimetres (Custom (114 x 162
+    mm)), else in inches as eighths or thousandths (Custom (3 7/8 x 8 7/8
+    in));
+  - choosing Custom keeps the size of the document; for a document with a
+    named paper it is 8.5 by 11 inches, as before;
+  - accepting the panel with no change writes nothing (the file is the same
+    bytes).
+Table of the templates (before: the text of the field; after):
+  envelope-us-ca-9       Custom (8.5 in x 11 in)  ->  Custom (3 7/8 x 8 7/8 in)
+  envelope-uk-c6         Custom (8.5 in x 11 in)  ->  Custom (114 x 162 mm)
+  envelope-eu-c65        Custom (8.5 in x 11 in)  ->  Custom (114 x 229 mm)
+  envelope-jp-yougata-4  Custom (8.5 in x 11 in)  ->  Custom (105 x 235 mm)
+  envelope-jp-yougata-2  Custom (8.5 in x 11 in)  ->  Custom (114 x 162 mm)
+The other eleven envelope templates and the two letters show the paper that
+they showed before (DL, C5, Business, Monarch, A4, Letter); tests/
+papernames.py checks all 18 templates and the 16 sample envelopes.
+
+The Preview.  The page of the Preview is the page of the print: the Printer
+writes the DVI with a papersize special, and a page that an Orientation
+marker turns carries the special pdf: put @thispage <</Rotate 90>>, which
+the Viewer honours (tools/dviview/src/special.c).  The Preview of every
+template and sample envelope was checked against the PDF of the same
+document (the same width and length, upright text).  Two faults were found
+and fixed:
+  - an envelope chosen in the paper list was stored with the short side as
+    the width (DP13,4125,9500), so its page was tall and narrow; the four
+    envelope entries are now stored long side first, as the templates store
+    them;
+  - the part of a document that Preview Block, Preview Section and the print
+    of a block or a section make starts after an Orientation (landscape)
+    marker that is not in the part, so it was drawn upright; the part now
+    carries the header record PO2 (src/fileops.c part_items, written by
+    doc_serialize, read by the Printer), and a whole document has no PO
+    record.
+The print queue: lp gets the number of copies, the sides, the collation and
+the page range, and no orientation or media option; the PDF carries the page
+size and the rotation, which the print system uses.
+
+12. THE OWNER'S PRINT OF AN ENVELOPE: ORIENTATION, RETURN ADDRESS, TYPE SIZE
+----------------------------------------------------------------------------
+(2026-11-19.  A real print: with the page set to an envelope the envelope
+printed in portrait, the narrow edge entering the printer, and the return
+address ran along the short edge; with US Office paper the envelope fed
+correctly in the manual feed and printed the right way, but the return
+address was about one inch from the top of the long edge and 1.5 inches from
+the left, and the type was small.)
+
+Orientation.  The page of a document whose paper is an envelope chosen in the
+list was tall: the Paper Size panel stored the entry as listed, the short side
+as the width (DP13,4125,9500), so the PDF page was 4.125 by 9.5 inches and the
+lines of the text ran along the short edge.  That is the print of the report.
+The entries are now stored long side first, as the templates store them
+(Section 11): the PDF page is 9.5 by 4.125 inches, the text runs along the
+long edge, and the Preview shows the same.  lp is given the copies, the
+sides, the collation and the page range, and no orientation or media option;
+the PDF carries the page size, and a print system turns a page whose size is
+the size of the envelope turned (the media of an envelope is fed with the
+narrow edge in).  Nothing in the program sends an orientation to the printer.
+
+The return address.  The templates put the sender 12.7 mm (0.5 inch) from the
+left and from the top of the page for the American sizes (and 12 to 20 mm for
+the others: Section 4), as the page of the document is the envelope.  On a
+letter size page that is printed on an envelope fed by hand, the printer
+places the sheet in its own way (the sheet is centred on the feed path and the
+top left of the page is not the top left of the envelope), so the position of
+the return address on the envelope is not the position in the document: the
+print of the owner on US Office paper cannot show the position of the
+template.  With the paper set to the envelope the page is the envelope and
+the position is the position of the template.  Nothing was changed in the
+positions.
+
+The type size.  The Printer set every document in 11 points, an envelope too.
+The header record PS names the size (Section DOC-FORMAT); a document with no
+record and an envelope for its paper has 14 points.  The templates and samples
+have PS14, except two: the return line of the German window envelope must stay
+inside the field of 85 mm (DIN 5008), so it keeps 11 points; the European C5
+has 12 points, because with 14 the sender block would end below 28 mm from the
+top edge (Royal Mail).  The vertical places of the blocks use the pitch of the
+lines at the size (4.8, 5.1 and 6.0 mm), and tests/templates.py measures every
+template again in a print: all the address rules still hold.  The sizes above
+11 use the LaTeX class extarticle (texlive-latex-extra, the package of
+adjustbox that the Printer needs already).
+
+
+12.1 WHAT THE FIRST FIX MISSED, AND WHAT THE SECOND ONE DOES
+------------------------------------------------------------
+(2026-11-20.  The owner printed again: a United States number 9 envelope
+still had small type and the return address far from the corner.)
+
+What was missed.  The first fix changed the templates and the orientation of
+the entries of the list.  It did not change what happens to a document whose
+paper is CHOSEN in the Paper Size list:
+  - The number 9 envelope (3 7/8 x 8 7/8 inches) was not in the list at all.
+    It was Custom, entry 16, with the size stored.  The rule "no PS record and
+    an envelope paper has 14 points" tested the entries 12 to 15 of the list
+    by their index, so Custom, and any size stored under another index, was
+    set in 11 points (a measured print: 10 point face, first word 96.7 points
+    from the left, 105 points from the top: 1.34 and 1.46 inches).
+  - Choosing an envelope changed only the paper.  The document kept its page
+    margins of one inch and its type size, so the text stood one inch inside
+    the corner.  Only a template has zero margins and the 14 points.
+
+What is done now.
+  - One table of envelope sizes (doc_envelope_points in src/msdoc.c), the
+    sizes of the paper list and of the templates: Monarch, number 10,
+    number 9, DL, C5, C6/5, C6 and Yougata 2 (the same size), Yougata 4.  The
+    Printer takes 14 points for ANY page of one of these sizes, in either
+    orientation and whatever index or Custom size the record DP names, when
+    the document has no record PS.  Every size has 14 points; a template that
+    needs another size has its own record (German DL 11, European C5 12).
+  - The paper list has the number 9 envelope, the C6/5, the C6 (the Japanese
+    Yougata 2 is the same size) and the Yougata 4.  Custom is still stored as
+    entry 16 as before; a stored size is found in the list by its size.
+  - Choosing an envelope in the Paper Size list sets, once, at the choice, the
+    four page margins to half an inch (Left, Right, Top and Bottom Margin of
+    the same panel) and the record PS, so that the sender stands half an inch
+    from the left edge and a little more from the top (measured: 36 points
+    from the left, 40 points from the top, in 14 point type).  A margin that
+    the same visit of the panel changed keeps the value that was typed; a
+    record PS that the document has stays; choosing another paper later
+    leaves the margins as they are.  The change is one step of Undo.  A
+    template made with the Template field is not changed by this: it already
+    has its zero margins and its own indents (sender at 0.44 inch from the
+    left and 0.52 inch from the top, 14 points).
+  - For a page of an envelope size the Printer gives lp the option
+    -o print-scaling=none.  Before, lp got no scaling option, so CUPS applied
+    its own default (print-scaling auto: fit the page to the printable area),
+    which can shrink the type and move the corner, and chose its own media for
+    an odd page size.  A letter or an A4 still has the default of the system.
+    No media option is sent: a media name that the printer does not know can
+    make it hold the job.
+
+NOT TESTED ON PAPER.  The PDF was measured and the arguments of lp were
+tested, no envelope was printed.  What to look at first if an envelope
+still prints wrong:
+  1. Open the PDF that the Printer made (the Output File of the Print panel,
+     or the same print with the printer set to File only).  If the PDF is
+     right (page 9 by 3 7/8 inches, 14 point type, the sender near the
+     corner) the difference is in the print system, not in Strata.
+  2. The print system then decides the media and the scaling: set the media
+     of the printer for envelopes (in the printer's own settings: the envelope
+     size and the manual feed as the paper source) and check that the job
+     shows scaling "none" (lpoptions or the CUPS web page of the job).  A
+     print system may also turn the page by its own rule (the narrow edge
+     enters the printer); the PDF page is 9 inches across, as the templates
+     store it.
+
+12.2 THE SECOND FIX MISSED A BUSINESS ENVELOPE OF 4.25 INCHES
+-------------------------------------------------------------
+(2026-11-20.  The owner's envelopes are number 10 envelopes.  The number 10
+still printed in small type: the second fix had been tested with the exact
+size of the list, 9.5 x 4.125 inches.)
+
+What was missed.  doc_envelope_points compared the stored page size with the
+table of sizes to within 0.002 inch.  A Custom page of 9.5 x 4.25 inches, a
+business envelope that measures a quarter inch more than the list says, was
+not an envelope: 10 point type (measured: LMRoman10), the same for 9.5 x 4.5
+and for 9.25 x 4.0.  The owner's own envelope, 240 x 104 mm (9.449 x 4.094
+inches), is within 0.002 and 0.001 inch of the number 10 of the table and was
+always recognised.
+
+What the rule is now (one function, doc_envelope_points, for the Printer and
+for the Editor):
+  - A page is an envelope when each side is within 0.30 inch of a size of
+    the table, in either orientation: 9.5 x 4.25, 9.5 x 4.5, 9.25 x 4.0, a
+    C5 of 9.2 x 6.5 and a C6 of 6.5 x 4.5 are envelopes.
+  - Or, whatever the table says, when it has the proportions of one: the
+    long side at least twice the short side, the short side between 2.5 and
+    5 inches, the long side at most 11.5 inches (9.5 x 4.75 and 10 x 4.5 are
+    envelopes this way).
+  - Letter, A4, a 6 x 9 inch page, a half letter (5.5 x 8.5), an index card
+    (4 x 6), a 5 x 5 square and a 6.5 x 3.6 inch page are not envelopes: they
+    keep their size of type and their margins.
+  What the rule gives for 240 x 104 mm (9449 x 4094 thousandths of an inch):
+  an envelope by the table (9500 x 4125, 51 and 31 thousandths away) and by
+  the proportions (2.31), in either orientation: 14 points.
+An envelope recognised only by its proportions has 14 points; one recognised
+by the table has the size of its entry.
+
+Not changed.  The Paper Size panel has no field to type a size: its Custom
+entry shows the size that the document has.  An envelope that a document has
+as a Custom size, with the margins of a page, is therefore not given the
+margins of an envelope by the Editor until an envelope of the list is chosen
+(which sets the size, the margins and the type size together); the Printer
+gives it the type size at once.
+
+12.3 OWNER DECISION 2026-11-20: THE RETURN ADDRESS IS 7 MM FROM THE TOP AND
+LEFT EDGES (5 MM AT FIRST)
+----------------------------------------------------------------------------
+The owner measured a print of the number 10 template with the old numbers:
+the sender 11 mm from the left and 15 mm from the top of the paper.  The PDF
+had 11.25 mm and 13.2 mm for the first glyph box (the left indent of 0.443
+inch and the top margin of 0.461 inch), so the PDF values are what is set.
+His printer, an HP LaserJet 2015PN, prints to about 4 mm from the edges, so
+5 mm was allowed.  The decision: the first glyph box of the first line of the
+sender (xMin and yMin of the first word in pdftotext -bbox) is 5 mm from the
+left edge and 5 mm from the top edge, within 0.5 mm, for EVERY envelope that
+has a sender, whatever the country.
+
+Owner decision 2026-11-20: 7 mm (was 5 mm; the first print on the HP
+LaserJet 2015dn showed 11 mm left and 15 mm top for the old half inch
+margins): "Increase the left and top margins of the return address by 2 mm."
+Every number below that says 5 mm is now 7 mm: xMin and yMin are 19.843
+points, the left margin is 276 thousandths of an inch, and the top margins
+are the old values plus 79.
+
+How it is made.
+  - The left margin is 7 mm (record PML276).  The sender has no block indent.
+    The xMin of the first word is the left margin, so xMin = 19.84 points.
+  - The top margin depends on the type size: the glyph box of a line begins
+    below the top margin by 3.475 points at 8 point type, 3.443 at 11, 3.718
+    at 12 and 4.063 at 14 (measured in the PDF with a top margin of 0 and of
+    0.100 inch), so the top margin that puts yMin at 19.843 points (7 mm) is
+    228, 237, 228, 230, 224, 219, 204 and 195 thousandths of an inch at 8, 9,
+    10, 11, 12, 14, 17 and 20 points (the values for 5 mm were 149, 158, 149,
+    151, 145, 140, 125 and 116).  The templates have 219 (14 points, the
+    number 9, number 10, Monarch, DL and C6 of several countries), 230 (the
+    German DL, 11 points) and 224 (the European C5, 12 points).
+  - The recipient keeps its place: the Whitespace marker between the blocks is
+    made so that the recipient is where the study of each country puts it; the
+    indent of the recipient is counted in cells of the page width less the
+    left margin and is never more than half a millimetre left of its place.
+  - The Editor sets these margins when an envelope is chosen in the Paper Size
+    list (the left margin 276, the top margin of the type size of the
+    envelope, right and bottom half an inch).
+  - The German DIN 5008 window envelope has its sender in the corner too,
+    which is the owner's decision: before, a small return line stood inside
+    the window.  The window now shows only the recipient.
+  - The Japanese Yougata templates have no sender block (the sender goes on
+    the back): their structure and positions are not changed.
+Measured first glyph boxes of the sample envelopes (xMin, yMin in mm): 5.00 and
+4.99 for every envelope with a sender, 5.00 and 5.05 for the German one;
+Yougata 2: 10.11, 15.43 and Yougata 4: 26.42, 15.43 (no sender: the postal
+code).  The checks are in tests/envfont.py.
+
+
+13. THE TEMPLATES THAT COME WITH STRATA HOLD NO TEXT; A SAMPLE IS AN EXAMPLE
+    (2026-11-20)
+-----------------------------------------------------------------------
+
+The owner asked why a template gives a sample address.  The templates that
+come with Strata should not: the first ones were written with example text, a
+sample company, Ms. Jane Example and a letter body, and that was a mistake.  A
+template itself can hold text, such as the return address of its user; the
+owner only wants no predetermined text in the templates that Strata makes.
+The rule now:
+
+  A TEMPLATE THAT COMES WITH STRATA holds the page set-up (paper, margins),
+  the size of the text (the record PS), the named formats, the head of a
+  letter, the places of the blocks and the blocks themselves as empty
+  paragraphs.  It holds no text.  The only field in it is the date of a
+  letter, a Time marker.  A new document from a template starts the cursor in
+  its first block.  A template that a user writes can hold text, and a new
+  document made from it holds that text.
+
+  A SAMPLE is a finished document with example text: samples/envelopes (one
+  for each envelope template) and samples/letters.  It is an ordinary
+  document, not a template, and it is the only place for example text.
+
+Both are made from one description of the layout, tests/mktemplates.py:
+envelope() and letter() write empty blocks, and write the example lines of
+the table ENVELOPES (or those that tests/mksamples.py and tests/mkletters.py
+give) when the argument example=True or a sample asks for them.  The
+argument --example of the program writes the templates with that text; the
+tests print those copies to measure the places of the blocks, and check that
+the shipped templates print none of the text.
+
+The sender of an envelope is its first block, so that the cursor starts in
+it.  Its place down the envelope is the top margin of the page (the distance
+from the top edge less 1 mm); the recipient follows at the height of a
+Whitespace marker between the two blocks, made for the number of lines that
+the sender has when it is written, so that the recipient is where the address
+zone is.  Before this change a Whitespace marker block came first and the
+cursor started in it.

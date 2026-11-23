@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Not a valid <description> -- 
+
+The marker you are trying to define does not contain any information, or the
+information specified is not valid.  See chapter 8 of the Reference manual
+for more information on marker definition.
+
+-- Not enough room for column (column ignored) --
+
+There are too many columns to fit across the page.  Starting from the left-
+most column, as many columns as possible will be displayed; others are ignored.
+
+-- Number must be specified (<description>) -- 
+
+A number must be specified before proceding with the operation you requested.
+
+-- Number of <item> exceeds limit - <description> -- 
+
+There are too many font files, typefaces, or point sizes in the current 
+download font directory.  See Appendix E or Appendix G for more information.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

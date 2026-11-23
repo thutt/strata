@@ -1,0 +1,1019 @@
+LEDGER OF THE READ-EVERY-SECTION PASS, CHAPTER 3 (EDIT)
+
+This ledger follows docs/MANUAL-CHECK-LEDGER-README.txt, which says what
+a ledger line is and what the notation of the state means.
+
+One entry for each of the 198 sections of chapter 3 (levels 1 to 4,
+numbered as printed).  A line that starts with "read; checked" says
+what the statements of the section were compared with.  "Not re-run"
+means that the text was read and its labels and messages were found
+in the program, but that the behavior itself was not run again here.
+The rules of the manual (reference style, one name per concept, See,
+American spelling) were applied to every section by the lint, which
+reports 0 hits.  Key names in running text and in table cells
+(not in headlines and picture captions) are keycaps: 11 places
+that wrote Alt-F2, Ctrl-F9 and the like in plain letters were
+changed, and the entries of the Ctrl-F list are in the program
+font.  Table widths of 55 tables follow their content (the page
+text is 56 positions wide, so the old widths that added up to 70
+left the last column too narrow).
+
+3  Edit
+    read; checked: section list against master.txt and the labels; table
+    of sections.  Wrong: the second paragraph described the chapter
+    instead of the thing.  Changed: two-part statement of the contents
+    replaces it.
+3.1  The Edit Screen
+    read; checked: rows of the screen: view.c status line, expanded line,
+    ruler, text, key strip; width 40 to 80 (ui.c:254); 25 rows give 21
+    text rows (counted from ui.c:63); message line rule from view.c.
+    Wrong: a marketing sentence ("Strata is made for people who ...").
+    Changed: sentence removed; key naming sentence shortened.
+3.1.1  The Status Line
+    read; checked: status line format string in view.c:1485-1525; Attr,
+    Pos, Sect, OVR, mode names; name shown by its end (layout.c
+    name_tail).  Wrong: a long file name does not push the fields to the
+    right: the program shows its end after three periods.  Changed: File
+    name row rewritten with room 12 to 60.
+3.1.1.1  The modified flag
+    read; checked: asterisk set by doc_touch; Autosave 120 s
+    (config.c:40).  Wrong: none.  Changed: none.
+3.1.1.2  Attr
+    read; checked: attr_name in view.c:1317-1352.  Wrong: Special missing
+    from the names.  Changed: Special added.
+3.1.1.3  Pos
+    read; checked: Pos from the status line format (view.c); tab moves Pos
+    by the distance.  Wrong: none.  Changed: none.
+3.1.1.4  Sect
+    read; checked: Sect from the section number; none when unstructured
+    (view.c).  Wrong: none.  Changed: none.
+3.1.1.5  The expanded line
+    read; checked: just_name and ind_name in view.c:1358-1370; expanded
+    line drawn when opt_expanded; seen on the screen of a new document.
+    Wrong: none.  Changed: none.
+3.1.2  The Ruler
+    read; checked: ruler code view.c:1540-1570: dots 0xFA, small block
+    0xFE, tab types; opt_ruler is always 1 (editor.c:40), so it cannot be
+    switched off.  Wrong: none.  Changed: none.
+3.1.3  The text area
+    read; checked: quoted messages and field names found in src by script;
+    drawing rules read against view.c and layout.c.  Wrong: none.
+    Changed: none.
+3.1.3.1  The end-of-line and tab characters
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.1.3: quoted messages and field names found in src by script;
+    drawing rules read against view.c and layout.c).  Wrong: none.
+    Changed: none.
+3.1.3.2  The rules between the blocks
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.1.3: quoted messages and field names found in src by script;
+    drawing rules read against view.c and layout.c).  Wrong: none.
+    Changed: none.
+3.1.3.3  Several columns
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.1.3: quoted messages and field names found in src by script;
+    drawing rules read against view.c and layout.c).  Wrong: none.
+    Changed: none.
+3.1.3.4  The cursor and the highlight
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.1.3: quoted messages and field names found in src by script;
+    drawing rules read against view.c and layout.c).  Wrong: none.
+    Changed: none.
+3.1.3.5  What scrolls
+    read; checked: scroll margin: view.c:991 (2 rows when rows > 8);
+    PgUp/PgDn half (move.c:521).  Wrong: none.  Changed: none.
+3.1.4  The key labels
+    read; checked: key_labels_normal, _ctrl, _alt and _none in
+    view.c:1382-1391; Compose and the Alt-Fn message in ui.c
+    (handle_key_inner); key strip seen in tmux.  Wrong: the Ctrl and Alt
+    columns left out Math, Case, Prev Error, Next Error, Again, Undo,
+    Redo, Compose and Border; pressing Alt-F1 does not do nothing (the
+    message is "Alt-F1: not available"); a picture of the menu bar stood
+    in the section about the key labels.  Changed: table rebuilt from the
+    program; sentence about Compose fixed; picture moved to 3.4.1.
+3.2  Using the keyboard to edit
+    read; checked: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c.  Wrong: none.  Changed: none.
+3.2.1  Typing Text
+    read; checked: typing keys against handle_key_inner (ui.c:4290-4430);
+    Ctrl-H messages ui.c:713,726 and seen in tmux: "Hanging indent set at
+    2".  Wrong: none.  Changed: none.
+3.2.1.1  Enter
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.1: typing keys against handle_key_inner (ui.c:4290-4430);
+    Ctrl-H messages ui.c:713,726 and seen in tmux: "Hanging indent set at
+    2").  Wrong: none.  Changed: none.
+3.2.1.2  Tab
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.1: typing keys against handle_key_inner (ui.c:4290-4430);
+    Ctrl-H messages ui.c:713,726 and seen in tmux: "Hanging indent set at
+    2").  Wrong: none.  Changed: none.
+3.2.1.3  Ctrl-Shift-Space
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.1: typing keys against handle_key_inner (ui.c:4290-4430);
+    Ctrl-H messages ui.c:713,726 and seen in tmux: "Hanging indent set at
+    2").  Wrong: none.  Changed: none.
+3.2.1.4  Alt-_
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.1: typing keys against handle_key_inner (ui.c:4290-4430);
+    Ctrl-H messages ui.c:713,726 and seen in tmux: "Hanging indent set at
+    2").  Wrong: none.  Changed: none.
+3.2.1.5  Attributes
+    read; checked: Alt-I, Ctrl-B, Ctrl-U, Ctrl-N
+    (ui.c:4296,4342-4350,4210); run in X11 under Xvfb: Ctrl-I types a TAB
+    (arrow on the screen), Alt-I gives Attr: Italic.  Wrong: the manual
+    said Ctrl-I is italics in the X11 version; it is Tab in both versions
+    (KEY-MAP.txt agrees).  Changed: five statements corrected (typing
+    table, this section, Ctrl letters table, reserved keys table, note on
+    Ctrl-M).
+3.2.1.6  Hanging indent
+    read; checked: hanging_indent in ui.c:700-730; messages found in src.
+    Wrong: none.  Changed: none.
+3.2.2  Typing special characters
+    read; checked: run: 26 characters typed in X11 under Xvfb (xdotool):
+    accented letters, sharp s, inverted question mark, one half, one
+    quarter, plus-minus, degree, micro and the other accents are typed;
+    Greek letters, the euro, copyright, registered, trademark, en dash,
+    quote and a box line are not typed; run: the same set pasted into the
+    terminal Editor: alpha, Gamma, delta, epsilon, Theta, micro, pi,
+    sigma, Sigma, tau, phi, Phi, Omega, infinity, less-or-equal, plus-
+    minus, root and the box lines survive; beta, small gamma, small theta,
+    small omega, the Greek mu, the euro and the signs are lost.  Wrong:
+    the list of Greek letters of the set was wrong (beta, small gamma,
+    small theta and small omega are not in the set; Gamma, Theta and Omega
+    are capitals).  Changed: list rewritten.
+3.2.3  Typing a Nonbreaking Space
+    read; checked: run in X11: Ctrl-Shift-Space types the cap, Ctrl-Space
+    types nothing; Search: a plain space string does not find it and the
+    string typed with Ctrl-Shift-Space does (Replace panel took the cap
+    too); Count: it ends a word (4 words in the test); print: a document
+    of Mr.<nbsp>Smith and 10<nbsp>km was printed to PDF with strprint and
+    no line broke inside a pair; export: charset_put and
+    cp437_to_ascii7[0xFF] = space (fileops.c), Latin-1 A0, UTF-8 U+00A0;
+    Overtype: the cap replaced the character under the cursor; Spell check
+    (Ctrl-C) and Thesaurus (Ctrl-T) took hello before the cap as the word;
+    a macro that recorded Ctrl-Shift-Space played it back; not run: a
+    terminal that reports modified keys (none is installed here; the
+    survey in claude-interchange says which terminals send them).  Wrong:
+    none.  Changed: none.
+3.2.4  Typing a Soft Hyphen
+    read; checked: run in X11: Alt-Shift-Hyphen types the down triangle;
+    Search for hyphenation finds hy-phen-ation; Replace with Find at Soft
+    Hyphen, empty replacement and Ask at Each No gave 2 replacements and
+    the whole word; Count: it does not end a word; print: unbe-lievable-
+    hyphen-ation x30 printed to PDF with strprint: breaks only at soft
+    hyphens and a hyphen is printed there; export: layout_hide_shy in
+    export.c; a document with 1F bytes opened and was written again; not
+    run: Ctrl-F entry, spell check, overtype, terminal Esc-underscore.
+    Wrong: none.  Changed: none.
+3.2.5  Deleting Text
+    read; checked: keys against ui.c: Del, Backspace, Ctrl-D, Alt-
+    Backspace, Ctrl-K, Ctrl-L, Ctrl-X.  Wrong: none.  Changed: none.
+3.2.5.1  Del
+    read; checked: delete_block_at in editor.c:1625-1665 (messages and
+    conditions); "Nothing to join here" at editor.c:1157.  Wrong: none.
+    Changed: none.
+3.2.5.2  Backspace
+    read; checked: run in X11: Backspace at the start of a second
+    paragraph joined it to the first, at the start of the first paragraph
+    after a headline joined it to the headline (cursor at the junction),
+    at the start of a headline did nothing.  Wrong: none.  Changed: none.
+3.2.5.3  Ctrl-D and Alt-Backspace
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.5: keys against ui.c: Del, Backspace, Ctrl-D, Alt-
+    Backspace, Ctrl-K, Ctrl-L, Ctrl-X).  Wrong: none.  Changed: none.
+3.2.6  Moving around the document
+    read; checked: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c; the section key table is the one removed from 3.9.  Wrong: none.
+    Changed: none.
+3.2.6.1  Left and Right
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.6: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c; the section key table is the one removed from 3.9).  Wrong:
+    none.  Changed: none.
+3.2.6.2  Up and Down
+    read; checked: move.c vertical(); the sentence about pictures now
+    points to 3.2.6.8.  Wrong: a displayed equation or picture was called
+    "passed over as one line" while 3.9 said one stop.  Changed: wording
+    made the same.
+3.2.6.3  Home and End
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.6: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c; the section key table is the one removed from 3.9).  Wrong:
+    none.  Changed: none.
+3.2.6.4  PgUp and PgDn
+    read; checked: move.c:516-524: half the rows, one row when 3 rows or
+    fewer.  Wrong: none.  Changed: none.
+3.2.6.5  Words
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.6: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c; the section key table is the one removed from 3.9).  Wrong:
+    none.  Changed: none.
+3.2.6.6  Start and end of a column, of the document
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.6: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c; the section key table is the one removed from 3.9).  Wrong:
+    none.  Changed: none.
+3.2.6.7  The section keys
+    read; checked: handle_key_inner cases K_UP, K_DOWN, K_PGUP, K_PGDN
+    with Shift (ui.c:4090-4130).  Wrong: the manual did not say that there
+    is no key for the previous or the next page.  Changed: sentence added.
+3.2.6.8  The cursor and a picture
+    read; checked: section moved here from 3.9 (it described the cursor,
+    not Move); run: tests/xpicscroll.py under Xvfb, 0 failures (one Down
+    puts the cursor on the picture, one more on the next line, steps of at
+    most 6 rows, a key during the glide ends it, a tall picture is
+    scrolled through before the key leaves it).  Wrong: none.  Changed:
+    none.
+3.2.7  The keys by kind
+    read; checked: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c.  Wrong: none.  Changed: none.
+3.2.7.1  The function keys
+    read; checked: fkeys table ui.c:3923-3955.  Wrong: none.  Changed:
+    none.
+3.2.7.2  The Alt function keys
+    read; checked: fkeys table ui.c:3923-3955.  Wrong: Ctrl-F7, F8 and F9
+    were listed under the Alt keys; Alt-F8 Border was missing.  Changed:
+    rows moved and added.
+3.2.7.3  The Ctrl function keys
+    read; checked: fkeys table ui.c:3923-3955.  Wrong: Ctrl-F2, F6, F7,
+    F8, F9, F10 and F11 were missing.  Changed: seven rows added.
+3.2.7.4  The Ctrl letters
+    read; checked: cases 1 to 31 of ui.c:4294-4430.  Wrong: Ctrl-G
+    (message "Text indent: not implemented") was not listed.  Changed: row
+    added.
+3.2.7.5  The Alt keys
+    read; checked: alt block ui.c:4157-4225: Alt-1 to 9, 0, minus, plus,
+    equals, star, brackets, angle brackets, comma, period, I, O,
+    Backspace, slash.  Wrong: Alt-/ (Redo), Alt-, and Alt-. were missing.
+    Changed: rows added.
+3.2.7.6  The keys of the cursor and of sections
+    read; checked: statements read; quoted messages and field names found
+    in src by script; behavior taken from the program only where noted
+    (parent 3.2.7: keys found in KEY-MAP.txt or in the key handlers of
+    ui.c).  Wrong: none.  Changed: none.
+3.2.8  Keys that the terminal or the window manager keeps
+    read; checked: the table was compared with claude-
+    interchange/TERMINAL-DOCS-SURVEY.txt (Alt-F1 to F12 switch Linux
+    consoles, Alt-F4 closes windows, Shift-Insert pastes in terminals) and
+    KEYS-ENVIRONMENTS.txt; Xvfb has no window manager or console, so the
+    keys that those take cannot be tried here.  Wrong: none.  Changed:
+    none.
+3.2.8.1  The keypad
+    read; checked: run in X11: KP_Subtract, KP_Add and KP_Multiply
+    contract, expand and hide the text (marks + and *); KP_Enter and KP_1
+    KP_2 type a line end and digits; with Num Lock toggled KP_End and
+    KP_Left move, KP_Delete deletes, KP_Insert appends a section; the
+    terminal statement (plain characters typed) comes from the survey.
+    Wrong: none.  Changed: none.
+3.2.8.2  Keys that repeat other keys
+    read; checked: ui.c:4062-4260 and run in X11: Ctrl-Left, Ctrl-Shift-
+    Left (word), Alt-Left, Ctrl-Up, Alt-Home, Ctrl-Home, Shift-End, Ctrl-
+    Shift-End/Home and Alt-Shift-End (document), Ctrl-Backspace (one
+    character), Alt-Backspace (word before), Shift-Delete, Ctrl-Delete,
+    Alt-Delete (one character), Shift-F1 (nothing), Ctrl-Alt-F2 and Shift-
+    Alt-F2 (the Append list), Ctrl-Alt-F1 (message Alt-F1: not available).
+    Wrong: two rows repeated keys that have a command (Ctrl-F2, Ctrl-F6).
+    Changed: rows removed.
+3.3  Modes of the Editor
+    read; checked: quoted messages and field names found in src by script.
+    Wrong: none.  Changed: none.
+3.3.1  Structured and Unstructured Edit
+    read; checked: Edit menu on a one-section document seen in tmux
+    (Title, Unstructured, Section, Window); messages found in src.  Wrong:
+    none.  Changed: none.
+3.3.2  Section Edit
+    read; checked: toggle_section_only and the hints "Edit current section
+    only [Ctrl-^]" in ui.c.  Wrong: none.  Changed: none.
+3.3.3  Title Page Edit
+    read; checked: ui.c nested editor: status line "TITLE PAGE EDIT";
+    messages found in src.  Wrong: none.  Changed: none.
+3.3.4  Notes, Comments, Equations and the Library
+    read; checked: ui.c:1475 builds the mode name from the title in
+    capitals.  Wrong: none.  Changed: none.
+3.4  The menus
+    read; checked: menu structure dumped with stred --dump-menus.  Wrong:
+    none.  Changed: none.
+3.4.1  The F12 Menu Bar
+    read; checked: top_items hints ui.c:3270-3278; menus dumped: File,
+    Global, Edit, Print, Tools (8 entries), Quit; Edit menu seen in tmux.
+    Wrong: the picture of the menu bar was in 3.1.4.  Changed: picture
+    moved here.
+3.4.1.1  The Edit menu
+    read; checked: --dump-menus output: five forms of the Edit menu, all
+    with Window.  Wrong: none.  Changed: none.
+3.4.2  The Alt Commands Menu
+    read; checked: Ctrl-F list seen in tmux: 34 entries, border "Ins
+    selects"; Ins and Return run an entry (widgets.c:253-259).  Wrong: Ins
+    was not named as a key that runs an entry.  Changed: Ins added.
+3.4.3  The pop-up lists
+    read; checked: popup_menu in widgets.c:135-300: Up, Down, Home, End,
+    PgUp, PgDn, Ins, Return, Esc, F1, letter (at once when 12 entries or
+    fewer).  Wrong: Ins and F1 missing from the table; Set Attributes
+    opens with Bold selected, not the first choice.  Changed: two rows
+    added; sentence on the selected choice completed.
+3.4.4  The prompts
+    read; checked: popup_input in widgets.c; used by Go To Section (field
+    empty) and the Block Format Editor.  Wrong: Replace is a form, not a
+    prompt; Go To offers no value.  Changed: text corrected.
+3.5  Blocks and Columns
+    read; checked: quoted messages and field names found in src by script.
+    Wrong: none.  Changed: none.
+3.5.1  Append
+    read; checked: ed_append_*; the list of five choices and their first
+    letters; seen in tmux: Ctrl-A block, Ins peer section, Shift-Ins
+    subsection 2.1.  Wrong: none.  Changed: none.
+3.5.1.1  The list Append
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.2  Column
+    read; checked: run in X11: Append, Column on a block of one column:
+    the first column wraps at 40 positions and the colon of the gutter
+    stands at 40 (text width 80); the new column starts after it.  Wrong:
+    none.  Changed: none.
+3.5.1.3  Block
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.4  Global-block
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.5  Peer-section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.6  Sub-section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.7  In an unstructured document
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.8  Notes on Append
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.1.9  Examples
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.1: ed_append_*; the list of five choices
+    and their first letters; seen in tmux: Ctrl-A block, Ins peer section,
+    Shift-Ins subsection 2.1).  Wrong: none.  Changed: none.
+3.5.2  Join
+    read; checked: cmd_join (ui.c) and ed_join (editor.c): "Cannot join
+    here", "Join works on single-column blocks", "No following peer
+    section", "Cannot join a section that has subsections".  Wrong: none.
+    Changed: none.
+3.5.2.1  Block
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.2: cmd_join (ui.c) and ed_join
+    (editor.c): "Cannot join here", "Join works on single-column blocks",
+    "No following peer section", "Cannot join a section that has
+    subsections").  Wrong: none.  Changed: none.
+3.5.2.2  Section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.2: cmd_join (ui.c) and ed_join
+    (editor.c): "Cannot join here", "Join works on single-column blocks",
+    "No following peer section", "Cannot join a section that has
+    subsections").  Wrong: none.  Changed: none.
+3.5.2.3  Notes on Join
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.2: cmd_join (ui.c) and ed_join
+    (editor.c): "Cannot join here", "Join works on single-column blocks",
+    "No following peer section", "Cannot join a section that has
+    subsections").  Wrong: none.  Changed: none.
+3.5.2.4  Example
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.5.2: cmd_join (ui.c) and ed_join
+    (editor.c): "Cannot join here", "Join works on single-column blocks",
+    "No following peer section", "Cannot join a section that has
+    subsections").  Wrong: none.  Changed: none.
+3.6  Copy, Cut and Delete
+    read; checked: quoted messages and field names found in src by script;
+    the highlight message (ui.c).  Wrong: none.  Changed: none.
+3.6.1  How to reach the commands
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.2  The steps
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.3  What the choices take
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.3.1  Text
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.3.2  Column
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.3.3  Block
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.3.4  Section
+    read; checked: editor.c:2672 "Cannot take the whole document as a
+    section".  Wrong: none.  Changed: none.
+3.6.4  The highlight
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.5  The clipboard
+    read; checked: "Nothing to paste" found in src.  Wrong: none.
+    Changed: none.
+3.6.6  Cut
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.7  Delete
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.8  Lib Copy, Lib Cut and the library
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.6.9  Examples
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.6: quoted messages and field names found in
+    src by script; the highlight message (ui.c)).  Wrong: none.  Changed:
+    none.
+3.7  Sections: Contract, Expand and Go To
+    read; checked: quoted messages and field names found in src by script.
+    Wrong: none.  Changed: none.
+3.7.1  Contract and Expand
+    read; checked: run in X11 (Alt-minus: mark + and the cursor on the
+    headline; Alt-plus; keypad keys) and in the terminal (ESC minus
+    collapses, ESC plus and ESC equals expand, ESC star hides the text and
+    again shows it); the four states run in X11 on a five-section
+    document: Alt-1 (marks + on top-level sections, headlines only), Alt-1
+    again (text shown, mark +), a third Alt-1 (headlines), Alt-0 (all
+    headlines, mark *), Alt-0 again (open in full), Alt-2 (level 1 mark *,
+    level 2 mark +).  Wrong: none.  Changed: none.
+3.7.1.1  The four states of a section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.1.2  Contract: Alt--
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.1.3  Expand: Alt-+
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.1.4  Hide the text: Alt-*
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.1.5  The cursor and what is hidden
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.1.6  What hidden text takes part in
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.1.7  Examples
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.1: run in X11 (Alt-minus: mark + and the
+    cursor on the headline; Alt-plus; keypad keys) and in the terminal
+    (ESC minus collapses, ESC plus and ESC equals expand, ESC star hides
+    the text and again shows it); the four states run in X11 on a five-
+    section document: Alt-1 (marks + on top-level sections, headlines
+    only), Alt-1 again (text shown, mark +), a third Alt-1 (headlines),
+    Alt-0 (all headlines, mark *), Alt-0 again (open in full), Alt-2
+    (level 1 mark *, level 2 mark +)).  Wrong: none.  Changed: none.
+3.7.2  Go To
+    read; checked: Go To list: five items; D chooses Document end (the
+    letter search starts after the selected entry: widgets.c:263-275).
+    Wrong: none.  Changed: none.
+3.7.2.1  Document start and Document end
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.2: Go To list: five items; D chooses
+    Document end (the letter search starts after the selected entry:
+    widgets.c:263-275)).  Wrong: none.  Changed: none.
+3.7.2.2  Next section and Previous section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.2: Go To list: five items; D chooses
+    Document end (the letter search starts after the selected entry:
+    widgets.c:263-275)).  Wrong: none.  Changed: none.
+3.7.2.3  Section number
+    read; checked: ui.c:1403-1420: prompt "Go To Section", label, "No
+    section %s".  Wrong: the field was said to hold the last number typed;
+    it is empty each time.  Changed: sentence corrected.
+3.7.2.4  Notes on Go To
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.2: Go To list: five items; D chooses
+    Document end (the letter search starts after the selected entry:
+    widgets.c:263-275)).  Wrong: none.  Changed: none.
+3.7.2.5  Example
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.7.2: Go To list: five items; D chooses
+    Document end (the letter search starts after the selected entry:
+    widgets.c:263-275)).  Wrong: none.  Changed: none.
+3.8  Marker
+    read; checked: marker menu table marker.c:222-258 and popup_grid with
+    13 rows (ui.c:1608).  Wrong: the text said 35 commands in one place
+    and 34 markers in two others; Page Number belongs to the third column
+    of the grid, not the second.  Changed: 34 changed to 35; semicolon
+    moved.
+3.8.1  How to reach the command
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.8: marker menu table marker.c:222-258 and
+    popup_grid with 13 rows (ui.c:1608)).  Wrong: none.  Changed: none.
+3.8.2  The table Marker Commands
+    read; checked: popup_grid in widgets.c:1386-1440; "Press Ins to Select
+    a Command"; 35 names in 13 rows give columns of 13, 13 and 9.  Wrong:
+    none.  Changed: none.
+3.8.3  Inserting a marker
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.8: marker menu table marker.c:222-258 and
+    popup_grid with 13 rows (ui.c:1608)).  Wrong: none.  Changed: none.
+3.8.4  Editing a marker
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.8: marker menu table marker.c:222-258 and
+    popup_grid with 13 rows (ui.c:1608)).  Wrong: none.  Changed: none.
+3.8.5  The panel of a marker
+    read; checked: quoted messages and field names found in src by script.
+    Wrong: none.  Changed: none.
+3.8.6  The markers and their fields
+    read; checked: marker names against the menu table in marker.c; field
+    names read, defaults not all re-run.  Wrong: the count of markers was
+    34; there are 35 rows.  Changed: 34 changed to 35.
+3.8.7  What is drawn in the text
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.8: marker menu table marker.c:222-258 and
+    popup_grid with 13 rows (ui.c:1608)).  Wrong: none.  Changed: none.
+3.9  Move and Paste
+    read; checked: Move command messages found in src.  Wrong: a second
+    table of the cursor keys (3.2.6) and a section about the cursor over a
+    picture that does not belong here.  Changed: duplicate removed;
+    picture section moved to 3.2.6.8.
+3.9.1  The Move command (F7)
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.9: Move command messages found in src).
+    Wrong: none.  Changed: none.
+3.9.1.1  What is highlighted for each choice
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.9: Move command messages found in src).
+    Wrong: none.  Changed: none.
+3.9.1.2  Keys while the area is highlighted
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.9: Move command messages found in src).
+    Wrong: none.  Changed: none.
+3.9.1.3  Where the area goes
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.9: Move command messages found in src).
+    Wrong: none.  Changed: none.
+3.9.2  Moving a section to another level
+    read; checked: section_move_level ui.c:760-810: Alt-], Alt->, Alt-.
+    demote; Alt-[, Alt-<, Alt-, promote; messages found.  Wrong: none.
+    Changed: none.
+3.9.3  Paste
+    read; checked: quoted messages and field names found in src by script.
+    Wrong: none.  Changed: none.
+3.9.3.1  What is pasted and where
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.9.3: quoted messages and field names found
+    in src by script).  Wrong: none.  Changed: none.
+3.9.3.2  Edge cases
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.9.3: quoted messages and field names found
+    in src by script).  Wrong: none.  Changed: none.
+3.10  Split
+    read; checked: quoted messages and field names found in src by script;
+    the Split list (Column, Block, Section) seen in tmux.  Wrong: none.
+    Changed: none.
+3.10.1  How to reach the command
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.10: quoted messages and field names found
+    in src by script; the Split list (Column, Block, Section) seen in
+    tmux).  Wrong: none.  Changed: none.
+3.10.2  Split, Column
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.10: quoted messages and field names found
+    in src by script; the Split list (Column, Block, Section) seen in
+    tmux).  Wrong: none.  Changed: none.
+3.10.3  Split, Block
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.10: quoted messages and field names found
+    in src by script; the Split list (Column, Block, Section) seen in
+    tmux).  Wrong: none.  Changed: none.
+3.10.4  Split, Section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.10: quoted messages and field names found
+    in src by script; the Split list (Column, Block, Section) seen in
+    tmux).  Wrong: none.  Changed: none.
+3.10.5  Edge cases
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.10: quoted messages and field names found
+    in src by script; the Split list (Column, Block, Section) seen in
+    tmux).  Wrong: none.  Changed: none.
+3.11  Undo and Redo
+    read; checked: undo.c: levels 0 to 500, default 100 (config.h:90);
+    messages "Nothing to undo", "Nothing to redo", "Undone", "Redone";
+    keys Ctrl-/, Ctrl-Z, Alt-/ in ui.c.  Wrong: "Redone" and "Undo is off:
+    Undo Levels is 0" were not listed.  Changed: message sentence
+    completed.
+3.11.1  What one operation is
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.11: undo.c: levels 0 to 500, default 100
+    (config.h:90); messages "Nothing to undo", "Nothing to redo",
+    "Undone", "Redone"; keys Ctrl-/, Ctrl-Z, Alt-/ in ui.c).  Wrong: none.
+    Changed: none.
+3.11.2  What is not undone
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.11: undo.c: levels 0 to 500, default 100
+    (config.h:90); messages "Nothing to undo", "Nothing to redo",
+    "Undone", "Redone"; keys Ctrl-/, Ctrl-Z, Alt-/ in ui.c).  Wrong: none.
+    Changed: none.
+3.11.3  Undo Levels
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.11: undo.c: levels 0 to 500, default 100
+    (config.h:90); messages "Nothing to undo", "Nothing to redo",
+    "Undone", "Redone"; keys Ctrl-/, Ctrl-Z, Alt-/ in ui.c).  Wrong: none.
+    Changed: none.
+3.11.4  Back to the saved document
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.11: undo.c: levels 0 to 500, default 100
+    (config.h:90); messages "Nothing to undo", "Nothing to redo",
+    "Undone", "Redone"; keys Ctrl-/, Ctrl-Z, Alt-/ in ui.c).  Wrong: none.
+    Changed: none.
+3.11.5  Edge cases
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.11: undo.c: levels 0 to 500, default 100
+    (config.h:90); messages "Nothing to undo", "Nothing to redo",
+    "Undone", "Redone"; keys Ctrl-/, Ctrl-Z, Alt-/ in ui.c).  Wrong: none.
+    Changed: none.
+3.12  Search and Replace
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3: section list against master.txt and the
+    labels; table of sections).  Wrong: none.  Changed: none.
+3.12.1  Search
+    read; checked: search panel fields ui.c:1030-1100 (seven Find
+    choices); messages found.  Wrong: none.  Changed: none.
+3.12.1.1  How to reach the command
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.12.1: search panel fields ui.c:1030-1100
+    (seven Find choices); messages found).  Wrong: none.  Changed: none.
+3.12.1.2  The panel
+    read; checked: search_finds[] has Soft Hyphen; fields Search for,
+    Find, Direction, Match Case, Whole Word, Attribute; input 79
+    characters (editor.h search[80]).  Wrong: none.  Changed: none.
+3.12.1.3  What it does
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.12.1: search panel fields ui.c:1030-1100
+    (seven Find choices); messages found).  Wrong: none.  Changed: none.
+3.12.1.4  Examples
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.12.1: search panel fields ui.c:1030-1100
+    (seven Find choices); messages found).  Wrong: none.  Changed: none.
+3.12.2  Replace
+    read; checked: cmd_replace_panel ui.c:1280-1350: eight fields, choices
+    and defaults (Match Case Yes: editor.c:46; Ask at Each Yes:
+    editor.c:47).  Wrong: none.  Changed: none.
+3.12.2.1  How to reach the command
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.12.2: cmd_replace_panel ui.c:1280-1350:
+    eight fields, choices and defaults (Match Case Yes: editor.c:46; Ask
+    at Each Yes: editor.c:47)).  Wrong: none.  Changed: none.
+3.12.2.2  The panel
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.12.2: cmd_replace_panel ui.c:1280-1350:
+    eight fields, choices and defaults (Match Case Yes: editor.c:46; Ask
+    at Each Yes: editor.c:47)).  Wrong: none.  Changed: none.
+3.12.2.3  What it does
+    read; checked: prompt text and "(wrapped to the start)" suffix of the
+    replace loop (editor.c).  Wrong: the suffix on the prompt was not
+    described.  Changed: sentence added.
+3.12.2.4  Examples
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.12.2: cmd_replace_panel ui.c:1280-1350:
+    eight fields, choices and defaults (Match Case Yes: editor.c:46; Ask
+    at Each Yes: editor.c:47)).  Wrong: none.  Changed: none.
+3.13  Outlines
+    read; checked: Alt-1 to 9 and Alt-0 keys in ui.c; seen in tmux: Alt-1
+    showed headlines only, Alt-0 showed all.  Wrong: none.  Changed: none.
+3.13.1  The keys
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.2  The marks
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.3  Rules of each key
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.3.1  Alt-1 to Alt-9
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.3.2  Alt-0
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.3.3  Alt-minus
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.3.4  Alt-plus
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.3.5  Alt-star
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.13.4  Edge cases
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.13: Alt-1 to 9 and Alt-0 keys in ui.c; seen
+    in tmux: Alt-1 showed headlines only, Alt-0 showed all).  Wrong: none.
+    Changed: none.
+3.14  Sort and Count
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3: section list against master.txt and the
+    labels; table of sections).  Wrong: none.  Changed: none.
+3.14.1  Sort
+    read; checked: sort_key_of editor.c:1974-2010 (key[128] gives 127
+    characters); messages found in src.  Wrong: none.  Changed: none.
+3.14.1.1  How to reach the commands
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.14.1: sort_key_of editor.c:1974-2010
+    (key[128] gives 127 characters); messages found in src).  Wrong: none.
+    Changed: none.
+3.14.1.2  Autosort, Section
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.14.1: sort_key_of editor.c:1974-2010
+    (key[128] gives 127 characters); messages found in src).  Wrong: none.
+    Changed: none.
+3.14.1.3  Autosort, Table
+    read; checked: "Use arrow keys to highlight block(s); ..." and "Sort
+    direction" messages found.  Wrong: none.  Changed: none.
+3.14.2  Words
+    read; checked: do_count in ui.c: box "Word Count", "Total number of
+    words in document: %d".  Wrong: Count is the sixth of eight Tools
+    entries, not the last of six.  Changed: corrected.
+3.14.2.1  The Word Count box
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.14.2: do_count in ui.c: box "Word Count",
+    "Total number of words in document: %d").  Wrong: none.  Changed:
+    none.
+3.14.2.2  What counts as a word
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.14.2: do_count in ui.c: box "Word Count",
+    "Total number of words in document: %d").  Wrong: none.  Changed:
+    none.
+3.14.2.3  What is counted
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.14.2: do_count in ui.c: box "Word Count",
+    "Total number of words in document: %d").  Wrong: none.  Changed:
+    none.
+3.14.2.4  Edge cases
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.14.2: do_count in ui.c: box "Word Count",
+    "Total number of words in document: %d").  Wrong: none.  Changed:
+    none.
+3.15  Options and Overtype
+    read; checked: options_menu ui.c:1795-1850 for labels, order and
+    shown-only fields.  Wrong: the table named five fields; the panel has
+    eleven.  Changed: six rows added; label spelled as on the screen
+    (Display Tab & End-of-Line Characters?).
+3.15.1  How to reach the panel
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.15: options_menu ui.c:1795-1850 for labels,
+    order and shown-only fields).  Wrong: none.  Changed: none.
+3.15.2  The fields
+    read; checked: options_menu: Expanded Status Line?, Display On-Screen
+    Help?, Block Indicators, Display Tab & End-of-Line Characters?,
+    Display Dots for Spaces?, Display Even Justification?, Display +/-
+    with Section Tags?, Units, Backups Kept (0 to 99), Line Weight
+    (Borders), (Other); BACKUP_DEFAULT 3 (backup.h:38).  Wrong: none.
+    Changed: none.
+3.15.3  Autosave
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.15: options_menu ui.c:1795-1850 for labels,
+    order and shown-only fields).  Wrong: none.  Changed: none.
+3.15.4  Overtype
+    read; checked: overtype toggle ui.c:4200 "Overtype on" and "Overtype
+    off"; OVR in the status line (view.c).  Wrong: none.  Changed: none.
+3.15.4.1  What a character does in Overtype
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.15.4: overtype toggle ui.c:4200 "Overtype
+    on" and "Overtype off"; OVR in the status line (view.c)).  Wrong:
+    none.  Changed: none.
+3.16  Quit
+    read; checked: quoted messages and field names found in src by script.
+    Wrong: none.  Changed: none.
+3.16.1  When nothing has changed
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.16: quoted messages and field names found
+    in src by script).  Wrong: none.  Changed: none.
+3.16.2  When the document has changed
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.16: quoted messages and field names found
+    in src by script).  Wrong: none.  Changed: none.
+3.16.3  What happens after Quit
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.16: quoted messages and field names found
+    in src by script).  Wrong: none.  Changed: none.
+3.17  Find Next Error
+    read; checked: quoted messages and field names found in src by script;
+    Print menu entries from the menu dump.  Wrong: none.  Changed: none.
+3.17.1  How to reach it
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.17: quoted messages and field names found
+    in src by script; Print menu entries from the menu dump).  Wrong:
+    none.  Changed: none.
+3.17.2  The Search panel
+    read; checked: Find choices include Soft Hyphen (ui.c:1031).  Wrong:
+    Soft Hyphen missing from the Find values.  Changed: added.
+3.17.3  What it does
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.17: quoted messages and field names found
+    in src by script; Print menu entries from the menu dump).  Wrong:
+    none.  Changed: none.
+3.17.4  Search again
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.17: quoted messages and field names found
+    in src by script; Print menu entries from the menu dump).  Wrong:
+    none.  Changed: none.
+3.17.5  Taking markers out
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.17: quoted messages and field names found
+    in src by script; Print menu entries from the menu dump).  Wrong:
+    none.  Changed: none.
+3.17.6  Messages of Find Next Error
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.17: quoted messages and field names found
+    in src by script; Print menu entries from the menu dump).  Wrong:
+    none.  Changed: none.
+3.18  Case
+    read; checked: run in X11: Capitalize gave Don't Well-Known 3rd and E
+    acute capital, other accents unchanged; Upper changed 22 characters
+    (accents with a capital pair only, sharp s unchanged); Lower; Enter at
+    once on Text changed the word under the cursor (4 characters);
+    messages "Capitalized: 5 characters changed", "Upper case: N
+    characters changed", "Lower case: N characters changed".  Wrong: the
+    rule for a word that begins with a digit was not said.  Changed:
+    sentence added.
+3.19  Border
+    read; checked: bordermenu.c: fields, "Border Layout", messages at
+    lines 185, 198, 312, 453.  Wrong: four Border messages were not
+    listed.  Changed: table of messages added.
+3.19.1  Borders on several columns and rows
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.19: bordermenu.c: fields, "Border Layout",
+    messages at lines 185, 198, 312, 453).  Wrong: none.  Changed: none.
+3.20  Math
+    read; checked: run in X11 with 30 expressions: 1,5 (1.5), 1,234.50
+    (1234.5), 1.5e3 (1500), 2E-2 (0.02), 2 3 (5), 2 3 * 4 (14), 0.1 + 0.2
+    (0.3), 1 / 3 (0.333...), 10^100 (1E+100), 1 / 0 (Cannot divide by
+    zero), 50% (0.5), 200 * 15% (30), (1+2)*3 (9), -2^2 (-4: the exponent
+    comes before the negation), 2^-1 (0.5), 2 + 3 * 4 (14), price $12.50 +
+    3 (15.5), 3 apples 4 pears (7); "Nothing is highlighted: highlight the
+    numbers to calculate" at once on an empty highlight; 1 / 3 gave 100
+    threes; 10^99 gave 100 digits and 10^100 gave 1E+100; 1 followed by 99
+    zeros plus 1 and 100 nines were calculated; a 101-digit number gave
+    "Cannot calculate: the expression is not good"; a long result is cut
+    at the left with three periods in the message line and pasted whole.
+    Wrong: the messages "Cannot calculate: the expression is not good" and
+    "There is no number to calculate" and the cut of a long result were
+    not described.  Changed: sentences added.
+3.21  Tools: Macros and Library
+    read; checked: quoted messages and field names found in src by script;
+    message boxes against message lines classified from the source
+    (popup_msg and ed_msg).  Wrong: a box titled Paste from Library or
+    Delete from Library, not the message line, says that the library has
+    no entries; "There are no macros" and "No such macro" are boxes too.
+    Changed: wording says box.
+3.21.1  Tools, Macros, Learn
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.2  Tools, Macros, Edit
+    read; checked: macro.c key_names[] (macro.c:297-306).  Wrong: <NBSP>
+    missing from the key names.  Changed: added.
+3.21.3  Tools, Macros, Delete
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.4  Tools, Macros, Save
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.5  Tools, Macros, Retrieve
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.6  Tools, Library, Edit
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.7  Tools, Library, Delete
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.8  Tools, Library, Save
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.9  Tools, Library, Retrieve
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.
+3.21.10  Copy to Library and Paste from Library
+    read; checked: statements read; quoted messages and field names found
+    in src by script (parent 3.21: quoted messages and field names found
+    in src by script; message boxes against message lines classified from
+    the source (popup_msg and ed_msg)).  Wrong: none.  Changed: none.

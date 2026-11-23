@@ -1,0 +1,405 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+THE PRINT MENU
+==============
+
+F12, Print.  Draft and Final make a PDF of the document and, when a printer
+is named, send it to the printer.  The panels were compared with the
+original program (Manuscript 2.1 running under DOSBox-X), and every field
+that cannot work now was removed.
+
+What the original does
+----------------------
+The original sends the document through a typographic formatter to a
+printer driver.  Its Draft Print panel has Print Current Section Only?,
+Print Document with Footers?, Force Document Expansion? and Print Double
+Spaced?, and the name of the printer.  Its Print Document panel (Final) has
+the working directory, the document name, the number of copies, the print
+quality, whether to print double sided and in sorted order, a check list of
+the parts to print (Title Page, Table of Contents, Table of Figures, Table
+of Tables, Body, Index, Error Log, Document Print Summary), a range of
+sections and of pages, and the graphics options.
+
+What Draft and Final do here
+----------------------------
+Strata has no printer drivers and no formatter of its own.  The text of the
+document goes through LaTeX (the program strprint, PRINT-LATEX.txt) and the
+operating system's print system, CUPS, talks to the printer.  So:
+
+  Final   Typesets the document with all that it has (the spacing of the
+          document, pictures, the comments left out) to a PDF.
+  Draft   A quick, plain print: the same engine, but one line spacing
+          whatever the document says, no extra space between the blocks,
+          the pictures drawn as empty frames (they are what makes a
+          document slow), and the comments of the document printed with
+          their author and time (they are printed in a Draft only).  It is
+          strprint --draft.  The default name of its PDF is NAME-draft.pdf,
+          so that it does not replace the final one.
+
+Then, if the Printer field names a queue, the PDF is sent with "lp".  With
+File only and PDF viewer the PDF is the product, the Output File.  With a
+queue (and lp found) the PDF is made in the private temporary directory, sent,
+and deleted with the directory: no Output File is written, the Output File
+field is inactive (in its place, its text dim, the cursor skips it, nothing
+can be typed in it; File only and PDF viewer make it active again), and
+nothing asks to replace a file (a print that is made
+by stred --print keeps its PDF as before: see the command line below).
+Nothing writes plain text under the name of a print any more.  (The text
+writer stays for "stred --text FILE.doc OUT", which the tests use, and was
+removed from Print: the copies and double-spacing parameters of it had no
+user left.)
+
+The panel
+---------
+Fields of Final (Draft has the same, without Print Title Page?, Print from
+Section and to Section):
+
+  Output File                   The PDF.  The default is the document's name
+                                with .pdf, in the document's directory (the
+                                PDF is found next to the document); a
+                                document with no name gives Untitled.pdf in
+                                the working directory.  A name without a
+                                directory is in the working directory of
+                                stred.  An existing file asks "Replace
+                                NAME?" first; No returns to the panel.  The
+                                directory must exist and be writable, and
+                                the PDF cannot replace the document.
+                                Keypad + (or F2) lists the PDF files.
+  Printer                       The name of a CUPS queue, File only (or
+                                empty): make the PDF and stop, or PDF
+                                viewer: make the PDF and open it in a PDF
+                                viewer (see below; the old name Open to
+                                print is still read).  The default
+                                is the Printer of the Document Manager's
+                                Setup (kept in ~/.strata/config).  Keypad +
+                                (or F2) lists File only, PDF viewer and
+                                the queues that
+                                "lpstat -a" gives.  A name with a space, a
+                                slash, a quote, a "#" or a first "-" is
+                                refused.  When lp is not found the panel
+                                shows "Print Status: lp not found: only the
+                                PDF is made", and that is what happens.
+  Copies                        1 to 99.  lp -n.
+  Print Double Sided?           Printer default, Yes or No.  Yes is
+                                lp -o sides=two-sided-long-edge, No is
+                                lp -o sides=one-sided, and Printer default
+                                gives no option.
+  Sort Output Pages?            Printer default, Yes or No.  Yes is
+                                lp -o collate=true (pages 1, 2, 3, 1, 2, 3
+                                for three copies), No is lp -o
+                                collate=false (1, 1, 1, 2, 2, 2).  It only
+                                means something for more than one copy.
+  Print Current Section Only?   Yes makes the section the cursor is in, with
+                                all that is below it.
+  Print Title Page?             No leaves out the sections above level 1.
+  Print Double Spaced?          Yes doubles the line spacing of every block
+                                (strprint --double-spaced).  It changes the
+                                PDF, so it works with File only too.
+  Print from Section / to Section
+                                A range of section numbers such as 1.2 and
+                                2.  A blank "from" starts at the first
+                                section and a blank "to" ends at the last.
+                                A number that is not a section is refused
+                                on the panel ("Cannot find section number").
+  Print from Page / to Page     The pages to print: lp -P FROM-TO.  A blank
+                                "from" is page 1 and a blank "to" is the
+                                last page of the PDF.  The range is cut by
+                                CUPS when it prints (the PDF has all the
+                                pages, so that it can be printed again), no
+                                program is needed to cut the PDF.
+  Error Log?                    Yes (the default) ends the PDF with an Error
+                                Log: a new page that lists what is wrong in
+                                the document and where (PRINT-LATEX.txt,
+                                section 17).  No leaves it out; the errors
+                                are still marked in the document (see below).
+
+What the panels keep (src/printmenu.c, config keys print_last_*)
+  After a print that is not cancelled the Printer, Print Double Sided?, Sort
+  Output Pages? and Print in Black and White? are kept: in memory for the
+  life of the Editor and in the settings (print_last_printer, print_last_sides
+  = default|one|two, print_last_sort = default|yes|no, print_last_bw =
+  yes|no; the file is read again before it is written, atomic, mode 0600, so
+  the other keys stay; the last writer wins).  The next panel starts with
+  them; Setup (Print To, Printer Queue) is the default of a first use.  Not
+  kept: the Output File, the pages and sections, the title page, the error
+  log, the document's own choices (they belong to this print or are read from
+  the document first) and Copies (it is 1 each time: the copies belong to one
+  job).  A kept queue that "lpstat -a" no longer lists shows File only and
+  the message "The printer NAME is not in the list of the system any more:
+  File only is shown"; a cancelled panel keeps nothing.  The same keys serve
+  Print, Draft; Preview has none of these fields.
+
+Copies, Print Double Sided?, Sort Output Pages? and the page range are
+instructions to the printer: with File only there is nothing for them to
+act on, so the panel refuses them ("More than one copy needs a printer:
+name one in Printer") instead of showing a field that does nothing.
+
+Removed from the original's panel, with the reason:
+  Print Quality                 CUPS has no portable setting that a program
+                                can map it to; Draft is the quick print.
+  Parts to print (title page, tables, index, error log, summary)
+                                The title page (Print Title Page?), the
+                                Error Log (Error Log?) and the table of
+                                contents (Table of Contents?, with Contents
+                                Levels) remain.  Tables of figures and of
+                                tables and the index are not made yet, nor
+                                the Document Print Summary
+                                (NOT-IMPLEMENTED.txt).
+  Print Document with Footers?, Force Document Expansion?
+                                They only changed the page of the original's
+                                formatter.
+  Graphics options              The pictures are drawn by LaTeX; Draft turns
+                                them off.
+  Working directory, document name
+                                The document is the one in the editor.
+
+While it runs
+-------------
+The document in the editor is printed with the changes that are not saved;
+the file is not touched.  The work is done by child programs (strprint and
+lp) that stred reads through a pipe and polls, so the editor does not
+freeze.  A wait panel in the style of Preview's shows the stage ("Writing",
+"Running LaTeX (pass N)", then "Sending to the printer"), "Page N of about M"
+and a gauge.  Esc cancels: strprint is stopped, nothing is written (a PDF
+that was there before stays as it was) and the message line says "Print
+cancelled".  Esc while lp runs stops lp; the PDF was already made and the
+popup says so, and says that the job may or may not have been queued.  The
+temporary directory is deleted after every run, after Esc and when stred is
+stopped by SIGINT, SIGTERM or SIGHUP.  The PDF is written to its place only
+when it is complete.
+
+The messages
+------------
+At the end (the message line when nothing was sent, a popup when lp was
+used, so that the text of lp can be read in full):
+
+  Wrote /home/a/plan.pdf (12 pages)
+  Wrote /home/a/plan.pdf (12 pages) and sent it to laser (request id is
+  laser-17 (1 file(s)))
+      The text after "sent it to" is the answer of lp.  (Only a print that
+      keeps its PDF, stred --print.)
+  Sent to laser: 12 pages, 2 copies, double sided, sorted.  No PDF was kept
+      A print to a queue from the panel: message line.  lp failing gives
+      "lp failed (status N): TEXT  Nothing was sent and no PDF was kept:
+      choose File only to keep one." in a popup; the PDF is deleted.
+  Print cancelled
+  Cancelled while sending to laser.  The PDF ... was made; the print job
+  may or may not have been queued.
+
+Popups for what went wrong:
+
+  LaTeX failed: ! TEXT l.12 THE LINE
+      The first error line of the TeX log and the line after it.  No PDF.
+  Print failed: strprint: TEXT
+      Any other message that strprint gave.
+  Print needs strprint: it was not found next to stred or in PATH.
+  Print needs LaTeX: pdflatex was not found in PATH.  See README.txt for
+      the packages.
+  Wrote FILE.pdf but lp was not found, so it was not sent to QUEUE.
+      The PDF is made.  Install cups-client, or STRATA_LP names another lp.
+  lp failed (status N): TEXT  The PDF FILE was made.
+      TEXT is what lp printed, for example "lp: The printer or class does
+      not exist."  The PDF is kept.
+  The PDF FILE was made but was not sent.  TEXT
+      The page range was refused (for example a "from" page after the end of
+      the PDF: "The document has only 2 pages, so it has no page 5").
+  The PDF FILE was made but lp did not answer within a minute.
+
+Programs and variables
+----------------------
+  strprint   next to stred, else in PATH; STRATA_STRPRINT names another.
+  pdflatex   in PATH (strprint runs it).
+  lp         "lp -d QUEUE ..." from PATH; STRATA_LP names another program
+             (the tests and users with another print command).
+  lpstat     "lpstat -a" lists the queues; STRATA_LPSTAT names another.
+             It is asked when a panel opens, for at most 3 seconds.
+The programs are started with fork and exec and an argument list; no shell
+is started and no text of the user goes through system() or popen().  The
+command is
+    lp -d QUEUE -n COPIES [-o sides=...] [-o collate=...] [-P FROM-TO]
+       [-t DOCUMENT-NAME] /full/path/NAME.pdf
+
+The command line
+----------------
+    stred --print FILE.doc [--printer QUEUE] [--copies N]
+          [--sides one|two] [--sort yes|no] [-o OUT.pdf]
+          [--from SECTION] [--to SECTION] [--from-page N] [--to-page N]
+          [--no-title] [--double-spaced] [--draft] [--no-error-log]
+          [--errors FILE] [-v]
+
+It makes the PDF and sends it without opening the editor, like the
+"stred --preview FILE" mode that the Document Manager uses.  It is Final
+unless --draft is given.  The default of -o is the document's path with
+.pdf (NAME-draft.pdf with --draft).  There is no default printer here: only
+--printer sends the PDF (the Printer of Setup is the default of the panels).
+This mode is unchanged by the memory of the panels: it keeps its PDF (the -o
+file, written without a question, and sent when --printer is given) because
+a script that names -o wants the file, and it does not read or write the
+choices that the panels keep.
+It prints one line of text, and the exit status tells the result, so that a
+shell script can use it:
+
+  0   The PDF is made (and sent, if --printer): the line is on the standard
+      output, "Wrote FILE.pdf (12 pages)" or "Wrote FILE.pdf (12 pages) and
+      sent it to QUEUE (request id is ...)".
+  1   Nothing was made: strprint or pdflatex is missing, LaTeX failed, the
+      document cannot be read.  The text is on the standard error.
+  2   A wrong option or value (the same refusals as the panel); nothing was
+      started.
+  3   The PDF is made but not sent: lp is missing, failed, or the page range
+      is wrong for the PDF.  The PDF is kept; the text is on the standard
+      error.
+  4   Stopped.  (A signal ends the program as the signal would.)
+  5   The PDF is made (and sent, if --printer) but the document has errors or
+      warnings.  They are written as text on the standard error, one for
+      each, with the place in the document ("Section 3.1.1 Definition,
+      block 2, line 4").  With --errors FILE they are written to FILE too,
+      in the format of PRINT-LATEX.txt, section 17.5 (the items are those of
+      the document).  Without diagnostics the status stays 0.
+
+With -v the pages are told on the standard error as they are made ("Page 1
+of about 2", "Sending to the printer").  strprint stays the pure typesetter;
+this mode is the print itself.
+
+The Document Manager
+--------------------
+The Document Manager (str) has no Print Document or Preview Document of its
+own any more (the owner removed them): its entry Edit / Preview / Print
+Document opens the Editor, and the panels of this file are reached from the
+menu of the Editor.  "stred --print" and "stred --preview" stay as modes of
+the Editor (tests and scripts).  Keypad + (or F2) on Printer
+lists the queues.  Setup has one Printer field (the default queue, in
+~/.strata/config as printer=NAME) in place of Primary Printer Driver,
+Secondary Printer Driver and Port; it is the default of the Printer field of
+the Print panel of stred.  The other (n/a) fields of Setup are untouched.
+
+Not tested
+----------
+The real CUPS: the tests use a stand-in for lp and lpstat that logs its
+arguments (tests/fakelp.sh, tests/fakelpstat.sh).  That a real queue takes
+the options (sides, collate, page ranges) was not tried; the option names
+are those of CUPS.
+
+Errors of the document: the Error Log and the Print Errors
+-----------------------------------------------------------
+Print and Preview tell what is wrong with the document (an equation that
+is not valid TeX math, a picture that is missing, a character that no font
+has, a Keep that is not closed, an error that LaTeX reports ...).  The
+Error Log is at the end of the pages.  The Editor also reads the file that
+the Printer wrote and puts a PRINT ERROR marker at each place in the
+document (MARKERS.txt, "Print Error"), so that the errors can be found and
+fixed in the Editor: the Print menu has Next Error (Ctrl-F8), Previous
+Error (Ctrl-F7), Remove Error and Remove Print Errors, and the Search panel
+(F9) can search for the next Print Error (Ctrl-F9 repeats the search).  The
+message line says how many ("Print: 3 print errors", "Print: no print
+errors").  A new Preview or Print replaces the markers that the same kind
+of run put in.  The Document Manager's Print and Preview have no document
+to mark: the errors are shown as text at the end.
+
+Preview
+-------
+The original's Preview draws the pages on the screen and needs a graphics
+display driver; it stops with "invalid graphics display driver" when it
+has none, which is the case under DOSBox-X here.  Strata typesets the part
+with LaTeX (latex, the DVI route of strprint) and shows the pages with the
+viewer dviview, in a window of its own.  Details: PRINT-LATEX.txt, section 15.
+
+  Document   Asks for Preview Title Page?, a range of sections and Error Log?,
+             as Final does, then previews them.
+  Block      The block the cursor is in.
+  Section    The section the cursor is in, with all that is below it.
+
+The document in the editor is previewed, with the changes that are not
+saved; the file is not touched.  While LaTeX runs a panel shows the stage
+("Writing", "Running LaTeX (pass N)", "Starting viewer"), "Page N of about M"
+and a gauge; Esc cancels.  Close the window of the viewer to return to the
+editor (q or Esc in the viewer).  If LaTeX fails, the message line shows the
+first error line of its log and the line after it.  Needs latex (see
+README.txt) and an X display (DISPLAY, or the X11 version of stred); without
+the viewer or the display the message line says so.
+
+Ctrl-P is Print, Final.
+
+Repaginate and Clear-pages
+--------------------------
+Repaginate runs the formatter over the whole document and draws a line in
+the text where every page ends: the section number, then
+"-- v 7 (Page 7 of 36) v --".  GSAOPC.DOC comes to 36 pages.  It asks
+"Printer driver mismatch - use Setup printer?" when the document was made
+for another printer, and stops with a fatal error for a document that has
+Include markers ("Cannot paginate documents with Include markers").
+Clear-pages removes those lines.
+
+Both were dimmed in Strata and are now removed from the Print menu (owner,
+2026-11-18); the text above describes the original.  Page breaks depend on the printer's fonts,
+margins, headers and footers, which Strata does not have, and an estimate
+would not agree with the original.
+
+
+PDF viewer (once Open to print)
+-------------------------------
+The entry PDF viewer of the field Printer (PJ_PDF_VIEWER, in any case of
+letters; the old words Open to print, PJ_PDF_VIEWER_OLD, are read the same) makes the PDF as File only does and then opens it (pj_open_pdf in
+src/printjob.c, called by pj_run after the PDF is in its place), for Final and
+for Draft, in the Editor and in "stred --print".  The checks of pj_check are
+those of File only (copies, sides, sort and a page range are refused, with the
+words "the program that opens the PDF has its own print dialog" added);
+Print Double Spaced? works.
+
+The program: the setting pdf_viewer of the settings file (PjOpts.viewer, read
+from the Config by printmenu.c and printcli.c) when it is not empty.  It is
+the FULL PATH of the program, so that no program of PATH can take its
+place (decision of the owner, 2026-11-18: "do not allow ${PATH} poisoning").
+viewer_form_ok accepts only a path that starts with a slash, holds letters,
+digits and . _ + - / and has no .. component; a name or a relative path is
+refused by Setup ("The PDF viewer needs its full path, such as /usr/bin/evince"), and one found in an older settings file is not run: the
+value is treated as not given (config.c keeps it in pdf_viewer_old for the
+message of Setup).  viewer_state wants a regular file with X_OK for the
+user, owned by the user or root, not writable by group or others, in a
+directory that others cannot write (the sticky bit does not excuse it).  An
+empty setting means the first of evince, okular, atril, zathura, qpdfview,
+mupdf, xpdf and epdfview that is found in /usr/bin, /usr/local/bin and /bin
+(viewer_dirs; never PATH, never the current directory), and only when
+DISPLAY or WAYLAND_DISPLAY is set; when there is none the message is "no PDF
+viewer was found: set one in Setup".  start_detached runs the program with
+execv(argv[0]) (no execvp, no shell), the PDF as the only argument, and the
+environment of the run without LD_PRELOAD and LD_AUDIT.  The general openers (xdg-open, gio
+open, open) are not looked for, because the handler of application/pdf of a
+machine may be a word processor.  A setting whose base name holds soffice,
+libreoffice, oowriter, oodraw, lowriter, lodraw, abiword, wps, calligra or
+winword (any case, pj_opener_refused) is never started: it is logged as a
+warning and treated as if no program was found.  The PDF is the only
+argument.
+
+The program is started detached (start_detached): two forks, setsid, no
+terminal, standard input, output and error on /dev/null, and it is not waited
+for; a pipe with the close-on-exec flag tells the caller when the program
+could not be executed.  The messages are in the manual (chapter 6): "Wrote
+FILE (N pages) and opened it to print", and, with the PDF kept and no failure
+of the print, "... but no PDF viewer was found: set one in Setup: it is
+saved" (no viewer, no display, or a refused setting), "... but the program of
+the setting pdf_viewer was not found: it is saved" and "... but the program
+that opens it could not be started: it is saved".
+
+Tests: tests/pjtest.c (the order of the viewers, no display, the setting, the
+refused names, the refusal of names, relative paths, files that cannot be
+run, directories, world-writable files and directories; a poisoned evince
+that is first in PATH never runs, its marker file stays absent; an old name
+in the setting is ignored; the viewers are in directories that the test sets
+with pj_viewer_dirs_set), tests/printpdf.py (the Editor and "stred --print", Final and Draft)
+and tests/fakeopen.sh, the stand-in.  No test may start a real program that
+opens a PDF: the directory tests/shadowbin is first in PATH (tests/tui.py,
+printpdf.py, xsmoke.py) with guards named like the viewers and like xdg-open,
+gio, open, soffice and libreoffice, which record a call and refuse it.

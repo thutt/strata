@@ -1,0 +1,25 @@
+
+---------------------------------- Section Tag ---------------------------------
+Section tags can be defined globally, by level, or locally for a specific 
+section.  Section tags can be any combination of markers, backslash commands, or
+text.  The default section tag is decimal numbers.
+
+# Markers perform formatting functions or substitute text during printing. For 
+  example, the Page Break marker starts sections on a new page.  Markers that 
+  are valid in section tags are displayed without parentheses when you press 
+  Marker (Alt F10) in the section tag edit box.
+
+# Backslash commands automatically increment section tags as you add sections.
+
+  \#\               Decimal numbering, for example 1, 1.2, 1.5.2
+  \1\               Arabic numbers, for example 1, 2, 3
+  \a\ or \A\        Lowercase or uppercase letters, for example A, B, C
+  \i\ or \I\        Lowercase or uppercase roman numerals, for example i, ii
+
+# Text can be used alone or with markers or backslash commands. For example, you
+  could specify Exercises to print as the section tag for a specific section 
+  level.  Or, you could define the section tag as Chapter \1\, to generate 
+  Chapter 1, Chapter 2, and so on.
+--------------------------------------------------------------------------------
+    Section Format        Section Tag Starting Value        Global Format
+         Markers              Keyboard Summary              Help Index

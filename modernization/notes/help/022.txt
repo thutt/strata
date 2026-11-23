@@ -1,0 +1,25 @@
+
+-------------------------------- Display Drivers -------------------------------
+
+The text and graphics display drivers you select on the Setup panel are used 
+to display characters on the screen.
+
+Text Display Driver: Select the monitor to use for all Manuscript functions
+except Preview Document.
+
+Graphics Display Driver: Select the monitor to use for Preview Document.
+You must have a monitor capable of displaying graphics to use preview.
+
+--Procedure---------------------------------------------------------------------
+
+ Move the cursor to Text Display Driver and press Space Bar.
+ Highlight the appropriate selection for your hardware and press Enter. 
+ Some display drivers have additional settings you can select from a secondary
+  panel, such as attribute display colors. If a second panel is displayed, 
+  make your selections and press Ins.
+ Repeat the procedure to select a Graphics Display Driver. 
+--------------------------------------------------------------------------------
+# You need to select both display drivers, even if you are using the same
+  monitor for both text and graphics. 
+--------------------------------------------------------------------------------
+        Document Manager      Setup       Keyboard Summary      Help Index

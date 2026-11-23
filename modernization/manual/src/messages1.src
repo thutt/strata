@@ -1,0 +1,585 @@
+# Chapter 11, part 1: the message line and the boxes of the Editor.
+.h2 The Editor: the message line [msg-editor-line]
+.ix Message line, Editor
+.ix Messages, Editor, message line
+.ix Editor, messages
+The Editor puts these lines on the message line.  A line stays until the next
+key.  None of them prompts for a key; the ones that reject something leave the
+document as it was.  The line is described in {x:view-message}.
+.h3 Refusals and information [msg-editor-line-refusals]
+.table 26 34
+Message | Meaning and what to do
+A Print Error cannot be made by hand | A Print Error marker was chosen in the
+ | Marker command.  Only a print makes that marker; the document was not
+ | changed.
+Adjust needs two windows that share the screen | Edit, Window, Adjust: one window is open, or a window fills the screen.
+Autosort sorts blocks | Sort was asked for something that is not a block
+ | selection.  Choose Autosort again and highlight blocks.
+Block selection must stay within one section | The highlight of Cut, Copy,
+ | Delete, Move or Autosort includes a section tag or a heading.  Highlight
+ | blocks of one section only, or use the section selection of the command.
+Border: N changes | Border applied the settings of the panel to the highlighted
+ | columns and blocks.
+Cancelled | {k:Esc} ended a highlight: the command did nothing.
+Cannot calculate: the expression is not good | Math found an operator with
+ | nothing to work on, an exponent that is not a whole number, a number of more
+ | than 100 digits or one that is too large.  Change the numbers.
+Cannot delete the only block | Delete Block on the only block of a section
+ | that cannot be removed with it (an unstructured document, or a section that
+ | has subsections).  Delete the section, or put other text in the block.
+Cannot delete the only section | Delete Section when the document has a single
+ | section. A structured document always keeps one.
+Cannot divide by zero | Math was asked to divide by zero.  The clipboard is not
+ | changed.
+Cannot join a section that has subsections | Join Section on a section that is
+ | followed by subsections.  Join the subsections first, or move them.
+Cannot join here | Join found nothing to join and had no more exact message.
+ | Move the cursor to another place and try again.
+Cannot take the whole document as a section | A section highlight that starts
+ | at the first section (the root).  Highlight a part of the document.
+Capitalized: N characters changed | Case, Capitalize.  {c:1 character} for
+ | one.  Upper case: and Lower case: are the same for those choices.
+Collapse/expand works in structured documents | Expand, Contract or a fold key
+ | in an unstructured document.  There are no sections to fold.
+Copied | Copy finished.  The area is in the clipboard.
+Cut | Cut finished.  The area is in the clipboard.
+Deleted | Delete finished.  Unlike Cut, Delete does not put the area in the
+ | clipboard.
+Equation drawn as Short: REASON | The cursor is on an Equation, shown with the
+ | display mode Inline, whose picture cannot be made.  The marker is drawn in
+ | its Short form, {c:[EQN text]}.  REASON is the first line of the message
+ | ({n:eq-messages}); the Error Log of the run has the place of the marker.
+Found | Search found the text and the cursor is on it.
+Hanging indent set at {i:N} | {k:Ctrl-H} made a hanging indent whose second
+ | and later lines begin at position N.
+Highlight text, Enter to cut | {k:Ctrl-X} began a highlight of text.  Move the
+ | cursor, then {k:Enter}; {k:Esc} cancels.
+Highlight the area with the cursor keys, then press Enter (Esc cancels) | Move
+ | (F7) began a highlight.  Move the cursor, then {k:Enter}.
+Highlighting: move the cursor, Enter to accept, Esc to cancel | A highlight of
+ | Cut, Copy or Delete is on.  Same keys.
+Ins saves, Esc restores, Ctrl-W views the equation | The editing window of an
+ | equation (Marker, Alt-F12 on an equation) is open. {k:Ins} keeps the
+ | changes, {k:Esc} gives the old text back, {k:Ctrl-W} shows the equation
+ | ({n:eq-view}).
+Join works on single-column blocks | Join Block on a block that has more than
+ | one column.  Join the columns first (Join Column), or use Split.
+Keycap drawn as Short: REASON | The same for a Keycap, drawn as
+ | {c:[Key: legend]}.
+LaTeX marker drawn as Short: REASON | The cursor is on a LaTeX marker, shown
+ | with the display mode Inline, that is not drawn as a picture.  REASON is a
+ | phrase that says why: a marker that begins or ends a block, a list, a table
+ | or a conditional, a definition, a counter or a setting that the text after
+ | it uses, a command that is not safe to run, or a text that is too long or
+ | damaged ({n:markers}).  The first line of a message of LaTeX is the reason
+ | when the text did not typeset.
+Leave Section edit before moving blocks or sections | Move: Section edit is on, and a block or a section cannot move then.  Leave it with {k:Ctrl-^}.
+Left, Right, Home and End move columns | Move Column: another key was pressed.
+Marker type {i:N} cannot be edited | The cursor is on a marker whose type is
+ | not in the table of Strata; N is its number.  Delete it or leave it.
+Moved | Move: {k:Enter} kept the columns, blocks or sections where they are.
+Moving: the cursor keys move it, Enter accepts, Esc cancels | Move: a key that is not a cursor key was pressed while the area moves.
+No following peer section | Join Section on the last section of its level.
+No letter was changed | Case: the text that was highlighted had no letter to
+ | change (or all of them were in that case).
+No previous peer section | Demote ({k:Alt-]}) found that the section before
+ | has another level.  Move the section first.
+No previous section to become a subsection of | Demote on the first section.
+No section here | Append Section or Append Subsection found that the cursor is
+ | outside every section.  Move into a section.
+No section {i:NAME} | Go To Section: the number NAME is not in the document.
+ | Use Go To again and type a number such as 2.1.
+No word under the cursor | Case with nothing highlighted: the cursor is not at
+ | a word.
+Not found: {i:TEXT} | Search or Replace did not find TEXT. TEXT is the string, or
+ | what was looked for ({c:a tab}, {c:an end of line}, {c:a no-break space},
+ | {c:a marker}, or {c:bold text} for an attribute with no string).  The cursor
+ | does not move.
+Nothing is highlighted: highlight the numbers to calculate | Math was chosen with
+ | no highlight.  Highlight the numbers and choose Math again.
+Nothing to join here | The Delete key, at the end of the last column of a
+ | block, would join the next block and found none.  There is nothing to do.
+Nothing to paste | Paste ({k:F5}) when the clipboard is empty.  Cut or copy
+ | first.
+Nothing to redo | Redo ({k:Alt-/}) when no operation has been undone, or a
+ | new change took the undone operations away.
+Nothing to sort | The section has fewer than two subsections.
+Nothing to undo | Undo ({k:Ctrl-/}) when nothing has been changed since the
+ | document was loaded, or the operations were all taken back.
+Only a structured document has sections | Edit, Section ({k:Ctrl-^}) in an
+ | unstructured document.
+Overtype off | Overtype is off. ({k:Alt-F5} and {k:Ins} switch it.)
+Overtype on | Overtype is on.  Typed letters replace the letters at the cursor.
+Picture drawn as Short: REASON | The same for a Picture whose file cannot be
+ | made into a picture.
+Press Ins to Save Changes or Esc to Restore Previous Version | The editing
+ | window of a note or footnote, or of another text of a marker, is open.  Same
+ | keys.
+Section selection must cover peer sections | The highlight of a section
+ | command begins and ends in different levels or cuts a section in half.
+ | Highlight whole sections of one level.
+Sections exist only in structured documents | Sort Sections, or a section
+ | highlight, in an unstructured document.
+Sort direction: ascending | While the highlight of Autosort is on, the key
+ | {k:+} or {k:-} was typed.  Ascending is the default; each of the keys
+ | switches the direction.
+Sort direction: descending | Same, descending.
+Sorted {i:N} blocks | Autosort ordered N blocks.
+Sorted {i:N} sections | Sort Sections ordered N subsections.
+Split a block of several columns by column | Split Block on a block that has
+ | more than one column.  Split by column instead.
+Text selection must stay within one column | A text highlight that crosses
+ | from one column to another.  Highlight inside one column.
+The block cannot move farther | Move Block: the block is at the first or the last place of its section.
+The block has one column only | Move Column: a block with one column has nothing to move to.
+The column cannot move farther | Move Column: the column is the first or the last one.
+The cursor is not in a block | Spell Check Block or Section, Autosort or
+ | Preview Block when the cursor is on a section tag or a heading.  Move into
+ | the text of a block.
+The file has no named block settings | Retrieve, with the option Retrieve Named Block Settings Only: the file has no named block format.
+The headline of a section cannot move | Move Block: the headline is the first block of its section and stays there.
+The section cannot move | Move Section: the section is not inside another section.
+The section cannot move farther | Move Section: the section is at the place where the key would take it (the first or the last, or the next level would not exist).
+The section cannot move left | Promote ({k:Alt-[}) on a section of the first
+ | level.  Nothing is above it.
+The section has no subsections to sort | Sort Sections on a section that has
+ | none.
+There is no block to put a border on | Border found no block in the highlight.
+ | Highlight a column of a block.
+There is no column to put a border on | The highlight of Border does not cover
+ | a column of the block.  Highlight at least one column and choose Border
+ | again.
+There is no current section | Edit, Section ({k:Ctrl-^}) or Sort Sections when
+ | the cursor is outside every section.
+There is no number to calculate | The highlight that Math was given holds no
+ | number.  Highlight text that has the numbers and the operators.
+There is one window only | Edit, Window, Close or Switch: only one window is open.
+Two windows are open already | Edit, Window, Open: a second window is open.
+Type the hanging characters first, then press Ctrl-H | {k:Ctrl-H} at the first
+ | position of a line: the hanging indent is measured to the position of the
+ | cursor, so there is nothing to measure.  Type the bullet or number, then
+ | press the key.
+Up and Down change the size of the windows; Enter accepts, Esc cancels | Edit, Window, Adjust: the keys that change the size.
+Up, Down, Home and End move blocks | Move Block: another key was pressed.
+Use arrow keys to highlight block(s); then press Enter. | Spell Check Block or
+ | Preview: highlight blocks and press {k:Enter}.  The line for Section says
+ | {c:section(s)}.
+Use arrow keys to highlight block(s); then press Enter.  Home, End: begin or
+ end of section. +, -: change direction | Autosort Table began a highlight.
+ | {k:Home} and {k:End} go to the ends of the section, {k:+} and {k:-} set the
+ | direction of the sort.
+Use arrow keys to highlight column(s); then press Enter | {k:Alt-F8}, Border began a
+ | highlight of columns.  Move the cursor to cover the columns and press
+ | {k:Enter}; the panel of the border opens.
+Window closed | Edit, Window, Close closed the window of the cursor.
+Window opened: retrieve or create a document in it | Edit, Window, Open opened a second window.
+.end
+.h3 After a command has done its work [msg-editor-line-done]
+These lines tell what a command did.  Every one of them is also given in the
+chapter of the command.
+.table 27 33
+Message | After
+Defining Alt-{i:K}: press Ctrl-F1 to end | Learn: every key is now recorded
+ | for the macro Alt-K until {k:Ctrl-F1}.
+Deleted | Delete Macro or Delete from Library: the macro or the entry is gone.
+Deleted {i:PATH} | Delete (File).
+Exported {i:PATH} | Export.
+Imported; {i:N} characters not kept | Import with UTF-8 or Latin-1: N characters
+ | became question marks (1 character).
+Imported {i:PATH} | Import.  See {x:file-messages-line}.
+Library entry {i:NAME} made | Copy to Library.  The entry NAME is in the
+ | library.
+Library not loaded: REASON | The start of the Editor.  The file of the Setup
+ | field Initial Library cannot be read or is not a library; the Editor
+ | started without it.
+Macro Alt-{i:K} has {i:N} keystrokes | The entry of a macro was accepted; K is
+ | the key, N the number of keystrokes (1 keystroke).
+Macro set not loaded: REASON | The start of the Editor.  The file of the Setup
+ | field Initial Macro Set cannot be read or is not a macro set; the Editor
+ | started without it.
+N library entries | The library has N entries (after Cut to Library or the
+ | Library Edit panel was accepted). {c:1 library entry} for one.
+N replacements | Replace changed N places. {c:1 replacement} for one;
+ | {c:(stopped)} is added when {k:Q} or {k:Esc} ended the run.
+New document | New.
+{c:No UTF-8 terminal: ASCII is drawn. The font is not checked. See Setup.} | The
+ | start of the Editor, and of the Document Manager (on its footer line).  The
+ | terminal does not read UTF-8, so the screen is drawn with ASCII characters
+ | ({n:appterm-charset}).  The font cannot be checked.  Field Terminal
+ | Characters of Setup and the variable STRATA_ASCII change the choice.
+Not included in the library | Copy to Library with Include in Library? set to
+ | No: nothing was stored.
+Preview cancelled | {k:Esc} was pressed while the preview was prepared.
+Preview done | The Viewer was closed after a good preview.
+Preview done: PRINT FAILED, N print errors (Ctrl-F8 finds the next) | The
+ | Viewer was closed after a preview that had errors ({n:print-failed}).
+Preview done; the viewer could not show N things: TEXT | The Viewer left
+ | something out of the pages (TEXT names the first); the preview is
+ | otherwise good.  When the run has a log the line ends with "; details in
+ | the log of the run" ({n:appcfg-log}).
+Preview: the viewer failed: TEXT | The Viewer ended with an error; TEXT is
+ | the reason.  When the run has a log the line ends with "; details in the
+ | log of the run" ({n:appcfg-log}).
+Replace needs the text to search for | Replace was accepted with Find at Text
+ | and no string to search for.  Nothing was changed.
+Replace?  R replace  O once  S skip  A all  Q quit | Replace stopped at a place
+ | and waits for a key ({n:edit-b-replace}).
+Retrieved N library entries | Retrieve Library. {c:1 library entry} for one.
+Retrieved N macros | Retrieve Macros. {c:1 macro} for one.
+Retrieved {i:PATH} | Retrieve (and the Retrieve of the list at the start).
+Saved {i:PATH} | Save, Save Library, Save Macros.
+Saved {i:PATH} (no backup made: {i:REASON}) | Save, when the document was
+ | saved but its backup could not be made (the directory .backup cannot be made
+ | or written, or a file named .backup is in the way).  The document is
+ | saved; the reason shows what to mend.
+Saved {i:PATH} (no change, no backup made) | Save, when the file on disk
+ | holds exactly what Save would write: nothing was written and no backup was
+ | made or moved.
+.end
+.h2 The Editor: boxes [msg-editor-boxes]
+.ix Boxes, Editor
+.ix Messages, Editor boxes
+.ix Press any key, Editor
+The boxes of the Editor appear over the text and wait for a key.  Each table
+gives the title of the box first (the name of the command or of the area), then
+the text, then the meaning.  The panel that was open when the box appeared is
+shown again, unless the table says that the command is over.
+.h3 File: Save, Retrieve, New, Delete, Import, Export [msg-ed-file]
+.ix Messages, File boxes
+.ix Save failed
+.ix Retrieve failed
+.ix Import failed
+.ix Export failed
+{x:file-messages} describes each of these in the context of its command.
+{c:PATH} below is the full name of the file.  Several reasons of the document
+reader are in lower case ({c:cannot open file}, {c:read error}): they are the
+words of the program, not those of the system, and they do not name which
+system error occurred.
+.table 22 13 25
+Title and text | Command | Meaning and what to do
+A backup file is not saved over: use Restore Backup or give another name |
+ Save | The name is the name of a backup: the extension {c:.bak} or {c:.bak} and
+ | | digits, or a file in the directory {c:.backup}.  Nothing is written.  Save
+ | | with another name, or use Restore Backup.
+Delete: Cannot delete the file | Delete | The file could not be removed.  It is
+ | | a directory, or the directory is protected.  Check the rights.
+Delete: Cannot find the file | Delete | The name is not a file of the Working
+ | | Directory.  Add the extension.
+Export failed: cannot write PATH | Export | The file cannot be created.  The
+ | | directory does not exist or is protected.  Give another Working Directory.
+Export failed: There is no current section | Export, scope Export Current
+ | Section | The cursor is in no section.
+Export failed: write error on PATH | Export | The disk is full, or the write
+ | | failed at the end.  Free some space.
+Import failed: cannot open file | Import | No such file, or no right to
+ | | read it.
+Import failed: read error | Import | The file was opened and could not be read
+ | | through.  Try again, or copy the file.
+Import failed: this is a directory, not a file | Import | The name is the name
+ | | of a directory.  Type the name of a file.
+Open the part that can be read? | Retrieve, Open, the Editor started on a file |
+ | | The file is cut short or damaged after a readable beginning. Y opens the
+ | | blocks before the damage as the new document NAME.recovered.doc; N and Esc
+ | | open nothing.  The file is not changed.
+Recovered N blocks of NAME; the original is not changed | Retrieve, Open |
+ | | The part of a damaged file is open as a new, unsaved document.
+Retrieve failed: cannot open file | Retrieve, New (template) | No such file,
+ | | or no right to read it.  Check the name and the Working Directory.
+Retrieve failed: damaged document: a piece of text has no end | Retrieve |
+ | | The file is damaged: it is cut short.  Use the newest backup (Restore
+ | | Backup, if backups are kept).
+Retrieve failed: Nothing to apply | Retrieve | A kind of retrieve that has
+ | | nothing in the file to take.  Choose Retrieve Entire Document.
+Retrieve failed: read error | Retrieve | The file could not be read through.
+Retrieve failed: The file is not a document of this software. | Retrieve |
+ | | The file is a text file or another kind of file.  Use Import for a text
+ | | file.
+Retrieve failed: The file is version N.  This software reads up to version 3.
+ | Retrieve | The file was written by a newer version of the software.  Use
+ | | the newer software, which reads the file.
+Retrieve failed: The file version is N.  This software reads versions 2 to 3.
+ | Retrieve | The version of the file is below the oldest that is read, or it
+ | | is damaged (a damaged version is shown in quotation marks).
+Save failed: cannot write file | Save | The directory or the file does not
+ | | allow writing.  Give another Working Directory or name.
+Save failed: cannot write PATH | Save Global Settings Only, Extract | Same.
+Save failed: There is no current section | Extract Current Section | The
+ | | cursor is in no section.
+Save failed: write error | Save | The disk is full or failed.  The old file is
+ | | not touched.
+Template: Cannot find the template file | New | The Template field names a
+ | | file that is not in the directories of templates
+ | | ({n:file-templates-path}).
+Template: the text of the reading error | New | The template is not a document
+ | | (the reasons of Retrieve above).
+.end
+.h3 The panels: refused values [msg-ed-panels]
+.ix Panel refusals, messages
+.ix Marker, title of a panel box
+.ix Refusal box
+Every panel is checked as a whole when {k:Ins} is pressed.  A wrong value shows
+one of the messages below in a box, and the panel stays open with nothing
+applied.  The box title is
+that of the area, with one exception that the user would not expect: the check
+of the panels of the File commands, Print and Preview, the Macros, the
+Library and the Marker panels shows its box under the title {c:Marker},
+whatever panel refused.  Read the text, not the title.  The panels of Global
+Format, Page and Named have their own titles.
+.table 23 12 25
+Text | Panel | Meaning and what to do
+Cannot find section number | Marker (Cross-reference) | The section number is
+ | | not in the document.
+Counter must be 1 to 99 | Marker (Counter) | The counter number is not a whole
+ | | number from 1 to 99.
+FIELD must be 0.0 to 100.0 | Marker (Keycap) | The Foreground or the
+ | | Background is not from 0.0 to 100.0.  FIELD is the name of the field.
+File must be specified (File Name) | Macros: Save | The File Name field is
+ | | empty.
+No file name specified | All File panels and Library | The name field is
+ | | empty.
+No string specified | Marker | A text field that must have text is empty.
+Not a valid number (LABEL) | Marker | A numeric field has something else than
+ | | a number with the right number of decimals. LABEL is the field.
+Not a valid revision number | Save, New | Revision is not digits with at most
+ | | three decimals.  Type 2 or 1.25.
+Scale must be 0.001 to 10.000 | Marker (Keycap) | The Scale is less than 0.001
+ | | or more than 10.
+Set Value must be 0 to 4294967295 | Marker (Counter) | The Set Value is not a
+ | | whole number from 0 to 4294967295.
+The macro key is a letter or a digit | Macros | Macro Key: Alt- has no letter
+ | | or digit, or has more than one.
+.end
+The same box title is used for the refusals of the markers
+({n:msg-ed-marker}).
+.h3 Further reasons for a refused value [msg-ed-reasons]
+.ix Reasons for a refused value
+.ix Refused values, reasons
+These texts are the reasons that the programs give for a value, a file or a
+backup that is refused.  They are shown in the box of a refusal, on the
+message line or after {c:no backup made:} on the line of a save.
+.table 25 12 23
+Text | Where | Meaning and what to do
+{c:A header or footer has at most three parts, separated by |} | Global, Page |
+ The text of a header or a footer has more than three parts: the parts for the
+ left, the center and the right are separated by the bar.
+A header or footer takes plain ASCII text | Global, Page | A character of the
+ text is not ASCII.  Use the markers for special characters.
+A word with an equals sign has no hyphen: it is never broken | Maintain Dictionaries |
+ The entry has an equals sign: the word is kept whole.  A notice.
+cannot make backup 1: REASON; the document that was replaced is the file NAME |
+ Save | The old version could not be put into the directory of the backups.
+ The document is saved; the old version is the file NAME.
+{c:cannot make the folder DIR: REASON} | Save | The directory of the backups
+ cannot be made.
+cannot move a backup: REASON | Save | A numbered backup could not be renumbered.
+cannot move the backups: REASON; the document that was replaced is the file
+ NAME | Save | The same, for the whole row of backups.
+cannot restore: not a regular file | Restore Backup | The backup is not an
+ ordinary file.
+cannot write file: not a regular file | Save | The name is a directory or
+ another file that is not an ordinary file.
+Gutter Size must be a number such as 0.250 | Global, Page | Gutter Size has a
+ letter, a sign or more than three decimals.
+{c:lpinfo could not be started} | Print | Search for printers could not run {c:lpinfo}.
+{c:lpinfo was not found in the system folders}
+ {c:(/usr/bin, /usr/sbin and the others): install the cups package} | Print | Search for printers needs {c:lpinfo}
+ of the cups package.
+Number of Columns must be from 1 to 9 | Global, Page | Number of Columns is
+ not a whole number from 1 to 9.
+Search for printers only looks for printers: choose File only, PDF viewer or a
+ printer to print | Print | Search for printers was started with a value of
+ Printer that is not a queue.  Choose one of the three values.
+Sides or sort is not a known choice | Print | A value of Sides or Sort is not
+ one of the choices.
+The description has at most N characters, with no control character | Save,
+ New | The Description is too long or has a control character.
+The hyphenation dictionary gives N words and has M | Maintain Dictionaries | The count in
+ the file is not the number of words.  The file is damaged.
+The hyphenation dictionary is damaged | Maintain Dictionaries | The file has an error.
+ Choose another or restore the file.
+{c:the name of the folder DIR is too long} | Save | The directory of the backups
+ would have a name that is too long.  No backup is made.
+{c:The name of the output file is longer than 255 bytes} | Print | Output File is
+ too long.  Give a shorter name.
+The PDF Directory cannot be written | Print | The directory exists and cannot
+ be written.  Check the rights.
+The PDF Directory does not exist | Print | The directory is not there.  Make
+ it, or give another.
+The PDF Directory starts with ~/, but the home directory of the user is not
+ known | Print | The variable HOME is not set.
+{c:The PDF viewer can be changed by other users (its file or its directory
+ is writable by others, or it belongs to another user), so it is not started}
+ | Print | The viewer is not used, for safety.  Use a program that only its
+ owner can change.
+The PDF viewer is not an executable file that you can run | Print | The name
+ is not a program.
+The PDF viewer must be a program that shows PDF files, not a word processor |
+ Print | The name is that of a word processor.
+The PDF viewer must be given with its full path, such as /usr/bin/evince
+ (letters, digits and . _ + - only, no space, no ..) | Print | The name of the
+ viewer is not a full path of that form.
+the PDF was not given with its full path | Print | The PDF Directory or the
+ name of the PDF does not give a full path.
+{c:This is not a hyphenation dictionary (its size is not a whole number of
+ pages)} | Maintain Dictionaries | The file chosen is not a dictionary of hyphenation.
+.end
+.h3 Global: Format, Page, Options, Named [msg-ed-global]
+.ix Messages, Global
+.ix Messages, Options
+.ix Options, could not be saved
+These are described with their panels in {x:format-messages}; the table lists
+them for the lookup.
+.table 22 15 23
+Text | Title | Meaning and what to do
+Enter a name to save the format as | Named Block Format | Save as is empty.
+FIELD must be 0 to 100 | Page Layout | Vertical Centering is not a whole
+ | | number from 0 to 100.
+FIELD must be a number such as 1.000 | Page Layout | A margin, an indent or a
+ | | whitespace is not a number with at most three decimals.
+FIELD must be a number such as 1.50 | Format | A spacing is not a number.
+FIELD must be a whole number | Format | A field of whole numbers has a sign, a
+ | | point or a letter.
+Foreground and Background are 0.0 to 100.0, Scale is 0.100 to 10.000 | Keycap
+ | Format (box titled Marker) | A value of the keycap panel is out of range.
+Invalid number | Named Block Format | A name with a control character, a
+ | | spacing with more than two decimals, or a whole number field with a
+ | | letter.
+There are no named block formats | Delete Named Block | The document has none.
+.end
+When Options is accepted the settings are written to the file of the user.  If
+that fails, a box titled Options shows one of the messages of
+{x:appcfg-write-errors} ({c:There is no home directory}, {c:Cannot make DIR:
+REASON}, {c:DIR is not a directory of yours}, {c:Cannot write FILE: REASON}).
+The settings stay valid until the Editor ends.
+.h3 Marker and the commands that make markers [msg-ed-marker]
+.ix Messages, markers
+.ix Invalid marker selection
+.table 27 33
+Text | Meaning and what to do
+Invalid marker selection (Not available in an unstructured document) | Box
+ | titled Marker.  The marker chosen (a section marker such as a
+ | cross-reference to a section tag) needs a structured document.  Choose
+ | another or make the document structured.
+Invalid marker selection (Not available in document body) | Box titled Marker.
+ | The marker belongs only to headers, footers or the title page, not to the
+ | body of the text.
+Marker type N cannot be edited | Message line: see the table of the message
+ | line.
+.end
+The panels of a marker are checked with the messages of {x:msg-ed-panels}.
+{n:markers} gives the panel of each marker.
+.h3 Tools: Macros and Library [msg-ed-tools]
+.ix Messages, Macros
+.ix Messages, Library
+.ix Library messages
+.ix Macro messages
+.table 20 13 27
+Text | Title | Meaning and what to do
+Enter a name for the entry | Copy to Library | Entry name is empty.
+Enter the name of the entry | Library Entry | Entry Name is empty.
+No such library entry | Delete from Library, Paste from Library | The name is
+ | | not in the library.  Press {k:F2} in the field to see them.
+No such macro | Delete Macro | The key has no macro.
+That file is not a library | Retrieve failed | The file loaded, but is not
+ | | a library.  It is a document or a macro set.
+That file is not a macro set | Retrieve failed | Same for a macro file.
+The keystrokes are not understood (a key name is in < >, and < is <<) | Macro
+ | Edit | The text of Keystrokes has a key name that is not known, or an
+ | | unbalanced angle bracket.  Write {c:<Enter>} for Enter and {c:<<} for the
+ | | sign.
+The library has no entries | Delete from Library, Paste from Library
+ | | Retrieve or make an entry first.
+There are no macros | Delete Macro | Make a macro first.
+.end
+The reading errors of Retrieve Macros and Retrieve Library are the texts of
+{x:msg-ed-file} (the box is titled Retrieve failed) except that the refusal of a file that is not a
+library or not a macro set is one of the texts in the table above.
+.table 20 13 27
+Text | Title | Meaning and what to do
+cannot open file | Retrieve failed | A macro file that cannot be opened.  The
+ | | other reasons of the reader are in {x:msg-ed-file}.
+Cannot write the file | Save failed | A macro file that cannot be written
+ | | (Save Macro Set).
+.end
+.h3 Print and Preview [msg-ed-print]
+.ix Messages, Print panel
+.ix Messages, Preview panel
+The values of the Print and Preview panels are checked when
+{k:Ins} is pressed; the messages of the checks and of the run are in
+{x:msg-job}.  The two boxes below are for the panel only.
+.table 23 12 25
+Text | Title | Meaning and what to do
+The cursor is not in a block | Preview | Preview Block with the cursor off a
+ | | block.
+There is no current section | Preview | Preview Section when the cursor is in
+ | | no section.
+.end
+.h3 The equation viewer and the title page [msg-ed-misc]
+.ix Messages, title page
+.ix Messages, equation viewer
+.table 22 12 26
+Text | Title | Meaning and what to do
+latex and dvipng are needed to typeset an equation | Equation | The programs
+ | | that typeset an equation are not installed, so {k:Ctrl-W} cannot show it.
+ | | See the prerequisites.
+The text of the reading error | Title Page | The title page text could not be
+ | | made a document; the reasons are those of Retrieve.
+Viewing an equation needs the X11 version | Equation | {k:Ctrl-W} in the
+ | | terminal version.
+.end
+The equation messages themselves are in {x:msg-eq}.
+.h3 The start of the Editor [msg-ed-start]
+.ix Messages, start of the Editor
+.ix Cannot open
+.ix Cannot retrieve
+.table 19 41
+Text | Meaning and what to do
+Cannot open: the reading error | The start menu (Edit / Preview /
+ | Print Document, Enter a file name) was given a file that exists but is not a
+ | document.  The text is one
+ | of the reading errors of {x:msg-ed-file}.
+Cannot retrieve: the reading error | The same for a file chosen from the list
+ | of the directory.
+.end
+.h3 Word count and help [msg-ed-count]
+.ix Messages, Word Count
+.ix Messages, help
+.table 20 12 28
+Text | Title | Meaning
+Cannot read the directory | Directory | The directory that a file list should
+ | | show cannot be read (rights).
+There is nothing to choose from | Checklist | A list of choices that has no
+ | | entries.
+Total number of words in document: N | Word Count | The answer of Count. A
+ | | notice, not an error.
+.end
+.h2 The Editor: questions [msg-editor-questions]
+.ix Questions, Editor
+.ix Yes or No
+.ix Confirmation
+A question is a box with a list or the words Yes and No.  The default is the
+first choice, {k:Esc} is No.
+.table 31 29
+Question | Asked by
+Delete NAME? | Delete (File).  Yes removes the file.
+Delete the library entry NAME? | Delete from Library.
+Delete the macro Alt-K? | Delete Macro.
+Delete the named block format NAME? | Delete Named Block.
+Edit the contents of the entry? | Library Entry.  Yes opens the entry text in
+ | an editing window.
+{c:File does not exist. Create it?} | The start menu of the Editor, a new name was
+ | typed.
+New document type | New with no template: Structured or Unstructured.
+Overwrite old version on disk? | Save, Save Macro Set, Save Library, Export:
+ | the file exists.
+Replace PATH? | Print Document panel of the Editor: the PDF exists. PATH is
+ | the name without its directory.
+Replace the entry that has this name? | Copy to Library: the name is used.
+Save and quit / Discard changes and quit / Cancel | Quit (Ctrl-Q) with unsaved
+ | changes: a list titled Document has unsaved changes.
+Save corrected document? | End of the spell check of a file.
+The file exists.  Replace it when it is saved? | New with a name that is a
+ | file.
+The file has changes that were not saved.  Ignore them? | Retrieve (not Insert)
+ | and New: the open document has changes.
+.end

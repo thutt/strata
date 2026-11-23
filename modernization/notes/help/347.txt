@@ -1,0 +1,25 @@
+
+------------------------------ Execute Command File ----------------------------
+
+    +------------------------- Execute Command File -----------------------+
+    |                                                                      |
+    |   Command File Name:                                                 |
+    |                                                                      |
+    +-------------------- Press Ins to Execute Command File ---------------+
+
+# Enter the name of the batch print command file to execute; Manuscript 
+  assumes the .CMF file name extension.
+
+                     or
+
+# Press Gray + at the Command File Name prompt to display a list of all 
+  command files in the current directory.
+
+--------------------------------------------------------------------------------
+You can also execute a batch print command file from the DOS prompt by typing
+
+                              ms @<commandfile.cmf>
+
+where <commandfile.cmf> is the name of the command file to run.
+--------------------------------------------------------------------------------
+      Batch Print Utility           Keyboard Summary           Help Index

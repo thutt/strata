@@ -1,0 +1,25 @@
+
+------------------------------ Batch Print Utility -----------------------------
+
+Use the Batch Print Utility on the Document Manager to create, change, delete, 
+or run batch print command files.  A batch print command file is a single file
+that prints one or more documents with standard or custom final print settings
+specified for each document.
+
+  +------------------------- Batch Print Utility -------------------------+
+  |                                                                       |
+  |                        Create/Edit Command File                       |
+  |                        Delete Command File                            |
+  |                        Execute Command File                           |
+  |                        Return to Document Manager                     |
+  |                                                                       |
+  +--------------------- Press Ins to Select Action ----------------------+
+
+--------------------------------------------------------------------------------
+You can also execute batch print command files from the DOS prompt by typing
+
+                            ms @<commandfile.cmf>
+
+where <commandfile.cmf> is the name of the command file you want to run.
+--------------------------------------------------------------------------------
+ Document Manager        Final Print        Keyboard Summary        Help Index

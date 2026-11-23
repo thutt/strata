@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Printer driver mismatch - use Setup printer? -- 
+
+The Setup printer is different from the document printer (the document printer 
+is specified on the Typeface List panel). Press Y to use the Setup printer or 
+N to use the document printer. If you are printing or comparing documents the 
+printer you select must match a printer that is on-line. If you are previewing 
+a document you can select any printer.
+
+To eliminate the mismatch change one of the Setup printers to match the document
+printer or change the document printer to match one of the Setup printers.
+
+-- Printer not ready --
+
+Make sure that your printer is on-line, that all cables are securely connected,
+and that there is paper loaded. For more information, check your printer manual.
+
+-- Printer write error --
+
+Data cannot be sent to the printer.  Make sure that the printer is on-line and 
+check the connections between the computer and the printer.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

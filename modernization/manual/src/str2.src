@@ -1,0 +1,188 @@
+# Chapter 7, part 2: the menu and Edit / Preview / Print Document.
+.h2 The menu of the Document Manager [str-menu]
+.ix Menu entries, Document Manager
+.ix Document Manager, menu
+.ix Select Action
+.ix Press Ins to Select Action
+.ix Main menu, entries
+The menu is the first screen of Strata.  Choose an entry with {k:Enter} or
+{k:Ins} after moving to it, or move with the first letter (see
+{n:str-keys-menu}).  The highlight starts on Edit / Preview / Print Document
+and, after a
+panel is left, comes back to the entry that was used.
+.table 24 8 18
+Entry | Key | Section
+Edit / Preview / Print Document | {k:E} | {x:str-edit}
+Maintain Dictionaries | {k:M} | {x:str-spell-words}
+Compare Document Versions | {k:C} | {x:str-compare}
+Restore Backup | {k:R} | {x:str-restore}
+TeX Font Association | {k:T} | {x:str-fonts}
+Setup | {k:S} | {x:str-setup}
+Quit | {k:Q} | {x:str-quit}
+.end
+.pic pictures/str-main.png 4.8 The menu of the Document Manager.
+A letter only moves the highlight; the entry is chosen with {k:Enter} or
+{k:Ins}.
+.ix Entry letters
+.ix F1, main menu
+
+.h2 Edit / Preview / Print Document [str-edit]
+.ix Edit / Preview / Print Document
+.ix Document Name
+.ix Working Directory
+.ix Edit / Preview / Print Document, panel
+.ix Open a document
+Edit / Preview / Print Document opens a document in the Editor.  It is the entry
+that most sessions begin with.  When the Editor ends, the
+Document Manager is on the screen again.
+.h3 The Edit / Preview / Print Document panel [str-edit-panel]
+.ix Edit / Preview / Print Document panel
+.ix Panel, Edit / Preview / Print Document
+.pic pictures/str-edit-panel.png 5 The Edit / Preview / Print Document panel.
+The panel has three fields.  Working Directory is shown first.  The focus
+starts on Document Name, the field that is usually filled in.
+.table 15 11 24
+Field | Default | Meaning
+Working Directory | see below | The directory of the document.
+Document Name | the last name | The file name, with or without a path.
+Variables | what is given | The variables of the conditional text of the
+ | | document ({n:str-variables}).
+.end
+.rows 24 46
+Working Directory | A directory name.  The default is the setting
+ | workdir of the configuration file if it names an existing directory,
+ | and otherwise the current directory at the time the Document Manager
+ | started.  After a successful Edit / Preview / Print Document the
+ | directory that was typed is the default of the next panel, until the
+ | program ends (it is not saved: only Setup saves a directory).
+ | A blank field means the current directory.  The directory must exist.
+Document Name | The name of the document.  The default is the name given
+ | on the command line, or else the name last used in this run of
+ | the Document Manager, or else empty.  A name that has no dot in its last
+ | component gets the suffix {c:.doc}.  A name that begins with a slash is
+ | an absolute name and the Working Directory is not used to find it.
+.end
+The first two fields name files: the listing of {x:str-browse} is available on
+them with {k:Keypad +}.  The listing of the Document Name field shows the
+files of the Working Directory that end in {c:.doc}, in any case of
+letters.
+.h3 The variables [str-variables]
+.ix Variables, panel
+.ix Variables panel
+.ix Panel, Variables
+.ix Conditional text, variables
+.pic pictures/str-variables-panel.png 5 The Variables panel.
+The field Variables is not typed in.  It shows how many variables are given,
+"none" or for example "2 given" (followed by the keys that open the panel), and
+{k:F2} or {k:Keypad +} on it opens the panel Variables.  The panel has eight pairs of fields, Name 1 and Value 1 up
+to Name 8 and Value 8: the name of a variable in one field and its value in
+the other.  A pair that has nothing in it is not used.  {k:Ins} accepts the
+panel and {k:Esc} leaves it as it was.
+The variables are what the If markers of a document are compared with
+({n:marker-variables}).  A name starts with a letter and holds letters,
+digits, hyphens and underscores; a value is printable 7-bit ASCII without
+quotation marks, up to 255 characters; a name that begins with a period belongs
+to Strata and is refused.  When a pair breaks a rule the panel stays open
+with what was typed and a box shows which rule: for example "The variable name
+9lives must start with a letter." or "A value may not hold a quotation mark".
+A value without a name is refused with "Line N has a value but no name."
+The variables are kept until the Document Manager ends; they are not saved.
+A change made while an Editor is running does not reach that Editor; it
+reaches the Editors that are started after it.
+Strata gives its own variables as well ({n:marker-special-variables}).
+.h3 What happens when the panel is accepted [str-edit-accept]
+.ix Edit / Preview / Print Document, accept
+.ix Cannot find directory
+.ix Enter a document name
+Pressing {k:Ins} (or {k:Enter} in the last field) accepts the panel.  The
+program checks the fields in this order and, when a check fails, shows a
+message in the footer line and stays in the panel with all the values
+untouched.
+.table 31 29
+Condition | Message in the footer
+Document Name is empty | Enter a document name
+The directory does not exist | Cannot find directory DIR
+ | (the directory of the path; for a new
+ | name that is the directory part)
+.end
+The name is then made into a full path: the directory is joined to the name,
+and a suffix {c:.doc} is added when the last component has no dot at all
+(the name {c:notes.v2} is used as it is).  The Working Directory and the
+Document Name that were accepted are remembered for the other panels of this
+session.
+.h3 An existing document [str-edit-existing]
+.ix Edit / Preview / Print Document, existing file
+If the file exists, the Editor is started at once on the document.  The
+Editor takes over the terminal (in the terminal version) or opens its own
+window (in the X11 version, where the window of the Document Manager stays
+and waits).  The Autosave and Autosave Interval of Setup are in effect for
+the document at once, with no restart of the Editor.
+.h3 A new document [str-edit-new]
+.ix New File
+.ix New File, document type
+.ix Structured, new file
+.ix Unstructured, new file
+.ix Description, new file
+.ix Author, new file
+.ix Create a new document
+If the file does not exist, a new document is made.  Two questions come
+first.  The first is a list titled New File: document type.
+.pic pictures/str-newfile-type.png 4.8 The type of a new document.
+.table 15 45
+Choice | Effect
+Structured | A document with sections, levels and headlines.
+Unstructured | A flat document of blocks (a memo or letter).
+.end
+The list is moved with {k:Up} {k:Down}; {k:Enter} chooses; {k:S} and
+{k:U} choose at once (see {n:str-keys-list}).  {k:Esc} here goes back
+to the Edit / Preview / Print Document panel with the values as they were.
+When there are templates ({n:file-new-list}), the list of the type is
+preceded by a list titled Templates.  It holds Structured, Unstructured and
+each template, and the lines below it show the description of the chosen
+entry.  {k:Enter} takes the entry and shows the New File panel; {k:Ins} takes
+it and finishes at once, with Description and Author empty; {k:Esc} shows the
+list of the type instead.  A new document goes through these questions
+whichever way names it: a name typed in the panel, a name given on the
+command line or a name chosen in the list of files.
+The second question is the panel New File, with three fields.
+.pic pictures/str-newfile-panel.png 5 The New File panel.
+.table 13 47
+Field | Meaning
+Template | Structured, Unstructured, or the name or path of a template.  It
+ | starts as the choice of the list.  {k:F2} or Gray + lists the
+ | choices and a way to look for a template file in any directory.
+ | A name that is not found gives the message "Cannot find the
+ | template file", and the panel stays.
+Description | The description of the document, kept in its header
+ | (the field Description of the Save panel).  Up to 159 characters.
+ | May be empty.  Default: empty.
+Author | The author of the document, kept in its header.  Up to 159
+ | characters.  May be empty.  Default: empty.
+.end
+{k:Esc} in this panel also goes back to the Edit / Preview / Print Document
+panel.  {k:Ins}
+opens the Editor on the new document.  {k:F1} on the New File panel shows
+the help of Edit / Preview / Print Document.
+.note The new document is only in the memory of the Editor.  No file is made
+  until the document is saved in the Editor.  If it is never saved (quit
+  with Discard), the file never exists.
+.h3 When the editor ends [str-edit-end]
+.ix Edit / Preview / Print Document, exit status
+.ix Cannot run the editor
+.ix The editor ended with status
+After the Editor has ended the Document Manager returns to the main menu
+and shows a notice only when the Editor did not end well.
+.table 20 40
+Status of the Editor | What the Document Manager shows
+0 | Nothing.  The menu is shown.
+127 | A notice titled Edit / Preview / Print Document:
+ | "Cannot run the editor: PATH", {c:PATH}
+ | being the Editor program of Setup.
+other | A notice titled Edit / Preview / Print Document:
+ | "The editor ended with status N".
+.end
+A file that exists but is not a document that the Editor can read (a
+damaged file, a file that is not a document of this software, or a file of
+a version that the Editor does not read) makes the Editor
+write the file name and the reason and end with status 1; the Document
+Manager then shows "The editor ended with status 1".

@@ -1,0 +1,25 @@
+--------------------------------- File Retrieve --------------------------------
+
+File Retrieve opens an existing document, template, or backup file.
+
+Accelerator:   Ctrl R
+
+--Procedure-----------  +------------------- Retrieve File --------------------+
+                        |                                                      |
+ Press Menu.           | Working Directory:                                   |
+ Select File Retrieve. |                                                      |
+ Complete the Retrieve | Document Name:                                       |
+  File panel and press  |                                                      |
+  Ins.                  |   Options: v Retrieve Entire Document                |
+                        |              Retrieve Body Only                      |
+                        |              Retrieve Global Settings                |
+                        |              Retrieve Typeface Settings Only         |
+                        |              Retrieve Named Block Settings Only      |
+----------------------  |              Retrieve & Insert after Current Section |
+                        +------------- Press Ins to Retrieve File -------------+
+# Press Gray + at the Working Directory prompt to display a list of available 
+  directories or at the Document Name prompt to list the document files 
+  available. Continue pressing Gray + to display additional file information.
+# Use File New to create a new document.
+--------------------------------------------------------------------------------
+File    File Types    Accelerators    File New    Keyboard Summary    Help Index

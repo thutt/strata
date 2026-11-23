@@ -1,0 +1,384 @@
+# Chapter 1, part 1: the elements of a document, the two kinds of document,
+# guidelines for large documents, and global and local formats.
+.h2 The elements of a document [view-elements]
+.ix Elements of a document
+.ix Document, elements of
+.ix Text, block, column, section
+Every Strata document is built from four elements: text, blocks, columns and
+sections.  A letter has one block with one column of text; a manual has
+hundreds of sections.  The commands work on these elements.  Copy, Cut, Move
+and Delete ask for the element in a pop-up that lists Text, Column and Block,
+and Section in a structured document.
+
+.table 10 50
+Element | What it is
+Text | Characters, words and lines inside a column.  The smallest unit.
+Column | A vertical part of a block.  Every block has at least one.
+Block | A unit of related text: a paragraph, a list item, a headline, a
+ | table row.  The unit of most commands.
+Section | A headline block followed by text blocks and, below them, the
+ | subsections.  Only in a structured document.
+.end
+
+The elements nest: a section holds blocks, a block holds columns, a column
+holds text.  A subsection is a section inside another section.  The Editor
+draws the borders of the elements on the screen ({n:view-screen-text}).
+
+.h3 What text is [view-text]
+.ix Text (element)
+.ix Character
+.ix Word
+.ix Attribute, text
+.ix Highlight, text
+Text is the characters of a document: letters, digits, punctuation, spaces,
+tabs and the ends of lines.  It is the smallest element.  A character, a
+word, a line or several paragraphs are text when they lie inside one column.
+A marker (a date, a page number, a footnote, an equation, a picture) is part
+of the text: it takes the place of one or more characters and moves with them
+when the text is moved.  Markers are described in {x:view-markers} and, in
+full, in {x:markers}.
+
+Text has attributes.  Strata has four: normal, bold, italic and underscore.
+They are set with {k:Ctrl-B}, {k:Alt-I}, {k:Ctrl-U} and
+{k:Ctrl-N}, or with {k:Alt-F6} (the Set Attributes menu), and they can be
+mixed (bold italic).  An attribute set for a stretch of text is the most
+local format there is: no other setting overrides it.  The attribute under
+the cursor is shown on the status line after the word {c:Attr:}.
+
+A command that works on text prompts for a highlight: move the cursor over the
+characters, then press {k:Enter} to accept or {k:Esc} to cancel.  The Editor
+draws the highlighted characters in reverse video ({n:view-highlight}).
+
+.h3 What a block is [view-block]
+.ix Block (element)
+.ix Block, separator line
+.ix Paragraph
+.ix Headline block
+.ix Text block
+A block is a unit of related text.  The usual block is a paragraph; a
+headline, a row of a table, an item of a list, a line of an address and a
+quotation are blocks as well.  Every document has at least one block.  A new
+unstructured document is one empty block.
+
+Strata keeps most settings per block: each block has its own justification,
+indent, tabs, attribute and named format.  A document is reorganized by
+cutting, copying and moving whole blocks.  {k:Ctrl-Home} and {k:Ctrl-End}
+move the cursor to the start and to the end of the block (more exactly, of
+the column of the block that holds the cursor).
+
+{k:Enter} ends a line inside a block.  It does not end the block: the lines
+stay in the same block and the cursor moves to the next line.  A new block
+begins with {k:Ctrl-A} (the new block has the local format of the current
+one), with {k:Ctrl-O} (the new block has the global format) or with the
+Append command ({k:Alt-F2}).  {k:Ctrl-V} or {k:F2} divides the block in two at
+the cursor.  Type a paragraph as one block and press {k:Enter} only where a
+line must end (an address, a line of verse); the Editor wraps the text of a
+block to the width of the screen.
+
+The Editor marks the border between two blocks with a single horizontal line.
+In a structured document the first block of a section is its headline block
+and the others are text blocks.  A headline block can have a format of its
+own, which depends on the level of the section ({n:view-levels}).
+
+.h3 What a column is [view-column]
+.ix Column (element)
+.ix Table
+.ix Column separator
+.ix Multicolumn block
+A column is a vertical part of a block.  Every block has at least one
+column, and most blocks have exactly one: the whole block is that column.  A
+block with several columns builds a table or a schedule: each row is a block
+and each cell is a column.  The columns of a block lie side by side; each has
+its own text, justification and tabs.
+
+The Editor marks the border between two columns with a vertical line of dots
+in the dim color of the borders (a colon in the terminal version).  To add a
+column to the right of the current one, press {k:F8} and choose Add column, or
+choose Column in the Append command.  To cut the current column in two at the
+cursor, press {k:F8} and choose Split column here, or choose Column in the
+Split command.  {k:Shift-Left} and {k:Shift-Right} move from one column to the
+next.
+
+.note The widths of the columns of a table come from the settings that the
+  document holds.  A table keeps its columns and borders when the document
+  is saved and retrieved.
+
+.h3 What a section is [view-section]
+.ix Section (element)
+.ix Subsection
+.ix Headline
+.ix Section number
+.ix Section tag
+.ix Level of a section
+.ix Level
+.ix Peer section
+A section is a group of related blocks: one headline block, which holds the
+title of the section, and any number of text blocks after it.  A section can
+have subsections, which are sections of the next lower level, each with a
+headline and text blocks.  The section is the unit of reorganization: moving
+a section moves its headline, its text and all its subsections.
+
+The Editor marks a section with a double horizontal line above the headline
+and draws the headline with its number in front of it ({c:2.1 Sales}).  The
+Editor makes the numbers from the place of the section in the outline; they
+are not typed and are not part of the headline text.  A section that moves
+gets a new number at once.  The status line shows the number of the section
+that holds the cursor after {c:Sect:}.
+
+.h4 Levels [view-levels]
+.ix Level, of a section
+.ix Level, format
+Every section has a level.  A section of level 1 is a main topic; a
+subsection of a section of level 1 has level 2, and so on.  The level is the
+count of the numbers in the tag of the section: the sections numbered 1, 2
+and 3 have level 1, and the sections numbered 1.1, 2.3 and 3.1 have level 2.
+Promote and Demote ({k:Alt-[} and {k:Alt-]}) change the level of a section and
+of all its subsections.
+
+The level selects the format.  The global settings give the headlines of each
+level a format of their own (for example bold for level 1 and italic for
+level 3), and the text blocks that follow a headline can have the settings of
+its level.  See {x:view-formatting}.  {k:Alt-1} to {k:Alt-9} show the headlines
+down to that level ({n:view-outline-keys}).
+
+.h4 The shape of a section on the screen [view-section-shape]
+The picture shows a short report in the X11 version.  The first block of the
+document is the headline of section 1, with the double rule drawn between
+sections.  Section 2 has the subsection 2.1, which has the subsections 2.1.1
+and 2.1.2; each lower level is shifted to the right.
+
+.pic pictures/view-structured.png 5.4 A structured document with its rules.
+
+.table 17 43
+What you see | What it is
+Single line | The border between two blocks.
+Double line | The border above the headline of a section.
+{c:*} or {c:+} in the double line | The section is collapsed
+ | ({n:view-outline-keys}).
+Shift of 3 characters per level | The depth of the section in the outline.
+Number before the headline | The tag of the section.
+Dotted vertical line | The border between two columns of a block.
+.end
+
+.h2 Documents with sections and documents without [view-modes]
+.ix Structured document
+.ix Unstructured document
+.ix STRUCTURED EDIT
+.ix UNSTRUCTURED EDIT
+.ix SECTION EDIT
+.ix Mode of a document
+.ix Structured edit
+.ix Unstructured edit
+A document is unstructured or structured.  The right end of the status line
+shows which: {c:UNSTRUCTURED EDIT} or {c:STRUCTURED EDIT}.
+
+.table 13 47
+Kind | What it is
+Unstructured | A run of one or more blocks, with no sections and no
+ | headlines.  A memo, a letter, a note.
+Structured | Blocks organised in sections of different levels.  The first
+ | block of each section is its headline.  A report, a proposal, a book.
+.end
+
+An unstructured document has no commands for sections.  Append offers
+Column, Block and Global-block; Split offers Column and Block; Join offers
+Block; Copy, Cut, Move and Delete ask for Text, Column or Block.  The keys
+that move through the outline ({k:Shift-Up}, {k:Shift-Down}, {k:Shift-PgUp},
+{k:Shift-PgDn} and the outline control keys) belong to a structured document;
+in an unstructured one the outline control keys show the message
+"Collapse/expand works in structured documents".  The Cross-reference marker
+appears in parentheses on the Marker Commands menu and cannot be chosen.
+
+A structured document organizes blocks in sections.  The outline shows its
+shape and the full text shows its content; a cut section can be pasted
+elsewhere, and the numbers of all the sections change by themselves.
+Cross-references, numbered headlines and tables of contents need a structured
+document.
+
+.h3 Making a document structured or unstructured [view-make-kind]
+.ix New document, structured
+.ix New document, unstructured
+.ix Edit, Structured
+.ix Edit, Unstructured
+A prompt of the Document Manager offers Structured or Unstructured when a
+document that does not exist yet is edited.  The command File, New takes the
+kind from
+the template named in its Template field (the template DEFAULT.SET unless
+another is named).  A document that exists is structured or unstructured as
+it was saved.
+
+The Edit menu changes the kind of an open document.
+{b:Edit, Structured} (offered in an unstructured document) turns the whole
+text into one section, whose first block becomes the headline, and the status
+line then shows {c:STRUCTURED EDIT}.  {b:Edit, Unstructured} (offered
+in a structured document that is a single section with nothing below it)
+turns it back.  A document with several sections cannot be made
+unstructured: the entry is not on the menu.  A change of the kind counts as
+a change of the document: Quit puts the question whether to save it.
+
+.h3 Editing one section [view-section-mode]
+.ix Edit, Section
+.ix Edit, Document
+.ix Ctrl-^
+.ix Section edit
+.ix SECTION EDIT
+In a structured document the command {b:Edit, Section} (or {k:Ctrl-^}) makes
+the Editor show only the section that holds the cursor, with its
+subsections, as if it were the whole document.  The rest of the text is out
+of sight and out of reach: a search, a Go To or a count deals with the
+section only, and the status line shows {c:SECTION EDIT}.  The entry of the
+menu then reads {b:Edit, Document}; it brings the whole text back, as does
+{k:Ctrl-^} again.  {k:Esc} does not leave the mode.  The mode is not part of
+the file.
+
+.pic pictures/view-section-edit.png 5.4 Edit, Section: one section shown alone.
+
+.h2 Guidelines for large documents [view-guidelines]
+.ix Large documents, guidelines
+.ix Guidelines
+.ix Document, large
+.ix Master document
+.ix Include marker, several authors
+A document of a hundred pages is easier to write, to revise and to print
+when it follows these guidelines.  The table gives the reason for each.
+
+.table 20 40
+Guideline | Why
+Make the document structured. | You can see its outline, rearrange it by
+ | moving sections, and number it automatically.
+Keep blocks short, about a | A short block is quick to move and to
+ page at most. | format.
+Give a block one paragraph. | Cut, copy and move then take a paragraph
+ | as a unit, and a format applies to it alone.
+Set the format globally first. | A setting made once in the Global menu
+ | holds for the whole document.  Use local
+ | settings only for exceptions.
+Use named formats. | A block format that you use again and again
+ | can be given a name (Global, Named) and changed
+ | in one place.
+Work in one section at a time. | Edit, Section ({k:Ctrl-^}) hides the rest, so
+ | that searches and counts stay within it.
+Keep the headlines meaningful. | The outline ({k:Alt-1} to {k:Alt-9}) shows only
+ | headlines; a good headline is a good table of
+ | contents.
+Share the work in parts. | Only one person can edit a document at a time;
+ | with the Include marker each author has a
+ | document of their own for a part.
+Save often. | {k:Ctrl-S} saves at once.  Autosave and a backup
+ | file are there, but they do not replace it.
+.end
+
+.caution A structured document that is edited as one large unbroken
+  block is slow to lay out and awkward to move around in.  Divide long
+  stretches of text into blocks.
+
+.h3 A work with several authors [view-master]
+.ix Master document
+.ix Several authors
+.ix Include marker
+Strata edits, searches and prints a document of thousands of pages as one
+document.  A document cannot be edited by two people at the same time.  For a
+work with several authors, give each author a document for a part and make a
+master document that holds an Include marker for each part (Marker, Include;
+see {n:marker-include}).  Printing the master prints the parts together, with
+continuous numbering.  {x:authors} describes the setup.
+
+.h3 Saving, backup and autosave [view-save-habits]
+.ix Autosave
+.ix Backup file
+.ix Save, habits
+.ix Backups Kept
+Three mechanisms protect the work.  Save ({k:Ctrl-S}) writes the document
+under its name at once.  The setting Backups Kept (Setup, or Global, Options)
+keeps the previous versions of the file under numbered names such as
+{c:.backup/report.bak01}, in a directory next to the file; Restore Backup of
+the Document Manager brings one back.  Autosave saves a document that has
+unsaved changes when the interval has passed since the first change (120
+seconds by default); the interval and the on-off setting are in the Setup
+panel of the Document Manager.  Autosave saves only a document that already
+has a name.  See {x:file} for the details.
+
+.h2 Global and local formats [view-formatting]
+.ix Format, global
+.ix Format, local
+.ix Global format
+.ix Local format
+.ix Override, hierarchy of formats
+.ix Named format
+.ix Format settings
+Strata separates the typing of text from its formatting.  The screen is an
+approximation; the Printer does the real formatting, with fonts and pages,
+when the document is printed or previewed.  The formats are the settings that
+control how the text looks: justification, indents, tabs, attribute, fonts
+and page layout.  They are global or local.
+
+.h3 Global format settings [view-global-formats]
+.ix Global menu
+.ix Global, Format
+.ix Global, Page
+.ix Global, Typeface
+.ix Global, Marker
+.ix Global, Options
+.ix Global, Named
+A global setting holds for the whole document: for all the headline blocks
+and all the text blocks of a structured document, or all the blocks of an
+unstructured one.  The Global menu of the {k:F12} bar makes them; its entries
+are Format, Page, Typeface, Marker, Options and Named.  The global settings
+are the attributes, the justification and the indents of the blocks
+(separately for headlines and for text, and, for the headlines, separately for
+each level), the page layout, the typefaces, the way the markers are shown
+and the options of the Editor.  A global setting stays in force until a local
+setting overrides it.  {X:format} describes every panel and every field of the
+Global menu.
+
+.h3 Local format settings [view-local-formats]
+.ix Local format, text
+.ix Local format, column
+.ix Local format, block
+.ix Block Format Editor
+.ix F6
+.ix Ctrl-E
+.ix Hanging indent
+.ix Ctrl-H
+A local setting affects one element of the document: some text, a column or
+a block.  It takes precedence over the global settings.  For example, a
+block that holds a quotation can be set to print in italics; the setting
+overrides the global attribute for that block alone.
+
+The settings form a hierarchy.  The most local is the attribute of the text
+itself; no other setting overrides it.  The order of precedence is: the text,
+the column, the block, the named format that the block uses, the global
+setting for the level (for a headline) and the global setting of the document.
+The Editor takes the first setting of that order that exists.
+
+.table 6 15 37
+Order | Setting | How it is made
+1 | Text | An attribute: {k:Ctrl-B}, {k:Alt-I}, {k:Ctrl-U}, {k:Ctrl-N},
+ | | {k:Alt-F6}.
+2 | Column | The Block Format Editor, {k:F6} or {k:Ctrl-E}, in a block
+ | | that has several columns.
+3 | Block | The same, in a one column block; {k:Ctrl-H} for a
+ | | hanging indent.
+4 | Named format | Global, Named, and the name given to a block.
+5 | Level | Global, Format, for the headlines of a level.
+6 | Global | Global, Format, Page, Typeface, Marker, Options.
+.end
+
+{k:F6} (also {k:Ctrl-E}) opens the Block Format Editor, a short series of
+prompts about the block that holds the cursor: the left block indent, the
+justification (Left, Right, Center or Even), the indent of the lines
+(None, First, All but First, All), the attribute (Normal, Bold, Italics,
+Bold Italics or Underscore Words) and the tabs, typed as a list such as
+{c:5,20R,40D}, where a letter after the position gives the type of the
+tab (L left, R right, C center, D decimal, a comma for comma, N for number)
+and {c:0} means none.  {X:format} describes the Block Format Editor and the
+settings.  After a local setting is made the block shows it at once on the
+screen: the justification and the tabs are laid out, and the ruler shows the
+tabs of the block that holds the cursor.
+
+.h3 The expanded status line and the ruler show the format [view-format-view]
+The format that applies to the cursor is visible all the time.  The ruler
+under the status line shows the left indent and the tabs of the block that
+holds the cursor, and the expanded status line (Global, Options, Expanded
+Status Line?  Yes) shows the justification, the indent, the left block indent
+and whether the block is a headline.  {x:view-screen} describes both.

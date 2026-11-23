@@ -1,0 +1,7 @@
+# The phrases that may keep the word Strata as plain text in a document, one
+# phrase per line, matched without regard to case against the 40 characters
+# on each side of the word.  The words in the program font and the
+# description in the header are not looked at; the two phrases below are the
+# name of a directory and of a file.
+directory strata under the cache
+strata.conf

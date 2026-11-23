@@ -1,0 +1,25 @@
+---------------------- Block and Column Conceptual Overview --------------------
+
+Blocks are the foundation of a Manuscript document.  Blocks are units of text 
+such as a single paragraph, an item in a list, a row in a table, or a headline 
+in an outline.  You append (add) a new block in a Manuscript document each time
+you create or add one of these items.
+
+When you create a document, the first block is already on the screen.  When you
+use Append (Alt F2) to add the second block, it is separated from the current 
+block by a single horizontal line.  (The block indicator is for display purposes
+only; it does not print.)
+
+From blocks, you create all the other elements in a Manuscript document: 
+columns, sections, and levels.
+
+Every block has at least one column and can be split into more than one column.
+For example, to create a table you split a block into as many columns as you
+need.  Then append additional blocks with the same number of columns.  When you
+are finished building the table, you can append a block without the columns.
+
+You can also use Table (F8) to split blocks into columns and to size columns.
+Columns are separated by vertical lines of dots on the edit screen.
+--------------------------------------------------------------------------------
+   Section and Level Overview         Append         Columns and Table Editor
+                Keyboard Summary                   Help Index

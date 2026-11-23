@@ -1,0 +1,25 @@
+------------------------------------ Markers -----------------------------------
+The Picture marker inserts graphics images from 1-2-3, Symphony, metafiles, 
+AutoCAD, PostScript, scanned images, PC Paintbrush, or MacPaint.  (Scanned
+images, PC Paintbrush, and MacPaint files must be converted to Manuscript format
+files before they can be used in a Picture marker.)  See the Reference manual 
+for details on specific graphics images.
+
+File Name:     Be sure to specify the appropriate path and file name extension. 
+
+Position:      Specify whether the image should retain its relative place in 
+               the text (Fixed), allow following text to move forward if the 
+               image must be moved to the next page (Floating), or be sized to 
+               fit in a line of text (In Text).  
+
+Height/Width:  Specify the dimensions for the image or use Scale (from 0 to 10)
+Scale          to adjust the size of the image relative to its original size.  
+               Width and Height use the unit of measurement on the Options panel
+               unless another unit is specified as part of the value. 
+
+Name:          Specify the name, if any, to use in the table of figures.
+
+Print/Preview: Print or Preview the image before returning to the editor.
+--------------------------------------------------------------------------------
+ Options      Markers      File Conversion Utilities      Print/Preview Options
+                 Keyboard Summary                   Help Index

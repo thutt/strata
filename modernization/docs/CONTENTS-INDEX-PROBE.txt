@@ -1,0 +1,467 @@
+TABLES OF CONTENTS, FIGURES, TABLES AND INDEX: THE ORIGINAL AND STRATA
+=====================================================================
+
+Status: a probe and a report.  Nothing in src/ was changed.  The probe was
+run on 2026-11-19; the probe documents, the printed results and two screens
+of the original are in docs/probe/ (section 9).  Every statement is marked:
+
+  [tried]    seen in the original or in Strata during this probe
+  [help]     read in the help file of the original (tools/hlp.py)
+  [repo]     read in this repository (code, git log, docs)
+  [docs]     in a document of this project that quotes the original manuals;
+             not seen again here
+  [not tried] not looked at; said so
+
+The manuals of the original as PDF files (Getting productive, Reference) are
+not in this copy of the repository, so the page numbers that the owner's
+coordinator quoted (4-26, 4-28, 4-59) could not be read here; what they say
+about the panels was checked against the help file and the program.  The
+original is called "the original" and is not named.
+
+THE SHORT ANSWER
+----------------
+
+Yes.  The original makes the table of contents, a table of figures, a table
+of tables and the index by itself, WHEN THE DOCUMENT IS PRINTED, from the
+headlines and from markers in the text.  It does not put them into the text:
+a document in the Editor has no contents; the printout has.  There is NO
+table of equations or list of equations.  Strata's Printer can already make
+a contents, an index, a list of figures and a list of tables the same way,
+but only when told on the Print panel or on the command line, the choice is
+not kept in the document, and the Editor shows nothing.  The manual and the
+sample build theirs by hand because they were made before the Printer had
+the lists and because the hand built parts follow edits in the Editor and
+carry the right page numbers when a part is included (section 5).
+
+1. WHAT THE ORIGINAL DOES (probe)
+---------------------------------
+
+1.1 How the probe was made [tried]
+
+  The original runs unmodified in DOSBox-X 2026.01.02 on an Xvfb display of
+  its own (own HOME and XDG folders in the scratchpad, output redirected to
+  a file); the kit is a scratch copy of the disks, never the source folder;
+  keys by xdotool, screens by xwd; the parallel port is sent to a file (the
+  Generic driver: plain text).  A first run of Setup writes the value file.
+  The probe document probe1.doc is the sample cns5drft.doc with six Index
+  markers, two Figure markers and one Table marker put into its text (the
+  markers are written as docs/MARKERS.txt describes them).  Keys that did not
+  work: Ctrl-F1, Ctrl-F5 and Ctrl-Shift-A did not reach the program; F10 in
+  the Editor gave the Marker Commands list (the display sends the F keys with
+  Alt in this setup; see docs/GHOSTTY-PROBE.txt note 1), so no Page Layout
+  panel was opened in the Editor.  What is known about the Page Layout panels
+  comes from the help file and from changing a record of the document by hand
+  and printing (1.5).
+
+1.2 The Print panel [tried]
+
+  Screen: docs/probe/orig-print-panel.png.  The panel Print Document has:
+    Copies, Print Quality (Final or Quick Print), Double Sided?, Sort Output
+    Pages?, and a checklist "Print:" with
+      Title Page, Table of Contents, Table of Figures, Table of Tables, Body,
+      Index (all ticked at first), Error Log, Document Print Summary (not
+      ticked), then Print from/to Section, Print from/to Page, and "Graphics
+      Print Options": Print Text, Print Borders, Print Pictures, Print
+      Equations.
+  Preview Document has the same checklist (Preview instead of Print).
+  There is no "Table of Equations" and no "List of Equations" on the panel.
+  [tried]
+
+1.3 What is printed, and where [tried]
+
+  With every box ticked, probe1.doc (docs/probe/print-probe1-all.txt):
+    - the body, then the index, then the table of contents, then the table
+      of figures, then the table of tables (Sort Output Pages? is No).
+      The help text says that Yes puts them in this order: title page, table
+      of contents / figures / tables, body, index, error log, print summary.
+      [help topic "Print Document"]  The sorted order was not printed here.
+      [not tried]
+    - each of the three tables is on a page of its own (the file of the
+      Generic driver has blank lines to the end of the page after each; it
+      has no form feed characters).
+    - The table of contents lists every headline with its section number
+      and the page, a line of dots between them, indented by level:
+          1 Project Issues and Approach ............................ 1
+            1.1 Site Use and Development ........................... 1
+               1.1.1 Soil Conditions ............................... 1
+      A long headline wraps and the dots go on the next line.
+    - The table of figures lists the NAMES of the Figure markers with their
+      pages ("Site plan .... 1"); the table of tables lists the Table
+      markers the same way.  A Figure marker holds a name (field 1) and the
+      page is that of the marker.  [tried; marker fields: docs/MARKERS.txt]
+    - The index lists the entries by main heading in alphabetical order,
+      the sub-headings below with a small indent, and the page; a marker
+      with a Reference text prints the text instead of a page:
+          Index
+          Drainage, 1
+          Parks
+           See Soil
+           Centennial, 1
+          Soil
+           Clay, 1
+           Rubble, 2
+      [tried; sub-entries, "See" text, merging of equal main headings]
+    - The markers themselves print nothing in the text (a marker that makes
+      an entry is not seen in the printout).  [tried]
+    - Page numbers: the lists and the index were counted after the body in
+      the file the Generic driver wrote, so roman page numbers for the front
+      parts were not visible in plain text.  The help topic says that the
+      tables are on their own pages; the manual (via docs/MARKERS.txt) says
+      with roman numerals.  [not tried: a driver with page numbers]
+
+1.4 Levels of the contents [tried]
+
+  Four copies of probe1.doc differ only in the header record YCL (the
+  record YCL99 is in every document that the original makes):
+      YCL0  -> no table of contents at all (docs/probe/out-pl0.txt)
+      YCL1  -> headlines of level 1 only (out-pl1.txt)
+      YCL2  -> levels 1 and 2 (out-pl2.txt)
+      YCL5  -> levels 1 to 3, all that the document has (out-pl5.txt)
+  So YCL<n> IS the setting "Table of Contents Level" of the Page Layout
+  panels (the help topic "Setting the Table of Contents Level" gives the
+  same: 1 to 99, 0 leaves the contents out).  The default of a new document
+  is 99.  [tried]  The record YIWN2 was not tested; it is probably the index
+  columns (the manual says 1 to 9 winding columns).  [not tried]
+
+1.5 What the stored settings are [tried, help]
+
+  Stored in the document (header records):
+    YCL<n>       Table of Contents Level, 0 to 99.  [tried]
+    Page Layout panels: the help file lists, for the panels of the page
+    types (global, title page, table of contents, first page, even, odd,
+    index pages), the prompts Table of Contents Level, Table of Contents
+    Style, Table of Figures/Tables Style and Index Style, each Standard or
+    Custom.  A Custom style adds a page title, a title font and attributes,
+    and for the contents up to five levels with an indent, a fill character,
+    an attribute and a font; the figures and tables add a fill character and
+    "Start on New Page?".  [help topics "Page Layout", "Custom Table Style",
+    "Custom Page Style"]  The records that carry the styles were NOT dumped
+    (no Page Layout panel could be opened, see 1.1); the P<n>... records of
+    the samples (P1HB1, P1FB1, P1C33, P1P\i\ ...) are the header, footer,
+    columns and page number tag of the page types and none of the samples
+    has a custom table style.  [not tried: the records of a custom style]
+  Stored in each marker (text of the document): Index (main heading, sub
+    heading, reference text, page number attributes), Figure (name), Table
+    (name); a Picture marker has a Name that also goes into the table of
+    figures [docs]; a headline can be left out of or put into the contents
+    with "Include in Table of Contents" on the Current Section Format panel
+    [help topic "Format Section", "Setting the Table of Contents Level"].
+  NOT stored in the document: the Print panel checklist (which parts to
+    print).  The document file was byte for byte the same after the print,
+    and the value file of the original changed.  [tried]
+
+1.6 Other generated parts [help, tried]
+
+  - Equations: the Equation marker prints an equation.  The marker list
+    (docs/probe/orig-marker-commands.png) has no marker for a table of
+    equations; the Print panel has none; no help topic names one.  The
+    help topic of the Equation marker does not mention a Name; the manual
+    (via docs/MARKERS.txt) says that a Picture's or an equation's Name counts
+    as a figure; this was not tried.  So: NO TABLE OF EQUATIONS.  [tried, help]
+  - Counters: the nine counters (marker Counter) number things in the text
+    (Table I, 1), ...); they do not make a list.  [help, docs]
+  - Notes: the Note marker makes a footnote (printed at the foot of the
+    page), a levelnote (printed at the end of a section of a chosen level,
+    the next section on a new page) or an endnote (all at the end of the
+    document on a page with a title, "End Notes" by default).  There is no
+    "list of notes" on the Print panel: the notes are printed in the text or
+    at the end by their type, set on the Note Format panels.  [help topics
+    "Note Style", "Note Format", "Endnotes"]
+  - Cross-references: the Cross-reference marker prints the number of a
+    section; there is no list.  [help, docs]
+  - Error Log and Document Print Summary: two boxes of the Print checklist,
+    off at first.  The Summary counts the words of the printed document
+    (help topic "Worksheet and Count").  [help]
+  - Marker Index (help topic): the markers of the original are Author,
+    Column Break, Comment, Counter, Cross-ref., Date, Description, Else,
+    Endif, Equation, Escape Codes, Figure, Filedate, Filename, Filetime,
+    Font, If, Include, Index, Keep, Keycap, Line, Markup, Merge, Note,
+    Orientation, Page Break, Page Number, Pathname, Picture, Printer,
+    Revision, Screen, Section, Symbol, Table, Time, Whitespace, Worksheet.
+    Of these only Figure, Table, Index (and the headlines) feed a generated
+    part.  [tried, help]
+
+1.7 Levels beyond five [tried]
+
+  The contents level goes to 99 and the style panel offers five levels, but
+  the program does not stop at five.  docs/probe/deep.doc (8 levels) and
+  deep2.doc (22 levels, every level a section inside the one before):
+    - the section numbers are made for every level: "1.1.1.1.1.1.1.1" at
+      level 8 and 22 numbers at level 22; the headline is indented a little
+      more at each level (two cells, then three, alternately) without
+      limit, until the line is too narrow and wraps (out-deep2.txt);
+    - with YCL99 the table of contents lists all 22 levels the same way,
+      with the dots and the page.  Levels 6 and up have no style of their
+      own: they continue the pattern.  [tried; the five custom levels of a
+      Custom style were not tried and what level 6 and up take from them is
+      not known]
+    - The limit of the original was not reached at 22 levels.  [tried]
+
+2. WHAT STRATA DOES TODAY
+-------------------------
+
+2.1 The Printer [tried]
+
+  strprint FILE [--contents LEVEL] [--index] [--list-figures] [--list-tables]
+  (and the same on stred --print, and the fields of the Print panel: "Table
+  of Contents?", "Contents Levels", "Index?", "List of Figures?", "List of
+  Tables?").  --long-list is another thing: it lists the marker types that
+  were printed in the long form.  [repo: src/strprint.c, src/printmenu.c]
+
+  probe1.doc with --contents 3 --index --list-figures --list-tables
+  (docs/probe/ shows the original's print; Strata's PDF is not kept):
+    - contents on a page of its own, title "Contents", dots as a leader,
+      levels indented, section tag and title, page; list of figures and list
+      of tables each on a page with roman page numbers (i, ii, iii); then the
+      body from page 1; the index at the end, on its own page: entries by main
+      heading with sub-entries indented, "Parks, See Soil" with the reference
+      text, pages joined as 1-3 when three consecutive pages.  The markers
+      print nothing.  [tried]
+    - Order: contents, figures, tables, body, index.  This is the order that
+      the original calls "sorted" (Sort Output Pages? Yes); Strata has no
+      other order.  [tried]
+  With no option the same document prints no contents and no lists, the
+  markers print as text ("INDEX Parks", "FIGURE "Site plan""), and the
+  Printer says "Index markers are not typeset by Strata" for each; with the
+  options the markers print nothing.  [tried]
+
+2.2 What is stored [tried, repo]
+
+  Nothing.  The header record YCL99 is written into every document and
+  read back, but no code reads it as a setting (only a constant in
+  src/msdoc.c).  A document made by the original with YCL2 prints, in
+  Strata, the contents that the options say, not level 2: pl1.doc printed
+  with no option has no contents.  [tried]  The page layout panels of the
+  original (styles) are not read either.  The settings of the Print panel
+  are not saved in the document (they are the settings of the run).  Whether
+  the panel keeps them from one run to the next in the user's settings file
+  was not checked.  [repo, partly not tried]
+
+2.3 What the Editor and the Print menu offer [tried, repo]
+
+  - The Editor shows the Index, Figure and Table markers as a diamond
+    glyph (docs/MARKERS.txt).  It has no list of the entries.
+  - The Print panel has the five fields above.  The contents level is 1 to 9
+    (the original: 1 to 99); the same limit holds for --contents.
+  - There is no panel for the style of the contents (title, fill, fonts):
+    the look is fixed in src/latex.c (strc page style, dots, indent).
+  - There is no way to leave one headline out of the contents or to put it in.
+    The original has "Include in Table of Contents" on the section format
+    panel.  [repo: no such field in the panel or in latex.c]
+  - Section numbers: Strata makes the numbers of up to 16 levels; from
+    level 17 the headline has no number (strprint on deep2.doc: "Level 17"
+    prints without a tag).  [tried]
+
+3. THE TABLE: ORIGINAL AND STRATA
+---------------------------------
+
+  Feature          Original: how chosen /      Strata: how chosen / stored /
+                   stored / printed            printed
+  ---------------  --------------------------  ----------------------------
+  Table of         Print box "Table of         Print field "Table of
+  contents         Contents"; level in the     Contents?" and "Contents
+                   document (YCL, 0..99, 0 is  Levels" (1..9) or --contents;
+                   none); style in the page    not stored; fixed style;
+                   layout; per section flag.   printed before the body.
+                   Printed after the index
+                   (or before the body when
+                   sorted); own page.
+  Table of         Print box; Figure marker    Print field "List of
+  figures          (name); style in the page   Figures?" or --list-figures;
+                   layout.  Own page.          Figure markers and picture
+                                               names; roman pages; own page.
+  Table of tables  Print box; Table marker     "List of Tables?" /
+                   (name); style as above.     --list-tables; Table markers.
+  Index            Print box; Index markers    "Index?" / --index; Index
+                   (main, sub, reference       markers (same fields); at the
+                   text, attributes); style    end.  Standard look only.
+                   in the page layout (winding
+                   columns, fonts).
+  Table of         does not exist              does not exist
+  equations
+  Notes            Note marker; type foot,     Note marker; see docs/MARKERS.txt
+                   level or end; format in     for the types that print
+                   Global Marker
+  Cross-ref.       marker, no list             marker, no list
+  Error Log,       Print boxes                 Error Log is a Print field;
+  Summary                                      no Summary
+  Level limit      1..99 for the contents;     1..9 for the contents; 16
+                   numbers to at least 22      levels of numbers
+                   levels
+  Stored with      YCL (level); the styles     nothing
+  the document     are page layout records
+  Print choice     the Print checklist, kept   fields of the Print panel
+  stored           by the program, not in      (some in the user settings)
+                   the document
+
+4. DIFFERENCES
+--------------
+
+  D1  Strata does not read or write the contents level (YCL) or any style:
+      the original's document says how deep its contents is; Strata's does
+      not.
+  D2  The Print panel of Strata has fields for the contents, index and lists
+      (and the Error Log), but not the checklist of the original in the same
+      form: no "Body", "Title Page" or "Document Print Summary" box (not
+      looked for beyond the field names in src/printmenu.c).
+  D3  Level limit 9 against 99, and 16 numbered levels against at least 22.
+  D4  No "Include in Table of Contents" per section.
+  D5  The order of the parts is fixed: contents, figures, tables, body,
+      index.  The original's default is body, index, contents, figures,
+      tables, and Sort Output Pages? chooses the other.
+  D6  Strata prints the markers as text when the option is off; the original
+      never prints them.
+  D7  No custom styles (title, fill character, fonts, levels, columns of the
+      index, Start on New Page).
+  D8  Neither has a table of equations.
+
+5. WHY THE SAMPLE AND THE MANUAL BUILD THEIRS BY HAND
+-----------------------------------------------------
+
+  Evidence [repo]:
+  - manual/mkmanual.py was added on 2026-11-13 (cd66961c8, "the first manual
+    of Strata as Strata documents, with its generator"); the one document with
+    contents, index and list of figures made by --single on 2026-11-14
+    (d7a19819a).  The commit that made the Printer able to print an index
+    and lists (f7fec66f1, "Step 1 of index and lists") is dated 2026-11-17.
+    The generator was written three days before the Printer had the lists.
+  - manual/README.txt (HOW TO CHANGE THE MANUAL) gives the reason that is
+    still true: the contents and the index of the manual document are tables
+    of cross-reference markers, "their page numbers are cross-references that
+    the Printer evaluates", so they follow a change made in the Editor and the
+    document needs no command line option to print with its contents.
+  - REPORT-38 (the structured sample, 2026-11-19): the contents, index and
+    list of figures are built as in the manual because they follow edits and
+    work in the Editor, not the print options, and because Index, Figure and
+    Table markers print as text (boxes) when the options are off.  [repo]
+  - src/latex.c: the contents, index and lists are made from the headlines
+    and the markers of the Strata document only when the options say so; the
+    options are not part of the document (2.2).  [tried]
+
+  The real reasons, in the order of weight:
+    1. NO STORED SETTING.  Strata documents do not remember that they want a
+       contents or an index.  A sample that must print with them whoever
+       prints it, from the Print panel with the default, can only hold them
+       as text.  (The original keeps the level in the document, and the other
+       choices on the Print panel; its default prints the contents, figures,
+       tables and index.  Strata's default prints none.)
+    2. THE EDITOR SHOWS NOTHING.  The generated contents are only seen in the
+       printout.  A contents made of cross-reference markers is seen, checked
+       and followed (Go To) in the Editor, which is the point of the sample
+       as an example of structured documents.
+    3. THE MARKERS PRINT AS TEXT WITHOUT THE OPTIONS, so a sample that has
+       Index and Figure markers and is printed by default is wrong.
+    4. THE GENERATOR CAME FIRST (section 5, first point).
+    5. NOT A REASON: page numbers of included documents.  The Printer's
+       contents cover a joined document (the Include step joins the parts
+       first), but this was not tested here.  [not tried]
+
+  What each choice costs:
+    Hand built (now): the contents is text that the generator writes: a
+      headline that is renamed or moved needs the generator or the Editor's
+      cross-reference update; the tables must be kept in step by tests
+      (tests/story.py, manual/checkpdf.py check every page number); the
+      sample teaches a method that a person cannot use without a generator;
+      the contents is not on its own roman-numbered page unless the
+      generator does it; the index has to be written as marker tables.
+    Automatic (Printer options): nothing to keep; follows every edit;
+      but only when printed with the options, shows nothing in the Editor,
+      and is a different look from the original's.
+
+6. RECOMMENDATION (no implementation)
+-------------------------------------
+
+  So that a document gets its contents, index and lists when it is printed,
+  as the original does, Strata should:
+    R1  Store the choices in the document.  Read and write YCL<n> as the
+        contents level (0 = none, 1 to 99); keep a header record for the
+        Print choices that the original keeps outside the document only if
+        the owner wants a document to print with its parts whatever the
+        default (a new record, for example one for each part).  The default
+        of a new document: contents level 99, figures, tables and index
+        printed when there is a marker of the kind (the original's default).
+    R2  Make the Print panel the way to override: the checklist of the
+        original (Title Page, Table of Contents, Table of Figures, Table of
+        Tables, Body, Index, Error Log, Document Print Summary) with the
+        document's settings as the first values; keep the command line
+        options as overrides.
+    R3  Raise the limits: the contents level to 99; the section number to
+        as many levels as the Editor allows (the original passes 22).
+    R4  Offer the page layout settings that the original has, in order of
+        value: Include in Table of Contents (a section flag), the title of
+        each part, the fill character, Start on New Page, then the indent and
+        font by level, then the index columns.  They need records in the
+        header; the records of the original's Custom styles must be probed
+        first (not done here).
+    R5  Offer the output order (Sort Output Pages?) with the original's
+        default or Strata's, by the owner's choice.
+    R6  Show the index, figure and table markers in the Editor as they are
+        shown now, and add a command that lists the entries (Go To a marker
+        by name); leave a table of equations out, as the original has none.
+    R7  Make the markers print nothing when the document asks for the part,
+        and print them as text (or nothing) when it does not, with no
+        warning for each marker.
+
+  What would change in the generators (manual/mkmanual.py, tests/mkstory.py):
+    - the contents, the list of figures and the index parts of the document
+      (single_front, single_index, single_figures and the tables of
+      cross-reference markers) would be dropped; the generator writes Index,
+      Figure and Table markers at the headlines and pictures and sets the
+      level; the Printer makes the parts.
+    - the roman page numbers, the own pages and the leaders come from the
+      Printer.
+    - the checks that read every contents row (checkpdf.py, tests/story.py)
+      stay, and read the printed parts instead of the tables of markers.
+  What the sample and the manual would drop: the hand built tables of
+  cross-reference markers for the contents, index and lists, the marker
+  wiring of the headlines, and the text in the sample that explains that the
+  contents is a table of markers (the sample would then say that the contents
+  is made when the document is printed, which is what the original does).
+  The sample would still keep the cross-reference markers in its text.
+  A document made before the change keeps working: a hand built contents is
+  still text.
+
+7. THE SECTION DEPTH QUESTION (for the job on the first machine)
+----------------------------------------------------------------
+
+  Section numbers and the contents of the original have no limit that was
+  reached at 22 levels (1.7).  The contents level accepts 1 to 99.  The style
+  of the contents has five levels (indent, fill, attribute, font each); what
+  levels 6 and up take is not known, but the plain contents continues the
+  indent pattern.  Strata's limit is 16 numbered levels and a contents level
+  of 9.  To match: number every level the document has and take the contents
+  level up to 99.
+
+8. OPEN QUESTIONS FOR THE OWNER
+-------------------------------
+
+  Q1  Should a Strata document store the contents level and the choice of
+      parts (R1), and may a new document print its contents, figures, tables
+      and index by default as the original does?
+  Q2  Should the order of the parts follow the original (body first) or stay
+      as it is (contents first)?
+  Q3  The records of the Custom styles were not dumped: may a further probe
+      open the Page Layout panels (it needs the F keys to arrive without the
+      Alt state; another key mapping of the emulator)?
+  Q4  The manuals of the original (PDF) are not in this copy: they are needed
+      to check pages 4-26, 4-28 and 4-59, the Index style fields (winding
+      columns, separator) and what level 6 and up take in a custom style.
+  Q5  Should the sample and the manual drop their hand built parts when
+      R1 to R7 are done, or keep one hand built example because it teaches
+      cross-reference markers?
+
+9. THE EVIDENCE (docs/probe/)
+-----------------------------
+
+  probe1.doc          sample with Index, Figure and Table markers
+  print-probe1-all.txt  the original's print of probe1.doc, all boxes
+  pl0.doc pl1.doc pl2.doc pl5.doc   probe1.doc with YCL0, 1, 2, 5
+  out-pl0.txt out-pl1.txt out-pl2.txt out-pl5.txt   the original's prints
+  deep.doc deep2.doc  8 and 22 nested levels; out-deep.txt, out-deep2.txt
+  orig-print-panel.png     the Print Document panel
+  orig-marker-commands.png the Marker Commands list (no table of equations)
+  The printed files are plain text of the Generic driver (the characters that
+  are not ASCII are shown as ?).  The original's help topics read were
+  those about Print Document, Page Layout, Custom Table Style, Custom Page
+  Style, Setting the Table of Contents Level, Marker Index, Note Style, Note
+  Format, Endnotes, Format Section and Worksheet and Count.

@@ -1,0 +1,25 @@
+
+------------------------- Global Format - Unstructured -------------------------
+
+The Menu (F10) Global Format panel controls the format settings for all blocks 
+in an unstructured document.
+
++------------------------------ Global Block Format ---------------------------+
+|                                                                Pos: 1        |
+| ........................................................................... |
+|                                                                              |
+| Attributes:               Justification:              Indent:                |
+| Font:                                                                        |
+|------------------------------------------------------------------------------|
+| SPACING                                                                      |
+|     Line:                                                                    |
+|    Block:                                                                    |
+|    Ruler:                                                                    |
+|                                                                              |
+| Winding Columns:                                                             |
+|                                                                              |
++---------------------- Press Ins to Use Displayed Settings -------------------+
+
+--------------------------------------------------------------------------------
+   Format         Global Format-Structured         Global         Panel Keys
+                  Keyboard Summary                 Help Index

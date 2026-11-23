@@ -1,0 +1,25 @@
+
+------------------------------- Header/Footer Edit -----------------------------
+
+Use the Header or Footer Edit panel to enter the text of a header or footer.
+
+--Procedure-----------------------------   +-------- Header/Footer Edit -------+
+                                           |           .  - [PG] -  .          |
+ Press Menu (F10) and select Global Page. |                                   |
+ Move the cursor to the Header or Footer  |                                   |
+  prompt and press Space Bar.              |                                   |
+ Enter the text in the columns and make   |                                   |
+  any format settings.                     |                                   |
+ Press Ins to accept your edits.          |   Press Ins to Save Changes or    |
+                                           +- Esc to Restore Previous Version -+
+
+--------------------------------------------------------------------------------
+# You can add columns or blocks and set local text, column, and block formats
+  in headers and footers.
+# The default format for a header or footer is a three column block with the
+  left column left justified, the center column center justified, and the right
+  column right justified.  You can enter your text in this format or change the
+  format.  Use the Column and Table Editor to change the column layout.
+--------------------------------------------------------------------------------
+       Global Page            Column and Table Editor            Markers
+                Keyboard Summary                         Help Index

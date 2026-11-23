@@ -1,0 +1,25 @@
+
+------------------------------- Print Draft Options ----------------------------
+
+
+Print Current Section Only?   Select Yes to print only the current section or
+                              No to print the entire document.
+
+Print Document with Footers?  Select Yes to print the document with footers that
+                              contain the current date, time, file name, and 
+                              page number.  Select No to print the document 
+                              without footers.
+
+Force Document Expansion?     Select Yes to print the expanded version of a 
+                              collapsed document or No to print the collapsed
+                              version of the document.
+
+Print Double Spaced?          Select Yes to print a double-spaced draft or No
+                              to print a single-spaced draft.
+
+Printer:                      Select either the primary or secondary printer
+                              driver as specified in Setup.
+
+
+--------------------------------------------------------------------------------
+     Print Draft          Setup         Keyboard Summary         Help Index

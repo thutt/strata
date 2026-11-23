@@ -1,0 +1,25 @@
+
+--------------------------------- Block Indents --------------------------------
+
+Block Indents indent all text in a block. The block indents for the current 
+block are displayed on the ruler.
+
+# The Left and Right Block Indent settings on the Current Block Format panel
+  is where you enter the number of ruler units you want to indent the block. 
+
+  +--------------------------------------------------------------------------+
+  |L: 5    Attr: [Normal]   Just: [Left]   Indent: [None]       Pos: 6 R:[0] |
+  |#####--------------------------------------------------------------------|
+  +--------------------------------------------------------------------------+
+
+# You can also set left and right block indents with the L and R settings on 
+  the Block Format Editor (Ctrl E).
+
+# A left block indent shifts tabs and line indents to the right. For example,
+  if you set a tab at ruler unit 10 and then enter a left block indent of 5,
+  the tab is still 10 ruler units from the new left margin (at position 15).
+
+
+--------------------------------------------------------------------------------
+ Current Block Format       Block Format Editor       Setting Tabs on the Ruler
+                 Keyboard Summary           Help Index

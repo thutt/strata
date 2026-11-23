@@ -1,0 +1,25 @@
+
+--------------------------------- Setup Options --------------------------------
+
+Use the following settings to specify the macro set, library, or working
+directory which is initially loaded each time you run Manuscript.
+
+
+Initial Macro Set:  Enter the path and file name of the initial macro set.
+                    Macro set files must have a .MAC file extension, which is
+                    assumed if you do not specify an extension.
+
+Initial Library:    Enter the path and file name of the initial library file.
+                    Library files must have a .LIB file extension, which is
+                    assumed if you do not specify an extension.
+
+Initial Working:    Enter the full path name of the initial working directory.
+Directory     
+
+You can change the macro set or library for a Manuscript session with the
+Menu (F10) Tools options in the editor.  You can change the working directory
+during a Manuscript session from any panel with a Working Directory prompt.
+
+--------------------------------------------------------------------------------
+   Setup       Macros       Libraries       Tools       Working Directories
+               Keyboard Summary                     Help Index

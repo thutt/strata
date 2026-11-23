@@ -1,0 +1,25 @@
+
+------------------------------------- Print ------------------------------------
+
+The Menu (F10) Print commands address draft and final print, preview, and 
+display of on-screen pagination.
+
+
+  Print the document as it     Print the document executing all
+  appears on screen.           format settings.             
+          |                              |
+          +--+         +-----------------+
+         +------------------------------------------------------------+
+         | Draft     Final     Preview     Repaginate     Clear-pages |
+         +------------------------------------------------------------+
+             +--------------------+            |               |
+             |                                 |               |
+  Display fully formatted pages -        Show page       Clear page
+  including graphics, fonts,             breaks in the   break display in
+  spacing, and tables - on the screen.   document.       the document.
+
+
+You can also final print or preview a document from the Document Manager.
+--------------------------------------------------------------------------------
+     Draft        Final        Preview        Repaginate        Clear-pages
+   Menu         Document Manager         Keyboard Summary         Help Index

@@ -1,0 +1,183 @@
+# File Formats, part 1: the text of a column, the markers, the examples.
+.h3 The text of a column [appfmt-text]
+.ix Text record, bytes of
+.ix T record, payload
+.ix Tab token
+.ix Attribute token
+.ix End of line, 1D
+.ix Escape 01
+.ix Text indent, 1A
+.ix No-break space, 1E
+.ix Soft hyphen, 1F
+The bytes between the T and the NUL of a text record are the text of one
+column.  Every column ends with the end-of-line byte 1D, and an empty block is
+the single byte 1D.  Several lines in one block are several 1D.
+.table 12 58
+Bytes | Meaning
+20 to FF | A character of code page 437, as it is.
+1D | The end of a line: the key {k:Enter}.
+01 c | The literal character c.  It is how a picture of the control range is
+ | written (the bullet of a list item is 01 07), and how a byte that would
+ | be a sign of the format can be a character.
+10 f n | A tab.  f is the fill character (usually a space, 20) and n is one less
+ | than the number of cells that the tab takes, from the position of
+ | the tab to the next stop of the ruler.  The width is worked out again
+ | from the stops when the block is edited.
+12 m f | A change of attributes.  m is the new mask for all the text that
+ | follows (00 normal, 01 bold, 02 underscore words, 04 italic, 08 subscript,
+ | 10 superscript, 20 strikethrough, 40 printer specific, and the sums); f
+ | is a flag byte: 01 printer specific, 02 underscore all, 04 double underscore
+ | words, 08 small caps, 10 double underscore all, 80 a state bit that is
+ | kept.  The printer specific ones are kept and print as plain text.
+13 t ( ... 13 ) | A marker of type t: see the next section.
+1A | The text indent character: lines that follow in the block line up after
+ | it, up to the next 1D.
+1C | Once at the start of the first block of some documents; kept.
+1E | A no-break space.
+1F | A soft hyphen: a place where a word may be broken at the end of a line.
+ | It is typed with {k:Alt-_}.
+other 00 to 1F | Opaque: kept in place, shown as the picture of the code.
+.end
+.behavior The text of an imported plain file is put in this form by Import
+(Reference Manual, chapter 2): a Tab of the file becomes the tab token, a line
+end is the byte
+1D, and a byte below 20 is written as two characters, the sign {c:^} and a
+letter.
+.h3 Markers [appfmt-markers]
+.ix Marker records
+.ix Marker payload
+.ix Marker types
+.ix Marker field numbers
+A marker in a text is written as the byte 13, the type in decimal digits, an
+open parenthesis, the payload, and the byte 13 with a close parenthesis.
+The payload is a list of records, each ended by CR LF.  A marker may nest:
+the payload of a note, a comment or an equation begins with whole S and T
+records, which is why a text record is read sequentially.  Every other record
+of a payload is one field of the panel of the marker: the first byte is the
+number of the field, and the rest is its value (a text ends with NUL, a number
+is decimal digits).  A field that has its default value is left out, and the
+fields are written in the order of their numbers, which is not always the order
+of the panel.
+.code
+13 "37(" "1F12" 00 CR LF 13 ")"        a Keycap whose legend is F12
+13 "9(" S CR LF T "y + 3^x" 1D 00 CR LF 13 ")"     an Equation
+13 "5(" 13 ")"                         an Author marker, no payload
+.end
+The types and their fields are these.  A field number that has
+no mark is a text, a mark (n) is a number, and (c) a choice that is stored as a
+number.
+.table 6 14 50
+Type | Marker | Fields
+1 | Note | nested text; 1 type (c): left out footnote, 2 levelnote, 3 endnote
+2 | Cross-reference | XN section number; XT what is printed: 1 tag (default),
+ | | 2 headline, 3 both, 4 page number.
+3 | Index | 2 main heading; 3 subheading; 4 reference text; 1 attributes
+4 | Keep | 1 (c): left out start fixed, 1 start floating, 2 end
+5 | Author | none
+6 | Comment | nested text; 1 initials or the name of the author; 2 the time
+7 | Date | 1 format (default Month D, Year)
+8 | Description | none
+9 | Equation | nested text, or 1 file name; 2 width; 3 height; 4 scale;
+ | | 5 position (1 floating, 2 in text); 6 name for the table
+10 | Worksheet | 1 file name; 4 when to import
+11 | Figure | 1 name for the table of figures
+12 | Filedate | 1 format
+13 | Filename | none
+14 | Filetime | 1 format
+15 | Font | 1 font number
+16 | Include | 1 document name
+17 | Counter | 1 counter (1 to 99); 2 start value (0 to 4294967295); 3 style (1
+ | | arabic, 2 lower roman, 3 upper roman, 4 upper letters, 5 lower letters)
+18 | Line | 1 string; 2 length; 3 weight; 4 center (thousandths)
+19 | Merge | 1 variable; 2 delete blank lines (Yes when left out)
+20 | Markup | 1 code
+21 | Escape Codes | 1 hexadecimal digits
+22 | Page Number | none (headers and footers only)
+23 | Page Break | 1: 0 page (left out), 1 odd page, 2 even page
+24 | Pathname | none
+25 | Picture | 1 file name; 2 width; 3 height; 4 scale; 5 position; 6 name
+26 | Printer | none
+27 | Revision | none
+28 | Section | none (headers and footers only)
+29 | Table | 1 name for the table of tables
+30 | Time | 1 format (default H:MM am/pm)
+31 | Whitespace | 1 size (thousandths); 2 treatment (0 crop, 1 next page,
+ | | 2 float); U unit (1 cm, 2 mm, 3 pt, 4 bp, 5 pc, 6 dd, 7 cc, 8 sp,
+ | | 9 em, 10 ex; none inches)
+32 | Symbol | 1 symbol code; 2 symbol name
+33 | If | 1 expression
+34 | Else | none
+35 | Endif | none
+36 | Orientation | 1: none the document, 1 portrait, 2 landscape
+37 | Keycap | 1 legend; 2 foreground, 3 background (tenths); 4 scale; 5 font
+38 | Screen | 1 file name; 2 width; 3 height; 4 scale
+39 | Column Break | none
+40 | Print Error | 1 message; 2 code; 3 run (made by the Editor after a print)
+41 | LaTeX | the nested text (S and T records), no field; the text is the
+ | | instructions as typed
+.end
+A marker of the types 10, 20, 21, 32 and 38 is shown as its label.  Sizes
+are in thousandths of an inch (a width of 3 inches is 3000), a scale of 2 is
+2000.  The chapter on markers (Reference Manual, chapter 5) says what each
+marker means.
+.h3 A document, byte by byte [appfmt-example]
+.ix Example, new document
+.ix Example, saved document
+.ix Minimal document
+A new unstructured document, as Strata saves it after the text {c:caf} with an
+e that has an acute accent (code 82), three spaces, an n with a tilde (code A4),
+a space, a c with a cedilla (code 87), a space, a sharp s (code E1) and the word
+{c:done} was typed.  Every line is a record; the notation is that of the
+conventions above.
+.code
+*R2                         the release
+MR1001                      the revision: one save since a new document
+PP\1\ 00                    the page number tag
+P1C33                       the title page is centered at 33 per cent
+P1P\i\ 00                   the tag of the page number of the title page
+P2P\i\ 00                   the same for the table of contents
+FHA1                        headlines are bold
+FTJ3                        text is justified evenly
+FTT5                        tab stops of the text: one, at 5
+FSH150 FST150 FSS200 FSC200 spacing
+FI3                         indent per level
+DP0,8500,11000              paper: letter
+YCL99                       kept
+YIWN2                       kept
+*B0                         the body, not structured
+S                           the one section
+T caf 82 20 20 20 A4 20 87 20 E1 20 done 1D 00     its text
+*E                          the end
+.end
+Each line in the picture above ends with CR LF in the file; the T record is
+one record with the bytes that the line shows, and its end is the byte 1D, the
+NUL and CR LF.  The bytes were read from a real file that the Editor wrote.
+.h4 A table imported from a text file [appfmt-example-tab]
+.ix Example, tab token
+.ix Example, imported text
+A text file of three lines, each with tabs between three words, imported with
+Preserve Line Endings into a new document and saved, has this body.
+.code
+Item TAB Qty TAB Price
+Bolts TAB 12 TAB 3.50
+Nuts TAB 100 TAB 0.25
+.end
+In the file the body of the document is
+.code
+*B0
+S
+T Item 10 20 00  Qty 10 20 01  Price 1D
+  Bolts 10 20 04  12 10 20 02  3.50 1D
+  Nuts 10 20 00  100 10 20 01  0.25 1D
+  1D 00
+*E
+.end
+Each tab is the byte 10, the fill character 20 and a width byte, which is the
+cache of the width of the tab, as the Editor worked it out when the text came
+in (the bytes in the example are those of a real file).  What the screen and a
+screen image show is made from the ruler and not from these bytes: with the
+default ruler of a new document, which has one stop, at 5, the three columns
+of the example are not aligned, and the Export of a screen image writes
+{c:Item Qty Price}.  With the stops 12 and 22 in the ruler of the text the
+same Export writes the columns at the positions 12 and 22 of each line.  The
+last 1D is the empty line that the last line end of the file leaves.

@@ -1,0 +1,25 @@
+
+----------------------------------- File New -----------------------------------
+
+File New creates a new document, replacing the current document on screen.
+                                        
+--Procedure---------------------------  +-------------- New File --------------+
+                                        | Working Directory:                   |
+ Press Menu.                           |                                      |
+ Select File New.                      | Document Name:                       |
+ Complete the New File panel and       |                                      |
+  press Ins.                            |      Template: DEFAULT.SET           |
+                                        |                                      |
+--------------------------------------  |   Description:                       |
+                                        |        Author:                       |
+# If changes have been made to the      |      Revision: 1.000                 |
+  current document since it was last    +---- Press Ins to Create New File ----+
+  saved, you are prompted to save those
+  changes before opening the new document.
+
+# To retrieve an existing document, use the File Retrieve command.
+
+# You must enter a file name when editing a new file - all other information is
+  optional.  Any file extension is accepted; .DOC is used if none is supplied.
+--------------------------------------------------------------------------------
+       File        File Retrieve        Keyboard Summary         Help Index

@@ -1,0 +1,25 @@
+
+---------------------------------- Window Open ---------------------------------
+
+Use Menu (F10) Edit Window Open to open a window and display two documents for 
+editing.
+
+  # View of the screen before               # View of the screen after
+    selecting Window Open                     selecting Window Open
+
+    ..........................                ..........................
+    .^^^^^^^^^^^^^^^^^^^^^^^^^                .^^^^^^^^^^^^^^^^^^^^^^^^^
+    . 3.4 Management Position                 . 3.4 Management Position 
+    .                                         .
+    .     The initial reaction                .     The initial reaction
+    .     merger proposal was                 .     merger proposal was
+    .     negative. However, t                .^^^^^^^^^^^^^^^^^^^^^^^^^
+    .     considerable support                .     
+    .                                         .   
+    .     The current tendency                .     
+    ..........................                ..........................
+
+Window Open is useful for copying or moving text from one file to another. 
+
+--------------------------------------------------------------------------------
+         Window      Window Close      Keyboard Summary      Help Index

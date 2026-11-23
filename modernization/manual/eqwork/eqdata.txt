@@ -1,0 +1,558 @@
+# SECTION lowergreek | Lower case Greek letters
+\alpha ;; alpha
+\beta ;; beta
+\gamma ;; gamma
+\delta ;; delta
+\epsilon ;; epsilon (lunate form)
+\varepsilon ;; epsilon (variant, the form of the set symbol)
+\zeta ;; zeta
+\eta ;; eta
+\theta ;; theta
+\vartheta ;; theta (variant)
+\iota ;; iota
+\kappa ;; kappa
+\varkappa ;; kappa (variant, amssymb)
+\lambda ;; lambda
+\mu ;; mu
+\nu ;; nu
+\xi ;; xi
+\pi ;; pi
+\varpi ;; pi (variant)
+\rho ;; rho
+\varrho ;; rho (variant)
+\sigma ;; sigma
+\varsigma ;; sigma (final form)
+\tau ;; tau
+\upsilon ;; upsilon
+\phi ;; phi
+\varphi ;; phi (variant)
+\chi ;; chi
+\psi ;; psi
+\omega ;; omega
+\digamma ;; digamma (amssymb)
+# SECTION uppergreek | Upper case Greek letters
+\Gamma ;; Gamma
+\Delta ;; Delta
+\Theta ;; Theta
+\Lambda ;; Lambda
+\Xi ;; Xi
+\Pi ;; Pi
+\Sigma ;; Sigma
+\Upsilon ;; Upsilon
+\Phi ;; Phi
+\Psi ;; Psi
+\Omega ;; Omega
+\varGamma ;; Gamma in italics
+\varDelta ;; Delta in italics
+\varTheta ;; Theta in italics
+\varLambda ;; Lambda in italics
+\varXi ;; Xi in italics
+\varPi ;; Pi in italics
+\varSigma ;; Sigma in italics
+\varUpsilon ;; Upsilon in italics
+\varPhi ;; Phi in italics
+\varPsi ;; Psi in italics
+\varOmega ;; Omega in italics
+# SECTION binary | Binary operators
++ ;; plus
+- ;; minus
+\pm ;; plus or minus
+\mp ;; minus or plus
+\times ;; multiplication cross
+\div ;; division sign
+\cdot ;; centred dot
+\ast ;; asterisk operator
+\star ;; five pointed star
+\circ ;; small circle
+\bullet ;; bullet
+\cap ;; intersection
+\cup ;; union
+\uplus ;; multiset union
+\sqcap ;; square intersection
+\sqcup ;; square union
+\wedge ;; logical and
+\vee ;; logical or
+\setminus ;; set difference
+\wr ;; wreath product
+\diamond ;; diamond operator
+\oplus ;; circled plus
+\ominus ;; circled minus
+\otimes ;; circled times
+\oslash ;; circled slash
+\odot ;; circled dot
+\bigcirc ;; large circle
+\triangleleft ;; triangle left
+\triangleright ;; triangle right
+\bigtriangleup ;; large triangle up
+\bigtriangledown ;; large triangle down
+\amalg ;; coproduct sign
+\dagger ;; dagger
+\ddagger ;; double dagger
+\boxplus ;; boxed plus (amssymb)
+\boxminus ;; boxed minus (amssymb)
+\boxtimes ;; boxed times (amssymb)
+\boxdot ;; boxed dot (amssymb)
+\circledast ;; circled asterisk (amssymb)
+\circledcirc ;; circled circle (amssymb)
+\circleddash ;; circled dash (amssymb)
+\dotplus ;; dot plus (amssymb)
+\ltimes ;; left semidirect product (amssymb)
+\rtimes ;; right semidirect product (amssymb)
+\barwedge ;; bar wedge (amssymb)
+\veebar ;; vee bar (amssymb)
+\curlywedge ;; curly wedge (amssymb)
+\curlyvee ;; curly vee (amssymb)
+\intercal ;; intercalate (amssymb)
+\divideontimes ;; divide on times (amssymb)
+\smallsetminus ;; small set difference (amssymb)
+\Cap ;; double intersection (amssymb)
+\Cup ;; double union (amssymb)
+# SECTION relations | Relations
+= ;; equals
+\neq ;; not equal
+\equiv ;; identical to
+\not\equiv ;; not identical (negation of any relation: \not before it)
+\approx ;; approximately equal
+\sim ;; similar
+\simeq ;; similar or equal
+\cong ;; congruent
+\doteq ;; approaches the limit
+\propto ;; proportional to
+< ;; less than
+> ;; greater than
+\le ;; less than or equal
+\ge ;; greater than or equal
+\leq ;; less than or equal (same as \le)
+\geq ;; greater than or equal (same as \ge)
+\ll ;; much less than
+\gg ;; much greater than
+\prec ;; precedes
+\succ ;; succeeds
+\preceq ;; precedes or equals
+\succeq ;; succeeds or equals
+\subset ;; subset of
+\supset ;; superset of
+\subseteq ;; subset or equal
+\supseteq ;; superset or equal
+\sqsubseteq ;; square subset or equal
+\sqsupseteq ;; square superset or equal
+\in ;; element of
+\ni ;; contains as an element
+\notin ;; not an element of
+\perp ;; perpendicular
+\parallel ;; parallel
+\mid ;; divides
+\nmid ;; does not divide (amssymb)
+\vdash ;; proves
+\dashv ;; is proved by
+\models ;; models
+\asymp ;; asymptotically equal
+\bowtie ;; join
+\smile ;; smile
+\frown ;; frown
+\leqslant ;; slanted less than or equal (amssymb)
+\geqslant ;; slanted greater than or equal (amssymb)
+\lesssim ;; less than or similar (amssymb)
+\gtrsim ;; greater than or similar (amssymb)
+\lessgtr ;; less than or greater than (amssymb)
+\nless ;; not less than (amssymb)
+\ngtr ;; not greater than (amssymb)
+\nleq ;; not less than or equal (amssymb)
+\ngeq ;; not greater than or equal (amssymb)
+\ncong ;; not congruent (amssymb)
+\nsim ;; not similar (amssymb)
+\nsubseteq ;; not a subset or equal (amssymb)
+\subsetneq ;; subset, not equal (amssymb)
+\supsetneq ;; superset, not equal (amssymb)
+\nparallel ;; not parallel (amssymb)
+\nvdash ;; does not prove (amssymb)
+\approxeq ;; approximately equal or equal (amssymb)
+\thickapprox ;; thick approximately (amssymb)
+\backsim ;; reversed similar (amssymb)
+\eqsim ;; equals similar (amssymb)
+\triangleq ;; defined as (amssymb)
+\therefore ;; therefore (amssymb)
+\because ;; because (amssymb)
+\between ;; between (amssymb)
+\pitchfork ;; pitchfork (amssymb)
+\Vdash ;; forces (amssymb)
+\vartriangleleft ;; normal subgroup of (amssymb)
+\vartriangleright ;; contains as normal subgroup (amssymb)
+\trianglelefteq ;; normal subgroup or equal (amssymb)
+# SECTION arrows | Arrows
+\leftarrow ;; arrow left
+\rightarrow ;; arrow right
+\to ;; arrow right (same as \rightarrow)
+\gets ;; arrow left (same as \leftarrow)
+\leftrightarrow ;; arrow both ways
+\uparrow ;; arrow up
+\downarrow ;; arrow down
+\updownarrow ;; arrow up and down
+\Leftarrow ;; double arrow left
+\Rightarrow ;; double arrow right
+\Leftrightarrow ;; double arrow both ways
+\Uparrow ;; double arrow up
+\Downarrow ;; double arrow down
+\Updownarrow ;; double arrow up and down
+\longleftarrow ;; long arrow left
+\longrightarrow ;; long arrow right
+\longleftrightarrow ;; long arrow both ways
+\Longleftarrow ;; long double arrow left
+\Longrightarrow ;; long double arrow right
+\Longleftrightarrow ;; long double arrow both ways
+\implies ;; long double arrow right with space
+\impliedby ;; long double arrow left with space
+\iff ;; long double arrow both ways with space
+\mapsto ;; maps to
+\longmapsto ;; long maps to
+\hookleftarrow ;; hook left
+\hookrightarrow ;; hook right
+\leftharpoonup ;; harpoon left up
+\leftharpoondown ;; harpoon left down
+\rightharpoonup ;; harpoon right up
+\rightharpoondown ;; harpoon right down
+\rightleftharpoons ;; harpoons right over left
+\nearrow ;; arrow north east
+\searrow ;; arrow south east
+\swarrow ;; arrow south west
+\nwarrow ;; arrow north west
+\leadsto ;; squiggle right (amssymb)
+\rightsquigarrow ;; squiggle right (amssymb)
+\twoheadrightarrow ;; two heads right (amssymb)
+\rightarrowtail ;; tail right (amssymb)
+\rightrightarrows ;; two arrows right (amssymb)
+\leftrightarrows ;; arrows left and right (amssymb)
+\rightleftarrows ;; arrows right and left (amssymb)
+\curvearrowright ;; curved arrow right (amssymb)
+\circlearrowleft ;; circle arrow left (amssymb)
+\nrightarrow ;; no arrow right (amssymb)
+\nRightarrow ;; no double arrow right (amssymb)
+\nLeftrightarrow ;; no double arrow both ways (amssymb)
+\Lsh ;; arrow up left (amssymb)
+\Rsh ;; arrow up right (amssymb)
+\looparrowright ;; loop arrow right (amssymb)
+\upuparrows ;; two arrows up (amssymb)
+\dashrightarrow ;; dashed arrow right (amssymb)
+\Rrightarrow ;; triple arrow right (amssymb)
+# SECTION symbols | Other symbols
+\infty ;; infinity
+\partial ;; partial derivative
+\nabla ;; nabla
+\forall ;; for all
+\exists ;; there exists
+\nexists ;; there does not exist (amssymb)
+\emptyset ;; empty set
+\varnothing ;; empty set (amssymb)
+\neg ;; logical not
+\lnot ;; logical not (same as \neg)
+\angle ;; angle
+\measuredangle ;; measured angle (amssymb)
+\sphericalangle ;; spherical angle (amssymb)
+\triangle ;; triangle
+\vartriangle ;; small triangle (amssymb)
+\blacktriangle ;; black triangle (amssymb)
+\square ;; square (amssymb)
+\blacksquare ;; black square (amssymb)
+\lozenge ;; lozenge (amssymb)
+\blacklozenge ;; black lozenge (amssymb)
+\bigstar ;; big star (amssymb)
+\prime ;; prime
+\backprime ;; reversed prime (amssymb)
+\hbar ;; h bar
+\hslash ;; h slash (amssymb)
+\ell ;; script l
+\Re ;; real part
+\Im ;; imaginary part
+\aleph ;; aleph
+\beth ;; beth (amssymb)
+\gimel ;; gimel (amssymb)
+\daleth ;; daleth (amssymb)
+\wp ;; Weierstrass p
+\top ;; top
+\bot ;; bottom
+\surd ;; radical sign
+\imath ;; dotless i
+\jmath ;; dotless j
+\complement ;; complement (amssymb)
+\mho ;; inverted omega (amssymb)
+\Finv ;; turned F (amssymb)
+\Game ;; turned G (amssymb)
+\eth ;; eth (amssymb)
+\checkmark ;; check mark (amssymb)
+\maltese ;; maltese cross (amssymb)
+\circledR ;; circled R (amssymb)
+\circledS ;; circled S (amssymb)
+\diagup ;; diagonal up (amssymb)
+\diagdown ;; diagonal down (amssymb)
+\clubsuit ;; club
+\diamondsuit ;; diamond
+\heartsuit ;; heart
+\spadesuit ;; spade
+\flat ;; flat
+\natural ;; natural
+\sharp ;; sharp
+\backslash ;; backslash
+\ldots ;; low dots
+\cdots ;; centred dots
+\vdots ;; vertical dots
+\ddots ;; diagonal dots
+\dotsc ;; dots for a list of commas
+\dotsb ;; dots for binary operators
+\dotsm ;; dots for multiplication
+\dotsi ;; dots for integrals
+\dotso ;; other dots
+# SECTION scripts | Superscripts and subscripts
+x^2 ;; superscript of one character
+x_i ;; subscript of one character
+x_i^2 ;; both (either order)
+x^{n+1} ;; a group as superscript
+x_{ij} ;; a group as subscript
+x^{y^z} ;; superscript of a superscript
+a_{i_j} ;; subscript of a subscript
+x^{a}_{b} ;; both with groups
+x^2_3 ;; each script takes one character without braces
+x' ;; prime (an apostrophe is a prime)
+x'' ;; double prime
+f'(x) ;; derivative
+x^\prime ;; prime as a command
+{}^{14}_{6}\mathrm{C} ;; scripts on the left (an empty group first)
+e^{-x^2/2} ;; scripts that hold an expression
+\sum_{i=1}^{n} ;; limits of a sum
+\sum\nolimits_{i=1}^{n} ;; limits at the side
+\int\limits_0^1 ;; limits over and under an integral
+\lim_{x\to 0} ;; limit under the word lim
+\max_{1\le i\le n} ;; limit under max
+\overset{!}{=} ;; a mark over a symbol
+\underset{n\to\infty}{\lim} ;; text under a symbol
+\sideset{_a^b}{_c^d}\sum ;; scripts on both sides of an operator
+# SECTION fractions | Fractions, binomials and roots
+\frac{a}{b} ;; fraction (two groups)
+\frac12 ;; fraction of two characters
+\dfrac{a}{b} ;; fraction in display size
+\tfrac{a}{b} ;; fraction in text size
+\cfrac{1}{1+\cfrac{1}{x}} ;; continued fraction
+\frac{x+1}{\frac{y}{2}} ;; fraction in a fraction
+{a \over b} ;; fraction by the TeX word over
+{n \choose k} ;; binomial by the TeX word choose
+\binom{n}{k} ;; binomial coefficient
+\dbinom{n}{k} ;; binomial in display size
+\tbinom{n}{k} ;; binomial in text size
+{a \atop b} ;; two lines with no bar
+\genfrac{(}{)}{0pt}{}{a}{b} ;; general form: delimiters, bar, style
+\sqrt{x} ;; square root
+\sqrt{x^2+y^2} ;; root of an expression
+\sqrt[3]{x} ;; cube root
+\sqrt[n]{a+b} ;; root of any degree
+\sqrt{1+\sqrt{1+x}} ;; root in a root
+\frac{-b\pm\sqrt{b^2-4ac}}{2a} ;; quadratic formula
+x^{1/2} ;; slash fraction in a script
+\frac{\partial f}{\partial x} ;; partial derivative
+\frac{d}{dx}\left(x^2\right) ;; derivative of an expression
+# SECTION bigops | Large operators and functions
+\sum ;; sum
+\prod ;; product
+\coprod ;; coproduct
+\int ;; integral
+\iint ;; double integral
+\iiint ;; triple integral
+\oint ;; contour integral
+\bigcup ;; large union
+\bigcap ;; large intersection
+\bigvee ;; large or
+\bigwedge ;; large and
+\bigoplus ;; large circled plus
+\bigotimes ;; large circled times
+\bigodot ;; large circled dot
+\biguplus ;; large multiset union
+\bigsqcup ;; large square union
+\sum_{k=1}^{n} k^2 ;; sum with limits
+\prod_{i=1}^{n} a_i ;; product with limits
+\int_a^b f(x)\,dx ;; integral with limits
+\oint_C \vec{F}\cdot d\vec{r} ;; contour integral
+\iint_D f\,dA ;; double integral over a region
+\bigcup_{i\in I} A_i ;; union over an index set
+\sum_{\substack{i<n\\ j<m}} a_{ij} ;; two lines of conditions
+\sin x ;; sine
+\cos x ;; cosine
+\tan x ;; tangent
+\cot x ;; cotangent
+\sec x ;; secant
+\csc x ;; cosecant
+\arcsin x ;; arc sine
+\arccos x ;; arc cosine
+\arctan x ;; arc tangent
+\sinh x ;; hyperbolic sine
+\cosh x ;; hyperbolic cosine
+\tanh x ;; hyperbolic tangent
+\coth x ;; hyperbolic cotangent
+\log x ;; logarithm
+\ln x ;; natural logarithm
+\lg x ;; logarithm to base 10
+\exp x ;; exponential
+\lim_{n\to\infty} a_n ;; limit
+\limsup_{n} a_n ;; upper limit
+\liminf_{n} a_n ;; lower limit
+\max_{i} x_i ;; maximum
+\min_{i} x_i ;; minimum
+\sup_{x} f(x) ;; supremum
+\inf_{x} f(x) ;; infimum
+\det A ;; determinant
+\gcd(a,b) ;; greatest common divisor
+\deg p ;; degree
+\dim V ;; dimension
+\hom(A,B) ;; homomorphisms
+\ker f ;; kernel
+\arg z ;; argument
+\Pr(A) ;; probability
+\operatorname{sgn} x ;; a function name of your own
+\operatorname*{argmax}_{x} f(x) ;; own name with limits underneath
+a \bmod b ;; binary mod
+a \equiv b \pmod n ;; congruence with mod in parentheses
+a \equiv b \mod n ;; congruence with mod and space
+a \equiv b \pod n ;; congruence with parentheses only
+# SECTION delimiters | Delimiters and their sizes
+( x ) ;; parentheses
+[ x ] ;; square brackets
+\{ x \} ;; braces (backslash needed)
+\langle x \rangle ;; angle brackets
+\lvert x \rvert ;; absolute value bars
+\lVert x \rVert ;; norm bars
+\lfloor x \rfloor ;; floor
+\lceil x \rceil ;; ceiling
+| x | ;; vertical bars typed as they are
+\| x \| ;; double bars
+\vert x \vert ;; vertical bars by name
+\Vert x \Vert ;; double bars by name
+\ulcorner x \urcorner ;; upper corners (amssymb)
+\big( x \big) ;; one size larger
+\Big( x \Big) ;; two sizes larger
+\bigg( x \bigg) ;; three sizes larger
+\Bigg( x \Bigg) ;; four sizes larger
+\bigl( x \bigr) ;; same as \big with the side told
+\left( \frac{a}{b} \right) ;; grows to fit
+\left[ \frac{a}{b} \right] ;; square brackets that grow
+\left\{ \frac{a}{b} \right\} ;; braces that grow
+\left\langle \frac{a}{b} \right\rangle ;; angle brackets that grow
+\left| \frac{a}{b} \right| ;; bars that grow
+\left\| \frac{a}{b} \right\| ;; double bars that grow
+\left\lfloor \frac{a}{b} \right\rfloor ;; floor that grows
+\left. \frac{df}{dx} \right|_{x=0} ;; one side empty (a dot)
+\left( \frac{a}{b} \middle| \frac{c}{d} \right) ;; a delimiter in the middle (e-TeX)
+\left\uparrow x \right\downarrow ;; arrows as delimiters
+# SECTION accents | Accents, lines and braces
+\hat{a} ;; hat
+\check{a} ;; check
+\tilde{a} ;; tilde
+\acute{a} ;; acute
+\grave{a} ;; grave
+\dot{a} ;; one dot
+\ddot{a} ;; two dots
+\dddot{a} ;; three dots (amsmath)
+\breve{a} ;; breve
+\bar{a} ;; bar
+\vec{a} ;; vector arrow
+\mathring{a} ;; ring
+\widehat{abc} ;; hat over several letters
+\widetilde{abc} ;; tilde over several letters
+\overline{abc} ;; line over
+\underline{abc} ;; line under
+\overbrace{a+b+c} ;; brace over
+\underbrace{a+b+c} ;; brace under
+\overbrace{a+b+c}^{3} ;; label on a brace over
+\underbrace{a+b+c}_{3} ;; label on a brace under
+\overrightarrow{AB} ;; long arrow over
+\overleftarrow{AB} ;; long arrow left over
+\overleftrightarrow{AB} ;; double arrow over
+\underrightarrow{AB} ;; long arrow under
+\xrightarrow{f} ;; arrow that stretches over a label
+\xleftarrow[g]{f} ;; arrow with labels over and under
+\xrightarrow{n\to\infty} ;; arrow with an expression
+\stackrel{def}{=} ;; text over a relation
+\overset{*}{\to} ;; symbol over a symbol
+\underset{x}{\min} ;; symbol under a symbol
+\hat\imath ;; accent on a dotless letter
+# SECTION fonts | Text and fonts
+\mathrm{d}x ;; upright roman
+\mathbf{v} ;; bold
+\mathit{diff} ;; italic text (not the math italic)
+\mathsf{A} ;; sans serif
+\mathtt{A} ;; typewriter
+\mathcal{L} ;; script capitals
+\mathbb{R} ;; blackboard bold
+\mathfrak{g} ;; Fraktur
+\boldsymbol{\alpha} ;; bold symbol, Greek included
+\mathnormal{x} ;; the normal math italic
+\text{if } x>0 ;; text in the font of the text round it
+\text{ and } ;; text between formulas
+\mbox{for all } x ;; text box, same effect as \text outside scripts
+\textrm{rm} ;; text in roman
+\textbf{bold} ;; text in bold
+\textit{italic} ;; text in italics
+\textsf{sans} ;; text in sans serif
+\texttt{mono} ;; text in typewriter
+\operatorname{Hom}(A,B) ;; a word as an operator
+x \in \mathbb{R}^n ;; real n-space
+\mathcal{F}\{f\}(\omega) ;; script with braces
+\mathrm{e}^{\mathrm{i}\pi}+1=0 ;; upright constants
+\text{area} = \pi r^2 ;; word in a formula
+f(x)=\begin{cases} 1 & \text{if } x>0 \\ 0 & \text{otherwise}\end{cases} ;; text in a case table
+\displaystyle\sum_{i=1}^n ;; display style
+\textstyle\sum_{i=1}^n ;; text style
+\scriptstyle x ;; script size
+\scriptscriptstyle x ;; script of script size
+\boxed{E=mc^2} ;; a frame
+\fbox{text} ;; a frame round text
+\smash{\frac{a}{b}} ;; hide the height and depth
+# SECTION spacing | Spacing
+a\,b ;; thin space (3/18 em)
+a\:b ;; medium space (4/18 em)
+a\;b ;; thick space (5/18 em)
+a\!b ;; negative thin space
+a\ b ;; space of the text font
+a\quad b ;; one em
+a\qquad b ;; two em
+a \thinspace b ;; thin space, the TeX name
+a \medspace b ;; medium space, the amsmath name
+a \thickspace b ;; thick space, the amsmath name
+a \negthinspace b ;; negative thin space, the TeX name
+a \negmedspace b ;; negative medium space
+a \negthickspace b ;; negative thick space
+a \phantom{xyz} b ;; blank as wide and high as its contents
+a \hphantom{xyz} b ;; blank as wide as its contents
+x\vphantom{\frac{1}{2}} ;; blank as high as its contents
+\mathstrut ;; blank as high as a bracket
+a~b ;; tie: a space of the text font
+a\mathbin{\#}b ;; set a symbol as a binary operator
+a\mathrel{R}b ;; set a letter as a relation
+\mathop{\mathrm{Res}}_{z=0} ;; set a word as an operator with limits
+\mathopen{[}\mathclose{]} ;; open and close
+\mathord{+} ;; set a sign as an ordinary symbol
+\mathpunct{;} ;; set as punctuation
+\mathinner{\ldots} ;; inner
+a{+}b ;; a group makes the sign ordinary: no spaces
+a+b ;; the spaces are made by the sign
+a = b ;; the spaces that you type are ignored
+a   =   b ;; the same
+# SECTION structures | Matrices, arrays and alignment
+\begin{matrix} a & b \\ c & d \end{matrix} ;; matrix, no delimiters
+\begin{pmatrix} a & b \\ c & d \end{pmatrix} ;; matrix in parentheses
+\begin{bmatrix} a & b \\ c & d \end{bmatrix} ;; matrix in square brackets
+\begin{Bmatrix} a & b \\ c & d \end{Bmatrix} ;; matrix in braces
+\begin{vmatrix} a & b \\ c & d \end{vmatrix} ;; determinant bars
+\begin{Vmatrix} a & b \\ c & d \end{Vmatrix} ;; norm bars
+\begin{smallmatrix} a & b \\ c & d \end{smallmatrix} ;; small matrix for a line of text
+\left(\begin{smallmatrix} a & b \\ c & d \end{smallmatrix}\right) ;; small matrix with delimiters
+\begin{pmatrix} 1 & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots & 1 \end{pmatrix} ;; matrix with dots
+\begin{array}{ccc} a & b & c \\ d & e & f \end{array} ;; array: a letter per column, c l or r
+\begin{array}{lr} x & 1 \\ yy & 22 \end{array} ;; left and right aligned columns
+\begin{array}{c|c} a & b \\ \hline c & d \end{array} ;; rules between columns and rows
+\left(\begin{array}{cc|c} 1 & 0 & 2 \\ 0 & 1 & 3 \end{array}\right) ;; augmented matrix
+\begin{cases} x & x\ge 0 \\ -x & x<0 \end{cases} ;; cases
+|x|=\begin{cases} x & \text{if } x\ge 0 \\ -x & \text{if } x<0 \end{cases} ;; function by cases
+\begin{aligned} a &= b+c \\ &= d \end{aligned} ;; lines aligned at the sign &
+\begin{aligned} x &= 1 & y &= 2 \\ z &= 3 & w &= 4 \end{aligned} ;; two pairs of columns
+\begin{gathered} a=b \\ c=d \end{gathered} ;; lines centred
+\begin{matrix}a\\b\end{matrix} ;; rows separated by two backslashes
+\substack{i<n\\ j<m} ;; stacked lines under a limit
+\begin{subarray}{l} i<n \\ j<m \end{subarray} ;; stacked lines, left aligned
+\begin{pmatrix} \begin{matrix} 1 & 0 \\ 0 & 1\end{matrix} & 0 \\ 0 & 2 \end{pmatrix} ;; matrix of matrices

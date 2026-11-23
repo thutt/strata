@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- No unassigned font files to delete -- 
+
+There are no font files with an unassigned load mode in the current download
+font directory.  Verify the directory name and path or change the font file
+load mode for the fonts you want to delete.
+
+-- No word selected -- 
+
+There is no text preceding the cursor on the current line.  Move the cursor to
+the word you want to look up in the thesaurus and retry the operation.
+
+-- Not a batch mode operation --
+
+You cannot batch procedures when using Preview Document or when using Print 
+Document with double-sided or single-sheet manual feed. Create a new command 
+file or perform each procedure separately.
+
+-- Not a structured document --
+
+The Section marker can be used only in structured documents.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

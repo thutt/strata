@@ -1,0 +1,25 @@
+
+------------------------------------ Keycap Format -----------------------------
+
+Use Keycap Format to specify global shading, scale, and font values for the 
+Keycap marker.  Use the Keycap marker to include the graphic in a document.
+
+---Procedure---------------------------   +---------- Keycap Format ---------+
+                                          |                                  |
+ Press Menu (F10) and select Global      | Foreground:                      |
+  Marker.                                 | Background:                      |
+                                          | Scale:                           |
+ Press Space Bar at the Keycap Format    | Font:                            |
+  prompt.                                 |                                  |
+                                          + Press Ins Use Displayed Settings +
+ Enter the values you want and press Ins.
+--------------------------------------------------------------------------------
+Foreground/Background: Enter a value between 0 (black) and 100 (white) to for 
+      the shade of gray to use for the foreground or background of the image.
+
+Scale: Enter how much to scale the keycap relative to the surrounding text.
+
+Font: Press Space Bar and select the typeface for text printed on the keycap;
+      the type size is determined by surrounding text.
+--------------------------------------------------------------------------------
+   Global Marker       Keycap Marker       Keyboard Summary       Help Index

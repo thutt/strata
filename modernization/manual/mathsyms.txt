@@ -1,0 +1,190 @@
+# The symbols of the Math Symbols card.  This list is the one place that
+# holds them: manual/mkmathcheat.py makes the source of the card
+# (manual/src/mathcheat.src) from it, and manual/checkmathsyms.py checks it.
+#
+# A line that begins with a number sign is a comment.  The other lines are:
+#
+#   @panel N         The groups that follow are on panel N of the six panels
+#                    (1 to 3 on the outside of the sheet, 4 to 6 inside).
+#   @group TITLE     A group: a heading, and the entries up to the next
+#                    @group or @panel.
+#   @again           The group repeats entries that are listed elsewhere (the
+#                    most used symbols): they are not counted twice.
+#   TEX TEX ...      Entries that are small: each word is the text of an
+#                    equation, and it is also the text to type.  A word
+#                    @bar stands for a plain vertical bar.
+#   (a space)        A line that begins with a space goes on from the line
+#                    before it (so that no line is longer than 80 columns).
+#   > TEX | NOTE     An entry that has a line of its own: the text of the
+#   > TEX | TYPED | NOTE
+#                    equation, the text to type when it is not the same
+#                    (a shorter form of a long text), and a short note.
+#
+# Every entry is typeset by the Printer in an equation, and the check fails
+# when the Printer reports a fault.  The names that the packages define and
+# that are not here are in manual/mathsyms-left-out.txt with the reason.
+
+@panel 1
+@group Fractions, roots and scripts
+\frac{a}{b} \dfrac{a}{b} \tfrac{a}{b} \cfrac{1}{1+x}
+\sqrt{x} \sqrt[3]{x} \binom{n}{k} \dbinom{n}{k} \tbinom{n}{k}
+x^{2} x_{i} x_{i}^{2} {}^{n}x_{i}
+> \genfrac{(}{)}{0pt}{}{a}{b} | general fraction
+> {a \over b} | {a \over b}
+> {n \choose k} | {n \choose k}
+\overset{!}{=} \underset{x}{\min} \stackrel{def}{=}
+\overunderset{a}{b}{c} \skew{3}\hat{a}{x}
+\substack{i<n\\j<m} \sideset{_a^b}{_c^d}\sum
+\xrightarrow{f} \xleftarrow[g]{f} \boxed{x=1}
+\sum\limits_{i=1}^{n} \int\nolimits_{0}^{1}
+@group Over and under
+\overline{AB} \underline{AB} \overbrace{a+b}^{n} \underbrace{a+b}_{n}
+\overrightarrow{AB} \overleftarrow{AB} \overleftrightarrow{AB}
+\underrightarrow{AB} \underleftarrow{AB} \underleftrightarrow{AB}
+\widehat{xyz} \widetilde{xyz}
+@group Matrices: cells with &, rows with \\
+> \begin{pmatrix}a&b\\c&d\end{pmatrix} | \begin{pmatrix}
+> \begin{bmatrix}a&b\\c&d\end{bmatrix} | \begin{bmatrix}
+> \begin{Bmatrix}a&b\\c&d\end{Bmatrix} | \begin{Bmatrix}
+> \begin{vmatrix}a&b\\c&d\end{vmatrix} | \begin{vmatrix}
+> \begin{Vmatrix}a&b\\c&d\end{Vmatrix} | \begin{Vmatrix}
+> \begin{matrix}a&b\\c&d\end{matrix} | \begin{matrix}
+> \begin{array}{cc}a&b\\c&d\end{array} | \begin{array}{cc}
+> \begin{cases}1&x>0\\0&x\le0\end{cases} | \begin{cases}
+> \begin{aligned}a&=b\\&=c\end{aligned} | \begin{aligned}
+> \begin{gathered}a=b\\c=d\end{gathered} | \begin{gathered}
+> \left(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right)
+ | \begin{smallmatrix} | with \left( and \right)
+@panel 2
+@group Relations
+\leq \le \geq \ge \neq \ne \equiv \approx \sim \simeq \cong \propto \asymp
+ \doteq \models \perp \mid \parallel \prec \succ \preceq \succeq \ll \gg
+ \subset \supset \subseteq \supseteq \sqsubset \sqsupset \sqsubseteq
+ \sqsupseteq \in \ni \notin \vdash \dashv \smile \frown \bowtie
+@group Relations of the AMS symbols
+\leqq \leqslant \eqslantless \lesssim \lessapprox \approxeq \lessdot \lll
+ \lessgtr \lesseqgtr \lesseqqgtr \doteqdot \risingdotseq \fallingdotseq
+ \backsim \backsimeq \subseteqq \Subset \preccurlyeq \curlyeqprec \precsim
+ \precapprox \vartriangleleft \trianglelefteq \vDash \Vvdash \smallsmile
+ \smallfrown \bumpeq \Bumpeq \geqq \geqslant \eqslantgtr \gtrsim \gtrapprox
+ \gtrdot \ggg \gtrless \gtreqless \gtreqqless \eqcirc \circeq \triangleq
+ \thicksim \thickapprox \supseteqq \Supset \succcurlyeq \curlyeqsucc \succsim
+ \succapprox \vartriangleright \trianglerighteq \Vdash \shortmid \shortparallel
+ \between \pitchfork \varpropto \blacktriangleleft \therefore \backepsilon
+ \blacktriangleright \because \eqsim \Doteq \llless \gggtr
+@group Negated relations
+\nless \nleq \nleqslant \nleqq \lneq \lneqq \lvertneqq \lnsim \lnapprox \nprec
+ \npreceq \precnsim \precnapprox \nsim \nshortmid \nmid \nvdash \nvDash
+ \ntriangleleft \ntrianglelefteq \nsubseteq \nsubseteqq \subsetneq
+ \varsubsetneq \subsetneqq \varsubsetneqq \ngtr \ngeq \ngeqslant \ngeqq \gneq
+ \gneqq \gvertneqq \gnsim \gnapprox \nsucc \nsucceq \succnsim \succnapprox
+ \ncong \nshortparallel \nparallel \nVDash \nVdash \ntriangleright
+ \ntrianglerighteq \nsupseteq \nsupseteqq \supsetneq \varsupsetneq \supsetneqq
+ \varsupsetneqq \precneqq \succneqq
+
+@panel 3
+@group Most used
+@again
+\alpha \beta \gamma \delta \epsilon \theta \lambda \mu \pi \sigma \phi \omega
+ \Delta \Sigma \Omega \pm \times \cdot \leq \geq \neq \approx \equiv \infty
+ \partial \nabla \sum \prod \int \to \Rightarrow \Leftrightarrow \in \subset
+ \cup \cap \forall \exists \ldots \cdots
+\frac{a}{b} \sqrt{x} x^{2} x_{i}
+
+@group Text and styles
+> \text{if } x>0 | \text{words} | text in an equation
+\mathrm{d}x \mathbf{x} \mathit{x} \mathsf{x} \mathtt{x} \mathnormal{x}
+\mathcal{ABC} \mathbb{RNZ} \mathfrak{abc} \boldsymbol{\alpha}
+\displaystyle \textstyle \scriptstyle \scriptscriptstyle
+\operatorname{rank}(A) \operatorname*{arg\,max}_{x}
+\mathbin{*} \mathrel{R} \mathop{M} \mathord{x} \mathopen{[} \mathclose{]}
+ \mathpunct{;} \mathinner{x}
+\not\in \not=
+@group Spacing
+a\,b a\:b a\;b a\!b a\quad b a\qquad b
+> a\ b | a\ b | a space
+a\thinspace b a\medspace b a\thickspace b a\negthinspace b a\negmedspace b
+ a\negthickspace b
+a\mspace{18mu}b \phantom{x} \hphantom{x} \vphantom{x} \smash{x}
+@group Accents
+\hat{a} \check{a} \tilde{a} \acute{a} \grave{a} \dot{a} \ddot{a} \dddot{a}
+ \ddddot{a} \breve{a} \bar{a} \vec{a} \mathring{a}
+
+@panel 4
+@group Greek letters, small
+\alpha \beta \gamma \delta \epsilon \varepsilon \zeta \eta \theta \vartheta
+ \iota \kappa \varkappa \lambda \mu \nu \xi \pi \varpi \rho \varrho \sigma
+ \varsigma \tau \upsilon \phi \varphi \chi \psi \omega \digamma
+@group Greek letters, capital
+\Gamma \Delta \Theta \Lambda \Xi \Pi \Sigma \Upsilon \Phi \Psi \Omega
+ \varGamma \varDelta \varTheta \varLambda \varXi \varPi \varSigma \varUpsilon
+ \varPhi \varPsi \varOmega
+@group Hebrew letters
+\aleph \beth \gimel \daleth
+@group Big operators
+\sum \prod \coprod \int \oint \iint \iiint \iiiint \idotsint \bigcap \bigcup
+ \bigsqcup \bigvee \bigwedge \bigodot \bigoplus \bigotimes \biguplus \smallint
+ \intop \ointop
+@group Dots
+\ldots \cdots \vdots \ddots \dots \dotsb \dotsc \dotsi \dotsm \dotso \ldotp
+ \cdotp \colon
+@group Function names
+\arccos \arcsin \arctan \arg \cos \cosh \cot \coth \csc \deg \det \dim \exp
+ \gcd \hom \inf \ker \lg \lim \liminf \limsup \ln \log \max \min \Pr \sec \sin
+ \sinh \sup \tan \tanh \injlim \projlim \varinjlim \varprojlim \varliminf
+ \varlimsup \bmod \pmod \pod \mod
+
+@panel 5
+@group Binary operators
+\pm \mp \times \div \cdot \ast \star \circ \bullet \cap \cup \uplus \sqcap
+ \sqcup \vee \wedge \lor \land \setminus \wr \diamond \bigtriangleup
+ \bigtriangledown \triangleleft \triangleright \oplus \ominus \otimes \oslash
+ \odot \bigcirc \dagger \ddagger \amalg \dotplus \smallsetminus \Cap \Cup
+ \doublecap \doublecup \barwedge \veebar \doublebarwedge \boxminus \boxtimes
+ \boxdot \boxplus \divideontimes \ltimes \rtimes \leftthreetimes
+ \rightthreetimes \curlywedge \curlyvee \circleddash \circledast \circledcirc
+ \centerdot \intercal \lhd \rhd \unlhd \unrhd \varbigtriangleup
+ \varbigtriangledown
+@group Logic and sets
+\forall \exists \nexists \neg \lnot \top \bot \emptyset \varnothing
+ \complement \in \ni \notin \subset \supset \Join \owns
+@group Calculus and analysis
+\partial \nabla \infty \prime \backprime \surd \angle \measuredangle
+ \sphericalangle \triangle \triangledown \vartriangle
+@group Letters and marks
+\hbar \hslash \ell \wp \Re \Im \imath \jmath \mho \eth \Bbbk \Finv \Game
+ \aleph \circledS \flat \natural \sharp \clubsuit \diamondsuit \heartsuit
+ \spadesuit \mathdollar \mathparagraph \mathsection \mathunderscore
+@group Shapes and signs
+\square \blacksquare \lozenge \blacklozenge \blacktriangle \blacktriangledown
+ \bigstar \diagup \diagdown \checkmark \maltese \yen \mathsterling
+ \mathellipsis \Box \Diamond
+
+@panel 6
+@group Arrows
+\leftarrow \gets \rightarrow \to \leftrightarrow \Leftarrow \Rightarrow
+ \Leftrightarrow \longleftarrow \longrightarrow \longleftrightarrow
+ \Longleftarrow \Longrightarrow \Longleftrightarrow \mapsto \longmapsto
+ \hookleftarrow \hookrightarrow \leftharpoonup \leftharpoondown \rightharpoonup
+ \rightharpoondown \rightleftharpoons \uparrow \downarrow \updownarrow \Uparrow
+ \Downarrow \Updownarrow \nearrow \searrow \swarrow \nwarrow \iff \implies
+ \impliedby
+@group Arrows of the AMS symbols
+\dashrightarrow \dashleftarrow \leftleftarrows \leftrightarrows \Lleftarrow
+ \twoheadleftarrow \leftarrowtail \looparrowleft \leftrightharpoons
+ \curvearrowleft \circlearrowleft \Lsh \upuparrows \upharpoonleft
+ \downharpoonleft \multimap \leftrightsquigarrow \rightrightarrows
+ \rightleftarrows \Rrightarrow \twoheadrightarrow \rightarrowtail
+ \looparrowright \curvearrowright \circlearrowright \Rsh \downdownarrows
+ \upharpoonright \downharpoonright \rightsquigarrow \nleftarrow \nrightarrow
+ \nLeftarrow \nRightarrow \nleftrightarrow \nLeftrightarrow \restriction
+ \dasharrow \leadsto \relbar \Relbar \lhook \rhook
+@group Delimiters
+( ) [ ] \{ \} \lbrace \rbrace \langle \rangle \lfloor \rfloor \lceil \rceil
+ @bar \| \vert \Vert \lvert \rvert \lVert \rVert / \backslash \ulcorner
+ \urcorner \llcorner \lrcorner \lmoustache \rmoustache \lgroup \rgroup
+ \arrowvert \Arrowvert \bracevert
+> \left( \frac{a}{b} \right) | \left( ... \right) | sized
+\bigl( \Bigl[ \biggl\{ \Biggl\langle \big( \Big( \bigg( \Bigg(
+> \left. x \right|_{0} | \left. x \right|_{0} | one side only
+> \left( a \middle| b \right) | \left( a \middle| b \right) | a middle one

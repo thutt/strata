@@ -1,0 +1,25 @@
+
+----------------------------- Edit Section/Document ----------------------------
+
+
+Edit Section/Document controls whether you are editing the current section or 
+the entire document. This makes editing long documents more efficient.
+
+Accelerator:    Ctrl ^
+
+
+# In a structured document, select Edit Section to display only the current 
+  section and its subsections for editing. This does not affect the structure
+  of the document (all sections remain in place); it temporarily hides the
+  other sections so that only the current section is displayed.
+
+# The mode indicator in the Status line displays Section Edit when you have
+  used the Edit Section command.
+
+# Select Edit Document to return to editing the entire document. 
+
+# Edit Section/Document is not available in an unstructured document.
+
+
+--------------------------------------------------------------------------------
+       Edit        Accelerators        Keyboard Summary        Help Index

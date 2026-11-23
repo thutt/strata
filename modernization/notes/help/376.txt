@@ -1,0 +1,25 @@
+
+----------------------------------- Markers ------------------------------------
+
+Use the Include marker to insert another Manuscript document into the current
+document during final print or preview.  
+
+
+# If the document being included is unstructured, the Include marker must be
+  in its own block.  
+
+# If the document being included is structured, the Include marker must be in 
+  its own section. In other words, you can include a structured document only
+  in a structured document.
+
+# The global format settings of the current document are used for final 
+  printing.
+
+# The index and table of contents incorporate all appropriate items from all 
+  included documents.
+
+# You can also build a master document of just "include" documents.  Such 
+  documents must conform to the preceding rules.
+
+--------------------------------------------------------------------------------
+         Markers              Keyboard Summary              Help Index

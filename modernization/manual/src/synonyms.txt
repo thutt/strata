@@ -1,0 +1,39 @@
+# The second names of things.  A line is a name, a bar and the glossary term
+# that the name stands for.  The generator makes an entry of the index for
+# the name with the reference text "See" and the term, so that a reader who
+# looks up the name finds the term.  A term that is not in the glossary stops
+# the build.  The names are the words that a reader of another program, or
+# of this manual in another wording, would look up.
+Dialog | Panel
+Dialogue | Panel
+Dialog box | Panel
+Heading | Headline
+Popup | Pop-up list
+Popup list | Pop-up list
+Pop-up | Pop-up list
+Menu of commands | Alt commands menu
+Commands menu | Alt commands menu
+Exit | Quit
+Hotkey | Accelerator
+Shortcut | Accelerator
+Keyboard shortcut | Accelerator
+Contents | Table of contents
+TOC | Table of contents
+Discretionary hyphen | Soft hyphen
+Non-breaking space | Nonbreaking space
+Tab | Tab stop
+Auto save | Autosave
+Preferences | Setup
+Settings | Setup
+Style | Named format
+Paragraph | Block
+Cut and paste | Clipboard
+Spelling | Spell check
+Spellcheck | Spell check
+Find | Search
+Reference | Cross-reference
+Xref | Cross-reference
+Heading level | Level
+Curses version | Terminal version
+Graphical version | X11 version
+GUI | X11 version

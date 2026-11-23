@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- Orientation marker must be in its own block -- 
+
+The Orientation marker must be in its own single-column block.  Edit the
+document and retry the operation.
+
+
+-- Out of memory (<description>) -- 
+
+There is not enough memory available to perform the requested task.  For 
+example, a graphics file you are trying to print may contain too many elements.
+
+
+-- Out of real memory (<description>) --
+
+There are too many columns in your document to display on your monitor. Return 
+to Setup and change to 25 line display mode for EGA or VGA monitors, or use 
+Edit Window to split the screen.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

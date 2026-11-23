@@ -1,0 +1,25 @@
+
+---------------- Recovering From An Out Of Virtual Memory Error ----------------
+
+When you receive the "Out of virtual memory" message, more virtual memory is 
+needed to continue processing your document.  Either your disk is full or your 
+virtual memory setup is too restrictive.
+              +---------------------------------------------------+
+              |  Save your document using the File Save command.  |
+              |  Exit and re-enter Manuscript before continuing.  |
+              +---------------------------------------------------+
+
+If you can't save the document, use the following techniques to free up disk 
+space and save your document.
+
+# Use the Extract Current Section/Block option on the File Save panel to save
+  portions of your document revised since the last time you saved the file.
+
+# Save your document to a different disk, for example a diskette.
+
+After you've saved your file and exited Manuscript, free up additional disk
+space by removing outdated files or files that you have copies of on floppies.
+
+--------------------------------------------------------------------------------
+    Virtual Memory Setup         Out of Virtual Memory        Avoiding Errors
+                Keyboard Summary                    Help Index

@@ -1,0 +1,663 @@
+A BETTER SETUP FOR THE DOCUMENT MANAGER: A DESIGN
+=================================================
+
+Written 2026-11-18 for the owner (worklist item W25, release 1, priority 1).
+This is a design only.  No program, test or manual text is changed by it.
+The facts below were read from the source (src/str.c do_setup, src/config.c,
+src/config.h, src/globalmenu.c), from the manual (manual/src/str4.src,
+manual/src/format7.src, manual/src/getstart.src), from the tests
+(tests/smoke.py, tests/xsmoke.py), and from the pictures of the manual
+(manual/doc/pictures/str-setup*.png, read with the picture viewer).
+
+The owner's request was: "create a better Setup for the Document Manager".
+It is not yet said what is wrong with the present one.  Part 2 therefore
+lists what is wrong, as found in the code and in the pictures, and Part 7
+asks the questions that the choice depends on.
+
+
+STATUS (2026-11-18, LATER): THREE PAGES, THE KEYS OF THE EDITOR, A FULL PATH
+===========================================================================
+
+The owner found the second level of Setup, the sub-panel of the colors, the
+arrow keys of the choices and the words "Open to print" inconsistent with the
+Editor.  What was done (the first built design, below, is kept as it was):
+
+  - Setup is ONE panel of THREE pages, as the panels of the Editor with
+    several pages are (popup_form_nav with paging in src/widgets.c, the
+    callers in src/globalmenu.c): PgUp goes forward, PgDn backward, round
+    and round; the title names the page (Setup (settings), Setup (screen
+    colors), Setup (advanced settings)); Ins keeps the changes of every page,
+    Esc takes them all back; a wrong value keeps the focus on its page.
+    The lines Advanced and Screen Colors, the panel Setup: Advanced and the
+    route by Enter, F2 or Keypad + are gone (src/str.c: Field.page, form()
+    with f_pages, f_page, f_page_titles and the custom page of the colors,
+    which src/colorui.c draws and keys: colors_page_*).
+  - A choice field has the keys of the Editor (src/widgets.c, "A field with
+    choices"): Right is the next (nothing at the last), Left the previous
+    (nothing at the first), Space the next and round to the first, F2 or
+    Keypad + the list; a letter does nothing.  The foot of the screen names
+    the keys on such a field.  The colors page takes the same keys for the
+    color of the entry.
+  - Print To: the choice "Open to print" is "PDF viewer" (settings file
+    value viewer).  The old words and the old value open are read, and are
+    saved back as viewer.
+  - PDF Viewer is the FULL PATH of a program (see docs/PRINT-MENU.txt); a
+    name or a relative path is refused, one in an old file is not run, and
+    the empty default is looked for in /usr/bin, /usr/local/bin and /bin
+    only.  docs/EXEC-PATHS.txt is the survey of the other programs.
+  - The old key backup (yes or no) is not read (see the table).
+
+The old keys.  The program before 2026-11-16 (commit 071e4ddf^) wrote EVERY
+key of this list in every file, whatever the value was.  A value that was only
+the default of that time must not become a choice now.  The table compares
+the default that was written with the default that is used now, and what the
+reader does:
+
+  Key written        Old default  Default now  Meaning changed?  Done
+  -----------------  -----------  -----------  ----------------  -----------
+  backup (yes/no)    no           3 backups    YES: no = 0 was   FIXED: the
+                                  (key backups) read as 0 backups  key is not
+                                                                  read; no
+                                                                  line is
+                                                                  written
+  workdir            empty        empty        no                none
+  stred              empty        empty (found no               none (Setup
+                                  by itself)                      keeps a path
+                                                                  only if it
+                                                                  is not the
+                                                                  found one)
+  help               empty        empty (found no               none
+                                  by itself)
+  autosave           yes          yes          no                none
+  autosave_seconds   120          120          no                none
+  expanded_status    no           no           no                none
+  onscreen_help      yes          yes          no                none
+  show_marks         yes          yes          no                none
+  show_dots          no           no           no                none
+  printer            empty        print_to     same meaning:     none (read;
+                                  file         empty is File     print_to and
+                                                only; a queue     print_queue
+                                                name is Printer   written)
+  print_to=open      (new)        viewer       renamed           read as
+                                                                  viewer
+  pdf_viewer         (when set)   empty        a bare name is    not run,
+                                                no longer a       treated as
+                                                value             not given;
+                                                                  no line is
+                                                                  written
+
+The test of the whole old file: tests/backuptest.c (a file with all these
+keys at their old defaults reads backups 3, autosave yes, 120 seconds) and
+the block of tests/smoke.py with "backup=no".  A file of the owner's with
+backups=0 written by a later Setup is a CHOICE of the file and stays 0; it is
+not changed by the program.
+
+Other places of the Document Manager where a field or a line opens a
+sub-panel (the survey asked for; only Setup was changed):
+
+  - Edit / Preview / Print Document, field Variables: F2 or Keypad + opens the
+    panel Variables (edit_variables, src/str.c).  This is the one field that
+    opens a sub-panel with a key.
+  - The file and directory fields (Document Name, the directory fields,
+    Initial Macro Set, Initial Library, Editor program, Help File) open a LIST
+    with F2 or Keypad + (a pick list, not a panel); the Editor's panels do
+    the same.
+  - A missing Document Name, when Ins is pressed, opens the panel New File
+    (description and author): a step of the flow, not a key on a field.
+  - The menu entries of the Document Manager open their panels with Enter
+    (that is a menu).
+
+The checks that were added or changed, and the mutations that were run on each
+of them (a copy of the source with one change; the check must fail):
+
+  Checks of tests/setuppages.py (each failed with the change; the first
+  failing check is named):
+  S1  PgUp does not change the page      -> 'PgUp goes forward ...'
+  S2  PgDn does not change the page      -> 'PgDn goes backward ...'
+  S3  PgUp and PgDn swapped              -> 'PgUp goes forward ...'
+  S4  the pages do not wrap round        -> 'PgUp goes forward ... again'
+  S5  a wrong value does not block the
+      change of page                     -> 'PgUp with a wrong value stays'
+  S6  Ins does not keep the colors       -> 'Ins keeps the chosen color'
+  S7  Esc does not take the colors back  -> 'Esc puts the color back'
+  S8  Space does not wrap                -> 'Space takes the next choice'
+  S9  Space does nothing                 -> 'Space takes the next choice'
+  S10 Left wraps at the first choice     -> 'Left at the first choice'
+  S11 Right wraps at the last choice     -> 'Right goes on to the last'
+  S12 the foot names no keys             -> 'the foot of the screen names'
+  S13 F2 does not list                   -> 'F2 shows the list'
+  S14 the label is Open to print again   -> 'Space takes the next choice'
+  S15 an old bare pdf_viewer is kept     -> 'an old setting that is a bare
+                                             name is not used'
+  Checks of tests/backuptest.c and tests/pjtest.c:
+  U1  the old key backup is read again   -> 'the old yes is the default of
+                                             three', 'a whole file of the
+                                             old program keeps the defaults'
+  U2  a bare name is accepted as the
+      PDF viewer                         -> 'a name, a relative path ... are
+                                             refused'
+  U3  a directory that anyone can write,
+      with the sticky bit, is accepted   -> 'a directory that anyone can
+                                             write is not safe'
+  Not shown by a test: the removal of LD_PRELOAD and LD_AUDIT before the
+  exec (there is no test; reported as open).
+
+
+STATUS (2026-11-18): DESIGN 3C IS BUILT
+=======================================
+
+The owner approved W25 (release 1, priority 1) and the defaults of the
+questions applied: Q3 design 3C (the guide 3B is later), Q4 yes (Paper for New
+Documents), Q5 Editor program and Help File only under Advanced, Q6 no colour
+sets, Q2 and Q7 and Q8 no.  What was done:
+
+  - src/str.c, do_setup: the first level has four groups under headings
+    (Documents, Printing, Writing, Screen) with 14 fields and the line
+    Advanced, and fits a screen of 25 rows; the second level, Setup: Advanced,
+    has the Initial Macro Set, the Initial Library, Terminal Characters, the
+    Editor program and the Help File and two lines of text (where the
+    templates are looked for, where the settings are).  Enter, F2 or Keypad +
+    on the line Advanced opens it; Ins keeps what was typed and goes back,
+    Esc takes it back.
+  - F1, F2: a field is checked when the focus leaves it (setup_check; the
+    functions that did the checks after the panel closed) and every field when
+    Ins is pressed; a wrong value keeps the panel open and the focus in the
+    field, the reason is in the line at the foot in bold, and nothing else is
+    lost.
+  - F3: Autosave is a choice field (Yes, No); a settings file with yes or no
+    in any case still reads.
+  - F4, F8: the new order and the groups; the first level is 19 rows.
+  - F5: Editor program and Help File moved to Advanced, with the default
+    shown ("as installed").
+  - F6: every field shows "default: X" at its right when there is room, and
+    Del puts the default back (Field members def and defshow; Del edits text
+    only in the panels that do not set a default).
+  - F7: Screen Colors and Advanced are lines that open a panel: the words say
+    so and Enter, F2 or Keypad + open it.
+  - F9: the Setup pictures and the Options table are retaken and corrected.
+  - F10: the new setting Paper for New Documents, key default_paper (Letter,
+    the setting that is not there, or A4).  A document that is made new and
+    does not come from a template gets it (doc_default_paper in
+    src/globalmenu.c, called where the Editor makes a new document: the
+    command line without a template, File New of the built-in types, and a
+    missing file that is created).  A template keeps its own paper.
+
+The new checks (the block 'Setup: the two levels' of tests/smoke.py, part 6
+of 7) were each shown to fail when the feature is switched off, in a copy of the
+tree with one change:
+  M1 the default is not drawn                  -> 'each field shows its default'
+  M2 Del does not put the default back         -> 5 checks (Del, Autosave, ...)
+  M3 a field is not checked when it is left    -> 5 checks of the new block and
+                                                  the old check of Backups Kept
+  M4 Ins does not check all the fields         -> 2 checks of the new block and
+                                                  the old check of Backups Kept
+  M5 default_paper is not written              -> 2 checks (saved, shown again)
+  M6 a new document does not take the paper    -> 'a document made new has A4'
+  M7 Esc in Advanced does not restore          -> 'takes the typed value back'
+  M8 Advanced does not open                    -> 7 checks (new block and the
+                                                  checks of the macro set)
+
+Every key of the settings file is compatible; the keys of an older file read
+as before and a test saves one with the new panel and compares.  The tests are
+the Setup blocks of tests/smoke.py (the block 'Setup: the two levels' is new),
+tests/termcheck.py and tests/gsdoc.py.
+
+
+1. WHAT SETUP IS TODAY
+----------------------
+
+Setup is the last entry but one of the Document Manager menu (before Quit).
+It is one panel of 16 fields with a note line at its foot.  The panel is
+taller than a 20 row screen, so it scrolls.  Ins accepts it ("Press Ins to
+Use Displayed Settings"), Esc cancels, F2 lists the choices of a choice
+field, Keypad + lists files or directories in a file field.  The settings
+are saved in ~/.strata/config (mode 0600), a list of "key=value" lines that
+the Editor reads too.
+
+Screen of the panel today (the first twelve of its sixteen rows, from the
+picture str-setup-panel.png; the panel is 80 columns wide):
+
+  +------------------------------- Setup --------------------------------+
+  |         Initial Macro Set: ......................................    |
+  |           Initial Library: ......................................    |
+  |       Dictionary Language: en_US ................................    |
+  |Initial Working Directory: /home/writer/documents ................    |
+  |                  Print To: File only ............................    |
+  |             Printer Queue: No printers found ....................    |
+  |             PDF Directory: ......................................    |
+  |                PDF Viewer: evince ...............................    |
+  |            Editor program: /usr/local/strata/stred ..............    |
+  |                 Help File: /usr/local/strata/strata.hlp ........     |
+  |     Autosave (Yes or No): Yes ...................................    |
+  | Autosave Interval (Seconds): 120 ................................    |
+  |   (and below: Window Rows, Screen Colors, Undo Levels, Backups Kept) |
+  +----------------- Press Ins to Use Displayed Settings ----------------+
+
+1.1 The fields, in the order of the panel
+
+  Field (label)               Key in ~/.strata/config  Used by
+  --------------------------  -----------------------  ---------------------
+  Initial Macro Set           initial_macros           Editor, at start
+  Initial Library             initial_library          Editor, at start
+  Dictionary Language         spell_language           Editor (Spell)
+  Initial Working Directory   workdir                  Document Manager
+  Print To                    print_to                 Printer, Editor,
+                                                       Document Manager
+  Printer Queue               print_queue              Printer
+  PDF Directory               pdf_dir                  Printer
+  PDF Viewer                  pdf_viewer               Editor, Document Mgr
+                                                       (Open to print)
+  Editor program              stred                    Document Manager
+  Help File                   help                     Document Manager
+  Autosave (Yes or No)        autosave                 Editor
+  Autosave Interval (Seconds) autosave_seconds         Editor
+  Window Rows (X11, Terminal) x11_rows, terminal_rows  both Editors, DM
+  Screen Colors (F2)          colors (many keys)       all four programs
+  Undo Levels (0 to 500)      undo_levels              Editor
+  Backups Kept (0 to 99)      backups                  Editor
+
+1.2 Defaults and what each field does
+
+  Initial Macro Set     Empty (none).  A macro file the Editor loads when it
+                        starts.  A name with no period gets .mac.
+  Initial Library       Empty (none).  A library file, .lib added likewise.
+  Dictionary Language   en_US (saved as nothing).  The spell checker needs the
+                        dictionary of that language installed for aspell or
+                        hunspell.
+  Initial Working Dir   The directory of the Edit / Preview / Print Document
+                        panel; empty means the start directory.
+  Print To              File only (the PDF is made and nothing is sent).
+                        Printer, or Open to print (the PDF is opened in the
+                        PDF Viewer).  Printer is offered only if the system
+                        has a queue.
+  Printer Queue         System default.  Chosen from the queues of the
+                        system.
+  PDF Directory         Empty: the PDF goes next to the document.
+  PDF Viewer            evince (saved as nothing).  A name or full path;
+                        a word processor is refused.
+  Editor program        The Editor that was found.  Saved as empty: the place
+                        changes with the install.
+  Help File             The help file that was found.
+  Autosave              Yes.  Typed as Yes or No.
+  Autosave Interval     120 seconds, 1 to 86400.
+  Window Rows           Empty: 50 for X11, all of the screen for a terminal.
+                        20 to 200.
+  Screen Colors         F2 opens the Colors panel; the default colors.
+  Undo Levels           100, 0 to 500; 0 turns Undo off.
+  Backups Kept          3, 0 to 99.
+
+1.3 Settings that the Editor has and Setup does not
+
+  The Editor's Global, Options panel (manual chapter 4) holds five settings:
+  Expanded Status Line?, Display On-Screen Help?, Display Tab & End-of-Line
+  Characters?, Display Dots for Spaces? and Backups Kept.  The first four
+  are in no other place.  Backups Kept is in BOTH Options and Setup, under
+  the same key; this is the one setting that appears in two places.  The
+  file also holds latex_pictures, latex_positions (Export as LaTeX) and
+  latex_markers, and the old key printer, which are set elsewhere.
+
+1.4 Things found that are wrong today (facts, not opinions)
+
+  F1  An invalid value closes the whole panel.  When Ins is pressed, do_setup
+      checks the fields one after another; the first bad one (Autosave not
+      Yes or No, the interval, the rows, Undo Levels, Backups Kept, the PDF
+      Directory, the PDF Viewer, the Dictionary Language) shows a box with
+      the reason and "setting not saved", and Setup RETURNS.  Every other
+      change typed in the same visit is lost.  The user must open Setup again
+      and type everything again.
+  F2  The errors come one at a time, only when Ins is pressed, not where the
+      value was typed.  The note line at the foot checks only four fields
+      (Printer Queue, PDF Directory, Backups Kept, PDF Viewer).
+  F3  Autosave is typed as the word Yes or No.  Print To is a choice field
+      (Left and Right change it).  The Editor's Options use choice fields
+      for yes and no.  The same kind of setting is entered in two ways.
+  F4  The order has no logic: the two Editor start files come first, then
+      the language, the directory, the printing group, the two program
+      paths, autosave, rows, colors, Undo, Backups.  Related settings are
+      apart (Backups Kept and Autosave; Undo Levels and Backups Kept).
+  F5  Editor program and Help File show system paths that the installer
+      sets.  A user has no reason to change them, and a wrong value stops the
+      Editor from starting.  They take two of the sixteen rows.
+  F6  The label carries the allowed range ("Undo Levels (0 to 500)") but the
+      default is not shown, and there is no key to return one field to its
+      default.  A user cannot see what is the default of the Printer Queue
+      or the Window Rows without reading the manual.
+  F7  Screen Colors is not a value: it is a line of text, "Press F2 to choose
+      the colors", that the user might try to edit.
+  F8  The panel needs 26 rows and a 20 row window scrolls it; the sixteen
+      fields are one long list.
+  F9  The picture str-setup-panel.png and the table in the manual (chapter
+      7) show Backups Kept as 1; the program default is 3 (the picture is
+      stale; the table of the Options in chapter 4 has "1" in its Default
+      column although the text next to it says 3).  These are manual faults
+      to correct in the same job.
+  F10 No default paper.  A new document is Letter (src/globalmenu.c, the
+      DP record) unless a template says otherwise.  A user outside the
+      United States and Canada gets Letter for every new document unless
+      they know to choose an A4 template or to change the paper of every
+      document.  The templates (letter-a4, envelope-eu-dl, ...) are not
+      mentioned in Setup, and there is no setting for the folder of the
+      user's own templates (it is ~/.strata/templates or STRATA_TEMPLATES).
+  F11 The original's Setup also had a Decimal Separator (period or comma),
+      used by the calculator Math; Strata's Setup has none, and the
+      calculator uses the period.  Not a fault: a gap that
+      docs/ORIGINAL-EDITOR-GAPS.txt leaves to the owner.
+  F12 The original's drivers, ports, virtual memory and sound fields are not
+      needed (the operating system does that work) and are rightly absent.
+
+
+2. THE REAL USER PROBLEMS
+-------------------------
+
+Picture a person who has just installed the product and has never used it.
+They start the Document Manager and write a letter.  Everything works with
+no Setup at all: the defaults print a PDF next to the document, backups are
+kept, Autosave is on.  So the first-run need is small.  What a new user may
+want to choose in the first hour, in order of how often it matters:
+
+  1. Where a print goes: a PDF only, or a printer (and which one).  Today:
+     Print To, Printer Queue, PDF Directory, PDF Viewer: four rows in the
+     middle of the panel.
+  2. The paper: A4 or Letter.  Today: not in Setup at all (F10).
+  3. The language of the spell checker, and whether its dictionary is
+     installed.  Today: a typed code ("en_US") with no list of what is
+     installed and no hint of what to type; a wrong or missing dictionary
+     is found only later, when Spell is used.
+  4. The size of the window (X11 rows) and the screen colors.
+  5. How many backups and how often Autosave runs (the defaults are good).
+
+What an expert may want: the two Editor start files, the paths of the Editor
+and the help file (developers and unusual installs), the Undo depth.
+
+What a user needs from the panel itself:
+  - to see what a field means before typing (the one line help),
+  - to know the default and to get back to it with one key,
+  - to be told of a mistake at once, at the field, and to keep everything
+    else typed so far (F1, F2),
+  - to find the common settings without scrolling.
+
+The first run has no moment of its own today: the Document Manager starts,
+the settings file does not exist, the defaults apply, and nothing says that
+Setup exists or that a printer, a paper or a language could be chosen.
+
+
+3. THREE DESIGNS
+----------------
+
+Common to all three:
+  - The settings file keeps its keys and its format.  A setting that exists
+    today keeps its key, its default and its allowed values.  A file made
+    by any version is read by every other (unknown keys are skipped when
+    reading; a program older than the change that saves the file would drop
+    a key it does not know, so a downgrade loses only new settings).
+  - Ins accepts, Esc cancels, F2 lists a choice, Keypad + lists files.
+  - The 80 by 25 screens below are mock-ups; the real panel is drawn by the
+    same form code as now.
+
+3A  THE SAME FIELDS, GROUPED IN PAGES
+-------------------------------------
+
+Five pages, each short enough for 20 rows with no scrolling.  The page names
+are in a row at the top; PgDn and PgUp (and Ctrl-Right, Ctrl-Left) go from
+page to page; Tab at the last field of a page goes on to the next page.  A
+one line help for the focused field is at the foot.  The fields are those of
+today; nothing is added or taken away, except that Autosave becomes a choice
+field (Yes, No) like the others.
+
+ Page 1 of 5: Printing           (the others: Files, Editing, Screen, Language)
+
+  +------------------------------- Setup --------------------------------+
+  |  [Printing]  Files  Editing  Screen  Language          PgDn: next    |
+  |                                                                      |
+  |     Print To: File only ........................  F2 lists           |
+  |  Printer Queue: System default ....................                  |
+  |  PDF Directory: .......................................              |
+  |     PDF Viewer: evince ................................              |
+  |                                                                      |
+  |                                                                      |
+  +----------------------------------------------------------------------+
+  | Where a print goes: a PDF file only, a printer, or the PDF opened    |
+  | in the viewer.  Left and Right change it.                            |
+  +---------------- Ins: Use Displayed Settings   Esc: Cancel -----------+
+
+ Page 2: Files        Initial Working Directory, Backups Kept, Autosave,
+                      Autosave Interval, Initial Macro Set, Initial Library.
+ Page 3: Editing      Undo Levels, Window Rows (X11, Terminal).
+ Page 4: Screen       Screen Colors (F2 opens the Colors panel).
+ Page 5: Language     Dictionary Language.
+ The Editor program and Help File rows move to the foot of page 2 under
+ the line "Programs (set by the install)".
+
+Field list: the 16 fields of today in five pages.  Keys: as today plus
+PgUp, PgDn, Ctrl-Left, Ctrl-Right.  Settings file: unchanged.
+What it fixes: F4, F6 (help line), F8.  What it leaves: F1, F2, F5, F7, F10.
+Cost: size M.  The form widget needs pages (it has scrolling only), the
+help line, and the foot.
+Tests that change: every Setup check of tests/smoke.py (about 40 checks,
+lines 2572 to 2760) and the X11 Setup checks in tests/xsmoke.py, which now
+need a page key before the field they test; the Setup key counts (a Down
+count that starts at the first field) change for every field that moves.
+Manual pages that change: chapter 7 "The fields of Setup" (the order and
+the pages), its 5 pictures, appendix B (the settings table), the Getting
+Started "The Setup panel", help topic Setup.
+
+3B  A FIRST-RUN GUIDED SETUP, AND THE FULL SETUP KEPT
+-----------------------------------------------------
+
+A short guide of four steps that opens by itself the first time the
+Document Manager starts with no settings file, and can be opened later from
+a menu entry "Guided Setup" next to Setup.  Esc at any step ends it and
+keeps the defaults.  Nothing is saved until the last step is accepted.  The
+full Setup of today stays as it is.
+
+  Step 1 of 4 : Printing                               (Esc: skip the guide)
+
+  +----------------------- Guided Setup, step 1 of 4 --------------------+
+  |                                                                      |
+  |  Where should a printed document go?                                 |
+  |                                                                      |
+  |     > A PDF file next to the document                                |
+  |       The printer  HP_LaserJet (the system default)                  |
+  |       A PDF file, opened in evince to print from there               |
+  |                                                                      |
+  |  Paper:  > Letter (8 1/2 x 11 in)    A4 (210 x 297 mm)               |
+  |                                                                      |
+  +--------------- Ins: Next    Left/Right: Back   Esc: Skip ------------+
+
+  Step 2: Language.  The dictionaries found on this system are listed (the
+          guide asks aspell and hunspell what they have installed) and one is
+          chosen; if none is installed it says which package to install.
+  Step 3: Documents.  The directory documents start in, the number of backups
+          (3), and Autosave (every 2 minutes).
+  Step 4: Screen.  The window height in rows (X11), and a choice of three
+          sets of colors: Classic, Light, Dark.  A summary of everything
+          chosen, and "Ins: Save these settings".
+
+Paper in step 1 is a new setting (a default paper, see Question 4): its
+initial choice is A4 when the system language is not en_US or en_CA.
+
+Field list: the guide's questions are a subset of Setup's fields plus the
+default paper.  Keys: Ins next, Left back, Esc skip, F2 list.  Settings
+file: unchanged keys; one new key (default_paper) if the paper is asked.
+What it fixes: the first-run silence, F10 (paper), the dictionary guess
+(item 3 of part 2).  What it leaves: F1, F2, F3, F4, F5, F6, F7, F8 (the
+full Setup is unchanged).
+Cost: size M to L.  A new guide screen (not the form widget), detection of
+the dictionaries and the printers, a first-run test that creates no file
+before step 4 and one that the full Setup still works.
+Tests that change: none of the existing Setup checks (the full Setup is
+unchanged); new checks for each step (a mutation for each).
+Manual pages that change: a new section "The first start" in chapter 7 and
+in Getting Started (with 4 new pictures); the Setup chapter is untouched.
+
+3C  ONE PANEL, TWO LEVELS, CHECKED IN PLACE   (my own best design)
+------------------------------------------------------------------
+
+Keep one panel (no pages to learn), but fix what is actually wrong:
+
+  - The common settings come first, grouped under short headings; the rarely
+    changed ones are behind one line, "Advanced: Ins opens", which opens a
+    second level (a second panel, not a long scroll).
+  - Every field shows its default at the right ("default: 3") and the Del
+    key returns the focused field to its default.
+  - A value is CHECKED WHEN THE USER LEAVES THE FIELD (Down, Up, Tab), and
+    the reason appears in the note line at the foot in place of the help.
+    A bad value cannot be accepted: Ins on a panel with a bad field moves
+    the focus to that field and says why.  The panel is never closed by an
+    error and no other change is lost.  (F1, F2)
+  - Autosave, and any other yes or no, becomes a choice field (F3).
+  - Screen Colors becomes a line that is clearly a button: "Colors ...
+    F2" (F7).
+  - A new field, Paper for New Documents (Letter or A4; default by the
+    system language), the one missing setting that every user outside North
+    America needs (F10).  The folder of the user's templates is shown as a
+    read-only line ("Templates: ~/.strata/templates").
+  - Editor program and Help File move to the Advanced level, shown with the
+    word "found" or "set" and the path that is used, and edited only there
+    (F5).
+
+ First level (the first 14 rows):
+
+  +------------------------------- Setup --------------------------------+
+  | Documents                                                            |
+  |   Working directory:   /home/writer/documents            (start dir) |
+  |   Backups kept (0-99): 3                                  default: 3 |
+  |   Autosave:            Yes  every 120 seconds           default: Yes |
+  | Printing                                                             |
+  |   Print to:            File only                  default: File only |
+  |   Printer:             No printers found                             |
+  |   PDF directory:                       (empty: next to the document) |
+  |   PDF viewer:          evince (found)                default: evince |
+  | Writing                                                              |
+  |   Paper for new:       Letter                        default: Letter |
+  |   Dictionary language: en_US (installed)              default: en_US |
+  |   Undo levels (0-500): 100                              default: 100 |
+  | Screen                                                               |
+  |   Window rows:         X11: 50  Terminal: all                        |
+  |   Colors ...           F2                                            |
+  |   Advanced ...         Ins opens                                     |
+  +----------------------------------------------------------------------+
+  | Backups kept: how many numbered copies Save keeps.                   |
+  +----- Ins: Use Settings   Del: Default   F2: List   Esc: Cancel ------+
+
+ Advanced level:  Initial Macro Set, Initial Library, Editor program (found:
+ /usr/local/strata/stred), Help File (found: /usr/local/strata/strata.hlp),
+ Templates folder (read-only), and the name of the settings file.
+
+Field list: the 16 fields of today (Editor program and Help File in
+Advanced) plus Paper for New Documents.  Keys: Up, Down, Tab, Left and Right
+(choices), Del (default), F2, Keypad +, Ins, Esc, and Ins on "Advanced ...".
+Settings file: all keys unchanged; one new key, default_paper (absent means
+the system's choice); an old file reads as it did.
+What it fixes: F1, F2, F3, F4, F5, F6, F7, F9 (the picture is retaken), F10.
+F8 (rows) is reduced: the first level is 14 rows plus headings and the
+rest is behind Advanced.  What it leaves: the first-run silence and F11.
+Cost: size M.  Per-field checking in the form widget (the checks exist as
+functions: backups_ok, rows_ok, undo_ok, pj_viewer_check,
+pj_pdf_dir_check; they are now called in do_setup after the form closes),
+the Del key, the second level, a new field.
+Tests that change: the Setup checks of tests/smoke.py and tests/xsmoke.py
+(the order changes; the Down counts of every field change), plus new checks
+each of which must fail without its feature: a bad value keeps the panel
+open and every other value; Del restores the default; the default is shown;
+Advanced shows the found Editor; the paper setting is saved and read back.
+Manual pages that change: chapter 7 "The fields of Setup" (rewritten, the
+table in the new order and the Advanced level), its 5 pictures, appendix B
+(one new key), Getting Started "The Setup panel", the help topic.
+
+
+4. RECOMMENDATION
+-----------------
+
+Do 3C now, and 3B afterwards only if the owner wants a guided first start.
+
+Reasons:
+  1. 3C repairs the faults that cost a user work: F1 (the panel closes and
+     loses everything) and F2 (late, one at a time), F3 (two ways to enter
+     a yes or no).  3A leaves them; 3B leaves them in the full Setup.
+  2. 3C adds the one setting that is missing for people outside North
+     America (the paper) and costs a single new key.
+  3. 3C keeps one panel to learn, with the common settings in the first 14
+     rows, which meets the problem of the long scrolling list (F8) as well
+     as pages do, without the cost of the page machinery of 3A.
+  4. The first-run guide (3B) is a larger, separate feature (new screens,
+     detection of printers and dictionaries); it rests on the same checks
+     that 3C builds, so it is cheaper after 3C than before it.
+  5. Every key stays compatible, so the work cannot damage a user's file or
+     the Editor, which reads the same file.
+
+Order of work for 3C: (a) checks at the field and Ins to the bad field;
+(b) choice fields, defaults shown, Del; (c) the new order and the Advanced
+level; (d) Paper for New Documents; (e) manual, pictures, help, tests, in
+the same job as each step.  Size M in all (about a day for one job).
+
+
+5. WHAT EACH DESIGN CHANGES IN THE FILES
+---------------------------------------
+
+  3A  src/str.c (do_setup, the form widget in src/ui widgets for pages),
+      tests/smoke.py, tests/xsmoke.py, manual chapter 7 and appendix B,
+      help source, the 5 Setup pictures.
+  3B  src/str.c (a new guide), a detection helper for dictionaries and
+      printers (spell.c, printcli.c have the pieces), config.c (one key),
+      tests, manual chapter 7 and Getting Started, 4 new pictures.
+  3C  src/str.c (do_setup and the form checks), config.c and config.h (one
+      key, default_paper), src/globalmenu.c or src/msdoc.c (the paper of a
+      new document reads the key), tests/smoke.py, tests/xsmoke.py,
+      manual chapter 7, appendix B, Getting Started, the help topic, the
+      5 Setup pictures, the Options table (the "1" that should be 3).
+
+Not in any design: the drivers, ports, memory and sound of the original (the
+system does that); an interface language other than English; a Setup inside
+the Editor (see Question 2).
+
+
+6. SETTINGS THAT ARE NOT IN SETUP AND ARE NOT TO BE ADDED NOW
+-------------------------------------------------------------
+
+  - The four display options of the Editor (Expanded Status Line?, On-Screen
+    Help?, Tab and End-of-Line marks, Dots for Spaces?): they belong to the
+    Editor's Options and are set while editing.
+  - The Export as LaTeX settings: they belong to that command.
+  - The decimal separator (F11): add only if the owner asks.
+
+
+7. QUESTIONS FOR THE OWNER
+--------------------------
+
+Each has a suggested default; work goes on with the default if the owner
+does not answer.
+
+  Q1  What is wrong with the Setup today, in your words (too long, too many
+      fields, hard to find the printer, errors close the panel, ...)?  The
+      design above answers the faults found in the code; yours may differ.
+      Default: the faults F1 to F10 of part 1.4 are the list.
+
+  Q2  Should the Editor reach the same Setup (a Global menu entry, "Setup")
+      so that a writer need not leave the Editor to change the printer or
+      the backups?  Default: no.  Setup stays in the Document Manager; the
+      Editor keeps its Options (and Backups Kept stays in both).
+
+  Q3  Which design: 3A (pages), 3B (first-run guide), or 3C (one panel, two
+      levels, checked in place)?  Default: 3C now, 3B later if wanted.
+
+  Q4  A new setting, Paper for New Documents (Letter or A4, default by the
+      system language), used when a document is made without a template:
+      yes?  Default: yes, in 3C.  (It adds one key, default_paper; the
+      built-in default stays Letter when the setting is absent and the
+      language is en_US or en_CA.)
+
+  Q5  Should Editor program and Help File stay editable?  Default: yes, but
+      only at the Advanced level, with the path shown that is in use.
+
+  Q6  Should the screen colors offer three ready sets (Classic, Light, Dark)
+      in the Colors panel, so that a user need not choose each color?
+      Default: no (not part of this work; the panel stays).
+
+  Q7  The decimal separator of the original's Setup (period or comma) for
+      the calculator: add it?  Default: no.
+
+  Q8  A first-run notice: should the Document Manager, the first time it
+      runs with no settings file, show one message line ("Settings:
+      choose Setup to set the printer, paper and language") without a guide?
+      Default: no.

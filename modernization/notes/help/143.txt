@@ -1,0 +1,25 @@
+
+------------------------------------- Quit -------------------------------------
+
+Menu (F10) Quit ends the current editing session.
+
+Accelerator:    Ctrl Q
+
+# If you have modified the current document since it was last saved, you are
+  prompted to save those changes.
+
+   Press Y to save changes made to the document since it was last saved.
+   Press N to ignore changes and leave the document as it was last saved.
+   Press Esc to return to the document and continue working.
+
+# You can use the Menu (F10) DOS command to temporarily exit to DOS while 
+  keeping Manuscript in memory.  However, be sure to use the Quit command when
+  you are finished with the current Manuscript edit session or before you turn
+  the power off on your computer.
+
+# You do not have to use Quit if you want to edit another document. Use File 
+  New to create a new document, File Retrieve to retrieve a different 
+  document, or Edit Window to edit a second document in a separate window.
+--------------------------------------------------------------------------------
+  Menu     Accelerators     DOS     File New     File Retrieve     Edit Window
+                  Keyboard Summary               Help Index

@@ -1,0 +1,25 @@
+
+------------------------------- Move Section Keys ------------------------------
+
+After highlighting the sections to move, use the following keys to move the 
+sections:
+
+  Up, Down         Up or down one section 
+  Right, Left      Left or right (down or up) one level
+  PgUp, PgDn       Up or down to the next section at the same level
+  Home, End        To the first or last section at the same level
+  Ctrl Left        Subsections of the current section left (up) one level
+  Ctrl Right       Subsequent sections at the same level right (down) one level
+  Ctrl [           Current section left (up) one level
+  Ctrl ]           Current section right (down) one level
+
+
+
+Use the following keys to change the highlighted region of sections:
+
+  Shift Up, Shift Down        Up or down to the next section 
+  Shift Right, Shift Left     Left (up) or right (down) one level
+  Shift PgUp, Shift PgDn      Up or down to the next section  at the same level
+
+--------------------------------------------------------------------------------
+    Highlighting          Move          Keyboard Summary          Help Index

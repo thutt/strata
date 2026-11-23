@@ -1,0 +1,147 @@
+The Release 2 Note Format panel (probed in the original)
+========================================================
+
+Where: F12, Global, Marker opens the Marker Format panel.  Its fields are
+Marker Display Modes, Display Hidden Markers?, Note Format, Primary Note Type,
+Cross-reference Format, Counter Format, Keycap Format, Screen Capture Format,
+Date Format and Time Format.  The ones that say Standard (Note Format,
+Counter Format, Keycap Format, Screen Capture Format, Marker Display Modes)
+open a panel of their own; Space on the field opens it (Return only moves to
+the next field).  Strata's Counter Format and Keycap Format are done
+(GLOBAL-MENU.txt).
+
+Primary Note Type: a pick list with Footnotes (the default), Levelnotes and
+Endnotes.  It is the kind of note that a new Note marker is.
+
+Note Format: three panels stacked like the Global Format panel (tabs named
+Footnote Format, Levelnote Format and Endnote Format; PgUp and PgDn go from
+one to the next).  Ins accepts all three, Esc cancels.  The default settings
+seen in the original:
+
+Footnote Format
+  Pos (the ruler, for tabs in the note), a ruler line
+  Attributes: Normal   Justification: Left   Indent: None
+  Font: Text (10.0 pitch Generic)
+  SPACING   Line: 1.00   Block: 1.50   Note: 1.50
+  Reference Tag: \1\    Attributes: Super      (the tag in the text)
+  Note Tag:      \1\    Attributes: Bold       (the tag before the note)
+  Separator Bar: 2.000 in
+  Renumber?: No
+  Position of Notes: Bottom of Page
+
+Levelnote Format
+  Attributes, Justification, Indent, Font and SPACING as above
+  Reference Tag: \a\    Attributes: Super
+  Note Tag:      \a\)   Attributes: Bold
+  Separator Bar: 2.000 in
+  Renumber?: No
+  Note Level: 1
+
+Endnote Format
+  Attributes, Justification, Indent, Font and SPACING as above
+  Reference Tag: [\1\]  Attributes: Normal
+  Note Tag:      \1\.   Attributes: Normal
+  Note Page Title: Endnotes
+  Title Font: Headline (10.0 pitch Generic)
+  Title Attributes: Bold
+
+What the Release 1 manual says about the same settings (chapter 4, Global
+Note Format; chapter 3, Creating Notes):
+  - Footnotes print at the bottom of the page, level notes at the end of the
+    level named by Note Level (1 means the end of each level-1 section), and
+    end notes at the end of the document.
+  - A tag is \1\ (numbers), \A\ or \a\ (letters), \I\ or \i\ (roman numerals),
+    or any other character, printed once for the first note, twice for the
+    second, three times for the third, and so on.
+  - Renumber says whether the notes are numbered again on each page (for
+    footnotes) or level (for level notes), or numbered one after another in
+    the document.  Bottom Align (in Release 1) says whether footnotes are
+    at the bottom of the page or just after the text; Release 2 calls it
+    Position of Notes (Bottom of Page; the other choice was not looked at).
+  - The marker decides where the reference tag is in the text and which page
+    a footnote is on.  A long footnote that does not fit gives the error
+    "Footnote split required".
+
+How the settings are stored (probed: values were changed in the original,
+the document was saved and the header records were read).  A record is written
+only when the value is not the default.  k is 1 for the footnote panel, 2 for
+the levelnote panel and 3 for the endnote panel.
+
+  N<k>R<text>NUL   reference tag (N1R\A\, N3R<\A\>)
+  N<k>N<text>NUL   note tag (N1N(\i\))
+  N<k>X<mask>      attributes of the reference tag (N1X20)
+  N<k>Y<mask>      attributes of the note tag (N1Y5)
+  N<k>SL<n>        line spacing in hundredths (N1SL125 is 1.25)
+  N<k>ST<n>        block spacing; N<k>SN<n> note spacing (N1ST175, N1SN225)
+  NS<k><n>         separator bar in thousandths of an inch (NS13500 is 3.500;
+                   footnotes and levelnotes)
+  NZ<k><0|1>       Renumber (NZ11 is Yes)
+  NB<0|1>          Position of Notes: 0 After Text, 1 Bottom of Page (default)
+  NL<n>            Note Level of levelnotes
+  NE<text>NUL      Note Page Title of the endnotes (NENotes Here)
+  NT<n>            Primary Note Type, 2 levelnotes, 3 endnotes
+  N1F...           a font (seen in a sample, N1FF10; not probed)
+
+The remaining settings of a panel (probed by changing each one in the Footnote,
+Levelnote and Endnote panels and reading the saved file):
+
+  N<k>FA<mask>   Attributes of the notes (the top row of the panel)
+  N<k>FJ<n>      Justification: 0 Left, 1 Right, 2 Center, 3 Even (N1FJ3)
+  N<k>FI<n>      Indent: 0 None, 1 First, 2 All but First, 3 All (N1FI2)
+  N<k>FF<n>      Font, as a number (N1FF5; Headline 1, Text 2, Header/Footer
+                 3, Font 4 to Font 20 are 4 to 20; N1FF10 is in a sample)
+
+The attribute masks of the original, probed one by one (a field holds the sum
+of the entries that are ticked, so Italics and Underscore All is 516):
+
+    1 Bold                    2 Underscore Words      4 Italics
+    8 Subscript              16 Superscript          32 Strikethrough
+   64 Printer Specific 1    128 not found (no entry of the list)
+  256 Printer Specific 2    512 Underscore All     1024 Double Underscore Words
+ 2048 Small Caps           4096 Double Underscore All
+
+These masks are those of the records of the header.  The text of a block
+(the 0x12 attribute token) was said to use 16 for underscored words
+(DOC-FORMAT.txt); with the masks above that would be Superscript, so the
+token may use other bits or that old inference may be wrong: to check.
+Choices of Position of Notes: Bottom of Page and After Text.  The Pos field
+(the ruler for the tab stops of notes) and the title font and the title
+attributes of the Endnote panel were not probed.
+
+The Note panel of the original (probed) has two fields: Note (the text, "..."
+opens the editor) and Type, a list of four: [Footnote] (the first entry, in
+brackets, names the Primary Note Type of the document: it is [Levelnote] when
+NT2), Footnote, Levelnote and Endnote.  A note that has [..] chosen has no
+type record and takes the Primary Note Type; the others are stored as the
+field 1 of the marker: 11 for Footnote (read back from a saved file), and 12
+and 13 for Levelnote and Endnote (the numbers follow the NT records; they
+were not read back from the original).  Alt-F12 on a marker opens the panel
+of that marker in Strata; that is the decision of the project owner, so the
+key that does it in the original does not matter.
+
+The graphic Preview of the original (display driver and printer as in
+MARKERS.txt, Keycap) draws a footnote at the bottom of the page of its mark: a
+short rule (the Separator Bar, about two inches) and under it the note tag and
+the text in a smaller type.  Preview of the levelnotes and endnotes was not
+read closely (the endnote page and the end of the level are on later pages).
+
+Still not probed: the records of Pos, Attributes, Justification, Indent and
+Font of the three panels, and the Title Font and Title Attributes of the
+Endnote panel (the panels were changed only in the fields listed above).
+
+What Strata does with it (done)
+  - Global, Marker has the three panels (PgDn after the counters; they show
+    spacing, tags, attributes, separator, Renumber, Position of Notes, Note
+    Level and Note Page Title) and writes the records above.
+  - Note.type is a field of the Note panel (Footnote, Levelnote, Endnote).
+  - Each note is numbered among the notes of its kind in the order of the
+    text.  The mark is made from the Reference Tag (\1\, \a\, \A\, \i\,
+    \I\, or text repeated once, twice, three times); the number of the note
+    tag is the same.  In a printout the mark replaces the marker.
+  - The text printout prints a footnote after the block that has its mark,
+    a levelnote after the section at the Note Level, and the endnotes at the
+    end under the Note Page Title.  Renumber for levelnotes starts at 1 in
+    each such list; footnotes cannot be renumbered per page without pages,
+    which is for the LaTeX printing.
+  - The display mode of a Note stays the diamond; the label in Long mode is
+    NOTE "text" as in the original.

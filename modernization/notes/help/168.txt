@@ -1,0 +1,25 @@
+
+--------------------------------- Page Margins ---------------------------------
+
+
+
+Margin settings on the Page Layout panels determine the print area on the page.
+
+
+# The print area is calculated from the page margins and the paper size
+  you select. All printed text, including headers and footers, notes, and 
+  headlines, are printed within this area. 
+
+
+# Unless you specify otherwise when entering the margin sizes, the margins
+  are in the units of measurement specified on the Options panel.
+
+
+# Although you can select different page margins for some pages of a document,
+  the total left to right margin width must be the same for the text pages
+  (First Page, Even Page, and Odd Page). You can create different margins
+  for the text area locally with block indents.
+
+
+--------------------------------------------------------------------------------
+ Options     Block Indents     Page Layout     Keyboard Summary     Help Index

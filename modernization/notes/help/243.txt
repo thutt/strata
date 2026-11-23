@@ -1,0 +1,25 @@
+
+-------------------------- Compare Document Versions ---------------------------
+
+
+Older Document Name: Enter the name of the first of two documents to compare.
+
+
+Newer Document Name: Enter the name of the second of two documents to compare. 
+                     This document will be printed showing the differences 
+                     between the two documents.
+
+
+Revision Markers:    Select Revision Bars Only to print solid lines in the 
+                     margins next to changed text. Select Text Markers to mark
+                     the start and end of changed text. Select Attribute 
+                     Markers to assign attributes to changed text (select this 
+                     option only if your printer supports italics, 
+                     strikethrough, or underscore).  Deleted text is printed 
+                     with the strikethrough attribute, inserted text is printed
+                     with the underscore attribute, and moved text is printed
+                     with the underscore and italics attributes.
+
+
+--------------------------------------------------------------------------------
+      Compare Document Versions      Keyboard Summary      Help Index

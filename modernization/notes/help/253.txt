@@ -1,0 +1,25 @@
+
+------------------------------ Indents and Margins -----------------------------
+
+Indent settings indent levels, blocks, or text from the page margins.  Margin 
+settings specify the distance from the edge of the paper to the start of text.
+
+There are five type of indents in Manuscript:
+
+# Level indents indent sections at a specific level from the sections at the 
+  preceding level.  For example, if Indent per Level is set to 3, level 2 
+  sections are indented 3 ruler units from level 1 sections.
+# Block indents indent the text in the block left and/or right.
+# Line indents indent lines of text within blocks or columns.
+# Hanging indents set block format settings so the first line of the block 
+  "hangs" to the left and subsequent text is indented.
+# Text indents indent lines of text in a block, but do not set block format 
+  settings.
+  
+Indents are cummulative. For example, if a document has level indents set to 3 
+and a block in a level 2 section has a left block indent of 5, that block is
+indented 8 ruler units from the left page margin.  (You can use either negative
+or positive numbers for indents.)
+--------------------------------------------------------------------------------
+ Hanging Indents   Text Indents   Level Indents   Line Indents   Margin Indents
+    Setting Tabs       Page Margins       Keyboard Summary       Help Index

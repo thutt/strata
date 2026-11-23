@@ -1,0 +1,159 @@
+THE LIST OF FONTS FOR PRINTING (TEX FONT ASSOCIATION)
+=====================================================
+
+What it is
+----------
+A font in a Strata document is a number: 1 Headline, 2 Text, 3 Header/Footer
+and 4 to 20 for the other fonts (the Font fields of the formats, of the Note
+panels and of the Keycap marker hold these numbers).  The list says which
+LaTeX font each number is.  It replaces what the original did with
+"Maintain Download Fonts", which loaded fonts into a printer.  Strata prints
+through LaTeX, so a font is a LaTeX package (or, for the default fonts of
+LaTeX, nothing at all), and a font that is not on the machine is downloaded
+from CTAN.  The entry is called TeX Font Association.
+
+Where it is
+-----------
+TeX Font Association is an entry of the Document Manager (str), between
+Compare Document Versions and Setup.  It shows the 20 fonts; Return on one
+opens its panel; Ins saves, Esc cancels.  The list is kept for the user in the file
+~/.strata/fonts (the directory and the file can be used by the owner only; the
+environment variable STRATA_HOME names another directory, as for the other
+settings).  A font that is not in the file has its default.
+
+The panel of a font
+-------------------
+  Font Number                 (not changeable)
+  Name                        What the panels show, such as Palatino.
+  LaTeX Package               The package that selects the font, such as
+                              mathpazo; empty for Computer Modern, the
+                              fonts that LaTeX has without a package.
+  Package Options             The options of the package, such as
+                              scaled=0.92.
+  Family                      roman (\rmfamily), sans (\sffamily) or mono
+                              (\ttfamily): how the font is selected once the
+                              package is loaded.
+  CTAN Archive to Download    The name of the archive on CTAN (the file
+                              install/fonts/NAME.tds.zip), or empty.
+  Map File to Enable          The map file of the fonts (a file such as
+                              lato.map), or empty.
+  Installed                   Yes when TeX finds the package (kpsewhich
+                              NAME.sty); not changeable.
+  Install Now                 Yes downloads and installs the font for the
+                              user when the panel is accepted.
+
+Only letters, digits and . _ - + = , are allowed in the package, the options,
+the archive and the map file, so that nothing of the list can reach a shell or
+the TeX file as a command.  The name can be anything but a bar.
+
+The file ~/.strata/fonts
+------------------------
+One line for each font: NUMBER|NAME|PACKAGE|OPTIONS|FAMILY|ARCHIVE|MAP, with
+FAMILY one of roman, sans and mono, for example
+    5|Helvetica|helvet|scaled=0.92|sans||
+    19|Lato|lato|default|sans|lato|lato.map
+A line that cannot be read is ignored.
+
+The list that comes with Strata
+-------------------------------
+Every font of 1 to 18 is a standard LaTeX font: the packages are in the
+standard TeX Live collections (psnfss, lm, tex-gyre and the base), and the list
+works on a machine as it is (tested: each package typeset a page with
+pdflatex and pdffonts showed real Type 1 outlines embedded).  Only number 19,
+Lato, is not standard.  What the names are:
+  - 2, 3: Latin Modern, the improved Computer Modern (LMRoman10, LMSans10).
+  - 4 to 13 are the packages of psnfss, the standard PostScript fonts.  The
+    outlines are the free clones of URW, Bitstream and Adobe that TeX Live
+    carries, not the fonts of the manufacturers of the names: Times is
+    Nimbus Roman No9 L, Helvetica is Nimbus Sans L, Courier is Nimbus Mono L,
+    Palatino is URW Palladio L, Bookman is URW Bookman L, New Century
+    Schoolbook is Century Schoolbook L, Avant Garde is URW Gothic L, Zapf
+    Chancery is URW Chancery L, Charter is Bitstream Charter and Utopia is
+    Utopia, which Adobe released for free.
+  - 14 to 17 are TeX Gyre, the GUST project that extends the same clones.
+  - 18 is Computer Modern, the font that LaTeX uses when no package is
+    loaded, so it needs no package; the list shows (LaTeX default).
+
+   1 Headline                Latin Modern Sans       lmodern    sans
+   2 Text                    Latin Modern Roman      lmodern    roman
+   3 Header/Footer           Latin Modern Roman      lmodern    roman
+   4 Times                   mathptmx                           roman
+   5 Helvetica               helvet [scaled=0.92]               sans
+   6 Courier                 courier                            mono
+   7 Palatino                mathpazo                           roman
+   8 Bookman                 bookman                            roman
+   9 New Century Schoolbook  newcent                            roman
+  10 Avant Garde             avant                              sans
+  11 Zapf Chancery           chancery                           roman
+  12 Charter                 charter                            roman
+  13 Utopia                  utopia                             roman
+  14 TeX Gyre Termes         tgtermes                           roman
+  15 TeX Gyre Heros          tgheros                            sans
+  16 TeX Gyre Pagella        tgpagella                          roman
+  17 TeX Gyre Cursor         tgcursor                           mono
+  18 Computer Modern Roman   (no package)                       roman
+  19 Lato                    lato [default]  archive lato       sans
+  20 (not set)
+
+Entry 19 is a real font that has to be downloaded (Lato, by Lukasz Dziedzic,
+SIL Open Font License; it is in the full TeX Live and in Debian's
+texlive-fonts-extra, not in the recommended set); it shows "not installed" in
+the list until it is.  A number that is not set prints with the Text font.
+
+Downloading a font (tested)
+---------------------------
+What Install Now does, and what was tested by hand with the font Lato (not
+part of a basic TeX Live, so it was missing):
+  1. The archive is fetched with curl from
+     https://mirrors.ctan.org/install/fonts/NAME.tds.zip (the address can be
+     changed with the environment variable STRATA_CTAN_URL, which is the
+     directory that holds NAME.tds.zip, a file:// directory too: the tests
+     use it).  The Lato archive is 24 MB and holds 1844 files.
+  2. It is unpacked with unzip into the TeX directory of the user, TEXMFHOME
+     (kpsewhich -var-value TEXMFHOME; ~/texmf), so nothing of the system
+     is touched and no privilege is needed.
+  3. mktexlsr on that directory makes TeX see the new files.
+  4. updmap-user --enable Map=lato.map registers the font map.  Without this
+     step pdflatex stops with "Font Lato-Italic-T1-TLF--base at 600 not
+     found": the package is found but the Type 1 fonts have no map.
+  5. A document with \usepackage[default]{lato} then typesets with pdflatex,
+     and pdffonts shows Lato-Regular, Lato-Bold and Lato-Italic embedded as
+     Type 1.  Before the install the same document stops with "File lato.sty
+     not found".
+  FEEDBACK.  The steps run in child processes that the Document Manager
+  polls about every 50 milliseconds (fonts_install gives a tick function that
+  str calls; str.c draws the box).  A box titled Installing font shows the
+  step, as the search for printers does: "Downloading NAME..." with the size
+  of the file so far (the total is not known cheaply), "Unpacking NAME...",
+  "Making the file list of TeX (mktexlsr)...", "Enabling the map file MAP
+  (updmap-user)...".  Esc stops the download only: the group of the child is
+  stopped (SIGTERM, then SIGKILL), the partial archive and its temporary
+  folder are removed, nothing is unpacked, and the footer says "Installation
+  cancelled".  Decision: the steps after the download are not stopped by
+  Esc, because a half unpacked tree or a map file that is not enabled would
+  leave the font in a state that is worse than either end; their box says
+  "Please wait".  tests/fontprogress.py checks all of this with slow fake
+  programs (STRATA_PROGRAM_DIRS).  Mutations that were run, each detected:
+  no box drawn (8 checks fail), Esc not answered (3 checks fail).
+  The test was done in a private TeX tree (TEXMFHOME, TEXMFVAR and TEXMFCONFIG
+  set to a scratch directory) so that nothing of the user was changed.
+  The tlmgr of a Debian TeX Live cannot install packages (it is for the
+  system packages), which is why the archive is unpacked by hand; a system
+  that has a working tlmgr could use "tlmgr --usermode install NAME" instead.
+
+How printing will use it
+------------------------
+strprint (docs/PRINT-LATEX.txt) is to look up the font number of a block, a
+note or a keycap in this list: it loads the package with \usepackage when the
+font is used and selects it with the family command.  That is not done yet;
+fonts.c gives the functions it needs (fonts_load, fonts_package_line,
+fonts_family_command and fonts_installed).  A font that is not installed
+prints with the Text font and a message on stderr.
+
+Tests
+-----
+tests/edtest.c: the defaults, the package line, the family commands, the check
+of the characters, the save and load with the mode 0600, and that an unsafe
+value is refused.  tests/smoke.py: the entry in the Document Manager, the list,
+a changed font kept in the file, and an install from a fake archive in a
+scratch directory.

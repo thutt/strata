@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Word is wider than column -- 
+
+The word is too wide to fit in the column.  Change either the column width or 
+the column or block font to avoid wrapping the word within the column.
+
+-- Worksheet is password protected (<filename>) --
+
+You are trying to import a protected 1-2-3 or Symphony worksheet. Remove the 
+password protection to import the worksheet.
+
+-- Worksheet update deleted subsequent worksheet marker(s) --
+
+When the worksheet data was updated, the range of the import deleted another 
+marker(s).  Re-enter the Worksheet marker(s) after the current table. 
+
+-- Write error on device PRN --
+
+Data cannot be sent to the printer.  Make sure that the printer is on-line and
+check the connections between the computer and the printer.
+
+--------------------------------------------------------------------------------
+     Error Index                Keyboard Summary             Help Index

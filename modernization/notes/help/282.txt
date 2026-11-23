@@ -1,0 +1,25 @@
+
+-------------------- Add Document to Hyphenation Dictionary --------------------
+
+Add Document to Hyphenation Dictionary adds entries from a document to a 
+custom hyphenation dictionary.
+
+  +----------------------- Add Document to Dictionary -----------------------+
+  |                                                                          |
+  |             Working Directory:                                           |
+  |                                                                          |
+  |                 Document Name:                                           |
+  |                                                                          |
+  |   Hyphenation Dictionary Name:                                           |
+  |                                                                          |
+  +---------------- Press Ins to Add Document to Dictionary -----------------+
+
+--Procedure---------------------------------------------------------------------
+ Create a document containing the hyphenated words to add to the dictionary.
+ Select Maintain Dictionaries from the Document Manager.
+ Select Add Document to Hyphenation Dictionary.
+ Enter the name of the document containing the entries you want to add and 
+  the name of the hyphenation dictionary you want to extend.
+--------------------------------------------------------------------------------
+      Custom Hyhenation Dictionary                 Maintain Dictionaries
+                Keyboard Summary                   Help Index

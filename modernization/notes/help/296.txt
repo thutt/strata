@@ -1,0 +1,25 @@
+
+----------------------------- Winding Column Layout ----------------------------
+
+Winding - or snaking - columns are columns in which the text flows down
+to the bottom of one column and then winds to the top of the next column.
+
+Number of Columns:  Specify the number, from 1 to 9, of columns to wind across
+                    a page.
+
+Gutter Size:        Specify the amount of space to leave between columns.
+
+Vertical Rules:     Specify the type of rule line (vertical border) to use
+                    between columns.
+              
+Spacing for:        Specify where Manuscript should insert space in order to 
+Bottom Alignment    bottom align (balance) the winding columns on a page.
+
+--------------------------------------------------------------------------------
+
+# Winding columns can be set for all blocks on the Global Format panel, for 
+  specific level(s) on the Global Level Format panels, for individual blocks on
+  the Current Block Format panel, or for the index on the Index Style panel.
+
+--------------------------------------------------------------------------------
+Global Format    Block Format     Index Style     Keyboard Summary    Help Index

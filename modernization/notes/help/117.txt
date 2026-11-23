@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Invalid Else marker request --      or
+-- Invalid Endif marker request -- 
+
+An Else or Endif marker was encountered without a preceding If marker.  See
+chapter 8 for more information on If, Else, and Endif markers.
+
+-- Invalid equation format --
+
+No equation was specified for the Equation marker.
+
+-- Invalid file (<filename>) --
+
+Unable to open the file specified.  The file name may be incorrect or infor-
+mation in the file may be invalid for the operation being performed.
+
+If you are trying to edit a document created by another word processor, use 
+File Import or the File Conversion Utilities to first create a Manuscript format
+file, and then proceed with editing.  If you are trying to convert a ThinkTank 
+file, the file specified must be a structured file.  Use the Port Textfile Send
+Structured command in ThinkTank to convert the file and retry the command.  If 
+you are trying to convert a Release 2.0 or 2.1 document to a Release 1 document
+be sure that the document being converted is a Release 2.0 or 2.1 document. 
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

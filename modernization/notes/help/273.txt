@@ -1,0 +1,25 @@
+-------------------------------------- Markers ---------------------------------
+The Screen marker inserts an image created with the Screen Capture utility.
+
+Position:      Specify whether the image should retain its relative place
+               in the text (Fixed) or allow following text to move forward if
+               the image must be moved to the next page (Floating).  
+
+Foreground:    Specify gray shades for the screen image's normal and reverse
+Background     foreground and background areas. These prompts can be from 0
+               (black) to 100 (white). Use the default settings for non-
+               PostScript printers.
+
+Height/Width:  Specify the dimensions for the image or use Scale to adjust the 
+Scale          size of the image relative to its original size. Width and Height
+               use the units of measurement specified on the Options panel 
+               unless you specify another unit as part of the value. Scale can 
+               be a value from 0 to 10.
+
+Print/Preview: Print or preview the image on the primary printer before 
+               returning to the editor.
+Values for the video foreground and background shadings and Show Cursor can be 
+specified globally on the Marker Format (F10 Global Marker) panel.
+--------------------------------------------------------------------------------
+  Screen Capture       Global Marker       Options       Print/Preview Options
+      Markers              Keyboard Summary              Help Index

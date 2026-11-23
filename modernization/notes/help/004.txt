@@ -1,0 +1,25 @@
+
+------------------------------- Optional Settings ------------------------------
+
+The Optional Settings panel lists additional settings for printing, previewing,
+or comparing documents.
+
+  +---------------------------- Optional Settings ---------------------------+
+  |                                                                          |
+  | Merge Data Document Name:                                                |
+  |                                                                          |
+  | Print to File:                     Optimize Graphics?                    |
+  |                                                                          |
+  | Forms Type:                        Error Log Markers?                    |
+  |                                                                          |
+  | Print Comments?                    Force Document Expansion?             |
+  |                                                                          |
+  | Print Line Numbers?                Page Number of First Page:            |
+  |                                                                          |
+  | Save Page Breaks?                                                        |
+  +--------------------------------------------------------------------------+
+  | Create Separate Documents:         Blank Page Contents:                  |
+  |                                                                          |
+  +------------------- Press Ins to Use Displayed Settings ------------------+
+--------------------------------------------------------------------------------
+    Print       Preview       Compare       Keyboard Summary       Help Index

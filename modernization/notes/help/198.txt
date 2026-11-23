@@ -1,0 +1,25 @@
+
+------------------------------ Ruler and Tab Keys ------------------------------
+
+Use the following keys to set and adjust tabs on the ruler:
+
+  Tab                Set or remove a left-aligned tab
+  Shift Tab          Set or remove a right-aligned tab 
+  ^                  Set or remove a centering tab
+  ,                  Set or remove a comma tab
+  . (period)         Set or remove a decimal tab
+  #                  Set or remove a number tab
+
+  1 thru 9           Set evenly spaced (according to the number you enter)
+                     left-aligned tabs across the ruler
+  0 (zero)           Removes all tabs
+
+  - (dash), [        Reset tabs to the next level in the hierarchy
+
+  Del, Backspace     Delete a tab or a ruler unit between tabs
+  Space Bar          Insert a ruler unit between tabs
+  Ctrl Left, Right   Move the cursor 5 units to the left or right
+  Shift Home, End    Move the cursor to the beginning or end of the ruler
+
+--------------------------------------------------------------------------------
+               Setting Tabs           Keyboard Summary           Help Index

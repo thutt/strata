@@ -1,0 +1,75 @@
+# The places that the editorial check (checkeditorial.py) lets stand: a rule
+# name, a blank and a phrase that is matched, without regard to case, in the
+# 40 characters around the hit.  A line that begins with a number sign is a
+# comment.  Every line says why in the comment above it.
+#
+# Just is the name of a field of a panel, and a value of it.
+E1 Just: | Left, Right
+E1 Just is Left, Right
+# The Viewer shows the zoom 100% in its help line, as typed.
+E6 0: 100%   arrows
+# A message of the program that goes over two lines of a table cell.
+E2 synonyms -  Please choose
+# A note that a new Note marker is: the noun note, not the verb.
+E2 note that a new Note
+# A statement of what a file of an earlier version of Strata holds, so that
+# the reader of such a file knows how it is read.
+E3 A file of an earlier version has the single key
+E3 Earlier versions of Strata kept the settings
+E3 Earlier versions of Strata left the backups
+E3 A document that was made by an earlier version
+E3 were drawn as a diamond in an earlier version
+E3 of earlier versions does not exist
+E3 a backup that an earlier version left
+# The same row in the tables of two panels that share a field, and the
+# same sentence for two keys that put in the same character.
+E13 The character is put in at the cursor like any letter
+E13 When it is not a number above 0 the revision
+# The message of the Highlight prompt, which two commands show.
+E13 The message line says "Highlight the area
+# The same message in two rows, one for each way that the checker fails.
+E13 The spelling checker PROGRAM did not start
+# A message of the program that ends with its own period inside the cell.
+E15 The pages carry the banner and the marks.
+# Too soon is a measure of a stop, not a promise.
+E3 stop too soon or too late
+# The names of two keys in a headline.
+E10 PgUp and PgDn
+# The names of the marker types and of a person, in the sentence case of a
+# headline.
+E10 Notes, Comments, Equations and the Library
+E10 A Fourier transform
+# E24: the words of a message or of a screen of a program, as it writes them
+# (the programs spell the names of the commands in lower case).
+E24 latex and dvipng are needed
+E24 cannot start latex
+E24 latex could not typeset
+E24 latex took more than
+E24 no temporary directory for latex
+E24 latex: out of memory
+E24 with the x11
+E24 latex edit
+E24 pdflatex or latex
+# E25: the name of an extension of the typesetting system, written with a
+# hyphen as its authors write it.
+E25 (e-TeX)
+# The word postscript with a small p is the noun that P.S. stands for in a
+# letter, not the name of the page description language.
+E26 enclosures and postscript
+E26 and P.S.} (carbon copy, enclosures and postscr
+# The status line of the program says LATEX EDIT in capital letters.
+E26 LATEX EDIT
+# The name of a Debian package is cups, in lower case.
+E26 of the cups package
+# A message of the program, quoted as the program prints it, begins with
+# the name of the program latex or the word x11 of a build name.
+E26 latex and dvipng are needed
+E26 The program ENGINE (pdflatex or latex) did not run
+E26 display with the x11
+E26 Cannot start latex
+E26 latex could not typeset the equation
+E26 latex took more than 5 seconds
+E26 No temporary directory for latex
+E26 latex: out of memory
+# A message of the Printer that is quoted as the program prints it: the text
+# of the message is the program's, so the table shows it unchanged.

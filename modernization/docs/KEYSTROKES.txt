@@ -1,0 +1,466 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+KEYSTROKES: STRUCTURED AND UNSTRUCTURED EDIT, AND THE EQUATION MARKER
+====================================================================
+
+Sources.  Orig: H = documented in the original's help (Keyboard Summary and
+the per-command pages, extracted with tools/hlp.py); V = tried in the
+original (Manuscript 2.1 under DOSBox-X) for this report; - = not in the
+original.  Strata: yes = works as in the original; alt:KEY = works on
+another key; diff = works differently (see the note); no = not implemented;
+msg = the key only shows a message.  Mode: S = structured only, U =
+unstructured only, B = both.  Control keys are the PC keys; a terminal
+keeps some of them for itself, which is why Strata has alternates.
+
+The menu key.  The original opens the menu with F10 and the Marker Commands
+with Alt-F10.  Strata opens the menu with F12 and the Marker Commands with
+Alt-F12 or Ctrl-F12, and it reserves F12 for the menu: no command, no macro
+and no recording uses it.  F10 and F11 have no command and are recorded and
+played back by a macro.  The rows below name the keys of Strata; the column
+Orig says what the original has on the key that does the same (F10 for F12),
+and the column Strata says diff for such a key.
+
+Terminal alternates.  Many terminals and window managers do not pass
+Alt-F keys, Shift-Ins or Ctrl-Hyphen.  Strata therefore also has: Ctrl-F
+(a menu of the Alt-F commands), Ctrl-F12 (the Marker menu), Alt-O
+(Overtype) and Alt-I (italics, because Ctrl-I is Tab).
+
+1. Cursor movement
+------------------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  Left, Right      Character left, right             H    yes       B   
+  Up, Down         Line up, down                     H    yes       B   
+  PgUp, PgDn       About half a screen               H    yes       B   
+  Home, End        Beginning, end of the line        H    yes       B   
+  Ctrl-Left/Right  Word left, right                  H    yes       B   
+  Ctrl-Home/End    Beginning, end of block/column    H    yes       B   
+  Shift-Left/Right Column left/right; level up/down  H    diff      B   
+  Shift-Up         Up to the section's headline      H    yes       S   
+  Shift-Down       Down to next section's headline   H    yes       S   
+  Shift-PgUp/PgDn  Previous, next section, same level HV   yes       S   
+  Shift-Home/End   Beginning, end of the document    H    yes       B   
+  Ctrl-PgUp/PgDn   Previous, next page               H    no        B   
+  Alt-F7           Go To section or page             H    yes       B   
+  Notes: Shift-Left and Shift-Right are written for columns in the
+  original; Strata moves between columns.  Shift-PgUp does nothing in an
+  unstructured document (tried in the original).  Ctrl-PgUp/PgDn need a
+  paginated document, which Strata cannot make yet.
+
+2. Editing
+----------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  Del              Delete character (or empty block) H    yes       B   
+  Ctrl-D           Delete next word                  H    yes       B   
+  Shift-Del        Delete section and subsections    H    ?         S   
+  Backspace        Delete character before cursor    H    yes       B   
+  Ctrl-Backspace   Delete previous word              H    alt:A-BkSp B   
+  Enter            End of line, cursor to next line  H    yes       B   
+  Ctrl-Enter       End of line, cursor stays         H    no        B   
+  Tab              Move to the next tab              H    yes       B   
+  Alt-_            Soft hyphen (task 36)             H    YES       B   
+  Alt-F5           Overtype on/off ([OT] shown)      H    alt:A-O   B   
+  Alt-F1           Compose (special characters)      H    no        B   
+  Ctrl-G           Text indent                       H    msg       B   
+  Ctrl-H           Hanging indent                    H    yes       B   
+  Strata: Alt-Backspace is the alternate for Ctrl-Backspace.  Shift-Del and
+  Ctrl-Enter were not looked for in the Strata code and are marked ? / no.
+
+3. Blocks, columns and sections
+-------------------------------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  Alt-F2           Append column/block/section menu  H    alt:C-F   B   
+  Ins              Append a section, same level      HV   yes       S   
+  Shift-Ins        Append a subsection               H    yes       S   
+  Ctrl-A           Append block, same local format   H    yes       B   
+  Ctrl-O           Append block, global format       H    yes       B   
+  F2               Split column/block/section        H    yes       B   
+  Ctrl-V           Split the block                   H    yes       B   
+  Ctrl-Y           Split the section                 H    yes       S   
+  Alt-F3           Join column/block/section         H    alt:C-F   B   
+  Alt-F4           Delete highlighted area           H    alt:C-F   B   
+  Ctrl-K           Cut block(s)                      H    yes       B   
+  Ctrl-L           Cut section(s)                    H    yes       S   
+  Ctrl-[ , Ctrl-]  Move the section left, right      H    alt:A-[ A-] S   
+  Ctrl-^           Edit Section / Edit Document      H    yes       S   
+  F8               Table (column and table editor)   H    diff      B   
+  Gray +           Expand current section            H    alt:A-+   S   
+  Gray -           Collapse current section          H    alt:A--   S   
+  Gray *           Outline the section's text        H    alt:A-*   S   
+  Alt-1 to Alt-9   Show headlines to that level      HV   yes       S   
+  Alt-0            Outline the whole document        H    yes       S   
+  Notes: in an unstructured document Ins, Alt-1 and Shift-PgUp had no
+  visible effect when tried in the original, and the help says Edit
+  Section/Document is not available there.  F8 in Strata offers 'Add
+  column' and 'Split column here' only; the original's column and table
+  editor (widths, borders) is not implemented.
+
+4. Highlight, copy, cut, paste
+------------------------------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  F3               Copy (Text/Column/Block/Section)  H    yes       B   
+  F4               Cut                               H    yes       B   
+  F5               Paste                             H    yes       B   
+  F7               Move                              H    yes       B   
+  Ctrl-X           Cut text (highlight first)        H    yes       B   
+  Enter            Accept the highlight              H    yes       B   
+  Esc              Cancel the highlight              H    yes       B   
+  Gray + (in area) Anchor at the opposite corner     H    no        B   
+  Gray + (panel)   List of files, directories or     H    yes       B   
+                   choices to pick from (also F2)
+  letter (in area) Extend to next occurrence         H    no        B   
+  Left/Right (area) Change the direction              H    diff      B   
+  Ctrl-F3/F4       Lib Copy, Lib Cut to library      H    yes       B   
+  Ctrl-F5          Lib Paste from library            H    yes       B   
+  The section 'Section' choice of F3/F4/F7 is offered only in a structured
+  document.
+
+5. Attributes
+-------------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  Ctrl-B           Bold on/off                       H    yes       B   
+  Ctrl-I           Italics on/off                    H    alt:A-I   B   
+  Ctrl-U           Underscore on/off                 H    yes       B   
+  Ctrl-N           Normal text                       H    yes       B   
+  Alt-F6           Set Attribute menu                H    alt:C-F   B   
+  F6, Ctrl-E       Block/column format editor        H    diff      B   
+
+6. Search and replace
+---------------------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  F9               Search                            H    diff      B   
+  Alt-F9           Replace                           H    alt:C-F   B   
+  Ctrl-F9          Search again (the method and the direction of the last
+                   Search)                           -    yes       B   
+  Ctrl-F8          Find the next Print Error         -    yes       B   
+  Ctrl-F7          Find the previous Print Error     -    yes       B   
+  The Search panel (F9) has the fields Search for, Find (Text or Print
+  Error) and Direction (Forward or Backward); the original also has case,
+  attribute and whole-word options (WORKLIST.txt).  Find = Print Error is
+  the search method of the Print Errors that the Editor puts in the
+  document after Preview and Print (MARKERS.txt, "Print Error"): it moves
+  the cursor onto the next marker after the cursor (the previous one before
+  it), wraps with a message ("Wrapped to the start.") and says "No print
+  errors" when there is none.  Ctrl-F7, Ctrl-F8 and Ctrl-F9 were only other
+  names of F7, F8 and F9; the original does not use them.  The F12 menu has
+  the same in Print: Next Error, Previous Error, Remove Error (the one under
+  the cursor) and Remove Print Errors (all).  Del removes the marker under
+  the cursor as well.
+
+7. Markers
+----------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  Alt-F12          Marker Commands menu / edit marker HV   diff      B   
+  Ctrl-\ xx        Marker by its two letters         HV   no        B   
+  Ctrl-\ eq        Equation marker panel             V    no        B   
+  Alt-F12 on one   Edit the marker under the cursor  V    diff      B   
+  Alt-F12 on a     Show the text of the error (read only) -   yes       B   
+  Print Error
+  In the original the Marker Commands menu shows the markers that do not
+  apply in parentheses: (Page Number) and (Section) in a body; also
+  (Cross-reference) in an unstructured document (V).  The two-letter
+  accelerators are in the Marker Index help topic: au cb co c1..c9 xr da
+  de el en eq es fi fd fn ft fo if in ix ke ky ln ma me no or pb pg pa pi
+  pr re sc se sy ta ti ws wk.  Strata has no Ctrl-\ accelerators; its
+  marker menu is Alt-F12 or Ctrl-F12 (Ctrl-\ is 0x1C in a terminal).
+
+8. Menus, help, files, macros
+-----------------------------
+  Key              Function                          Orig Strata    Mode
+  ---------------- --------------------------------- ---- --------- ----
+  F12              Menu (File Global Edit Print...)  H    diff      B   
+  F1               Help                              H    yes       B   
+  Ctrl-S           Save                              H    yes       B   
+  Ctrl-R           Retrieve                          H    yes       B   
+  Ctrl-Q           Quit the editor                   H    yes       B   
+  Ctrl-P           Print, Final (not in the original) -    yes       B   
+  Ctrl-C           Spell check the current word      HV   yes       B   
+  Ctrl-T           Thesaurus, current word           HV   yes       B   
+  Ctrl-W           Switch windows                    H    no        B   
+  Ctrl-M           Virtual memory status panel       H    no        B   
+  Ctrl-Z           Undo (not in the original)        -    yes       B   
+  Ctrl-F10         Undo, as Ctrl-Z (not in the original) -  yes       B   
+  Ctrl-F11         Redo (not in the original)        -    yes       B   
+  Esc (Preview)    Cancel the wait panel of F12, Print, Preview: LaTeX is
+                   stopped and the files are deleted (PRINT-LATEX.txt, 15)
+  Esc (Print)      The same for the wait panel of Draft and Final, and while
+                   lp runs (PRINT-MENU.txt)
+  Alt-letter       Run the macro of that key         H    yes       B   
+  Ctrl-F1          Learn; ends a macro definition    V    yes       B   
+  The keys inside the thesaurus panel (Ctrl-T or Tools, Thesaurus; all V,
+  all yes; see THESAURUS.txt):
+    Right, Left      Next, previous word
+    Down, Up         Word of the row below, above (nearest column)
+    Home, End        First, last word of the row
+    PgDn, PgUp       Next, previous page of 9 rows (not-found list: 10 words)
+    Ctrl-Home        The heading word      Ctrl-End  Last word on the screen
+    Enter            Replace the word in the text (a list of similar words:
+                     look up the highlighted word)
+    Ctrl-T           Look up the highlighted word
+    Ctrl-PgUp        Back to the last word looked up
+    a letter         The Look Up box (Enter or Ctrl-T looks up, Esc closes it)
+    Esc              Leave, the text unchanged
+  Edit menu: in an unstructured document it offers Title, Structured and
+  Window; in a structured one Title, Section (or Document) and Window
+  (EDIT-MENU.txt).  The original's Accelerator Summary lists Ctrl-D twice
+  (delete word; reset a panel to a higher level) and Ctrl-E twice (block
+  format editor; toggle page display and error log in preview).
+
+
+EQUATION MARKER: INSERT AND EDIT
+================================
+
+A. In the original (Manuscript 2.1, all steps tried under DOSBox-X)
+------------------------------------------------------------------
+
+Insert.
+  1. Put the cursor where the equation goes.  This works in structured
+     and unstructured documents (and in notes, comments and headers).
+  2. Press Alt-F12.  The Marker Commands panel appears, three columns;
+     Equation is in the first column after Endif.  Move to it and press
+     Ins.  Shortcut: Ctrl-\ then e q opens the Equation panel at once.
+  3. The Equation panel (title Equation) has the fields:
+       Equation:          ...   Space opens the Equation Edit editor
+       or File Name:            an equation read from a file
+       Position:          Fixed (default), Floating or In Text
+       Optional:  Width, Height, Scale (in inches / a factor)
+       Name (for Table of Figures):
+       Print/Preview:     No (default), Print or Preview
+     Up and Down move between the fields; Return accepts a field and
+     moves on; Space opens a list or a box; Ins accepts the panel.
+  4. Space at Equation: opens Equation Edit, a full editor whose status
+     line says EQUATION EDIT and whose bottom line says 'Press Ins to
+     Save Changes or Esc to Restore Previous Version'.  Type the text
+     of the equation, for example:   a sub 1 over b super 2
+     Ins saves and returns to the panel, where the field shows the text
+     followed by '...'.  Blocks and columns can be added, but only the
+     first column of the first block is the equation; the others are
+     comments that do not print.
+  5. Ins on the panel puts the marker in the text.
+
+The panel's checks (messages seen):
+  'Width, Height and Scale cannot be used with Position: In Text'
+  'Not a valid marker (Scale cannot be used with Height or Width)'
+  'No equation was specified for the Equation marker.'  (help text)
+Print/Preview is an action, not a setting: Preview ran at once and
+stopped with 'Error: Unable to Preview document; invalid graphics
+display driver' (no graphics driver under DOSBox-X); it is not stored.
+
+Seen in the text.  The marker is drawn as   [EQN "a sub 1 over b super
+2"]   (the default Short display mode, with the text in quotes).  When
+the cursor is on it the status line says  Attr: Equation  (an empty
+marker shows as [EQN ] in the Short mode and [EQUATION ] in the Long
+mode; see GLOBAL-MENU.txt).
+
+Edit.  Put the cursor on the marker and press Alt-F12 (or Ctrl-\ e q):
+the Equation panel opens at once with the saved values (tried); Space at
+Equation: opens the editor again.  Esc leaves the panel unchanged.  The
+Search and Replace commands also look inside equations (help).
+
+The language.  The text is the original's equation language, not TeX:
+words separated by spaces, with keywords: sub, super, over, below, above,
+left, right, center, stack, matrix, end, sum, int, product, root, Greek
+letters by name, #R #F #I #B #C #S (fonts), #0 to #4 (spaces), (| |) and
+#[ #] (groups).  The help topics 'Equation Keywords'
+(about nine pages) list them all.
+
+B. On disk (bytes written by the original)
+-------------------------------------------
+
+Saved from the original with Position Fixed, Width 3, Height 1, Name
+'Eq one' (the CR LF line ends are written out; the marker is inside the
+T record of the block, it is not a record of its own):
+
+    ... text ^S 9 ( S CR LF
+    T a sub 1 over b super 2 1D 00 CR LF      the nested text record
+    2 3000 CR LF                              field 2: width, 3.000 in
+    3 1000 CR LF                              field 3: height
+    6 Eq one 00 CR LF                         field 6: name, a text
+    ^S ) 1D 00 CR LF                          end of the marker
+
+(^S is byte 13 hex.)  The records after the nested text are the fields
+of the panel, in the order of their numbers; a field that has its default
+is left out.  Found by changing one setting at a time:
+
+  field  meaning                    value
+  1      file name (or File Name)   text ending in NUL; then there is no
+                                    nested S/T text  (1ESRC.DOC 00)
+  2      width                      thousandths of an inch: 3000
+  3      height                     thousandths: 1000
+  4      scale                      thousandths: 2.000 is 2000
+  5      position                   1 Floating, 2 In Text; Fixed = no
+                                    record
+  6      name for Table of Figures  text ending in NUL
+
+Print/Preview is not stored.  Scale and Height or Width cannot both be
+set, and none of the three can be set with Position In Text.
+DOC-FORMAT.txt lists only 'nested text; 5: position' for type 9; fields
+1 to 4 and 6 and the position values are new here and should be added
+there.  Not yet checked: what the original does with a missing file for
+field 1, and the value of Position when the panel's default is changed
+back to Fixed (assumed: the record is removed).
+
+C. In Strata today
+-----------------
+
+Insert: Alt-F12 (or Ctrl-F12, or Ctrl-F then Marker) opens the Marker
+Commands menu; choose Equation.  There is no Ctrl-\ accelerator.
+Strata opens a text editor of its own first (status EQUATION EDIT, the
+same kind of mini editor as the original's Equation Edit; Ins saves,
+Esc restores), and then inserts the marker.  There is no panel after
+it: Strata's marker table has no fields for type 9, so Position, Width,
+Height, Scale, File Name, the name for the Table of Figures and
+Print/Preview cannot be set.
+Edit: cursor on the marker, Alt-F12 opens the same text editor on the
+saved text.  The payload reader keeps records it has no field for, so the
+field records (1 to 6 above) of a marker that came from the original
+should survive an edit and a save; this was not tried here.
+Display: the marker is drawn as [EQN text] in the Short mode, the text
+without quotes, as plain text from the nested block when it has one line;
+the display modes of GLOBAL-MENU.txt apply (diamond, name, short, long,
+hidden).  The equation is not typeset, evaluated or printed;
+the text export and the preview show the label.
+
+Gaps against the original:
+  - No Ctrl-\ e q accelerator (and none of the other Ctrl-\ ones).
+  - No Equation panel: Position, Width, Height, Scale, File Name, Name,
+    Print/Preview, and the checks that go with them.
+  - The label has no quotes around the text.
+  - Space/Ins inside the panel work differently because there is no
+    panel; Return in the editor inserts a new line of the equation.
+  - Nothing reads the original's language; the TeX plan is in
+    EQUATIONS.txt (a new equation would carry a marker flag, the position
+    and size fields above would still apply to it).
+
+
+D. Keys that could not be verified
+----------------------------------
+
+  - Shift-Del (delete a section), Ctrl-Enter, Ctrl-Hyphen, Ctrl-PgUp/PgDn
+    were taken from the help, not tried, and Strata's handling of Shift-Del
+    was not looked at.
+  - Alt-F1 (Compose), Alt-F8 (Border), Ctrl-W, Ctrl-M, Ctrl-D in a
+    panel (reset to a higher level): help only.
+  - The Table key sequences (F8 twice, F8 Up/Down/End) and the column and
+    table editor keys (Space, Del, Shift-Del, Ctrl-[ and Ctrl-]).
+  - The ruler keys (Tab, Shift-Tab, ^ , . # for tab types; 1 to 9; 0).
+  - The highlight keys Gray +, a letter, and the direction keys.
+  - Gray + / - / * on a PC keypad: Strata receives plain + - * and uses
+    Alt + - * instead; the PC keypad behaviour itself was not tried.
+  - What Ins does in an unstructured document: nothing showed on the
+    screen, no message was seen; whether it appends a block is open.
+  - Ctrl-\ in the X11 front end (not tried; the terminal sends 0x1C).
+
+
+
+EQUATION EDITOR, CTRL-W (added after the report above)
+------------------------------------------------------
+Ctrl-W in the equation editor (Alt-F12 on an Equation marker; the status line
+says EQUATION EDIT) shows an enlarged picture of the equation as it is now,
+or the message that latex gave when it could not typeset it.  Esc goes back
+to the editor.  It needs the X11 version, latex and dvipng.  Strata only; the
+original has no such key.
+
+
+Function key labels of the modifier keys
+----------------------------------------
+
+With Display On-Screen Help? set to Yes (the default; Global, Options), the
+two bottom lines of the edit screen show the labels of ten keys.  In the
+original, which has F1 to F10, they change while a modifier key is held (seen
+in DOSBox-X):
+
+  none   F1 Help, F2 Split, F3 Copy, F4 Cut, F5 Paste, F6 Format, F7 Move,
+         F8 Table, F9 Search, F10 Menu
+  Shift  empty labels (Shift has no function key commands)
+  Ctrl   F1 Learn, F2 Math, F3 Lib Copy, F4 Lib Cut, F5 Lib Paste, F6 Case;
+         F7 to F10 empty
+  Alt    F1 Compose, F2 Append, F3 Join, F4 Delete, F5 Overtype,
+         F6 Set Attr, F7 Go To, F8 Border, F9 Replace, F10 Marker
+
+Held together, Alt wins over Ctrl and Ctrl over Shift (Shift+Ctrl shows the
+Ctrl labels, Ctrl+Alt and Shift+Ctrl+Alt the Alt labels).  The labels go back
+when the key is released.  Strata does this in the X11 version; a terminal
+cannot see a modifier key alone, so it always shows the usual labels.  The
+columns of the labels are 0, 15, 32, 51 and 66 (F9) or 65 (the last key).
+In Strata the last key of the second row is F12 and not F10: F12 Menu, with
+Ctrl and with Alt F12 Marker.  F10 and F11 have no command and no label.
+
+Moving a section left or right (Alt-[ and Alt-]; Alt-< and Alt-> also work,
+and are the only ones in a terminal, where Alt-[ cannot be told from the
+start of a key sequence).  Right makes the section the last subsection of
+the section before it; its own subsections go with it.  Left makes it a peer
+of its parent, placed after it, and the sections that followed it become its
+subsections: with 2, 2.1, 2.2 and 2.3, moving 2.1 left gives 3 with 3.1 and
+3.2 (the old 2.2 and 2.3).  Any section can move, not only the last one.
+
+The collapsed or expanded state of the sections is saved in the file, and
+changing it counts as a change of the document: Quit asks to save it (seen
+in the original).
+
+
+THE SPELL CHECK: KEYS
+=====================
+
+Orig: V = seen in the original under DOSBox-X, H = in the help file.  The
+details and the screens are in SPELL.txt.
+
+F12, Tools, Spell has Document, Block, Section and Word (the letters d, b, s
+and w).  Ctrl-C is Spell Word.  Without aspell or hunspell in PATH (and not
+named by STRATA_SPELL) the entries stay, and a message says what to install.
+
+  Key (panel)      Function                          Orig Strata
+  ---------------- --------------------------------- ---- ----------
+  Check Document Spelling (Ins starts, Esc cancels)
+  Space, Left,
+   Right           Auto Correct? Yes or No           V    yes
+  Block, Section highlight
+  Up, Down         Move the highlight                V    yes
+  Home, End        Begin or end of the section       V    diff
+  Enter            Take the highlight                V    yes
+  Esc              Cancel                            -    yes
+  Unknown word (the bar of commands)
+  A, D, I, E,
+   G, L, Q         Accept, Define, Ignore, Edit,
+                   Guess, Line, Quit                 V    yes
+  Left, Right,
+   Enter           Choose a command on the bar       V    yes
+  Ins              the same as Enter                 H    yes
+  Guess
+  Left, Right      Choose a suggestion               V    yes
+  Enter            Replace the word                  V    yes
+  Esc              Back to the commands              H    yes
+  Edit and Line
+  Left, Right,
+   Home, End       Move in the word or the line      V    yes
+  Bksp, Del        Delete                            V    yes
+  Enter            Use the corrected word or line    V    yes
+  Esc              Back to the commands              H    yes
+  Accept correction? and Continue with auto corrections?
+  Y, N, Left,
+   Right, Enter    Yes or No (Esc is No)             V    yes
+  Spell Word (Ctrl-C)
+  Left, Right      Choose a suggestion               V    yes
+  Ins, Enter       Replace the word in the document  V    yes
+  Esc              Cancel                            V    yes
+  Any key          Leave the panel of a word that is
+                   right or too long                 V    yes

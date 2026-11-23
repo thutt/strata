@@ -1,0 +1,25 @@
+
+------------------------------- Equation Keywords ------------------------------
+
+Miscellaneous Characters
+----------------------------------------+---------------------------------------
+Name                   Keyword          | Name                    Keyword
+----------------------------------------+---------------------------------------
+Nabla                  nabla            | Proportional            proport
+Aleph                  aleph            | Partial differential    partial
+Infinity               infinity         | Empty set               empty
+Prime                  prime            | Angle                   angle
+Real                   real             | Degree                  degree
+Imaginary              imag             | Ellipses                ...
+Therefore              therefore        | Centered ellipses       #...
+H bar                  hbar             |
+----------------------------------------+---------------------------------------
+                             
+             Example equation:      90 degree    ->    90deg
+
+--------------------------------------------------------------------------------
+
+Function Names    Greek Letters    Diacriticals    Operators    Pointers
+      Attributes     Grouping Symbols     Large Operators     Format Keywords
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

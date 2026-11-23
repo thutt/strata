@@ -1,0 +1,131 @@
+THE SAMPLE OF THE STANDARD FONTS AND SIZES
+==========================================
+
+What it is
+----------
+samples/fonts/fonts-sample.doc is a structured document with no title page.
+It has one section of the first level for each of the 20 numbers of the list
+of fonts of Strata (the TeX Font Association, docs/FONTS.txt, src/fonts.c):
+the numbers 1 to 3 are the fonts of the roles of a document (Headline, Text
+and Header/Footer, all three Latin Modern), the numbers 4 to 18 are the
+fifteen standard fonts, the number 19 is Lato, and the number 20 is free.
+
+The headline of a section is the name of the font as the panels of the Editor
+show it: Headline (Latin Modern Sans), Text (Latin Modern Roman),
+Header/Footer (Latin Modern Roman), then Times, Helvetica and so on, then
+Lato, then (not set).  The number in front of it is made by the document: the
+Section Tag of the first level (Global Format, Level 1, Section Tag) is
+
+    Font \1\:
+
+(the record F1G), so that the first level counts the sections and the
+headline of the font 4 is printed, and shown on the screen, as Font 4: Times.
+The counter is the number of the font because the document has exactly one
+section for each font, in the order of the list.  Auto Numbering is on (the
+header has no FLA record).
+
+A number that has nothing configured (the number 20; the default list leaves
+only this one empty) has the headline Font 20: (not set), the line nothing
+configured. and no blocks.  Every other number has one block for each of five
+sizes: 8, 10, 12, 14 and 20 points.  Every block has two columns.  The narrow
+column on the left holds the size, and the wide column on the right holds the
+sentence The quick brown fox jumps over the lazy dog., set in that font and at
+that size.  At 20 points the sentence does not fit the column on one line in
+most of the faces, and it goes on a second line there.
+
+The page break level is 0, so the fonts follow one another and no font is
+forced to a new page.  A Keep region (a Keep marker Start (Fixed) and a Keep
+marker End, each in a block of its own, so that they take no height) holds the
+headline and the five blocks of each font: a font is never split between two
+pages and its headline is never left alone at the foot of a page.  The Start
+marker of a font stands at the end of the section of the font before it, so
+that the region holds the headline; the first font has its Start marker after
+its headline, because it stands at the top of the first page.  The running
+head has no Section marker: a Section marker in a header shows the wrong
+section when the headline of the section is inside a Keep region.
+
+The fonts 4 to 18 are Times, Helvetica, Courier, Palatino, Bookman, New
+Century Schoolbook, Avant Garde, Zapf Chancery, Charter, Utopia, TeX Gyre
+Termes, TeX Gyre Heros, TeX Gyre Pagella, TeX Gyre Cursor and Computer Modern
+Roman.  Every one of them is a font of the standard collections of TeX Live.
+
+Lato (the number 19)
+--------------------
+Lato is the one font of the list that TeX Live does not have in its basic
+collections: it has to be installed, once, for the user.  In the Document
+Manager choose TeX Font Association, open the font 19 with Return, set Install
+Now to Yes and press Ins: the Document Manager downloads the archive lato from
+CTAN, unpacks it in the TeX directory of the user and enables its map file.
+It needs curl, unzip, kpsewhich, mktexlsr and updmap-user (docs/FONTS.txt,
+Downloading a font).  Before it is installed the Printer does not fail: the
+sizes of the font 19 are set in the font of the text, and LaTeX only warns.
+After it is installed they are set in Lato.  The test of the sample checks the
+Lato face when kpsewhich finds lato.sty and the five sizes in any case.
+
+How the font and the size are set
+---------------------------------
+The Font marker of Strata chooses only one of three families of type (roman,
+sans serif and typewriter), and no marker and no format sets a size: the size
+of a document is one number, the record PS of the header.  The sample therefore
+starts the specimen text of each block with a LaTeX instruction marker that
+holds
+
+    \fontfamily{FAMILY}\fontsize{SIZE}{LEADING}\selectfont
+
+where FAMILY is the name of the LaTeX family of the font (lmss for the
+Headline font, ptm for Times, ppl for Palatino, lato-TLF for Lato and so on,
+from the table in tests/mkfonts.py).  A second LaTeX
+marker, \par, at the end of the text closes the last paragraph inside the
+group of the size, so that every line has the same distance to the next.  The
+header has the record F1G for the section tag and no FLA record (Auto
+Numbering is on) and no FLP record: the page break level is 0, the default,
+which the Editor does not write.
+
+The specimen text
+-----------------
+The text is in the file samples/fonts/specimen.txt: one line of the text on
+each line of the file, at most ten lines of at most 80 characters, all of
+them printable ASCII.  The file in the repository holds one line, The quick
+brown fox jumps over the lazy dog., and nothing else.  The generator refuses a
+file with no line, with more than ten lines, with a line of more than 80
+columns, with an empty line, or with a character that is not printable ASCII,
+and it says why.  The sample has no footnote and no credit.
+
+To use another text
+-------------------
+Put the text into samples/fonts/specimen.txt (or into any other file) and
+make the sample again.  From the directory modernization:
+
+    python3 -I -B tests/mkfonts.py
+
+writes samples/fonts/fonts-sample.doc from samples/fonts/specimen.txt.  To read
+another file and write to another directory:
+
+    python3 -I -B tests/mkfonts.py --specimen MYTEXT.TXT MYFOLDER
+
+writes MYFOLDER/fonts-sample.doc.  The output is the same bytes on every run.
+Then run the test, which prints the sample to a PDF and reads it (no printer is
+used):
+
+    STRATA_BUILD_DIR=BUILD python3 -I -B tests/fontsample.py
+
+where BUILD is the folder of a build, such as /tmp/strata/debug.  The test
+compares the committed document with the generator, so the committed document
+must be made again whenever the text changes.
+
+What the test checks
+--------------------
+tests/fontsample.py: the committed document is what the generator makes; the
+structure (a structured document, the Section Tag "Font \1\: " and no FLA
+record, no FLP record, no title page, 20 sections in the order of the list,
+the name of each the one that src/fonts.c gives to its number, five blocks of
+two columns for each of the 19 configured fonts, the line nothing
+configured. and no block for the number 20, and a Keep region around each
+font that includes its headline); in the print the headline Font N: NAME of
+every font with the counter equal to the number of the font, no headline
+alone at the foot of a page, no footnote and no credit, the last word of the
+text, with its period, once for each size of each configured font, no font
+forced to a new page, the embedded face of each font on the pages from its
+headline to the next one (Lato when it is installed), and a size of the
+printed text that grows from block to block; and the texts that are accepted
+(three lines, in a temporary folder) and refused.

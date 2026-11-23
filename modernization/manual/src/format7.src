@@ -1,0 +1,221 @@
+# Chapter 4, seventh part: Global, Options and Global, Named.
+# Part of the chapter source.
+
+.h2 Options [format-options]
+.ix Global Options
+.ix Options panel
+.ix Display options
+.ix Expanded Status Line
+.ix Display On-Screen Help
+.ix Display Tab and End-of-Line Characters
+.ix Display Dots for Spaces
+.ix Backups Kept
+.ix BAK file
+.ix Backup file
+.ix config file
+Global, Options holds the settings of the Editor itself: how much of the
+screen the Editor draws and whether it keeps a backup when it saves.  They
+belong to the user and not to the document: nothing of this panel is saved
+with a document, and a setting stays as it is for every document, now and in
+later sessions.
+
+.h3 How to reach the command [format-options-reach]
+Press {k:F12}, choose Global and then Options (the fifth entry; the hint line
+reads "Other settings"), as described in {x:format-global-menu}.  The panel
+has no neighbors: {k:Ins} accepts and {k:Esc} cancels.
+.pic pictures/format-options.png 5 The Options panel.
+
+.h3 The fields [format-options-fields]
+.ix Options, fields
+The panel has eleven rows: four choices ({k:Left}, {k:Right} and {k:Space}
+change them), one number and six information rows.  An information row shows a
+fixed value; the cursor skips it and it cannot be changed.
+.table 28 7 22
+Field | Default | What it does
+Expanded Status Line? | No | A second row of the status.
+Display On-Screen Help? | Yes | The two rows of key labels.
+Display Tab & End-of-Line Characters? | Yes | Marks in the text.
+Display Dots for Spaces? | No | A dot for each space.
+Backups Kept (0 to 99) | 3 | Numbered backups on Save.
+.end
+The six information rows are these.  They are not errors and they do not show
+a count or a size of the document: each one is a setting that has one value
+here, which is what the row says, and the value is not changed by anything.
+.table 22 12 26
+Row | Shows | What it means here
+Block Indicators | Solid Lines | The screen draws a solid line between two blocks.
+Display Even Justification? | No | The screen never spreads a line of text to the
+ full width; the Printer does it for the blocks that are justified.
+Display +/- with Section Tags? | No | A section tag has no sign in front of it;
+ the outline commands show which sections are open ({n:edit-b-outlines}).
+Units | Inches (in) | The lengths of the panels are in inches, and the fields
+ that have a Unit field say which unit they use.
+Line Weight (Borders) | 100 % | Borders print at the weight that they have.
+(Other) | 100 % | Lines of the Line marker print at the weight of the marker.
+.end
+{b:Expanded Status Line?}  With Yes the screen has a second row under the
+status line that shows the format of the block at the cursor: the justification,
+the indent, the left block indent (L), and the word Headline when the block is
+a headline, such as
+.code
+ Just: Even    Indent: None           L: 0
+.end
+The status line and this row are described in {x:format-screen-status}.  The
+screen has one row fewer for the text when the row is on.
+
+{b:Display On-Screen Help?}  With Yes the last two rows of the screen hold the
+labels of the function keys ({k:F1} Help, {k:F2} Split, and so on); in the
+graphical version, holding {k:Alt} or {k:Ctrl} shows the labels of the Alt and
+Ctrl keys instead.  With No the two rows are used for text, and a message of
+the Editor takes one row at the foot when there is one.
+
+{b:Display Tab & End-of-Line Characters?}  With Yes the end of every line of a
+block is marked with a small left pointing triangle and every tab with a right
+pointing arrow, drawn dimmed, so that line ends and tabs can be seen.  With No
+neither is drawn.  The marks are not text: they are not saved, not printed, and
+the cursor does not stop on them.
+
+{b:Display Dots for Spaces?}  With Yes every space of the text is drawn as a
+small centered dot, to see how many spaces there are between two words; with
+No a space is blank.  It is not saved and not printed.
+
+{b:Backups Kept (0 to 99)}  The number of numbered backups that Save keeps of
+the file that it replaces, such as {c:.backup/report.bak01} (the newest) and
+{c:.backup/report.bak02}.  0 makes none and the default is 3.  A save of a
+document
+that has not changed makes no backup.  A lower number puts a question first, and the box
+shows which backups are removed ({n:file-backup-option}).  {n:file} (File, Save) has the whole
+of Save.  Autosave and its interval are set in the Setup of the Document
+Manager ({n:str}).
+
+.h3 Where the settings are kept [format-options-kept]
+.ix Config file, Options
+.ix expanded_status, onscreen_help
+.ix show_marks, show_dots, backup
+.ix STRATA_HOME
+When {k:Ins} is pressed the five choices take effect at once and are saved in
+the file {c:config} in the Strata directory of the user, which is {c:.strata}
+in the home directory, or the directory that the environment variable
+{c:STRATA_HOME} names.  The file is a list of lines, key and value.  The Editor
+reads it again at start.
+.table 28 16 13
+Field | Key | Written as
+Expanded Status Line? | {c:expanded_status} | yes or no
+Display On-Screen Help? | {c:onscreen_help} | yes or no
+Display Tab & End-of-Line Characters? | {c:show_marks} | yes or no
+Display Dots for Spaces? | {c:show_dots} | yes or no
+Backups Kept (0 to 99) | backups | 0 to 99
+.end
+The same file holds the settings of the Document Manager ({n:str} and
+{n:appcfg}).  A key that is missing has its default.  If the file cannot be
+written (there is no home directory, the directory cannot be made, it belongs
+to somebody else, or the disk does not accept the write), a box titled Options
+shows the reason
+({n:format-messages}); the settings still hold for the rest of the
+session.  After {k:Esc} nothing is changed.
+
+.note The screen is drawn again when the panel is accepted, so that a change
+  of the status rows or of the marks shows at once.  The settings of Options
+  are not a change of the document: the star in front of the name of the file
+  does not appear.
+
+.h2 Named [format-named]
+.ix Global Named
+.ix Named block format
+.ix Named Block Format panel
+.ix Block format, named
+.ix Retrieve Named Block
+.ix Save as, named format
+Global, Named keeps named formats: a group of settings for a block that is
+given a name and is saved with the document, so that a block can say "format
+me as Quotation".  You can make, change, copy and delete the named formats
+of a document.  A block that has a named format takes its attributes,
+justification, indent, tab stops, left block indent, font, line spacing and
+block spacing from it, at the place of the lookup order of
+{x:format-order}.
+
+.h3 How to reach the commands [format-named-reach]
+Press {k:F12}, choose Global and then Named (the sixth entry; the hint line
+reads "Edit, Delete named block format settings") as described in
+{x:format-global-menu}.  A second menu offers two entries: Edit, "Edit a
+named block format" and Delete, "Delete a named block format".  Choose with
+{k:Left}, {k:Right} and {k:Return}, or press {k:E} or {k:D}.
+.pic pictures/format-named.png 5 The Named Block Format panel.
+
+.h3 Edit [format-named-edit]
+.ix Edit, Named
+.ix (new), named format
+.ix Named Block Format, fields
+If the document has named formats a list titled Retrieve Named Block appears
+first.  Its first entry is (new), for a format that does not exist yet, and the
+others are the names of the formats; choose one with the cursor keys and
+{k:Return}, or leave with {k:Esc}.  A document with no named format goes
+directly to the panel.  The panel is titled Named Block Format.  Every field
+starts empty (a choice shows [], a text field is blank), because a named
+format sets only what it names: an empty field is left to the other levels of
+the lookup ({n:format-order}).  When a format was retrieved the fields show
+its values and the name appears in Save as.
+.table 22 38
+Field | Values
+Save as | a name
+Ruler (tab stops) | text, such as 5,20R
+Attributes | [], Normal, Bold, Italic, Underscore Words
+Justification | [], Left, Right, Center, Even
+Indent | [], None, First, All but First, All
+Font | [] and the twenty font names
+Line Spacing | empty, or a number of lines, such as 1.50
+Block Spacing | empty, or a number of lines, such as 2.00
+Block Indent (Left) | whole number
+Block Indent (Right) | whole number
+Vertical Centering (%) | whole number
+Winding Columns | whole number from 1 to 9; {k:F2} opens the layout
+Keep Block on One Page? | [], No, Yes
+.end
+{b:Winding Columns.}  With {k:F2} (or {k:Keypad +}) on the field the Winding
+Column Layout panel opens, as on the Global Format panel
+({n:format-fields-spacing}): Number of Columns, Gutter Size (an inch with up
+to three decimals) and Vertical Rules (a choice that starts with [], then
+None, Single, Double and Wide).  A block that has the named format is set in
+that number of columns with that gutter and that rule; an empty gutter and
+[] leave the gutter and the rule to the level of the block and to the
+document.  The Editor shows one column; the Printer sets the columns.
+.pic pictures/format-named-winding.png 5 The Winding Column Layout panel of the Named Block Format, with two columns, a gutter of 0.5 inch and a single rule.
+The attributes, the justification, the indent, the tab stops and the left
+block indent are used on the screen and on the printed page; the font is used
+on the printed page ({n:format-set-typefaces}), and so are the line spacing
+and the block spacing, in a final print ({n:format-set-spacing}).
+
+{b:Accepting.}  {k:Ins} checks the panel: Save as must not be empty (the box
+shows "Enter a name to save the format as") and must not have control
+characters, Block Indent (Left) must be digits only, and Line Spacing and
+Block Spacing must be numbers with at most two decimals; otherwise a box
+shows "Invalid number" and the panel is shown again with what was typed.  The
+Ruler (tab stops) is not checked.  {k:Esc} leaves everything as it was.
+
+{b:Saving.}  The format is saved under the name in Save as.  If the name is that
+of a format that exists the old definition is replaced; if it is a new name
+the format is a copy and the one that was retrieved stays.  So a format is
+renamed by saving it under another name and deleting the old one.  The
+formats are kept in the order of their names (by character code, so that
+capitals come before lower case letters).  The document is marked as changed.
+
+.h3 Delete [format-named-delete]
+.ix Delete, Named
+.ix Delete Named Block
+Delete shows the list titled Delete Named Block with the names of the formats.
+Choose one with the cursor keys and {k:Return}; the question "Delete the named
+block format NAME?" is asked as a list of two entries, Yes and No: Yes deletes
+the format, and No or {k:Esc} keeps it.
+When the document has no named formats a box shows "There are no named block
+formats" and nothing else happens.  Blocks that used the name are not changed:
+they take the next level of the lookup.
+
+.h3 Limits [format-named-limits]
+.ix Named format, limits
+.table 24 36
+Case | What happens
+More than 40 named formats | Only the first 40 are listed.
+A name longer than 31 characters | It is cut in the lists, so that the format
+ cannot be retrieved by its list entry.  Keep names short.
+A name that has the same letters in another case | It is another name.
+.end

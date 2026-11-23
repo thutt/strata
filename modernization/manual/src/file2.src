@@ -1,0 +1,548 @@
+# Chapter 2, part 2: the commands Save and Retrieve.
+.h2 Save [file-save]
+.ix Save
+.ix Save File panel
+.ix Ctrl-S
+.ix Saving a document
+.ix Save As
+.ix F12, File, Save
+.ix Description, Save panel
+.ix Author, Save panel
+.ix Revision, Save panel
+.ix Overwrite old version on disk
+Save writes the document, or a part of it, to a file.  Until a document is
+saved it exists only in the memory of the Editor.  The name on the panel can
+be changed, so Save also does what other programs call Save As, and its
+Options field makes templates and extracts.  {k:Ctrl-S} writes the document at
+once under its own name and shows no panel.
+.table 20 40
+Way to reach it | Notes
+{k:F12}, File, Save | Press {k:F12} and then {k:F} for File
+ | and {k:S} for Save.  The keys {k:Left} and
+ | {k:Right} and {k:Enter} do the same.  The panel
+ | Save File opens.
+{k:Ctrl-S} | Saves under the name of the document, at once.
+ | See {x:file-save-quick}.
+.end
+The menu hint on the line below the menu bar reads "Save the current document
+on the disk [{k:Ctrl-S}]".
+.pic pictures/file-save.png 5 The Save File panel.
+.h3 The Save File panel [file-save-panel]
+.ix Save File, fields
+.ix Document Name, Save
+.ix Options, Save
+The panel has six fields.  The keys that move between them and accept the
+panel are those of {x:file-panels}.
+.table 15 45
+Field | Meaning and value
+Working Directory | The directory that the file is written in.  It is
+ | shared by all the File panels
+ | ({n:file-workdir}).  {k:F2} lists the directories.
+ | Default: the working directory.
+Document Name | The name of the file.  The field begins with the name
+ | of the document, without its directory.  A name with
+ | no dot gets the extension {c:.doc}, or {c:.set} when
+ | the option is Save Global Settings Only
+ | ({n:file-names-ext}).  {k:F2} lists the files that end
+ | with {c:.doc}, {c:.set} or {c:.bak} (and a number).  The field must
+ | not be empty.
+Options | What is written: Save Entire Document, Save Global
+ | Settings Only or Extract Current Section (Extract
+ | Current Block when the document is not structured).
+ | Default: Save Entire Document.
+Description | The description of the document.  It begins with the
+ | description that the document has, or is empty.
+Author | The author of the document.  It begins with the author
+ | that the document has, or is empty.
+Revision | The revision number, in the form {c:1.007}.  It begins
+ | with the revision that the document has.
+.end
+All the text fields are edited as {x:file-panels-text} says, and
+Options is changed as {x:file-panels-choice} says.  A document that
+is new has the revision 1.000, an empty description and an empty author unless
+the New panel or the Document Manager gave it some.
+.h3 What the Options field writes [file-save-options]
+.ix Save Entire Document
+.ix Save Global Settings Only
+.ix Extract Current Section
+.ix Extract Current Block
+.ix Template, Save Global Settings Only
+.ix Extract, section
+.pic pictures/file-save-options.png 4 The list of the Options field of the Save panel.
+.table 22 38
+Value | What the file holds
+Save Entire Document | The whole document: the settings and every
+ | section and block of the text.  The document takes
+ | the name and the directory of the file, and it is no
+ | longer marked as changed.  It is the only value
+ | that makes backups ({n:file-backup-when}).
+Save Global Settings Only | All the settings, including the description,
+ | the author and the revision, and no text at all.
+ | The result is a template.  The name gets {c:.set}
+ | when it has no dot.  The document in
+ | the Editor keeps its name and its text.
+Extract Current Section | A complete document that holds the section the
+ | cursor is in with all its subsections, and the
+ | settings of the document.  The document
+ | in the Editor is not changed and keeps its name.
+Extract Current Block | The same for a document that is not structured: the
+ | block the cursor is in.
+.end
+The file of Extract Current Section is a valid document of its own.  The
+extracted section is the first section of the new document, whatever its
+number was in the old one: the section 2.1.2 of a report becomes the section 1
+of the extract.  The extract has no title page.  Opening it later is an
+ordinary Retrieve.
+.note The settings of a template are all the settings of the document at that
+  moment: the global formats, the page layouts, the typefaces, the marker
+  settings, the description, the author and the revision.  A template
+  made by Save Global Settings Only has no text, no title page, no macros and
+  no libraries.  A template with starting text is made with Save Entire
+  Document under a name that ends with {c:.set} ({n:file-templates-create}).
+.h3 Description, Author and Revision [file-save-dar]
+.ix Description, change
+.ix Author, change
+.ix Revision, rule at Save
+What is typed in the fields Description and Author becomes the description and
+the author of the document, and is written in the file.  They
+are the values that the markers Description and Author print.  Changing
+either of them counts as changing the document: the revision goes up even if
+no text was edited ({n:file-revision-rule} gives the rule).  A field
+that is left as it was changes nothing.
+.pic pictures/file-overwrite.png 4 The question that is asked when the file exists.
+The Revision field is read when the panel is accepted.  The rule is this.
+.table 33 27
+What is in the field | What is written
+The number shown on the panel, and the | The number plus 0.001.
+ document or its description or author | (1.004 becomes 1.005.)
+ was changed |
+The number shown on the panel, and | The number shown.
+ nothing was changed |
+Any other number | That number, as typed.
+.end
+A number that is typed is accepted if it has digits, an optional point and
+at most three digits after the point: {c:3}, {c:2.5} and {c:.25} are numbers;
+{c:1.2345}, {c:-1}, {c:1.2a} and an empty field are not, and the panel shows
+"Not a valid revision number" ({n:file-panels-check}).  A number
+typed that happens to be equal to the number shown counts as not typed: the
+automatic rule applies.
+.caution Save Global Settings Only and Extract Current Section apply the
+  revision rule to the document in the Editor too.  If the document has been
+  changed, the revision in the Editor goes up by 0.001 as the file is written,
+  although the document itself was not saved and is still marked as changed.
+  The next Save then shows a revision that is one higher than the document had
+  on the disk.  Typing the revision on the Save panel avoids the surprise.
+.h3 The question and the result [file-save-result]
+.ix Overwrite old version on disk?
+.ix Save, existing file
+.ix Save failed
+.ix Saved (message)
+When the panel is accepted the Editor first tests the name.  If a file of
+that name exists, whatever the option is and even if it is the file of the
+document itself, the question "Overwrite old version on disk?" is asked, with
+the entries Yes and No ({n:file-panels-yn}); No leaves the panel's
+work undone and the document unchanged, except that the Working Directory has
+been remembered.  Then, in this order:
+.table 4 57
+Step | What happens
+1 | The description and the author are put in the document, if they were
+ | changed, and the revision is set by the rule above.
+2 | With Save Entire Document, Backups Kept above 0 and a file of that name
+ | on the disk that the new version differs from, the backups are moved up
+ | and the file on the disk becomes backup 1 ({n:file-backup-when}).
+3 | The file is written.
+4 | If it was written, the message line shows "Saved" and the full name of
+ | the file, for example "Saved" and the path.  With Save Entire
+ | Document the document takes that name and loses its changed mark; the
+ | status line no longer shows the asterisk.
+5 | If it was not written, a box with the title "Save failed" shows the
+ | reason (see the table below), the revision and the changed mark are put
+ | back as they were, and the document keeps its old name.
+.end
+The reasons that the box can give:
+.table 29 31
+Reason | Cause
+cannot write file | The file could not be opened for writing (Save
+ | Entire Document): the directory does not exist, is
+ | not writable, or a name of that kind is a directory.
+cannot write {i:name} | The same for Save Global Settings Only and Extract
+ | Current Section.  The name is the full path.
+A backup file is not saved over: use Restore Backup or give another name | The
+ | name is that of a backup ({n:file-backup-use}).
+write error | The file was opened but writing or closing it failed
+ | (the disk is full, for instance).
+There is no current section | Extract Current Section was chosen and the cursor
+ | is in no section.
+.end
+A save that fails leaves the document on the disk as it was: the new version
+is written completely before it replaces the old one, and the changes stay in
+the Editor.  The backups, if there are any, hold the versions before.
+.h3 Ctrl-S, the quick save [file-save-quick]
+.ix Quick save
+.ix Ctrl-S, quick save
+.ix Save without a panel
+.ix Autosave, quick save
+{k:Ctrl-S} saves the document at once.  No panel is used and no question is
+put: Save Entire Document is written under the name that the document has,
+in the directory of that name.  The rules are these.
+.table 31 29
+Situation | What {k:Ctrl-S} does
+The document has a name | Writes the file, without asking.
+The document has changed | The revision goes up by 0.001 first.
+The document has not changed | The revision stays; nothing is written and
+ | no backup is made ({n:file-backup-when}).
+Backups Kept is above 0 | Makes the backups first
+ | ({n:file-backup-when}).
+The document has no name | Opens the Save panel; the rest is as for
+ | the menu command.
+The file cannot be written | The box "Save failed" with the reason;
+ | the revision is put back.
+.end
+After a good save the message line shows "Saved" and the name.  The
+Working Directory field of the File panels is not used and not changed by
+{k:Ctrl-S}: the file goes where the document came from, which may be a
+different place from the directory that the Save panel proposes if another
+directory has been used on a File panel since.  The Autosave of the Editor
+does the same as {k:Ctrl-S} each time its interval has passed, but makes no
+backup ({n:file-backup-autosave}).
+.caution The Save panel writes to the Working Directory plus the Document
+  Name, and {k:Ctrl-S} writes to the place the document has.  After a Retrieve
+  or a Delete in another directory the two can differ.  To be sure where the
+  file goes, read the line "Saved" that follows.
+.h3 Where the cursor is when a document is opened [file-cursor-place]
+.ix Cursor place, saved with the document
+.ix Position, saved with the document
+.ix Reopening a document at the place of the last change
+.ix Document, where the cursor starts
+A document that is opened again shows the place where the last change was
+saved: the cursor is on the same line of the same block at the same column,
+and the line is on the same row of the screen.  Nothing has to be asked for or
+set.  The place is stored in the document file itself, so it goes with the file
+when the file is copied, and it is the same when the document is opened from
+the menu of documents, from the command line, with Retrieve or from a backup.
+.table 31 29
+Situation | Where the cursor is
+The document was saved with changes | At the place of the cursor when it was
+ | saved, by Save, {k:Ctrl-S} or Autosave.
+The document was only looked at | At the place of the last saved change:
+ | moving the cursor changes nothing, so
+ | nothing is written for it, and a
+ | document that was not changed is not
+ | written again ({n:file-save-quick}).
+The document was made with Save As | At the place of the cursor when it was
+ | saved under the new name.
+The document was never saved with a place | At the start of the text, as always.
+The document was made from a template | At the start of the text, even if the
+ | template file holds a place.
+A backup is opened | At the place that the saved version had.
+The document is shorter than it was | At the nearest place that is there: the
+ | last block, or the end of the block.
+The saved place cannot be read | At the start of the text; the document
+ | opens as usual.
+.end
+The place counts the blocks of the document, so if another program changes the
+text before it, the cursor can be a few lines away from the place it left; it
+is never outside the document.  A cursor at the start of the text, with
+the screen at its top, writes no place at all, and removes the old one.  The
+place does not change what is printed or exported, does not change the
+revision and does not mark the document as changed (there is no star in
+front of the name).
+.h3 Save at the edges [file-save-edges]
+.ix Save, empty document
+.ix Save, read-only file
+.ix Save, name of a directory
+.table 31 29
+Case | Result
+An empty document | It is written like any other: the settings and one
+ | empty block.
+A file that is write protected | "cannot write file" (the file is opened for
+ | writing and refused).
+A name that has a slash and a | The directory must exist; Save does not make
+ directory that does not exist | directories: "cannot write file".
+A name that is a directory | "cannot write file".
+The Document Name field empty | It is rejected with "No file name
+ | specified" and the panel stays open.
+A backup name, {c:.backup/name.bak01} | Refused with the box "Save failed" and
+ | "A backup file is not saved over: use
+ | Restore Backup or give another name"
+ | ({n:file-backup-use}), after the question
+ | "Overwrite old version on disk?" when the
+ | file exists.
+Extract Current Section, the cursor | "There is no current section".  (The
+ in no section | editor keeps the cursor in a section, so
+ | this is not met in normal use.)
+.end
+.h3 The terminal version and the X11 version [file-save-diff]
+.ix Save, terminal and X11
+The panel and its keys are the same in the terminal version and in the X11
+version.  The checklist key is {k:F2} in both; in the terminal version
+{k:Alt-+} is the same key as {k:Keypad +} in the X11 version.
+.h3 See [file-save-see]
+{X:file-backup} on the backup and {x:file-revision} on the
+revision; {x:file-templates-create} on making templates; the
+chapter on the Global menu for the settings that a template carries; the
+Quit command of the Edit chapter, which offers to save a changed document.
+
+.h2 Retrieve [file-retrieve]
+.ix Retrieve
+.ix Retrieve File panel
+.ix Ctrl-R
+.ix F12, File, Retrieve
+.ix Opening a file
+.ix Merging a file into a document
+.ix Insert a file
+Retrieve brings a file into the Editor.  In its plainest form it replaces the
+document that is being edited by another one.  Its other forms take only a part
+of a file (the text, the global settings or the typefaces) and put it into the
+open document, and one adds the text of a file to the document after the
+current section.  Retrieve combines documents, copies the layout of one
+document to another, and restores a backup.
+.table 20 40
+Way to reach it | Notes
+{k:F12}, File, Retrieve | Press {k:F12}, then {k:F} and {k:R}.
+{k:Ctrl-R} | Opens the same panel from anywhere in the Editor.
+.end
+The menu hint reads "Retrieve a new document file from the disk [Ctrl-R]".
+.h3 Ways to open a document [file-retrieving]
+.ix Retrieving a file
+.ix Opening a document
+.ix Document, opening
+A document that has been saved is read back in one of two ways.
+.table 24 36
+Way | What happens
+Document Manager, Edit / Preview /
+ Print Document | The Document Manager starts the Editor on
+ | the name.  A file that is not a Strata
+ | document makes the Editor end with status
+ | 1, and the Document Manager shows "The
+ | editor ended with status 1".
+File, Retrieve ({k:Ctrl-R}) | The panel Retrieve File, described below.
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: the Editor started by hand with a name reads the file; if it
+cannot be read, the program prints the message and ends with exit status 1.  A
+name that does not exist is a new document (see {n:file-new-ways}).
+.endif
+The file can be a document, a template or a backup.  The Editor does not look
+at the extension: any file that is a Strata document is read, and everything
+else is rejected with the message "The file is not a document of this
+software."  A file
+that is damaged, cut short or larger than a document can be is refused with a
+message that says so (the table below), and the document that is open is not
+changed.  When the file is cut short or damaged after a readable beginning, the
+box offers the part that can be read ({n:file-recover}).
+.note Retrieve is more than loading a file.  It can bring in only the text of
+  a file, or only its settings, or only its typefaces, and it can add the text
+  of a file to the document that is being edited.
+.pic pictures/file-retrieve.png 5 The Retrieve File panel.
+.h3 The Retrieve File panel [file-retrieve-panel]
+.ix Retrieve File, fields
+.ix Document Name, Retrieve
+The panel has three fields.
+.table 15 45
+Field | Meaning and value
+Working Directory | The directory in which the file is looked for; shared
+ | by all the File panels ({n:file-workdir}).
+ | {k:F2} lists the directories.
+Document Name | The name of the file.  It begins with the name of the
+ | document that is open, without its directory.  {k:F2}
+ | lists the files that end with {c:.doc}, {c:.set} or
+ | {c:.bak} (and a number).  The field must not be empty.  If there is no
+ | file of the name as typed, the name is tried again with
+ | {c:.doc} added, when it has no dot.
+Options | What is taken from the file, one of six values (the
+ | next section).  The last one is Retrieve & Insert after
+ | Current Section, or Retrieve & Insert after Current
+ | Block when the document is not structured.  Default:
+ | Retrieve Entire Document.
+.end
+The file may be a document, a template or a backup.  What it is called does
+not matter: the file must be a Strata document ({n:file-retrieving}).
+.h3 What the Options field takes [file-retrieve-options]
+.ix Retrieve Entire Document
+.ix Retrieve Body Only
+.ix Retrieve Global Settings
+.ix Retrieve Typeface Settings Only
+.ix Retrieve & Insert after Current Section
+.pic pictures/file-retrieve-options.png 4 The list of the Options field of the Retrieve panel.
+.table 26 34
+Value | Effect on the open document
+Retrieve Entire Document | The document is replaced by the file: its text,
+ | its settings, its description, author and
+ | revision.  The document takes the name of the file.
+ | The cursor goes to the place saved in the file
+ | ({n:file-cursor-place}).  The new document is
+ | not marked as changed.
+Retrieve Body Only | The text is replaced by the text of the file.  The
+ | settings, the name and the revision of the document
+ | stay.  The document is structured or not, as the
+ | file is.  The cursor goes to the start.
+ | The document is marked as changed.
+Retrieve Global Settings | The settings are replaced by those of the file; the
+ | text stays.  See the table below for what is
+ | settings.  The document is marked as changed.
+Retrieve Typeface Settings | Only the typefaces are replaced: the
+ Only | assignment of typefaces to the attributes and the
+ | page size that goes with it.  The document is
+ | marked as changed.
+Retrieve Named Block | The named block formats of the file are added to
+ Settings Only | the document: a format of the same name is
+ | replaced, the others stay.  The text and the other settings do not
+ | change.  A file that has no named block format gives the message
+ | "The file has no named block settings".
+Retrieve & Insert after | The text of the file is added after the current
+ Current Section | section and all its subsections.  The first section of
+ | the file is a peer of the current section.  Nothing
+ | is replaced.  The document is marked as changed.
+ | The cursor does not move.
+Retrieve & Insert after | The same for a document that is not structured: the
+ Current Block | blocks of the file are added after the current block.
+.end
+.h4 What Retrieve Global Settings replaces [file-retrieve-global]
+.ix Retrieve Global Settings, contents
+Retrieve Global Settings replaces every setting of the document by the
+settings of the file, except two.  The table lists what is replaced and what
+is kept.
+.table 24 36
+Part of the settings | At Retrieve Global Settings
+Global formats, page layouts, | Replaced by the file's.
+ fonts, marker settings, named |
+ block formats, page headers |
+ and footers |
+Description and author | Replaced by the file's.
+Revision | Kept: the document keeps its own revision.
+Structured or not | Kept: a structured document stays structured.
+.end
+.h4 What Retrieve Typeface Settings Only replaces [file-retrieve-typeface]
+.ix Typeface settings
+The typeface settings are the assignment of fonts to the attributes of the
+document (the Global Typeface panel) and the paper size that goes with it.
+Nothing else changes: the formats of the Global menu and the page layouts stay
+as they were.  To give a document the typefaces of a template and keep the
+rest, use this value.
+.h3 What happens after the panel [file-retrieve-after]
+.ix Retrieve, order of events
+.ix Retrieve, unsaved changes
+.ix The file has changes that were not saved
+When the panel is accepted the Editor works in this order.
+.table 4 57
+Step | What happens
+1 | The Working Directory is remembered and the file is looked for (with
+ | {c:.doc} added if the name as typed is not a file).
+2 | The file is read.  If it cannot be read, a box with the title "Retrieve
+ | failed" shows the reason and nothing else happens.  The document that is
+ | open is not touched.
+3 | For every value except Retrieve & Insert, if the open document has
+ | changes that were not saved, the question "The file has changes that were
+ | not saved.  Ignore them?" is asked with Yes and No.  No cancels the
+ | command and the document stays as it is.  Retrieve & Insert puts no question.
+4 | The work is done, and the message line shows "Retrieved" and the full
+ | name of the file.
+.end
+.pic pictures/file-retrieve-failed.png 4 The message that the file cannot be read.
+The reasons in the box "Retrieve failed" are these.
+.table 31 29
+Reason | Cause
+cannot open file | There is no such file, or it cannot be read.  The
+ | name has been tried with and without {c:.doc}.
+read error | The file was opened but reading failed.
+cannot read file | The state of the file could not be read.
+The file is not a document of this software. | The file is a text file or
+ | another kind of file.  Use Import for text.
+The file is version N.  This software reads up to version 3. | The file was
+ | written by a newer version of the software.
+The file version is N.  This software reads versions 2 to 3. | The version of
+ | the file is below the oldest that is read, or it is damaged.
+damaged document: a piece of text has no end | The file is a document that
+ | is damaged: a piece of text is not ended.
+damaged document: it is cut short | The file ends before the end of the
+ | document: the start of the text or the end of the document is missing.
+ | The disk may have been full when it was saved.  Use the backup ({n:file},
+ | {n:file-backup}).
+damaged document: a number in the settings has too many digits | A number of
+ | the settings has more than seven digits, which no document has.
+damaged document: more than N lines or columns | The file has more than 20000
+ | lines of settings in its header, more than 2000 lines of settings for one
+ | block or more than 5000 columns in one block.
+document too large: more than N blocks or markers | The document has more
+ | than 500000 blocks and sections or more than 1000000 markers.
+file too large (the limit is 32 MB) | The file is larger than any document
+ | the program reads.  A document of 4000 pages has about 12 MB.
+this is a directory, not a file | The name is the name of a directory.  Choose
+ | a file with the list of files.
+this is not a regular file | The name is a device or another kind of special file.
+file changed while it was read | Another program was writing the file.  Try
+ | again when it has finished.
+.end
+.h3 The part that can be read [file-recover]
+.ix Recovery of a damaged document
+.ix Damaged document, open the readable part
+.ix Cut short, document
+A file that is cut short (the disk was full when it was saved) or damaged in
+the middle is not lost: what comes before the damage can be read.  When
+{b:Retrieve}, the opening of a document from the menu of documents or the
+Editor started on a file finds such a file, the box that names the reason also
+says how many blocks and sections, and how much of the file, can be read, and
+prompts
+{c:Open the part that can be read?}  {k:Y} opens it; {k:N} and {k:Esc} do not
+open anything ({k:Enter} does not answer).  The part is opened as a new
+document with the name {c:NAME.recovered.doc} (or {c:NAME.recovered2.doc} and so
+on when that name is taken), in the directory of the file or, when that directory
+cannot be written, in the working directory.  It is never the name of the
+file, so that saving cannot write over the damaged file, which is never
+changed, moved or removed.  The document is marked as changed, its end is
+supplied, and the message line shows
+{c:Recovered N blocks of NAME; the original is not changed}.
+
+Only what is complete is kept: every block and section before the damage, and
+of a block that is cut in the middle the columns that are whole.  A bad place
+in the middle of a file stops the reading there: the Editor does not look for
+the place where the file goes on, so what stands after the bad place is not in
+the part.  A file that is not a document, that is larger than 32 MB, that has
+more blocks, markers or lines than the limits allow, a directory or a device is
+refused as before and no question is put.  Compare Document Versions does not
+offer it: the file is rejected with the message; open the file in the Editor
+to recover it, save the recovered document and compare that.  From the command
+line, the two print commands refuse a damaged file; with
+{c:--recover} they print the part that can be read and say so on the error
+output.
+.h3 Retrieve at the edges [file-retrieve-edges]
+.ix Retrieve, empty file
+.ix Retrieve, the document being edited
+.ix Retrieve, structured and unstructured
+.table 31 29
+Case | Result
+The file is the document that is open | It is read again.  With Retrieve Entire
+ | Document, the unsaved changes are
+ | thrown away (after the question); this
+ | is the way to go back to the saved
+ | version.
+A file with no text (a template made by | Retrieve Body Only leaves the document
+ Save Global Settings Only) | with one empty section and block;
+ | Retrieve & Insert adds nothing.
+A template ({c:.set}) or a backup | Read like any document.
+ ({c:.bak01}, in {c:.backup}) |
+.end
+.h3 Using Retrieve [file-retrieve-use]
+.ix Retrieve, examples
+.ix Combining documents
+.ix Copying the layout of a document
+.table 29 31
+To do this | Use
+Open another document | Retrieve Entire Document.
+Go back to the version on the disk | Retrieve Entire Document with the name of
+ | the document.
+Put a standard chapter into a document | Retrieve & Insert after Current
+ | Section, with the cursor in the
+ | section before it.
+Reuse the text of a form letter in a | Retrieve Body Only, with the form letter.
+ document that has its own layout |
+Give a document the layout of a template | Retrieve Global Settings, with it.
+Give a document the typefaces of a template | Retrieve Typeface Settings Only.
+Restore a backup | The entry Restore Backup of the Document
+ | Manager ({n:file-backup-use}).
+.end
+.h3 See [file-retrieve-see]
+{X:file-retrieving} on the other ways to open a document, {x:file-checklist} on {k:F2}, {x:file-templates} on templates, and
+{x:file-backup} on backups.  The Document Manager has its own
+Edit / Preview / Print Document, which starts the Editor on a file.

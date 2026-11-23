@@ -1,0 +1,70 @@
+.chapter 6
+.h1 Testing [testing]
+The project has five kinds of test and one rule for every check: it must fail
+when its feature is off.  One script runs the tests, with a part for each kind.
+.h2 Kinds of test [testing-kinds]
+{Tab:kinds} lists the kinds.  The first tests used the 24 sample documents of
+the old program.  On 17 November documents made for the project replaced them:
+a community orchard and its plan, brief and yearly report, a utility that
+prints tide tables, and letters and memos of a club.
+.tabcap kinds Kinds of test
+.table 14 50
+Kind | Method
+Unit | A program links the code and calls it with exact expected values.  The
+ | loader test loads each damaged document in a child process, so a crash or a
+ | hang fails one check and not the run.
+Terminal | The Editor runs in a pseudo-terminal.  The test sends keys, waits
+ | until a text is on the screen and reads the screen as text.
+X11 and pixel | The X11 Editor runs on a virtual display; {c:xdotool} sends
+ | keys and {c:xwd} captures the window.  Checks cover borders and colours.
+PDF | {c:pdftotext} reads the PDF of a print.  A page converted at 300 or 400
+ | dpi checks unbroken lines, colours and the position of a word in points.
+Manual | The build checks keycaps, the border rule of tables and the three pages
+ | of the leaflet of keys.  Pictures are retaken and compared.
+.end
+.h2 Mutation rule [testing-mutation]
+A check that passes while its feature does nothing is vacuous.  It is worse
+than no check, because it reports the feature as tested.  Mutation testing
+finds it: one line of the program is changed so that the feature is lost, the
+program must still build with all warnings as errors, the test runs, and the
+line is put back.  A check that does not fail is rewritten.  {Tab:mutations}
+lists results of the first audit.
+.tabcap mutations Examples of mutations and their effect on the tests
+.table 16 26 20
+Test of | Mutation | Result
+Header and footer | header and footer not rendered | 12 of 19 fail: caught
+Index and lists | index never made | 7 of 18 fail: caught
+Index and lists | lists hold figures and tables | 0 fail: vacuous, fixed
+Calculator | rounding at the 101st digit half down | 0 fail: vacuous, fixed
+.end
+The check of the list of figures looked only for figure names, so a list of
+every kind passed; one check per list now requires that the other kind is
+absent.  No calculator expression had a cut-off digit of exactly 5, so
+rounding down at the half passed; two expressions were added.  Commit messages
+give the mutation and the number of failed checks under Testing.
+.h2 Counts [testing-counts]
+The verification before a merge builds, runs the unit tests, the smoke and the
+X11 tests, and checks that they left the source tree unchanged.  {Tab:counts}
+gives the result of 19 November.  The complete smoke printed no line that
+begins with "FAIL", in @smoke_seconds@ s.
+.tabcap counts Checks of the verification of 19 November
+.table 51 12
+Part | Checks
+The unit tests (sixteen programs that print a number) | @unit_checks@
+The complete smoke: terminal scripts, the Printer, the Viewer | @smoke_ok@
+The X11 smoke | @xsmoke_ok@
+.end
+.if .STRATA_BUILD_TYPE # release
+.h2 Faulty tests [testing-flakes]
+A test that fails without a fault in the program is flaky and teaches people to
+ignore failures.  Two kinds were found.
+Fixed waits: the parallel smoke on a machine with eight busy loops failed five
+checks of the Viewer and eight of the Print panel.  The programs were right and
+the tests too quick.  A step that waits for a text on the screen, for up to 20
+s, replaced the fixed waits.
+Temporary files: programs ignored {c:TMPDIR}, and a test with a long path
+failed in several places, among them a socket path above the 107 characters
+that the system allows.  Programs now use the folder that {c:TMPDIR} names, and
+a quick test runs with a private empty folder and fails when a program leaves
+anything in it.
+.endif

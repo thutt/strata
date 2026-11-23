@@ -1,0 +1,25 @@
+------------------- Convert Spelling Dictionary to Document --------------------
+
+Convert Spelling Dictionary to Document converts a custom spelling dictionary 
+into a document so you can edit the dictionary entries.
+
+  +---------------- Convert Spelling Dictionary to Document -----------------+
+  |                                                                          |
+  |             Working Directory:                                           |
+  |                                                                          |
+  |      Spelling Dictionary Name:                                           |
+  |                                                                          |
+  |                 Document Name:                                           |
+  |                                                                          |
+  +-------------------- Press Ins to Convert Dictionary ---------------------+
+
+--Procedure---------------------------------------------------------------------
+
+ Select Maintain Dictionaries from the Document Manager.
+ Select Convert Spelling Dictionary to Document.
+ Enter the name of the dictionary to convert and the name of the document file
+  to create.
+ Select Edit Document and retrieve the document file.
+--------------------------------------------------------------------------------
+          Document Manager                          Creating Custom Dictionaries
+          Keyboard Summary                                  Help Index

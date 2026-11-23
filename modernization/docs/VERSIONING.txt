@@ -1,0 +1,180 @@
+VERSIONING
+==========
+
+This document defines what a version of Strata is, how a version is made, and
+how a program learns its own version.  It is a developer document.  The
+decisions are the owner's (the text of the decisions is in
+claude-interchange/what-is-a-version.text of the owner's working directory);
+the sections about the file format version and the special backup are
+implemented by the file format work and are listed here so that the rules are
+in one place.
+
+1. The branches
+---------------
+
+The branching scheme is part of the versioning.  The name of a branch is the
+version; there is no separate version file in the source tree.
+
+  development-<x>   The development branch of major line x (for example
+                    development-1).  All development work on that line is
+                    done here, unless specified.  No development occurs on a
+                    release branch.
+  <x>.<y>.0         A release branch (for example 1.2.0).
+  v<x>.<y>.0        The tag of a release (for example v1.2.0).  It names the
+                    release SHA and is never moved or deleted.
+  <x>.<y>.<z>       A defect branch (for example 1.2.57).  It holds the fix of
+                    one defect and nothing else.  The number z is the number
+                    of the defect ticket.
+
+When a release is created, a new release branch is created at the top-of-tree
+SHA of the development branch of that major line, and the release is tagged at
+once with v<x>.<y>.0.  The tools that create a release determine the next
+version from the names of the existing branches of that major line and from
+the kind of release that is requested.  A build is made from the release
+branch, the installation media are produced, and they are uploaded to github.
+A release branch is not changed after the release is created: no commit is
+added to it and no development occurs on it.
+
+The current branch (port-to-c) is not development-1.  Until release 1 is
+reached the current branch is used, and then the development model shifts.
+
+2. The version number
+---------------------
+
+A version is a triplet x.y.z (for example 1.0.9).
+
+x   The major version.  It changes only when a change of the program behavior
+    breaks compatibility with the immediately older version: an incompatible
+    change of the file format, or a change of the settings of the hot keys.
+    An incompatible change of the file format always needs a new major
+    version; the file format number (section 5) is a separate number and is
+    not derived from x.  A major version is a line of development of its own,
+    with its own development branch and its own releases.  When a new major
+    version is created, y and z reset to 0.
+y   The minor version.  It is normally changed with each release.  A new
+    release incorporates all existing fixes for defects on the same major
+    line.  It signifies new features and the accumulated defect fixes.
+z   The defect number: the number of the github ticket of the defect.  The
+    numbers are not consecutive (github numbers defects, other issues and
+    pull requests in one sequence) and a number is never reused.  A defect
+    that needs a fix in two major lines has the same number in both (1.2.57
+    and 2.0.57).
+
+When a defect is reported in a release, it is reproduced at the SHA that the
+tag of the release names.  A new branch named <x>.<y>.<z> is created from the
+release tag, and the defect is fixed on it.  The fix of one defect is
+disjoint from the fix of another, because each fix is taken at the tag of the
+release.  The fix is then cherry-picked into the development branch of the
+same major line when it is verified.  No release is made from a defect branch.
+A defect in an older major line is fixed in the same way on a branch from that
+release; the fix is not necessarily ported to the other major lines, and a new
+release of an older major line is possible, made from its development branch.
+
+A release always has 0 as z.  The number z identifies a defect; it does not
+order releases and is never compared.
+
+Comparing versions: the numbers are integers (1.10.0 is newer than 1.9.0).
+For one value of x, the highest numbered release is the most recent.  It
+incorporates all the fixes for known defects that were cherry-picked into its
+development branch at the time of the release; it does not guarantee that every
+defect is fixed.  A larger x indicates incompatibilities between two versions.
+Comparing y is valid only when x is the same for the two releases.
+
+3. The version of a program
+---------------------------
+
+The version of a program is the name of the branch that it was built from.  It
+is printed by --version.  scripts/strata-version derives it, in the source
+root, with git:
+
+  Built from a branch named x.y.z         x.y.z
+  Built from any other branch             <branch name> <short SHA>
+                                          (development-1 3f2a9c1)
+  Built from a checkout of the tag
+  v<x>.<y>.0 (a detached HEAD)            <x>.<y>.0
+  No git repository, git not installed,
+  or a detached HEAD without a release
+  tag                                     UNSUPPORTED BUILD CONFIGURATION
+
+The source code is in the git repository.  A release does not carry source
+code.  Whoever wants the source code clones the repository.
+
+The Makefile calls scripts/strata-version and passes the result to the
+programs with -DSTRATA_VERSION (the version has spaces, so every use of it is
+quoted).  It also writes the version into the file <build directory>/version,
+which the install script copies to share/strata/VERSION of the installed
+prefix and which a release payload carries.  Nothing in the source tree holds
+the number.
+
+The title page of the manuals shows a shorter form, made with the option
+--manual of scripts/strata-version: the number for a release, a defect branch
+or a checkout of a release tag, and the word development for every other
+branch.  The manuals are committed documents.  If they carried the name of the
+branch or the SHA, every commit and every branch would make the committed
+documents stale and the checks that compare them with the generated ones would
+fail without end.  A document that is built on a release branch shows the
+number.
+
+4. The release
+--------------
+
+A release is a point where the software meets quality standards and is ready
+to give to users.  A build is made, installation media are produced, and they
+are uploaded to github.  The installation media carry no source code.  No
+build of a development branch or of a defect branch is a release.
+
+5. The file format version
+--------------------------
+
+Every file that uses the header of a document carries the version of its file
+format: the .DOC documents, the .SET templates, the .LIB library files and the
+.MAC macro files.  The version is a single whole number: the number of the
+first record of the file, '*R<n>'.  The original program wrote '*R2'; the
+record is reused, and the current format is version 3, written as '*R3'.  The
+version does not record the version of the program that wrote the file.
+
+  - A file that carries '*R2' is a file of the older format, version 2, and is
+    read as such.
+  - Each time the file format changes in an incompatible way, the number is
+    incremented by one.  Between two releases the number is incremented at
+    most once: the first incompatible change after a release takes the next
+    number, and later changes before the next release use the same number.
+  - Every program that reads or writes the file format supports reading the
+    current format and all older formats, and writing only the current format.
+  - A file of a version above the one that the software reads is an error: the
+    software is too old to read the file.  The error states the version of the
+    file and the highest version that the software can read ("The file is
+    version 4.  This software reads up to version 3.").
+  - A version below 2, or a version that is damaged (not a number, negative or
+    empty), is an unsupported format: an error that names the value.
+  - A file whose first record is not '*R<n>' is not a file format for this
+    software: an error that the file is not a document of this software.
+  - Reading a file of an older version and writing it again sets the version
+    of the file to the version that the software writes.  There is no facility
+    to downgrade the version of a file.
+  - The release model lists the file format version that the software of the
+    release writes, and --version prints it next to the program version.
+
+The special backup.  If a file of an older version is loaded into software
+that writes a newer version, the Editor saves a special backup when the load
+is finished.  If the special backup already exists it is not written again.
+It is saved next to the file with the name V<old-version>-<filename>.<ext>
+(V2-memo.doc for memo.doc).  If it cannot be written, the load is refused with
+an error and the original is not touched.  It is permanent: the setting that
+limits the number of backups does not remove it.  Restoring a special backup
+writes the original file with whatever version number it uses.
+
+Before a release, a tool visits all the documents and sample documents and
+changes their version; it creates no backup files.
+
+6. Open items
+-------------
+
+  1. Compatibility of everything that is not a document: the settings, the
+     macro and library files, the key assignments, the command line options,
+     the install layout.
+  2. The release procedure: what must pass, who creates the branch, where the
+     list of fixes and features is recorded.
+  3. What 'incompatible' means for the file format.
+  4. The transition to release 1, and the fate of the branches that exist now
+     (the current branch, and 'main' which holds the original materials).

@@ -1,0 +1,120 @@
+# Chapter 11 of the Reference Manual: the messages of all the programs.
+# The chapter is kept in five files that this one includes.
+.doc Strata Reference: Messages
+.chapter 11
+.h1 Messages [messages]
+This chapter lists every message that the programs of Strata show or write:
+the lines on the message line of the Editor, the boxes, the questions, the
+notices of the Document Manager and the lines that the Printer and the
+print and preview jobs write.  Each message has its text exactly as the program shows it, what
+it means, and what to do about it.  The messages are grouped by program and by
+the area that shows them, and in every table they are sorted by their text,
+ignoring capital letters, so that a message is found by the first words that
+the screen showed.  The index at the end of the manual lists every message
+too.  What the programs do not show on a screen is written to the log of the
+run ({n:appcfg-log}).
+.ix Appendix, error messages
+.ix Error messages
+.ix Messages
+.ix Warnings
+.ix Notices
+.ix Message index
+.h2 How to read this chapter [msg-reading]
+.ix Messages, notation
+.ix Capitals in messages
+.ix Message text, changing parts
+.ix Program names in messages
+A message is written in the program font.  Where the program puts a value into
+the text, the table shows a word in capital letters in its place:
+.table 9 51
+Word | Stands for
+NAME | A file name or a name of any other kind (a library entry, a macro key,
+ | a printer queue).
+PATH | A full file name, with its directories. A path that was typed without a
+ | directory is made full by the program that shows it.
+DIR | The name of a directory.
+FILE | A file name, as above.
+N | A number.  In the messages with a word that changes between the singular
+ | and the plural, as in {c:1 replacement} and {c:3 replacements}, the table
+ | shows the plural.
+REASON | The reason that the operating system gives, in its own words: for
+ | example {c:No such file or directory}, {c:Permission denied},
+ | {c:No space left on device}.  The words depend on the system and its language settings.
+TEXT | Words that come from another program (LaTeX, the print system) or from
+ | the document, copied unchanged.
+LABEL | The label of a field of a panel, as the panel shows it.
+.end
+.note Some messages contain the name of a program of Strata.  They are shown
+  here with the name of the program replaced by a word in angle brackets:
+  {c:<Editor>}, {c:<Document Manager>}, {c:<Printer>} or {c:<Viewer>}.  The
+  screen shows the real name of the program in that place.
+Messages that other programs write, such as the first error line of LaTeX or
+the answer of the print command, are shown unchanged inside a Strata message;
+{x:msg-other} says what the commonest of them mean.  Where another chapter
+already describes a message with its context, the entry here has a reference
+to that section: this chapter is the one place where all the messages can be
+looked up, and the other chapters tell what the command was doing.
+.h2 Where messages appear [msg-where]
+.ix Message line
+.ix Boxes
+.ix Footer, Document Manager
+.ix Standard error
+.ix Press any key
+Strata shows a message in one of five ways.  The tables of this chapter say
+which way each message uses.
+.table 19 41
+Way | What it looks like
+Message line (Editor) | One line in bold reverse video at the bottom of the
+ | screen, over the second row of key labels.  No key has to be pressed; the
+ | line goes away at the next key ({n:view-message}).
+Box with Press any key | A framed box in the middle of the screen with a title
+ | (the name of the command or of the area), the text, and the words
+ | {c:Press any key}.  The key that closes it is lost: it is not used as a command.  The command
+ | that showed the box is over, or its panel is shown again; each table says
+ | which.
+Question | A framed box or a line with the choices Yes and No. {k:Esc} counts
+ | as No.
+Footer (Document Manager) | The line at the bottom of the Document Manager,
+ | which shows hints such as {c:F1 Help Esc Cancel}, and the text of a message
+ | in their place until the next key.
+Error output | Text written on the standard error of the shell that started
+ | the program, in the terminal, outside the screen.  It is seen when the
+ | program was started from a shell, or in the box that the Document Manager
+ | makes of it.
+.end
+The messages of the print and preview jobs are made once and shown in the way
+of the command that ran the job: on the message line, in a box, or on the
+footer of the Document Manager.  They are therefore in one section ({n:msg-job}).
+.h2 The sections of this chapter [msg-sections]
+.ix Messages, list of sections
+.table 22 38
+Section | Contents
+{x:msg-editor-line} | The message line of the Editor.
+{x:msg-editor-boxes} | The boxes of the Editor, by area: File, Format, Marker,
+ | Edit, Print and Preview, Tools (Macros, Library, Spell, Thesaurus), the
+ | equation and the start of the Editor.
+{x:msg-editor-questions} | The questions of the Editor.
+{x:msg-job} | The messages of a print and of a preview (Print panel and
+ | Preview).
+{x:msg-printer} | The Printer: the messages that the Editor shows for it.
+{x:msg-docmgr} | The Document Manager: footer, boxes, notices and the error
+ | output.
+{x:msg-spell} | Spell check and thesaurus.
+{x:msg-eq} | Equations.
+{x:msg-start} | What the programs write at start: no terminal, files that
+ | cannot be read.
+{x:msg-other} | Messages of programs that Strata runs: LaTeX, the print
+ | command, the spell checker, the font installer.
+{x:msg-faults} | Messages that look wrong: what they report.
+{x:msg-errlog} | The faults that Print and Preview name, and the messages of
+ | the Error Log, of the Print Error markers and of Find Next Error.
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: {x:msg-cmdline} has the exit status of the programs and the
+messages of their command lines.
+.endif
+.include messages1.src
+.include messages2.src
+.include messages3.src
+.include messages4.src
+.include messages5.src

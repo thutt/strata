@@ -1,0 +1,25 @@
+
+------------------------------- Delete from Library ----------------------------
+
+Use Library Delete to delete a library entry from the current set of entries in
+memory.  Once deleted an entry cannot be retrieved unless it was saved to disk.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Tools        +------- Delete from Library -----+
+  Library Delete.                          |                                 |
+                                           |  Entry Name:                    |
+ Enter the name of the entry to delete.   |                                 |
+  The entry's description is displayed     |  Description:                   |
+  so you can confirm your choice.          |                                 |
+                                           +--- Press Ins to Delete Entry ---+
+ Press Ins to delete the entry.
+
+
+--------------------------------------------------------------------------------
+
+# Press Gray + at the Entry Name prompt to display a list of entries in the 
+  current library.
+
+--------------------------------------------------------------------------------
+  Library Overview       Library Menu       Keyboard Summary      Help Index

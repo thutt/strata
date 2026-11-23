@@ -1,0 +1,25 @@
+
+------------------------------------ Overtype ----------------------------------
+
+Overtype (Alt F5) is a toggle that changes how characters are entered on the 
+edit screen.  Normally, characters are inserted as you type, moving any 
+characters that follow to the right.  With Overtype, each character you type 
+replaces the character at the cursor position.
+
+
+
+# Overtype is especially useful for long portions of text that need changes 
+  throughout.
+
+
+# When you press Overtype, [OT] appears in the lower-right corner of the 
+  Status line. 
+
+
+# To turn off overtype, press Overtype again.
+
+
+
+
+--------------------------------------------------------------------------------
+                  Keyboard Summary                  Help Index

@@ -1,0 +1,25 @@
+
+-------------------------------- Replace Strings -------------------------------
+Replace:   Enter any string of characters as the string to replace. When 
+           entering the string, be sure to include all punctuation and spaces 
+           that are in the actual text.  You can enter the following special 
+           characters in a search string:
+
+  Character                   Enter by Pressing
+  -----------------------------------------------------------------------------
+  Compose characters        Compose (Alt F1) and a 2 character compose sequence
+  Tab ()                   Tab
+  Enter ()                 Ctrl Enter
+  Soft hyphen ()           Ctrl - (hyphen)
+  Nonbreaking space ()     Compose (Alt F1) Space Bar Space Bar
+  -----------------------------------------------------------------------------
+
+With:      Enter the string that replaces the replace string. This string can 
+           have the same characters as the search string.
+
+Direction: Select whether to search forward, backward, or all of the document.
+           If you select All, the title page, headers, and footers are searched
+           in addition to the document body, notes, equations, and comments.
+--------------------------------------------------------------------------------
+      Search Options           Replace Options           Compose Characters
+                  Keyboard Summary                  Help Index

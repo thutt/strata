@@ -1,0 +1,105 @@
+% The large Strata logo, as the command \stratalogo.
+%
+% The logo is a large S whose top bar runs out to the right, with the words
+% Technical Document on that bar.  Under the bar are the word Processor and
+% the letters RATA, in which the crossbar of the first T is joined to that of
+% the second one and covers the letters RA and the final A.
+%
+% The command takes the scale as an option: \stratalogo[2] is twice as big.
+% Without it the scale is 1 and the logo is about 4.4 cm wide.
+%
+% The S is a drawing made with TikZ, which every file of the Printer loads:
+% one filled outline, so that no font file is needed and the edges are clean
+% at every size.  The fonts of the other letters are Palatino and Helvetica
+% of the psnfss package, which a standard TeX Live installation has.
+%
+\makeatletter
+\newlength{\strbig@u}
+\newlength{\strbig@stw}
+\newlength{\strbig@bart}
+\newlength{\strbig@capk}
+\newlength{\strbig@tga}
+\newlength{\strbig@tgb}
+\newlength{\strbig@tgc}
+\newlength{\strbig@barover}
+\newlength{\strbig@barend}
+\newlength{\strbig@barw}
+\newsavebox{\strbig@bS}
+\newsavebox{\strbig@bRA}
+\newsavebox{\strbig@bA}
+\newsavebox{\strbig@bstem}
+\newsavebox{\strbig@bword}
+\newsavebox{\strbig@bbar}
+\newsavebox{\strbig@bcol}
+\newsavebox{\strbig@ball}
+\newsavebox{\strbig@btitle}
+% The S: a stroke of 6 pt that follows a center line with bends of 9 pt, a
+% body of 46 pt by 43.5 pt, and a top bar that runs out to 126 pt.  The path
+% is the outline of the stroke: the left side from the end of the top bar
+% around to the bottom bar, the flat end of the bottom bar, and the other
+% side back.  All numbers are in the unit \strbig@u, so the S follows the
+% scale of the logo.  The picture is as wide as the top bar, and the box
+% that holds it is as wide as the body only (see \strbig@logo).
+\newcommand{\strbig@drawS}{%
+  \begin{tikzpicture}[baseline=0pt,x=\strbig@u,y=\strbig@u]
+    \fill (126,37.5) -- (12,37.5)
+      arc[start angle=90,end angle=180,radius=6] -- (6,30.75)
+      arc[start angle=180,end angle=270,radius=6] -- (34,24.75)
+      arc[start angle=90,end angle=0,radius=12] -- (46,12)
+      arc[start angle=0,end angle=-90,radius=12] -- (0,0) -- (0,6)
+      -- (34,6)
+      arc[start angle=-90,end angle=0,radius=6] -- (40,12.75)
+      arc[start angle=0,end angle=90,radius=6] -- (12,18.75)
+      arc[start angle=270,end angle=180,radius=12] -- (0,31.5)
+      arc[start angle=180,end angle=90,radius=12] -- (126,43.5) -- cycle;
+  \end{tikzpicture}}
+\newcommand{\stratalogo}{\@ifnextchar[{\strbig@logo}{\strbig@logo[1]}}
+\def\strbig@logo[#1]{%
+  \leavevmode
+  \begingroup
+  \setlength{\strbig@u}{#1pt}%
+  \fontencoding{T1}\fontfamily{phv}\fontseries{b}\fontshape{n}\selectfont
+  % The stems of the two Ts are rules with the stroke of the letter I of
+  % the font of the small letters, as in the text \strata (latex.c): the
+  % stroke is 0.149 of the size of the letter (21 u), the bar is 0.9 of it,
+  % and a capital is 0.726 of its size high in the drawing of the font.
+  % The stems end half a bar below the top, hidden in the bar.
+  \setlength{\strbig@stw}{\dimexpr0.149\dimexpr21\strbig@u\relax\relax}%
+  \setlength{\strbig@bart}{\dimexpr0.9\strbig@stw\relax}%
+  \setlength{\strbig@capk}{\dimexpr0.726\dimexpr34\strbig@u\relax\relax}%
+  \setlength{\strbig@barover}{7\strbig@u}%
+  \setlength{\strbig@barend}{3\strbig@u}%
+  \setlength{\strbig@tga}{2.1\strbig@u}%
+  \setlength{\strbig@tgb}{2.2\strbig@u}%
+  \setlength{\strbig@tgc}{1.7\strbig@u}%
+  \sbox{\strbig@bS}{\rlap{\strbig@drawS}\rule[0pt]{0pt}{43.5\strbig@u}%
+    \hspace{46\strbig@u}}%
+  \sbox{\strbig@bRA}{\fontsize{\the\dimexpr21\strbig@u\relax}{0pt}%
+    \selectfont RA}%
+  \sbox{\strbig@bA}{\fontsize{\the\dimexpr21\strbig@u\relax}{0pt}\selectfont A}%
+  \setlength{\strbig@barw}{\dimexpr\strbig@barover+\strbig@stw%
+    +\strbig@tga+\wd\strbig@bRA+\strbig@tgb+\strbig@stw%
+    +\strbig@tgc+\wd\strbig@bA+\strbig@barend\relax}%
+  \sbox{\strbig@bstem}{\rule[0pt]{\strbig@stw}%
+    {\dimexpr\strbig@capk-\strbig@bart/2\relax}}%
+  \sbox{\strbig@bword}{\hbox to \strbig@barw{\hss
+    \fontfamily{ppl}\fontseries{m}\fontshape{sc}%
+    \fontsize{\the\dimexpr12\strbig@u\relax}{0pt}%
+    \selectfont processor\hss}}%
+  \sbox{\strbig@bbar}{\hbox to \strbig@barw{%
+    \rlap{\raisebox{\dimexpr\strbig@capk-\strbig@bart\relax}%
+      {\rule{\strbig@barw}{\strbig@bart}}}%
+    \kern\strbig@barover\usebox{\strbig@bstem}\kern\strbig@tga
+    \usebox{\strbig@bRA}\kern\strbig@tgb\usebox{\strbig@bstem}%
+    \kern\strbig@tgc\usebox{\strbig@bA}\hss}}%
+  \sbox{\strbig@bcol}{\vbox{\box\strbig@bword\kern\strbig@u\box\strbig@bbar}}%
+  \sbox{\strbig@ball}{\hbox{\usebox{\strbig@bS}\kern5\strbig@u
+    \usebox{\strbig@bcol}}}%
+  \sbox{\strbig@btitle}{\hbox to \wd\strbig@ball{\hss
+    \fontfamily{ppl}\fontseries{m}%
+    \fontsize{\the\dimexpr11\strbig@u\relax}{0pt}\selectfont
+    Technical Document}}%
+  \mbox{\rlap{\raisebox{\dimexpr\ht\strbig@ball+2.5\strbig@u\relax}%
+    {\usebox{\strbig@btitle}}}\usebox{\strbig@ball}}%
+  \endgroup}
+\makeatother

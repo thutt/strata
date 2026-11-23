@@ -1,0 +1,1191 @@
+# Chapter 2, part 3: New, Delete, Import, Export, messages, examples.
+.h2 New [file-new]
+.ix New
+.ix New File panel
+.ix F12, File, New
+.ix Creating a document, New command
+.ix Document type, structured or unstructured
+.ix Template, New command
+New starts a new document without leaving the Editor.  The document that was
+open is closed (after a question, if it had unsaved changes) and the Editor
+shows the new one.  The new document is a copy of a template, or of the
+built-in settings when there is no template, and it has the name
+given.  When there are templates, New begins with a list of them
+({n:file-new-list}).  Nothing is written to the disk: the file comes to
+exist when the document is first saved.
+.table 20 40
+Way to reach it | Notes
+{k:F12}, File, New | Press {k:F12}, then {k:F} and {k:N}.
+.end
+There is no key of its own for New.  The menu hint reads "Create a new
+document".
+.pic pictures/file-new.png 5 The New File panel.
+.h3 Ways to begin a document [file-new-ways]
+.ix Creating a file
+.ix Starting a document
+.ix File does not exist until it is saved
+There are two ways to begin a document.  In all of them nothing is
+written on the disk until the document is saved: a new document has a name,
+and that is all.  If the Editor is left without saving, the file does not
+come to exist.
+.table 22 38
+Way | What happens
+The Document Manager, Edit / Preview /
+ Print Document, | A prompt offers the choice
+ with a name that does not exist | between a structured and an unstructured document;
+ | the Description and the Author
+ | are requested, and the Editor is
+ | started on the name.
+File, New (inside the Editor) | The panel New File, described below.
+.end
+The Document Manager and the New command add {c:.doc} to a name that has no
+dot, so that the name {c:plan} makes {c:plan.doc}.
+.if .STRATA_BUILD_TYPE # release
+For developers: the Editor started by hand with the name of a file that does
+not exist opens at once with a new structured document called by that name,
+exactly as given (the name {c:plan} makes a document called {c:plan}, with no
+extension); with the option {c:-u} (or {c:--unstructured}) the document is
+unstructured.
+.endif
+.h3 The new document [file-new-defaults]
+.ix New document, contents
+.ix Default settings of a new document
+.ix Structured and unstructured, choice at creation
+A document that is made with no template has one section and one empty block.
+A structured one has, in addition, the root section above it.  Its settings
+are these.
+.table 31 29
+Setting | Value
+Revision | 1.000
+Paper | Letter, 8.5 by 11 inches
+Page number tag | {c:\1\} (the tags of the title page and
+ | the table of contents are {c:\i\})
+Title page, vertical centering | 33 percent
+Headline attributes | Bold
+Text justification | Even
+Tab stops of the text | 5
+Spacing, headline and block | 1.50 each
+Spacing, subsection and peer | 2.00 each
+Indent per level | 3
+.end
+The other settings of the Global menu have the values that their panels show.
+To begin with other settings, use a template ({n:file-templates}).
+.caution A new document counts as changed from the first moment, because the
+  New command has given it its name, description and revision.  The
+  status line shows an asterisk before the name, and Quit puts the question whether to save
+  although nothing has been typed.
+.h3 The list of templates [file-new-list]
+.ix Templates, list
+.ix Description of a template
+.ix New, list of templates
+When there is at least one template in the directories of {x:file-templates-path},
+New first shows a list.  The first two entries are the built-in settings,
+Structured and Unstructured; the others are the templates, in the order of
+their names.  The lines below the list show the description of the entry
+that is chosen, and a template that has none says so.  {k:Up} and {k:Down}
+choose, {k:Enter} or {k:Ins} takes the entry, and {k:Esc} takes the built-in
+settings.  In the Editor the New File panel follows, with the entry in its
+field Template.  The Document Manager shows the same list when it is given
+the name of a document that does not exist; there {k:Ins} makes the document
+at once from the entry, with no panel and with the description and the author
+left blank, and {k:Enter} shows the New File panel first.  The description of
+a template is the Description of the document that is the template, the one
+that the Save File and New File panels have; it has at most 250 characters and
+no control character, and a document that has more or has one is not opened.
+In the New File panel the field Template has the same list: {k:F2} (or
+{k:Keypad +}) opens it.  {k:Ins} on an entry puts it in the field and finishes
+the panel, as {k:Ins} does in any panel, so that the new document is made at
+once; {k:Enter} on an entry only puts it in the field, and the panel stays
+open for the other fields; {k:Esc} leaves the panel and the field as they
+were.  The entry Another file... opens a list of files and does not finish the
+panel.  Every other list of choices, such as the list of printers of a print
+panel, takes the entry with {k:Ins} or {k:Enter} and leaves the panel open.
+.pic pictures/file-new-list.png 5 The list that New shows, with the description of the chosen template below it. [file-new-list-figure]
+The list is shown in {fig:file-new-list-figure}: the template that is chosen is
+the German window envelope, and its description is in the three lines below the
+list.
+.h3 The templates that come with Strata [file-new-shipped]
+.ix Letter templates
+.ix Envelope templates
+.ix Templates that come with Strata
+Strata comes with templates for business letters and for envelopes.  The
+layout is Strata's own.  The templates that come with Strata hold the page
+set-up, the size of the text, the named formats and the blocks as empty
+paragraphs, and no text of their own: the new document has no address or
+sentence that someone else wrote.  The one field in them is the date of a
+letter.  A template made by the user can hold any text that every document of its
+kind should start with, such as the return address of an envelope or the name
+of a company: write that document, give it the description that the list
+shows, and save it in a directory of {x:file-templates-path}
+({n:file-templates-create}).  Each template has a description, so that the
+list shows what it is.
+.table 20 40
+Template | What it is
+{c:letter-us} | A business letter on US Letter paper.
+{c:letter-a4} | The same letter on A4 paper; the recipient stands where the
+ | window of a DL window envelope shows it (DIN 5008, form B).
+{c:envelope-us-ca-10} | A number 10 envelope, 4 1/8 by 9 1/2 inches, for the
+ | United States and Canada.
+{c:envelope-us-ca-9} | A number 9 envelope, 3 7/8 by 8 7/8 inches, for the
+ | United States and Canada.
+{c:envelope-us-ca-monarch} | A Monarch envelope, number 7 3/4, 3 7/8 by 7 1/2
+ | inches, for the United States and Canada.
+{c:envelope-uk-dl} | A DL envelope, 110 by 220 millimetres, for the United
+ | Kingdom.
+{c:envelope-uk-c5} | A C5 envelope, 162 by 229 millimetres, for the United
+ | Kingdom.
+{c:envelope-uk-c6} | A C6 envelope, 114 by 162 millimetres, for the United
+ | Kingdom.
+{c:envelope-de-din5008-dl} | A DL window envelope for Germany: the address field
+ | of the standard DIN 5008, form B, in the window of DIN 680.
+{c:envelope-fr-dl} | A DL envelope for France, with the address block in the
+ | right half, as La Poste asks.
+{c:envelope-eu-dl} | A DL envelope for continental Europe and Russia.
+{c:envelope-eu-c5} | A C5 envelope for continental Europe and Russia.
+{c:envelope-eu-c65} | A C6/5 envelope, 114 by 229 millimetres, for
+ | Switzerland and other European countries.
+{c:envelope-latam-dl} | A DL envelope, the sobre americano, for Latin America.
+{c:envelope-au-dl} | A DL envelope for Australia, in the address zone of
+ | Australia Post.
+{c:envelope-au-c5} | A C5 envelope for Australia, in the address zone of
+ | Australia Post.
+{c:envelope-jp-yougata-4} | A Western-style envelope, Yougata 4, 105 by 235
+ | millimetres, for Japan, addressed horizontally.
+{c:envelope-jp-yougata-2} | A Western-style envelope, Yougata 2, 114 by 162
+ | millimetres, for Japan, addressed horizontally.
+.end
+A letter has the parts of a business letter in the style of the LaTeX letter
+class: the address of the sender at the right, the date below it, the name
+and address of the recipient at the left, the salutation, the paragraphs of
+the letter with a blank line between them and no indent, the closing and the
+signature at the right with room for a signature, and below them the lines
+{c:cc:}, {c:encl:} and {c:P.S.} (carbon copy, enclosures and postscript).  Every part has a named format of its own
+({c:Sender}, {c:Date}, {c:Recipient}, {c:Salutation}, {c:Body}, {c:Closing},
+{c:Signature}, {c:Enclosure}, {c:Copy} and {c:Postscript}), so that a change
+of look is one change of the format.  The first page has no head; the pages
+after it have the head {c:date - page}; add the name of the recipient to it
+in Global, Page.  The blocks are empty: type the text into them, in the
+order of the parts, and delete the parts that the letter does not need, such as
+the lines {c:cc:}, {c:encl:} and {c:P.S.} (carbon copy, enclosures and postscript).  The cursor starts in the block of
+the sender.
+An envelope is a page of its own size, turned to lie wide.  The sender, the
+return address, stands 7 mm from the left edge and 7 mm from the top edge of
+every envelope that has one, measured to the first line in the printed page:
+a laser printer prints to about 4 mm from the edge.  The recipient stands
+where the post of the country expects it.  Where a country has no template of its own,
+take the template of the same size: the sizes of continental Europe, Latin
+America and Australia are the sizes of the ISO series.  The place of the
+recipient in the templates of the United Kingdom, Germany, France, Australia,
+the United States and Japan follows the rules of the postal service or the
+standard of the country; the templates of continental Europe and Latin America
+keep the margins of Royal Mail for it, because no rule of their own was found.
+In the German window envelope the window shows the recipient only: the sender
+is in the corner.  A Japanese envelope has no
+sender block, because Japan Post prompts for the sender on the back of the
+envelope.  The rules of a postal service may differ; move the blocks to the
+place that the service requires.
+The table gives the place of the first line of each block, in millimetres
+from the left edge and the top edge of the envelope.
+.table 23 18 18
+Template | Sender | Recipient
+{c:envelope-us-ca-10} | 7, 7 | 102, 52
+{c:envelope-us-ca-9} | 7, 7 | 95, 46
+{c:envelope-us-ca-monarch} | 7, 7 | 89, 46
+{c:envelope-uk-dl} | 7, 7 | 100, 45
+{c:envelope-uk-c5} | 7, 7 | 110, 70
+{c:envelope-uk-c6} | 7, 7 | 70, 48
+{c:envelope-de-din5008-dl} | 7, 7 | 25, 68
+{c:envelope-fr-dl} | 7, 7 | 113, 50
+{c:envelope-eu-dl} | 7, 7 | 100, 45
+{c:envelope-eu-c5} | 7, 7 | 110, 70
+{c:envelope-eu-c65} | 7, 7 | 100, 45
+{c:envelope-latam-dl} | 7, 7 | 100, 45
+{c:envelope-au-dl} | 7, 7 | 100, 45
+{c:envelope-au-c5} | 7, 7 | 110, 70
+{c:envelope-jp-yougata-4} | none | 28, 15
+{c:envelope-jp-yougata-2} | none | 10, 15
+.end
+The first block of an envelope, the sender, is put by a block indent and by the
+top margin of the page, which is as large as the distance from the top; the
+recipient is put by a block indent and by a Whitespace marker between the two
+blocks.  The cursor of a new envelope starts in the sender block (in the
+recipient block of a Japanese envelope).  Change the indents, the margin and
+the height of the marker to move a block.  The ruler of a document has 80 cells across, so the indent of a
+block is counted in eightieths of the page width.  A printer cuts the
+envelope by its own rules: put the envelope in the way that the printer
+requires, and print a test page on plain paper first.
+.h3 The sample envelopes [file-sample-envelopes]
+.ix Sample envelopes
+.ix Envelope samples
+.ix Examples of envelopes
+Strata also comes with one finished sample for each envelope template: the
+envelope of the template filled in with the address of a person or a company
+that does not exist, written as the country of the envelope writes it.
+A sample shows what an envelope of each style looks like when it is filled in,
+and it is a way to try the envelope on a printer before a real address is
+typed.  The samples are in the directory {c:share/strata/samples/envelopes} of
+the directory where Strata is installed.  A sample is an ordinary document, not a
+template, so the list of New does not show it.
+.table 26 34
+Sample | The address
+{c:sample-envelope-us-ca-10} | A company in the United States, with an
+ | attention line and a ZIP+4 code.
+{c:sample-envelope-us-ca-9} | A company in Canada, with the postal code of
+ | Canada.
+{c:sample-envelope-us-ca-monarch} | A person in the United States.
+{c:sample-envelope-uk-dl} | A person in the United Kingdom.
+{c:sample-envelope-uk-c5} | A company in the United Kingdom.
+{c:sample-envelope-uk-c6} | A doctor in the United Kingdom.
+{c:sample-envelope-de-din5008-dl} | A person in Germany, with the return line
+ | in the window.
+{c:sample-envelope-fr-dl} | A person in France, in capitals.
+{c:sample-envelope-eu-dl} | A person in the Netherlands.
+{c:sample-envelope-eu-c5} | A person in Italy.
+{c:sample-envelope-eu-c65} | A person in Switzerland.
+{c:sample-envelope-latam-dl} | A person in Mexico.
+{c:sample-envelope-au-dl} | A person in Australia.
+{c:sample-envelope-au-c5} | A company in Australia, with a post office box.
+{c:sample-envelope-jp-yougata-4} | A company in Japan, written across, the
+ | postal code first.
+{c:sample-envelope-jp-yougata-2} | A person in Japan, written across, the
+ | postal code first.
+.end
+To open a sample, choose Retrieve in the File menu of the Editor, or Edit in
+the Document Manager, and type the name of the file with its directory.  A
+sample opens like any document, as in {fig:file-sample-edit-figure}: a
+Whitespace marker puts the line of the sender where it belongs, a second one
+puts the address, and the lines of the address follow.  Print it as you print
+any document.  {fig:file-sample-print-figure} shows the sample of the number
+10 envelope as the Printer prints it.  To make an envelope from a
+sample, change the address and save the document with another name.
+.pic pictures/edit-envelope-sample.png 5 A sample envelope in the Editor: the line of the sender, the Whitespace marker, and the address. [file-sample-edit-figure]
+.pic pictures/print-envelope-sample.png 5 The sample of the number 10 envelope, as it is printed. [file-sample-print-figure]
+The text of an envelope is larger than the text of a letter: the templates and
+the samples are set in 14 points (the German window envelope in 11, because the
+return line of its window is small by design, and the European C5 in 12).  The
+Preview shows an envelope as it is printed, the long side across, as in
+{fig:file-sample-preview-figure}.  An envelope chosen in Global, Page, Paper
+Size is stored that way; a page set upright can be turned with an Orientation
+marker, and the part of a block or of a section after such a marker is turned
+too.
+.pic pictures/view-envelope-preview.png 5 The Preview of the number 10 envelope: the Viewer shows the page with the long side across. [file-sample-preview-figure]
+.h3 Label sheets [file-new-labels]
+.ix Label templates
+.ix Avery labels
+.ix Sticker sheets
+.ix Templates, labels
+Strata comes with a template for each of the common sheets of Avery
+stickers: address, shipping, return address, filing, name badge, round,
+disc and other labels, on US Letter paper and on A4.  A template is named
+{c:label-us-} or {c:label-a4-} and the product number of the sheet in lower
+case: {c:label-us-5160} is the sheet 5160 and {c:label-a4-l7160} is the sheet
+L7160.  A sheet that Avery sells under several numbers has a template for each
+number, with the same layout.  The description of a template starts with the
+word Avery and the number, and shows the kind of label, the number of labels on
+the sheet and the paper, for example: Avery 5160 address labels, 30 per
+sheet, US Letter.
+.h4 Finding a sheet [file-new-labels-find]
+.ix Templates, finding by number
+In the list of templates, type the number that is printed on the box of
+labels.  The list chooses the first entry that has a word that begins with
+what you typed, in its name or in its description, and the bottom line of the
+list shows what you typed.  {k:Backspace} takes back the last character.  A
+character that no entry can follow is ignored.  Any other key, such as
+{k:Up} or {k:Down}, starts the search again.  Typing {c:5160} chooses
+{c:label-us-5160}; typing {c:8160} chooses the template of the sheet 8160,
+which has the layout of the sheet 5160.  {k:Enter} or {k:Ins} takes the
+entry, as for any template.
+.h4 Using a label template [file-new-labels-use]
+.ix Labels, typing the text
+A label template is a document of blocks, one for each sticker of the sheet,
+and no text.  The page has the size of the sheet, and every block is placed so
+that its first line is 2 mm from the left edge of its sticker and 1.5 mm from
+the top edge (1 mm and 0.5 mm on a small sticker).  Type the text of each
+sticker into its block, and move to the next block with the cursor keys.  The
+blocks are filled down the first column of stickers and then down the next
+column, not across the rows.  A block holds as many lines as fit on the
+sticker: the column Lines of the table below gives the number, and the
+template shows them as empty lines.  Type into those lines; do not add lines.
+A line that is too long for the width of the sticker continues on the next
+line.  If a sticker has more lines than it holds, the extra lines push the
+stickers below it down, and every later sticker of that column is off its
+place: make the text shorter.  The Preview shows the sheet as it is printed, so check it
+there before a sheet of labels goes into the printer.
+.pic pictures/file-new-labels.png 5 The list of templates after the number 5160 was typed: the chosen template is the sheet 5160. [file-new-labels-figure]
+Strata also comes with a sample: the sheet 5160 filled in with thirty
+addresses of people who do not exist.  It is in the directory
+{c:share/strata/samples/labels} of the directory where Strata is installed, as
+{c:sample-label-us-5160}, and is an ordinary document: open it, change the addresses and save it
+with another name.  The printed sheet is in {fig:print-label-sample-figure}.
+.pic pictures/print-label-sample.png 5 The sample sheet 5160 as it is printed: thirty addresses, each on its own sticker. [print-label-sample-figure]
+.h4 Round and disc stickers [file-new-labels-round]
+The place of a round sticker, or of a disc, is the square that holds it, and
+the text of its block starts in the corner of the square that fits inside the
+circle.  A disc has a hole in the middle that the template does not leave
+free: keep the text of a disc to the lines that lie on the ring.
+.h4 The sheets [file-new-labels-sheets]
+The sizes and the numbers across and down are those of the sheets that Avery
+publishes in its templates.  The table gives, for each sheet, the product
+numbers that have the layout, the kind, the paper, the number of stickers
+across and down, the size of one sticker in millimetres, and the number of
+lines that a sticker holds.
+.include labels-table.src
+A printer can place the page a little off.  Print the sheet on plain
+paper first and hold it against a sheet of labels in front of a light.  If
+every sticker is off by the same amount, change the margins in Global, Page
+by that amount.  The template does not name a printer.  The sizes and the
+numbers of the sheets can differ by a millimetre from the numbers of the
+printed packet.
+.h3 The structured sample [file-sample-story]
+.ix Structured sample
+.ix How Strata was made
+.ix Example, structured document
+Strata comes with one long sample that is not a letter or an envelope: the
+document {c:strata-story.doc} in the directory {c:share/strata/samples/story}, with
+its pictures in a directory next to it.  It describes how Strata was made and
+serves as an example.  It is a structured document with numbered sections four
+levels
+deep, a contents list, cross references, captions, tables, footnotes, notes,
+an index, a header with the title of the section and a footer with the page
+number.  Open it as {fig:edit-story-sample-figure} shows and use the outline
+commands to see how it is built, then print it.  It prints with line
+numbers, as a further example: the Line Numbering panel of Global Format
+({n:format-fields-linenum}) has Numbering set to Pagewise, so that the count
+starts again at 1 on every page, as the lines of a legal document are
+numbered, and Number Every on 5, so that a number stands beside every fifth
+line.  The rows of a table take no number.  To print the sample without the
+numbers, set Numbering to Off on that panel and print again.  It is a sample,
+not a template, so the list of New does not show it.
+.pic pictures/edit-story-sample.png 5 The structured sample in the Editor: the title page and the start of the first section. [edit-story-sample-figure]
+.h3 A letter and an envelope, step by step [file-new-example]
+.ix Letter, example
+.ix Envelope, example
+This example makes a letter and the envelope for it.
+1. Press {k:F12}, then {k:F} and {k:N}.  In the list of templates choose
+{c:letter-us} and press {k:Enter}.
+2. In the panel, type the name {c:offer} in Document Name and press {k:Ins}.
+3. Type the lines of the sender, the lines of the recipient, the
+salutation and the paragraphs in the empty blocks.  The date is a Date marker,
+so it is the day of the print.  Change the name in the head of the second
+page, which is a header that you reach with Global, Page.
+4. Press {k:Ctrl-S}, then print the letter with {k:F12}, Print, Final.
+5. For the envelope, choose New again and take the template of your country,
+for example {c:envelope-de-din5008-dl}.  Type the name {c:offer-env}, type
+the address into the two empty blocks, and print it in the same way, with the
+envelope in the printer as the printer requires.
+.h3 Sample letters [file-new-samples]
+.ix Sample letters
+.ix Letters, samples
+Strata comes with sample business letters that use the letter style of the
+templates {c:letter-us} and {c:letter-a4}: the named formats {c:Sender},
+{c:Date}, {c:Recipient}, {c:Salutation}, {c:Body}, {c:Closing},
+{c:Signature}, {c:Enclosure}, {c:Copy} and {c:Postscript}, with the same
+settings as in the templates.  A letter adds a named format of its own only
+for a part that the style has no name for: {c:Subject} for the subject line,
+{c:Table head} and {c:Table row} for the rows of a table.  Every letter is
+there twice, on US Letter paper (the name ends in {c:-us}) and on A4 paper
+(the name ends in {c:-a4}).  On A4 paper the recipient stands where the
+window of a DL window envelope shows it.
+.table 20 40
+Letter | What it shows
+{c:enquiry} | A question to a supplier about a price.
+{c:quotation} | The answer, with a table of prices.
+{c:complaint-reply} | A reply to a complaint, with a {c:cc:} line.
+{c:complaint-to-utility} | A customer's complaint to a utility about a bill.
+{c:order-confirmation} | The confirmation of an order, with a {c:P.S.}.
+{c:enclosures} | Documents that go with a letter: {c:encl:} and {c:cc:} lines.
+{c:two-pages} | A letter of two pages, with the head of the second page.
+{c:sans-serif} | A letter set in a sans serif face.
+.end
+The names, the companies and the addresses are made up.  The letter
+{c:complaint-to-utility} is from a customer to a company whose name has an
+ampersand, {c:Pathetic Gas & Deceptive}; the name is written and printed as
+it is.  It is a firm and polite complaint about a bill that rests on an
+estimated reading, with the number of the account and of the meter, a demand
+for a corrected bill within 14 days, three enclosures and a copy.  The table
+of the quotation has the borders of the tables of this manual: a header row in
+bold with a double line under it, and a single line under every other row.
+The letter in a sans serif face has the font of its text named {c:Text
+(sans)}: the Printer sets the text in a sans serif face when the name of the
+font has the word {c:sans} in it ({n:format-set-typefaces}).  The second
+page of {c:two-pages} has a head with the name of the recipient, the date and
+the number of the page.
+{fig:file-letter-screen-figure} shows the letter {c:complaint-to-utility} on
+the screen and {fig:file-letter-page-figure} the same letter as it is printed.
+.pic pictures/file-letter-screen.png 5 The sample letter to the utility on the screen. [file-letter-screen-figure]
+.pic pictures/print-letter-page.png 5 The same letter, printed on US Letter paper. [file-letter-page-figure]
+To open a letter, start the Editor on its name, or choose Edit Document in the
+Document Manager and type the name with its directory.  The letters are in the
+directory
+{c:share/strata/samples/letters} of the place where Strata was installed, for
+example {c:/usr/share/strata/samples/letters}, and in {c:samples/letters} of
+the source tree.  Save the letter under another name before it is changed, and
+replace the sender, the recipient and the text.  The letters are made
+by the program {c:tests/mkletters.py} of the source tree, so that a change of
+the style is made once.
+.h3 The New File panel [file-new-panel]
+.ix New File, fields
+.ix Document Name, New
+.ix Template, field of New
+.ix Revision, New
+The panel has six fields.
+.table 15 45
+Field | Meaning and value
+Working Directory | The directory of the new document and the first place
+ | in which the template is looked for.  Shared by all
+ | the File panels.  {k:F2} lists the directories.
+Document Name | The name of the new document.  It is required and it
+ | starts empty.  A name with no dot gets the extension
+ | {c:.doc}.  {k:F2} lists the files that end with
+ | {c:.doc}, so that you can see the names that are in
+ | use.
+Template | Structured, Unstructured, or the name of a template.  It
+ | starts as {c:DEFAULT.SET}, or as the template that
+ | was chosen in the list ({n:file-new-list}).  {k:F2} or
+ | {k:Keypad +} lists Structured, Unstructured, the templates with
+ | their descriptions, and Another file..., which looks for a file that
+ | ends with {c:.doc} or {c:.set} in any directory.  When there is no
+ | template, the list shows where the templates are looked for.  A name
+ | is looked for in the places of {x:file-templates-path}, with
+ | {c:.doc} or {c:.set} added if it has no extension.
+Description | The description of the new document.  Left empty, the
+ | description of the template is kept.
+Author | The author of the new document.  Left empty, the
+ | author of the template is kept.
+Revision | The revision number.  It starts as 1.000.  It is
+ | checked as for Save ({n:file-save-dar}) and
+ | always used: the revision of the template is not
+ | carried over.
+.end
+.h3 What happens after the panel [file-new-after]
+.ix New, order of events
+.ix The file exists.  Replace it when it is saved?
+.ix New document type
+.ix Cannot find the template file
+.ix Template (message title)
+When the panel is accepted, the Editor works in this order.  Each step can end
+the command, and then nothing is changed.
+.table 4 57
+Step | What happens
+1 | An empty Document Name is rejected with "No file name specified",
+ | and a Revision that is not a number with "Not a valid revision number".
+ | The panel stays open.
+2 | The Working Directory is remembered.  The name gets {c:.doc} if it has
+ | no dot.
+3 | If a file of that name exists, the question "The file exists.  Replace it
+ | when it is saved?" is asked.  No ends the command.  The file is not
+ | touched at this point: the question only makes you decide now.  Saving the
+ | new document later prompts "Overwrite old version on disk?" again.
+4 | If the open document has unsaved changes, the question "The file has
+ | changes that were not saved.  Ignore them?" is asked.  No ends the
+ | command.  Yes throws the changes away; New does not offer to save them.
+5 | The template is looked for.  If it is found it is read; a file that cannot
+ | be read shows its reading error in a box titled "Template" (for example
+ | "The file is not a document of this software.") and ends the command.
+6 | If no file is found and the name is {c:DEFAULT.SET} (in any case of
+ | letters), the built-in settings are used, and a menu titled "New document
+ | type" prompts for Structured or Unstructured.  {k:Esc} ends the command.
+ | Any other name that is not found shows "Cannot find the template file",
+ | in a box titled "Template", and ends the command.
+7 | The new document replaces the old one.  It has the name and directory of
+ | step 2, the description and author (when typed) and the revision of the
+ | panel.  The message line shows "New document".
+.end
+.pic pictures/file-new-type.png 4 The question that is asked when no template is found.
+The new document is counted as changed: the status line shows an asterisk
+before its name at once, because the name, the description and the revision
+have been put in it, and Quit puts the question whether to save.  The cursor is at
+the start.  The document that was open is not saved, not backed up and not
+kept anywhere.
+.caution New replaces the open document.  If you answer Yes to "Ignore
+  them?" the changes of the open document are lost.  Save first ({n:file-save}) if you want to keep them.
+.h3 New at the edges [file-new-edges]
+.ix New, template with text
+.ix New, unstructured template
+.table 31 29
+Case | Result
+The template has text | The new document starts with that text.
+The template is a file of Save Global | The new document is empty (one empty
+ Settings Only | block) with the settings of the
+ | template.
+The template is unstructured | The new document is unstructured; the
+ | choice of "New document type" is not
+ | offered, because it is part of the
+ | template.
+A template name with a slash | The path is used as given, relative to the
+ | directory in which the Editor was started.
+Template field empty | "Cannot find the template file".
+The file {c:DEFAULT.SET} exists in the | It is used, and no question about the
+ working directory or in the template | type of the document is asked.  Put the
+ directory | file there to get the same settings for
+ | every new document.
+.end
+.h3 See [file-new-see]
+{X:file-templates} on templates and where they are found, {x:file-new-ways} on the other ways to begin a document, and the Document
+Manager's own Edit / Preview / Print Document, which prompts for the type of the
+document, the
+description and the author.
+
+.h2 Delete [file-delete]
+.ix Delete
+.ix Delete File panel
+.ix Erasing a file
+.ix Removing a file
+.ix F12, File, Delete
+.ix Delete, no way back
+Delete erases a file from the disk.  It is the one command of the File menu
+that touches a file that is not the document: the file is named, and, after
+a question, it is gone.
+.table 20 40
+Way to reach it | Notes
+{k:F12}, File, Delete | Press {k:F12}, then {k:F} and {k:D}.
+.end
+The menu hint reads "Delete a document file from the disk".  The command
+works on any file that can be removed, not only on documents.
+.pic pictures/file-delete.png 5 The Delete File panel.
+.h3 The Delete File panel [file-delete-panel]
+.ix Delete File, fields
+.ix File Name, Delete
+The panel has two fields.
+.table 15 45
+Field | Meaning and value
+Working Directory | The directory in which the file is looked for; shared
+ | by all the File panels.  {k:F2} lists the directories.
+File Name | The name of the file, complete: no extension is added
+ | ({n:file-names-ext}).  It starts empty and
+ | must not be empty.  {k:F2} lists all the files of the
+ | Working Directory, whatever their names end with.
+.end
+A name has no wildcards: the characters {c:*} and {c:?} are taken as part of
+the name, so that one file is erased at a time.
+.h3 What happens after the panel [file-delete-after]
+.ix Delete, confirmation
+.ix Delete, messages
+.ix Cannot find the file
+.ix Cannot delete the file
+.ix Deleted (message)
+.pic pictures/file-delete-confirm.png 4 The question that Delete puts.
+.table 4 57
+Step | What happens
+1 | An empty File Name is rejected with "No file name specified".
+2 | The Working Directory is remembered.  If there is no file of the name, a box
+ | titled "Delete" says "Cannot find the file" and the command ends.
+3 | The question "Delete {i:name}?" is asked, with the bare name of the file
+ | (without its directory) as the question.  Yes is the first answer.  {k:N}
+ | or {k:Esc} cancels.
+4 | The file is removed.  If that fails, the box titled "Delete" shows "Cannot
+ | delete the file"; if it is done the message line says "Deleted" and the
+ | full name.
+.end
+There is no way to get a file back after it has been deleted.
+.h3 Delete at the edges [file-delete-edges]
+.ix Delete, the open document
+.ix Delete, directory
+.ix Delete, link
+.table 31 29
+Case | Result
+The file is the document that is open | It is erased.  The document stays in
+ | the Editor with its name and its
+ | changes; the next Save, or {k:Ctrl-S},
+ | writes it again.
+A backup file ({c:.bak}, in {c:.backup}) or a template | Erased like any file.
+A directory | "Cannot delete the file": directories are not
+ | removed.
+A link | The link is removed, not the file that it points to.
+A file in a directory that cannot be | "Cannot delete the file".
+ changed |
+A name with no extension that is typed | "Cannot find the file" when only
+ while the file is {c:report.doc} | {c:report.doc} exists.
+.end
+.h3 See [file-delete-see]
+{X:file-checklist} on the checklist of all files, and {x:file-backup} on the backup file that Save keeps, which is the safeguard
+that Delete does not have.
+
+.h2 Import [file-import]
+.ix Import
+.ix Import ASCII Text File panel
+.ix F12, File, Import
+.ix Plain text, importing
+.ix Text file, importing
+.ix ASCII file, importing
+.ix Character set, Import
+.ix Line endings, Import
+Import reads a plain text file and inserts its text into the document at the
+cursor.  It reads text only: text from other word processors, spreadsheets or
+databases has to be saved by them as plain text first.
+.table 20 40
+Way to reach it | Notes
+{k:F12}, File, Import | Press {k:F12}, then {k:F} and {k:I}.
+.end
+The menu hint reads "Import an ASCII text file".
+.pic pictures/file-import.png 5 The Import ASCII Text File panel.
+.h3 The Import ASCII Text File panel [file-import-panel]
+.ix Import ASCII Text File, fields
+.ix ASCII File Name, Import
+.ix Ignore Line Endings
+.ix Preserve Line Endings
+The panel has four fields.
+.table 15 45
+Field | Meaning and value
+Working Directory | The directory in which the file is looked for; shared
+ | by all the File panels.  {k:F2} lists the directories.
+ASCII File Name | The name of the text file, complete: no extension is
+ | added.  It starts empty and must not be empty.  {k:F2}
+ | lists all the files of the Working Directory.
+Options | How the line ends of the file are read: Ignore Line
+ | Endings or Preserve Line Endings.  Default: Ignore
+ | Line Endings.
+Character Set | The character set of the file: IBM Extended ASCII
+ | (CP 437), 96 Character ASCII (7 Bit), IBM Multilingual
+ | (CP 850), Portuguese (CP 860), Norwegian/Danish
+ | (CP 865), UTF-8 or Latin-1 (ISO 8859-1).
+ | Default: IBM Extended ASCII (CP 437).
+.end
+.h3 The Options field [file-import-options]
+.ix Import, line ends
+.ix Import, paragraphs
+.ix Import as a document
+A line end in the file is a Line Feed, or a Carriage Return followed by a Line
+Feed.  The two values treat it differently.
+.table 24 36
+Value | Effect
+Ignore Line Endings | The file is read as prose.  A line end between two
+ | lines of text is replaced by one space, so that the
+ | lines of a paragraph run together and are wrapped
+ | again by the Editor.  A blank line (an empty line, or
+ | one that has only spaces) ends the block, and a new
+ | block starts; any number of blank lines in a row
+ | make one break.  Blank lines at the start of the file
+ | are ignored.
+Preserve Line Endings | Every line end of the file becomes a line break in
+ | the text, so that the lines stay as they are.  Blank
+ | lines are kept.  The whole text goes into the current
+ | block, which is the way to import data in columns, a
+ | listing or a table that is laid out with spaces.
+.end
+Ignore Line Endings is for letters, notes and articles; Preserve Line Endings
+is for what is arranged by its lines.  In both, the spaces and the tabs of the
+file are kept.  A Tab of the file becomes a tab of the text.
+.pic pictures/file-export-charset.png 4 The list of the Character Set field (the same on the Import and Export panels).
+.h3 The Character Set field [file-import-charset]
+.ix Import, code pages
+.ix Code page, Import
+.ix CP 437, CP 850, CP 860, CP 865
+.ix UTF-8, Import
+.ix Latin-1, Import
+.ix Characters not kept, Import
+.ix Control characters, Import
+The Editor holds its text in IBM Extended ASCII, code page 437.  Import
+changes the characters of the file from the chosen code page to it.
+.table 26 34
+Value | Treatment of the characters of the file
+IBM Extended ASCII (CP 437) | Taken as they are.
+96 Character ASCII (7 Bit) | Only the 7 bit part of each character is kept.
+IBM Multilingual (CP 850) | Each character is changed to the letter of CP 437
+ | that has the same shape.
+Portuguese (CP 860) | The same for CP 860.
+Norwegian/Danish (CP 865) | The same for CP 865.
+UTF-8 | The file is read as UTF-8 text.  Each character that the document
+ | can show is put in the text; any other character becomes a
+ | question mark.
+Latin-1 (ISO 8859-1) | Each character of the file is the character of Latin-1
+ | that has the same shape in the document; any other becomes
+ | a question mark.
+.end
+A letter of CP 850, 860 or 865 that has no shape in CP 437 becomes a question
+mark.  A control character is not put in the text as it is: it is written as
+the two characters {c:^} and the letter, so that Control-A is {c:^A}; the Tab
+is the exception.
+With UTF-8 and Latin-1 Import counts the characters that it could not keep.
+The accented letters of the western languages, the box characters and the
+no-break space are kept, and so are the Greek letters of mathematics and the
+other signs that the document can show ({n:appchar-high}).  A Chinese
+character, a letter of an alphabet that the document does not have, or an
+emoji becomes a question mark, one for each character.  When the import is
+done the message line shows how many were not kept, for instance "Imported;
+3 characters not kept"; when none was lost the message line shows "Imported"
+and the name of the file, as for the other sets.  The older sets do not count.
+A mark that UTF-8 files may have at the start, to say that the text is
+UTF-8, is not text and is skipped.  A part of a UTF-8 file that is not valid
+UTF-8, for instance a file that is Latin-1 or that was cut, is not
+refused: each such part is read as the Latin-1 character with that number, and
+it is a question mark that is counted when the document has no place for it.
+.caution A question mark that Import made stays in the document, and the
+  character that it stands for is gone from the text.  Keep the imported file
+  until the text has been checked, when the message line has reported
+  characters that were not kept.
+.h3 Where the text goes [file-import-where]
+.ix Import, cursor
+.ix Import, document changed
+The text is inserted at the cursor, as if it had been typed.  When it has been
+inserted the cursor is put back at the start of the new text, so that the
+beginning of the new text is in view.  The document is marked as changed.  The
+message line shows "Imported" and the full name of the file, or, for UTF-8 and
+Latin-1 when characters were not kept, how many.
+The text that was after the cursor in the block follows the new text.  With
+Ignore Line Endings, the end of the last line of the file is joined to it
+without a space or a break, unless the file ends with a blank line, which
+starts a new block there.  With Preserve Line Endings, the last line end of
+the file, if the file has one, is a line break before that text.
+An empty file inserts nothing.
+.h3 Import at the edges and messages [file-import-edges]
+.ix Import, messages
+.ix Import failed
+.ix Cannot open the file
+.ix Read error
+.table 31 29
+Case | Result
+The ASCII File Name is empty | "No file name specified"; the panel stays.
+There is no such file | Box "Import failed": "cannot open file".
+The file is read, but not completely | Box "Import failed": "read error".
+The name is a directory | Box "Import failed": "this is a directory, not a
+ | file".
+The name is a device | Box "Import failed": "this is not a regular file".
+The file cannot be examined | Box "Import failed": "cannot read file".
+A file that is a Strata document | Its content is inserted as text.  Use
+ | Retrieve for documents.
+A long line | There is no limit of the length of a line;
+ | the Editor wraps it.
+.end
+.h3 See [file-import-see]
+Retrieve & Insert after Current Section ({n:file-retrieve}) to add a Strata
+document to a document; Export ({n:file-export}) for the way back; the chapter
+on conversion for the other ways to bring text in.
+
+.h2 Export [file-export]
+.ix Export
+.ix Export ASCII Text File panel
+.ix F12, File, Export
+.ix Plain text, exporting
+.ix Screen image
+.ix Export Data Only
+.ix Export a Screen Image
+.ix Export a LaTeX File
+Export writes the document as a plain text file, for a program that does not
+read documents of Strata: a mail program, a text editor, a word processor
+that takes text.  The text has CR LF line ends.  The attributes (bold,
+underline), the fonts, the page layout and the pictures do not come into the
+text file.  A third choice, Export a LaTeX File, writes the file that Print
+and Preview give to LaTeX, for a person who wants to work on it with LaTeX;
+{x:file-export-latex} describes it.
+.table 20 40
+Way to reach it | Notes
+{k:F12}, File, Export | Press {k:F12}, then {k:F} and {k:E}.
+.end
+The menu hint reads "Export an ASCII text file".
+.pic pictures/file-export.png 5 The Export ASCII Text File panel.
+.h3 The Export ASCII Text File panel [file-export-panel]
+.ix Export ASCII Text File, fields
+.ix ASCII File Name, Export
+.ix Scope, Export
+.ix Export Entire Document
+.ix Export Current Section
+The panel has five fields; Scope is shown only when the document is
+structured.  When Options is Export a LaTeX File a sixth field, Check
+Validity, is shown.
+.table 15 45
+Field | Meaning and value
+Working Directory | The directory in which the file is written; shared by
+ | all the File panels.  {k:F2} lists the directories.
+ASCII File Name | The name of the file to write, complete: no extension
+ | is added (but see Export a LaTeX File).  It starts empty
+ | and must not be empty.
+ | {k:F2} lists the files of the Working Directory.
+Options | What is written: Export a Screen Image, Export Data
+ | Only or Export a LaTeX File.  Default: Export a Screen
+ | Image.
+Character Set | The character set of the file: the same seven values
+ | as the Import panel.  Default: IBM Extended ASCII
+ | (CP 437).  Export a LaTeX File does not use it.
+Scope | Export Entire Document or Export Current Section.
+ | Default: Export Entire Document.
+Check Validity | Active only for Export a LaTeX File; with the other options
+ | it stays in its place, dim, and the cursor skips it.  No or Yes:
+ | Yes also runs LaTeX on the file and reports what it finds
+ | ({n:file-export-latex-check}).  Default: No.
+.end
+.h3 The Options field [file-export-options]
+.ix Export, screen image
+.ix Export, data only
+.ix Export, columns and tables
+.ix Export, line width
+.table 24 36
+Value | What the file holds
+Export a Screen Image | The text as the Editor lays it out on a screen of 80
+ | columns, with the borders of the blocks and without
+ | the rules between blocks: each block is wrapped into lines that are at
+ | most 79 characters long, with a blank line between
+ | blocks.  Headlines have their numbers.  The indent of
+ | each level, centered and right aligned text, the
+ | columns of a block side by side and the cells of a
+ | table are as they are on the screen.  Markers show
+ | as they do on the screen: a keycap as its text between
+ | spaces, an equation, a picture, white space or a page
+ | break as a name in square brackets, and the others
+ | in their short form in square brackets, such as [NOTE], or as a
+ | diamond when the display mode says so.  The bullet of a list is written as an
+ | asterisk.  A border is drawn as the screen draws it,
+ | with the box characters of the character set,
+ | the corners, tees and crossings too (in Latin-1 and
+ | in ASCII, which have none, a plus sign, a hyphen, an
+ | equals sign for a double line, and a vertical bar):
+ | the line above the first block and below the
+ | last one, the lines between two blocks and the
+ | sides on every row.
+Export Data Only | Only the text, and none of the layout: each block is
+ | one line that is as long as the text (a line end is
+ | written only at the end of the block or at a line
+ | break of the text), with real Tab characters.  Each
+ | column of a block is written on a line of its own, so
+ | that a table is taken apart cell by cell.  Headlines
+ | have no numbers.  A marker that has a text or a value
+ | (a keycap, for instance) is written as text; the
+ | others (equations, pictures, page breaks, white space)
+ | are left out.  The bullet of a list is an asterisk.
+Export a LaTeX File | The LaTeX file that Print and Preview typeset, with
+ | its pictures in a directory beside it ({n:file-export-latex}).
+.end
+Use a screen image when the columns and tables must stay in line and the
+receiving program does not wrap the text; use data only when the receiving
+program does the wrapping and the layout.
+.note A screen image is made of what the screen shows.  A marker that the
+  Editor draws as a diamond (its display mode is Diamond) and the sign of a text indent (the mark that a
+  bullet has before its text) are written as control characters.  They show
+  in the exported file as odd characters, or as {c:^D} and {c:^Z} in a
+  program that shows control characters.  A program that cannot take them
+  must be given a file of Export Data Only, which has none of them.
+.h3 The Scope field [file-export-scope]
+.ix Export, current section
+.ix Export, title page
+Export Entire Document writes all the sections.  Export Current Section writes
+the section that the cursor is in, with all its subsections; the section
+numbers of a screen image start at 1 for that section, as in an extract of
+Save ({n:file-save-options}).  The title page, which is the text above
+the first level, is never written: it is not part of the text for either
+value.  A LaTeX file is different: Export Entire Document writes the title
+page with the rest, as Print does.
+.h3 The Character Set field [file-export-charset]
+.ix Export, code pages
+.ix Export, UTF-8
+.ix Export, Latin-1
+.ix Characters without a shape in a code page
+The characters of the text are changed from CP 437 to the code page that is
+chosen.  A character that the page does not have becomes a question mark.  For
+96 Character ASCII (7 Bit), the accented letters become the letter without the
+accent (an e with an accent is written as e; the Spanish n with a tilde as n).
+A few others have a letter or a digit: the one-half and one-quarter signs
+become 1, the superscript n becomes n, the superscript 2 becomes 2, and the
+no-break space becomes a space.  Every other character above the 7 bit range
+becomes a question mark.
+UTF-8 loses nothing: every character of the document is written as the same
+character in UTF-8, the accented letters, the Greek letters and the box
+characters included, and the no-break space is written as a no-break space.
+The bullet of a list is still an asterisk, as in every set.  Latin-1 has the
+accented letters of the western languages and the no-break space; a Greek
+letter, a box character and the other signs that Latin-1 lacks are written as
+a question mark, one for each character.  The lines end with a Carriage Return
+and a Line Feed in every set.
+.h3 Export a LaTeX File [file-export-latex]
+.ix Export a LaTeX File
+.ix LaTeX file, exporting
+.ix LaTeX file, compiling
+.ix .tex file
+.ix Pictures directory of an exported file
+.ix latex_pictures
+.ix latex_positions
+.ix Exporting a document with errors
+Export a LaTeX File saves the file that Print and Preview give to LaTeX, so
+that it can be kept, changed or sent to somebody who works with LaTeX.
+It is the same file that Print typesets: LaTeX makes of it the pages of a
+Final print, except that an exported file has no banner, no marks of errors
+and no Error Log.  When the document has conditional text, the file holds only
+the text of the branches that the variables choose ({n:marker-if-print}).  The
+Scope field works as for the text files, and a name that has no extension gets
+{c:.tex}.  The Character Set field is not used.
+.h3 Checking that LaTeX accepts the file [file-export-latex-check]
+.ix Check Validity
+.ix LaTeX file, checking
+.ix Exporting, checking the file with LaTeX
+The field Check Validity is active when Options is Export a LaTeX File; with
+the other options it stays in its place, dim, and the cursor skips it.
+It is No at first.  With No the file is only written: LaTeX is not run, the
+export
+is quick, and a file that LaTeX cannot process, for example because a picture
+is damaged, is found only when the file is compiled; Strata does not report
+it.  With Yes the export also runs LaTeX once on the file, as Print does,
+and reports what it finds.  While LaTeX runs a box shows "Checking the file with
+LaTeX", and {k:Esc} stops the check: the file stays, and the message line shows
+that the check was stopped.
+When LaTeX accepts the file the message line shows "Exported" and the full name
+of the file, followed by "LaTeX accepts it".  When it does not, the message
+line shows how many errors there are (together with those of the document, as
+for any export), and a box lists the first of them with their places in the
+document, such as a picture that LaTeX cannot read.  The file is written
+whatever the check finds: it is neither removed nor changed.  If LaTeX is not
+installed, the message line shows "not checked" and what to install, and the
+file is exported all the same.  The check takes about as long as a print of
+the document.
+.h3 Making the pages of an exported file [file-export-latex-compile]
+To make the pages, run LaTeX on the file twice, so that the page numbers of
+the references settle:
+.code
+pdflatex report.tex
+.end
+The file works with {c:latex} too, followed by {c:dvipdfmx} when a PDF is
+wanted.  The comment at the top of the file says what made it, from which
+document and on which day, how to compile it, and which packages it needs;
+they are all in a standard TeX Live installation.  The end of the file lists
+its pictures.  The file is made again each time the document is exported:
+a change made in the file is lost then, so make the change in the
+document.
+.h3 The pictures of an exported file [file-export-latex-pictures]
+Every picture of the document is copied into a directory beside the file, named
+as the file with {c:_files} added (the file {c:report.tex} has the directory
+{c:report_files}).  The file names the pictures in that directory, so the file
+and the directory can be moved or sent together; keep them together.  A picture
+of PostScript is also made into a PDF there, because LaTeX reads that.  A
+document without pictures makes no directory.  At each export the picture files
+of the last export (the names that begin with {c:pic} and a number) are
+removed from the directory first; other files in it are left alone.
+.table 19 41
+Setting | Effect
+{c:latex_pictures}=keep | The file names each picture where it is, and copies
+ | nothing (a PostScript picture is still copied).  The default, copy,
+ | copies them.
+{c:latex_positions}=yes | The file keeps, before each line, a comment that says
+ | which line of the document it came from.  By default these comments are
+ | left out.
+.end
+The two settings are keys of the file {c:config} ({n:appcfg-keys}); the Setup
+panel has no field for them, so they are changed by editing the file.
+.h3 Errors, and what an exported file is for [file-export-latex-errors]
+A document with errors is exported all the same.  An equation or a picture
+that LaTeX would reject is written as text, as Print writes it.  The message
+line shows "Exported" and the name of the file, followed by "with 3 errors and
+1 warning" when there are some, and a box lists the first of them with their
+places.  The document gets no Print Error markers from an export, and Find
+Next Error has nothing to find after one; the Error Log is not added to the
+file.  If LaTeX is not installed on the system, the export still works, but
+which equations LaTeX would reject is not known: they are found when the
+file is compiled.  The field Check Validity ({n:file-export-latex-check})
+runs LaTeX on the file and reports the errors that it finds.
+Strata does not read an exported file back: it is made for LaTeX.  Keep the
+document itself as the source, and export again when the document changes.
+.h3 After the panel [file-export-after]
+.ix Export, overwrite
+.ix Export failed
+.ix Exported (message)
+.table 4 57
+Step | What happens
+1 | An empty ASCII File Name is rejected with "No file name specified".
+2 | The Working Directory is remembered.  If a file of that name exists, the
+ | question "Overwrite old version on disk?" is asked, with Yes and No.
+3 | The file is written.  If it cannot be written, the box "Export failed"
+ | shows "cannot write" and the full name of the file.  If the text is not
+ | completely written, the box shows "write error".  Otherwise the message line
+ | says "Exported" and the full name.
+.end
+For Export a LaTeX File the message line shows "Exported" and the full name,
+and when the document has errors or warnings it adds how many; with Check
+Validity set to Yes it ends with "LaTeX accepts it" or reports what LaTeX does
+not accept.  If the directory of the pictures cannot be made the box "Export
+failed" says so.
+.h3 Export at the edges [file-export-edges]
+- The document is not changed by Export, and its name, revision and changed
+  mark stay as they were.
+- The written file is not a document: Retrieve rejects it with "The file is
+  not a document of this software."; use Import to bring it back.
+.h3 See [file-export-see]
+Import ({n:file-import}) for the way in; Save with Extract Current Section
+({n:file-save-options}) for a part of a document that stays a document; the
+chapter on printing for text that is made by the Printer.
+
+.h2 Messages of the File commands [file-messages]
+.ix Messages, File
+.ix Error messages, File commands
+.ix File messages
+The File commands put words on the screen: the reasons that the panels refuse a
+value, the boxes that report a failure, the questions, and the lines of the
+message line.  Each is listed here with the command and what to do.  The chapter on messages lists all the messages of the programs.
+.h3 Panel refusals [file-messages-panel]
+.ix Panel refusals
+A panel that rejects a value shows a box with the title of the panel and the
+reason (see {n:file-panels-check}); press a key and the panel is still open.
+.table 18 10 30
+Message | Commands | What to do
+No file name specified | All six | Type the name in the name field.
+Not a valid revision number | Save, New | Type digits with at most three
+ | | decimals, for instance 2 or 1.25.
+.end
+.h3 Boxes that report a failure [file-messages-fail]
+.ix Failure boxes
+.ix Message boxes, File
+These boxes have a title, a line of text and the words "Press any key".  The
+command is over when the key is pressed, and its panel is not shown again.
+.table 10 18 30
+Title | Text | Cause and remedy
+Save failed | cannot write file | The directory or the file
+ | | does not permit writing.
+ | | Change the Working
+ | | Directory or the name.
+Save failed | cannot write {i:path} | The same for Save Global
+ | | Settings Only and Extract.
+Save failed | write error | The disk is full or failed.
+Save failed | There is no current | Extract Current Section
+ | section | and the cursor is in no
+ | | section.
+Retrieve failed | cannot open file | No such file, or it cannot
+ | | be read.  Check the name,
+ | | the Working Directory.
+Retrieve failed | read error | The file could not be read
+ | | through.  Try again.
+Retrieve failed | The file is not a document of this software. | The file is
+ | | not a document.  Use Import.
+Retrieve failed | The file is version N.  This software reads up to version 3.
+ | | The file was written by a newer version of the software.
+Retrieve failed | The file version is N.  This software reads versions 2 to 3.
+ | | The version of the file is below the oldest that is read, or it is
+ | | damaged.
+Retrieve failed | damaged document: a piece of text has no end | The file is
+ | | damaged; use a backup.
+Template | Cannot find the | New: the template is not
+ | template file | there.  See
+ | | {x:file-templates-path}.
+Template | the reading error of | New: the template is not a
+ | Retrieve | document.
+Delete | Cannot find the file | The name is not a file of
+ | | the Working Directory.  Add
+ | | the extension.
+Delete | Cannot delete the file | A directory, or a
+ | | directory that is
+ | | protected.
+Import failed | cannot open file | No such file.
+Import failed | cannot read file | The file could not be examined.
+Import failed | read error | The file could not be read.
+Import failed | this is a directory, not a file | The name is a directory.
+Import failed | this is not a regular file | The name is a device.
+Export failed | cannot write {i:path} | The directory does not
+ | | exist or is protected.
+Export failed | write error | The disk is full or failed.
+.end
+.h3 Questions [file-messages-questions]
+.ix Questions, File
+.table 34 26
+Question | Asked by
+Overwrite old version on disk? | Save, Export: when the file exists.
+The file exists.  Replace it when it | New: when the name is that of a
+ is saved? | file.
+The file has changes that were not | Retrieve (not Insert) and New:
+saved.  Ignore them? | the open document has changes.
+Delete {i:name}? | Delete.
+New document type | New, with no template: Structured
+ | or Unstructured.
+.end
+.h3 The message line [file-messages-line]
+.ix Message line, File
+After a command has done its work the message line, above the status line,
+shows one of these lines.  {i:path} is the full name of the file.
+.table 26 34
+Line | After
+Saved {i:path} | Save, and {k:Ctrl-S}.
+Retrieved {i:path} | Retrieve, every value.
+New document | New.
+Deleted {i:path} | Delete.
+Imported {i:path} | Import.
+Imported; {i:N} characters not kept | Import with UTF-8 or Latin-1: N
+ | characters became question marks (1 character).
+Exported {i:path} | Export.
+.end
+
+.h2 Examples [file-examples]
+.ix File examples
+.ix Examples, File
+.ix Worked examples, File
+The chapter has five short examples.  The names in them are examples.
+.h3 Saving a document under a new name, keeping the old [file-examples-saveas]
+.ix Save As, example
+.ix Version of a document, keeping
+The document {c:budget-proposal-draft-1.doc} is continued in a copy, so that
+the first draft stays as it is.
+.table 4 57
+Step | What to do
+1 | Press {k:F12}, then {k:F} and {k:S}.  The Save panel opens with the Document
+ | Name {c:budget-proposal-draft-1.doc}.
+2 | Type {k:Down}, and type {c:budget-proposal-draft-2.doc}.  The first key
+ | replaces the old name.
+3 | Press {k:Ins}.  There is no such file, so there is no question.  The
+ | message line shows "Saved" and the full name.  The document is now called
+ | {c:budget-proposal-draft-2}.
+.end
+The file of draft 1 is as it was when it was last saved, and further changes
+and saves go to draft 2.  If the revision of the document was 1.004, it was
+raised to 1.005 in the file of draft 2 and the file of draft 1 still has 1.004.
+.h3 Making a template and using it [file-examples-template]
+.ix Template, example
+.ix Memo template, example
+A memo has the page layout, the typefaces and the headlines wanted for all
+memos.
+.table 4 57
+Step | What to do
+1 | Choose File, Save.  Move to Document Name and type {c:memo}.  Move to
+ | Options and choose Save Global Settings Only.  Press {k:Ins}.  The file
+ | {c:memo.set} is written with the settings and no text.
+2 | Put {c:memo.set} in the directory that the environment variable
+ | {c:STRATA_TEMPLATES} names, or leave it in the working directory.
+3 | Later, choose File, New.  Type {c:memo-to-staff} for the Document Name and
+ | {c:memo.set} for the Template (or choose it with {k:F2}).  Type your name
+ | in Author.  Press {k:Ins}.  A new document, with the settings of the memo,
+ | opens.
+.end
+To make the file {c:DEFAULT.SET} that the New panel proposes, save the
+settings under that name; New then needs no question about the type.
+.h3 Getting an older version back [file-examples-backup]
+.ix Backup, example
+.ix Restoring, example
+Backups Kept is 1 or more, and the document was found damaged after the last
+save.  The newest backup of {c:annual-report.doc} is
+{c:.backup/annual-report.bak01}.
+.table 4 57
+Step | What to do
+1 | Leave the Editor.  In the Document Manager choose Restore Backup, and give
+ | the Document Name {c:annual-report.doc}.
+2 | Choose backup 01, then View the text, and read it.  If it is the right one,
+ | press {k:Esc}, choose Restore this backup and answer {k:Y}.
+3 | The damaged version is now backup 1, in {c:.backup/annual-report.bak01};
+ | you can get it back the same way, because a restore is a swap.
+.end
+.h3 Adding a standard text to a document [file-examples-insert]
+.ix Retrieve Insert, example
+.ix Standard text, example
+A file {c:terms-and-conditions.doc} holds the standard terms; a contract needs
+them as the last section.
+.table 4 57
+Step | What to do
+1 | Put the cursor in the last section of the contract.
+2 | Press {k:Ctrl-R}, type {c:terms-and-conditions.doc} in the Document Name,
+ | move to Options and choose Retrieve & Insert after Current Section.  Press
+ | {k:Ins}.
+3 | The sections of the terms are added after the last section.  The contract
+ | is marked as changed; nothing was replaced.  Save it when the result is
+ | right.
+.end
+.h3 Moving text to and from a text editor [file-examples-text]
+.ix Import, example
+.ix Export, example
+The minutes arrive as a text file, {c:minutes.txt}, with a line end at every
+line, in a plain code page.  They are put in a document, edited and sent back
+as text.
+.table 4 57
+Step | What to do
+1 | In a new document choose File, Import.  Type {c:minutes.txt} as the ASCII
+ | File Name, keep Ignore Line Endings and the Character Set that matches the
+ | file, and press {k:Ins}.  The paragraphs, which were broken at every line,
+ | are wrapped as paragraphs again.
+2 | Edit, and save the document as usual.
+3 | To send it back as text choose File, Export.  Type {c:minutes-edited.txt}.
+ | Choose Export Data Only if the other program wraps the lines itself, or
+ | Export a Screen Image if the layout must stay.  Press {k:Ins}.
+.end
+If the file has accented letters and came from a modern system, it is
+usually in UTF-8: choose UTF-8 as the Character Set of Import
+({n:file-import-charset}), and of Export when the text goes back.

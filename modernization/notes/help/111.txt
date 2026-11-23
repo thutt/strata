@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Error message file revision error -- 
+
+The MSPRINT.ERR error message file in your current Manuscript directory is
+incompatible with your current version of Manuscript.  Recopy the file from
+the original Manuscript disk into your Manuscript directory.
+
+
+-- Error message received from printer (<description>) -- 
+
+An error message has been received from the printer.  Make sure that the
+printer is on-line, that all cables are securely connected, and that paper is
+loaded.
+
+
+-- File already exists (<filename>) --
+
+A file already exists with the name you specified.  Specify a new name or delete
+the old file and try the operation again.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

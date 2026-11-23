@@ -1,0 +1,25 @@
+
+---------------------------------- Change Case ---------------------------------
+
+Use Case (Ctrl F6) to change the case of existing text to all uppercase, all
+lowercase, or initial capitals.
+
+
+---Procedure--------------------------------------------------------------------
+
+ Move the cursor to the beginning         
+  or end of the text to change.       +-------------- Change Case ------------+
+                                      |                                       |
+ Press Case (Ctrl F6).               |             v No Change               |
+                                      |               UPPER                   |
+ Highlight the text to change and    |               lower                   |
+  press Enter.                        |               Initial                 |
+                                      |                                       |
+ Use Up and Down to move the cursor  +- Press Ins to Use Displayed Settings -+
+  to the setting and press Space Bar
+  to select the setting.
+
+ Press Ins to accept the setting.
+
+--------------------------------------------------------------------------------
+         Highlighting             Keyboard Summary             Help Index

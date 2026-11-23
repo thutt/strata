@@ -1,0 +1,190 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# str-dev starts str for a developer, with a second console window that
+# follows the log of the run (tail -F of the link current.log), so that the
+# log messages of the programs can be read as they are written, and the
+# screen of the Editor is never disturbed.  The programs write their
+# messages to the log of the run and never to the console; this script is
+# the only developer convenience for reading them.
+#
+# Usage: str-dev [options] [--] [arguments of str]
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+terminal_pid=""
+use_window=1
+log_link=""
+
+function help
+{
+    echo "Usage: str-dev [options] [--] [arguments of str]"
+    echo ""
+    echo "Starts str and, in a second console window, follows the log of the"
+    echo "run with tail -F on the link current.log in the directory of the"
+    echo "logs (\${STRATA_HOME}/log, or \${HOME}/.strata/log).  The window is"
+    echo "closed when str ends."
+    echo ""
+    echo "Options:"
+    echo "  -n, --no-window  Do not open the second window; only start str."
+    echo "  -h, --help       Show this text."
+    echo ""
+    echo "Environment:"
+    echo "  STR              The str program to start (default: str in the"
+    echo "                   PATH, else the build in \${STRATA_BUILD_DIR})."
+    echo "  TERMINAL         The terminal program for the window (default:"
+    echo "                   x-terminal-emulator, xterm, gnome-terminal,"
+    echo "                   konsole or xfce4-terminal, the first found)."
+    echo "  STRATA_HOME      The directory of the settings of the user."
+}
+
+# Writes the directory of the logs.
+function log_directory
+{
+    if [ -n "${STRATA_HOME:-}" ]; then
+        echo "${STRATA_HOME}/log"
+    else
+        echo "${HOME}/.strata/log"
+    fi
+}
+
+# Writes the str program to start, or nothing.
+function find_str
+{
+    local candidate
+
+    if [ -n "${STR:-}" ]; then
+        if [ -x "${STR}" ]; then
+            echo "${STR}"
+            return 0
+        fi
+
+        return 1
+    fi
+
+    if command -v str >/dev/null 2>&1; then
+        command -v str
+        return 0
+    fi
+
+    for candidate in "${STRATA_BUILD_DIR:-/nonexistent}/term/str" \
+                     "${STRATA_BUILD_DIR:-/nonexistent}/x11/str"; do
+        if [ -x "${candidate}" ]; then
+            echo "${candidate}"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Writes the terminal program for the window, or nothing.
+function find_terminal
+{
+    local candidate
+
+    if [ -n "${TERMINAL:-}" ] && command -v "${TERMINAL}" >/dev/null 2>&1; then
+        command -v "${TERMINAL}"
+        return 0
+    fi
+
+    for candidate in x-terminal-emulator xterm gnome-terminal konsole \
+                     xfce4-terminal; do
+        if command -v "${candidate}" >/dev/null 2>&1; then
+            command -v "${candidate}"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Ends the window of the log when this script ends.
+function cleanup
+{
+    if [ -n "${terminal_pid}" ]; then
+        kill "${terminal_pid}" 2>/dev/null || true
+        wait "${terminal_pid}" 2>/dev/null || true
+        terminal_pid=""
+    fi
+}
+
+# Opens the window that follows the log.
+function open_window
+{
+    local terminal
+    local name
+
+    if ! terminal="$(find_terminal)"; then
+        echo "str-dev: no terminal program found (set TERMINAL); the log" \
+             "is not followed in a window, it is in ${log_link}" >&2
+        return 0
+    fi
+
+    name="$(basename "${terminal}")"
+
+    case "${name}" in
+        gnome-terminal)
+            "${terminal}" --wait -- tail -F "${log_link}" &
+            ;;
+        *)
+            "${terminal}" -e tail -F "${log_link}" &
+            ;;
+    esac
+
+    terminal_pid=${!}
+}
+
+function main
+{
+    local str_program
+    local directory
+
+    while [ "${#}" -gt 0 ]; do
+        case "${1}" in
+            -h|--help)
+                help
+                return 0
+                ;;
+            -n|--no-window)
+                use_window=0
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    if ! str_program="$(find_str)"; then
+        echo "str-dev: the str program is not found (set STR, or build and" \
+             "set up STRATA_BUILD_DIR)" >&2
+        return 1
+    fi
+
+    directory="$(log_directory)"
+    log_link="${directory}/current.log"
+    mkdir -p "${directory}"
+
+    # A link that is left from the last run would make the window show the
+    # old log; str makes the new link before it starts any program.
+    if [ -L "${log_link}" ]; then
+        rm -f "${log_link}"
+    fi
+
+    trap cleanup EXIT
+
+    if [ "${use_window}" -eq 1 ]; then
+        open_window
+    fi
+
+    "${str_program}" "${@}"
+}
+
+main "${@}"

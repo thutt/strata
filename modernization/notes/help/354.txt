@@ -1,0 +1,25 @@
+
+------------------------------------ Preview -----------------------------------
+
+Use the Menu (F10) Print Preview options to specify the region of the document
+to preview.
+
+
+          Preview the entire       Preview only the        Preview only the
+          document.                current block.          current section.
+              +----+                     |                   +---+
+        +----------------------------------------------------------------+
+        |        Document              Block              Section        |
+        +----------------------------------------------------------------+
+
+--------------------------------------------------------------------------------
+# When you select Block or Section you need to highlight the block(s) or 
+  section(s) to preview.  Use the highlighting keys to mark the region and 
+  press Enter to proceed with preview.
+ 
+# Previewing blocks or sections will accurately reflect the final printed format
+  of the area you select.  However it will not necessarily reflect aspects of 
+  the format that are document-dependent such as page breaks.
+--------------------------------------------------------------------------------
+        Final Print             Highlighting             Preview Settings
+                Keyboard Summary                         Help Index

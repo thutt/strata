@@ -1,0 +1,707 @@
+# Chapter 3, Edit, the work on the shape of the document: blocks and columns
+# (Append, Join), pieces of the document (Copy, Cut, Delete) and sections
+# (Contract, Expand and Go To).  The headlines are of the second level and
+# below.
+
+.h2 Blocks and Columns [edit-blocks]
+.ix Blocks
+.ix Block, new
+.ix Columns, adding
+A document grows by blocks: a block is a paragraph, a headline, a table row
+or any other unit of text with a format of its own, and a block is made of
+one or more columns side by side ({n:view}).  Enter does not make a new
+block; it makes a new line inside the block ({n:edit-typing}).  A
+block is made with Append, two blocks are made one with Join, and one block
+is made two with Split ({n:edit-b-split}).  Pieces of text, blocks and
+sections are moved and copied as described in {x:edit-copy}, and put in by
+Paste ({n:edit-b-paste}).
+.table 23 37
+To do this | Use
+Add a column, a block or a section | Append, {k:Alt-F2}, and the keys below.
+Make two blocks or two sections one | Join, {k:Alt-F3}.
+Split a block or a section in two | Split ({n:edit-b-split}).
+.end
+
+.h3 Append [edit-append]
+.ix APPEND command
+.ix Alt-F2
+.ix Ctrl-A
+.ix Ctrl-O
+.ix Ins
+.ix Shift-Ins
+.ix Append a column
+.ix Append a block
+.ix Append a global block
+.ix Append a peer section
+.ix Append a subsection
+.ix Peer section
+.ix Subsection
+.ix Global-block
+.ix Sub-section
+.ix Peer-section
+.ix New block
+.ix New section
+.ix Add column
+.ix Table list, F8
+.ix Block, same local format
+.ix Block, global format
+.ix No section here
+Append adds something new to the document next to the thing that the cursor
+is in: a column at the right of a block, a block after the block, a section
+after the section, or a subsection inside the section.  The new thing is
+empty and the cursor is put in it, ready to type.
+.table 22 38
+Way | What it does
+{k:Alt-F2} | Opens the list Append; choose one of the five.
+{k:Ctrl-F}, then {c:Append (Alt-F2)} | The same, for terminals.
+{k:Ctrl-A} | Block, without the list.
+{k:Ctrl-O} | Global-block, without the list.
+{k:Ins} | Peer-section, without the list.
+{k:Shift-Ins} | Sub-section, without the list.
+{k:F8}, then Add column | Column, without the list.
+.end
+Append is not on the {k:F12} menu bar, and it has no panel.  When a terminal does
+not hand {k:Alt-F2} to the Editor, the {k:Ctrl-F} list works everywhere.  Most
+terminals use {k:Shift-Ins} to paste the clipboard of the desktop and never
+hand it to the Editor: there, append a subsection from the list
+({k:Alt-F2}, then {k:S}).
+.pic pictures/edit-a-append.png 5 The list Append in a structured document.
+.h4 The list Append
+The list is a pop-up list ({n:edit-popups}).  It opens with Block selected.
+The choices, in order:
+.table 12 48
+Choice | What is appended
+Column | A column at the right of the block of the cursor.
+Block | A block after this block, with the format of this block.
+Global-block | A block after this block, with the global format.
+Peer-section | A section after this section, at its level.
+Sub-section | A section inside this section, at the next level.
+.end
+In an unstructured document the list has three choices, Column, Block and
+Global-block.  A letter chooses at once: {k:C}, {k:B}, {k:G}, {k:P}, {k:S}.
+{k:Esc} closes the list and nothing is appended.
+.h4 Column
+Append, Column adds an empty column at the right edge of the block.  The
+block then has one more column, and the cursor stands at its start.
+.table 21 39
+Detail | What happens
+Width of the new column | None of its own: it takes what is left.
+Width of the old last column | Set, if it had none (see below).
+Text of the new column | One empty line.
+Format of the new column | The global format (no local format).
+Cursor | At the start of the new column.
+.end
+A column that is last has no width: it extends to the right edge.  When
+another column is appended, the old last column gets the width of the text
+width divided by the new number of columns, in positions.  With the text width
+of 80, a block of one column that gets a second is cut into a column of 40
+positions and the new one, which takes the other 40; a third column
+makes the middle one 26 positions wide.  The widths can be changed afterwards
+with the format of the column ({n:format}).  Appending a column to a block
+whose last column already has a width leaves the widths alone and adds the
+new column with no width.
+.pic pictures/edit-a-blocks.png 5 A block made of two columns by Append, Column and typed into.
+The ruler follows the cursor into the new column, which is how the width and
+the tab stops of each column can be seen.  Columns are the way to make
+tables, lists in two parts, and labels that sit beside text.
+.h4 Block
+Append, Block adds an empty block after the block of the cursor, in the same
+section, and puts the cursor in it.  The new block has the local format of
+the block that it follows: the block formats, the number and the widths of
+the columns, and the formats of every column are copied; the text is not.
+Appending to a row of a table is therefore the way to make the next row.
+{k:Ctrl-A} does this without the list.  The new block is put directly after
+the block of the cursor, before any other block that follows.
+.table 25 35
+The cursor is in | The new block has
+A block of text | The format of that block.
+A headline | The global format (the headline format is not copied).
+A block of several columns | The same columns, empty.
+.end
+.h4 Global-block
+Append, Global-block adds an empty block of one column after the block of
+the cursor, with no local format: the format of the section or of the
+document applies, which is the format that Global, Format sets.  {k:Ctrl-O}
+does this without the list.  Use it when the block that holds the cursor has
+a special format (a hanging indent, a centered line, a table row) that the
+next block should not have.
+.h4 Peer-section
+Append, Peer-section adds a new section after the section of the cursor, at
+the same level.  If the cursor is in section 2.2, the new section is 2.3
+(the old 2.3 becomes 2.4); if 2.2 has subsections, they stay with it and
+the new section follows them.  The new section has one empty block, its
+headline, and the cursor stands in it.  {k:Ins} does this without the list.
+.pic pictures/edit-a-fold-1.png 5 An outline of the sample document.  A peer section can be appended while the outline is shown.
+.h4 Sub-section
+Append, Sub-section adds a new section inside the section of the cursor, one
+level lower.  It is put after the subsections that already exist: it
+becomes the last, and if the section had none, the first and only
+subsection.  The cursor stands in the new headline.  {k:Shift-Ins} does this
+without the list.
+.table 23 37
+Before (cursor in 2.2) | After Sub-section
+2.2 with no subsection | 2.2 has the subsection 2.2.1
+2.2 with 2.2.1 and 2.2.2 | 2.2 has also 2.2.3
+2.2 followed by 2.3 | The new section is 2.2.1; 2.3 stays 2.3
+.end
+The section number in the status line changes at once to that of the new
+section, and the document is marked as changed (the asterisk).  Text that
+is typed into a new headline is the title of the new section.
+.h4 In an unstructured document
+{k:Ins} and {k:Shift-Ins} append a block of the global format, like
+{k:Ctrl-O}.  The same keys do the same inside the editors of a note, a
+comment and an equation; there {k:Ins} saves the text instead ({n:edit-modes}).
+.h4 Notes on Append
+- A block that was added by mistake is removed with {k:Del} while it is
+  empty ({n:edit-deleting}), a section with {k:Ctrl-L}, a column by
+  moving the text out of it.
+- With the cursor in no section (in the text before the first headline) {k:Ins}
+  and {k:Shift-Ins} give the message "No section here".
+- While an area is highlighted for Copy, Cut, Move or Delete the Append
+  keys are refused ({n:edit-highlight}).
+- A document that has been collapsed ({n:edit-contract}) can be
+  appended to: the new section is shown, the folded ones stay folded.
+- The Table list of {k:F8} has two choices: Add column does what Append,
+  Column does, and Split column here does what Split, Column does ({n:edit-b-split}).
+.h4 Examples
+To add a section of the same level after 2.2, with its text:
+1. Put the cursor anywhere in section 2.2 (its headline, its text or its
+   subsections).
+2. Press {k:Ins}.  The cursor is in the empty headline of the new section.
+3. Type the headline.  Press {k:Ctrl-A} to add a block for the text of the
+   section, and type the text.
+To make a table of two columns and three rows:
+1. In an empty block press {k:Alt-F2}, {k:C}.  The block has two columns.
+2. Type the first cell, press {k:Right} to go to the second column, type
+   it, and press {k:Ctrl-A}: the new block has two columns, like the first.
+3. Repeat from step 2 for each of the other rows.
+
+.h3 Join [edit-join]
+.ix JOIN command
+.ix Alt-F3
+.ix Join blocks
+.ix Join sections
+.ix Join, Block
+.ix Join, Section
+.ix Cannot join here
+.ix Cannot join a section that has subsections
+.ix No following peer section
+.ix Join works on single-column blocks
+.ix Nothing to join here
+.ix Merge two blocks
+Join makes one of two neighbors: two blocks become one block, or two
+sections become one section.  It is the opposite of Split ({n:edit-b-split}).  The first of the two is the one that holds the cursor,
+and what is joined to it is what follows.
+.table 23 37
+Way | What it does
+{k:Alt-F3} | The list Join: Block, Section.
+{k:Ctrl-F}, then {c:Join (Alt-F3)} | The same, for terminals.
+{k:Del} | Join, Block, at the end of a column ({n:edit-deleting}).
+{k:Backspace} | Join, Block, at the start of a block.
+.end
+.pic pictures/edit-a-join-menu.png 5 The list Join in a structured document.
+The list has two choices, Block and Section, and in an unstructured document
+one, Block.  The key {k:B} or {k:S} chooses at once; {k:Esc} cancels.  Join
+is not on the {k:F12} menu bar.
+.h4 Block
+Join, Block joins the block of the cursor and the block that follows it
+in the same section.
+.table 16 44
+Detail | What happens
+The text | The next block's text follows the text of this one.
+The end of line | The end-of-line of the first block is dropped.
+The format | The block keeps its own format; the other is lost.
+The cursor | At the place where the two texts meet.
+The other block | Removed from the document.
+.end
+The two blocks join end to end with no space put between them: if the text
+of the first block ends with "Sales" and the next begins with "Sales grew",
+the result is "SalesSales grew".  If the first block was a headline, the text
+of the next block becomes part of the headline, which is how a headline made
+from two lines is closed up.  A joined block that holds markers keeps them.
+
+Both blocks must have one column.  The message for blocks of several columns
+is "Join works on single-column blocks" and nothing is joined.  When the
+cursor is in the last block of a section, there is no block that follows (a
+section, a subsection or the end of the document follows), and the message is
+"Cannot join here".  The blocks of two sections are not joined by this choice;
+use Join, Section.
+.h4 Section
+Join, Section joins the section of the cursor and the following section
+at the same level: the second becomes part of the first.  The headline of
+the second section becomes an ordinary block, with the text of the first;
+its blocks follow; its subsections become subsections of the first.
+.table 24 36
+Before (cursor in 2.2) | After Join, Section
+2.2 Costs, with text | 2.2 Costs, text, a block "People" and its text
+2.3 People, with text |  (the headline of 2.3 is now text)
+.end
+.pic pictures/edit-a-fold-minus.png 5 After the sections are contracted, the sections to join can be seen together.
+The numbers of the sections that follow go down by one.  The headline block
+of the second section keeps its format but is no longer a headline, so it is
+printed as text.  The cursor stays in the first section.
+.table 28 30
+Message | When
+Cannot join a section that has subsections | The first has subsections.
+No following peer section | There is no section after.
+.end
+The first message is given when the first section has subsections: they would
+be left between its text and the text of the second.  Remove or move them
+first (Cut and Paste), or join the sections from the last backward.  The
+second message is given when the first section is the last at its level; the
+next section of the parent is not a peer.
+.h4 Notes on Join
+- The joined block takes the format of the first.  If the second block
+  was a table row, its columns are lost.
+- Split ({n:edit-b-split}) with the cursor at the junction makes two blocks
+  again, but not the format of the second.
+- {k:Backspace} at the start of a headline does nothing.
+- Autosort ({n:edit-b-sort}) works on blocks and sections; it does not join
+  them.
+.h4 Example
+A paragraph that was split in two by Enter and {k:Ctrl-V} is made one again:
+put the cursor at the end of the first block and press {k:Alt-F3}, {k:B}; or
+press {k:Del} at its end.  The cursor stands between the two parts.
+
+.h2 Copy, Cut and Delete [edit-copy]
+.ix COPY command
+.ix CUT command
+.ix DELETE command
+.ix F3
+.ix F4
+.ix Alt-F4
+.ix Ctrl-X
+.ix Ctrl-K
+.ix Ctrl-L
+.ix Copy text
+.ix Copy a column
+.ix Copy a block
+.ix Copy a section
+.ix Cut text
+.ix Cut a column
+.ix Cut a block
+.ix Cut a section
+.ix Delete text
+.ix Delete a column
+.ix Delete a block
+.ix Delete a section
+.ix Clipboard
+.ix Highlight
+.ix Copied
+.ix Deleted
+.ix Nothing to paste
+.ix Text selection must stay within one column
+.ix Block selection must stay within one section
+.ix Section selection must cover peer sections
+.ix Cannot take the whole document as a section
+.ix Sections exist only in structured documents
+Three commands take a piece of the document.  Copy makes a copy of it in the
+clipboard, and the document is not changed.  Cut removes it and keeps it in
+the clipboard.  Delete removes it and keeps nothing: it is for a piece that
+is not wanted again, and the clipboard keeps what it had.  Paste
+({n:edit-b-paste}) puts the contents of the clipboard anywhere, any number of
+times.  The three work in the same way: a list of four choices, a highlight
+that shows the piece, {k:Enter} to do it and {k:Esc} to cancel.  The piece can
+be a stretch of text, a column, a block or a section.
+
+Delete here is the Delete of the edit screen.  Delete in the File menu removes a file
+from the disk ({n:file}), Delete in Tools, Macros and Tools, Library removes a
+macro or an entry, and Delete in Global, Named removes a named block format.
+The keys that delete without a highlight ({k:Del}, {k:Backspace},
+{k:Ctrl-D}, {k:Alt-Backspace}) are in {x:edit-deleting}.
+
+.h3 How to reach the commands
+.table 23 37
+Way | What it does
+{k:F3} | The list Copy; choose Text, Column, Block or Section.
+{k:F4} | The list Cut: the same four choices.
+{k:Alt-F4} | The list Delete: the same four choices.
+{k:Ctrl-F}, then {c:Delete (Alt-F4)} | The same, for terminals.
+{k:Ctrl-X} | Starts a Text highlight at once; {k:Enter} cuts it.
+{k:Ctrl-K} | Cuts the block of the cursor at once, no highlight.
+{k:Ctrl-L} | Cuts the section of the cursor at once, no highlight.
+{k:Ctrl-F3}, {k:Ctrl-F4} | Lib Copy and Lib Cut: as Copy and Cut, and the
+ library as well (below).
+.end
+None of them is on the {k:F12} menu bar.  Many window managers close the window on
+{k:Alt-F4}; if the Editor does not get the key, use the {k:Ctrl-F} list.
+.pic pictures/edit-a-copy-menu.png 5 The list Copy: Text, Column, Block and Section.  The lists of Cut and Delete look alike; the title says which.
+
+.h3 The steps
+1. Press {k:F3}, {k:F4} or {k:Alt-F4}.  A list shows four choices: Text,
+   Column, Block and, in a structured document only, Section.  Choose with
+   {k:Up}, {k:Down} and {k:Return}, or press the first letter ({k:T},
+   {k:C}, {k:B}, {k:S}), which chooses at once.  {k:Esc} closes the list.
+2. The message line shows "Highlight the area with the cursor keys, then press
+   Enter (Esc cancels)".  The area starts at the cursor and is drawn in
+   the colors of the highlight.  Move the cursor to make the area larger
+   or smaller.
+3. Press {k:Enter}.  The area is copied, cut or deleted, and the message is
+   "Copied", "Cut" or "Deleted".  {k:Esc} instead cancels: the message is
+   "Cancelled" and nothing is done.
+Look at what is highlighted before {k:Enter}: none of the three prompts for
+confirmation.
+
+.h3 What the choices take
+.table 8 52
+Choice | The area
+Text | From where the cursor was to where it is, within one column.
+Column | The whole text of the column that holds the cursor.
+Block | The blocks from the first block to the one the cursor is in.
+Section | The sections from the first one to the one the cursor is in.
+.end
+.table 9 23 24
+Choice | Cut and Delete remove | What stays
+Text | The characters; the text closes up. | The block.
+Column | The text of the column. | The column, empty.
+Block | The blocks of the area. | One block per section.
+Section | The sections and their subsections. | A section 1, if empty.
+.end
+.h4 Text
+The area is the characters between the place where the cursor was when
+Text was chosen (the anchor) and the place where it is now; the anchor may
+be before or after the cursor.  The area can contain tabs, line ends,
+attribute changes and markers.  It must stay in one column of one block.
+If the cursor ends in another block or column, {k:Enter} gives the message
+"Text selection must stay within one column" and nothing is done; the
+highlight is gone and the command must be started again.  Choosing Text and
+pressing {k:Enter} at once copies nothing, and that empty copy replaces what
+the clipboard had.  Cut and Delete close up the text that followed the area,
+and the cursor is put at the place where the text was.
+.pic pictures/edit-a-highlight.png 5 Copy, Text: from the start of the paragraph to the cursor.
+.h4 Column
+The area is all the text of the column that holds the cursor; it does not
+grow, so press {k:Enter} at once.  The clipboard holds the text, not the
+column: Paste puts the text in at the cursor like Text.  Cut and Delete leave
+the column in the block with one empty line.
+.h4 Block
+.pic pictures/edit-a-highlight-block.png 5 Copy, Block: the area covers whole blocks, from the start to the cursor.
+The area is whole blocks: all the blocks from the one where the cursor was to
+the one where it is now, and the movement keys make it longer or shorter a
+block at a time.  A block that is partly in the area is wholly in it.  All
+the blocks must be in one section: when the area crosses the start of a
+section the message is "Block selection must stay within one section".  A
+copied block keeps its format, its columns and its text.  Paste puts the
+blocks after the block of the cursor.
+
+A section must keep one block: when all the blocks of a section are cut or
+deleted, a new empty block is put in the section and the cursor stands in it.
+If the headline was among the blocks, the first block that follows it becomes
+the headline.  After a cut the cursor is at the end of the block above.
+Cutting a block of a column, as part of a table, removes the row; Paste puts
+the row in after another row.
+.h4 Section
+In a structured document, the area is whole sections, each with its
+subsections.  The area starts in the section where the cursor was and
+ends in the section where it is now; both must be peers (at the same level
+and with the same parent), otherwise the message is "Section selection must
+cover peer sections".  The top of the document cannot be taken: "Cannot take
+the whole document as a section".  Choosing Section and pressing {k:Enter} at
+once takes the section of the cursor and its subsections.  An unstructured
+document has no Section choice.  Paste puts the copy after the section of the
+cursor, at its level, after its subsections.
+
+Cut and Delete take the sections out as one piece, and the numbers of the
+sections that follow are made again.  The last section of the document cannot
+disappear: when the only top-level section is removed, an empty section 1
+takes its place.  The cursor is put at the end of the section above.  A
+section that is contracted is taken whole, with its text.
+.table 28 30
+Message | When
+Block selection must stay within one section | The blocks cross a section.
+Section selection must cover peer sections | The sections are not peers.
+Cannot take the whole document as a section | The root was chosen.
+Sections exist only in structured documents | A section, in unstructured.
+Text selection must stay within one column | The text crosses a column.
+.end
+
+.h3 The highlight [edit-highlight]
+The cursor keys move the cursor and change the area.  {k:Enter} accepts,
+{k:Esc} cancels, {k:F1} is Help, and every other key is refused.  Append, the
+keys that contract and expand, and the other commands that change the
+document cannot be used while an area is highlighted.
+
+.h3 The clipboard
+.ix Clipboard, one at a time
+The clipboard holds one thing: the last Copy, Cut or Move.  A second Copy
+replaces the first, and Paste does not empty it, so the same copy can be
+pasted again and again.  Delete leaves the clipboard alone.  The clipboard
+is the memory of the Editor: it is lost when the Editor ends, it is not
+the clipboard of the desktop and it is not shared with other programs.
+Retrieving or beginning another document does not clear it, so a Copy in
+one document can be pasted in another.  Paste with nothing in the clipboard
+shows "Nothing to paste".
+
+Copy never changes the document: the asterisk of the status line is not put
+up by it.  Cut and Delete do change it.  A marker is one item of the text, so
+it is carried with the text, and when it is copied into another place it is
+the same marker (a counter is still the counter that it was, a note has the
+same text).  Block and Section copies keep the markers, the formats and the
+state of the sections that they hold.
+
+.h3 Cut [edit-cut]
+Cut is Copy followed by the removal of the area.  Three keys cut without the
+list: {k:Ctrl-K} cuts the block that holds the cursor, without asking, and
+{k:Ctrl-L} cuts the section that holds the cursor with its subsections;
+{k:Ctrl-X} starts the cutting of text.  They are the quick form of {k:F4}, Block,
+{k:Enter} and {k:F4}, Section, {k:Enter} with the area limited to the one block or
+the one section.  {k:Ctrl-L} does nothing in an unstructured document and when
+the section is the whole document.  The cut is in the clipboard, so a cut by
+mistake is put back with {k:F5} at once; the section or block is put after the
+block or section of the cursor.
+.pic pictures/edit-a-flat.png 5 A short unstructured document.  Ctrl-K cuts the whole block under the cursor.
+An area that is cut and not pasted, followed by another Cut or Copy, is lost.
+Move ({k:F7}, {n:edit-b-move}) does not use the clipboard: it moves the area
+in the place.
+.caution Cut keeps the piece only until the next Copy or Cut, and Delete keeps
+nothing: after {k:Enter} a deleted area is gone.  When there is a doubt, use
+Cut, because the clipboard holds the piece.
+
+.h3 Delete [edit-delete]
+Delete removes the area and does not touch the clipboard, even when it held
+nothing.  A hidden (contracted) section is deleted with its text.  Delete has
+no key without a list, like {k:Ctrl-K}.
+
+.h3 Lib Copy, Lib Cut and the library
+{k:Ctrl-F3} and {k:Ctrl-F4} do Copy and Cut and, in addition, add the area to
+the library of the Tools menu under a name that a panel prompts for
+({n:edit-c-library-keys}).  The library keeps the entry after the Editor ends.
+
+.h3 Examples
+To repeat a paragraph in another section: put the cursor in the paragraph,
+press {k:F3}, {k:B}, {k:Enter} (the area is the one block); move to the
+other section, put the cursor in the block that the copy is to follow, and
+press {k:F5}.
+
+To move a section of the report to the end of the document: put the cursor
+in the section and press {k:Ctrl-L}; press {k:Shift-End} to go to the end of
+the document and {k:F5}.  The section is put after the section the cursor is
+in (the last one), at the level of the last section.
+
+.h2 Sections: Contract, Expand and Go To [edit-sections]
+.ix Sections, working with
+A long structured document is read and changed one section at a time.  This
+part describes the commands that show less of the document, so that its
+headlines can be read, and the command that goes to a section by its number.
+The commands that make sections are Append and Join (above) and Split
+({n:edit-b-split}); the commands that show a whole level at once, and move a
+section to another level, are in {x:edit-b-outlines} and {x:edit-b-move}.
+
+.h3 Contract and Expand [edit-contract]
+.ix CONTRACT and EXPAND
+.ix Contract
+.ix Expand
+.ix Collapse a section
+.ix Expand a section
+.ix Alt--
+.ix Alt-+
+.ix Alt-*
+.ix Alt-=
+.ix Keypad -
+.ix Keypad +
+.ix Keypad *
+.ix Fold
+.ix Fold state
+.ix Section marks
+.ix Fold mark
+.ix Hide text
+.ix Collapse/expand works in structured documents
+.ix Plus mark
+.ix Star mark
+.ix Hidden sections
+Contract and Expand hide and show the parts of a structured document so
+that its headlines can be read without the text.  A section that is
+contracted keeps its headline; its text and its subsections are out of
+sight (not removed) until it is expanded.  Three keys do it, one section
+at a time; the keys that show a whole level at once, {k:Alt-1} to {k:Alt-9} and
+{k:Alt-0}, are in {x:edit-b-outlines}.
+.pic pictures/edit-a-fold-minus.png 5 Section 2.1 contracted with Alt--: its headline stays, a + stands in the rule above it, and its text and subsections are out of sight.
+.table 17 43
+Key | What it does
+{k:Alt--} | Contract the current section to its headline.
+{k:Alt-+}, {k:Alt-=} | Expand the current section by one level.
+{k:Alt-*} | Hide, or show, the text of the section.
+.end
+The commands are keys; they are not on the {k:F12} menu bar and have no panel.
+In the X11 version the keys of the numeric keypad with a minus, a plus and an
+asterisk work as {k:Alt--}, {k:Alt-+} and {k:Alt-*}.  A terminal sends those
+keys as the plain characters, which would be typed into the text, so in a
+terminal only the Alt keys work; the {k:Alt-=} key is the {k:Alt-+} key
+without Shift.  The keys work in a structured document only: in an
+unstructured one the message line shows "Collapse/expand works in structured
+documents".  The keys are refused while an area is highlighted
+({n:edit-highlight}).
+.h4 The four states of a section
+Every section is in one of four states.  The state is saved with the
+document, so a document that was left contracted is contracted when it is
+retrieved again.
+.table 15 6 38
+State | Mark | What is shown of the section
+Open | none | The headline, the text and the subsections.
+Text hidden | * | The headline and the subsections; not the text.
+Collapsed | + | The headline only.
+Headline and text | + | The headline and the text; not the subsections.
+.end
+The fourth state is made by the keys {k:Alt-1} to {k:Alt-9} ({n:edit-b-outlines}); the three keys of this section make the first three.
+The state of a section is shown in the double rule above its headline: a +
+or a * in bold, three positions from the left edge of the rule's own indent.
+A section that is open has no mark.  A section that has no subsections and
+is marked + was collapsed only to hide its text.
+.pic pictures/edit-a-fold-1.png 5 The whole document shown as headlines (Alt-1): the + marks are in the rules.
+.h4 Contract: Alt--
+{k:Alt--} makes the current section Collapsed: the mark + stands in the rule
+above its headline, and its text and all its subsections go out of sight.
+The current section is the one that holds the cursor; in a document whose
+sections have subsections it is the innermost, so the key on a block of
+2.1.2 collapses 2.1.2 and leaves 2.1 as it was.  The cursor goes to the
+start of the headline, because the block it stood in has gone out of
+sight.  {k:Alt--} on a section that is already collapsed changes nothing.
+The key marks the document as changed.
+.h4 Expand: Alt-+
+{k:Alt-+} expands the current section by one level, which makes it
+possible to open an outline step by step:
+.table 24 36
+The section is | {k:Alt-+} makes
+Collapsed or with text hidden | Open; each direct subsection is collapsed
+Open | Its direct subsections open, theirs collapsed
+.end
+After the first press of {k:Alt-+} on the section 2 of the sample document
+that was collapsed, the text of 2 is shown, and so are the headlines of
+2.1, 2.2 and 2.3, each with the mark + (their text and their subsections are
+hidden).  After the second press, 2.1, 2.2 and 2.3 are open and 2.1.1 and
+2.1.2 show as headlines with the mark +.  Each press shows one more level
+of the document under the section, and a section that is not collapsed
+never shows less.  A subsection that has no subsections of its own is
+opened.  The cursor stays where it is: Expand never hides the
+block that holds the cursor.
+.h4 Hide the text: Alt-*
+{k:Alt-*} hides only the text of the section (all its blocks but the
+headline): the mark * is set and the subsections stay in sight.  Pressed
+again on a section that has the mark *, it shows the text again.  Pressed on
+a collapsed section (mark +) it opens the section in full.  Use it to read
+the headlines of a section and of its subsections without the paragraphs
+between them.  If the cursor was in the text that is hidden, it goes to the
+headline.
+.table 16 16 24
+The section is | {k:Alt-*} makes | The mark
+Open | Text hidden | *
+Text hidden | Open | none
+Collapsed | Open | none
+.end
+.h4 The cursor and what is hidden
+The cursor is always in a block that can be seen.  When a key hides the
+block that holds it, the cursor moves to the headline of the section.  The
+movement keys skip hidden blocks: {k:Down} on a collapsed headline goes to
+the headline that follows, and the section keys ({k:Shift-Down},
+{k:Shift-PgDn}) do the same.
+.h4 What hidden text takes part in
+Hidden text is still part of the document.
+.table 23 37
+Command | On hidden text
+Save, Export, Print | The whole document, hidden or not.
+Copy, Cut, Move of a section | The hidden text goes with it.
+Search | Opens the sections that hold a match.
+Replace | Changes hidden text too.
+Autosort, Count | Take hidden text into account.
+.end
+.h4 Examples
+To see the shape of a long report, press {k:Alt-1}: only the top level
+headlines remain, each with a +.  To read the contents of Part 2, put the
+cursor in it and press {k:Alt-+} once: the headlines of its sections show.
+To work on one section of that part, put the cursor in it and press
+{k:Alt-+} again.  To put everything back, press {k:Alt-0} twice or
+{k:Alt-+} on each section.
+.caution A collapsed or contracted section is saved as it is.  A reader who
+retrieves the document sees it contracted.  Open the sections that are to be
+read before the document is sent away.
+
+.h3 Go To [edit-goto]
+.ix GO TO command
+.ix Alt-F7
+.ix Go To a section
+.ix Go To Section
+.ix Document start
+.ix Document end
+.ix Next section
+.ix Previous section
+.ix Section number
+.ix No section
+.ix Section number prompt
+Go To moves the cursor a long way in one step: to the start or the end of
+the document, to the next or the previous section, or to a section by its
+number.  It is the key to use in a long structured document, where the
+cursor keys would take many presses.
+.table 28 30
+Way | What it does
+{k:Alt-F7} | The list Go To.
+{k:Ctrl-F}, then {c:Go To (Alt-F7)} | The same, for terminals.
+.end
+.pic pictures/edit-a-goto-menu.png 5 The list Go To.
+The list is a pop-up list ({n:edit-popups}); it opens with the first
+choice selected.
+.table 17 43
+Choice | Where the cursor goes
+Document start | The first character of the first block.
+Document end | The end of the last block.
+Section number... | The headline of the section whose number is typed.
+Next section | The headline of the next section.
+Previous section | The headline of the section, or of the one before.
+.end
+A letter chooses at once, but the letter looks for the next entry after the
+selected one.  The first entry is selected when the list opens; so {k:D} does
+not choose Document start but Document end; to choose
+Document start press {k:Return} or {k:Home}.  The letters {k:S}, {k:N} and
+{k:P} choose Section number, Next section and Previous section.
+.h4 Document start and Document end
+Document start puts the cursor on the first character of the first block that
+can be seen; Document end puts it after the last character of the last
+visible block.  They are the same as {k:Shift-Home} and {k:Shift-End}.
+.h4 Next section and Previous section
+Next section puts the cursor on the first character of the headline of the
+next section in the text, whatever its level; at the last section it stays
+where it is.  It is the same as {k:Shift-Down}.  Previous section goes to
+the headline of the section that holds the cursor, or, if the cursor is
+already on that headline, to the headline of the section before it, which
+is the same as {k:Shift-Up}.  Sections that are hidden by Contract or
+Section edit are passed over.  In an unstructured document, Previous
+section goes to the start of the document and Next section does nothing.
+.h4 Section number
+Section number... opens a prompt ({n:edit-prompts}) titled Go To
+Section, with the line "Section number (e.g. 2.1):" and a field of dots.
+Type the number as the status line shows it, 2, 2.1 or 2.1.2, and press
+{k:Enter}; {k:Esc} cancels.
+.pic pictures/edit-a-goto-panel.png 5 The prompt of Go To, Section number: the number 2.1.2 is typed.
+.table 14 46
+Field | Values
+Section number | Digits and periods as the status line shows them: 3, 3.2, 2.1.2.
+.end
+The cursor goes to the first character of the headline of that section.  The
+number must be written exactly: "2.1" and "2.1.0" are different, a leading
+zero does not count as the same number, and there are no spaces.  The field
+is empty each time the prompt opens.
+.pic pictures/edit-a-goto-done.png 5 After Enter: the cursor is on the headline of section 2.1.2.
+.table 14 36
+Message | When
+No section 9 | There is no section of that number.
+No section | Enter with an empty field.
+.end
+The message is shown on the message line and the cursor stays where it was.
+In an unstructured document the whole document is section 1, so only the
+number 1 is found.
+.h4 Notes on Go To
+- A section that is hidden by Contract or by an outline can be named: the
+  status line then shows its number, and the cursor is in text that is
+  not drawn.  The next movement key brings the cursor to the nearest
+  visible block.  Expand the section first if you mean to work in it.
+- Go To does not change the document and does not touch the clipboard.
+- The section numbers are made from the position of the sections, so Go To
+  after sections have been appended, cut or pasted uses the new numbers.
+- The section keys {k:Shift-Up}, {k:Shift-Down}, {k:Shift-PgUp} and
+  {k:Shift-PgDn} do the work of Previous and Next section from the keyboard
+  directly ({n:edit-moving}).
+- Search finds text, and Go To finds a place by its number; Search moves the
+  cursor to the match, and in a collapsed document it opens the section
+  ({n:edit-b-search}).
+.h4 Example
+In a report of 40 sections, to go to 3.2.1: press {k:Alt-F7}, {k:S}, type
+{c:3.2.1}, press {k:Enter}.  To return to the start: {k:Alt-F7}, {k:Return}.

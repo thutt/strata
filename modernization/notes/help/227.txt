@@ -1,0 +1,25 @@
+
+------------------------------ Tab-fill Characters -----------------------------
+
+Tab-fill characters fill the blank spaces between tabs. You can use any 
+character as a tab fill.  Three commonly used fill characters are periods (.), 
+dashes (-), and underscores (_).
+
+--Procedure---------------------------------------------------------------------
+
+In the text of the document
+ Press Compose (Alt F1).
+ Press Tab.
+ Press the character to use as a tab fill character.
+
++------------------------------------------------------------------------------+
+|*TABS.DOC      Attr: Normal         Pos: 1                   UNSTRUCTURED EDIT|
+|.............................................................................|
++------------------------------------------------------------------------------+
+
+Use periods.........................
+or dashes---------------------------
+or underscores______________________
+or any other character==============
+--------------------------------------------------------------------------------
+ Tab Types      Setting Tabs      Compose      Keyboard Summary      Help Index

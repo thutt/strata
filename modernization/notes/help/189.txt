@@ -1,0 +1,25 @@
+
+-------------------- Expand/Collapse Section and Level Keys --------------------
+
+The following keys control section display in a structured document:
+
+Gray -                Collapse the current section.
+  (Collapse Section)  
+
+Gray +                Expand the current section and display the next level of
+  (Expand Section)    subsections.
+
+Gray *                Collapse all text blocks in the current section; if text
+  (Outline Section)   blocks are already collapsed, expand all text blocks in 
+                      the section.
+
+Alt 1-9               Collapse a document to display only headline blocks for 
+  (Outline Level)     the specified levels and all higher levels; if the 
+                      document is already collapsed, expand the text blocks for
+                      the specified levels.
+
+Alt 0                 Collapse all text blocks in the document and display only
+  (Outline Document)  headline blocks; if the document is already collapsed, 
+                      expand all text blocks in the document.
+--------------------------------------------------------------------------------
+                     Keyboard Summary             Help Index

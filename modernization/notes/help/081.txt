@@ -1,0 +1,25 @@
+
+---------------------------------- Note Format ---------------------------------
+
+Use the Note Format panels to set the global format for each note type.  The 
+prompts on the top two-thirds of the panel below are common to all note types;
+the prompts on the bottom third are specific to different note types.
+
+                         +----------- Footnote/Levelnote/Endnote Format -------+
+--Procedure------------  |                                           Pos: 1    |
+                         | .................................................. |
+ Press Menu (F10).      | Attributes:      Justification:     Indent:         |
+ Select Global Marker.  | Font:                                               |
+ Move the cursor to the |-----------------------------------------------------|
+  Note Format prompt and | SPACING                                             |
+  press Space Bar.       |                                                     |
+ Enter the settings.    |      Reference Tag:             Attributes:         |
+ Use PgUp and PgDn to   |           Note Tag:             Attributes:         |
+  move between panels    |-----------------------------------------------------|
+  and press Ins to       |      Separator Bar:             Note Level:         |
+  accept your settings.  |           Renumber?        Note Page Title:         |
+                         |  Position of Notes:             Title Font:         |
+-----------------------  |                           Title Attributes:         |
+                         +--------- Press Ins to Use Displayed Settings -------+
+--------------------------------------------------------------------------------
+Marker Format     Note Marker     Note Types    Keyboard Summary     Help Index

@@ -1,0 +1,25 @@
+
+-------------------------------- Search Options --------------------------------
+
+
+Match Lowercase With: Select Any Case to match a lowercase search string with
+                      all occurrences in the document, regardless of case. 
+                      Select Lowercase Only to match only those occurrences 
+                      with the same lowercase letters as the search string.
+
+Attributes:           Select Any to match all occurrences in the document, 
+                      regardless of attributes. Select specific attributes to 
+                      match only occurrences with those attributes. For 
+                      example, select Bold to match only the bold occurrences 
+                      of the search string.
+
+Match Complete Word?  Select No if you want to match occurrences of the 
+                      string that occur within other words. For example, the
+                      search string "the" would be found in "other" and
+                      "theater." Select Yes to match only occurrences of
+                      the string that are complete words. For example, "the"
+                      would only match the word "the."
+
+
+--------------------------------------------------------------------------------
+       Search       Search Strings       Keyboard Summary       Help Index

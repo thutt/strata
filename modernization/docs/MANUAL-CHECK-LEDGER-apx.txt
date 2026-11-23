@@ -1,0 +1,1410 @@
+LEDGER OF THE READ-EVERY-SECTION PASS: APPENDICES A TO E, THE GLOSSARY
+AND THE KEY REFERENCE
+
+This ledger follows docs/MANUAL-CHECK-LEDGER-README.txt, which says what
+a ledger line is and what the notation of the state means.
+
+Date: 21 November 2026.  Part: manual/src/appcmd*.src, appcfg*.src,
+appchar.src, appterm.src, appx11.src, glossary.src, cheat.src and
+mathcheat.src.  Sections are numbered as in the single document
+(A.1 is the first section of Appendix A).
+
+HOW TO READ THIS LEDGER
+
+  Every line is one headline of the part.  The columns are: number, title,
+  read, how the facts were checked, what was wrong, what was changed.  Each
+  section was read whole, in the source.  The facts were checked against
+  the program where the text states one that the program decides: the
+  options (the usage text of each program and its parser), the environment
+  variables (every getenv), the keys of the settings (config.c), the font
+  table (src/fonts.c), the character table (src/layout.c), the menus
+  (stred --dump-menus), the timings and limits of the terminal and the X11
+  window (term.c, term_x11.c, ui.c, config.c).  A line that says only
+  "read" in the how column had no such fact beyond what the manual's own
+  sections say; the text was compared with them.  The glossary has 222
+  entries; they are one line each and are covered by the glossary lines
+  below.
+
+A  Appendix A: Starting Strata, Environment and Files
+    checked: read; says only what the other sections of the appendix say.
+      wrong: nothing found.  changed: no change.
+A.1  The parts of Strata
+    checked: the three programs and the Viewer exist as term/stred, str,
+      strprint and x11/dviview in the debug build; the Viewer is built for X11
+      only.  wrong: nothing found.  changed: no change.
+A.1.1  The terminal version and the X11 version
+    checked: read; str and stred run (usage, --version, status 1 with no
+      terminal) and the parser of str.c compared with the table.  wrong:
+      sentence without a subject.  changed: rewritten.
+A.2  Starting Strata: the Document Manager
+    checked: str --usage and str.c lines 3008-3040 (options and the order of
+      start).  wrong: nothing found.  changed: no change.
+A.2.1  Options of the Document Manager
+    checked: str --usage, str.c lines 3008-3020.  wrong: --version, -H and
+      --default-colors were missing.  changed: three rows added.
+A.2.2  Exit status of the Document Manager
+    checked: ran str -h (status 0) and str with no terminal (status 1).
+      wrong: nothing found.  changed: no change.
+A.3  Environment variables
+    checked: listed every getenv of src/*.c and compared with the tables
+      below.  wrong: nothing found.  changed: no change.
+A.3.1  Environment variables of Strata
+    checked: getenv in src/*.c.  wrong: STRATA_HELP, STRATA_COLORS,
+      STRATA_DEFAULT_COLORS, STRATA_ASCII missing.  changed: four rows added.
+A.3.2  Environment variables of the system
+    checked: getenv in src/*.c.  wrong: TERM, COLORTERM, LC_ALL, LC_CTYPE,
+      LANG, WAYLAND_DISPLAY and SOURCE_DATE_EPOCH missing; USER and DISPLAY
+      without the program font.  changed: rows added, program font set.
+A.3.3  Environment variables of the X11 window
+    checked: src/term_x11.c open_xft, open_fonts and the geometry code:
+      defaults 16, 15 and 80x50, the minimum 20, the value 0 of the XFT
+      variable.  wrong: nothing found.  changed: no change.
+A.4  Programs that Strata runs
+    checked: src/eqrender.c lines 255 and 256.  wrong: pdflatex and pdftoppm
+      also draw keycaps and LaTeX markers; programs without the program font.
+      changed: rows and the paragraph after the table changed.
+A.4.1  Where each program is looked for
+    checked: src/sysprog.c: the directories, the TeX Live directories (newest
+      year first), the tests of mode, owner and directory.  wrong: nothing
+      found.  changed: no change.
+A.5  Files
+    checked: src/config.c, src/logrun.c, src/eqrender.c; the autosave row by
+      the run of appcfg-key-autosave.  wrong: nothing found.  changed: no
+      change.
+A.6  Programs and their command lines
+    checked: read; introductory text only.  wrong: nothing found.  changed: no
+      change.
+A.6.1  The Editor
+    checked: stred --usage and the modes of ui.c; ran --text.  wrong: nothing
+      found.  changed: no change.
+A.6.1.1  Options of the Editor
+    checked: stred --usage; str.c parser.  wrong: -H, --help-file and
+      --default-colors missing.  changed: two rows added.
+A.6.1.2  Starting the Editor
+    checked: ran stred --text on a missing file (status 1).  wrong: nothing
+      found.  changed: no change.
+A.6.1.3  Exit status of the Editor
+    checked: ran stred --spell (status 2), --text on a missing file and on a
+      sample (1 and 0); the statuses 3 to 5 are those of strprint printing and
+      were read in src/printcli.c, not run (a print needs a printer or a LaTeX
+      run).  wrong: nothing found.  changed: no change.
+A.6.1.4  The Editor in a terminal and under X
+    checked: ran stred in tmux at 80x24 (the whole terminal, alternate
+      screen); the X11 window size is appx11-window.  wrong: nothing found.
+      changed: no change.
+A.6.2  The Printer: command line
+    checked: read; the programs run for every exit status that can be run
+      without a terminal (1, 2 and 0 of strprint, stred and dviview); option
+      tables compared with --usage and the parsers; the key table of the
+      Viewer compared with tools/dviview/src/main.c (every key and the steps
+      25, 60, 25 to 800 equal).  wrong: nothing found.  changed: no change.
+A.6.2.1  Options of the Printer
+    checked: strprint --usage; strprint.c lines 1070-1140.  wrong: --black-
+      and-white, --recover, --index, --no-index, --list-*, --contents,
+      --progress, --var, --special and --version missing.  changed: rows
+      added.
+A.6.2.2  What a run does
+    checked: src/latex.c line 1009.  wrong: the message of a missing character
+      differed from the program.  changed: message text corrected.
+A.6.2.3  Exit status of the Printer
+    checked: ran strprint with no document, two documents, --dvi with --pdf-
+      via-dvi (status 2), a missing document (1), --tex-only (0), -o in a
+      missing directory (1, message "cannot write").  wrong: nothing found.
+      changed: no change.
+A.6.3  The Viewer: command line
+    checked: read; the programs run for every exit status that can be run
+      without a terminal (1, 2 and 0 of strprint, stred and dviview); option
+      tables compared with --usage and the parsers; the key table of the
+      Viewer compared with tools/dviview/src/main.c (every key and the steps
+      25, 60, 25 to 800 equal).  wrong: nothing found.  changed: no change.
+A.6.3.1  Options of the Viewer
+    checked: tools/dviview/src/main.c parse_args and ran x11/dviview under
+      xvfb-run: --report makes the file (empty with nothing to report), --var
+      and --special take two words and are ignored, -- takes the next word as
+      the file, --version prints the version.  wrong: --report, --var,
+      --special, --version and -- were missing.  changed: rows added; the
+      report file text made exact.
+A.6.3.2  Keys of the Viewer
+    checked: every key and the steps (zoom 25, scroll 60, 25 to 800) against
+      tools/dviview/src/main.c lines 410-520.  wrong: nothing found.  changed:
+      no change.
+A.6.3.3  Exit status and messages of the Viewer
+    checked: read; the programs run for every exit status that can be run
+      without a terminal (1, 2 and 0 of strprint, stred and dviview); option
+      tables compared with --usage and the parsers; the key table of the
+      Viewer compared with tools/dviview/src/main.c (every key and the steps
+      25, 60, 25 to 800 equal).  wrong: reference to the wrong section for the
+      environment variables.  changed: reference corrected.
+A.6.4  Environment variables for developers
+    checked: getenv in src/*.c; DVIVIEW_TIMING in tools/dviview/src/main.c
+      line 307 and src/build_type.h: a debug line to the log socket, none in a
+      release build; ran dviview with the variable set: nothing on stdout or
+      stderr.  wrong: STRATA_LPINFO, STRATA_PROGRAM_DIRS,
+      STRATA_LPSTAT_REFRESH_MS, STRATA_X11_DUMP and STRATA_SCROLL_LOG were
+      missing; STRED had no program font; DVIVIEW_TIMING was said to write to
+      the standard error.  changed: rows added, DVIVIEW_TIMING corrected.
+A.6.5  Where the programs are looked for, in full
+    checked: src/sysprog.c sp_find_env (a set name must be a regular
+      executable file).  wrong: nothing found.  changed: no change.
+B  Appendix B: Configuration
+    checked: read.  wrong: a narrative roadmap paragraph; "ten to thirteen
+      lines" was wrong.  changed: roadmap shortened, line count corrected.
+B.1  The settings directory
+    checked: src/config.c config_directory (STRATA_HOME, HOME, the password
+      entry).  wrong: nothing found.  changed: no change.
+B.1.1  What is checked about the directory
+    checked: src/config.c dir_check and config_save: link, owner, mode 0700
+      and the message.  wrong: nothing found.  changed: no change.
+B.1.2  What is checked about a file
+    checked: src/config.c config_load lines 530-555: owner test, mode 0600;
+      the fonts file test is in src/fonts.c and was not read.  wrong: nothing
+      found.  changed: no change.
+B.2  The files in the directory
+    checked: src/config.c, src/logrun.c; the dictionary file name was not
+      looked up in the spell sources.  wrong: "ten to seventeen lines" was
+      wrong.  changed: sentence corrected.
+B.3  The log of a run
+    checked: src/logrun.c: file name run-STAMP.log, link current.log, 10 kept;
+      levels FATAL ERROR WARN NOTE.  wrong: nothing found.  changed: no
+      change.
+B.4  The file config
+    checked: config.c lines 580-725 (the writer).  wrong: the list of written
+      lines was wrong: help is always written, undo_levels and others were
+      missing.  changed: list rewritten, example gains help=.
+B.4.1  How the file is read
+    checked: config.c lines 340-420.  wrong: the keys help and msed were not
+      named.  changed: rows added.
+B.4.2  Yes-or-no values
+    checked: src/config.c set_bool.  wrong: nothing found.  changed: no
+      change.
+B.4.3  Number values
+    checked: config.c set_int, backups, undo_levels and set_rows.  wrong: the
+      rule "a value that is not a number reads as 0" was wrong: backups takes
+      only digits, undo_levels needs a digit first, rows must be above 0.
+      changed: rules rewritten as a table.
+B.5  The keys of config
+    checked: every key of the table with src/config.c, default value and range
+      by key.  wrong: the key help was missing.  changed: row added.
+B.5.1  print_to and print_queue
+    checked: ran stred --print with fake strprint, lp and viewer programs
+      (STRATA_STRPRINT, STRATA_LP) and each setting: print_to=file sends
+      nothing; printer with a queue runs lp -d QUEUE, without a queue lp with
+      no -d; viewer runs the viewer with the PDF; the old key printer: File
+      only, Open to print and a queue name behave as the text says; --printer
+      overrides.  wrong: nothing found.  changed: no change.
+B.5.2  pdf_dir
+    checked: same run: NAME.pdf and NAME-draft.pdf made in the PDF directory;
+      a relative path and a missing directory give the message and use the
+      directory of the document; ~/ is expanded; no line uses the directory of
+      the document; message text in src/printjob.c.  wrong: nothing found.
+      changed: no change.
+B.5.3  pdf_viewer
+    checked: same run: the fake viewer was run by its full path with the full
+      path of the PDF as its only argument; the rules on characters, word
+      processors, LD_PRELOAD and the trust of the file are src/printjob.c
+      lines 1665 and 1690-1745 and src/config.c lines 540-555 (read, not run).
+      wrong: nothing found.  changed: no change.
+B.5.4  spell_language
+    checked: src/config.c copies the value; the check of the characters is in
+      src/str.c Setup (message found).  wrong: nothing found.  changed: no
+      change.
+B.5.5  x11_rows and terminal_rows
+    checked: src/config.c set_rows and config_clamp_rows; src/term_x11.c
+      resize and save.  wrong: nothing found.  changed: no change.
+B.5.6  terminal_charset
+    checked: src/config.c lines 428-433 and src/term.c choose_charset.  wrong:
+      nothing found.  changed: no change.
+B.5.7  default_paper
+    checked: src/config.c lines 435-441.  wrong: nothing found.  changed: no
+      change.
+B.5.8  The color keys
+    checked: script compared the 16 kinds of src/color.c (foreground and
+      background) with the table: all equal; set_color and warn_color read for
+      the bad value rule.  wrong: nothing found.  changed: no change.
+B.5.9  latex_pictures
+    checked: src/config.c line 413.  wrong: nothing found.  changed: no
+      change.
+B.5.10  latex_positions
+    checked: src/config.c line 415.  wrong: nothing found.  changed: no
+      change.
+B.5.11  latex_markers
+    checked: src/config.c lines 444-449.  wrong: nothing found.  changed: no
+      change.
+B.5.12  initial_macros and initial_library
+    checked: src/macro.c lines 712 and 909 (the extension .mac); the search
+      directories were not run.  wrong: nothing found.  changed: no change.
+B.5.13  workdir
+    checked: src/str.c message "The initial working directory does not exist".
+      wrong: nothing found.  changed: no change.
+B.5.14  The key for the Editor
+    checked: src/str.c lines 150-162 and 2190-2200; the search is the chapter
+      on the Document Manager.  wrong: nothing found.  changed: no change.
+B.5.15  autosave
+    checked: ran stred in tmux with autosave_seconds=2: a change is saved with
+      no key, no backup is made, nothing is saved without a new change, a
+      document with no name writes no file, autosave=no saves nothing,
+      --autosave no overrides yes and --autosave yes does not override no.
+      wrong: nothing found.  changed: no change.
+B.5.16  autosave_seconds
+    checked: same run: the change was saved 1.8 s after the edit with the
+      value 2; --autosave-seconds 2 overrides 300; the range in src/config.c
+      set_int.  wrong: nothing found.  changed: no change.
+B.5.17  expanded_status
+    checked: src/config.c.  wrong: nothing found.  changed: no change.
+B.5.18  onscreen_help
+    checked: src/config.c.  wrong: nothing found.  changed: no change.
+B.5.19  show_marks
+    checked: src/config.c.  wrong: nothing found.  changed: no change.
+B.5.20  show_dots
+    checked: src/config.c.  wrong: nothing found.  changed: no change.
+B.5.21  backups
+    checked: src/config.c lines 377-400 and src/backup.h (BACKUP_DEFAULT 3,
+      BACKUP_MAX 99).  wrong: nothing found.  changed: no change.
+B.6  When and how the settings are written
+    checked: src/config.c config_save, src/str.c line 2822.  wrong: nothing
+      found.  changed: no change.
+B.6.1  Which action writes what
+    checked: src/config.c config_save and src/str.c conf_save; which fields
+      Options writes was not compared with src/ui.c.  wrong: nothing found.
+      changed: no change.
+B.6.2  Messages of a failed write
+    checked: src/str.c line 2823, src/config.c, src/fonts.c.  wrong: the pop-
+      up of a failed Setup save is titled Setup.  changed: title named.
+B.7  The Setup panel and the keys
+    checked: Setup field labels and every message of the table found in
+      src/str.c and src/printjob.c; the panel was not driven.  wrong: nothing
+      found.  changed: no change.
+B.8  The Options panel and the keys
+    checked: src/ui.c line 1860 (pop-up Options); the five rows against the
+      Options panel seen in tmux at 24 rows.  wrong: nothing found.  changed:
+      no change.
+B.9  The older settings file
+    checked: src/config.c read_legacy (XDG_CONFIG_HOME, the path
+      strata/strata.conf) and config_load (only without STRATA_HOME, not with
+      an unusable directory).  wrong: nothing found.  changed: no change.
+B.10  The font list
+    checked: src/fonts.c; the labels of the Typeface list seen in tmux (Font
+      2: Text ...).  wrong: nothing found.  changed: no change.
+B.10.1  Format of the file
+    checked: src/fonts.c reader.  wrong: nothing found.  changed: no change.
+B.10.2  How the file is read and written
+    checked: src/fonts.c lines 200-215 (message) and the reader rules.  wrong:
+      nothing found.  changed: no change.
+B.10.3  The list that Strata comes with
+    checked: the 20 rows compared by script with the table of src/fonts.c:
+      equal.  wrong: nothing found.  changed: no change.
+B.10.4  Installing a font from CTAN
+    checked: every message found in src/fonts.c; the download was not run
+      (needs the network).  wrong: nothing found.  changed: no change.
+B.11  Search paths
+    checked: read; introductory text only.  wrong: nothing found.  changed: no
+      change.
+B.11.1  The Editor
+    checked: src/str.c find_msed (chapter on the Document Manager).  wrong:
+      nothing found.  changed: no change.
+B.11.2  Templates
+    checked: src/tplfind.c template_find and template_dirs: steps 1 to 6
+      equal.  wrong: nothing found.  changed: no change.
+B.11.3  Macro sets and libraries
+    checked: src/macro.c lines 712 and 909.  wrong: nothing found.  changed:
+      no change.
+B.11.4  Helper programs
+    checked: src/sysprog.c, src/preview.c.  wrong: nothing found.  changed: no
+      change.
+B.11.5  The cache of equations
+    checked: src/eqrender.c eqr_cache_dir.  wrong: nothing found.  changed: no
+      change.
+B.12  Settings that are not in the settings directory
+    checked: read; says what the document appendix says.  wrong: nothing
+      found.  changed: no change.
+B.13  Examples and troubleshooting
+    checked: the example file is read by config.c rules; the problems table
+      repeats rules checked above.  wrong: nothing found.  changed: no change.
+B.13.1  A settings file for a project directory
+    checked: read; Setup messages found in src/str.c, src/fonts.c,
+      src/printjob.c and src/config.c; field labels with str.c; font table
+      with src/fonts.c (20 rows equal); template search with src/tplfind.c
+      (steps 1 to 6 equal).  wrong: nothing found.  changed: no change.
+B.13.2  Trying settings without touching your own
+    checked: read; Setup messages found in src/str.c, src/fonts.c,
+      src/printjob.c and src/config.c; field labels with str.c; font table
+      with src/fonts.c (20 rows equal); template search with src/tplfind.c
+      (steps 1 to 6 equal).  wrong: nothing found.  changed: no change.
+B.13.3  Problems
+    checked: read; Setup messages found in src/str.c, src/fonts.c,
+      src/printjob.c and src/config.c; field labels with str.c; font table
+      with src/fonts.c (20 rows equal); template search with src/tplfind.c
+      (steps 1 to 6 equal).  wrong: nothing found.  changed: no change.
+C  Appendix C: Special Characters
+    checked: read; the 160 Unicode values against cp437_uni in src/layout.c
+      (equal); the X11 column against the Latin-1 range (equal).  wrong: a
+      narrative paragraph that argued for its own structure.  changed:
+      replaced by a short roadmap.
+C.1  The character set of Strata
+    checked: src/layout.c cp437_uni has 256 entries.  wrong: nothing found.
+      changed: no change.
+C.2  The printable characters of ASCII
+    checked: script: the signs equal the ASCII range of cp437_uni.  wrong:
+      nothing found.  changed: no change.
+C.3  The pictures
+    checked: script: the 32 Unicode values of the table equal cp437_uni[1..31]
+      and [127].  wrong: nothing found.  changed: no change.
+C.4  The accented letters, signs and box characters
+    checked: script: 160 values equal; X11 column equals value <= U+00FF.
+      wrong: nothing found.  changed: no change.
+C.5  Which characters can be typed
+    checked: src/term_x11.c map_key and src/term.c reader.  wrong: nothing
+      found.  changed: no change.
+C.6  The characters that the Editor draws by itself
+    checked: src/layout.c and src/util.h: the cell codes 04, 10, 11, 1A, FA,
+      1F and EF mapped through cp437_uni to U+2666, U+25BA, U+25C4, U+2192,
+      U+00B7, U+25BC and U+2229: equal to the table; the box lines are the box
+      characters of the set, not compared one by one.  wrong: nothing found.
+      changed: no change.
+C.7  How characters print
+    checked: script compared the 44 symbols of symdefs in src/latex.c with the
+      table of drawn symbols, the 13 placeholders with the list, and the 32
+      rows of the pictures table: all equal; the warning text is src/latex.c
+      line 1009.  wrong: the warning text differed from the program.  changed:
+      text corrected.
+C.8  The code pages of Import and Export
+    checked: script read the byte tables of src/fileops.c (cp850, cp860 and
+      cp865, both ways, 128 cells each) and compared every cell with the
+      Python codecs and cp437_uni: equal except the paragraph and section
+      signs of CP 850, which the import maps to a question mark; counts 45,
+      16, 3 and 90 of 128 for the 7-bit export equal; the 7-bit import is b &
+      0x7F; the Latin-1 export gives ? for the house.  wrong: the 7-bit import
+      was said to make pictures of accented letters, the CP 850 import row did
+      not name the two signs, the Latin-1 export row lacked the house.
+      changed: three rows corrected.
+C.9  Characters in the other files of Strata
+    checked: read; the thesaurus and dictionary readers were not read.  wrong:
+      nothing found.  changed: no change.
+D  Appendix D: The Terminal Version
+    checked: read; timings 40, 50 and 800 ms, the rows 20 to 200, the width 40
+      to 80, the colour depth rules (color.c), the Esc, Backspace and Ctrl-
+      Space reading (term.c) and the keys (docs/KEY-MAP.txt) compared; what
+      the user terminal, window manager or desktop does cannot be tested here
+      and is stated as the manual of that program says.  wrong: a narrative
+      paragraph "Organization.".  changed: rewritten.
+D.1  What the terminal version needs
+    checked: src/ui.c lines 4628 and 4905 and src/spellui.c: the messages; ran
+      stred without a terminal.  wrong: nothing found.  changed: no change.
+D.2  Terminals and the environment variable TERM
+    checked: src/term.c: alternate screen 1049, cfmakeraw, signals HUP INT
+      QUIT TERM, no bell sequence; Ctrl-C and Ctrl-S in docs/KEY-MAP.txt.
+      wrong: nothing found.  changed: no change.
+D.3  Colors and text attributes
+    checked: src/color.c color_depth_of.  wrong: STRATA_COLORS also accepts 0
+      and 24bit, TERM unknown means no colors, other values are ignored.
+      changed: table row and paragraph corrected.
+D.4  Characters
+    checked: src/term.c UTF-8 reader and cp437_uni; fonts of the user terminal
+      are not testable here.  wrong: a caution about a stray letter after a
+      character outside the plane described a fault that the reader no longer
+      has: such a character is dropped.  changed: caution removed.
+D.5  The start check and the ASCII characters
+    checked: src/term.c choose_charset (STRATA_ASCII, terminal_charset,
+      multiplexer test, 800 ms); the start message is at term.c line 526.
+      wrong: nothing found.  changed: no change.
+D.6  Screen sizes
+    checked: ran stred in tmux at 15, 20, 24 and 50 rows and read the screen:
+      top rows, bottom rows, box heights; src/term.c get_size 80x25; src/ui.c
+      text width 40 to 80.  wrong: the text said the tallest boxes are 19 and
+      20 rows high and that the two top rows are the status line; measured:
+      the top rows are the status line and the ruler; Marker Commands 17 rows,
+      Page Layout 16, Format panels 12 or 13 in a short terminal and up to 23
+      in a tall one, Typeface List about 24.  changed: the rows paragraph and
+      the box rows rewritten.
+D.7  The Esc key and the Alt key
+    checked: src/term.c lines 1072-1140 and 855-945 (40 and 50 ms, the forms
+      of the keys).  wrong: Esc followed by Enter is Alt-Enter, not Alt and
+      Ctrl.  changed: row added.
+D.8  The control keys
+    checked: src/term.c (byte 8 and 127, Ctrl-I, Enter, byte 0) and docs/KEY-
+      MAP.txt.  wrong: nothing found.  changed: no change.
+D.9  Keys that a terminal keeps for itself
+    checked: docs/KEY-MAP.txt for every alternate; which keys a terminal keeps
+      is not testable here: it depends on the terminal and the desktop.
+      wrong: "The test is simple" and a passive sentence.  changed: rewritten.
+D.10  Which terminals and desktops keep which keys
+    checked: not testable here: a table of what other programs keep; the
+      included document terminal-keys.doc is checked by its own tests.  wrong:
+      nothing found.  changed: no change.
+D.11  The Linux console
+    checked: not testable here: there is no Linux console here (a pty is not
+      one).  Compared with src/term.c: the reader takes the console forms ESC
+      [ [ A to E for F1 to F5 and the numeric forms (lines 925-1000); no code
+      is specific to the console.  The rows about the keys that the kernel
+      keymap keeps (Alt-F1 to F12, Shift with cursor keys, Shift-PgUp) are the
+      manual of the kernel keymap and are not tested.  wrong: nothing found.
+      changed: no change.
+D.12  Links, multiplexers and slow lines
+    checked: not testable here: depends on the multiplexer and the line;
+      src/term.c in_multiplexer (TMUX, STY, TERM) read.  wrong: nothing found.
+      changed: no change.
+D.13  What is different from X11
+    checked: each row against src/term_x11.c, src/term.c and chapter 5 text;
+      the Colors panel has 80 colors was not counted.  wrong: keycaps,
+      equations and pictures were described as boxes and labels; the X11
+      version draws pictures in the mode Inline.  changed: rows rewritten.
+D.14  Starting and leaving
+    checked: src/str.c starts the Editor and src/preview.c the Viewer; the
+      hand-over of the terminal was not watched.  wrong: nothing found.
+      changed: no change.
+D.15  Problems and their cures
+    checked: each cause and remedy points to a section checked above; the
+      effects on other terminals are not testable here.  wrong: nothing found.
+      changed: no change.
+E  Appendix E: The X11 Version
+    checked: read; the key reading (map_key), the font search, the window
+      class, the title, the resize and the geometry compared with
+      src/term_x11.c.  wrong: a narrative paragraph "Organization." and
+      statements on equations and keycaps that the mode Inline made false.
+      changed: rewritten.
+E.1  What the X11 version needs
+    checked: src/term_x11.c (the message), src/eqrender.c lines 255-256.
+      wrong: only equations were named.  changed: row rewritten.
+E.2  The window
+    checked: src/term_x11.c lines 506-511 and str.c.  wrong: the class
+      instance and the titles were not exact.  changed: rows corrected.
+E.3  Fonts
+    checked: src/term_x11.c lines 214-352: every step, size and default, the
+      faces dropped for width.  wrong: nothing found.  changed: no change.
+E.4  Colors
+    checked: script of the kinds against the table of colors at first (all
+      rows equal); the palette of 80 is src/colorui.c palette_make (16 VGA, 16
+      greys, 3 times 16 hues).  wrong: keycap described as a box of cells.
+      changed: paragraph corrected.
+E.5  The keyboard
+    checked: src/term_x11.c map_key lines 1352-1470: every row of the table.
+      wrong: nothing found.  changed: no change.
+E.5.1  Characters
+    checked: src/term_x11.c latin1_to_437 and map_key.  wrong: nothing found.
+      changed: no change.
+E.6  Keyboard maps and window managers
+    checked: not testable here: what a keyboard map or window manager does;
+      the rows about Strata (Alt is Mod1, AltGr ignored, keypad keys) against
+      map_key.  wrong: nothing found.  changed: no change.
+E.7  The size of the window
+    checked: src/term_x11.c ConfigureNotify (width kept, rows between the
+      minimum 20 and the maximum) and the geometry code; box heights as in the
+      terminal measurement of appterm-size.  wrong: the tallest box was said
+      to need 20 rows.  changed: now about 24 rows (the Typeface List).
+E.7.1  The height is kept
+    checked: src/term_x11.c SAVE_DELAY_MS 1000 and the save on exit;
+      src/config.c x11_rows.  wrong: nothing found.  changed: no change.
+E.8  Moving text between programs
+    checked: read; the commands named are in docs/KEY-MAP.txt; that the X11
+      version does not use the selection is true of src/term_x11.c (no
+      selection code).  wrong: nothing found.  changed: no change.
+E.9  Equations and keycaps on the screen
+    checked: markers1.src, markers4.src.  wrong: pictures were said to be
+      shown by their label and keycaps as boxes.  changed: section rewritten.
+E.10  The Viewer
+    checked: tools/dviview/src/main.c; the window size rule was not run.
+      wrong: nothing found.  changed: no change.
+E.10.1  The status bar
+    checked: tools/dviview/src/main.c (the bar texts).  wrong: nothing found.
+      changed: no change.
+E.10.2  The keys of the Viewer
+    checked: tools/dviview/src/main.c lines 410-520.  wrong: nothing found.
+      changed: no change.
+E.10.3  What the Viewer needs
+    checked: tools/dviview/src/main.c (the two messages found).  wrong:
+      nothing found.  changed: no change.
+Glossary  Glossary
+    checked: menus against stred --dump-menus.  wrong: nothing found.
+      changed: see the terms.
+F.1  A
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.2  B
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.3  C
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.4  D
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.5  E
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.6  F
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.7  G
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.8  H
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.9  I
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.10  J
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.11  K
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.12  L
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.13  M
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.14  N
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.15  O
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.16  P
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.17  Q
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.18  R
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.19  S
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.20  T
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.21  U
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.22  V
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.23  W
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.24  X
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+F.25  Z
+    checked: read; every keycap of the entry against docs/KEY-MAP.txt and
+      stred --fkey-table (equal); menu names against stred --dump-menus;
+      numbers (99 counters, 20 fonts, 3 backups, 120 seconds) against the
+      source.  wrong: nothing found.  changed: no change.
+Glossary  Accelerator
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Alt commands menu
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Alternate screen
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  AltGr
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Append
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  ASCII characters
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Attribute
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Author
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Auto Correct
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Auto Numbering
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Autosave
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Autosave interval
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Backup file
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Backups Kept
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Banner
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Block
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Block Format Editor
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Bold
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Border
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Border command
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: stated twice under one name and filed under C.
+      changed: renamed Border command and moved under B.
+Glossary  Box
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Case
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Character set
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Checklist
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Clipboard
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Collapse
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Colors panel
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Column
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Column Break
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Comment
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Comparison report
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Conditional text
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Config
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Console
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Contract
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Control panel
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Copy
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Counter
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Cross-reference
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Ctrl-^
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Cursor
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Cut
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Date
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Default colors
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: spelled colours and out of order.  changed:
+      spelled colors and moved after Date.
+Glossary  Delete
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Demote
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Description
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Diamond
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Display mode
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Document
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Document Manager
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Draft
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Edit Document
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Edit menu
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: did not name Window.  changed: Window named.
+Glossary  Edit / Preview / Print Document
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Editor
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Endnote
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Environment variable
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Equation
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Error Log
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Even page
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Exit status
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Expand
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Expanded status line
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Export
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  F12
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Failed print
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  File name
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Filedate
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Filename
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Filetime
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Final
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Find Next Error
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Font list
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Font marker
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Footer message
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Footnote
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Format
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Function key
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Global format
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Global menu
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Go To
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Hanging indent
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Header
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Headline
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Help
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Help viewer
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Highlight
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Hint line
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Hyphenation list
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Import
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Include
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Indent
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Index
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Initial Library
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Initial Macro Set
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Inline
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: named only the Equation, Picture and Keycap and
+      not the default or the fallback.  changed: rewritten.
+Glossary  Italic
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Join
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Justification
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Keep
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Key labels
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Keycap
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Keypad +
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Landscape
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  LaTeX
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  LaTeX marker
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  LaTeX file
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Latin-1
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Left block indent
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Level
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Level format
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Levelnote
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Library
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Line
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Line numbering
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Local format
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Long
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Long form
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Macro
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Macro set
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Maintain Dictionaries
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Mark of an error
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Marker
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Marker Commands
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: listed twice.  changed: one entry removed.
+Glossary  Master document
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Math
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Menu bar
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Message line
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Mode
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Modified flag
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Move
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  MyThes
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Name
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Named format
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Nonbreaking space
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Note
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Odd page
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Options
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Orientation
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Outline
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Overtype
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Page
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Page Break
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Panel
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Paste
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Path name
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Pathname
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  PDF
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Peer section
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Personal word list
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Picture
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Pop-up list
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Portrait
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Preview
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Print Error
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Print in Black and White
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Print menu
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: named three of its seven entries.  changed: all
+      seven named.
+Glossary  Printer
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Printer field
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Printer marker
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Promote
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Prompt
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Question
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Queue
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Quit
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Recovered document
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: out of alphabetical order.  changed: moved.
+Glossary  Red status area
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Replace
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Restore Backup
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Retrieve
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Revision
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Ruler
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Running head
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Save
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Search
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Search again
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Section
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Section Edit
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Section marker
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Section tag
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Settings directory
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Setup
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Shell escape
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Short
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Soft hyphen
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Sort
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Special variable
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Spell check
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Split
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Status line
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Structured
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Subsection
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Tab stop
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Table of contents
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Tag
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Template
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Terminal version
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  TeX
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Text
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Text block
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Thesaurus
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Time
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Title page
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Tools menu
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Typeface
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Underscore
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Undo
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: filed under T.  changed: moved under U.
+Glossary  Unstructured
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  UTF-8
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Variable
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Verbatim
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Viewer
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Wait panel
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Whitespace
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: out of alphabetical order.  changed: moved.
+Glossary  Winding columns
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Word
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Word count
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Working directory
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Wrap around
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  X11 version
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Glossary  Zoom
+    checked: the cross reference label, and the menu, key and default the
+      entry states.  wrong: nothing found.  changed: no change.
+Key Reference  panel 1: HOW TO READ THE KEYS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 2: WORDS IN ITALICS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 3: WHEN KEYS ARE HELD TOGETHER
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 4: MOVING THE CURSOR
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 5: DELETING AND BREAKING
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 6: LOOK OF THE TEXT
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 7: COPY, CUT, PASTE AND MOVE
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 8: WHILE TEXT IS HIGHLIGHTED
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 9: SEARCH AND REPLACE
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 10: BLOCKS AND COLUMNS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 11: SECTIONS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 12: OUTLINE AND LEVELS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 13: MENUS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 14: WHERE THE COMMANDS ARE
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: Edit lacked
+      Window; Print named three of seven entries.  changed: both lines
+      completed.
+Key Reference  panel 15: FILES
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 16: PRINTING AND PREVIEW
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 17: MACROS AND LIBRARY
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 18: FORMATS AND FONTS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 19: MORE OF THE MENU
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 20: SPELL AND THESAURUS {i:(Spell)}
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 21: MARKERS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 22: MARKER COMMANDS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 23: NOTES AND EQUATIONS
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 24: THE VIEWER {i:(X11)}
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 25: IN A PANEL
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 26: IN A LIST
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 27: ONE-LINE QUESTION
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 28: KEYPAD AND TERMINAL
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 29: HELP
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 30: DOCUMENT MANAGER
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Key Reference  panel 31: TEXT PAGES
+    checked: keys against docs/KEY-MAP.txt (checkkeys).  wrong: nothing found.
+      changed: no change.
+Math Symbols  the leaflet
+    checked: the symbol list is generated from mathsyms.txt.  wrong: nothing
+      found.  changed: no change.

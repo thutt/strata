@@ -1,0 +1,25 @@
+--------------------------------- Equation Edit --------------------------------
+
+Use the Equation Edit panel to enter the keywords that make up the equation.
+
+--Procedure-----------------------------  +----------- Equation Edit ----------+
+                                          |                                    |
+ Move the cursor to the position at      |                                    |
+  which you want an equation.             |                                    |
+ Press Marker (Alt F10).                 |                                    |
+ Select Equation.                        |                                    |
+ Press Space Bar at the Equation prompt  |                                    |
+  to display the Equation Edit panel.     |                                    |
+ Enter the text and press Ins.           |    Press Ins to Save Changes or    |
+ Enter other settings, if desired, and   +- Esc to Restore Previous Version --+
+  press Ins.
+
+--------------------------------------------------------------------------------
+# You can add blocks and columns in the Equation Edit panel, however, Manuscript
+  uses only the content of the first column of the first block to define the 
+  equation.  You can use other columns and blocks to add non-printing comments. 
+                  
+# The Sub and Super keywords cannot be the first elements in a equation.
+--------------------------------------------------------------------------------
+        Marker            Equation Marker              Equation Keywords
+                 Keyboard Summary                  Help Index

@@ -1,0 +1,25 @@
+
+---------------------------------- Text Indents --------------------------------
+
+Text indents indent subsequent text starting at the cursor position but do 
+not place a tab on the ruler or change the block or column format (as do 
+hanging indents).  Text following a text indent is indented until an end-of-
+line character is encountered.  You can use a text indent on any line in a 
+block.
+
+--Procedure---------------------------------------------------------------------
+
+ Position the cursor where you want the indent to begin.
+ Press Ctrl G.
+
+
+Manuscript displays  as the text indent character.  Subsequent text will 
+                     be indented from the text indent character.
+
+--------------------------------------------------------------------------------
+
+# The placement of a text indent in preview and final print may be different
+  than its position on the screen if you are using a proportional spaced font.
+
+--------------------------------------------------------------------------------
+  Hanging Indents        Accelerators        Keyboard Summary        Help Index

@@ -1,0 +1,25 @@
+
+----------------------------- Delete Named Block Format ------------------------
+Use Named Delete to delete a master named block format; thus removing the named
+format settings from any block with that name.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Global       +--- Delete Named Block Format ---+
+  Named Delete.                            |                                 |
+                                           |  Name:                          |
+ Enter the name of the master named block |                                 |
+  to delete or press Gray + and select a   +-- Press Ins to Delete Format ---+
+  master named block from the list.                                            
+                                       
+ Press Ins to delete the master named block format or Esc to cancel the delete.
+
+--------------------------------------------------------------------------------
+If you have used a named block format in a document and then delete the master,
+
+# Manuscript uses the appropriate global format settings in place of the 
+  named block format settings when the document is printed.
+# (Deleted) appears next to the named block format name on the Current Block 
+  Format panel for blocks that used the deleted named block format.
+--------------------------------------------------------------------------------
+    Named Block Overview     Named Menu     Keyboard Summary     Help Index

@@ -1,0 +1,999 @@
+LEDGER OF THE READ-EVERY-SECTION PASS, CHAPTERS 4 AND 5
+
+This ledger follows docs/MANUAL-CHECK-LEDGER-README.txt, which says what
+a ledger line is and what the notation of the state means.
+
+Date: 21 November 2026.  Every section below was read in full in
+the source.  The column checked by says what the facts of the
+section were compared with.  Where it says not run, the reason
+is given: the statement was read for sense and compared with
+the source of the program but its behaviour was not run.
+
+Sections of the two chapters: 265
+
+4         Format                           read; checked by: text; the chapter
+          table of parts; changed: organization paragraph rewritten, table row
+          corrected
+4.1       Global and local formats         read; checked by: globalmenu.c
+          FmtDef defaults; the lookup order was not run (it needs a document
+          with several levels of formats); no change needed
+4.1.1     The two kinds                    read; checked by: globalmenu.c
+          FmtDef defaults; the lookup order was not run (it needs a document
+          with several levels of formats); no change needed
+4.1.2     The order in which a setting is  read; checked by: run: strprint of
+          a structured document with global Right, level 1 Center, a named
+          format Left and a block Right: the level text is centered, the named
+          block is left, the block with its own format is right, and a level-2
+          section without a level value takes the global Right; the column
+          step not run (needs a table); no change needed
+4.1.3     The default format               read; checked by: globalmenu.c
+          FmtDef defaults; the lookup order is run (see Format order); no
+          change needed
+4.2       Formats on the edit screen       read; checked by: run: stred in a
+          pty and stred x11 under Xvfb (STRATA_X11_DUMP): Right ends rows one
+          cell before the edge, Center, All but First with left indent 8 and
+          tabs 10,30R (first row at 8, others at 18, 8 filled squares, a right
+          pointing mark at 18 and a left pointing mark at 38), First indented
+          5; the two give the same rows; no change needed
+4.2.1     What the screen draws            read; checked by: run: pty and
+          Xvfb: justification, indent, tab stops, left block indent, ruler
+          marks; Indent per Level on screen (level 2 blocks moved 3 cells,
+          level 3 six, level 1 not moved); section tags 1, 1.1, 1.1.1 before
+          the headlines; attributes: bold, italics and underscore are sent as
+          the escape sequences 1, 3 and 4 of the terminal; no change needed
+4.2.2     The status line and the expanded read; checked by: run: stred in a
+          pty with expanded_status=yes in the config file: the row reads Just:
+          Left Indent: All but First L: 8 and follows the F6 answers; no
+          change needed
+4.2.3     The ruler                        read; checked by: run: pty and
+          Xvfb: filled squares for the left block indent, right pointing
+          triangle for a left stop, left pointing triangle for a right stop
+          (type R); the other mark types not run; no change needed
+4.2.4     Attribute keys                   read; checked by: run: pty: Ctrl-B,
+          Alt-I and Ctrl-U start bold, italics and underscore, Ctrl-N ends
+          them; Alt-F6 opens the list Set Attributes with Normal, Bold,
+          Italics and Underscore Words and the line Ins selects; no change
+          needed
+4.3       The Global menu                  read; checked by: ui.c hints and
+          --dump-menus for the menu; view.c status row; attribute keys by
+          check-keys; panel keys not run; changed: Format entry opens fourteen
+          panels, not twelve
+4.3.1     Keys that every panel has        read; checked by: ui.c hints and
+          --dump-menus for the menu; view.c status row; attribute keys by
+          check-keys; panel keys not run; no change needed
+4.4       Format                           read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.1     How to reach the command         read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.2     The fourteen panels              read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.3     Global Format (headline and text read; checked by: globalmenu.c
+          FmtDef; Page Number Tag run in strprint (tags 1, i, I, a, A and a
+          tag with no code give 1 2 3, i ii iii, I II III, a b c, A B C, 1 2
+          3) is in the Page section; no change needed
+4.4.4     Global Format (spacing)          read; checked by: globalmenu.c
+          FmtDef; run: strprint: Page Break Level 1, Page Number Level 1,
+          Print, Ruler, First Block Type, Auto Numbering to Level; Winding
+          Columns 2 with gutter 0.5 in: columns 216 pt wide from x=72 and
+          x=324, and a short text is balanced (2 rows and 1 row); the rules
+          (single, double, wide) are accepted but their drawing was not
+          measured; changed: sentence about a field that does not exist
+          removed
+4.4.5     Global Format (line numbering)   read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.6     Global Format (contents and list read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.7     What counts as a line            read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.8     Level 1 to Level 5 Format        read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.9     How the panels are applied       read; checked by: globalmenu.c
+          FmtDef tables, NPANELS, winding panel labels, check messages; no
+          change needed
+4.4.10    Justification                    read; checked by: run: stred in a
+          pty (Left, Right, Center shown); the printed column of the table not
+          run; no change needed
+4.4.11    Indents                          read; checked by: run: strprint,
+          bbox: with the first stop at 10, None starts every row at 72, First
+          indents the first row to 130.5, All but First indents the other
+          rows, All indents every row; terminal and X11 run for First and All
+          but First with a left block indent of 8; changed: print unit is the
+          ruler unit, not a tenth of an inch
+4.4.12    Tab stops                        read; checked by: run: strprint,
+          bbox: a left stop at 10 starts at x=130.5 (72 + 10 x 5.85 pt), a
+          right stop 30R ends at 246.9, with no stops the tab goes to the next
+          multiple of 5 (101.2); terminal ruler and F6 entry also run; no
+          change needed
+4.4.13    Section tags                     read; checked by: run: strprint of
+          a structured document: level 1 tag Part \I\. gives Part I. Memo,
+          level 2 tag (\a\) gives (a) What changes, tag \A\) gives A), Auto
+          Numbering off gives no tag, Auto Numbering to Level 1 leaves level 2
+          without a tag; no change needed
+4.4.14    Spacing                          read; checked by: run: strprint,
+          bbox: Block, Headline, Subsection and Peer Section Spacing each add
+          (value - 1.00) lines (13.5 pt per line) at the place the manual
+          says; Line Spacing 2.00 doubles the rows; Print Draft gives 13.5 pt
+          whatever the spacing; Print Double Spaced doubles the line spacing;
+          the spacing of a named format (Block Spacing 3.00 adds 27 pt) wins
+          over the document; no change needed
+4.5       Page                             read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; changed: ring text: fourteen, not twelve, panels
+          of Global Format
+4.5.1     How to reach the command         read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; changed: ring text: fourteen, not twelve, panels
+          of Global Format
+4.5.2     The fields                       read; checked by: globalmenu.c
+          page_defs; run: strprint with the Page Number Tag set to each style:
+          all as the table says; changed: fields table: added Header and
+          Footer Indent and Whitespace, Paper Bin, panels column; brackets on
+          special layouts
+4.5.3     Page breaks and the title page   read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; no change needed
+4.5.4     Paper size                       read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; no change needed
+4.5.5     Header and Footer                read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; changed: Whitespace and Indent of the header and
+          footer explained
+4.5.6     What the panel checks            read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; no change needed
+4.6       Typeface                         read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; no change needed
+4.6.1     How to reach the command         read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; no change needed
+4.6.2     The Typeface List                read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; changed: five default names listed one by one;
+          Printer row added
+4.6.3     Typefaces and the printed page   read; checked by: globalmenu.c
+          page_defs, papers[], layout titles; latex.c margins and headsep;
+          msdoc.c font names; no change needed
+4.7       Marker                           read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; no change needed
+4.7.1     How to reach the command         read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; no change needed
+4.7.2     The ring of panels               read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; no change needed
+4.7.3     Marker Format                    read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; changed: field Cross-reference Format
+          added; table widths
+4.7.4     Date and time formats            read; checked by: run: strprint of
+          Date and Time markers with every format of the tables: Month D,
+          Year; M/D/YY; DD Mon YYYY; YYYY-MM-DD; H:MM am/pm; HH:MM:SS; H:MM;
+          HH:MM am/pm and the caution Today is Month D (prints To21ay is
+          November 21); no change needed
+4.7.5     Marker Display Modes             read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; changed: 35 kinds with LaTeX,
+          Orientation on panel 3, Inline for four kinds, fallback is the Short
+          form, history removed
+4.7.6     Counter Format                   read; checked by: run: strprint
+          with counter tags Table \I\. (Table I. Table II. Table III.), \1\)
+          (1) 2)), Step \1\: (Step 1: Step 2:), the defaults (1. 2. and A.
+          B.), Set Value 7 (7. 8.) and Number Style Upper Case Roman with Set
+          Value 3 (III.); no change needed
+4.7.7     Note formats                     read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; no change needed
+4.7.8     Keycap Format                    read; checked by: globalmenu.c
+          marker panels; marker.c default modes; run of the Editor in the
+          Name, Short and Long modes; no change needed
+4.8       Options                          read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.8.1     How to reach the command         read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.8.2     The fields                       read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; changed: six information rows added; lowering
+          Backups Kept asks first; table widths
+4.8.3     Where the settings are kept      read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.9       Named                            read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.9.1     How to reach the commands        read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.9.2     Edit                             read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.9.3     Delete                           read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.9.4     Limits                           read; checked by: ui.c
+          options_menu; config.c keys and defaults; globalmenu.c named format
+          labels and limits; no change needed
+4.10      Local formats                    read; checked by: run: stred in a
+          pty, F6 on a block (see Block above); characters and column not run;
+          no change needed
+4.10.1    The format of a block or of a co read; checked by: run: stred in a
+          pty: the F6 panel asks the five questions in the table; Ctrl-H with
+          the cursor at the left block indent says Type the hanging characters
+          first, then press Ctrl-H, and after typing the two characters * and
+          a space says Hanging indent set at 2; no change needed
+4.10.1.1  Hanging indent                   read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.10.2    Characters                       read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.11      Messages of the format panels    read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.11.1    Global Format                    read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages;
+          changed: three messages added (Table of Contents Level, Number
+          Every, Distance), list of fields, fourteen panels
+4.11.2    Page                             read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.11.3    Named                            read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.11.4    Keycap Format                    read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.11.5    Options and the other files of t read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+4.11.6    The F6 panel and the keys of the read; checked by: ui.c
+          block_format_editor and message strings, globalmenu.c messages; no
+          change needed
+5         Markers                          read; checked by: text; the table
+          of parts; changed: introduction rewritten as a reference with a
+          table of parts
+5.1       What a marker is                 read; checked by: run: Alt-F12 in
+          stred on an unstructured and a structured document: Cross-reference
+          in parentheses only in the unstructured one, Page Number and Section
+          in parentheses in both, three columns, Press Ins to Select a
+          Command; choosing Page Number gives Invalid marker selection (Not
+          available in document body); changed: Page Number and Section only
+          in a header or footer
+5.1.1     Where a marker may stand         read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.1.2     How a marker is made and changed read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.2       The markers in one table         read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; changed: rows Page Number and Section added
+5.3       Panels and fields                read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.3.1     Defaults and brackets            read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.3.2     Lengths and units                read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.3.3     File name fields                 read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.4       How a marker looks on the screen read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; changed: labels of Font, Merge and Table corrected;
+          Page Number and Section added
+5.5       How a marker is printed          read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.5.1     Four ways to print a marker      read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.5.2     Draft and Final                  read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.5.3     Value markers and the display mo read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.5.4     Markers in tables and boxes      read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.5.5     Limits of the printed markers    read; checked by: marker.c menu and
+          mode_label; run of the Editor on a document with every marker; ui.c
+          marker_allowed; no change needed
+5.6       Author                           read; checked by: run: strprint: a
+          document with no author prints nothing; no change needed
+5.6.1     On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.6.2     When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.6.3     Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.7       Column Break                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.7.1     On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.7.2     When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.7.3     Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.8       Comment                          read; checked by: run: strprint: a
+          Final print leaves a comment out; a Draft print gives [[Comment by
+          NAME, TIME: TEXT]]; a comment with no text and no time gives
+          [[Comment by NAME, : ]]; no change needed
+5.8.1     The panel                        read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.8.2     On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.8.3     When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.8.4     Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9       Counter                          read; checked by: run: strprint:
+          tags and styles (see Counter Format); Set Value 4294967295 prints
+          4294967295, the next markers print 4294967295 again, and the warning
+          counter-limit is given; no change needed
+5.9.1     The panel                        read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9.2     How the numbers are counted      read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9.3     The tag                          read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9.4     Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9.5     On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9.6     When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.9.7     Messages                         read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10      Cross-reference                  read; checked by: run: strprint of
+          a structured document: the five styles, and [no section] for a
+          number that is not a section; the marker following its section when
+          a section is moved or deleted in the Editor was not run: in the pty
+          the F7 Move menu moved a block (the headline) and not a section, and
+          no key sequence for moving a section was found; changed: duplicate
+          line of the edges removed
+5.10.1    The panel                        read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10.2    The styles                       read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10.3    How the marker follows its secti read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10.4    On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10.5    When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10.6    Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.10.7    Messages                         read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.11      Date                             read; checked by: run: strprint
+          with the formats of the table and of the caution, today's date: all
+          as the manual says; no change needed
+5.11.1    The panel                        read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.11.2    On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.11.3    When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.11.4    Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.12      Description                      read; checked by: run: strprint: a
+          document with no description prints nothing; no change needed
+5.12.1    On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.12.2    When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.12.3    Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.13      Equation                         read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.13.1    How it is entered                read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.13.2    On the screen                    read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.13.3    When printed                     read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.13.4    Edges                            read; checked by: marker.c field
+          tables f_*; markerui.c messages; markereval.c labels; Counter,
+          Cross-reference, Comment, Date, Time, Equation printing run (see the
+          sections marked run); no change needed
+5.14      Filedate                         read; checked by: run: strprint:
+          the date of the file of today; no change needed
+5.14.1    The panel                        read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.14.2    On the screen                    read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.14.3    When printed                     read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.14.4    Edges                            read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.15      Filename                         read; checked by: run: strprint:
+          v.doc prints V.DOC; no change needed
+5.15.1    On the screen                    read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.15.2    When printed                     read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.15.3    Edges                            read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.16      Filetime                         read; checked by: run: strprint:
+          the time of the file; no change needed
+5.16.1    The panel                        read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.16.2    On the screen                    read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.16.3    When printed                     read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.16.4    Edges                            read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.17      Font                             read; checked by: run: strprint
+          with font names Program, Sans Head and Palatino: typewriter, sans
+          serif and roman; a second Font marker with [Text] returns to the
+          roman family (the same word is 75.3 pt wide before and after and
+          51.5 pt in the typewriter font); no change needed
+5.17.1    The panel                        read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.17.2    On the screen                    read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.17.3    When printed                     read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.17.4    Edges                            read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.18      Keep                             read; checked by: run: strprint of
+          a document with 31 lines and a Keep region of three blocks: with the
+          markers the three blocks start page 2, without them the first stays
+          on page 1 and the region is split; a Page Break inside does not move
+          it; a region longer than a page starts at the top of the page; no
+          change needed
+5.18.1    The panel                        read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.18.2    How the regions are made         read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.18.3    On the screen                    read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.18.4    When printed                     read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.18.5    Edges                            read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.19      Keycap                           read; checked by: run: strprint:
+          the key prints its legend in a box (text Ctrl-S); the shades and the
+          scale not run; no change needed
+5.19.1    The panel                        read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.19.2    On the screen                    read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.19.3    When printed                     read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.19.4    Edges                            read; checked by: marker.c field
+          tables f_*; Filedate, Filename, Keep, Keycap printing run; the Font
+          marker printing not run (the family of a name is read in latex.c
+          only); no change needed
+5.20      LaTeX                            read; checked by: run: strprint of
+          LaTeX markers: bold word, boxed word, centered rule, stratalogo[0.5]
+          and This was set with strata all print as the table says; changed:
+          limit of the text is 65535 characters
+5.20.1    How it is entered                read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.2    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.3    As a picture on the screen       read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.4    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.5    Examples                         read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.6    The word Strata                  read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.7    The large logo                   read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.8    A mistake in the text            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.9    What the text may hold           read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.10   Safety                           read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.20.11   Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.21      Line                             read; checked by: run: strprint of
+          a Line marker: String *- of 1.5 inch is eleven whole copies; Weight
+          0.01 and 0.02 inch give 3 and 6 pixel rows at 300 dpi, 0.002 gives
+          the least and 0.05 the most (0.020); no Length runs to the right
+          margin; Center gives the same rule position for 0, 20 and 40 on
+          paper (it is shown in the label only, as the manual says); no change
+          needed
+5.21.1    The panel                        read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.21.2    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.21.3    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.21.4    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.21.5    Messages                         read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.21.6    See                              read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.22      Note                             read; checked by: run: strprint: a
+          footnote prints the mark and the note at the foot of the page; an
+          endnote prints [1] and a page Endnotes; a levelnote prints the mark
+          a and the note a) after the end of its section, before the next
+          headline; no change needed
+5.22.1    The panel                        read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.22.2    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.22.3    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.22.4    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.22.5    See                              read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.23      Orientation                      read; checked by: run: strprint,
+          pdfinfo: the page after a Landscape marker has Rot 90, the first
+          page 0; the value 1 is Portrait, 2 Landscape; no change needed
+5.23.1    The panel                        read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.23.2    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.23.3    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.23.4    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.24      Page Break                       read; checked by: run: strprint of
+          small documents (tests of 21 Nov), pages of the text read with
+          pdftotext: odd and even breaks land as the table says (page 2 to 3,
+          3 to 5 with page 4 blank, 5 to 6, 6 to 8 with page 7 blank); no
+          change needed
+5.24.1    The panel                        read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.24.2    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.24.3    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.24.4    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.25      Page Number                      read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); changed: new entry
+5.25.1    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.25.2    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.25.3    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.26      Pathname                         read; checked by: run: strprint:
+          the full path of the document; no change needed
+5.26.1    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.26.2    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.26.3    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27      Picture                          read; checked by: run: strprint of
+          PNG files: Width 2 and Width 2 with Unit cm give 2.00 in, a Width of
+          20 in is held to the line, Height 20 in on a tall picture is held to
+          7.69 in (85 percent of 9 in), no size gives the own size, a name in
+          another case is found; no change needed
+5.27.1    The panel                        read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.2    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.3    A picture whose file cannot be u read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.4    Where the file is looked for     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.5    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.6    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.7    Messages                         read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.27.8    See                              read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.28      Printer                          read; checked by: run: strprint:
+          prints Generic; no change needed
+5.28.1    On the screen                    read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.28.2    When printed                     read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.28.3    Edges                            read; checked by: marker.c field
+          tables f_*; config.c latex_markers; latex.c limits; LaTeX and Line
+          run; Note printing and Picture printing not run (Note needs a nested
+          text; Picture needs a picture file); no change needed
+5.29      Revision                         read; checked by: run: strprint: a
+          document with MR1001 prints 1.001; no change needed
+5.29.1    On the screen                    read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.29.2    When printed                     read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.29.3    Edges                            read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.30      Section                          read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; changed: new entry
+5.30.1    The panel                        read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.30.2    On the screen                    read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.30.3    When printed                     read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.30.4    Edges                            read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.31      Time                             read; checked by: run: strprint
+          with H:MM am/pm, HH:MM:SS, H:MM and HH:MM am/pm: all as the manual
+          says; no change needed
+5.31.1    The panel                        read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.31.2    On the screen                    read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.31.3    When printed                     read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.31.4    Edges                            read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.32      Whitespace                       read; checked by: run: strprint,
+          bbox: Size 1 in is 72 pt, 2 cm is 56.7 pt, 72 pt is 71.7 pt, 2 mm is
+          5.7 pt (the Unit is used on paper); a space that does not fit moves
+          whole to the top of the next page whatever the Treatment; a size
+          over the text area loses the text that follows (program fault,
+          written in the section); no change needed
+5.32.1    The panel                        read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.32.2    On the screen                    read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.32.3    When printed                     read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.32.4    Edges                            read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.32.5    Messages                         read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.33      Markers that are printed as a Bo read; checked by: run: strprint:
+          Merge prints MERGE NAME, Delete:Yes (the manual had no Delete part:
+          corrected); Figure and Table turn their lists on and print nothing
+          at the marker; Index prints nothing and is listed in the index; no
+          change needed
+5.33.1    Figure and Table                 read; checked by: run: strprint:
+          the Figure and Table markers turn the list of figures and of tables
+          on and print nothing at their place; no change needed
+5.33.2    Index                            read; checked by: run: strprint:
+          the index lists the entry with its page, nothing at the marker; no
+          change needed
+5.33.3    Merge                            read; checked by: run: strprint:
+          prints MERGE NAME, Delete:Yes; no change needed
+5.34      Include: a work made of parts    read; checked by: run: strprint:
+          nesting, loop, depth, margins of the master, counters, numbering
+          (see the lines above); a part that is changed between two prints is
+          read again at the second print; no change needed
+5.34.1    The panel                        read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.34.2    Where the marker goes            read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.34.3    What is printed                  read; checked by: run: strprint:
+          nesting, page layout of the master, counters and numbering; the part
+          is read when the print is made (VERSIONONE then VERSIONTWO in two
+          prints); no change needed
+5.34.4    Where a part is looked for       read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.34.5    Parts inside parts               read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.34.6    Mistakes in an Include           read; checked by: run: strprint:
+          missing part (Invalid Include request, status 4), loop and depth as
+          in the entry Include; no change needed
+5.35      Working with several authors     read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.36      Conditional text: If, Else and E read; checked by: run: strprint
+          with --var, then and else branches chosen as the text says; no
+          change needed
+5.36.1    What is printed                  read; checked by: run: strprint,
+          the branch that is false is not in the PDF text; no change needed
+5.36.2    The condition                    read; checked by: run: strprint
+          with --var; = # < > <= >= and the operators <> and != (not
+          operators) tried; changed: the field is named Expression
+5.36.3    Variables                        read; checked by: run: strprint
+          --var NAME VALUE; undefined for a variable that is not given;
+          VARS_MAX 8 in vars.h; no change needed
+5.36.4    The special variables            read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.36.5    Comparing                        read; checked by: run: strprint
+          with v = 9, 09, 4294967295, 4294967296, Z, red, abc and not given;
+          every row of the table gives the answer in the manual; changed: the
+          table is written with a variable, as the condition is
+5.36.6    Mistakes in a condition          read; checked by: marker.c field
+          tables f_*; include.h, cond.h and vars.h limits; Revision,
+          Whitespace, Box markers and Include run; no change needed
+5.37      Messages of the markers          read; checked by: run: Alt-F12 and
+          choosing Page Number in stred (message confirmed); the other
+          messages by grep of src; changed: message Invalid marker selection
+          (Not available in document body) added
+5.37.1    When a marker is chosen          read; checked by: grep of every
+          message string in src; no change needed
+5.37.2    On a marker panel                read; checked by: grep of every
+          message string in src; no change needed
+5.37.3    In the editor of a note, a comme read; checked by: grep of every
+          message string in src; no change needed
+5.37.4    When a picture cannot be shown o read; checked by: grep of every
+          message string in src; no change needed
+5.37.5    Texts that stand in the place of read; checked by: grep of every
+          message string in src; no change needed
+5.38      Print Error                      read; checked by: run: Print Final
+          to a PDF in stred of a document with a missing picture: labels,
+          message line, Ctrl-F8 and Ctrl-F7, Alt-F12 box; tests/errlog.py (0
+          failures): Remove Error, Remove Print Errors; F3 Column over the
+          Print Error and the Picture marker and F5 at the end: the Picture
+          marker is pasted and no second Print Error label appears; F4 Text
+          over the same two: both labels leave the text, F5 pastes only the
+          Picture marker; tests/perrtest.c test_save_load: saving; no change
+          needed
+5.38.1    What the marker holds            read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed
+5.38.2    On the screen                    read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed
+5.38.3    The read-only box                read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed
+5.38.4    When printed                     read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed
+5.38.5    Delete, copy, cut and paste      read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed
+5.38.6    Saving and loading               read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed
+5.38.7    Edges                            read; checked by: marker.c
+          perr_info fields; run: print with a missing picture in stred,
+          Ctrl-F8, Ctrl-F7 and the Alt-F12 box; see the section Print Error;
+          no change needed

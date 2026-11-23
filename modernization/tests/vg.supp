@@ -1,0 +1,57 @@
+# Suppressions for tests/vgrun.py (valgrind memcheck).  One entry for each
+# noise that is not a defect of Strata, with a comment that says why.  The
+# leaks that these entries name are made by a library for the life of the
+# program and are not given back at exit; the program is ended by a signal
+# (the Editor and the Viewer have no other end in a scenario) or by exit.
+
+# fontconfig and Xft keep the patterns and the caches of the fonts that the
+# window version opens (term_x11.c open_xft) until the process ends.
+{
+   fontconfig-held-until-exit
+   Memcheck:Leak
+   match-leak-kinds: definite,possible
+   fun:*alloc
+   ...
+   obj:*/libfontconfig.so*
+}
+
+# FreeType loads its modules with dlopen; the C library keeps the table of
+# the mappings of the loaded objects until exit.
+{
+   libc-dlopen-mappings
+   Memcheck:Leak
+   match-leak-kinds: definite,possible
+   fun:malloc
+   ...
+   fun:_dl_find_object_update
+   ...
+}
+{
+   freetype-held-until-exit
+   Memcheck:Leak
+   match-leak-kinds: definite,possible
+   fun:*alloc
+   ...
+   obj:*/libfreetype.so*
+}
+
+# The X library allocates the graphics contexts, the font structures and the
+# connection data of a client; the viewer and the window Editor keep them
+# for their whole life and the X server frees them when the connection
+# closes.
+{
+   libx11-held-until-exit
+   Memcheck:Leak
+   match-leak-kinds: definite,possible
+   fun:*alloc
+   ...
+   obj:*/libX11.so*
+}
+{
+   libxcb-held-until-exit
+   Memcheck:Leak
+   match-leak-kinds: definite,possible
+   fun:*alloc
+   ...
+   obj:*/libxcb.so*
+}

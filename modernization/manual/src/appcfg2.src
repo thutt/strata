@@ -1,0 +1,425 @@
+# Appendix B, part 2: writing, the panels, the older file, the fonts file,
+# search paths, start, what is not configuration.
+.h2 When and how the settings are written [appcfg-write]
+.ix Saving the settings
+.ix Writing the settings
+.ix Cannot write
+.h3 Which action writes what [appcfg-write-when]
+.table 26 34
+Action | What is written
+Setup accepted in the Document Manager | {c:config}, all its lines.  These
+ | come from the panel ({c:print_to}, {c:print_queue}, {c:pdf_dir}, {c:spell_language},
+ | workdir, the Editor, autosave, {c:autosave_seconds}, {c:x11_rows}, {c:terminal_rows},
+ | {c:terminal_charset}, {c:default_paper}, {c:undo_levels}, backups, {c:pdf_viewer}); the others
+ | are taken from the file as it is at that moment.
+Options accepted in the Editor | {c:config}, all its lines.  Five come from
+ | the panel ({k:F12}, Global, Options, Ins); the others are taken from the
+ | file as it is at that moment.
+The height of a window is changed | One line of
+ | {c:config}: {c:x11_rows} after the height has not changed for a second
+ | and when the program ends, {c:terminal_rows} when the program ends (see
+ | {n:appcfg-key-rows}).  Every other line stays as it is.
+A font panel accepted in the Document Manager | {c:fonts}, all twenty lines.
+Anything else | Nothing.
+.end
+A change made in one program is not lost when the other saves.  Cancelling a
+panel with {k:Esc} writes nothing.  Edit / Preview / Print Document changes the
+Working Directory and the Document Name of the panel for the rest of the
+session, but never writes {c:config}.
+A failed write of the height of a window is no failure of the program: the
+height is used until the program ends, and nothing is shown on the screen;
+the reason is in the log of the run ({n:appcfg-log}).
+.note The Editor never changes {c:autosave} or {c:autosave_seconds}; the
+  Options panel has no field for them.  They are set in the Setup panel of
+  the Document Manager only.
+.h3 Messages of a failed write [appcfg-write-errors]
+.ix Settings, error messages
+.table 31 29
+Message | Cause
+There is no home directory | No {c:STRATA_HOME}, no {c:HOME}, and no
+ | home directory for the user.
+Cannot make DIR: REASON | The directory is not there and could not be
+ | made (permission, a missing parent).
+DIR is not a directory of yours | The directory is a link, a file, or
+ | belongs to another user (see
+ | {n:appcfg-dir-checks}).
+Cannot write FILE: REASON | The file could not be written (the
+ | disk is full, no permission).
+.end
+In the Document Manager a failed save of {c:config} shows the pop-up Setup with
+the text "Settings are in effect but could not be saved": the new values are used until the
+program ends, and the reason is not shown.  In the Editor the message above is
+the text of a pop-up titled Options.  A failed save of {c:fonts} shows the
+message in a pop-up titled Fonts (see {n:str-fonts}).  A font with a bad
+character is refused before anything is written (see
+{n:appcfg-fonts-rules}).
+.h2 The Setup panel and the keys [appcfg-setup]
+.ix Setup panel, keys
+.ix Setup, validation
+.ix Settings not saved
+The fields of the Setup panel of the Document Manager that are settings of the
+user are listed here (see {n:str-setup} for the panel).  This table gives the
+connection between the fields and the keys, and the checks made when the
+panel is accepted.
+.table 17 14 28
+Field | Key | Check when the field is left, and on Ins
+Print To | {c:print_to} | A choice of Printer, File only and PDF viewer
+ | | (saved as printer, file or viewer); Printer is not offered when the
+ | | system has no queue, and a saved Printer is kept.
+Printer Queue | {c:print_queue} | A choice from the queues of the system
+ | | (System default is saved as no line); a saved queue that is not
+ | | listed now is kept.
+PDF Directory | {c:pdf_dir} | Empty, a full path or {c:~/} and a path, else the
+ | | reason "The PDF Directory is a full path or
+ | | starts with {c:~/}" is shown at the foot.  A
+ | | directory that does not exist is saved.
+Paper for New Documents | {c:default_paper} | A choice of Letter and A4.
+ | | Letter is saved as no line, A4 as {c:a4}.  The file
+ | | may have {c:letter} or {c:a4}; another word is
+ | | ignored.
+Dictionary Language | {c:spell_language} | Letters, digits and _ - @ only, else the
+ | | reason "The Dictionary Language is a code
+ | | such as en_US or de_DE".
+Initial Working Directory | workdir | May be empty.  Otherwise it must
+ | | be an existing directory, else the reason
+ | | "The initial working directory does not
+ | | exist".
+Editor program | stred | No check.  Used as typed.  See
+ | | {x:str-find-editor}.
+Autosave | autosave | A choice of Yes and No.  A settings file
+ | | may have yes or no in any case of letters.
+Autosave Interval (Seconds) | {c:autosave_seconds} | A number from 1 to 86400
+ | | ({c:90s} is 90), else the reason "The
+ | | autosave interval is 1 to 86400 seconds".
+Window Rows, X11 | {c:x11_rows} | Empty, or a whole number, else the
+ | | reason "The window rows are a whole number,
+ | | or empty".  A number below
+ | | 20 is saved as 20 and above 200 as 200; 50
+ | | is saved as no line.
+Window Rows, Terminal | {c:terminal_rows} | The same.  Empty is saved as no
+ | | line.  The two fields are one line of the panel.
+Terminal Characters | {c:terminal_charset} | One of three choices, so no check.
+ | | Automatic is saved as no line, UTF-8 as {c:utf8},
+ | | ASCII as {c:ascii}.
+Undo Levels (0 to 500) | {c:undo_levels} | A whole number, else the reason "Undo
+ | | Levels is a whole number from 0 to 500".  A number above 500 is
+ | | saved as 500; 100 is saved as no line.
+Backups Kept (0 to 99) | backups | A whole number, else the reason "Backups
+ | | Kept is a whole number from 0 to 99".  A number above 99 is saved as
+ | | 99; 1 is saved as no line.
+PDF Viewer | {c:pdf_viewer} | A full path (letters, digits and . _ + - /
+ | | only), else the reason "The PDF viewer needs its full
+ | | path, such as {c:/usr/bin/evince}".  Empty is saved as no line.  A word
+ | | processor gives the reason "A word processor is not a PDF viewer".
+ | | A file that is not executable or not safe is refused too.
+Screen Colors | the color keys | The second page of the panel; {k:Ins} keeps
+ | | its colors with the other pages, and every color that
+ | | is chosen is checked ({n:appcfg-key-colors}).
+.end
+A field is checked when the focus leaves it and all the fields are checked
+when {k:Ins} is pressed.  A wrong value keeps the panel open: the focus is in
+that field, the reason is shown in bold in the line at the foot, and every
+other value that was typed is kept; {k:Esc} throws the panel away.  On
+success the new values are in effect at once, the file is written, and the
+footer shows "Settings saved to {c:PATH}" with the full path of {c:config}.
+The third page, the advanced settings, has the Initial Macro Set, the Initial
+Library, Terminal Characters, the Editor program and the Help File; {k:PgUp}
+and {k:PgDn} go from page to page, and {k:Ins} on any page keeps all of them.
+.pic pictures/str-setup-panel.png 5 The Setup panel.
+.h2 The Options panel and the keys [appcfg-options]
+.ix Options panel, keys
+.ix Global, Options, settings
+The panel is opened with {k:F12}, Global, Options.  The rows that are
+settings of the user are these.
+.table 19 14 26
+Row | Key | Notes
+Expanded Status Line? | {c:expanded_status} | [Yes] or [No].
+Display On-Screen Help? | {c:onscreen_help} | [Yes] or [No].
+Display Tab & End-of-Line | {c:show_marks} | [Yes] or [No].
+ Characters? | |
+Display Dots for Spaces? | {c:show_dots} | [Yes] or [No].
+Backups Kept (0 to 99) | backups | A whole number, else the pop-up "Backups
+ | | Kept is a whole number from 0 to 99".  A number
+ | | above 99 is saved as 99; 1 is saved as no line.
+.end
+{k:Ins} accepts: the new values are in effect on the screen at once, and
+{c:config} is written (see {n:appcfg-write}).  {k:Esc} cancels.  The panel
+shows the values that the running Editor has, which it read from the file at
+start; so a change made to {c:config} by hand while the Editor runs is not
+seen until the Editor is started again, and is lost if the Options panel is
+accepted.
+.pic pictures/edit-b-options.png 5 The Options panel of the Editor.
+.h2 The older settings file [appcfg-legacy]
+.ix Older settings file
+.ix strata.conf
+.ix XDG_CONFIG_HOME
+Earlier versions of Strata kept the settings in a file {c:strata.conf} in the
+directory {c:strata} under the configuration directory of the desktop
+({c:.config} in the home directory).  The file has the same lines as
+{c:config}.  It is read only when there is no settings directory yet.  The
+first save (Setup or Options) writes a new {c:config} with its values, and the
+older file has no more effect; it is never changed or removed.
+.if .STRATA_BUILD_TYPE # release
+For developers: the directory is the one named by the environment variable
+{c:XDG_CONFIG_HOME} when it is set and not empty.  The older file is read in
+these cases only.
+.table 34 26
+Condition | Result
+{c:STRATA_HOME} is set | The older file is never read.
+{c:STRATA_HOME} is not set and the | The older file is read.
+ settings directory does not exist, or has |
+ no {c:config} that can be opened |
+{c:config} exists | The older file is ignored, whatever it holds.
+The settings directory or {c:config} is | Defaults.  The older file is not
+ not used (see {n:appcfg-dir-checks}) | read.
+.end
+If neither {c:HOME} nor {c:XDG_CONFIG_HOME} is set, no older file is looked
+for.
+.endif
+.h2 The font list [appcfg-fonts]
+.ix fonts file
+.ix Font list file
+.ix TeX Font Association, file
+.ix Font numbers
+A font of a document is a number (1 Headline, 2 Text, 3 Header/Footer, 4 to 20
+the other fonts).  The file {c:fonts} in the settings directory says which
+LaTeX font each number stands for.  It is made and changed by the TeX Font
+Association entry of the Document Manager (see {n:str-fonts}).  The Document
+Manager shows the list; the Editor uses it for the labels of font numbers in
+the Typeface and Keycap panels ("Text (Latin Modern Roman)").  The rules of
+{x:appcfg-dir} apply to the file.
+.h3 Format of the file [appcfg-fonts-format]
+.ix Font file format
+One line for each font, seven fields separated by a bar:
+.code
+NUMBER|NAME|PACKAGE|OPTIONS|FAMILY|ARCHIVE|MAP
+5|Helvetica|helvet|scaled=0.92|sans||
+19|Lato|lato|default|sans|lato|lato.map
+.end
+.table 12 48
+Field | Meaning
+NUMBER | The font number, 1 to 20.
+NAME | The name that the panels show (Palatino).  Any text without a bar.
+PACKAGE | The LaTeX package that selects the font, or empty for the
+ | fonts that LaTeX has without a package (Computer Modern).
+OPTIONS | The options of the package ({c:scaled=0.92}), or empty.
+FAMILY | roman, sans or mono: the kind of the font.
+ARCHIVE | The name of the archive on CTAN that holds the font, or empty.
+MAP | The map file to enable after the archive is installed, or empty.
+.end
+.h3 How the file is read and written [appcfg-fonts-rules]
+.ix Font file rules
+.ix Font entry, invalid character
+.table 24 36
+Rule | Effect
+Start | The list of defaults (next section) is loaded first, then
+ | the file changes the entries it names.
+A line with other than seven fields | Ignored.
+A number outside 1 to 20, a family | Ignored; the default of that number
+ other than the three words, or a | stays.
+ character not allowed in PACKAGE, |
+ OPTIONS, ARCHIVE or MAP |
+Allowed characters | Letters, digits and the signs . _ - + = ,
+ | in PACKAGE, OPTIONS, ARCHIVE and MAP; any
+ | character but a bar in NAME.
+Several lines for one number | The last one wins.
+Writing | All twenty lines are written, in order of
+ | number.  The file therefore holds the defaults
+ | too once any font was changed.
+Refused write | "Font N has a character that cannot be used
+ | (only letters, digits and . _ - + = , are allowed)".
+.end
+.h3 The list that Strata comes with [appcfg-fonts-defaults]
+.ix Default fonts
+.ix Font defaults
+A user who has no file, or no line for a number, has these fonts.
+.table 4 20 11 9 9
+No. | Name | Package | Options | Family
+1 | Latin Modern Sans | lmodern | | sans
+2 | Latin Modern Roman | lmodern | | roman
+3 | Latin Modern Roman | lmodern | | roman
+4 | Times | mathptmx | | roman
+5 | Helvetica | helvet | scaled=0.92 | sans
+6 | Courier | courier | | mono
+7 | Palatino | mathpazo | | roman
+8 | Bookman | bookman | | roman
+9 | New Century Schoolbook | newcent | | roman
+10 | Avant Garde | avant | | sans
+11 | Zapf Chancery | chancery | | roman
+12 | Charter | charter | | roman
+13 | Utopia | utopia | | roman
+14 | TeX Gyre Termes | tgtermes | | roman
+15 | TeX Gyre Heros | tgheros | | sans
+16 | TeX Gyre Pagella | tgpagella | | roman
+17 | TeX Gyre Cursor | tgcursor | | mono
+18 | Computer Modern Roman | (none) | | roman
+19 | Lato | lato | default | sans
+20 | (empty) | (none) | | roman
+.end
+Fonts 1 to 18 are fonts that every TeX Live installation has.  Font 19 has the
+archive {c:lato} and the map file {c:lato.map}, so it can be installed from
+CTAN; font 20 is free for your own choice.  The panels that show a font number
+(Typeface list, Format panels, Keycap markers) use the names as labels:
+"Headline (Latin Modern Sans)", "Text (...)", "Header/Footer (...)",
+"Font 4 (Times)" and so on; an empty name leaves the plain role or number.
+.h3 Installing a font from CTAN [appcfg-fonts-install]
+.ix CTAN
+.ix Install Now
+.ix Font download
+When Install Now is Yes in the font panel, the Document Manager downloads the
+archive of the font from CTAN and installs it in the TeX directory of the
+user (usually {c:texmf} in the home directory).  The programs {c:kpsewhich},
+{c:curl}, {c:unzip}, {c:mktexlsr} and {c:updmap-user} must be installed; each
+step fails with a message in a pop-up.
+.table 5 55
+Step | Action and failure message
+1 | Find the TeX directory of the user.  If TeX does not answer:
+ | "kpsewhich did not run (is TeX installed?)".
+2 | Download the archive.  The address is
+ | {c:https://mirrors.ctan.org/install/fonts/ARCHIVE.tds.zip}.  Failure:
+ | "The archive could not be downloaded from ADDRESS".
+3 | Unpack it into the TeX directory.  Failure: "The archive could
+ | not be unpacked".
+4 | Make the file name database of TeX again.
+5 | If MAP is not empty, enable the map file.  Failure:
+ | "updmap-user failed to enable the map file".
+.end
+While the steps run, a box titled Installing font names the step that is
+running; {k:Esc} stops the download (step 2): the footer shows "Installation
+cancelled", the partial file is removed and nothing is installed.  Steps 3 to 5
+are short and cannot be stopped.
+.if .STRATA_BUILD_TYPE # release
+.ix STRATA_CTAN_URL
+For developers: when the environment variable {c:STRATA_CTAN_URL} is set and
+not empty, the address of step 2 is that value followed by
+{c:/ARCHIVE.tds.zip}.
+.endif
+An entry with no ARCHIVE gives "This font has no archive to download"; an
+ARCHIVE or MAP with a bad character, or an ARCHIVE with a slash, gives "The
+name of the archive or of the map file has a character that cannot be used".
+On success the pop-up shows "Installed in DIRECTORY".  A font counts as
+installed when its package is found by TeX; an entry with no package is always
+installed.
+.h2 Search paths [appcfg-search]
+.ix Search paths
+.ix Where Strata looks for files
+.h3 The Editor [appcfg-search-editor]
+.ix Editor search
+The setting of the Editor in {c:config}, then the Editor's file next to the
+Document Manager's, then the system directories; see {x:str-find-editor}.
+.if .STRATA_BUILD_TYPE # release
+For developers: the environment variable {c:STRED} comes after the setting.
+.endif
+.h3 Templates [appcfg-search-templates]
+.ix Templates, search
+.ix STRATA_TEMPLATES
+.ix Template file
+A template named in the New command of the Editor (File, New) is looked for
+like this.  The comparison of names ignores the case of the letters (Memo.DOC
+is found for {c:memo.doc}).
+.table 5 55
+Step | Place
+1 | If the name contains a slash, exactly that path.
+2 | The Working Directory of the panel.
+3 | The directory named by {c:STRATA_TEMPLATES}, if it is set.
+4 | The directory {c:templates} of the settings directory.
+5 | The directory {c:share/strata/templates} beside the programs.
+6 | The directory of the program file of the Editor.
+.end
+An installed program needs nothing set: the templates are found beside the
+program.
+A program run in place from a build directory finds them when the setup
+script of the sources has been sourced, which sets {c:STRATA_TEMPLATES}.
+The list of templates that New shows is made from the files that end in
+{c:.doc} or {c:.set} in the directory named by {c:STRATA_TEMPLATES}, in
+{c:templates} below the settings directory, and in {c:share/strata/templates}
+of the installation (a name that is in an earlier one hides the same name
+in a later one).
+If none is found and the name is {c:DEFAULT.SET}, a new document is made from
+the built-in default, after asking Structured or Unstructured.  Otherwise the
+message "Cannot find the template file" is shown.
+.h3 Macro sets and libraries [appcfg-search-macro]
+.ix Macro file, search
+.ix Library file, search
+The File Name that you type for a macro set (extension {c:.mac}) or a library
+(extension {c:.lib}) is joined to the Working Directory of the panel, unless
+it begins with a slash; an extension is added when the name has no dot.
+.h3 Helper programs [appcfg-search-programs]
+.ix Printer, search
+.ix Viewer, search
+When the Editor needs another program of Strata (Draft, Final and Preview need
+the Printer, and Preview needs the Viewer) the program is found like this.
+.table 5 55
+Step | Place
+1 | The directory of the program file of the Editor.
+2 | The system directories ({n:appcmd-find}).
+.end
+.if .STRATA_BUILD_TYPE # release
+.ix STRATA_STRPRINT
+.ix STRATA_DVIVIEW
+For developers: before step 1 the environment variable {c:STRATA_STRPRINT} or
+{c:STRATA_DVIVIEW} is looked at, if it is set and not empty.  It must name a
+program that can be run; if it does not, the program is not found: no further
+search is made.
+.endif
+The programs that the Printer runs ({c:pdflatex}, {c:latex}, {c:dvipdfmx},
+{c:gs}, and the
+others of {n:appcmd-external}) are found in the system directories only, never in
+{c:PATH}.  The files that they
+make while they work are put under {c:TMPDIR} when it is set and not empty,
+otherwise in the system directory for such files.
+.h3 The cache of equations [appcfg-search-cache]
+.ix Equation cache
+.ix XDG_CACHE_HOME
+.ix Cache directory
+The Editor keeps the pictures of equations that it has rendered in a cache,
+so that they are not made again.  It is not a setting of the user and is not
+in the settings directory.  The directory is {c:strata/eqn} under the
+directory named by {c:XDG_CACHE_HOME} if that is set and is an absolute path,
+otherwise under {c:.cache} in the home directory.  The cache can be deleted
+at any time.
+.h2 Settings that are not in the settings directory [appcfg-notin]
+.ix Document settings
+.ix Settings kept in the document
+.ix Global format, where kept
+Everything that you set in the Global menu except the five Options of the
+table above belongs to the document and is saved with it: the Global Format
+and Page panels, the Typeface list (the names of the fonts of the document),
+the Marker defaults and the named formats.  The font list of
+{x:appcfg-fonts} is different: the list gives
+what a font number means to LaTeX for every document of the user,
+whereas the document's Typeface list gives the numbers their names.  The
+terminal and the window (the X11 font, size and size of the window) are set
+by environment variables, listed in {x:appcmd-env}, and not kept anywhere.
+.h2 Examples and troubleshooting [appcfg-examples]
+.ix Examples, configuration
+.ix Troubleshooting, settings
+.h3 A settings file for a project directory
+.code
+workdir=/home/ann/book
+autosave=yes
+autosave_seconds=60
+backups=3
+show_dots=yes
+.end
+The keys that are left out keep their defaults, and the first save from a
+panel adds them.
+.h3 Trying settings without touching your own
+Start the Document Manager with the environment variable {c:STRATA_HOME} set
+to a new directory, for example {c:/tmp/try}.  The directory is made at the
+first save, and your own settings are not read or changed.
+.h3 Problems
+.table 26 34
+Symptom | Cause and remedy
+A setting reverts to its default | The directory or file belongs to someone
+ | else (see {n:appcfg-dir-checks}), or the
+ | line has a space around the key or the
+ | value.
+{c:autosave=No} still saves | Only lower case {c:no} and {c:0} mean No.
+Setup shows "setting not saved" | A check failed (see {n:appcfg-setup}); nothing
+ | was changed.
+A hand edit is lost | The Editor was running; all keys are written
+ | when Options is accepted.
+The Editor path keeps changing | The path is the one that the Document
+ | Manager found; it is not saved unless it was typed.
+.end

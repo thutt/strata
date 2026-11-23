@@ -1,0 +1,40 @@
+# Chapter 6, third part: the Printer.  Included by the chapter file.  Its
+# command line and the print and preview modes of the Editor are not a
+# supported way to start Strata: they are in the last part of the chapter,
+# which the release edition leaves out.
+
+.h2 The Printer [print-strprint]
+.ix Printer, the typesetter
+.ix Typesetter
+.ix PDF from a document
+.ix TeX file
+.ix LaTeX source
+The Printer is the part of Strata that turns a document into a typeset file.
+The Editor uses it for every Draft, Final and Preview, with no screen of its
+own.
+
+.h3 What the Printer makes
+.table 20 40
+Result | What it is
+A PDF file | The pages of Draft and of Final.
+The pages of Preview | What the Viewer shows.
+The LaTeX source | The file that {k:F12}, File, Export, Export a LaTeX File
+ | saves ({n:print-export-latex}).  You can edit it and run LaTeX yourself.
+.end
+When the Printer makes a file, characters that no font has are printed as
+[U+XXXX], and a piece that LaTeX does not accept (an equation, a picture) is
+printed in
+the long form of its marker, so that a document always gives a file; the
+pieces are reported as errors ({n:print-errors}).
+
+.h3 An exported LaTeX file [print-export-latex]
+.ix LaTeX file, from Export
+.ix Export a LaTeX File, compiling
+{k:F12}, File, Export, Export a LaTeX File ({n:file-export-latex}) saves the file
+that the Printer gives to LaTeX, and does not run LaTeX.  The file has a
+comment at its top that says how to compile it, and the pictures of the
+document are copied into the directory beside it that has the name of the file
+and {c:_files} added (the file {c:NAME.tex} has {c:NAME_files}).  It has no
+banner, no marks of errors and no Error Log, whatever the document holds.  To
+make the pages, run {c:pdflatex} twice on the file; {c:latex} followed by
+{c:dvipdfmx} works too.

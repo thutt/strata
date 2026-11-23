@@ -1,0 +1,296 @@
+# Getting Started, part 1: what a system needs.  The numbers are those of the
+# measurements, and a test compares them with the document of the measurements.
+.h1 What you need [need]
+Strata is a set of four programs that work together: the Document Manager, the
+Editor, the Printer and the Viewer.  The Editor and the Document Manager come in
+two versions: the {b:terminal version}, which runs in a text terminal, and the
+{b:window version}, which opens a window of its own on an X11 display.  This
+chapter lists the software that they need, the desktops and the terminals that
+are known to work with the keys that each one keeps, and the alternative
+keybindings, which work in every one of them.
+.h2 Software prerequisites [software]
+Strata runs on Linux.  It was written and tested on Debian and Ubuntu on a PC
+with a 64-bit processor (x86-64), and it also runs on Windows 11 through WSL2
+with its Editor window.  Another distribution of Linux that has the same
+programs should work, but it has not been tested.
+.table 17 10 33
+Software | Required or optional | What needs it, and what is lost without it
+A terminal that reads UTF-8, or an X server | Required | The terminal version
+ needs the terminal, the window version the X server and a screen of at least
+ 1024 by 1000 pixels.  Without one of them Strata cannot be used.
+A fixed-width font with line characters | Required | DejaVu Sans Mono,
+ Liberation Mono, Cousine or FreeMono.  Without such a font the lines and bars
+ of the screen are drawn as empty squares.
+LaTeX | Optional | Printing to a PDF file or to a printer, Preview, and the
+ drawing of equations, LaTeX markers and keycaps as images in the window
+ version.  Without LaTeX Strata works, but nothing can be printed or previewed.
+ The equations, LaTeX markers and keycaps are shown in their short form.
+{c:dvipng} | Optional | Drawing equations, LaTeX markers and keycaps as images
+ in the window version; LaTeX makes them and {c:dvipng} turns them into
+ images.  Without it they stay in their short form.
+An X display for the Viewer | Optional | Preview shows its pages in the Viewer,
+ which needs an X display even when you work in a terminal.
+ghostscript | Optional | Printing a picture that is a PostScript or EPS file.
+ Without it the Printer reports the picture as one that cannot be converted.
+A print queue of your system | Optional | Printing on paper.  Without a queue
+ a document is printed to a PDF file.
+{c:aspell} or {c:hunspell}, and the dictionary of your language | Optional | The
+ spell check.  The dictionary is a package of its own, such as {c:aspell-en} or
+ {c:hunspell-en-us} on Debian and Ubuntu.  Without them a box shows that no
+ spelling checker was found.
+Thesaurus data | Optional | Tools, Thesaurus and {k:Ctrl-T}.  The data is a pair
+ of files in the MyThes format, one with the extension {c:.dat} and one with the
+ extension {c:.idx}, for one language.  On Debian and Ubuntu the package
+ {c:mythes-en-us} puts the American English pair {c:th_en_US_v2.dat} and
+ {c:th_en_US_v2.idx} in the directory {c:/usr/share/mythes}, which is searched
+ for the data.
+ Without the data a box shows that the thesaurus is not installed.
+{c:curl} and {c:unzip} | Optional | Install Now in the list of fonts, which
+ fetches a font from the Internet and unpacks it.  Without them the font is
+ not installed.
+.end
+Everything in the table that is marked optional can be left out: Strata works
+without it, and only the feature that needs it is missing.  The programs work
+without LaTeX; without it, nothing can be printed to a PDF file or to a printer
+and Preview cannot be shown.  Editing and saving need nothing besides the
+Editor.  When a program or the data that a feature needs is missing, a box
+names what is missing and the package to install, and everything else goes on
+working.  The install script run by an administrator installs the programs
+after a question; the install script run by anybody else installs Strata
+whether or not they are there, and lists the missing ones in a warning at the
+end, as the next chapter tells.  To list which of the programs your system
+has, run the install script with the option that only lists them; nothing is
+installed:
+.code
+scripts/strata-install --list-prereqs
+.end
+.h2 The programs [package]
+.table 22 52
+Program | What it does
+The Document Manager | The menu that you start first.  It opens a document in
+ the Editor, keeps the settings of all the programs, the list of fonts and
+ the word lists of the spell check, and compares two versions of a document.
+The Editor | The program in which you write.  It controls every part of the
+ work on a document: typing, formatting, the spell check, previewing and
+ printing.
+The Printer | Prints a document through LaTeX, to a PDF file or to a printer
+ of your system.  It is a program of its own, and the Editor starts it.
+The Viewer | Shows the pages of a Preview in a window of its own.
+.end
+.h2 Desktops and window managers [desktops]
+A desktop or a window manager can keep some keys for itself, so that the Editor
+never receives them.  Every command that has a key can also be started in the
+way of {x:keys-conflict}.  This section names each desktop that has been used
+with Strata, and says which keys it keeps.  The window version of the Editor
+draws with scalable fonts, and uses DejaVu Sans Mono when the system has it;
+without a scalable font it uses a fixed font of the X server, with no true bold
+and italic faces.
+.h3 WindowMaker [desk-windowmaker]
+WindowMaker takes none of the keys of Strata.  It has been used with the window
+version of the Editor and the Document Manager, and everything works.
+.h3 Microsoft Windows 11 with WSL2 [desk-windows]
+Strata works on Windows 11 under WSL2, with the window version of the Editor on
+the display that WSLg provides.  Opening a large document, such as the
+Reference Manual, and Print Preview work.  Writing files and the exchange
+between programs are slow under WSL2, most of all while the Printer writes its
+LaTeX file, so printing takes longer than on a Linux machine.  Keep your
+documents in the Linux file system, in your home directory, and not under
+{c:/mnt/c}.
+.h3 The X11 window with no window manager [desk-x11]
+The window version of the Editor, run with no window manager, receives every
+key of Strata.
+.h2 Terminals [terminal-needs]
+The terminal version draws its screen with the line, bar, block, arrow and
+triangle characters of Unicode.  This part says what a terminal needs
+({x:term-needs}) and describes each terminal that has been used with Strata:
+{x:term-xterm}, {x:term-tmux} and {x:term-xfce4}.  Another terminal is covered
+by {x:term-others}.
+.h3 What a terminal needs [term-needs]
+A terminal needs three things.
+- It must read UTF-8.  Most do when your locale is a UTF-8 locale, such as
+  {c:en_US.UTF-8}.  At the start the terminal is asked whether it reads UTF-8;
+  when the answer is no, the screen is drawn with plain characters that look
+  like the lines and bars, and the message line reports it.
+- It must use a fixed-width font that has the line, block and arrow
+  characters, such as DejaVu Sans Mono, Liberation Mono, Cousine or FreeMono.
+  Squares with numbers in them, or empty squares, where lines and bars belong
+  mean that the font does not have them; the cure is a better font, or the
+  Terminal Characters field of Setup set to ASCII.
+- It must send {k:Esc} when you press {k:Alt} with a key.  Redo
+  ({k:Alt-/}), the soft hyphen ({k:Alt-_}) and many other commands use
+  {k:Alt}.
+
+The terminal must have at least 80 columns by 25 lines; the Editor can be used
+down to 40 columns by 20 lines.  The 16 colours of the terminal are used, and
+more when {c:TERM} says {c:256color} or {c:COLORTERM} says {c:truecolor}; it
+also works on a terminal with no colours.
+.h3 xterm [term-xterm]
+{c:xterm} is the terminal that Strata recommends.  Started with the settings
+below, it meets all three needs, and it takes none of the keys of Strata, so
+every command works.  The command is:
+.code
+xterm -lc -u8 -fa "DejaVu Sans Mono" -fs 11 -xrm 'XTerm*metaSendsEscape: true'
+.end
+Each setting has a purpose.  The option {c:-lc} makes {c:xterm} follow the
+locale, and {c:-u8} makes it read and write UTF-8.  The options {c:-fa} and
+{c:-fs} choose the font and its size, here DejaVu Sans Mono at 11 points, which
+has the line, block and arrow characters.  The resource
+{c:XTerm*metaSendsEscape: true} makes {k:Alt} send {k:Esc} before the key;
+without it {c:xterm} sends another character, and the commands that use {k:Alt}
+type that character.
+To give every {c:xterm} the same settings, put these lines in the file
+{c:.Xresources} in your home directory:
+.code
+XTerm*locale: false
+XTerm*utf8: 2
+XTerm*faceName: DejaVu Sans Mono
+XTerm*faceSize: 11
+XTerm*metaSendsEscape: true
+.end
+.h3 tmux [term-tmux]
+{c:tmux} is a terminal multiplexer: it runs inside a terminal and shows another
+one.  Start it in UTF-8 mode ({c:tmux -u}), or set the locale to a UTF-8 locale;
+a {c:tmux} that is not in UTF-8 mode turns every character outside ASCII into an
+underscore.  Run inside the {c:xterm} of the previous section, {c:tmux} takes
+one key of Strata, because {k:Ctrl-B} is its command key.
+.table 18 20 22
+Key the terminal takes | Strata command | Alternative Strata keybinding
+{k:Ctrl-B} | Bold on and off. | {k:Alt-F6}, the Attribute menu, then Bold.
+.end
+The command key of {c:tmux} can be changed in the file {c:~/.tmux.conf}, for
+example with {c:set -g prefix C-]}, and {c:tmux} sends its own command key to
+the program when it is pressed twice.  Both are documented by {c:tmux} and were
+not tried with Strata.
+.h3 xfce4-terminal [term-xfce4]
+{c:xfce4-terminal} meets the three needs when its font is a fixed-width font
+with the line characters, but it takes nine keys of Strata, which the table
+lists in the order of the key tables of this manual.  Each of them can be
+replaced by the alternative in the table.
+.table 18 20 22
+Key the terminal takes | Strata command | Alternative Strata keybinding
+{k:F1} | Help. | {k:Ctrl-F}, then Help.
+{k:Shift-Insert} | Append a subsection. | {k:Alt-F2}, then Sub-section.
+{k:Shift-PageUp} | Previous section of the same level. | {k:Alt-F7}, then
+ Previous section, of any level.
+{k:Shift-PageDown} | Next section of the same level. | {k:Alt-F7}, then Next
+ section, of any level.
+{k:Shift-Home} | Start of the document. | {k:Alt-F7}, then Document start.
+{k:Shift-End} | End of the document. | {k:Alt-F7}, then Document end.
+{k:Shift-Up} | Previous section. | {k:Alt-F7}, then Previous section.
+{k:Shift-Down} | Next section. | {k:Alt-F7}, then Next section.
+{k:Ctrl--} | Undo. | {k:Ctrl-Z}, {k:Ctrl-/} or {k:Ctrl-F10}.
+.end
+{c:xfce4-terminal} also takes {k:F10}, {k:F11}, {k:Shift-F10}, {k:Ctrl-Insert}
+and the Menu key, which carry no command of Strata.  Its preferences, on the
+Shortcuts page, can release {k:F1}, {k:F10} and {k:F11}; that is described by
+the program and was not tried.  No setting was found that releases the other
+eight keys of the table, so use the alternatives.
+.h3 Other terminals and remote logins [term-others]
+A terminal that is not described here can keep keys that Strata uses; the ways
+of {x:keys-conflict} work in every terminal.  Over {c:ssh}, a line that begins
+with a tilde and a full stop ends the connection; type a space before the
+tilde.
+.h2 Alternative Keybinding [keys-conflict]
+Every command that has a function key, and every command of the menu, can be
+started without the key.  These ways work in every desktop, window manager and
+terminal, because they use keys that none of them keeps.
+.table 24 36
+Way | What it does
+{k:Ctrl-F} | Opens a list of every command that has a function key, with
+ the key written beside it.  Choose a command with {k:Up}, {k:Down} and
+ {k:Enter}.  The list also has the commands of {k:Alt-[}, {k:Alt-]} and the
+ soft hyphen.
+{k:F12} | Opens the menu bar: File, Global, Edit, Print and Tools.  Undo, Redo,
+ Learn, Next Error and Previous Error are in it with their keys.
+{k:Alt-O} | Switches overtype.
+.end
+When your desktop or terminal keeps a key, press {k:Ctrl-F} and choose the
+command from the list.  When a key carries a command that is not in the list,
+such as {k:Ctrl-B} (Bold), the Attribute menu has it.  Press the key twice
+when tmux keeps it: {k:Ctrl-B}.
+.h2 Memory, time and disk space [resources]
+The memory and time numbers in this section were measured on a PC with an Intel
+Core i7-6700HQ processor and 15 GB of memory (the sizes of the disk and of the
+prerequisites on another PC), with the programs of the release build and with
+the files of the document in the memory cache of the system.  A slower computer
+takes longer in proportion to its processor; the memory does not depend on the
+speed.  A page is 500 words, the length of a typed page; the Printer fits
+about 735 words on a page of its default layout, so that a document of 1000
+pages here prints as 679 pages.  The one page document is a letter of 380
+words.
+.h3 Memory of the Editor [memory]
+The table is for the terminal version.  Each number is the peak memory of the
+Editor, in megabytes (MB), after it opened a document of the size in the first
+two columns, after you moved to the end of the document, and after you saved
+it.
+.table 8 10 12 14 12
+Pages | Words | Memory after opening (MB) | Memory after moving to the
+ end of the document (MB) | Memory after a save (MB)
+100 | 50,035 | 4.6 MB | 5.1 MB | 5.4 MB
+500 | 250,007 | 10.9 MB | 13.4 MB | 15.0 MB
+1000 | 500,034 | 19.5 MB | 24.9 MB | 28.4 MB
+2000 | 1,000,008 | 37.3 MB | 48.9 MB | 55.9 MB
+3625 | 1,812,586 | 65.9 MB | 87.5 MB | 100.4 MB
+.end
+The memory grows in step with the document: twice the pages need about twice the
+memory.  A document of up to 50 pages needs less than 5 MB.  The window version
+needs about 10 MB more than the terminal version at every size.  The largest
+document that was measured, the whole collection of the works of Mark Twain, is
+a file of 15 MB and has 5,258 pages of 500 words (it prints as 3,625 pages); it
+needs 95 MB to open and 145 MB after a save in the terminal version.
+.h3 Time [time]
+The times are in seconds (s), for the terminal version: the time to open the
+document until the first screen is drawn, the time to search from the start to
+the end of the document for a word that is found only at the very end, and the
+time to save the document after typing one character.  The window version
+takes between half a second and two thirds of a second to open, whatever the
+size, because it starts a window.
+.table 8 16 18 16
+Pages | Time to open the document | Time to search the whole document |
+ Time to save the document
+100 | 0.045 s | 0.028 s | 0.034 s
+500 | 0.141 s | 0.116 s | 0.139 s
+1000 | 0.193 s | 0.174 s | 0.199 s
+2000 | 0.301 s | 0.259 s | 0.307 s
+3625 | 0.460 s | 0.396 s | 0.486 s
+.end
+.h3 Printing [print-time]
+A document of plain text is printed to a PDF in about half a second for a
+letter, and in 10.3 seconds, with 61 MB of memory, for 3625 pages.  A document
+with a table of contents, an index, lists of figures and tables, references to
+sections and pages, headers and footnotes needs two or three runs of LaTeX; they
+are made automatically, and the references are all in place when the print
+ends.
+.table 8 10 6 14 14
+Pages | PDF pages | Runs | Time to print (s) | Memory in MB
+10 | 12 | 2 | 1.4 s | 50.8 MB
+100 | 74 | 2 | 2.2 s | 51.0 MB
+500 | 352 | 2 | 5.6 s | 51.6 MB
+1000 | 703 | 2 | 9.8 s | 52.1 MB
+3600 | 2535 | 3 | 47.8 s | 58.8 MB
+.end
+.h3 Disk space [disk]
+The programs, the documents and the templates that the install puts in the
+prefix directory take 5.4 MB.  The manuals as PDF files take 3.7 MB more, so
+that the whole release is about 9 MB.
+.table 36 14
+What | Disk space
+The programs | 3.0 MB
+The documents of Strata | 2.2 MB
+The templates of letters and envelopes | 32 KB
+The licence and the README | 64 KB
+The manuals as PDF files | 3.7 MB
+.end
+A document that you save keeps up to three backups (a setting), so that a
+document of 15 MB takes up to 60 MB.  A print of 1,000 pages writes a LaTeX
+file of about 3.6 MB and a PDF of 2.5 MB.
+The programs that Strata needs in addition, LaTeX, ghostscript, the spell check
+and the thesaurus, are 126 packages on a system that has none of them: a
+download of 191 MB, and 661 MB when they are installed.  The download is up to
+about 700 MB less whatever your system has already; the install script shows
+the exact size for your system before anything is installed.
+.h3 What to have [recommended]
+For documents up to 5,000 pages, 256 MB of free memory is enough in both
+versions: the Editor needs at most 155 MB for such a document and a print needs
+at most 87 MB.  For a book of 1,000 pages 64 MB is enough.  Keep 700 MB of free
+disk space if the programs that Strata needs are to be installed.

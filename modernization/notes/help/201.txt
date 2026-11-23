@@ -1,0 +1,25 @@
+
+----------------------- Column and Table Editor Prompts ------------------------
+
+Column Number: Displays the current column being formatted. To change to another
+               column, move the cursor to the Column Number prompt, type a 
+               number, and press Enter; or move the cursor along the ruler.
+
+
+Width:         Displays the width of the current column. There are two methods 
+               for changing column widths:
+
+                Enter the column number in the Column Number prompt, then 
+                 enter the width in the Width prompt.
+          or
+                Move the cursor to the appropriate column or gutter area of 
+                 the ruler. Press Space Bar to increase or Del to decrease the 
+                 width of the column or gutter.
+
+
+Type:          Displays the column type of the current column: Fixed, 
+               Adjustable, or Floating. 
+
+--------------------------------------------------------------------------------
+      Table           Column and Table Editor Keys           Column Types
+                 Keyboard Summary                 Help Index

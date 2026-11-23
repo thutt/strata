@@ -1,0 +1,25 @@
+
+------------------------------- Equation Keywords ------------------------------
+
+
+Format Keywords
+
+----------------------------------------+---------------------------------------
+Name                   Keyword          | Name                    Keyword
+----------------------------------------+---------------------------------------
+Subscript              sub              | Stack                   stack
+Superscript            super            | Matrix                  matrix
+Below                  below            | Over                    over 
+Above                  above            | Space 0 (no space)      #0
+Left justify           left             | Space 1 (3/18 unit)     #1 
+Right justify          right            | Space 2 (4/18 unit)     #2
+Center                 center           | Space 3 (5/18 unit)     #3
+End of line            end              | Space 4 (1 unit)        #4
+Align lines            #^               |
+----------------------------------------+---------------------------------------
+
+Function Names    Greek Letters    Diacriticals    Operators   Pointers
+      Attributes      Grouping Symbols      Large Operators     Miscellaneous
+
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

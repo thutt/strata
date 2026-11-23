@@ -1,0 +1,113 @@
+.chapter 5
+.h1 Memory and speed [memory]
+Two rounds of work cut the memory and the time of the Editor.  The first, on
+11 and 12 November, removed two large mistakes.  The second, on 18 November,
+removed a third of the memory.  The numbers are those of the notes of the
+measurements.
+.h2 Large-document fixes [memory-first]
+The first test was a document of 15.6 MB, the complete works of Mark Twain
+from Project Gutenberg.
+Open time: on 11 November the Editor took @early_open_before@ s to open it.
+The function that gives the level of a block scanned the document from its
+start for every block, so the layout took time with the square of the number
+of blocks, about 48,000.  The level is now read from a table made once for a
+layout.  The debug build opened the document in @early_open_after@ s.
+Memory: on 12 November the document used @early_mem_before@ MB after the
+layout, 39 bytes for each byte of the file.  The main fix cut a token from 24
+bytes to four, with the data of a marker in a table.  The document then used
+@early_mem_after@ MB.
+Cross references: after every change the Editor searched the table of links
+and the table of sections from the start for each of the 6,000 cross
+references of the Reference Manual (753 pages).  A typed character took 69 ms.
+The table is now asked in the order of the document and sections are found by
+a hash of their numbers.  A typed character takes 6.6 ms.
+.h2 Survey [memory-survey]
+.ix Counting allocator
+On 18 November the project maintainer asked where each byte of a document is,
+by function.  A counting allocator, a library loaded before the program,
+replaces the allocation functions.  It counts live bytes for each place of
+allocation, identified by the return addresses of four frames, and maps the
+addresses to function names afterwards.  The Editor ran a script that opens a
+document, goes to its end, searches and saves after one typed character, and
+the script read the peak resident memory of each step from the
+system.{fn:The peak resident memory is the highest size of the resident set of
+a process that the system keeps.  It includes the program, the libraries and
+the stack.}  A script made the documents from a text of 2.9 million words,
+with @words_per_page@ words to a page, from 1 to @pages_big@ pages.
+{Tab:shadow} breaks down the memory of @pages_mid@ pages after the cursor moved
+to the end.  The first measurement had guessed a layout of the whole document
+and a backup copy at the save.  Neither exists.  The memory found was a second
+copy of the text, the Undo shadow.
+.tabcap shadow Memory of a document of @pages_mid@ pages (MB)
+.table 41 7 10
+What | Before | After
+.datarows shadow
+.end
+.h2 Reductions [memory-reduced]
+The Undo shadow is made at the first key and compared with the document after
+each key that changed it.  It was a clone of every block, at four bytes a
+token: @shadow_text_before@ MB in {tab:shadow}.  Now the text of a column
+without markers is packed, at one byte for a plain character.  The change saves
+@shadow_saved_mid@ MB at
+@pages_mid@ pages and @shadow_saved_big@ MB at @pages_big@, about two thirds of
+the shadow.  The first key is faster too: the move to the end of a document of
+@pages_big@ pages took @end_before_ms@ ms and takes @end_after_ms@.  The risk is
+that the shadow decides what Undo restores.  A first change sized the
+save buffer exactly by counting first: it saved up to half a file of memory
+and caused the slower save of {x:memory-slower}.
+.h2 Results [memory-results]
+The measurement of 20 November used another machine, plain documents of
+@words_per_page@ words to a page, the median of three runs of a fresh Editor
+and a release build.  Before is the main line before the memory work.
+{Tab:memory} gives the memory.
+.tabcap memory Memory of the terminal Editor (MB, before / after)
+.table 7 12 12 11 12
+Pages | Open | End | Search | Save
+.datarows memory
+.end
+{Fig:memorysave} shows the save column.  The memory at the open is the same
+before and after, because the Undo copy is made at the first key.  After a
+save at the largest size the memory is a third lower:
+.center
+{eq:\frac{{@mem_big_before@ - @mem_big_after@}}{{@mem_big_before@}}
+ \approx @mem_ratio@}
+
+The same holds at @pages_mid@ pages (@mid_before@ to @mid_after@ MB,
+@mid_percent@
+percent).  The X11 Editor needs @x11_more@ MB more than the terminal Editor at
+every size.  Open and search take the same time before and after; the move to
+the end takes @end_move_before@ ms before and @end_move_after@ ms after at
+@pages_big@ pages.  Thirteen documents edited with the same keys in the old
+and the new Editor were saved as the same bytes.
+.pic pictures/story-memory-save.png 4 Memory after a save. [memorysave]
+.h2 Slower save [memory-slower]
+The first version of the memory work made a save slower on 18 November, and
+the first survey did not see it.  The exact buffer needed a run over every
+token that only counted bytes, @count_big_ms@ ms at @pages_big@ pages, before a
+second run that wrote them.  A save of the largest document took
+@save_slow_ms@ ms instead of @save_base_ms@, with pages of 735 words on the
+first
+machine.  The fix writes the bytes in one run into a buffer that starts at an
+estimate and is cut to the file size at the end.  The memory after a save is
+the same, and 17 saved documents of 17 have the same bytes.  {Tab:savetime}
+gives the
+later measurement: the build with the memory work alone
+saves in @save_memory_only_ms@ ms at @pages_big@ pages.  The final build is
+slower
+than the build before the memory work (@save_final_ms@ against @save_before_ms@
+ms),
+because the main line has more changes by now.
+.tabcap savetime Time of a save (ms) of three builds
+.table 8 10 26 14
+Pages | Before | Memory work only | Final
+.datarows save
+.end
+.h2 Findings not acted on [memory-notdone]
+- The token takes four bytes for every character, and the text is
+  @text_mb_mid@ of the @total_mb_mid@ MB at @pages_mid@ pages.  A two-byte token
+  would save @token2_saving_big@ MB at @pages_big@ pages and changes every
+  function that reads a text, in about 60 files.
+- A save writes through one buffer of the file size, @save_buffer_big@ MB at
+  @pages_big@ pages.  The check that nothing is written when the bytes are the
+  same needs the bytes first.
+- The load reads the whole file before it makes the tokens.

@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Cannot paginate document with Include markers -- 
+
+You cannot use the Repaginate command in documents that contain Include 
+markers.  Using this command with Worksheet markers may not give you accurate
+pagebreaks.  Use print or preview to paginate these documents accurately.
+
+-- Cannot paste - clipboard is empty --
+
+You are attempting to paste without any data in the paste clipboard. Use Cut
+or Copy to select the area you want to paste and retry the command.
+
+-- Cannot paste multiple sections into an unstructured area --
+
+The clipboard contains sections which cannot be pasted into an unstructured 
+document. Cut or copy the area by text, columns, or blocks and repaste.
+
+-- Cannot print/preview marker - not in document body -- 
+
+You can only print or preview a graphics image directly from a marker panel
+when editing the document body.  Use final print or preview from the editor
+to display graphics images in areas other than the document body (such as
+in the title page, headers or footers, or notes).
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

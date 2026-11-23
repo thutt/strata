@@ -1,0 +1,25 @@
+
+--------------------------------- Editing Keys ---------------------------------
+
+Frequently used editing keys include:  
+
+Del            Delete the character at the cursor location (also deletes an 
+               empty block or section)
+Ctrl D         Delete next word
+Shift Del      Delete the section and any subsections
+Backspace      Delete the character preceding the cursor
+Ctrl Backspace Delete previous word
+
+Enter          Insert an end-of-line character and move cursor to the next line
+Ctrl Enter     Insert an end-of-line character and keep cursor on same line
+
+Ins            Append a section at the same level
+Shift Ins      Append a subsection to the current section
+
+Tab            Move the cursor to the next defined tab 
+Ctrl Hyphen    Insert a soft hyphen character
+
+Shift Home     Move to the beginning of the document
+Shift End      Move to the end of the document
+--------------------------------------------------------------------------------
+                     Keyboard Summary             Help Index

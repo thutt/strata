@@ -1,0 +1,25 @@
+
+------------ Creating Custom Spelling and Hyphenation Dictionaries -------------
+
+To create a spelling or hyphenation dictionary, just create a new document and 
+enter words following these rules:
+
+# Words must be separated by either a space, a tab, or an end-of-line character.
+
+# For spelling dictionaries, use capitalization and punctuation only if a word
+  must appear that way. Words entered in lowercase are also added with an 
+  initial capital letter.  Words entered in uppercase or with an initial 
+  capital letter are added exactly as typed.
+
+# For hyphenation dictionaries, type a soft hyphen (Ctrl -) where you want to
+  hyphenate the word. To prevent a word from being hyphenated, type it in the
+  document without any soft hyphens.  Enter the words in lowercase (Manuscript 
+  will hyphenate all cases of the word) and enter possessives when applicable.
+
+Use Maintain Dictionaries on the Document Manager to convert the document to 
+the appropriate type of dictionary.
+
+You can also create a custom spelling dictionary by typing its name on the Check
+Document Spelling panel; Manuscript creates it as you spell check a document.
+--------------------------------------------------------------------------------
+Maintain Dictionaries   Check Document Spelling   Keyboard Summary   Help Index

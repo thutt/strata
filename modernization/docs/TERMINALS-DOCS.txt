@@ -1,0 +1,719 @@
+TERMINAL DOCUMENTATION SURVEY: WHAT THE TERMINALS' OWN DOCUMENTS SAY
+=====================================================================
+
+Status: research only (written 2026-11-19).  No program was changed.  The
+owner asked (answer A7): "you can go gather data about popular terminals:
+rxvt, terminal (Ubuntu), ghostty, xterm, and various other gnome related
+tools.  What do their docs say?"  This file extends docs/TERMINALS.txt (which
+terminals draw the Editor correctly) and docs/KEYS-ENVIRONMENTS.txt (which
+keys arrive and which keys are taken) with what the documents of the
+terminals themselves say.  It does not repeat their probes.
+
+Contents
+  1. How to read this file
+  2. The findings that matter for the Editor
+  3. The terminals, one by one
+  4. Comparison table: the codes of the function keys (terminfo)
+  5. Keys that the terminals take for themselves
+  6. What the Editor's key reader does with each (code read and probed)
+  7. Sources
+  8. Not found, not fetched, not verified
+  9. Open questions
+ 10. The probe of the terminfo sequences against the Editor
+
+
+1. HOW TO READ THIS FILE
+------------------------
+  Every fact carries a tag and a source.
+    [D]  documented: a document says so (man page, manual, help page,
+         source file of the program, terminfo entry).  The source is named.
+    [P]  probed: tried on this machine (the installed programs are xterm
+         398, xfce4-terminal 1.1.4, gnome-terminal 3.56.2 with VTE 0.80.1,
+         tmux 3.5a; the rest are not installed and no package can be
+         installed here).
+    [I]  inferred: not stated by a document; the reasoning is given.
+    [N]  not found: the document was fetched and does not say it, or the
+         document could not be fetched.  Nothing is guessed.
+  The abbreviations: ESC is byte 1b, CSI is ESC [, SS3 is ESC O.  The
+  modifier parameter m of the xterm form is 1 + (Shift 1, Alt 2, Ctrl 4):
+  Shift 2, Alt 3, Shift+Alt 4, Ctrl 5, Ctrl+Shift 6, Ctrl+Alt 7.  The
+  forms "ESC [ 1 ; m P" (F1 to F4) and "ESC [ n ; m ~" (the others) are
+  called the xterm form below.  The terminfo values are from the
+  installed ncurses 6.5.20250216, read with "infocmp -1 -x NAME" (section
+  4); a terminfo entry says what a terminal type SHOULD send.
+
+
+2. THE FINDINGS THAT MATTER FOR THE EDITOR
+------------------------------------------
+  F1.  Alt with a letter.  xterm sends the character with the eighth bit
+       set unless metaSendsEscape is true, and its default is False [D
+       xterm(1) resource metaSendsEscape; ctlseqs "Alt and Meta Keys"].
+       rxvt-unicode sends ESC and the letter, because meta8 defaults to
+       False [D urxvt(1)].  VTE sends ESC and the letter for the keys it
+       lists and, from the code, for all [D vte src/keymap.cc; P xfce4-
+       terminal].  The Editor reads ESC and a letter.
+  F2.  Konsole sends Shift, Ctrl and Alt with F1 to F4 as ESC O m P to S
+       [D konsole default.keytab]; the Editor reads that form since task
+       36 (W29.3).  The terminfo entries "gnome" and "gnome-256color" give
+       ESC O 1 ; m P instead [D terminfo]; the Editor does NOT read that
+       form (section 6), but VTE itself sends the xterm form [D keymap.cc].
+  F3.  rxvt and rxvt-unicode send Shift-F1 to Shift-F8 as the codes of F13
+       to F20 (ESC [ 25 ~, 26 ~, 28 ~, 29 ~, 31 ~, 32 ~, 33 ~, 34 ~), the
+       shifted cursor keys as ESC [ a to d and the Ctrl cursor keys as
+       ESC O a to d [D terminfo rxvt and rxvt-unicode-256color]; the
+       Editor reads none of them (section 6).  The terminfo entry of
+       rxvt-unicode has no Ctrl-F or Alt-F keys at all.
+  F4.  GNOME Terminal takes Alt-1 to Alt-9 and Alt-0 for tab switching,
+       F11 for full screen, Ctrl-PageUp and Ctrl-PageDown, and all the
+       Ctrl-Shift letters it lists; the F10 menu accelerator is on by
+       default; its Alt-letter menu mnemonics are OFF by default [D the
+       installed schema org.gnome.Terminal.gschema.xml 3.56.2].  Alt-1 to
+       Alt-9 are outline levels in the Editor.
+  F5.  rxvt-unicode starts a hexadecimal character input when Control and
+       Shift are held together (ISO 14755; on by default) [D urxvt(1)].
+       Every Ctrl-Shift key of the Editor (Ctrl-Shift-Space for the
+       non-breaking space) is affected in urxvt.
+  F6.  xterm takes Alt-Return for full screen by default (an Editor key
+       combination) [D xterm(1), Default Key Bindings, installed xterm 398],
+       Shift-Insert and Shift-PageUp/PageDown.
+  F7.  Terminals that implement the kitty keyboard protocol (kitty,
+       alacritty, foot, ghostty, wezterm, xterm.js, the Microsoft
+       terminal) send the old forms until a program asks for the protocol
+       [D kitty keyboard protocol page]; the Editor never asks, so it sees
+       the old forms there.
+  F8.  tmux 3.5a: escape-time is 10 ms, extended-keys is off, TERM is
+       tmux-256color in a new window [P a private tmux server].  With
+       extended-keys on or always, tmux sends modified keys as
+       ESC [ 27 ; m ; code ~ (format xterm) or CSI code ; m u (format
+       csi-u) [D tmux(1)]; the Editor reads only Ctrl-Shift-Space in
+       those forms.
+  F9.  The Linux console never sends the forms of the terminals: terminfo
+       linux has ESC [ [ A to E for F1 to F5 and no Ctrl-F or Alt-F keys
+       [D terminfo]; its documents describe a subset of VT102 and the
+       control characters it does not implement [D console_codes(4)].
+
+
+3. THE TERMINALS, ONE BY ONE
+----------------------------
+
+3.1  xterm
+  TERM: the program searches the database for xterm-new, xterm, vt102,
+    vt100, ansi and dumb [D xterm(1) page, option -tn]; the usual value is
+    xterm or xterm-256color.
+  Function keys [D ctlseqs, "PC-Style Function Keys"]: F1 to F4 are SS3 P to
+    S, F5 to F12 are CSI 15 ~, 17 ~, 18 ~, 19 ~, 20 ~, 21 ~, 23 ~, 24 ~;
+    cursor keys CSI A to D (SS3 A to D in application mode), Home and End
+    CSI H and CSI F (SS3 H and F); Insert CSI 2 ~, Delete CSI 3 ~, PageUp
+    CSI 5 ~, PageDown CSI 6 ~.  Modifiers are parameters before the final
+    character: "shift-F5 would be sent as CSI 1 5 ; 2 ~"; 2 Shift, 3 Alt,
+    4 Shift+Alt, 5 Control, 6 Shift+Control, 7 Alt+Control, 8 all three;
+    9 to 16 add Meta and are used only when alwaysUseMods is set.
+  Resources [D xterm(1), resource section]:
+    modifyFunctionKeys (default 2), modifyCursorKeys (default 2): "2 forces
+      the modifier to be the second parameter if it would otherwise be the
+      first"; 0 is the old behaviour, -1 disables the feature.
+    modifyOtherKeys (default 0): 1 enables it for most keys, 2 for all
+      (Alt and Meta cause escape sequences), 3 also unmodified keys;
+      ctlseqs gives "CSI 27 ; 2 ; 9 ~" for Shift-Tab in mode 2.
+    modifyKeyboard (default 0).
+    metaSendsEscape (default False): Meta is converted into ESC and the
+      character; when false, "Meta input is handled by eightBitInput".
+    altSendsEscape (default False; only if altIsNotMeta is set).
+    eightBitInput: a Meta (Alt) letter is sent with the eighth bit set.
+    ctlseqs table for Alt and Meta: with metaSendsEscape on and
+      altSendsEscape off, Meta-x gives ESC x and Alt-x gives the shifted
+      (eighth bit) code; with both on, all give ESC x.
+  Keys the terminal takes [D xterm(1) "Default Key Bindings" in the
+    installed manual of xterm 398]:
+      Shift-Prior, Shift-Next   scroll-back and scroll-forw (half page)
+      Shift-Insert              insert-selection
+      Alt-Return                fullscreen()
+      Shift-KP_Add, Shift-Ctrl-KP_Add, Shift-KP_Subtract   VT font size
+      Ctrl with mouse buttons   popup menus
+      Meta with a character     insert-eight-bit() (so Alt-letter arrives
+                                with the eighth bit; ~Meta is insert-seven-
+                                bit)
+    They can be removed or changed with the translations resource (the
+    page names the groups of omitTranslation: popup-menu, paging,
+    shift-fonts and others).  The resource ctrlFKeys (default 10) matters
+    only when modifyFunctionKeys is 0: Ctrl-F1 then generates the key
+    symbol of F11 [D].
+  Probed earlier (docs/KEYS-ENVIRONMENTS.txt 4.1): Alt-o arrives as c3 af
+    in a default xterm and as ESC o with metaSendsEscape true.
+
+3.2  rxvt and rxvt-unicode (urxvt)
+  rxvt-unicode [D urxvt(1) at man.archlinux.org]:
+    TERM: "Normally set to rxvt-unicode, unless overwritten at configure
+      time, via resources or on the command line" (termName, -tn).
+    Meta: meta8 default False: with it true "handle Meta (Alt) + keypress
+      to set the 8th bit"; when false Alt/Meta is sent as an ESC prefix.
+      The resource modifier (option -mod) names which key is Meta (alt,
+      meta, hyper, super, mod1 to mod5); no default is stated.
+    Taken keys: Shift-Prior and Shift-Next scroll up and down; Shift-
+      Insert inserts the PRIMARY selection; Ctrl-Meta-c and Ctrl-Meta-v
+      copy to and paste from CLIPBOARD; Control and Shift held together
+      start ISO 14755 hexadecimal input (iso14755 and iso14755_52 default
+      enabled); the perl extensions selection, searchable-scrollback and
+      others are in the default set and are bound through keysym
+      resources.
+    Function key sequences: NOT stated in the man page [N].  The terminfo
+      says (section 4): F1 ESC [ 11 ~, F5 ESC [ 15 ~, F11 ESC [ 23 ~,
+      F13 to F20 ESC [ 25 ~ ... 34 ~ (Shift-F1 to F8 by rxvt convention),
+      Home ESC [ 7 ~, End ESC [ 8 ~, Delete ESC [ 3 ~, shifted cursor
+      keys ESC [ a b c d, Ctrl cursor keys ESC O a b c d, shifted Home
+      ESC [ 7 $.  rxvt-unicode-256color has no kf25 and kf49 entries.
+  rxvt (classic) [D terminfo rxvt]: the same table; also kf21 = ESC [ 23 $
+    and kf25 = ESC [ 13 ^ (the final characters ^ and $ mean Ctrl and
+    Shift).  No manual of classic rxvt was fetched [N].
+
+3.3  VTE terminals
+  VTE (libvte 0.80.1 here; GNOME Terminal, Xfce Terminal, Terminator,
+  Tilix, GNOME Console and others use it).
+  Key encoding [D vte src/keymap.cc, fetched from the master branch; the
+    installed library is 0.80.1, the file may differ in detail]:
+    Cursor keys: CSI A to D normally, SS3 A to D in application mode; Home
+      and End CSI H, CSI F or SS3 H, SS3 F.  Insert CSI 2 ~, PageUp CSI
+      5 ~, PageDown CSI 6 ~.  Delete is "handled in code".
+    F1 to F4: SS3 P to S unmodified; modified: CSI 1 ; m P to S (the
+      code adds "1;m" before the final character: "CSI 1;5A for Ctrl+Up
+      and CSI 1;2P for Shift+F1").  F5 to F12 CSI 15 ~ ... 24 ~ and, with
+      a modifier, "CSI 15;2~".  F13 to F35 use codes 25 to 56.
+    Modifier numbers: Shift 2, Alt 3, Shift+Alt 4, Ctrl 5, Shift+Ctrl 6,
+      Alt+Ctrl 7, all three 8.  The code converts SS3 to CSI when a
+      cursor key is modified in application mode, for xterm
+      compatibility.
+    Alt: the file prefixes ESC for Alt+Tab, Alt+space, Alt+Return,
+      Alt+Escape, Alt+slash and Alt+question; other Alt keys are not in
+      the file [N: handled elsewhere]; the xfce4-terminal probe (docs/
+      KEYS-ENVIRONMENTS.txt 4.1) shows Alt-letter arriving as ESC and the
+      letter [P].
+    TERM: terminfo vte and vte-256color exist here and give the xterm
+      form (section 4); terminfo gnome and gnome-256color give ESC O 1 ;
+      m P [D terminfo].  What TERM the installed gnome-terminal sets was
+      not read from a document [N].
+  GNOME Terminal 3.56.2 [D the installed schema org.gnome.Terminal.
+    gschema.xml (GSettings), and https://help.gnome.org/users/gnome-
+    terminal/stable/adv-keyboard-shortcuts.html]:
+    shortcuts-enabled   true by default: "They may interfere with some
+                        applications run inside the terminal so it's
+                        possible to turn them off."
+    menu-accelerator-enabled  true: "Normally you can access the menubar
+                        with F10."
+    mnemonics-enabled   FALSE by default ("Whether to have Alt+letter
+                        access keys for the menubar").
+    new-tab Ctrl-Shift-T, new-window Ctrl-Shift-N, close-tab Ctrl-Shift-W,
+    close-window Ctrl-Shift-Q, copy Ctrl-Shift-C, paste Ctrl-Shift-V,
+    find Ctrl-Shift-F, find-next Ctrl-Shift-G, find-previous Ctrl-Shift-H,
+    find-clear Ctrl-Shift-J, full-screen F11, prev-tab Ctrl-PageUp,
+    next-tab Ctrl-PageDown, move-tab-left and right Ctrl-Shift-PageUp and
+    PageDown, switch-to-tab-1 to 9 Alt-1 to Alt-9, tab 10 Alt-0,
+    zoom-in Ctrl-plus, zoom-out Ctrl-minus, zoom-normal Ctrl-0.
+    Disabled by default: help (so F1 is NOT taken), select-all,
+    preferences, toggle-menubar, reset, switch to tabs 11 and up.
+    The help page adds, as not editable: Shift-Ctrl-Up and Down (scroll one
+    line), Shift-PageUp and PageDown (a page), Shift-Home and Shift-End,
+    Shift-Ctrl-Left and Right (previous and next command).  To disable
+    one shortcut: "edit it and press the Backspace".
+  Xfce Terminal 1.1.4 [D https://docs.xfce.org/apps/xfce4-terminal/
+    preferences]: the Advanced tab has "Disable all menu access keys (such
+    as Alt+F)" (the mnemonics), "Disable menu shortcut key (F10 by
+    default)" and "Disable help window shortcut key (F1 by default)".
+    The page does not list F11 or the other shortcuts [N]; the probe of
+    docs/KEYS-ENVIRONMENTS.txt 4.1 found F1, F10, F11, Shift-F10, Ctrl-
+    Minus, Ctrl-Insert, Shift-Insert and the Shift cursor keys taken [P].
+  Terminator [D https://man.archlinux.org/man/terminator_config.5.en,
+    [keybindings]]: full_screen F11, help F1, split_horiz Ctrl-Shift-O,
+    split_vert Ctrl-Shift-E, split_auto Ctrl-Shift-A, new_tab Ctrl-Shift-T,
+    new_window Ctrl-Shift-I, close_term Ctrl-Shift-W, close_window Ctrl-
+    Shift-Q, cycle_next Ctrl-Tab, cycle_prev Ctrl-Shift-Tab, go_next Ctrl-
+    Shift-N, go_prev Ctrl-Shift-P, go_up/down/left/right Alt-Up, Down,
+    Left, Right, next_tab Ctrl-PageDown, prev_tab Ctrl-PageUp, resize_*
+    Ctrl-Shift-arrows, move_tab_* Ctrl-Shift-PageUp/Down, toggle_zoom Ctrl-
+    Shift-X, hide_window Ctrl-Shift-Alt-A, copy Ctrl-Shift-C, paste Ctrl-
+    Shift-V, search Ctrl-Shift-F, reset Ctrl-Shift-R, reset_clear Ctrl-
+    Shift-G, toggle_scrollbar Ctrl-Shift-S, send_newline Shift-Return,
+    zoom_in Ctrl-plus, zoom_out Ctrl-minus, zoom_normal Ctrl-0,
+    edit_window_title Ctrl-Alt-W, group_all Super-G, group_tab Super-T.
+    switch_to_tab_N have no default.  How to disable a binding: the page
+    does not say [N].
+  Tilix [D the gschema com.gexperts.Tilix.gschema.xml on github, master]:
+    win-fullscreen F11, win-view-sidebar F12, session-switch-to-terminal-
+    1 to 9 Alt-1 to Alt-9, session-switch-to-terminal-up/down/left/right
+    Alt-arrows, win-switch-to-session-0 to 9 Ctrl-Alt-0 to 9, win-switch-
+    to-next-session Ctrl-PageDown and previous Ctrl-PageUp, session-
+    switch-to-next-terminal Ctrl-Tab, terminal-copy Ctrl-Shift-C, terminal-
+    paste Ctrl-Shift-V, terminal-paste-primary Shift-Insert, terminal-page-
+    up Shift-PageUp and down, terminal-scroll-up and down Ctrl-Shift-Up
+    and Down, terminal-find Ctrl-Shift-F, terminal-select-all Ctrl-Shift-A,
+    terminal-zoom-in Ctrl-plus, out Ctrl-minus, normal Ctrl-0, terminal-
+    close Ctrl-Shift-W, app-new-window Ctrl-Shift-N, app-new-session Ctrl-
+    Shift-T, session-close Ctrl-Shift-Q, session-add-right Ctrl-Alt-R,
+    session-add-down Ctrl-Alt-D.  A shortcut set to 'disabled' is off.
+  GNOME Console (kgx), MATE Terminal, LXTerminal: no document with a
+    shortcut list or key encoding was found [N].  A search for GNOME
+    Console's help found only GNOME Terminal's pages.
+
+3.4  Konsole
+  Key table [D https://invent.kde.org/utilities/konsole/-/raw/master/
+    data/keyboard-layouts/default.keytab, keyboard "Default (XFree 4)"]:
+    F1 to F4 unmodified ESC O P to S; modified (the "+AnyMod" lines) ESC O
+    * P to S where * is the modifier digit: ESC O 2 P for Shift-F1, ESC O
+    5 P for Ctrl-F1, ESC O 3 P for Alt-F1.  F5 to F12 ESC [ 15 ~ ... 24 ~
+    and ESC [ 15 ; * ~ with a modifier.  Home and End ESC [ H and ESC [ F
+    (ESC O H and ESC O F with application cursor keys), modified ESC [ 1 ;
+    * H and F.  Insert ESC [ 2 ~, Delete ESC [ 3 ~, PgUp ESC [ 5 ~, PgDown
+    ESC [ 6 ~, modified with ";*".
+    The file's comments: "shift up/down are reserved for scrolling" and
+    "shift left/right are reserved for switching between tabs (this is
+    hardcoded)".
+    It has no Alt+letter rule [N: how Alt-letter is sent is not in this
+    file].
+  Konsole's command reference (docs.kde.org, read for docs/KEYS-
+    ENVIRONMENTS.txt 4.3): Shift-Right and Shift-Left switch tabs, Ctrl-
+    Shift-Ins pastes the selection, Ctrl-Alt-Left and Right move a tab.
+
+3.5  st
+  [D https://git.suckless.org/st/file/config.def.h.html] TERM st-256color
+    (termname).  Key table: F1 to F4 ESC O P to S unmodified; Shift ESC [
+    1 ; 2 P to S, Ctrl ESC [ 1 ; 5 P to S, Alt ESC [ 1 ; 3 P to S (the
+    comments call them F13, F25 and F49); F5 to F12 ESC [ 15 ~ ... 24 ~ and
+    ESC [ 15 ; m ~ with 2, 5, 3.  Home ESC [ 1 ~ (ESC [ H in some modes),
+    End ESC [ 4 ~, Insert ESC [ 2 ~, Delete ESC [ 3 ~, PageUp ESC [ 5 ~,
+    PageDown ESC [ 6 ~, with ";2" and ";5" forms; Shift-Home ESC [ 1 ; 2 H.
+    Shortcuts (TERMMOD is Ctrl+Shift): Ctrl-Shift-PageUp and PageDown zoom,
+    Ctrl-Shift-Home zoom reset, Ctrl-Shift-C copy, Ctrl-Shift-V paste, Ctrl-
+    Shift-Y paste selection, Shift-Insert paste selection, Ctrl-Shift-
+    NumLock, Break, the Print keys.  How Alt-letter is sent is not in the
+    file [N].
+
+3.6  kitty
+  [D https://sw.kovidgoyal.net/kitty/keyboard-protocol/]  An opt-in
+    protocol.  A program asks with CSI > flags u (push), CSI = flags ; mode
+    u (set), CSI ? u (query), CSI < u (pop).  Flags: 1 disambiguate escape
+    codes, 2 report event types, 4 alternate keys, 8 all keys as escape
+    codes, 16 associated text.  Form: CSI code ; modifiers u, with the
+    modifier value 1 + (shift 1, alt 2, ctrl 4, super 8, hyper 16, meta 32,
+    caps lock 64, num lock 128).  Without it, the legacy forms: arrows,
+    Home, End and F1 to F4 as CSI or SS3 forms, F5 to F12 as CSI 15 ~ ...
+    24 ~, with modifiers CSI 1 ; m [ABCDEFHPQS] and CSI n ; m ~.  The page
+    lists the terminals that implement it: alacritty, foot, ghostty,
+    iTerm2, the Microsoft terminal, rio, WezTerm, xterm.js and others.
+  Default shortcuts [D https://sw.kovidgoyal.net/kitty/overview/]: Ctrl-
+    Shift-C copy, Ctrl-Shift-V paste, Ctrl-Shift-S paste from selection,
+    Ctrl-Shift-Up/Down scroll a line, Ctrl-Shift-PageUp/PageDown a page,
+    Ctrl-Shift-Home/End, Ctrl-Shift-H scrollback in less, Ctrl-Shift-Z and
+    X prompts, Ctrl-Shift-Enter new window, Ctrl-Shift-N new OS window,
+    Ctrl-Shift-W close window, Ctrl-Shift-] and [ windows, Ctrl-Shift-F and
+    B move window, Ctrl-Shift-T new tab, Ctrl-Shift-Q close tab, Ctrl-Shift-
+    Right and Left tabs, Ctrl-Shift-Alt-T tab title, Ctrl-Shift-L layout,
+    Ctrl-Shift-equal, minus, backspace font size, Ctrl-Shift-E open URL,
+    Ctrl-Shift-O pass selection, Ctrl-Shift-F11 full screen, Ctrl-Shift-F10
+    maximize, Ctrl-Shift-U unicode input, Ctrl-Shift-F2 edit config, Ctrl-
+    Shift-F5 reload, Ctrl-Shift-F6 show config, Ctrl-Shift-Escape kitty
+    shell, Ctrl-Shift-Delete reset.  Remove one with "map kitty_mod+space"
+    (no action), "so that it passes to the program" [D the conf page].
+    kitty_mod is ctrl+shift by default [D the conf page].
+  TERM xterm-kitty: not in the terminfo database here (only "kitty") [P];
+    which name kitty sets was not read from a document [N].
+
+3.7  Alacritty
+  [D https://raw.githubusercontent.com/alacritty/alacritty/master/extra/
+    man/alacritty-bindings.5.scd] Default bindings: Ctrl-Shift-C copy, Ctrl-
+    Shift-V paste, Shift-Insert paste selection, Shift-PageUp scroll a page
+    (mode not alternate screen), Ctrl-Shift-Space vi mode, Ctrl-Shift-F
+    search, Ctrl-equal and Ctrl-plus font bigger, Ctrl-minus smaller, Ctrl-0
+    reset; full screen is bound only on Windows (Alt-Return).  The page does
+    not say how to remove a binding, what Alt sends or which keyboard
+    protocol it supports [N]; the kitty page lists alacritty as
+    implementing the kitty protocol.  The terminfo entry alacritty gives
+    the xterm forms (section 4).
+
+3.8  WezTerm
+  [D https://wezterm.org/config/default-keys.html] Defaults (SUPER or Ctrl-
+    Shift): copy and paste Ctrl-Shift-C and V, new tab Ctrl-Shift-T, close tab
+    Ctrl-Shift-W, tabs 1 to 8 and 9 (last) Ctrl-Shift-1 to 9, Ctrl-Tab and
+    Ctrl-Shift-Tab next and previous tab, Alt-Return full screen, Ctrl-minus,
+    Ctrl-equal, Ctrl-0 font size, Shift-PageUp and PageDown scroll a page,
+    Ctrl-Shift-F search, Ctrl-Shift-X copy mode, Ctrl-Shift-U character
+    select, Ctrl-Shift-Space quick select, Ctrl-Shift-R reload.  All can be
+    switched off with disable_default_key_bindings = true.
+  Encoding [D https://wezterm.org/config/key-encoding.html]: "The default
+    encoding scheme used by wezterm is xterm compatible"; CSI u encoding
+    (enable_csi_u_key_encoding) is off and "does change the behavior of some
+    keys in backwards incompatible ways"; enable_kitty_keyboard controls
+    whether it honours the program's requests for the kitty protocol;
+    allow_win32_input_mode defaults to true on Windows; modifyOtherKeys is
+    honoured on CSI > 4 ; N m.  Alt: the left Option key is treated as Alt
+    on macOS [D keyboard-concepts]; how Alt sends is not stated [N].
+
+3.9  foot
+  [D https://codeberg.org/dnkl/foot/raw/branch/master/doc/foot.ini.5.scd]
+    scrollback-up-page Shift-PageUp, clipboard-copy Ctrl-Shift-C, clipboard-
+    paste Ctrl-Shift-V, primary-paste Shift-Insert, search-start Ctrl-Shift-R,
+    font-increase Ctrl-plus, Ctrl-equal; full screen: no default binding.
+    How Alt is sent and the keyboard protocol are not in the page [N]; the
+    kitty page lists foot as implementing the kitty protocol.  The default
+    TERM is the template value @default_terminfo@ [D]; the terminfo entry
+    foot exists here and gives the xterm forms.
+
+3.10 Ghostty
+  [D https://ghostty.org/docs/config/keybind]  Syntax keybind =
+    trigger=action; modifiers shift, ctrl, alt (opt, option), super.  The
+    defaults are NOT listed: the page tells to run "ghostty +list-keybinds
+    --default".  "unbind" removes a binding (the key then goes to the
+    program if printable); "keybind=clear" "will clear all set keybindings"
+    including the defaults [D reference page].  The actions list names
+    copy_to_clipboard, new_tab, goto_tab, toggle_fullscreen, scroll_page_up
+    and others without triggers [D tip.ghostty.org keybind reference].
+    The xterm-ghostty terminfo is installed by "ghostty +ssh" on a remote
+    host [D man ghostty(1)].  A secondary source (a guide to version 1.3.1,
+    not the program's documents) names Ctrl-Shift-C for copy, Ctrl-Shift-W
+    for close tab, Ctrl-Shift-O and Ctrl-Shift-E for splits [I; marked
+    secondary]; no source for F11 or Alt-digit tab switching was found.
+    The kitty page lists ghostty as implementing the kitty keyboard
+    protocol.  Its function key encodings, Alt handling and the
+    xterm-ghostty terminfo are not in the fetched pages [N].
+
+3.11 The Linux console
+  [D console_codes(4)]  Describes a subset of VT102 and ECMA-48 and lists
+    what it does not implement: SS2, SS3 (ESC O), DCS, SOS, PM, ST, and the
+    G2 and G3 designations.  The page says nothing about the sequences of
+    function keys or Alt [N]; the key codes are in the keymap (loadkeys)
+    and in terminfo linux: F1 to F5 ESC [ [ A to E, F6 ESC [ 17 ~ ..., F12
+    ESC [ 24 ~, Shift-F1 to Shift-F10 the codes of F11 to F20 (kf13 = ESC
+    [ 25 ~), no Ctrl-F or Alt-F, Home ESC [ 1 ~, End ESC [ 4 ~ [D terminfo
+    linux].  Alt-F1 to F12 switch the virtual console [D kbd(4), carried
+    over from docs/KEYS-ENVIRONMENTS.txt 4.5].
+
+3.12 tmux and GNU screen
+  tmux 3.5a [D tmux(1), installed and https://man7.org/linux/man-pages/
+    man1/tmux.1.html; P a private server started with -f /dev/null]:
+    prefix C-b ("a prefix key, C-b (Ctrl-b) by default"); send-prefix
+    sends it through.  TERM: "must be set to screen or tmux" (or a
+    derivative); the default-terminal option is tmux-256color here [P].
+    escape-time: "the time in milliseconds for which tmux waits after an
+    escape is input to determine if it is part of a function or meta key
+    sequences" (10 here [P]; the Editor waits 40 ms after ESC for the
+    next byte).  extended-keys on/off/always (off here [P]): "the
+    equivalent of the modifyOtherKeys xterm(1) resource"; on lets a
+    program request mode 1 or 2; always forces mode 1; "tmux will always
+    request extended keys itself if the terminal supports them".
+    extended-keys-format xterm (default here [P]) or csi-u: "C-S-a will be
+    reported as ^[[27;6;65~ when set to xterm".  terminal-features has a
+    feature extkeys.  mode-keys: vi if VISUAL or EDITOR contains vi, else
+    emacs.  Meta is written M- in bindings [D].
+  GNU screen [D https://www.gnu.org/software/screen/manual/screen.html,
+    the first part only]: the command character is C-a ("The defaults are C-a
+    and a"); "C-a a" sends C-a to the window; $TERM is set to screen "by
+    default, unless no description for screen is installed" (then vt100).
+    bindkey, the input translation, maptimeout and Meta handling were not
+    in the part fetched [N].
+
+3.13 Windows Terminal and WSL2
+  [D https://learn.microsoft.com/en-us/windows/terminal/customize-
+    settings/actions]  Default actions: Alt-F4 close window, Alt-Space system
+    menu, Alt-Return and F11 toggle full screen, Ctrl-Shift-T new tab,
+    Ctrl-Shift-1 to 9 new tab of a profile, Ctrl-Alt-1 to 9 switch to tab,
+    Ctrl-Tab and Ctrl-Shift-Tab next and previous tab, Ctrl-Shift-D duplicate
+    tab, Ctrl-Shift-W close pane, Alt-Shift-D, Alt-Shift-minus, Alt-Shift-plus
+    duplicate pane, Alt-Shift-arrows resize pane, Ctrl-C and Ctrl-Shift-C
+    and Ctrl-Insert copy, Ctrl-V and Ctrl-Shift-V and Shift-Insert paste,
+    Ctrl-Shift-F find, Ctrl-Shift-Up/Down scroll a line, Ctrl-Shift-PageUp/
+    PageDown a page, Ctrl-Shift-Home top, Ctrl-plus and Ctrl-minus font size,
+    Ctrl-comma settings.  A key can be released to the program with the
+    action "unbound" (shown for alt+shift+minus and alt+shift+equals).  The
+    page does not describe the sequences sent to programs [N]; the kitty
+    page lists the Microsoft terminal as implementing the kitty keyboard
+    protocol, and the WezTerm page names a win32 input mode on Windows.
+    The owner's WSL2 run used X11 mode, not this terminal (worklist W51).
+
+3.14 ssh
+  ssh(1) [D, from docs/KEYS-ENVIRONMENTS.txt 4.5]: "The escape character
+    must always follow a newline to be interpreted as special"; ~. ends the
+    session (tilde and full stop at the start of a line).  The owner decided
+    on 2026-11-19 that the manual does not carry a warning about it.
+
+
+4. COMPARISON TABLE: THE CODES OF THE FUNCTION KEYS (terminfo)
+--------------------------------------------------------------
+  Source: infocmp -1 -x NAME, ncurses 6.5.20250216 (a terminfo entry is a
+  document of what the type should send; a terminal may differ).  The
+  columns are the capabilities kf1 (F1), kf13 (Shift-F1), kf25 (Ctrl-F1),
+  kf49 (Alt-F1), kf5 (F5), kf12 (F12), khome, kend, kdch1 (Delete) and kpp
+  (PageUp).  E is ESC; "-" means the entry has none.
+
+  xterm-256color         F1 EOP     Sh-F1 E[1;2P   Ct-F1 E[1;5P  Al-F1 E[1;3P
+                         F5 E[15~   F12 E[24~  Home EOH  End EOF
+                         Del E[3~   PgUp E[5~
+  vte-256color           as xterm-256color
+  gnome-256color         F1 EOP     Sh-F1 EO1;2P   Ct-F1 EO1;5P  Al-F1 EO1;3P
+                         F5 E[15~   F12 E[24~  Home EOH  End EOF
+                         Del E[3~   PgUp E[5~
+  konsole                F1 EOP     Sh-F1 EO2P     Ct-F1 EO5P    Al-F1 EO3P
+                         F5 E[15~   F12 E[24~  Home EOH  End EOF
+                         Del E[3~   PgUp E[5~
+  rxvt                   F1 E[11~   Sh-F1 E[25~    Ct-F1 E[13^   Al-F1 -
+                         F5 E[15~   F12 E[24~  Home E[7~  End E[8~
+                         Del E[3~   PgUp E[5~
+  rxvt-unicode-256color  F1 E[11~   Sh-F1 E[25~    Ct-F1 -       Al-F1 -
+                         F5 E[15~   F12 E[24~  Home E[7~  End E[8~
+                         Del E[3~   PgUp E[5~
+  st-256color            F1 EOP     Sh-F1 E[1;2P   Ct-F1 E[1;5P  Al-F1 E[1;3P
+                         F5 E[15~   F12 E[24~  Home E[1~  End E[4~
+                         Del E[3~   PgUp E[5~
+  foot, kitty, alacritty, wezterm   (identical rows)
+                         F1 EOP     Sh-F1 E[1;2P   Ct-F1 E[1;5P  Al-F1 E[1;3P
+                         F5 E[15~   F12 E[24~  Home EOH  End EOF
+                         Del E[3~   PgUp E[5~
+  tmux-256color          F1 EOP     Sh-F1 E[1;2P   Ct-F1 E[1;5P  Al-F1 E[1;3P
+                         F5 E[15~   F12 E[24~  Home E[1~  End E[4~
+                         Del E[3~   PgUp E[5~
+  screen                 F1 EOP     Sh-F1 -        Ct-F1 -       Al-F1 -
+                         F5 E[15~   F12 E[24~  Home E[1~  End E[4~
+                         Del E[3~   PgUp E[5~
+  linux                  F1 E[[A    Sh-F1 E[25~    Ct-F1 -       Al-F1 -
+                         F5 E[[E    F12 E[24~  Home E[1~  End E[4~
+                         Del E[3~   PgUp E[5~
+  xterm-ghostty, xterm-kitty   not in the terminfo database here.
+
+  Alt with a letter is not a terminfo capability.  By the documents: ESC and
+  the letter in urxvt (meta8 false), VTE (keymap.cc and the probe) and
+  tmux; the character with the eighth bit in xterm by default.
+  The documents of st, foot, alacritty, wezterm, ghostty and konsole do
+  not say [N].
+
+  The rows agree with the live probes of docs/KEYS-ENVIRONMENTS.txt 4.1
+  where both exist: xterm and xfce4-terminal send the xterm form (the entry
+  gnome does not describe xfce4-terminal), tmux inside xterm sends Home and
+  End as ESC [ 1 ~ and ESC [ 4 ~.
+
+
+5. KEYS THAT THE TERMINALS TAKE FOR THEMSELVES
+----------------------------------------------
+  Editor keys of concern (docs/KEYSTROKES.txt) against the documents.
+  "yes" is a documented default; the number says where it is described.
+
+  key                    taken by
+  Alt-1 .. Alt-9, Alt-0  GNOME Terminal tab switch (3.3), Tilix terminal
+                         switch (3.3); WezTerm no (Ctrl-Shift-1 to 9)
+  F1                     Xfce Terminal help (3.3), Terminator help (3.3);
+                         NOT GNOME Terminal (help disabled by default)
+  F10                    GNOME Terminal and Xfce Terminal menu (3.3; each
+                         has a switch)
+  F11                    GNOME Terminal, Terminator, Tilix (3.3), Windows
+                         Terminal (3.13); Xfce Terminal [P earlier]
+  F12                    Tilix sidebar (3.3)
+  Alt-Return             xterm full screen (3.1), Windows Terminal (3.13),
+                         WezTerm (3.8), Alacritty on Windows (3.7)
+  Alt-arrows             Terminator and Tilix (move between terminals)
+  Alt-F4                 Windows Terminal (and the desktops of docs/KEYS-
+                         ENVIRONMENTS.txt 4.4)
+  Shift-Insert           xterm, urxvt, st, foot, Alacritty, Tilix, Windows
+                         Terminal (paste)
+  Shift-PageUp/PageDown  xterm and urxvt (scroll), GNOME Terminal, Tilix,
+                         Alacritty, foot, WezTerm, Konsole (Shift up and
+                         down scroll, 3.4)
+  Shift-Home, Shift-End  GNOME Terminal (scroll), Xfce Terminal [P earlier]
+  Shift-Left/Right       Konsole (tabs, hard coded, 3.4)
+  Ctrl-PageUp/PageDown   GNOME Terminal, Terminator, Tilix (tabs)
+  Ctrl-Tab               Terminator, Tilix, WezTerm, Windows Terminal
+  Ctrl-plus, minus, 0    GNOME Terminal, Terminator, Tilix, Alacritty,
+                         WezTerm, foot (plus, equal), Windows Terminal
+  Ctrl-Shift-letter      GNOME Terminal (T N W Q C V F G H J), Terminator,
+                         Tilix, kitty, WezTerm, Alacritty, foot (C V R), st
+                         (C V Y), Ghostty [I]; urxvt: Ctrl+Shift starts a
+                         hexadecimal input (3.2).  Ctrl-Shift-Space: vi
+                         mode in Alacritty, quick select in WezTerm.
+  Ctrl-Alt-digit         Tilix (sessions), Windows Terminal (tabs)
+  Ctrl-B                 tmux prefix; Ctrl-A: GNU screen command character
+  Alt-F1 .. F12          the Linux console (virtual consoles)
+
+  Turn-off switches that the documents name: GNOME Terminal shortcuts-
+  enabled, menu-accelerator-enabled and per-shortcut Backspace (3.3); Xfce
+  Terminal "Disable menu shortcut key", "Disable help window shortcut key"
+  and "Disable all menu access keys" (3.3); xterm translations and
+  omitTranslation (3.1); WezTerm disable_default_key_bindings (3.8);
+  Ghostty unbind and clear (3.10); kitty "map KEY" with no action (3.6);
+  Tilix 'disabled' (3.3); Terminator: not documented; Windows Terminal
+  "unbound" (3.13); urxvt iso14755 (3.2).
+
+
+6. WHAT THE EDITOR'S KEY READER DOES WITH EACH
+----------------------------------------------
+  Read from src/term.c (parse_csi and term_getkey_raw) in the tree of
+  2026-11-19, which includes the Konsole form (task 36).
+  Read: ESC [ A B C D H F with a modifier parameter; ESC [ Z; ESC [ 1 ; m P
+  to S; ESC [ n ~ for n = 1 2 3 4 5 6 7 8 11 to 15 17 to 21 23 24, with ;m;
+  ESC [ [ A to E; ESC O A B C D H F; ESC O P to S; ESC O m P to S (m 2 to
+  8); Ctrl-Shift-Space as ESC [ 32 ; 6 u or ESC [ 27 ; 6 ; 32 ~; ESC and
+  one byte as Alt; UTF-8.
+  NOT read (dropped without a message, K_NONE, and the bytes that follow
+  may then arrive as typed characters; the probe of section 6.1 shows
+  which):
+    rxvt, rxvt-unicode  ESC [ 25 ~, 26 ~, 28 ~, 29 ~, 31 ~, 32 ~, 33 ~, 34 ~
+                        (Shift-F1 to Shift-F8 by the terminfo)
+                        ESC [ n ^ (Ctrl-F, rxvt) and ESC [ n $ (Shift
+                        keys: kf21 ESC [ 23 $, kHOM ESC [ 7 $, kEND ESC [
+                        8 $, kDC ESC [ 3 $, kPRV and kNXT ESC [ 5 $ and
+                        6 $)
+                        ESC [ a b c d (Shift cursor keys) and ESC O a b c
+                        d (Ctrl cursor keys)
+                        Ctrl-F and Alt-F: no sequence exists in
+                        rxvt-unicode (section 4)
+    gnome, gnome-256color  ESC O 1 ; m P to S (the terminfo of the type; a
+                        current VTE sends the xterm form instead)
+    any terminal        ESC [ 27 ; m ; code ~ and ESC [ code ; m u for any
+                        key except Ctrl-Shift-Space (tmux with extended-
+                        keys on or always when the program requests it, a
+                        terminal with the kitty protocol when the program
+                        asks for it: the Editor asks for neither, so this
+                        applies only if a terminal or tmux forces it)
+    xterm default       Alt-letter as the eighth-bit character: not an
+                        error but a different key (types the character)
+    ghostty             not decidable: the encodings are not in the fetched
+                        documents and the terminfo is not installed here
+  Read correctly by the documents: xterm, vte, konsole (since task 36), st,
+  foot, kitty, alacritty, wezterm, tmux and screen forms of section 4
+  (screen and linux have fewer keys, see section 4).
+
+  6.1 The probe: section 10.
+
+
+7. SOURCES
+----------
+  xterm      https://invisible-island.net/xterm/manpage/xterm.html (the
+             resources, read in the chunks 100000 to 400000 of the page);
+             https://invisible-island.net/xterm/ctlseqs/ctlseqs.html (PC-
+             Style Function Keys, Alt and Meta Keys); the installed manual
+             xterm(1) of XTerm(398), section Default Key Bindings
+  rxvt-unicode  https://man.archlinux.org/man/urxvt.1
+  VTE        https://raw.githubusercontent.com/GNOME/vte/master/src/
+             keymap.cc
+  GNOME Terminal  https://help.gnome.org/users/gnome-terminal/stable/adv-
+             keyboard-shortcuts.html; the installed schema /usr/share/glib-
+             2.0/schemas/org.gnome.Terminal.gschema.xml (3.56.2-2)
+  Xfce Terminal   https://docs.xfce.org/apps/xfce4-terminal/preferences
+  Terminator https://man.archlinux.org/man/terminator_config.5.en
+  Tilix      https://raw.githubusercontent.com/gnunn1/tilix/master/data/
+             gsettings/com.gexperts.Tilix.gschema.xml
+  Konsole    https://invent.kde.org/utilities/konsole/-/raw/master/data/
+             keyboard-layouts/default.keytab
+  st         https://git.suckless.org/st/file/config.def.h.html
+  kitty      https://sw.kovidgoyal.net/kitty/keyboard-protocol/ ;
+             https://sw.kovidgoyal.net/kitty/overview/ ;
+             https://sw.kovidgoyal.net/kitty/conf/
+  Alacritty  https://raw.githubusercontent.com/alacritty/alacritty/master/
+             extra/man/alacritty-bindings.5.scd
+  WezTerm    https://wezterm.org/config/default-keys.html ;
+             https://wezterm.org/config/keyboard-concepts.html ;
+             https://wezterm.org/config/key-encoding.html
+  foot       https://codeberg.org/dnkl/foot/raw/branch/master/doc/
+             foot.ini.5.scd
+  Ghostty    https://ghostty.org/docs/config/keybind ;
+             https://ghostty.org/docs/config/reference ;
+             https://tip.ghostty.org/docs/config/keybind/reference ;
+             https://man.archlinux.org/man/ghostty.1
+  Linux console  https://man7.org/linux/man-pages/man4/console_codes.4.html
+  tmux       https://man7.org/linux/man-pages/man1/tmux.1.html; the
+             installed manual tmux(1) 3.5a; a private tmux server
+  GNU screen https://www.gnu.org/software/screen/manual/screen.html
+  Windows Terminal  https://learn.microsoft.com/en-us/windows/terminal/
+             customize-settings/actions
+  terminfo   infocmp -1 -x of ncurses 6.5.20250216 on this machine
+  Earlier studies in this repository: docs/TERMINALS.txt, docs/KEYS-
+             ENVIRONMENTS.txt, docs/KEYSTROKES.txt
+
+
+8. NOT FOUND, NOT FETCHED, NOT VERIFIED
+---------------------------------------
+  - The documents of classic rxvt (only its terminfo entry was read); the
+    function key sequences of rxvt-unicode are not in its man page.
+  - GNOME Console (kgx), MATE Terminal and LXTerminal: no document with
+    shortcuts or key encodings was found.  The GNOME Console help URL gave
+    a 404.
+  - Tilix's and Terminator's documents (their manual pages) were not
+    available at the addresses tried; the Tilix schema and the Terminator
+    man page were used instead.
+  - Ghostty: the default keybindings (the documents send the reader to the
+    command "ghostty +list-keybinds --default"), the encodings, the Alt
+    handling and the xterm-ghostty terminfo.
+  - kitty: the default terminal name (xterm-kitty) was not read from a
+    document; the terminfo entry xterm-kitty is not installed here.
+  - How Alt-letter is sent by st, foot, Alacritty, WezTerm, Ghostty,
+    Konsole, GNOME Terminal (VTE was read from the source and probed in
+    xfce4-terminal only) and Windows Terminal.
+  - GNU screen: bindkey, input translation, maptimeout, Meta; the
+    manual's later parts (the page was fetched in the first 100000
+    characters only).
+  - xterm: the part of the manual after character 400000 (the actions
+    list) was not read; the installed manual was used for the default
+    bindings.
+  - Not run: live key probes of the terminals that are not installed
+    (rxvt, urxvt, konsole, st, foot, kitty, alacritty, wezterm, ghostty)
+    and of gnome-terminal (it needs a session bus).  The packages cannot be
+    installed here.
+  - Web pages were read through a summariser; the quotations are as the
+    summaries gave them and were not compared with the pages character by
+    character.
+
+
+9. OPEN QUESTIONS
+-----------------
+  Q1.  Is it enough that the Editor reads the xterm and Konsole forms?  The
+       rxvt family (the last of them urxvt, still shipped by distributions)
+       sends different codes for Shift-F1 to F8 and the cursor keys; reading
+       them is worklist item W47 (not started, as you answered).
+  Q2.  The Editor's Alt-1 to Alt-9 (outline levels) are taken by GNOME
+       Terminal and Tilix, and the Editor's Ctrl-Shift keys by urxvt
+       (hexadecimal input) and by every terminal with Ctrl-Shift shortcuts.
+       Should the manual's key appendix (W29.4) list them with the switch
+       that turns each off (section 5)?
+  Q3.  Should a live probe of Ghostty (the terminal the owner doubts) wait
+       until a machine with it is available?  Its documents do not give the
+       defaults.
+
+
+10. THE PROBE OF THE TERMINFO SEQUENCES AGAINST THE EDITOR
+---------------------------------------------------------
+  Method.  tools/keyprobe.py terminfo, in a copy with a longer list of
+  terminal types (xterm-256color, screen, tmux-256color, rxvt,
+  rxvt-unicode-256color, st-256color, kitty, alacritty, foot, wezterm,
+  konsole, gnome-256color, vte-256color and linux) and the path of this
+  tree set; the copy was kept outside the repository.  Each key sequence of
+  each terminfo entry was given to the terminal version of the Editor (the
+  debug build of this tree, which has the Konsole form) in a pseudo
+  terminal, and the screen was compared with the screen after the key that
+  the sequence stands for.  "ignored" means the screen did not change (the
+  sequence was dropped, or it is a key that changes nothing on the one
+  line probe document); "other" means the screen changed in a way that
+  matches no key: stray characters were typed.  It never installs
+  anything and its output stayed in the scratch folder.
+  Result, per terminal type (the number of capabilities probed, and the
+  number that typed stray characters):
+    xterm-256color, tmux-256color, vte-256color, st-256color, kitty,
+    alacritty, foot, wezterm, konsole, screen, linux:  0 stray.
+    gnome-256color:           19 stray: ESC O 1 ; m P to S for the modifiers
+                              2, 3, 4, 5 and 6 (kf13 to kf16, kf25 to kf28,
+                              kf37 to kf40, kf49 to kf52, kf61 to kf63).  The
+                              Editor reads ESC O 1 as a key and types ;mP.
+    rxvt:                     24 stray: the Ctrl forms ESC [ n ^ (kf23 to
+                              kf42, kHOM5, kEND5, kNXT5, kPRV5).  The forms
+                              with $ and @ at the end (the Shift and
+                              Ctrl+Shift forms, kHOM, kEND, kf21, kf22 and
+                              so on) and ESC [ 25 ~ ... 34 ~ (kf13 to
+                              kf20) were ignored: not read.
+    rxvt-unicode-256color:     5 stray: kHOM5, kEND5, kNXT5, kPRV5 and
+                              kFND5 (all ESC [ n ^); ESC [ 25 ~ ...
+                              34 ~ (kf13 to kf20), ESC [ a b c d and ESC O
+                              a b c d (Shift and Ctrl cursor keys) and the
+                              $ and @ forms were ignored.
+  konsole: the Ctrl and Alt forms ESC O 5 P to S and ESC O 3 P to S are read
+    as C-F1 to C-F4 and A-F1 to A-F4 (the form added by task 36); ESC O 2 P
+    to S (Shift-F1 to F4) change nothing on the probe document: no stray
+    characters.
+  The live terminals xterm, xfce4-terminal and tmux were probed before
+  (docs/KEYS-ENVIRONMENTS.txt 4.1); this probe adds the types the machine
+  does not have as programs.  A terminfo entry says what a terminal type
+  should send; it is not proof of what the program sends (the earlier
+  study found that xfce4-terminal sends the xterm form where its entry
+  gnome gives ESC O 1 ; m P).

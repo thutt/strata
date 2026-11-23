@@ -1,0 +1,25 @@
+
+--------------------------------- Line Weight ----------------------------------
+
+Use the Line Weight prompt on the Menu (F10) Global Options panel to specify
+the line weight to use for borders or other types of lines.
+
+
+# Enter a number from 1 to 1000 representing the line weight you want as a
+  percent of the default line weight.  The default line weight depends on 
+  the printer you are using.
+
+
+# The line weight settings are saved as part of the document's global settings.
+
+
+# The Other setting is used for winding column vertical rules and lines
+  created by the Line marker when you do not specify a string.  If you
+  specify weight as an optional argument for the Line marker, the line will
+  not print heavier than the size of the font preceding the Line marker. 
+  If you want a very heavy line, place the marker in its own block and 
+  assign a font with a large size to that block.
+
+--------------------------------------------------------------------------------
+     Options          Borders           Winding Columns           Line Marker
+                 Keyboard Summary                    Help Index

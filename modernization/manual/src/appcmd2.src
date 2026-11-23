@@ -1,0 +1,209 @@
+# Appendix A, part 3: environment, other programs, files.
+.h2 Environment variables [appcmd-env]
+.ix Environment variables
+.ix Environment variables, list
+These are the environment variables that Strata reads and that a person may
+set.  One that is set and empty counts as not set, except where noted.
+.h3 Environment variables of Strata [appcmd-env-strata]
+.ix STRATA_HOME
+.ix STRATA_SPELL
+.ix STRATA_THESAURUS
+.ix STRATA_TEMPLATES
+.ix STRATA_HELP
+.ix STRATA_COLORS
+.ix STRATA_DEFAULT_COLORS
+.ix STRATA_ASCII
+.table 17 12 30
+Name | Read by | Effect
+{c:STRATA_HELP} | Document Manager, Editor | The help file, used after the option
+ | | {c:-H} ({n:str-help-search}).
+{c:STRATA_COLORS} | Terminal version | The number of colors of the terminal: none, 16,
+ | | 256 or truecolor.  It replaces what {c:TERM} and {c:COLORTERM} say
+ | | ({n:appterm-colour}).
+{c:STRATA_DEFAULT_COLORS} | Document Manager, Editor | When set to anything but
+ | | empty or 0, the colors that the program is delivered with replace those
+ | | of the settings.  The option {c:--default-colors} does the same.
+{c:STRATA_ASCII} | Terminal version | 1 draws the screen with ASCII characters,
+ | | 0 with UTF-8, whatever the terminal reports ({n:appterm-charset}).
+{c:STRATA_HOME} | Document Manager, Editor | The directory of the settings, instead
+ | | of .strata in the home directory.  When it is set, the older settings
+ | | file is not read ({n:appcfg}).
+{c:STRATA_SPELL} | Editor | The program of the spell check (a full path, or a name
+ | | looked up in the fixed system directories), instead of {c:aspell} and then
+ | | {c:hunspell}.
+{c:STRATA_THESAURUS} | Editor | The directory (or the file) of the thesaurus,
+ | | instead of the system directory of the thesaurus data.
+{c:STRATA_TEMPLATES} | Editor | A directory searched for a template named in
+ | | File, New, after the Working Directory, before the
+ | | directory of the program ({n:appcfg-search-templates}).
+.end
+.if .STRATA_BUILD_TYPE # release
+.ix STRATA_LP
+.ix STRATA_LPSTAT
+.ix SOURCE_DATE_EPOCH
+.ix STRATA_CTAN_URL
+For developers: these environment variables are read as well.
+.rows 20 14 36
+{c:STRATA_LP} | Editor | The program that sends a PDF to the printer, instead
+ | | of {c:lp} ({n:print-sending}).
+{c:STRATA_LPSTAT} | Editor | The program that lists the queues, instead of {c:lpstat}.
+{c:STRATA_CTAN_URL} | Document Manager | The base address of the font archives,
+ | | instead of https://mirrors.ctan.org/install/fonts, for Install Now in
+ | | the TeX Font Association (the archive is NAME.tds.zip).
+{c:SOURCE_DATE_EPOCH} | Printer | A number of seconds since 1 January 1970.  The
+ | | exported LaTeX source names the day of that moment, in UTC, in its first
+ | | comment instead of the day of the run ({n:file-export-latex}).
+{c:STRATA_LPINFO} | Editor | The program that searches for printers, instead of
+ | | {c:lpinfo}, for Search for printers ({n:print-sending}).
+{c:STRATA_PROGRAM_DIRS} | all programs | A list of absolute directories, separated by
+ | | colons, that is searched for the programs before the system
+ | | directories.
+{c:STRATA_LPSTAT_REFRESH_MS} | Editor | The time in milliseconds between two reads of
+ | | the list of queues while the Print panel is open.
+{c:STRATA_X11_DUMP} | X11 version | A file to which the text of the screen is written
+ | | after every draw (used by the tests).
+{c:STRATA_SCROLL_LOG} | Editor | A file to which each scroll of the text is appended
+ | | (used by the tests).
+.end
+.endif
+.h3 Environment variables of the system [appcmd-env-system]
+.ix HOME
+.ix XDG_CONFIG_HOME
+.ix XDG_CACHE_HOME
+.ix TMPDIR
+.ix PATH
+.ix DISPLAY
+.ix WAYLAND_DISPLAY
+.ix USER
+.ix TERM
+.ix COLORTERM
+.ix LC_ALL
+.table 15 12 32
+Name | Read by | Effect
+{c:HOME} | Document Manager, Editor | The home directory.  If it is empty the home
+ | | directory that the system has for the user is used.  The
+ | | settings are in the directory .strata of it, and the cache of the
+ | | equations is in .cache/strata.
+{c:XDG_CONFIG_HOME} | Document Manager, Editor | Where the older settings file is
+ | | looked for (default .config in the home directory); read only to
+ | | take settings over when the file config is missing
+ | | ({n:appcfg-legacy}).
+{c:XDG_CACHE_HOME} | Editor | The directory for the cache of the pictures made
+ | | for equations and pictures of the screen (the value must be an
+ | | absolute path); the default is .cache in the home directory.
+{c:TMPDIR} | Printer, Editor, Document Manager | The directory where the
+ | | programs make the files that they need while they work, instead
+ | | of the system directory for such files.
+{c:PATH} | none | Not read.  The programs of the system are looked for in fixed
+ | | directories and never in {c:PATH} ({n:appcmd-find}).  A program that the
+ | | Printer starts gets a {c:PATH} of its own: its directory and the system
+ | | directories.
+{c:DISPLAY} | X11 version, Editor | The X server of the X11 programs.  Preview
+ | | checks that it or {c:WAYLAND_DISPLAY} is set when it starts the
+ | | Viewer.  The terminal version does not use it.
+{c:WAYLAND_DISPLAY} | Editor | Counts as a display for Preview, as {c:DISPLAY}
+ | | does.
+{c:USER} | Editor | The author name of a new Comment marker.
+{c:TERM} | Terminal version | The kind of the terminal: the number of colors and
+ | | the test for a multiplexer ({n:appterm-term}).
+{c:COLORTERM} | Terminal version | truecolor or 24bit means that the terminal
+ | | shows every color ({n:appterm-colour}).
+{c:LC_ALL}, {c:LC_CTYPE}, {c:LANG} | Terminal version | The name of the locale, the first
+ | | that is set.  In a multiplexer a name with UTF-8 selects UTF-8
+ | | characters ({n:appterm-charset}).
+.end
+.if .STRATA_BUILD_TYPE # release
+.h3 Environment variables of the X11 window [appcmd-env-x11]
+.ix STRATA_X11_XFT
+.ix STRATA_X11_SIZE
+.ix STRATA_X11_FONT
+.ix STRATA_X11_GEOM
+These are read by the X11 version of the Document Manager and of the Editor
+only; the terminal version ignores them.  They are described in {n:appx11}.
+.table 20 40
+Name | Effect
+{c:STRATA_X11_XFT} | 0 turns the outline fonts off; unset, empty or 1 uses
+ | "DejaVu Sans Mono"; any other value is the family name.
+{c:STRATA_X11_SIZE} | The pixel size of the font (default 16 with Xft, 15 with
+ | the bitmap fonts; values under 8 give 16 with Xft).
+{c:STRATA_X11_FONT} | An X font name for the bitmap font (normal; the bold is
+ | made by changing "medium" to "bold" in the name).
+{c:STRATA_X11_GEOM} | COLSxROWS, the size of the window in cells (default
+ | 80x50; the least is 20 columns and 20 rows).
+.end
+.endif
+.h2 Programs that Strata runs [appcmd-external]
+.ix External programs
+.ix TeX installation
+.ix Prerequisites
+Several features need programs that are not part of Strata.  They are all
+looked for in fixed directories of the system and never in {c:PATH}
+({n:appcmd-find}).  A
+missing program disables only the feature that needs it; the Editor,
+the Document Manager and the text output work with none of them.
+.table 13 18 27
+Program | Used by | For
+{c:pdflatex} | Printer, Editor | The PDF; the pictures, keycaps and LaTeX markers of
+ | | the screen.
+{c:latex} | Printer, Editor | The pages of a Preview; the equations.
+{c:dvipdfmx} | Printer | A second way to make the PDF.
+{c:gs} | Printer | Converting a PDF or EPS picture.
+{c:extractbb} | Printer | The size of a picture for a Preview.
+{c:kpsewhich} | Editor, Viewer, Document Manager | TeX files, fonts, the font
+ | | directory, the test for an installed font.
+{c:dvipng} | Editor | The images of equations on the screen.
+{c:pdftoppm} | Editor | The images of pictures, keycaps and LaTeX markers on the
+ | | screen.
+{c:pdfinfo} | Viewer | The size of a PDF picture.
+{c:lp} | Editor | Sending the PDF to the printer.
+{c:lpstat} | Editor | The list of queues.
+{c:aspell}, {c:hunspell} | Editor | The spell check (the first that is found).
+{c:curl} | Document Manager | Downloading a font archive.
+{c:unzip} | Document Manager | Unpacking it.
+{c:mktexlsr} | Document Manager | Updating the TeX file lists after the install.
+{c:updmap-user} | Document Manager | Enabling the map file of an installed font.
+.end
+The equation images are made only when both {c:latex} and {c:dvipng} are in
+the system directories, and
+the pictures, keycaps and LaTeX markers only when {c:pdflatex} and
+{c:pdftoppm} are; otherwise these markers are shown in their Short form on the
+screen ({n:markers-screen}, {n:equations}).
+.h3 Where each program is looked for [appcmd-find]
+.ix Search for programs
+.ix Program search order
+.table 15 45
+Looking for | Order of the search
+The Editor (by the Document Manager) | The setting of the Editor program;
+ | the Editor in the directory of the Document Manager; the Editor in the
+ | system directories.  See {x:str-find-editor}.
+The Printer, the Viewer | (by the Editor) The file of that name in the
+ | directory of the Editor; otherwise the system directories.
+The TeX engines, {c:gs}, {c:lp} and the others | The system directories.
+The system directories | {c:/usr/bin}, {c:/bin}, {c:/usr/local/bin}, {c:/usr/sbin},
+ | and the directories {c:/usr/local/texlive/YEAR/bin/SYSTEM} of a TeX Live
+ | installation, the newest year first.  A program is started only if its
+ | file is not writable by its group or by others, belongs to you or to
+ | root, and is in a directory that others cannot write to.
+Templates | The Working Directory; the environment variable
+ | {c:STRATA_TEMPLATES}; the directory of the program.
+.end
+.h2 Files [appcmd-files]
+.ix Files used by the programs
+.ix Cache directory
+.table 13 47
+File | Use
+config | In the settings directory.  The settings (read at start by the
+ | Document Manager and the Editor; written by Setup and by the Options
+ | panel).
+fonts | In the settings directory.  The list of fonts for printing (TeX Font
+ | Association).
+dictionary | In the settings directory.  The personal word list of the spell
+ | check ({n:spell}).
+The cache | The directory strata under the cache directory of the user (see
+ | {c:XDG_CACHE_HOME}): images of equations and pictures.
+{c:DOCUMENT.doc} | The document.  Autosave saves a changed document to its own
+ | file at the interval of the settings; it needs a file name.
+.end
+The settings directory and its files are made for the owner only and are
+used only if they belong to the user who runs the program.  The complete
+list and the format are in {n:appcfg}.

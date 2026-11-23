@@ -1,0 +1,25 @@
+
+------------------------------------ Libraries ---------------------------------
+
+
+Libraries are named, permanent cut buffers from which you can paste information
+into a document at any time.  Libraries are especially useful for saving text, 
+format settings, column and table layouts, and borders.
+
+
+
+# Lib Copy (Ctrl F3) copies information from the document to a library entry.
+# Lib Cut (Ctrl F4) cuts information from the document to a library entry.
+# Lib Paste (Ctrl F5) pastes a library entry into a document.
+
+
+
+Use the Menu (F10) Tools Library Edit command to edit existing library entries.
+Note: Unlike named blocks, a change made to a library entry will not be 
+reflected in the existing occurrences of that library entry in a document.
+
+
+
+--------------------------------------------------------------------------------
+   Lib Copy     Lib Cut       Lib Paste     Library Edit       Named Blocks
+                Keyboard Summary                               Help Index

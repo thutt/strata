@@ -1,0 +1,25 @@
+
+------------------------------------- Options ----------------------------------
+
+                                  +-------------------- Options ---------------+
+The Menu (F10) Global Options     | Expanded Status Line?                      |
+panel controls general character- | Display On-Screen Help?                    |
+istics of the screen display      |                                            |
+and file backup.                  | Block Indicators:                          |
+                                  |                                            |
+                                  | Display Tab & End-of-Line Characters?      |
+--Procedure---------------------  | Display Dots for Spaces?                   |
+                                  | Display Even Justification?                |
+ Press Menu.                     | Display +/- with Section Tags?             |
+ Select Global Options.          |                                            |
+ Select the settings to change   | Units:                                     |
+  and press Ins.                  |                                            |
+                                  | Maintain Backup File (.DOC only)?          |
+--------------------------------  | Autosave:                                  |
+                                  | Save Interval (Minutes):                   |
+                                  |                                            |
+                                  | Line Weight (Borders):                     |
+                                  |               (Other):                     |
+                                  +---- Press Ins to Use Displayed Settings ---+
+--------------------------------------------------------------------------------
+              Global          Keyboard Summary          Help Index

@@ -1,0 +1,98 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+A KEYCAP THAT CANNOT BE DRAWN IS DRAWN AS A MARKER
+===================================================
+
+Status: implemented in the X11 version of the Editor.  The terminal version
+does not draw pictures and is not changed.
+
+1. What the owner saw
+---------------------
+In the Reference Manual (owner copy of 21 November 2026) the passage that
+says that a key written with a capital letter after Ctrl- or Alt- is the same
+key whether or not Shift is down showed three keycaps as a gap the size of a
+keycap with nothing in it: Ctrl-s, the second Ctrl-S and the second F12.  The
+other keycaps of the page were drawn.  The owner's comment: a keycap that is
+not displayed because LaTeX returned an error must be drawn as a marker.
+
+2. The cause
+------------
+It was not LaTeX, the case of the legends, a race or a stopped job.  The cache
+folder held a picture (.png) for each of the 17 different legends of the
+passage and no .err file.  The Editor passes the pictures of a screen to the
+display in a list (tb_img of src/termbuf.c) that held 16 pictures; the 17th
+and later were dropped without a message, while their cells in the line had
+been reserved for them.  The passage has 19 keycaps on a screen, so the 17th
+to 19th (Ctrl-s, Ctrl-S, F12) were empty.  The same list of 16 stood in the
+copy of the last frame (last_img of src/term_x11.c) and in the list of the
+pictures given to the display in one drawing (eq_done of src/view.c).  The
+renderer (src/eqrender.c) also kept at most 128 different pictures: the 129th
+request returned no picture and no failure.
+
+Evidence: the owner passage with its comments, put in a document of its own
+and opened under Xvfb with an empty cache: before the fix 16 pictures drawn
+(the screenshot shows the gaps at Ctrl-s, Ctrl-S and F12), the dump of the
+screen has image cells at the gaps, the cache has 17 .png and no .err; after
+the fix 19 drawn.  Two keycaps whose legends differ only in case have two
+different cache names (the name is a hash of display, size, colors and the
+exact text) and two different pictures.
+
+3. The fix of the cause
+-----------------------
+The three lists grow as needed.  The table of the renderer holds up to 4096
+different pictures, each in a block of its own so that the address of one
+does not change when the table grows (the pictures that a frame holds point
+into it).
+
+4. The fallback
+---------------
+A job of the renderer can fail: LaTeX says an error, LaTeX is not installed,
+the job takes more than 5 seconds (every job has this limit, not only the
+LaTeX marker; it was 20 seconds), or the picture is refused.  The marker of an
+Equation (9), a Picture (25), a Keycap (37) or a LaTeX marker (41) whose
+display mode is Inline and whose picture failed is then drawn in its Short
+form, the rule of the owner of 21 November 2026 (marker_failed_fn of marker.h,
+used by marker_render): [Key: Ctrl-s], [PIC name], [EQN text], [LaTeX
+instructions].  It is never an empty box.  A marker that the rule table of
+LATEXMARKER-PICTURES.txt never draws as a picture is the Short form at once,
+with no job and no entry in the Error Log.  A Picture whose file cannot be
+used keeps the error label of picmissing; the other display modes (Diamond,
+Name, Short, Long, Hidden) ask for no picture and draw the marker by their
+mode as before.
+
+While the job runs, the line holds the cells that are reserved for the
+picture (a short time).  When the job ends, success or not, the Editor lays
+the text out again (the picture or the label may have another width): the
+label never overlaps its neighbours.
+
+The Error Log of the run gets one warning for each failed marker: "The Keycap
+in block B, line L cannot be drawn as a picture, so it is drawn as Short:
+FIRST LINE OF THE MESSAGE" (the same wording as the LaTeX marker of
+LATEXMARKER-PICTURES.txt, which reuses the same renderer).  When the cursor
+is on the marker the message line says "Keycap drawn as Short: ..." (or
+Picture, Equation).
+
+5. Tests
+--------
+tests/xfallback.py (xtest): 19 keycaps of the owner passage and 6 more (25 in
+all) on a screen are all pictures, with ink and no white pixel; Ctrl-s and
+Ctrl-S are two pictures; with a fake pdflatex and latex that exit 1 the three
+markers are drawn in the Short form, with ink, one log entry each and the
+message line; in the modes Diamond, Name, Short, Long and Hidden the marker is
+drawn by its mode and nothing is logged; a job of 30 seconds fails after 5.
+tests/keycapfall.py (smoke): the terminal Editor and the files of this
+document.  Every check was shown to fail with its feature turned off (the
+mutations are in the report of task 48).

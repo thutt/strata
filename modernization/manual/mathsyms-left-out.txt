@@ -1,0 +1,34 @@
+# Names that the packages define and that are not on the sheet, each with
+# the reason.  The check (checkmathsyms.py) fails for a name that is in
+# neither this file nor the list.
+#
+# Names of fonts from before the present ones: the sheet has what replaces
+# them.
+\Bbb | the old name of \mathbb
+\bold | the old name of \mathbf
+\frak | the old name of \mathfrak
+# Pieces that the packages use to build other symbols: they do nothing alone.
+\braceld | a piece of a large brace
+\bracelu | a piece of a large brace
+\bracerd | a piece of a large brace
+\braceru | a piece of a large brace
+\joinrel | joins two symbols (the long arrows are made with it)
+\mapstochar | the bar of \mapsto
+\math | an inner command of the packages
+\primfrac | an inner command of the packages
+\qopname | an inner command of the packages: it needs its arguments
+\tmspace | an inner command of the packages: it needs its arguments
+\varlim | an inner command of the packages: not defined for a user
+\MultiIntegral | an inner command of the packages: it needs its arguments
+# Commands for the text of a page, not for a formula.
+\downbracefill | fills a line in text, not in an equation
+\upbracefill | fills a line in text, not in an equation
+\leftarrowfill | fills a line in text, not in an equation
+\rightarrowfill | fills a line in text, not in an equation
+# Commands that are made for a displayed equation with numbers.
+\allowdisplaybreaks | for a page of displayed equations
+\displaybreak | for a page of displayed equations
+\numberwithin | numbers the equations of a document by section
+\eqref | refers to a numbered equation
+\shoveleft | moves a line of a displayed equation
+\shoveright | moves a line of a displayed equation

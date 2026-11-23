@@ -1,0 +1,574 @@
+# Chapter 1, part 2: the screen of the Editor and the panels.
+.h2 The screen [view-screen]
+.ix Screen of the Editor
+.ix Edit screen
+.ix Screen layout
+.ix Window layout
+The edit screen has the status line at the top, the ruler and the text area
+below it, and two optional parts: the expanded status line and the two rows
+of function key labels at the bottom.  The terminal version and the X11
+version show the same screen.  The table lists the rows from the top to the
+bottom.
+
+.table 17 43
+Row | What it holds
+Top row | The status line: the document, the attribute, the position, the
+ | section number, the mode.
+Second row | The expanded status line, when Expanded Status Line? is Yes;
+ | otherwise the ruler.
+Next row | The ruler.
+Middle rows | The text area.  Panels and menus open over it.
+Bottom two rows | The labels of the function keys, {k:F1} to {k:F12}, six in
+ | each row, when Display On-Screen Help? is Yes (the default).
+Bottom row | The message line.  It shares the place of the second row of
+ | key labels ({n:view-message}).
+.end
+
+.h3 The two versions of the screen [view-screen-kinds]
+.ix Terminal and X11, differences
+.ix Screen, terminal and X11
+.ix Screen size
+.ix Colors
+The terminal version fills the whole terminal: as many rows and columns as
+the terminal has (80 by 25 when the terminal reports no size).  The X11 version opens a
+window of 80 columns by 50 rows.  Both show the same screen, with the
+exceptions in this table.
+
+.table 18 20 20
+Feature | Terminal | X11
+Size | The terminal's own. | 80 by 50 characters; the
+ | A change of size is | window is as wide as the
+ | followed at once. | grid; its height may be
+ |  | changed and is kept, its
+ |  | width not.
+Width of the text | At most 80 characters, | At most 80 characters.
+ | at least 40. |
+Colors | Those of the terminal. | Fixed palette: grey
+ | Marker text is cyan. | text on black.
+Bold, italic, | Terminal attributes. | Bold and italic faces
+ | | with Xft; else tints.
+Underline | Terminal attribute. | A line below the cell.
+Cursor | The terminal's cursor. | An amber block.
+Equations | The label of the | Typeset pictures, if
+ | marker. | LaTeX is installed.
+Keycap markers | Reverse video text. | Boxes, or pictures.
+Labels of the keys | Always the plain | Follow Shift, Ctrl
+ | ones. | and Alt while held.
+Closing | {k:Ctrl-Q}. | The window close button
+ | | acts as {k:Ctrl-Q}.
+{k:Alt-F} keys, | Often kept back by | Arrive as they are.
+ | the terminal. |
+.end
+{n:appterm} and {n:appx11} describe the terminal version and the X11 version
+in full, in that order.  The rest of this chapter describes what both have in common, and
+points out the difference where there is one.
+
+.h3 The status line [view-status]
+.ix Status line
+.ix Status line, fields
+.ix Attr (status line)
+.ix Pos (status line)
+.ix Sect (status line)
+.ix OVR (status line)
+.ix Modified indicator
+.ix Asterisk, modified
+.ix Mode (status line)
+The top row of the screen is the status line, drawn in reverse video.  From
+the left it holds the following fields.
+
+.table 12 48
+Field | Meaning
+Name | The name of the document file, without its directory, in 12 characters.
+ | A document that has not been saved under a name shows {c:(new)}.
+ | An asterisk {c:*} just before the name means that the document has been
+ | changed since it was last saved or loaded.  The asterisk goes out when
+ | the document is saved.
+{c:Attr:} | The attribute of the character under the cursor: {c:Normal},
+ | {c:Bold}, {c:Italic}, {c:Under}, {c:Super}, {c:Sub}, a combination such
+ | as {c:Bold Italic}, or {c:Special} for something else, such as a marker.
+{c:Pos:} | The position of the cursor in its column, counted in characters
+ | from the left edge of the column, starting at 1.  In a headline the tag
+ | ({c:2.1 }) counts: at the start of the text of the headline of
+ | section 1 the position is 3, not 1.
+{c:Sect:} | The number of the section that holds the cursor ({c:2.1.2}).
+ | Only in a structured document; an unstructured document has no
+ | such field.
+{c:OVR} | Shown while Overtype is on ({k:Alt-O} or {k:Alt-F5}).
+Mode | At the right end: the kind of editing.
+.end
+
+The mode field shows the kind of editing:
+
+.table 22 38
+Mode | When
+{c:STRUCTURED EDIT} | A structured document is open.
+{c:UNSTRUCTURED EDIT} | An unstructured document is open.
+{c:SECTION EDIT} | Edit, Section: one section is shown.
+{c:TITLE PAGE EDIT} | The title page is being edited (Edit, Title).
+{c:EQUATION EDIT} | The text of an Equation marker is being edited.
+{c:NOTE EDIT} and the like | The text of a Note, a Comment or another
+ | marker that holds blocks is being edited; the word before EDIT
+ | is the title of the box.
+.end
+
+.note The field Attr shows {c:Special} on a marker.  The fonts are chosen
+  when the document is printed, so the status lines show none.
+
+.h3 The expanded status line [view-expanded]
+.ix Expanded status line
+.ix Expanded Status Line?
+.ix Just (status line)
+.ix Indent (status line)
+.ix Headline (status line)
+The second row is the expanded status line, drawn in reverse video like the
+first, when the option Expanded Status Line? is Yes ({k:F12}, Global, Options;
+the default is No).  It describes the format of the block under the
+cursor, whatever its source.  From the left:
+
+.table 12 48
+Field | Meaning
+{c:Just:} | The justification of the block: Left, Right, Center or Even.
+{c:Indent:} | Which lines of the block are indented: None, First, All but
+ | First or All.
+{c:L:} | The left block indent, in characters.
+{c:Headline} | Shown when the block is the headline of a section.
+.end
+
+.pic pictures/view-expanded.png 5.4 The expanded status line and the key labels.
+
+.h3 The ruler [view-ruler]
+.ix Ruler
+.ix Ruler, tab stops
+.ix Tab stops, ruler
+.ix Block indent, ruler
+.ix Left block indent
+.ix Tab types
+The ruler is the row under the status line (under the expanded status line,
+when that is on).  It shows, for the block that holds the cursor, where the
+text starts and where the tabs are.  It is drawn at the width of the
+screen; the position of the left edge of the block is the zero of the ruler,
+so that the marks stand over the cells of the text that they refer to.
+
+.table 10 50
+Mark | Meaning
+{c:.} (dim) | An ordinary cell.  A row of them is the baseline of the ruler.
+A square | The left block indent (the setting L): one square for each
+ | character of the indent.  There is none when the indent is 0.
+{c:>} (a right triangle) | A left tab stop.  The same mark stands for a tab
+ | of an unknown type.
+A left triangle | A right tab stop.
+{c:^} | A center tab stop.
+{c:.} (bold) | A decimal tab stop.
+{c:,} | A comma tab stop.
+{c:#} | A number tab stop.
+.end
+
+A document that has no tabs of its own has the default one: a left tab
+every five characters.  The ruler changes as the cursor moves from block to
+block, and as the format of the block is changed ({k:F6}, {k:Ctrl-H}).
+
+.h3 The text area [view-screen-text]
+.ix Text area
+.ix Block indicator
+.ix Section indicator
+.ix End of line mark
+.ix Tab mark
+.ix Dots for spaces
+.ix Display Tab & End-of-Line Characters?
+.ix Display Dots for Spaces?
+.ix Marker, appearance on screen
+The text area shows and edits the document.  The Editor wraps the lines,
+sets the tabs, justifies and lays out the columns, and shows as much of the
+result as fits.  The area scrolls when the cursor leaves it at the top or at
+the bottom, so that the cursor is always in view.
+
+The marks of the elements are these:
+
+.table 19 41
+On the screen | Meaning
+A single line | The border between two blocks.
+A double line | The border above a headline: between two sections.
+A dotted vertical line | The border between two columns of a block.
+A shift of 3 characters | One level of depth in a structured document: the
+ | blocks of a section are shifted 3 characters to the right of the
+ | blocks of the section above it, for each level.
+A left triangle | The end of a line, made with {k:Enter}.
+A right triangle | A tab.  The text that follows starts at the tab stop.
+A dot for each space | If Display Dots for Spaces? is Yes.
+{c:[ ... ]} in cyan | A marker, drawn as its name and value, such as
+ | {c:[WS 0.3 in]}.  By default a note is drawn as {c:[NOTE]}.
+Reverse video | The highlighted text, column, block or section, and the
+ | keycap markers in a terminal.
+Bold and italic text | Text with that attribute.  A headline is bold.
+.end
+
+The two options that control the marks are on the Options panel of the
+Global menu: Display Tab & End-of-Line Characters? (Yes by default) and
+Display Dots for Spaces? (No by default).  Both are saved in the file
+{c:~/.strata/config} with the other options of the Editor.  The way that
+each kind of marker is shown, as a name, as a value, as a diamond, or not at
+all, is set by the Marker Display Modes of the Global, Marker panel (see
+{n:format} and {n:markers}).
+
+.pic pictures/view-keycap.png 5.4 Markers in the text (X11 version).
+The picture shows keycaps drawn as boxes, equations in the line of text, a
+note as {c:[NOTE]}, a cross-reference in color and a whitespace marker in
+brackets.
+
+
+.h4 A terminal screen, as text [view-term-screen]
+The terminal version draws the same kind of screen (the text of the
+screen, 25 rows):
+
+.code
+ report.doc   Attr: Normal       Pos: 3   Sect: 1              STRUCTURED EDIT
+................................................................................
+1 Quarterly report<
+--------------------------------------------------------------------------------
+This report describes the work of the third quarter and the plan for the
+fourth.  It is divided into three parts, and each part into short sections so
+that a reader can see the shape of the whole by looking at the headlines.<
+================================================================================
+2 Results<
+--------------------------------------------------------------------------------
+The quarter ended with all the main goals met.  The details follow.<
+   =============================================================================
+   2.1 Sales<
+   -----------------------------------------------------------------------------
+F1: Help     F3: Copy      F5: Paste      F7: Move       F9: Search  F11:
+F2: Split    F4: Cut       F6: Format     F8: Table      F10:        F12: Menu
+.end
+The less-than sign at the end of the lines stands for the triangle that
+marks an end of line, and the rows of minus signs and equal signs for the
+single and double lines.
+
+.h3 The labels of the function keys [view-keylabels]
+.ix Function key labels
+.ix Display On-Screen Help?
+.ix On-screen help
+.ix Key labels
+.ix Modifier keys, labels
+When Display On-Screen Help? is Yes (the default) the two bottom rows show
+the labels of the twelve function keys, drawn in reverse video:
+{k:F1}, {k:F3}, {k:F5}, {k:F7}, {k:F9} and {k:F11} on the first row, and
+{k:F2}, {k:F4}, {k:F6}, {k:F8}, {k:F10} and {k:F12} on the second.  Each
+entry is the name of the key and its label, for example {c:F3: Copy}.  A key
+that has no command has an empty label: {k:F10} and {k:F11} alone and with
+{k:Alt}, and every key while {k:Shift} is held.  Every entry has the same place in all
+the modes, and two entries are never joined: at least one blank lies between
+the end of an entry and the start of the next.  In a terminal that is
+narrower than 80 columns the rows are cut at the right edge and the last
+entries are lost; they never wrap to the next row.
+
+.table 10 14 16 16
+Key | None | Ctrl | Alt
+{k:F1} | Help | Learn |
+{k:F2} | Split | Math | Append
+{k:F3} | Copy | Lib Copy | Join
+{k:F4} | Cut | Lib Cut | Delete
+{k:F5} | Paste | Lib Paste | Overtype
+{k:F6} | Format | Case | Set Attr
+{k:F7} | Move | Prev Error | Go To
+{k:F8} | Table | Next Error | Border
+{k:F9} | Search | Again | Replace
+{k:F10} |  | Undo |
+{k:F11} |  | Redo |
+{k:F12} | Menu | Marker | Marker
+.end
+
+In the X11 version the labels change while a modifier key is held: while
+{k:Alt} is down they show the Alt column, while {k:Ctrl} is down the Ctrl
+column, and while {k:Shift} is down empty labels, because no key has a command
+with Shift.  When several are held Alt wins over Ctrl, and Ctrl over Shift.  They go back to the
+plain labels when the key is released.  A terminal does not report a modifier
+key alone, so the plain labels are always shown.
+
+.h3 The message line [view-message]
+.ix Message line
+.ix Messages, on screen
+.ix Error message, line
+The bottom row of the screen reports what was done, and what was refused.  The message is shown in bold, in reverse video.  It replaces
+the second row of the key labels (when the labels are on) or appears on a row
+of its own (when they are off).  A message stays until the next key is
+pressed.  Examples are {c:Overtype on}, {c:Cancelled},
+{c:Found}, {c:Not found: abc}, {c:3 replacements}, {c:Hanging indent set at
+4}, {c:Only a structured document has sections}, and the text that asks for a
+highlighted area: {c:Highlight the area with the cursor keys, then press
+Enter (Esc cancels)}.  {X:messages} lists the messages of all the programs
+with their meaning.
+
+An error that must be read before work continues (a file that cannot be
+written, a marker that is not valid) is shown in a box in the middle of the
+screen, headed with the name of the command.  The box waits for a key; the
+message {c:Press any key} is at its foot.
+
+.h3 The cursor [view-cursor]
+.ix Cursor
+.ix Cursor, shape
+The cursor is a block (the terminal's cursor in the terminal version, an
+amber block in the X11 version).  While a menu or a box is open the Editor
+hides it.  On a picture (an equation, a keycap) the X11 version draws a
+frame around the picture.
+
+.h2 Panels, menus and prompts [view-panels]
+.ix Panels
+.ix Prompts
+.ix Menus, pop-up
+.ix Boxes
+.ix Dialog boxes
+Strata uses a few kinds of box, drawn over the text, with the same keys in
+all of them.  Every box has a border and a title; most have a line at the
+foot that names the keys that leave it.  {k:Esc} cancels (the command does
+nothing) and the key named at the foot accepts.  A box that is opened from
+another box returns to it when it closes.
+
+.table 15 45
+Kind | Where it is used
+List of choices | The unit menu of Copy, Cut, Move and Delete, the Append,
+ | Split and Join menus, the Set Attributes menu, the Go To menu, and
+ | every list of names.
+Prompt | A line of text: Search, Replace, a file name, a section number.
+Panel | A form of fields: the panels of File, Global, Print and Marker.
+Grid of commands | The Marker Commands menu (Alt-F12).
+Checklist | The names of files, directories or choices of a field.
+Message box | An error or a notice, until a key is pressed.
+Question | A list of Yes and No, or of ways to go on.
+Pager | A scrolling text: the screen of a long result.
+Help | The Help ({k:F1}).
+.end
+
+.h3 Lists of choices [view-list]
+.ix List of choices
+.ix Choice list
+.ix First letter, selecting
+A list of choices is a box with one name on each line.  The highlighted line
+is drawn in reverse video.  The keys:
+
+.table 13 47
+Key | Effect
+{k:Up}, {k:Down} | Move the highlight one line.  It does not wrap.
+{k:Home}, {k:End} | The first, the last entry.
+{k:PgUp}, {k:PgDn} | One page of entries up or down, when the list is longer
+ | than the box.
+{k:Enter} | Choose the highlighted entry.
+{k:Esc} | Cancel; no entry is chosen.
+A letter | Move to the next entry that begins with that letter, and in a
+ | list of twelve entries or fewer choose it at once.  In a longer list
+ | the highlight only moves, and {k:Enter} chooses.
+.end
+The list scrolls when it is taller than the screen allows; the box is
+never wider than the screen minus two cells.  The entry that was chosen the
+last time is highlighted again in lists that remember it (Append and Split
+start on their second entry).
+
+.h3 Prompts [view-prompt]
+.ix Prompt
+.ix Input line
+.ix Field, text
+A prompt is a box with a label, a line for the answer and the reminder
+{c:Enter accepts, Esc cancels}.  The line starts with the old answer
+(the last search string, say) shown in reverse video.  The first character
+that you type replaces all of it; to change the old answer instead, press
+{k:Left}, {k:Right}, {k:Home} or {k:End} first, and the highlight goes off.
+
+.table 13 47
+Key | Effect
+Printing key | Insert the character at the cursor (replace the old answer
+ | when it is still highlighted).
+{k:Left}, {k:Right} | Move the cursor along the answer.
+{k:Home}, {k:End} | The start, the end of the answer.
+{k:Backspace} | Delete the character before the cursor, or the whole old
+ | answer when it is still highlighted.
+{k:Del} | Delete the character at the cursor.
+{k:Enter} | Accept the answer.
+{k:Esc} | Cancel the prompt.
+.end
+
+.h3 Panels [view-form]
+.ix Panel
+.ix Panel, fields
+.ix Field
+.ix Yes/No field
+.ix Choice field
+.ix Ins accepts
+.ix Ins (accept a panel)
+.ix Checklist
+.ix Keypad + (list of choices)
+.ix Space (toggle a choice)
+.ix Information field
+A panel is a box of fields, one to a line, each with its label on the left
+and its value on the right.  The label is in bold, followed by a colon.
+The field that has the focus is drawn in reverse video.  A panel has the
+reminder {c:Ins accepts, Esc cancels} (a panel that is one of several has
+{c:PgUp/PgDn panels} as well).  There are three kinds of field:
+
+.table 13 47
+Kind | What it is
+Text | A line of text.  An empty text field is drawn as a row of dots.
+Choice | One entry of a short list, drawn in square brackets:
+ | {c:[Yes]}.  Changed with {k:Space} (the next entry), {k:Left} and
+ | {k:Right} (the previous, the next), or from a list.
+Information | A value that is shown and cannot be changed.  It is skipped
+ | when you move.
+.end
+
+.h4 The keys of a panel [view-form-keys]
+.table 19 41
+Key | Effect
+{k:Up}, {k:Shift-Tab} | Go to the previous field.
+{k:Down}, {k:Tab}, {k:Enter} | Go to the next field.  Enter does not accept
+ | the panel.
+{k:Ins} | Accept the panel.  Its checks are made first; a message box
+ | shows what is wrong and the panel stays.
+{k:Esc} | Cancel the panel; nothing is changed.
+{k:PgUp}, {k:PgDn} | In a panel that is one of a ring (Global, Marker), go
+ | to the next or the previous panel.
+{k:Space} | In a choice field: the next entry.
+{k:Left}, {k:Right} | In a choice field: the previous, the next entry.
+ | In a text field: move the cursor.
+{k:Home}, {k:End} | In a text field: the start, the end of the text.
+{k:Keypad +}, {k:Alt-+}, {k:F2} | In a text field with a checklist: the files
+ | or directories.  In a choice field: the list of its entries.
+Printing key | In a text field, insert (the first key replaces the whole
+ | old value, which is highlighted).
+{k:Backspace}, {k:Del} | In a text field, delete (the first key clears it).
+.end
+
+.note The keys + - * of the numeric keypad are used for the outline and for
+  the lists of panels, and Strata gives them the meaning of {k:Alt-+},
+  {k:Alt--} and {k:Alt-*}.  The X11 version does that by itself for the keypad
+  keys.  A terminal sends a plain plus, minus or star for them, which would
+  be typed as text, so in the terminal version press {k:Alt} with the key
+  ({k:Alt-+}; {k:Alt-=} also works), or use {k:F2} in a panel.  The manual
+  writes {k:Keypad +} where it means this key.
+
+.h4 Checklists [view-checklist]
+.ix Checklist of files
+.ix Checklist of directories
+.ix File list in a panel
+.ix Directory list in a panel
+A text field that names a directory or a file has a checklist, which you
+open with {k:Keypad +} or {k:F2} while the cursor is in the field.  The list
+shows the directories and the files of one directory:
+
+.pic pictures/view-pick.png 5.4 The checklist of directories.
+
+.table 19 41
+Entry | Effect of Enter
+{c:[Use this directory]} | In a list of directories: take the directory that
+ | the title of the box names.
+{c:../} | Go to the parent directory.
+{c:name/} | Go into that directory.
+{c:name} | In a list of files: put that file name in the field, and, if
+ | the panel has a directory field first, the directory in it.
+.end
+A list of files is of the directory in the first field of the panel, and
+shows only the files with the suffixes that the field expects (for a
+document, {c:.doc}, {c:.set} and for Save also {c:.bak}).  A name in the
+usual directory stays a bare name; a name in another directory is put in the
+field with its path.  {k:Esc} closes the list and changes nothing.
+
+.h3 The Marker Commands grid [view-grid]
+.ix Marker Commands grid
+.ix Grid of commands
+.ix Press Ins to Select a Command
+The Marker Commands menu, which {k:Alt-F12} and {k:Ctrl-F12} open, is a
+grid of names in three columns filled from top to bottom, with the foot line
+{c:Press Ins to Select a Command}.  The keys are {k:Up} and {k:Down} (they
+wrap round), {k:Left} and {k:Right} (a column to the left or to the right),
+{k:Home} and {k:End} (the first, the last name), a letter (the next name that
+begins with it; the parenthesis before a name is skipped), {k:Ins} or
+{k:Enter} to choose and {k:Esc} to cancel.  A name in parentheses is not
+available where the cursor is ({n:view-markers}).
+
+.pic pictures/view-marker-grid.png 5.4 The Marker Commands grid (Alt-F12).
+In the picture Section and Page Number are in parentheses because they are
+only for headers and footers.
+
+.h3 Questions and message boxes [view-question]
+.ix Question
+.ix Yes/No question
+.ix Message box
+.ix Press any key
+.ix Unsaved changes, question
+A question is a list of choices whose title is the question, such as
+{c:Document has unsaved changes} with the entries {c:Save and quit},
+{c:Discard changes and quit} and {c:Cancel}, or {c:File does not exist.
+Create it?} with {c:Yes} and {c:No}.  Choose with {k:Up}, {k:Down} and
+{k:Enter}, or by the first letter, and {k:Esc} cancels the question (it
+counts as No, or as Cancel).  A message box shows a notice, with {c:Press
+any key} under it, and any key closes it.
+
+.pic pictures/view-save-quit.png 5.4 A question: Quit with unsaved changes.
+
+.h3 The pager [view-pager]
+.ix Pager
+A pager shows text that is longer than the screen, with the title in a
+reverse video row at the top and the line number at its right end.  The keys
+are {k:Up}, {k:Down}, {k:PgUp} and {k:PgDn} (also {k:Space}) to scroll,
+{k:Home} and {k:End}, and {k:Esc}, {k:Enter}, {k:Q} or {k:Ctrl-Q} to
+close it.
+
+.h3 The menu bar [view-menubar-short]
+{k:F12} opens the menu bar in the two top rows.  It is described
+in {x:view-menu}.
+
+.h3 Highlighting an area [view-highlight]
+.ix Highlight
+.ix Highlighting an area
+.ix Unit menu
+.ix Text, Column, Block, Section (unit menu)
+.ix Enter (accept the highlight)
+.ix Esc (cancel the highlight)
+The commands Copy ({k:F3}), Cut ({k:F4}), Move ({k:F7}), Delete ({k:Alt-F4}),
+Lib Copy and Lib Cut ({k:Ctrl-F3}, {k:Ctrl-F4}) and Autosort work on an area
+that you mark first.  The command prompts for the unit of the document you
+mean, in a small list:
+
+.pic pictures/view-unit.png 5.4 The unit list of the Copy command.
+
+.table 12 48
+Unit | The area it marks
+Text | Characters, from the cursor to where you move it.
+Column | One or more columns of a block.
+Block | One or more blocks.
+Section | One or more sections (a structured document only).
+.end
+
+After the choice the Editor is in highlight mode: the message line shows
+{c:Highlight the area with the cursor keys, then press Enter (Esc
+cancels)}.  The cursor keys now stretch the highlighted area from the point
+where you chose, and the highlighted cells are drawn in reverse video.
+
+.table 17 43
+Key | In highlight mode
+Cursor keys | Stretch the area (all the movement keys, including
+ | {k:Shift-Up} and {k:Shift-Down} for sections).
+{k:Enter} | Accept.  The command is carried out.
+{k:Esc} | Cancel.  The message {c:Cancelled} is shown and nothing happens.
+{k:F1} | Help, and then back to the highlight.
+Any other key | The message "Highlighting: move the cursor, Enter to accept,
+ | Esc to cancel".  The key has no other effect.
+.end
+In Autosort (Tools, Autosort, Table) {k:Home} and {k:End} go to the start
+and the end of the section, and {k:+} and {k:-} change the sort direction.
+
+.pic pictures/view-highlight.png 5.4 Text highlighted by Copy.
+
+The choices of the unit list differ from command to command only in the
+title.  An unstructured document does not offer Section.  The area is
+carried out when {k:Enter} is pressed: Copy keeps it for Paste ({k:F5}), Cut
+removes it, Move moves it in the place with the cursor keys ({n:edit-b-move}),
+and Delete removes it for good.  {X:edit} describes each command.
+
+.h3 The Help [view-help-viewer]
+.ix Help
+.ix F1 (help)
+.ix Help topics, index
+.ix Help, links
+{k:F1} shows the Help, one topic at a time, in a window across the foot of
+the screen.  The first line of the window is {c:HELP: topic name}, the last
+line lists the keys.  {x:view-help} describes it.  When no help file is found,
+{k:F1} opens a box with the text {c:Help file not found (use --help-file or the
+STRATA_HELP variable)}; {n:str-help-search} says where the programs look for the
+file.

@@ -1,0 +1,25 @@
+
+------------------------------- Screen Capture Format --------------------------
+
+Use Screen Capture Format to specify global shading values and whether or
+not to show the cursor on the screen capture image.  Use the Screen Capture 
+marker to insert the image in a document.
+
+---Procedure---------------------------   +------ Screen Capture Format -----+
+                                          |                                  |
+ Press Menu (F10) and select Global      | Show Cursor?                     |
+  Marker.                                 |  Normal Video Foreground:        |
+                                          |  Normal Video Background:        |
+ Press Space Bar at the Screen Capture   | Reverse Video Foreground:        |
+  Format prompt and enter the values.     | Reverse Video Background:        |
+                                          |                                  |
+ Press Ins to accept your settings.      + Press Ins Use Displayed Settings +
+
+--------------------------------------------------------------------------------
+Show Cursor? Select Yes to show the cursor position in the screen capture image.
+
+Normal/Reverse Video Foreground/Background: Enter a value between 0 (black) and
+     100 (white) to specify the shade of gray to use for the foreground or 
+     background shading of normal or reverse video display modes.
+--------------------------------------------------------------------------------
+  Global Marker     Screen Capture Marker     Keyboard Summary     Help Index

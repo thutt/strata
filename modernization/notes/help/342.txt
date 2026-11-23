@@ -1,0 +1,25 @@
+
+------------------------------- Hyphenation Settings ---------------------------
+
+
+Hyphenation:        Chose how you want a document hyphenated.  Press Space Bar 
+                    to select or remove an option.  Automatic uses automatic 
+                    hyphenation; Custom Dictionary uses the hyphenation 
+                    specified in a custom hyphenation dictionary; Soft Hyphens
+                    hyphenates according to soft hyphens in the document body;
+                    and None prevents any hyphenation from occurring in the 
+                    document.
+
+
+
+Custom Hyphenation  If you've selected Custom Dictionary under Hyphenation, type
+Dictionary:         the name of the custom hyphenation dictionary to use; 
+                    Manuscript assumes the .HYC file extension.  Press Gray +
+                    to select from a list of custom hyphenation dictionaries
+                    in the current directory.
+
+
+
+--------------------------------------------------------------------------------
+     Creating a Custom Hyphenation Dictionary          Hyphenation Settings
+                Keyboard Summary                       Help Index

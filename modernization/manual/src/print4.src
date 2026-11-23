@@ -1,0 +1,342 @@
+# Chapter 6, fourth part: what is printed for each element of a document.
+# Included by the chapter file.
+
+.h2 What is printed for each element [print-elements]
+.ix Elements, printed
+.ix Typeset page
+.ix Page layout, printed
+.ix Long form of a marker
+Each element of a document puts something on the page.  The rules below hold
+for the PDF of Draft and Final and for the pages of a Preview alike; where a
+Draft differs, the text says so.  The document is printed as it is in
+the Editor, so that nothing has to be saved first; the parts that an Include
+marker names are read from their files, so a part has to be saved
+({n:marker-include-print}).
+
+.h3 The page
+.ix Paper size, printed
+.ix Margins, printed
+.ix Page number, printed
+.ix Title page, printed
+.table 19 41
+Part of the page | What is printed
+Paper size | The paper size of the Global Page Layout.  Without one, US
+ letter, 8.5 by 11 inches.
+Margins | The Left, Right, Top and Bottom Margin of the Global Page Layout, 1
+ inch each when the document has none.  Margins that leave less than 2 inches
+ for the text width or height are replaced by 1 inch.
+Page number | A number centered at the foot of every page, when no header or
+ footer of the document has text; if one has, the headers and the footers say
+ what is printed ({n:format-page-headers}).  Its style is the
+ Page Number Tag of the Global Page Layout: \1\ gives 1, 2, 3; \i\ gives i,
+ ii, iii; \I\ gives I, II, III; \a\ gives a, b, c; \A\ gives A, B, C.  Any
+ other tag gives 1, 2, 3.
+Title page | The blocks of a structured document that come before its first
+ level 1 section stand on a page of their own, with no page number.  They are
+ set lower on the page by the Vertical Centering of the Title page layout (33
+ percent when the document has none).  The numbering of the pages starts at 1
+ after it.
+Orientation | The Orientation marker ({n:markers}) turns the pages that follow
+ to landscape from the block that holds it, and another one turns back.  At
+ the end of the document the page is portrait.
+Line numbers | A number in the margin of each printed line, in a small sans
+ serif type, when the document asks for them (Global Format, line numbering,
+ {n:format-fields-linenum}).  They are in a Print, a Preview and an exported
+ LaTeX file, and never on the screen.
+.end
+The title page is made when the whole document is printed with Print Title
+Page? at Yes (or a Preview of the Document with it).  A part of a document (a
+section, a block, a range of sections) has no title page; its sections keep
+their numbers.
+
+.h3 Borders and shading [print-borders]
+.ix Borders, printed
+.ix Shading, printed
+.ix Gutter, printed
+A block that has borders is printed in a box: a thin line at each side that
+has Single, two lines for Double and one thick line for Wide, at the sides of
+each column, above and below the block and, in a table, between the columns.
+The Top Gutter and the Bottom Gutter are room inside the box above and below
+the text.  Shading fills the box with grey: 40 percent is a light grey, 100
+percent is black, and in a print in black and white it stays grey.  Connect
+Borders determines the space after the box: with Yes it is at most one line, so
+that the boxes of blocks one after the other close up; with No it is one and a
+half lines.  The Line Weight of Global Options is not used: the lines have the
+same weight whatever its value is.  A headline has no border in the print.
+Borders
+are set with {k:Alt-F8} ({n:edit-c-border}).
+
+The lines of a table meet as they do on the screen: the corners, the places
+where a line between two rows meets a line at a side or between two columns,
+and the crossings are closed for every kind of line, Single, Double and Wide,
+and for a mixed table (Double lines above and below with Single lines at the
+sides, or the reverse).  A vertical line runs through the space between the
+two lines of a Double line, and a line between two columns is drawn once.
+Where two neighbors disagree about a line that they share, the stronger kind
+is drawn.
+
+.h3 Headlines and section tags [print-tags]
+.ix Section tags, printed
+.ix Auto Numbering?
+.ix Auto Numbering to Level
+.ix Headlines, printed
+A headline is set as a heading line: level 1 in a large type, level 2 in a
+smaller large type and deeper levels in the size of the text, with the
+attributes, justification and indents that the Format panels give to the
+headline.  The space before it is the spacing of its level in the Global
+Format settings (Headline, Subsection or Peer Section), and a headline is
+kept together with the lines after it, so that it does not stand alone at
+the foot of a page.  The tag that stands before the headline is the same tag
+that the screen shows.  Three settings decide it.
+.table 22 38
+Setting | Effect on the printed tag
+Auto Numbering? (Global Format) | With No, no headline has a tag.
+Auto Numbering to Level (Global Format, a number, 99 by default) | A section
+ deeper than that level has no tag.  With a value of 2, the headlines of
+ levels 1 and 2 are numbered (1, 2.1) and those of level 3 and deeper are not.
+ A level that has a Section Tag of its own keeps it whatever this setting
+ says.
+Section Tag (a field of every Level panel) | A text in which \1\, \i\, \I\,
+ \a\ and \A\ are replaced by the number of the section among the sections of
+ its own level, as arabic, lower case roman, upper case roman, lower case
+ letters or upper case letters.  A roman numeral shows the numbers 1 to
+ 3999; above that the number is arabic.  Everything else is printed as
+ typed, the blanks at the end included.
+.end
+Without a Section Tag the tag is the numbers of the section and of all the
+sections above it, joined by points and followed by a blank: 1, 1.1, 1.1.6.
+The tag belongs to the headlines of a structured document; the headline of
+the root section, the title, has none.
+
+A section that is printed on its own (Print Current Section Only? or a Preview
+of a Section) keeps the tag that it has in the whole document, at its own
+level: the tags of a part are the tags that the screen shows, and Auto
+Numbering to Level counts the depth of the section in the document.  The same
+holds for a headline that has columns (a side head): its tag stands at the
+start of the text of its first column.  The tag is made for sections down to
+the 99th level, the deepest that a document has.
+
+.h3 Text, justification and spacing
+.ix Text, printed
+.ix Justification, printed
+.ix Line spacing, printed
+.ix Attributes, printed
+.table 19 41
+Element | What is printed
+Justification | Left, right, center and even, as the Format panels give for
+ the block: even gives the justified text of TeX, with hyphenation.
+Indents | The first line and the following lines, and the left and right
+ margins of the block, in the units of the Ruler of the Global Format settings
+ (a unit is one eightieth of the text width, or a tenth, a twelfth or a
+ fifteenth of an inch: {n:format-fields-spacing}).
+Text indent character | A hanging indent of the paragraph.
+Attributes | Bold, italic and underscore are printed (underscore of words and
+ of all text as an underline).
+Line spacing | The Line spacing of the Global Format settings in a Final, or
+ that of the block when its named format has one.  A Draft uses one line.
+ Print Double Spaced? doubles it in both.
+Space between blocks | The Block spacing of the Global Format settings, or that
+ of the block when its named format has one, in a Final, and the space before
+ and after headlines.  Only a spacing of more than one line adds space.  A
+ Draft has none.
+Pages | A page starts at each headline of the Page Break Level of the Global
+ Format settings and of the levels above it, in a Final and in a Draft.
+Non-breaking space | A space that is not a place to break the line.
+Tab characters | The tab stops of the format, with the fill character (dots)
+ of the tab.  The tab stops are the least exact part: they are approximated.
+Characters | The characters of the document are printed as the letters and
+ signs that they stand for (accented letters, Greek letters, signs, box
+ drawing, arrows, card suits).  A character that no font has is printed as
+ [U+XXXX] in a small typewriter type and reported as a print error
+ ({n:print-errkinds}).
+.end
+
+.h3 Tables
+.ix Tables, printed
+.ix Table rows
+.ix Borders, printed
+A run of blocks with the same columns is a table.  It is printed as one table
+with a column for each column of the blocks, and the rows break across pages
+as TeX determines.  The width of a column is its width in the units of the Ruler
+of the Global Format settings; the columns are laid out from the left, and a
+column that would pass the right edge of the text gets the width that is left.  The borders of a column (left, top,
+right, bottom) are drawn as rules.  The alignment of a cell is that of its
+column.  A block with several columns whose rows have other widths starts a
+new table.  Outside tables the text of a block runs in one column.
+
+.h3 Notes
+.ix Notes, printed
+.ix Footnotes, printed
+.ix Levelnotes, printed
+.ix Endnotes, printed
+The Note marker ({n:markers}) is printed by the settings of the Footnote,
+Levelnote and Endnote panels ({n:format}).
+.table 13 47
+Kind | Where it is printed
+Footnote | At the foot of the page that holds the mark.  The mark in the text
+ and the number of the note are set by the Note Format panel (tags,
+ attributes), and the text of the note is set as one paragraph in a smaller
+ type, numbered with its tag.  A note in a table cell or in a box (a block
+ with borders or shading) is set at the foot of the page after the table or
+ the box.
+Levelnote | After the last block of the section of the level that the Note
+ Level setting names (the end of the level 1 section when the level is 1), or
+ of the section that holds the note when its level number is smaller.
+
+Endnote | In a list at the end of the document, on a page of its own, under
+ the title of the Note panel.
+.end
+The text of a note is printed as one paragraph; the line ends of the note are
+blanks.  A note in a Draft or a Final is printed alike.
+
+.h3 Markers
+.ix Markers, printed
+.ix Long form, markers
+.ix Comment, printed in a draft
+Each marker is printed in one of three ways: it is typeset (its effect is
+done), it is replaced by its value, or it is not typeset and is printed in
+its {b:long form}: the label of the marker in the Long display mode, in a
+small typewriter type, in a box or in brackets, so that the page shows that it
+was there.  This table lists every marker of {n:markers}.
+.table 15 45
+Marker | Printed
+Note | A footnote, a levelnote or an endnote (above).
+Cross-reference | The tag of the section, or its headline, as the marker says.
+ A reference to a page prints the page number.  A reference that cannot be
+ resolved is printed in its long form.
+Index | Nothing when the index is made ({n:print-index}); the long form when the
+ index is off.
+Keep | Nothing: a Keep marker is never printed.  It keeps the blocks between a
+ Start and an End on one page ({n:print-keep}).
+Author, Description | The Author and the Description of the document (the Save
+ panel of {n:file}).
+Revision | The revision that the marker shows.
+Date, Time | The date and the time of the print, in the format of the marker.
+Filedate, Filetime | The date and the time of the file of the document.
+Filename, Pathname | The name of the document and its full path.
+Printer | The name of the printer.
+Page Number | The number of the page, in the style of the Page Number Tag.  It
+ belongs to the headers and the footers ({n:format-page-headers}).
+Section | The number and the headline of the section that the page is in, in one
+ of the three forms of the marker.  It belongs to the headers and the footers
+ ({n:format-page-headers}).
+Comment | Nothing in a Final.  In a Draft the label of the comment in
+ brackets, with its author, its time and its text.
+Equation | The equation typeset as TeX math (below).
+Figure, Table | Nothing when the list of figures or of tables is made
+ ({n:print-index}); the long form when the list is off.
+Font | Changes the family of the type (serif, sans serif, typewriter) up to
+ the end of the block, by the name of the font ({n:print-fonts}).  A
+ Font marker with no number goes back to the font of the block.
+Include | The text of the document that the marker names, at the place of the
+ marker ({n:marker-include-print}).  An Include that cannot be made prints a
+ notice in square brackets ({n:marker-include-errors}).
+Merge | The long form.
+If, Else, Endif | Nothing: the markers are not printed.  The text of the
+ branch that the condition chooses is printed and the text of the other is not
+ ({n:marker-if-print}).
+Counter | The value of the counter, as the Counter Format panel and the marker
+ say.
+Line | A rule or a string repeated to the length, as the marker says: the
+ string, the length in inches and the weight (a weight is cut to between 3 and
+ 20 hundredths of an inch).
+Page Break | A page break.  The field of the marker may ask for the next odd
+ page or the next even page.  Inside a table cell or a box (a block with
+ borders or shading) it is printed in the long form.
+Column Break | A page break.  In a table cell or a box, the long form.
+Whitespace | A vertical space of the size and the unit of the marker.  Size 0
+ prints nothing.  In a table cell or a box the space is a rule of that height.
+Orientation | See the page above.
+Picture | The picture (below).  A picture that cannot be used is printed in
+ its long form.
+Keycap | The legend in a box like a key, with the colors, the scale and the
+ font of the marker.  A keycap is always a word in a line of text.
+LaTeX | The text of the marker, as it was typed, at the place of the marker
+ ({n:marker-latex}).
+.end
+.note A marker that is printed in its long form is reported as a print error,
+  so that the Error Log and the Print Error markers tell of each piece that
+  could not be printed as it was ({n:print-errors}).
+
+.h3 Pictures
+.ix Pictures, printed
+.ix PNG, JPEG, PDF, EPS, printed
+.ix Picture lookup
+The Picture marker names a file.  The file is looked for with these rules.
+.table 20 40
+Name | Where it is looked for
+A full path | As written.
+A name with a directory | Below the directory of the document, as written.  A
+ backslash is the same as a slash.
+A name with no directory | In the directory of the document and then in the
+ working directory, comparing the name without regard to the case of the
+ letters.
+.end
+PNG, JPEG, PDF and EPS (PostScript) files are drawn, whatever the ending of
+their name.  A PNG or a JPEG file that is cut short is not used.  The
+size of the picture is the Width and Height of the marker (the aspect is kept
+when both are given), or the scale of the marker, or the natural size.  A
+picture wider than the line or higher than 85 percent of the text area is
+scaled down to fit.
+A picture that has no file, a file of another kind, or a file that is not
+whole is printed in its long form, and the run goes on.  A Final and a Draft
+print keep the colors of a picture and print them in color on a color
+printer, whatever the kind of file; with {b:Print in Black and White?} the
+picture is printed in greys.
+
+.h3 Equations
+.ix Equations, printed
+.ix TeX math, printed
+.ix Display equation
+An Equation marker holds TeX math ({n:equations}).  It is set as TeX math: as a
+display equation, centered on a line of its own, when it is alone on its line
+(the other things on that line being blanks, tabs and attribute changes), and
+inline otherwise.  In a table cell or in a box (a block with borders or shading) an equation is
+always inline.  A text
+that LaTeX would reject, or that uses a command that is not allowed (reading
+or writing files, and the like), is not typeset: the equation is printed in its
+long form, with its text, and the run goes on and gives a PDF. 
+
+.h3 Keep markers: blocks on one page [print-keep]
+.ix Keep, printed
+.ix Keep Start (Fixed)
+.ix Keep Start (Floating)
+.ix Blocks on one page
+A Keep marker is never printed.  What it does is to keep blocks on one page.
+The blocks from a Start to the End are a region, set so that the whole
+region is on one page.  The rules for the markers are these.
+.table 22 38
+Case | Result
+Start and End | The blocks between them are kept on one page.  The first End
+ closes the region.
+A Start inside a region | Ignored.
+An End with no Start | Ignored.
+A Start with no End | Keeps to the end of the document.
+A region across sections | It is broken into one part for each section; each
+ part is kept on a page, and a headline goes with the kept block that follows
+ it.
+A marker in the text of a block | The unit is the whole block.
+A marker in a row of a table | The unit is the whole table.
+A block that holds Keep markers only | Not printed at all and takes no height.
+A part that holds a Page Break, a Column Break or an Orientation marker | Not
+ kept: these change the page inside the part, so the Keep markers are dropped
+ and the text is set as if there were none.
+A part that begins in the text of the title page | Not kept.
+.end
+.table 17 43
+Marker | What it does
+Start (Fixed) | If the region does not fit in the rest of the page, a new page
+ is started and the region is placed there.  The page that was left short ends
+ early; the text after the End stays after the region.
+Start (Floating) | If the region does not fit in the rest of the page, it goes
+ to the top of the next page and the text after the End goes on in this page,
+ in front of it.  A region that fits is put where it stands.
+.end
+A region that is taller than the text area of a page (or, for a floating
+one, taller than nine tenths of it) cannot be kept: it starts on a new page
+and then breaks between lines and rows as usual.  Nothing is lost.  The
+footnotes of the blocks in a region are printed on the page where the region is
+placed.  A table in a region is a row at a time, with the same widths and
+borders, so that it can be broken if it does not fit.  The Editor still shows
+the label of the marker on the screen.  The format field Keep Block on One
+Page? is another feature ({n:format}).

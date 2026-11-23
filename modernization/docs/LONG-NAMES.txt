@@ -1,0 +1,226 @@
+NAMES OF FILES THAT ARE NOT 8.3 NAMES: SURVEY AND DECISIONS
+==========================================================
+
+Status: done.  The survey was made on the tree of release 1 (4 programs: the
+Editor stred, the Document Manager str, the Printer strprint, the Viewer
+dviview) by reading the code and by running every program with names of 40,
+120, 240 and 255 bytes, with spaces, several dots, a leading dot, letters that
+are not ASCII (an a with a diaeresis, Japanese) and the signs of a shell and
+of TeX.  The tests are tests/longnames.py (in the smoke run).
+
+1. THE RULES THAT FOLLOW FROM THE SURVEY
+----------------------------------------
+
+  - A name of a file is UTF-8 on the disk and in every field and list that
+    holds a name.  The screen has the cells of the code page of the document
+    format, one byte for a cell, so a name is converted when it is drawn
+    (utf8_cell, swidth, name_to_cells, name_tail in src/layout.c) and a
+    letter with no cell is a question mark.  The text of a document is in the
+    code page, so a name inside a document (Picture, Include) is looked for
+    as it is written and then as UTF-8 (name_from_cells), and the Filename
+    and Pathname markers print the letters of the code page (decision D1).
+  - The longest name is 255 bytes (the limit of the file system).  A backup
+    name is the name with .bak01 .. .bak99 in place of .doc (or after the
+    name when it does not end in .doc): a name that leaves less than 6 bytes
+    has no backups, the save is made and the message line says that the name
+    is too long for a backup (D2).  The file that a write goes to first has a
+    short name, .tmpPID-N, in the directory, so the length of the name does not
+    matter (D3).
+  - The extension is what follows the last dot of the part after the last
+    slash, unless that dot is the first character: ".notes" has none, "a.b.c"
+    has "c", "end." has an empty one (name_has_extension in src/util.h).  A
+    command adds .doc to a name that has no extension, and Retrieve, the
+    Document Manager and Include also try name.doc when the name as typed is
+    not a file (doc_name_complete) (D4).
+  - A long name is shown by its end, "...long-name.doc" (D5).
+  - A name is given to another program as one argument (execv, execvp) and
+    never in a line for a shell (D6).
+  - Names are never changed: the names of the old program, upper case, are
+    kept as they are (D7).
+
+2. THE SURVEY: PLACE, WHAT IT ASSUMED, WHAT WAS DONE
+----------------------------------------------------
+
+  Place                       Assumed                      Done
+  --------------------------  ---------------------------  -----------------
+  view.c status line          name padded and cut by       name_tail to the room
+                              bytes, 12 wide; a long       the line has left
+                              name pushed Attr and Pos     (the width less the
+                              off the screen               mode and the fields
+                                                           after the name: 30
+                                                           cells on 80 columns
+                                                           for an unstructured
+                                                           document, 20 for a
+                                                           structured one), the
+                                                           end is shown
+  editor.c ed_msg, util.h     a path (word with a slash)   the first long word
+   fit_message                was shortened, a bare name   (path or name) is
+                              was cut at the end           shortened from the
+                                                           front, between
+                                                           UTF-8 characters
+  termbuf.c term_puts         a byte is a cell: UTF-8      a well formed UTF-8
+                              names were 2 to 3 cells of   character is one
+                              signs                        cell
+  widgets.c popup_menu        width by bytes, entry wider  swidth; an entry
+                              than the box ran out of it   wider than the box
+                                                           shows its end
+  widgets.c form fields,      bytes: a typed accent was    name fields (a file
+   popup_input; str.c         stored as a byte of the      or folder) hold
+   fields                     code page, not a name        UTF-8, move by char,
+                                                           by character,
+                                                           show one cell for a
+                                                           character
+  widgets.c popup_browse      all entries are read and     done (the limit is
+                              sorted, 100000 of each kind  100000 of each kind,
+                                                           for memory); see O2
+  ui.c do_retrieve            512 files in the list;       no limit (realloc)
+                              ".doc" added when the whole
+                              name had no dot (a dot in a
+                              folder name counted)
+  ui.c, str.c, include.c,     "strchr(name, '.') == NULL"  doc_name_complete,
+   restoremenu.c,             decided on the extension     name_has_extension
+   comparemenu.c, filemenu.c
+  filemenu.c Retrieve         name.doc tried only when the name.doc is tried
+                              name had no dot              for any name
+  comparemenu.c report_name   NAME-diff.doc could pass     the name is cut
+                              255 bytes                    between characters
+  backup.c temp_name          NAME + .tmpPID: a name of    .tmpPID-N in the
+                              246 bytes or more could not  directory
+                              be written; the message
+                              said the directory could
+                              not be written
+  backup.c ensure_folder      the name of a backup was     the name of backup 1
+                              tested late and refused the  is tested first;
+                              save                         the save is made,
+                                                           the message says
+                                                           "no backup made: the
+                                                           name is too long for
+                                                           a backup"
+  printjob.c pj_default_out   ".notes" gave ".pdf"         a leading dot is not
+                                                           an extension
+  printjob.c pj_check_out     a name over 255 bytes failed a clear message
+                              in the system
+  latex.c find_picture        a name over 200 bytes was    255 bytes; the
+                              "missing"; a backslash was   name as written
+                              always a separator           first, then with
+                                                           separators, then as
+                                                           UTF-8
+  latex.c safe_path,          --pictures keep refused      \detokenize for any
+   put_tex_path               every name with a space or   printable ASCII
+                              a TeX sign                   sign, a macro made
+                                                           with \edef for % and
+                                                           #; a brace, a
+                                                           backslash or a
+                                                           non-ASCII letter
+                                                           still refused, with
+                                                           a message that says
+                                                           what to do
+  latex.c write_errlog        a UTF-8 name in a message    name_to_cells
+                              printed as signs
+  marker.c Filename,          UTF-8 bytes printed as code  name_to_cells
+   Pathname                   page signs
+  include.c find_name         the name as written only     also the UTF-8 form
+  dviview main.c              window title in Latin-1; a   _NET_WM_NAME in
+                              name that begins with '-'    UTF-8; -- option
+                              could not be opened
+  dviview util.c kpse_find    popen() of a shell line with execvp of kpsewhich
+                              a whitelist of characters    with an argument
+                                                           vector; an argument
+                                                           with a leading '-'
+                                                           or a control
+                                                           character is refused
+
+  Looked at and found right (no change):
+    - the Printer makes its work in a folder of its own with the names
+      doc.tex and doc.pdf, links the pictures as picN.png and copies the
+      result to the name that the user gave: a long or odd name never meets
+      TeX except in the text of a marker (put_bytes escapes every sign) and
+      in a comment of an export;
+    - every program that is started is started with execv or execvp
+      (printjob.c, pvcore.c, preview.c, spell.c, str.c, strprint.c, fonts.c,
+      eqrender.c); there is no system() or popen() in src/ or tools/ but
+      the one that was replaced;
+    - the print queue names (PJ_QNAME 128) are names of printers, not of files;
+    - macro key names (macro.c) and library entry names (library.c, 32 bytes)
+      are names inside a file, not names of files;
+    - the settings file, the dictionaries and the hyphenation lists have
+      fixed names in the folder of the user; the name of a personal dictionary
+      is the language;
+    - the PDF viewer of Setup is a full path of a program that passes a check
+      (letters, digits and . _ + - /): it is a program, not a document, and
+      the document is its one argument;
+    - the autosave name is the name of the document with a suffix in the
+      folder .backup, and follows the rule of the backup names;
+    - the sorting of names in the lists is by bytes (strcmp), so that the
+      order of UTF-8 names is the order of their code points.
+
+3. THE SHELL: EVERY PLACE THAT STARTS A PROGRAM
+-----------------------------------------------
+
+  fonts.c:293      execvp  fc-list or fc-match with fixed arguments
+  eqrender.c:407   execvp  the converters of a picture; arguments are paths
+  printjob.c:1108  execv   the PDF viewer, lp: the name is one argument
+  pvcore.c:472     execv   the Viewer: the DVI file and options
+  spell.c:1253     execv   the spell program
+  str.c:319        execv   the Editor and the Viewer
+  preview.c:397    execv   the Viewer
+  strprint.c       execvp  pdflatex, latex, dvipdfmx, gs
+  dviview util.c   execvp  kpsewhich (was popen)
+
+4. THE TESTS
+------------
+
+  tests/longnames.py has 377 checks.  For each name of 40, 120, 240 and 255
+  bytes, with spaces, dots, a leading dot, accents, Japanese and each sign:
+  the Printer makes the PDF, with the text and the name that the Filename
+  marker prints; an Include and a Picture with the name work (as written in
+  the code page and as UTF-8); an export of the picture is read by TeX with
+  the pictures kept and copied; the Editor opens, saves and makes the backup
+  (or says why not), shows the end of the name and keeps the fields of the
+  status line; Save As makes a file of the UTF-8 name that was typed;
+  Retrieve finds names with dots, with no extension and with a leading dot;
+  the Document Manager lists, chooses and opens a name, and the Restore
+  Backup list shows the backups; the PDF viewer of Setup is started with the
+  name as one argument; a Viewer opens a DVI file of such a name under Xvfb
+  and has the name as the title.  A name with ; $( ` & | in it is never read
+  by a shell: the file that it would make is checked.
+
+  Mutations that were run (each makes tests/longnames.py fail): a 16 byte
+  buffer for the name in the status line, the name split at a space for the
+  PDF viewer, a shell started for the PDF viewer, no TeX escape of the
+  ampersand, a leading dot starting an extension, picture names over 200 bytes
+  refused, no test of the name of a backup, term_puts drawing bytes, a typed
+  key of a name stored as one byte, the Filename marker printing bytes, the
+  title of the Viewer not in UTF-8, Retrieve not trying .doc, the lists not
+  shortened, no escape of the percent sign in a picture path.  The result of
+  each is in the report of the task.
+
+5. DECISIONS
+------------
+
+  D1  A name inside a document is in the code page of the format; the file of
+      a Picture or Include is looked for as written, then as UTF-8.  Japanese
+      names can be in a document only if the document holds the UTF-8 bytes.
+  D2  A save is never refused because of a backup: no room for .bak01 means
+      no backup and a message.
+  D3  The temporary file of a write has a short name.
+  D4  Leading dot: no extension.  Trailing dot: an (empty) extension.
+  D5  The end of a long name is shown, with three dots in front.
+  D6  Argument vectors, never a shell line.
+  D7  No name is changed or converted on the disk.
+
+6. OPEN QUESTIONS
+-----------------
+
+  O1  A Japanese or Chinese letter is a question mark on the screen (the
+      screen has the code page of the format).  Showing it needs the wide
+      characters of the study docs/UTF8.txt, stage 2.
+  O2  The file list of popup_browse read 500 folders and 500 files at most,
+      and sorted what it read.  It now reads every entry, up to 100000 of each
+      kind, and sorts all of them (tests/checklist.py).
+  O3  The text of a message that holds a name with spaces is shortened only
+      when a word is long (the first long word); a very long name with spaces
+      in a message is cut at the end.
+  O4  kpse_find (fonts and pictures of a DVI file found by kpsewhich) has no
+      test in longnames.py: it is reached only for a file that is not beside
+      the DVI file.

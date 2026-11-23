@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Cannot use same filename for output (<filename>) --
+
+When converting from one file format to another the file names must be 
+different.  Rename one of the files and retry the operation.
+
+-- Color/gray scale images are not supported (<filename>) --
+
+The TIFF file contains image data for a color or gray scale image.  Re-create
+the TIFF image file in black and white format and retry the file conversion.
+
+-- Column width too narrow for a single character in the selected font --
+
+Change the column width or font selected and reprint the document.
+
+-- Counter tag more than 90 characters --
+
+Change the Counter marker tag to less than 90 characters
+
+-- Create dictionary (<filename>)? --
+
+The custom dictionary you have specified does not exist.  Type Y to create the
+custom dictionary or N not to create the dictionary.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

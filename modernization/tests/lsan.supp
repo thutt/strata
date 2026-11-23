@@ -1,0 +1,19 @@
+# Strata is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Strata.  If not, see <https://www.gnu.org/licenses/>.
+# Copyright (c) 2026 Logic Magicians Software
+
+# The X11 programs load fontconfig through Xft.  Fontconfig never frees its
+# configuration, so every run reports a small fixed leak that is not ours.
+# That report makes the programs exit with an error status, which the X11
+# smoke tests treat as a failure.  Leaks in our own code are still reported.
+leak:libfontconfig

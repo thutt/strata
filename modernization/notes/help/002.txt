@@ -1,0 +1,25 @@
+
+------------------------------- Selecting a File -------------------------------
+
+Before entering the editor you specify a document to create or edit.
+
+--Procedure---------------------------------------------------------------------
+
+To edit a file that already exists:
+
+   Enter the name of the file (and full path name if the file is not in the
+    current working directory) and press Ins.
+                   or
+    Press Gray + at the Document Name prompt to list the available files in 
+    the current directory, highlight the file you want to edit, and press Enter.
+ 
+To create a new file:
+
+   Enter the new file name and press Ins to display the New File panel.  File
+    names and extensions must conform to the DOS file name conventions.  If no
+    file extension is specified, Manuscript uses the .DOC extension.
+
+   Complete the New File panel and press Ins to begin editing the new file.
+
+--------------------------------------------------------------------------------
+ File Directories    New File    File Names    Keyboard Summary    Help Index

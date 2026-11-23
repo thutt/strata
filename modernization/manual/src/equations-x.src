@@ -1,0 +1,191 @@
+# Chapter 9, worked examples.
+
+.h3 The quadratic formula [eq-ex-1]
+.ix Example, the quadratic formula
+A fraction whose numerator holds a sign, a root and a power, in a displayed
+equation.
+
+The text of the equation:
+.code
+x=\frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}
+.end
+The result:
+
+{eq:x=\frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}}
+
+.h3 A sum with limits [eq-ex-2]
+.ix Example, a sum with limits
+The limits are a subscript and a superscript of the large operator; the
+fraction on the right is large because the equation is displayed.
+
+The text of the equation:
+.code
+\sum_{{k=1}}^{{n}}k=\frac{{n(n+1)}}{{2}}
+.end
+The result:
+
+{eq:\sum_{{k=1}}^{{n}}k=\frac{{n(n+1)}}{{2}}}
+
+.h3 An integral [eq-ex-3]
+.ix Example, an integral
+The thin space \, before the differential is typed by hand; the command
+{c:\infty} is the sign for infinity.
+
+The text of the equation:
+.code
+\int_{{-\infty}}^{{\infty}}e^{{-x^2}}\,dx=\sqrt{{\pi}}
+.end
+The result:
+
+{eq:\int_{{-\infty}}^{{\infty}}e^{{-x^2}}\,dx=\sqrt{{\pi}}}
+
+.h3 The definition of a derivative [eq-ex-4]
+.ix Example, the definition of a derivative
+The name lim is a command, so it is upright; the subscript goes under it.
+
+The text of the equation:
+.code
+f'(x)=\lim_{{h\to 0}}\frac{{f(x+h)-f(x)}}{{h}}
+.end
+The result:
+
+{eq:f'(x)=\lim_{{h\to 0}}\frac{{f(x+h)-f(x)}}{{h}}}
+
+.h3 The binomial theorem [eq-ex-5]
+.ix Example, the binomial theorem
+The command {c:\binom} makes the coefficient; the braces are needed round
+exponents of more than one character.
+
+The text of the equation:
+.code
+(x+y)^n=\sum_{{k=0}}^{{n}}\binom{{n}}{{k}}x^{{n-k}}y^k
+.end
+The result:
+
+{eq:(x+y)^n=\sum_{{k=0}}^{{n}}\binom{{n}}{{k}}x^{{n-k}}y^k}
+
+.h3 A product of matrices [eq-ex-6]
+.ix Example, a product of matrices
+The environment pmatrix has parentheses; the cells of a row are separated by &
+and the rows by two backslashes.
+
+The text of the equation:
+.code
+\begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}}\begin{{pmatrix}}
+x \\ y \end{{pmatrix}}=\begin{{pmatrix}} ax+by \\ cx+dy
+\end{{pmatrix}}
+.end
+The result:
+
+{eq:\begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}}\begin{{pmatrix}} x \\ y
+\end{{pmatrix}}=\begin{{pmatrix}} ax+by \\ cx+dy \end{{pmatrix}}}
+
+.h3 A function defined in cases [eq-ex-7]
+.ix Example, a function defined in cases
+The environment cases has two columns, the value and the condition; the words
+are set by {c:\text}.
+
+The text of the equation:
+.code
+|x|=\begin{{cases}} x & \text{{if }} x\ge 0 \\ -x & \text{{if }}
+x<0 \end{{cases}}
+.end
+The result:
+
+{eq:|x|=\begin{{cases}} x & \text{{if }} x\ge 0 \\ -x & \text{{if }} x<0
+\end{{cases}}}
+
+.h3 A derivation in several lines [eq-ex-8]
+.ix Example, a derivation in several lines
+The environment aligned puts the lines under each other at the sign &, here
+the equals sign.
+
+The text of the equation:
+.code
+\begin{{aligned}} (a+b)^2 &= (a+b)(a+b) \\ &= a^2+2ab+b^2
+\end{{aligned}}
+.end
+The result:
+
+{eq:\begin{{aligned}} (a+b)^2 &= (a+b)(a+b) \\ &= a^2+2ab+b^2 \end{{aligned}}}
+
+.h3 A continued fraction [eq-ex-9]
+.ix Example, a continued fraction
+The command {c:\cfrac} keeps every level in full size.
+
+The text of the equation:
+.code
+\varphi=1+\cfrac{{1}}{{1+\cfrac{{1}}{{1+\cfrac{{1}}{{1+
+\cdots}}}}}}
+.end
+The result:
+
+{eq:\varphi=1+\cfrac{{1}}{{1+\cfrac{{1}}{{1+\cfrac{{1}}{{1+\cdots}}}}}}}
+
+.h3 An inequality with large brackets [eq-ex-10]
+.ix Example, an inequality with large brackets
+The commands {c:\left} and {c:\right} make the parentheses as tall as the sums
+between them.
+
+The text of the equation:
+.code
+\left(\sum_{{k=1}}^n a_kb_k\right)^2\le\left(\sum_{{k=1}}^n a_k^2
+\right)\left(\sum_{{k=1}}^n b_k^2\right)
+.end
+The result:
+
+{eq:\left(\sum_{{k=1}}^n a_kb_k\right)^2\le\left(\sum_{{k=1}}^n a_k^2\right)
+\left(\sum_{{k=1}}^n b_k^2\right)}
+
+.h3 A law of physics with vectors [eq-ex-11]
+.ix Example, a law of physics with vectors
+The commands {c:\nabla}, {c:\times} and {c:\partial} are symbols, and {c:\vec}
+puts an arrow over a letter.
+
+The text of the equation:
+.code
+\nabla\times\vec{{E}}=-\frac{{\partial\vec{{B}}}}{{\partial t}}
+.end
+The result:
+
+{eq:\nabla\times\vec{{E}}=-\frac{{\partial\vec{{B}}}}{{\partial t}}}
+
+.h3 A chemical equation [eq-ex-12]
+.ix Example, a chemical equation
+The letters of the elements are upright, by {c:\mathrm}, and the long arrow is
+a symbol.
+
+The text of the equation:
+.code
+2\mathrm{{H}}_2+\mathrm{{O}}_2\longrightarrow 2\mathrm{{H}}_2
+\mathrm{{O}}
+.end
+The result:
+
+{eq:2\mathrm{{H}}_2+\mathrm{{O}}_2\longrightarrow 2\mathrm{{H}}_2\mathrm{{O}}}
+
+.h3 A Fourier transform [eq-ex-13]
+.ix Example, a fourier transform
+The accent {c:\hat} is on one letter; the thin spaces \, are typed by hand.
+
+The text of the equation:
+.code
+\hat f(\xi)=\int_{{-\infty}}^{{\infty}} f(x)\,e^{{-2\pi i x\xi}}
+\,dx
+.end
+The result:
+
+{eq:\hat f(\xi)=\int_{{-\infty}}^{{\infty}} f(x)\,e^{{-2\pi i x\xi}}\,dx}
+
+.h3 A norm [eq-ex-14]
+.ix Example, a norm
+The commands {c:\lVert} and {c:\rVert} are the double bars of a norm, with the
+spacing of an opening and a closing sign.
+
+The text of the equation:
+.code
+\lVert x\rVert_2=\sqrt{{\sum_i x_i^2}}
+.end
+The result:
+
+{eq:\lVert x\rVert_2=\sqrt{{\sum_i x_i^2}}}

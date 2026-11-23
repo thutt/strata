@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+-- Invalid If-Else-Endif command --
+
+A combination of If, Else, and Endif markers contains more than the maximum of 
+10 levels of nesting.  Redefine the nesting commands and retry the operation.
+
+-- Invalid Include request <description> --
+
+The Include marker is in an incorrect location or is trying to read a structured
+document into an unstructured document. If the document being included is un-
+structured, the Include marker must be in its own block. If the document being
+included is structured, the marker must be the only thing in the section.
+
+-- Invalid Macro Key (use A-Z) -- 
+
+A macro key must be a single letter (uppercase or lowercase).
+
+-- Invalid marker <description> -- 
+
+The document contains a marker that is not valid.  For example, you may have 
+upgraded a Release 1 document with a \section\ command in the document body 
+to a Release 2 document.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

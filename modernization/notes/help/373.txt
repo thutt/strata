@@ -1,0 +1,25 @@
+
+----------------------- Section and Level Conceptual Overview ------------------
+
+A section is made up of a group of related blocks.  Each section begins with a
+headline block that contains the title or main topic for the section.  You can
+add as many blocks or text as you need to the section.  The section can also
+contain subsections, which have their own headline and text blocks.
+
+Each section has a level that determines its relationship to the other sections
+in the document.  Main topics are generally level 1 sections.  A subsection of 
+a level 1 section is a level 2 section, a subsection of a level 2 section is a
+level 3 section, and so on.
+
+# You use Append (Alt F2) to add sections and subsections.  Sections are 
+  separated by double horizontal lines on the edit screen.
+
+# When you work with sections you are working in a structured document.
+
+# You can collapse and expand sections so that you see just the section
+  headlines, section headlines of certain levels, or section headlines and
+  text of certain levels.  By using collapse and expand, you can quickly view
+  an outline of a document and check its organization.
+--------------------------------------------------------------------------------
+ Block and Column Overview        Append         Structured/Unstructured
+    Collapse/Expand Keys          Keyboard Summary            Help Index

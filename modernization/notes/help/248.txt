@@ -1,0 +1,25 @@
+
+--------------------------------- Preview Status -------------------------------
+
+         File: The name of the document that you are previewing.
+    Page Type: The type of the page that you are previewing.
+         Page: The number of the page that you are previewing.
+Begin Section: The first section on the page of the preview document.
+  End Section: The last section on the page of the preview document.
+Magnification: The degree of magnification of the text in the magnifier window.
+
+--------------------------------------------------------------------------------
+
+Use the preview menu (F10) to change the preview screen display options, zoom 
+a graphics image, display format errors, or quit preview.
+
+   Press Menu (F10).
+   Select the option.  
+
+--------------------------------------------------------------------------------
+
+# The message box indicates when a graphics image is being scaled to display on
+  the full screen.
+
+--------------------------------------------------------------------------------
+Preview     Preview Keys     Preview Menu     Keyboard Summary     Help Index

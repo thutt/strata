@@ -1,0 +1,61 @@
+# Chapter 4: Format.  The chapter is kept in several sources that this file
+# reads: how formats combine and what the screen shows (format1, format2),
+# the six entries of the Global menu in the order of the menu (format3 to
+# format7) and the local formats and the messages (format8).
+.doc Format
+.chapter 4
+.h1 Format [format]
+.ix Format
+.ix Formats
+.ix Format settings
+.ix Global menu
+.ix Global, Format
+.ix Global format
+.ix Local format
+.ix Panels of the Global menu
+A format is a group of settings that says how text looks and how a
+document is laid out: the attributes of the characters, the justification
+and the indents of the lines, the tab stops, the spacing between blocks and
+sections, the typefaces, the page margins and the way the markers are
+shown.  This chapter describes where each setting is made, what values it
+can have, what its default is and what it does on the screen and on the
+printed page.
+
+The settings come in two kinds.  The global settings are made on the Global
+menu of the {k:F12} bar and hold for the whole document until something more
+local overrides them.  The local settings are made with {k:F6} (or
+{k:Ctrl-E}) and with the attribute keys and belong to a piece of text, a
+column or a block.
+
+The chapter follows the menus, because a setting is found by asking where it
+is made.  First come the rules that hold for every setting: how global and
+local settings combine, and what the edit screen shows of them.  Then come the
+six entries of the Global menu, one section each, in the order of the menu.
+Each section describes the panels of its entry field by field.  A subject such
+as indents, tab stops or section tags is explained once, with the panel on
+which it is changed.  The local formats, which are made with keys and not with
+panels, and the messages of the panels come last.
+.table 19 41
+Section | What it covers
+{x:format-kinds} | Global and local settings, their order, the defaults.
+{x:format-screen} | What the edit screen draws of a format.
+{x:format-global-menu} | The Global menu and the keys of its panels.
+{x:format-format} | Attributes, justification, indents, tabs, spacing,
+ section tags and fonts of headlines and text.
+{x:format-page} | Paper, margins, page numbers and the title page.
+{x:format-typeface} | The names of the twenty fonts.
+{x:format-marker} | Markers: display, dates, counters, notes, keycaps.
+{x:format-options} | The settings of the Editor and the backup file.
+{x:format-named} | Named formats for blocks.
+{x:format-local} | Formats of a block, a column or characters.
+{x:format-messages} | The messages of the panels.
+.end
+
+.include format1.src
+.include format2.src
+.include format3.src
+.include format4.src
+.include format5.src
+.include format6.src
+.include format7.src
+.include format8.src

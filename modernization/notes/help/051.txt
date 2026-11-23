@@ -1,0 +1,25 @@
+
+-------------------------------- Move Block Keys -------------------------------
+
+
+
+After highlighting the blocks to move, use the following keys to move blocks:
+
+  Up, Down       Moves block(s) up or down one block
+  Home, End      Moves block(s) to the beginning or end of the current section
+
+
+
+Use the following keys to change the highlighted region of blocks:
+
+  Shift Up       Moves the highlight up to the next block   
+  Shift Down     Moves the highlight down to the next block  
+
+
+--------------------------------------------------------------------------------
+
+# In a structured document, you can move blocks only within the current section.
+  Use Cut and Paste to move a block between sections.
+
+--------------------------------------------------------------------------------
+  Highlighting     Move     Cut     Paste     Keyboard Summary     Help Index

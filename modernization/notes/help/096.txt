@@ -1,0 +1,25 @@
+
+--------------------------------- Replace Menu ---------------------------------
+
+
+After the Replace command (Alt F9) locates the search string, the Replace 
+Options menu is displayed.
+
+  Replace this occurrence and                Replace all occurrences of the 
+  continue. The cursor moves to              search string with the new string.
+  the next occurrence. |                                       |
+                       |                       +---------------+
+                       |                       |
+                  +--------------------------------------+
+                  | Replace   Once   Search   All   Quit | ----- End the Replace
+                  +--------------------------------------+       procedure.
+                               |       |                         
+                               |       |                         
+                               |       |
+      Replace only this        |       |   DO NOT replace this
+      occurrence and return ---+       +-- occurrence, but keep
+      to the document.                     looking for others.
+
+
+--------------------------------------------------------------------------------
+             Replace          Keyboard Summary           Help Index

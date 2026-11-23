@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- String not found --
+
+The string you are searching for or attempting to replace does not appear in the
+portion of the document being searched.
+
+
+-- String/variable exceeds 200 characters --
+
+The string or variable specified in an equation exceeds the 200 character limit.
+Change the string or variable and retry.
+
+
+-- Sum of column widths exceed page width -- 
+
+You are using an absolute ruler with fixed type columns and the sum of the
+column widths exceeds the page width.  Columns that do not fit on the page will
+not be printed.  Change to a relative ruler or change column widths and reprint.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

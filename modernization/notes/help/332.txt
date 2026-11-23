@@ -1,0 +1,25 @@
+
+--------------------------------- Keystrokes Edit ------------------------------
+
+On the Keystrokes Edit panel key tokens are displayed bold in brackets, while 
+individual keystrokes are displayed as normal text.
+                                           +---- Keystrokes Edit - Alt-a ---+
+# To enter a key token, press Alt =        |                                |
+  and then press the key corresponding     |                                |
+  to the token you want entered.  For      |                                |
+  example, press Alt = and F6 to enter     |                                |
+  the Format (F6) function key.            |                                |
+                                           |                                |
+# To enter a character you want typed in   +--- Press Ins to ... Version ---+
+  the macro, just type the character from the keyboard.
+
+# In the Keystrokes Edit panel, the macro is defined by the information in the 
+  first column of the first block.
+
+# Press Ins to accept your edits and return to the Macro Edit panel or press
+  Esc to cancel your edits and return to the Macro Edit panel.
+
+When the macro is run, characters are typed on the screen and tokens perform
+the function they represent.
+--------------------------------------------------------------------------------
+   Macro Overview        Macro Edit        Keyboard Summary       Help Index

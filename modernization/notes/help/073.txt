@@ -1,0 +1,25 @@
+
+---------------------------------- Page Layout ---------------------------------
+
+The Menu (F10) Global Page Layout panels control the page format of a printed 
+document. There are seven panels - one for all pages (global) and one each for 
+the title page, table of contents, first page, all even-numbered pages, all 
+odd-numbered pages, and all index pages. Format settings vary depending on the
+page type.
+       +----------------------- Page Layout Panels --------------------+
+       |                                                               |
+       | Left/Right Margin:            Top/Bottom Margin:              |
+       |                                                               |
+       |     Header:                       Footer:                     |
+       |     Indent:                       Indent:                     |
+       | Whitespace:                   Whitespace:                     |
+       |                                                               |
+       |                               Page Number Tag:                |
+       | Paper Size:                   Starting Value:                 |
+       | Paper Bin:                    Table of Contents Level:        |
+       |                               Table of Contents Style:        |
+       | Vertical Centering:           Table of Figures/Tables Style:  |
+       |                               Index Style:                    |
+       +--------------- Press Ins to Use Displayed Settings -----------+
+--------------------------------------------------------------------------------
+         Global        Panel Keys        Keyboard Summary        Help Index

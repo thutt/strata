@@ -1,0 +1,25 @@
+
+------------------------------------ Markers -----------------------------------
+The following markers are used in a merge text document.
+
+Merge: Inserts the name of a merge variable. When the document is printed, 
+       the value of that variable, as specified in the merge data document,
+       is inserted at the location of the Merge marker.
+
+If:    Inserts a conditional If statement in a merge text document. The If 
+       expression compares a variable in a merge data document to a numeric 
+       or string expression. The text following the If marker up to the Endif
+       marker prints only when the If condition is true. The If statement must
+       begin with a merge variable name, followed by an operator, and end with
+       a numeric or string value. Valid operators are =, <>, >, <, >=, or <=.
+
+Else:  Inserts a conditional Else statement that relates to the preceding If
+       statement.  Else marks the start of alternative text to print when the 
+       If statement is false.
+
+Endif: Ends a conditional If statement.  Each If marker must be paired with an
+       Endif marker.
+
+For more information on merge, see chapter 4 in the Reference manual.
+--------------------------------------------------------------------------------
+   Merge Data Document       Markers        Keyboard Summary       Help Index

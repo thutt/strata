@@ -1,0 +1,25 @@
+
+--------------------------- Check Document Spelling ----------------------------
+
+
+
+Custom Spelling Dictionary:  Enter the names of the custom dictionaries you 
+                             are using in addition to the main spelling 
+                             dictionary. The extension .SPC is assumed. You can
+                             use up to two different custom dictionaries.  You 
+                             will need to use a custom dictionary if you want 
+                             to make any additions or changes to a dictionary; 
+                             you cannot make changes to the main dictionary.
+
+
+
+Auto Correct:                Select Yes if you want all remaining occurrences 
+                             of a word to be corrected automatically after the
+                             first occurrence. Select No if you want to be 
+                             prompted on every occurrence of an incorrect word.
+
+
+
+--------------------------------------------------------------------------------
+Check Document Spelling    Custom Spelling Dictionaries    Maintain Dictionaries
+                Keyboard Summary                     Help Index

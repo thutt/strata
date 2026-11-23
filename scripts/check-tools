@@ -1,0 +1,389 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Reports which of the programs, headers and libraries that Strata needs are
+# present on this machine: the ones that BUILD Strata, the ones that run its
+# TESTS, and the ones that RUN Strata (and print with it).  It installs
+# nothing.  For every item that is missing it names the Debian or Ubuntu
+# package, and at the end it prints one command that installs them all (with
+# apt-get and without the recommended packages, which would add Java, Ruby and
+# many more that Strata does not use).
+#
+# This is the tool for a developer.  The install script (strata-install)
+# looks only at what running Strata needs, and installs it.
+#
+# Usage:  check-tools [--build] [--tests] [--run] [--quiet]
+#         strata-build check-tools [--build] [--tests] [--run] [--quiet]
+#
+# With no option every group is checked.  The exit status is 0 only when
+# nothing that is required is missing (an optional item that is missing is
+# reported and does not change the status).
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+# The groups to check, and what the run has found.
+want_build="no"
+want_tests="no"
+want_run="no"
+quiet="no"
+missing_count=0
+optional_count=0
+missing_packages=()
+
+
+# Prints the help text.
+function usage
+{
+    cat <<EOF
+usage: check-tools [--build] [--tests] [--run] [--quiet]
+
+Reports which of the programs, headers and libraries that Strata needs are
+present, and names the Debian or Ubuntu package of each one that is missing.
+Nothing is installed.
+
+  --build   The tools that build Strata and the manual (the compiler, make,
+            the X11, Xft and FreeType headers, Python 3).
+  --tests   The tools that run the tests (Xvfb, xdotool, xwd, bwrap and the
+            poppler utilities).
+  --run     The programs that run Strata and print with it (LaTeX, dvipng,
+            ghostscript, a spell checker, the thesaurus and the libraries of
+            the X11 version).
+  --quiet   Print only what is missing.
+  -h, --help  This text.
+
+With no option every group is checked.  The exit status is 0 only when
+nothing required is missing.
+EOF
+}
+
+
+# Prints a line of the report unless --quiet was given.
+function say
+{
+    if [ "${quiet}" != "yes" ]; then
+        echo "${*}"
+    fi
+}
+
+
+# Remembers the Debian packages of a missing item (one or several, separated
+# by blanks), each once.
+function remember_package
+{
+    local package
+    local seen
+    local known
+
+    for package in ${1}; do
+        known="no"
+
+        for seen in "${missing_packages[@]+"${missing_packages[@]}"}"; do
+            if [ "${seen}" = "${package}" ]; then
+                known="yes"
+            fi
+        done
+
+        if [ "${known}" = "no" ]; then
+            missing_packages+=("${package}")
+        fi
+    done
+}
+
+
+# Prints one line of the report.  The arguments are the state (ok, MISSING or
+# optional), the name, the package and what the item is for.
+function line
+{
+    local state="${1}"
+    local name="${2}"
+    local package="${3}"
+    local what="${4}"
+
+    case "${state}" in
+        ok)
+            say "$(printf '  %-9s %s' "ok" "${name}")"
+            ;;
+        MISSING)
+            missing_count=$((missing_count + 1))
+            remember_package "${package}"
+            printf '  %-9s %s (package %s): %s\n' "MISSING" "${name}" \
+                   "${package}" "${what}"
+            ;;
+        optional)
+            optional_count=$((optional_count + 1))
+            printf '  %-9s %s (package %s): %s\n' "optional" "${name}" \
+                   "${package}" "${what}"
+            ;;
+    esac
+}
+
+
+# Reports a result.  The arguments are whether the item was found (yes or no),
+# the requirement (required or optional), the name, the package and what the
+# item is for.
+function report
+{
+    local found="${1}"
+    local need="${2}"
+    local name="${3}"
+    local package="${4}"
+    local what="${5}"
+
+    if [ "${found}" = "yes" ]; then
+        line ok "${name}" "${package}" "${what}"
+    elif [ "${need}" = "required" ]; then
+        line MISSING "${name}" "${package}" "${what}"
+    else
+        line optional "${name}" "${package}" "${what}"
+    fi
+}
+
+
+# Checks that a program is in the PATH.  The arguments are the requirement,
+# the program, the package and what it is for.
+function need_program
+{
+    local found="no"
+
+    if command -v -- "${2}" >/dev/null 2>&1; then
+        found="yes"
+    fi
+
+    report "${found}" "${1}" "${2}" "${3}" "${4}"
+}
+
+
+# Checks that one of two programs is in the PATH.  The arguments are the
+# requirement, the two programs, the package and what they are for.
+function need_one_program
+{
+    local found="no"
+
+    if command -v -- "${2}" >/dev/null 2>&1 ||
+       command -v -- "${3}" >/dev/null 2>&1; then
+        found="yes"
+    fi
+
+    report "${found}" "${1}" "${2} or ${3}" "${4}" "${5}"
+}
+
+
+# Checks that a header file is in /usr/include or in /usr/include/ARCH.  The
+# arguments are the requirement, the file below include, the package and what
+# it is for.
+function need_header
+{
+    local found="no"
+    local dir
+
+    for dir in /usr/include /usr/include/*-linux-gnu /usr/local/include; do
+        if [ -f "${dir}/${2}" ]; then
+            found="yes"
+        fi
+    done
+
+    report "${found}" "${1}" "${2}" "${3}" "${4}"
+}
+
+
+# Checks that a shared library is known to the loader.  The arguments are the
+# requirement, the library, the package and what it is for.
+function need_library
+{
+    local found="no"
+    local libs
+
+    libs="$(ldconfig -p 2>/dev/null || /sbin/ldconfig -p 2>/dev/null ||
+            true)"
+
+    case "${libs}" in
+        *"${2}"*) found="yes" ;;
+    esac
+
+    report "${found}" "${1}" "${2}" "${3}" "${4}"
+}
+
+
+# Checks that a LaTeX file is known to kpsewhich.  The arguments are the
+# requirement, the file, the package and what it is for.
+function need_tex_file
+{
+    local found="no"
+
+    if command -v kpsewhich >/dev/null 2>&1 &&
+       [ -n "$(kpsewhich "${2}" 2>/dev/null)" ]; then
+        found="yes"
+    fi
+
+    report "${found}" "${1}" "${2}" "${3}" "${4}"
+}
+
+
+# Checks that a directory exists.  The arguments are the requirement, the
+# directory, the package and what it is for.
+function need_directory
+{
+    local found="no"
+
+    if [ -d "${2}" ]; then
+        found="yes"
+    fi
+
+    report "${found}" "${1}" "${2}" "${3}" "${4}"
+}
+
+
+# The tools that build Strata and its manual.
+function check_build
+{
+    say
+    say "To BUILD Strata and the manual:"
+    need_one_program required cc gcc build-essential "the C compiler"
+    need_program required make make "builds everything"
+    need_program required python3 python3 \
+        "the tests, the manual generator and the build checks"
+    need_header required X11/Xlib.h libx11-dev "the X11 version"
+    need_header required X11/Xft/Xft.h libxft-dev \
+        "anti-aliased text in the X11 version"
+    need_header required freetype2/ft2build.h libfreetype-dev \
+        "the Viewer (Preview)"
+    need_header required fontconfig/fontconfig.h libfontconfig-dev \
+        "fonts in the X11 version"
+}
+
+
+# The tools that run the tests.
+function check_tests
+{
+    say
+    say "To run the TESTS:"
+    need_program required Xvfb xvfb "the X11 tests run on a virtual display"
+    need_program required xdotool xdotool "the X11 tests type keys with it"
+    need_program required xwd x11-apps "the X11 tests take screenshots"
+    need_program required bwrap bubblewrap \
+        "the install and temporary file tests run in a private view"
+    need_program required pdftotext poppler-utils \
+        "the print tests read the PDF"
+    need_program required pdfinfo poppler-utils "the print tests"
+    need_program required pdftoppm poppler-utils \
+        "the manual pictures and the print tests"
+    need_program required pdffonts poppler-utils "the print tests"
+}
+
+
+# The programs that run Strata and print with it.  The LaTeX files are the
+# ones that the Printer asks for (src/latex.c), with the package of each.
+function check_run
+{
+    say
+    say "To RUN Strata and print with it:"
+    need_program required pdflatex texlive-latex-base \
+        "Print, Draft and Final make a PDF with it"
+    need_program required latex texlive-latex-base \
+        "Preview and the equations on the screen"
+    need_program required dvipdfmx texlive-binaries \
+        "the Printer converts the DVI file to a PDF with it"
+    need_program required kpsewhich texlive-binaries \
+        "finding the LaTeX files and fonts"
+    need_program required dvipng dvipng \
+        "equations, keycaps and pictures in the X11 version"
+    need_program required gs ghostscript "pictures in a print"
+    need_tex_file required adjustbox.sty texlive-latex-extra "the Printer"
+    need_tex_file required needspace.sty texlive-latex-extra "the Printer"
+    need_tex_file required extarticle.cls texlive-latex-extra "the Printer"
+    need_tex_file required pmboxdraw.sty texlive-latex-extra "the Printer"
+    need_tex_file required tikz.sty texlive-pictures "the Printer"
+    need_tex_file required ulem.sty texlive-plain-generic "the Printer"
+    need_tex_file required xcolor.sty texlive-latex-recommended "the Printer"
+    need_tex_file required setspace.sty texlive-latex-recommended \
+        "the Printer"
+    need_tex_file required pdflscape.sty texlive-latex-recommended \
+        "the Printer"
+    need_tex_file required fancyhdr.sty texlive-latex-base \
+        "headers and footers"
+    need_tex_file required lmodern.sty lmodern "the default LaTeX fonts"
+    need_one_program required aspell hunspell "hunspell hunspell-en-us" \
+        "the spell check (aspell with aspell-en does as well)"
+    need_directory required /usr/share/mythes mythes-en-us \
+        "the thesaurus"
+    need_library required libX11.so.6 libx11-6 "the X11 version"
+    need_library required libXft.so.2 libxft2 "the X11 version"
+    need_program optional lp cups-client "sending a print to a printer"
+    need_program optional curl curl "Install Now of the TeX Font Association"
+    need_program optional unzip unzip \
+        "Install Now of the TeX Font Association"
+}
+
+
+# Reads the options.
+while [ ${#} -gt 0 ]; do
+    case "${1}" in
+        --build)
+            want_build="yes"
+            shift
+            ;;
+        --tests)
+            want_tests="yes"
+            shift
+            ;;
+        --run)
+            want_run="yes"
+            shift
+            ;;
+        --quiet)
+            quiet="yes"
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "check-tools: unknown option ${1}; try --help." >&2
+            exit 2
+            ;;
+    esac
+done
+
+if [ "${want_build}" = "no" ] && [ "${want_tests}" = "no" ] &&
+   [ "${want_run}" = "no" ]; then
+    want_build="yes"
+    want_tests="yes"
+    want_run="yes"
+fi
+
+say "Tools that Strata needs (Debian and Ubuntu package names)."
+
+if [ "${want_build}" = "yes" ]; then
+    check_build
+fi
+
+if [ "${want_tests}" = "yes" ]; then
+    check_tests
+fi
+
+if [ "${want_run}" = "yes" ]; then
+    check_run
+fi
+
+echo
+
+if [ "${missing_count}" -eq 0 ]; then
+    echo "Nothing required is missing (${optional_count} optional item(s)" \
+         "missing)."
+    exit 0
+fi
+
+echo "${missing_count} required item(s) missing."
+echo "To install them on Debian or Ubuntu, as an administrator:"
+echo
+echo "    sudo apt-get install --no-install-recommends ${missing_packages[*]}"
+echo
+echo "If it fails with 404 Not Found, the package index is old: run" \
+     "sudo apt-get update"
+echo "and repeat the command."
+echo
+
+exit 1

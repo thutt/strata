@@ -1,0 +1,317 @@
+# Chapter 10, part 1: importing text, exporting text, the Printer as a way
+# out, and pictures.
+.h2 Importing text [convert-import]
+.ix Import, text
+.ix Plain text, bringing in
+.ix Text file, how it becomes text
+.ix Import, character rules
+Import is described, field by field, in {x:file-import}.  This section
+gives what that section leaves out: exactly what each character of the file
+becomes, what the two values of Options do to the same file, what happens
+to a file in UTF-8, and the recipes for the files that people import most.
+.h3 What each character becomes [convert-import-chars]
+.ix Import, control characters
+.ix Import, Tab
+.ix Import, carriage return
+.ix Import, form feed
+.ix ^M, ^L, control letters
+The code page of the Character Set field gives the characters above ASCII
+({n:appchar-pages}).  The rest is this.
+.table 20 40
+Character in the file | What is put in the text
+Line Feed | A line end (see the next section).
+Carriage Return and Line Feed | A line end; the Carriage Return is dropped.
+A Carriage Return alone | The two characters {c:^M}.  It is not a line end, so a
+ file with the line ends of old Macintosh systems comes in as one long
+ line with a {c:^M} at each end of a line.  Convert it first.
+Tab | The tab of the text, at the position of the ruler that the document has.
+Form Feed | The two characters {c:^L}; it does not make a page break.
+Any other control character | The sign {c:^} and a letter: {k:Ctrl-A} is {c:^A},
+ Esc is {c:^[}.
+Space | A space, kept: leading and trailing spaces stay in the text.
+A character of ASCII | The character.
+A character above ASCII | The character that the code page gives, or a
+ question mark when it has none.  For UTF-8 and Latin-1 see
+ {x:file-import-charset}.
+.end
+Because the file is taken as it is, text that has spaces before a line end
+keeps them.  A line that ends in two spaces of a file written for a mail
+program ends so in the document too.
+.h3 What the two values of Options do to one file [convert-import-options]
+.ix Ignore Line Endings, example
+.ix Preserve Line Endings, example
+.ix Import, blocks made from lines
+The file used below has eight lines.  Line 1 is {c:a}, a Carriage Return and
+{c:b}; line 2 is a Form Feed and {c:X line}; line 3 begins with a Tab; line 4
+has a word with a UTF-8 letter; lines 5 and 6 are blank; lines 7 and 8 are
+{c:next} and {c:CRLF line}, each ended by Carriage Return and Line Feed.
+.table 18 20 20
+What | Ignore Line Endings | Preserve Line Endings
+Lines 1 and 2 | One line, {c:a^Mb ^LX line} | Two lines, {c:a^Mb}
+ | with a space between | and {c:^LX line}
+The line that begins | After {c:X line} on the | A line of its own that
+ with a Tab | same line, tab kept | begins with the tab
+Two blank lines | One end of block | Two empty lines kept
+{c:next} and {c:CRLF line} | A new block: the text | Two lines of the same
+ | {c:next CRLF line} | block, then an empty line
+.end
+In the first column, text between two blank lines becomes one block, and the
+two blank lines made one break between blocks.  In the second the whole file is
+one block, with a line break for every line end of the file and an empty line
+at the end for the last line end.  The last row shows one more rule: a
+Carriage Return and Line Feed ends a line exactly like a Line Feed.
+.h3 A file in UTF-8 [convert-import-utf8]
+.ix UTF-8, importing
+.ix Latin-1, importing
+.ix Accents, imported text
+.ix Characters not kept
+.ix Mark at the start of a file, UTF-8
+Choose UTF-8 as the Character Set of Import to bring in a file of UTF-8, the
+form of text that most systems of today write.  Each character of the file
+that the document can show is put in the text: the accented letters of the
+western languages, the Greek letters of mathematics, the box characters and the
+no-break space.  A character that the document cannot show, such as a Chinese
+character, a letter of the Cyrillic alphabet or an emoji, becomes a question
+mark, one for each character, and the message line shows how many were not kept
+when the import is done: "Imported; 3 characters not kept".  The text between
+the question marks is right, and the file itself is not changed.
+.table 26 34
+Case | What Import does
+A mark at the start | A file may begin with the mark that says that its
+ text is UTF-8.  It is skipped; it does not come into the text.
+Parts that are not valid | A part of the file that is not a UTF-8 character (a
+ cut or damaged letter) is read as the Latin-1 character with that number.
+ A file that is Latin-1 therefore reads well with this value too.  If the document has no place for the character, it is a
+ question mark and is counted.
+Latin-1 as the value | Use it for a file of Latin-1 (ISO 8859-1).  The accented
+ letters and the no-break space are kept; the control characters of Latin-1
+ and any character that the document lacks become question marks, counted.
+.end
+.caution A question mark that Import made stays in the document, and the
+  character that it stands for is gone from the text.  Keep the file that you
+  imported until you have looked at the text, when characters were not kept.
+  A document is not a file of UTF-8: what it cannot hold is lost at the import,
+  and not at the export.
+Export has UTF-8 and Latin-1 as well ({n:file-export-charset}).  A text that
+is imported and exported again in UTF-8 is the same text, apart from the
+characters that were not kept; the lines end with a Carriage Return and a Line
+Feed after the export, whatever they were before.
+.h3 Recipe: a table from a spreadsheet [convert-recipe-table]
+.ix Table, import from a spreadsheet
+.ix Spreadsheet, import
+.ix Tab separated text
+.ix Ruler, tab stops, import
+Task: a table that is in a spreadsheet program is to be in a document, in
+columns that line up.  Strata cannot read the file of the spreadsheet; the
+other program has to write the table as text.
+1. In the spreadsheet program, save the table as text, with a Tab between
+ the cells, one row to a line.  (Most programs call it "text, tab
+ separated".)  If the text has accents, import it with the Character Set that
+ it was saved in ({n:convert-import-utf8}).
+2. In the Editor, set the tab stops of the text to the places where the
+ columns are to begin: the field Text Ruler of Global Format ({n:format},
+ {n:format-fields-rulers}), typed as a list such as {c:12,22}.  The stops are
+ cells counted from the left edge of the text, from 0; stops at 12 and 22
+ put the second column at the cell 12 and the third at the cell 22.  The
+ default ruler of a new document has one stop, at 5, and a tab that is
+ pressed past the last stop is one cell wide ({n:format-set-tabs}), so a
+ table imported under the default ruler is not in columns.
+3. File, Import: give the name of the text file, set Options to Preserve Line
+ Endings and accept with {k:Ins}.  Every row is a line of one block, and every
+ Tab of the file is a tab of the text.
+4. Look at the result.  The ruler is a property of the document, so it can be
+ changed after the import.
+{x:convert-examples-table} shows the result for a file of three rows of
+three cells: with the default ruler the cells of a screen image are one cell
+apart, and with the stops 12 and 22 the second column begins at the cell 12
+and the third at the cell 22 of the line, counted from 0.
+.note A table imported so is a block of lines with tabs.  It is not a table of
+  the Editor, which has a block for each row and a column of the block for each
+  cell (the {k:F8} menu, {n:edit}, Table).  Make that table by Split Column
+  where the cells are to part, if the table is to be sorted or moved by cells.
+.h3 Recipe: a letter or an article [convert-recipe-prose]
+.ix Letter, import
+.ix Prose, import
+.ix Word processor text, import
+Task: a text that was written in another word processor is to be edited in
+Strata.  The other program has to write it as plain text, with no formatting.
+1. Save the text in the other program as plain text, in UTF-8 or in a code page
+ of the Character Set field ({n:convert-import-utf8}).
+2. File, Import, with Options set to Ignore Line Endings (the default).  A
+ paragraph that was wrapped in the file is one block again, wrapped by the
+ Editor, and each blank line is a break between blocks.
+3. Add the formats and the attributes in the Editor.  They are not in the
+ text file, because plain text has no attributes.
+Two things to watch for.  A program that writes a blank line between every two
+paragraphs gives one block for each, which is right; a program that writes no
+blank line and indents the first line with spaces gives one long block, with
+the indent in its text.  Break that block where each paragraph begins with
+{k:Ctrl-V} (Split the block at the cursor).
+.h3 Recipe: an outline [convert-recipe-outline]
+.ix Outline, import
+.ix Sections, made from an outline
+.ix Headlines, from a list
+Task: an outline, such as one that another program can write as a text file,
+is to be a structured document of Strata.  Strata reads text; the levels of an
+outline are not read from the indents or the numbers.
+1. Create a structured document (File, New, structured).
+2. Import the outline with Preserve Line Endings.  Every entry is a line of
+ one block.
+3. Put the cursor at the start of an entry and use Split, Section ({k:F2},
+ then Section) to make a section of it.  The new section is a section of the
+ same level as the one that holds the cursor.
+4. Move a section to the level it is to have with {k:Alt-<} and {k:Alt->}
+ ({n:edit}, {n:edit-b-split} and the keys of the outline).
+Moving the sections one by one is slow for a large outline, and nothing in Strata does it by itself.
+.h2 Exporting text [convert-export]
+.ix Export, comparing the ways
+.ix Text, three ways out
+.ix Screen image, Data Only
+The File menu has two kinds of Export; {x:file-export} describes them.  The
+table says how they compare, from files of the same documents that were made
+by each.
+.table 20 19 19
+ | Screen image | Data only
+Made by | File, Export | File, Export
+Character set | The one chosen | The one chosen
+Line end | CR LF | CR LF
+Width | 79 characters | No limit
+Tabs | Spaces, by the | Tab characters
+ | ruler |
+Blank line between | Yes | No
+ blocks | |
+Columns of a block | Side by side | One line for
+ | | each cell
+Section numbers | Yes | No
+The title page | Not written | Not written
+Scope | Document or | Document or
+ | section | section
+Bullet of a list | An asterisk | An asterisk
+.end
+The screen image takes the spaces off the end of every line; data only keeps
+the spaces of the text.  A letter with an accent is exported in the character
+set that was chosen.
+.h3 Choosing a way [convert-export-choose]
+.ix Export, which way
+.ix Export for mail
+.ix Export for a text editor
+.table 31 29
+For | Use
+A text that another program wraps | Data only
+A text that is to look as it does on the screen | Screen image
+A text that goes to a mail program of today | Export with the Character Set
+ UTF-8
+A table that is to stay in columns | Screen image, with the ruler set
+A file that must be in code page 850, 860 or | Export with that value of
+ 865, 7 bit ASCII or Latin-1 | Character Set
+A part of a document | Export with Scope: Export Current Section
+.end
+.if .STRATA_BUILD_TYPE # release
+.h3 The text mode of the Editor [convert-export-text]
+.ix Text mode of the Editor
+.ix --text
+.ix UTF-8, text file
+.ix Formatted text file
+.ix Document to text, no screen
+The Editor can write the formatted text of a document to a file without
+opening a screen, so that it can be used from a script or on a machine with no
+terminal.  The mode is chosen with an option of the Editor ({n:appcmd}).
+.table 19 41
+Option | Meaning
+{c:--text FILE.doc} OUT | Read the document {c:FILE.doc} and write its text to
+ the file
+ OUT, then end.  Both names are needed; with one name the document is
+ opened for editing.
+.end
+The file is made as the text is laid out on a screen of 78 cells, with the
+settings of the document (the ruler, the formats of the levels, the section
+numbers) and with the markers shown as they are on the screen.  It has these
+properties, which were checked on documents of the project.
+.table 20 40
+Property | Value
+Character set | UTF-8.  Every character of the set is written as its Unicode
+ character, including the pictures of the control characters.
+Line end | A Line Feed.
+Width | 78 cells; a block that is wider is wrapped.
+Trailing spaces | Taken off.
+Rules | There is a blank line where the screen has a rule between blocks.
+Box characters | A box drawing character of the document is written as
+ {c:-} or {c:+}.
+Title page | Written, above the first section.
+Notes | The mark of the display mode, by default [NOTE]; the text of the note is
+ not written.
+The mark between columns | A space.
+.end
+The status is 0 when the file was written and 1 when the document cannot be
+read ("FILE: The file is not a document of this software.", "FILE: cannot open
+file")
+or when OUT cannot be written ("cannot write OUT").  The messages go to the
+standard error, and nothing is written to the screen.  If OUT exists it is
+replaced without a question.
+.note The text mode is an option of the Editor, not a command of a menu.  For
+  another width, a section or another character set use the File menu.
+.endif
+.h2 The Printer as a way out [convert-printer]
+.ix Printer, as a converter
+.ix PDF, making
+.ix TeX source, making
+.ix Print to a file
+A document leaves Strata in a form that keeps its look through the Printer,
+which typesets it with LaTeX ({n:print}).  Two kinds of file are made, and each
+is a way of exporting.
+.table 10 25 23
+File | How | Use
+PDF | Print, Final or Draft, with a | The printable form; it can be
+ | printer named or not | sent, kept and read by every
+ | | system.
+TeX | Export a LaTeX File | The source in LaTeX, with its pictures in a
+ | | directory; a user who knows TeX can edit it.
+.end
+These are described in the chapter on printing.  {k:F12}, Print, Final makes the PDF
+with the options of its panel; Output File names the file, and with no queue
+named nothing is sent to a printer ({n:print-final}).
+.caution A PDF is the printed page, not the document.  Keep the document.  A
+  PDF can be used as a picture in a document ({n:convert-pictures}).
+.h2 Pictures [convert-pictures]
+.ix Pictures, conversion
+.ix Picture formats, accepted
+.ix PNG, JPEG, PDF, EPS
+.ix Images, converting
+The Picture marker ({n:markers}) names a file of a picture.  Strata accepts four
+formats, found by the content of the file and not by its extension:
+PNG, JPEG, PDF and EPS.
+A picture in another format is not printed: the Printer prints the long form
+of the marker, a frame that has the name of the file, and goes on.
+.table 20 40
+You have | Do
+A scanned image | Use the file that the scanner or the camera writes,
+ normally JPEG or PNG.
+A photograph | JPEG or PNG: use it as it is.
+A drawing from a program that writes PDF or | PDF or EPS: use it as it is.
+ PostScript |
+A picture in another format | GIF, TIFF, BMP, SVG: convert it to PNG or JPEG
+ with a program of the system that converts images.
+A drawing in a program of the system | Export PDF or PNG from that program.
+.end
+An EPS picture is converted by the Printer to a PDF with Ghostscript
+({c:gs}); if Ghostscript is not on the machine, the picture is printed in the
+long form.  A PNG picture that is shown on the screen in the X11 version must
+be a file that is not interlaced.
+.h2 Equations [convert-equations]
+.ix Equations, conversion
+.ix Equations, old documents
+.ix TeX, rewriting equations
+The equations of Strata are TeX math ({n:equations}).  An equation of an old
+document that is not valid TeX math is kept unchanged in the file, the Printer
+flags it as an error, and it has to be written again in TeX.
+{x:eq-legacy} of {n:equations} says how to find such equations and how to
+rewrite them.
+.h2 Old documents [convert-release]
+.ix Old documents
+.ix Retrieve, old document
+.ix Documents of the earlier format
+A document of the earlier format is read by Retrieve and by the Editor as it
+is, and saved as it was.  So are its templates (.SET) and its
+libraries (.LIB); a macro set (.MAC) is read by the macro commands.  The
+equations of an old document are described in
+{x:convert-equations}.

@@ -1,0 +1,156 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+THE FILE MENU
+=============
+THE TOOLS MENU
+==============
+
+F12, Tools.  Every entry was compared with the original program
+(Manuscript 2.1 running under DOSBox-X).
+
+Count
+-----
+Shows "Total number of words in document: N" in a box headed Word Count.
+The count is of the words of the whole document, as in the original
+(ESRC.DOC has 55).
+
+Autosort
+--------
+Section:  sorts the subsections of the section the cursor is in, each with
+everything below it.  It is not recursive: the subsections of a subsection
+keep their order.  The sections are compared by the text of their headline.
+
+Table:  the original says "Use arrow keys to highlight block(s); then
+press Enter."  The highlight starts at the block the cursor is in and
+moves with Up and Down, one block at a time; Home and End move it to the
+beginning or end of the section; the Keypad + and Keypad - keys change the
+direction of the sort.  Enter sorts the highlighted blocks, with no further
+panel.  A block of several columns (a table row) is sorted by its first
+column.  Strata does the same, with + and - (the keys of the keypad
+arrive as plain + and -) for the direction.
+
+The order of both is the same: letters count without case; digits come
+before letters and are compared as text ("10 x" before "9 x"); of two texts
+that differ only in case the one with the lower case letter at the first
+difference comes first ("apple", "Apple", "Apple pie"; "bob", "bOb", "Bob",
+"BOB").  The original puts "A-b", "a_b", "a b" and "ab" in that order,
+whatever order they were in, so a hyphen sorts before an underscore, and
+an underscore before a space; the order of the other punctuation was not
+tried and is the order of the character codes.
+
+Library
+-------
+A library is a set of named cut buffers that can be pasted into any
+document.  Lib Copy (Ctrl-F3) and Lib Cut (Ctrl-F4) take the text, column,
+block or section that is highlighted and ask for the entry name, a
+description and "Include in Library?" in a panel headed Copy to Library
+(Cut to Library in the help); Lib Paste (Ctrl-F5) asks for the entry name
+and pastes it as F5 does.  F12, Tools, Library has:
+
+  Edit      panel "Library Entry": Entry Name, Description, Contents (...)
+            and Include in Library?  The original asks for the name on the
+            same panel; Strata asks for it first (Keypad + or F2 lists the
+            entries), then shows the panel, then asks whether to edit the
+            contents, which opens the text editor.  A new name makes a
+            copy of the entry; Include in Library? No removes the entry.
+  Delete    panel "Delete from Library": Entry Name, then a question.
+  Save      panel "Save Library": Working Directory, File Name,
+            Description, Author, Revision.  The default extension is .LIB.
+  Retrieve  panel "Retrieve Library": Working Directory, File Name and
+            Options, Overwrite Current Library Entries or Merge with them.
+
+The library is kept in memory for the whole run, whichever document is
+being edited.  A library file is a structured document (guide.lib is one
+of the samples): the root section has the entries as its subsections.
+Each entry is a section whose headline block is the kind of the entry (T
+text, B block, S section) followed by its name, as "BCopyright", whose
+second block is the description, and whose subsection holds the contents:
+the blocks themselves (a section holds the sections).  Entries are kept in
+alphabetical order.  Libraries that Strata saved were read back by the
+original (Tools, Library, Edit shows the name, description and contents),
+and guide.lib can be retrieved and pasted.
+
+Not known: whether Include in Library? starts as No on Lib Copy and Lib
+Cut as it does on Library Edit (Strata starts it as Yes so that a name that
+was typed is not lost), the column kind of entry (a column is kept as
+text), and what the original does when the name already exists (Strata asks
+whether to replace it).
+
+Not implemented (dimmed)
+------------------------
+Macros
+------
+A macro is a recorded series of keystrokes that runs when Alt and its key
+(a letter or a digit) are pressed.  F12, Tools, Macros has:
+
+  Learn     panel "Define Macro": Macro Key, Description and Include in
+            Macro Set?, with the line "(Press Ctrl-F1 to End Macro
+            Definition)".  Ins starts the recording, which keeps every key
+            that is pressed, in menus and panels too, until Ctrl-F1.
+  Edit      panel "Macro Edit": Macro Key, Description, Keystrokes and
+            Include in Macro Set?.  The original asks for the key on the
+            same panel and opens an editor for the keystrokes; Strata asks
+            for the key first and shows the keystrokes as one line of text:
+            a character is itself, "<" is "<<", and another key is its name
+            in angle brackets: <Enter> <Tab> <Esc> <BkSp> <Ins> <Del> <Up>
+            <Down> <Left> <Right> <Home> <End> <PgUp> <PgDn> <F1> to <F11>,
+            with Alt- or Ctrl- in front: <Alt-Q> <Ctrl-B> <Ctrl-Right>.
+  Delete    panel "Delete Macro": Macro Key, then a question.
+  Save      panel "Save Macro Set": Working Directory, File Name (default
+            extension .MAC), Description, Author, Revision.  Only the macros
+            that are included are written.
+  Retrieve  panel "Retrieve Macro Set": Working Directory, File Name and
+            Options, Overwrite Current Macros or Merge with Current Macros.
+
+A macro file is a structured document: each macro is a section whose
+headline block is "K" and the key, whose second block is the description,
+and whose subsection has one block with the keystrokes.  A key is three
+bytes: 0x11, a code and a flag.  The low bits of the flag tell the kind of
+key and the high bits the modifiers (0x40 Ctrl, 0x80 Alt).  The macro key
+itself is 0x11, the upper case letter and 0x80 (Alt-Q is 11 51 80).  Found
+by recording each key in the original:
+
+  a character key     flag 0, code the upper case character: Ctrl-B is
+                      11 42 40, Alt-I is 11 49 80
+  editing keys        flag 11: Enter 0, Insert 1, Delete 2, Escape 3,
+                      Backspace 5, Tab 7
+  function keys       flag 12, code the number: F4 is 11 04 12, Alt-F3 is
+                      11 03 92
+  cursor keys         flag 14: Up 0, Down 1, Left 2, Right 3, Page Up 4,
+                      Page Down 5, Home 6, End 7; Ctrl-Right is 11 03 54
+  a character typed without Alt or Ctrl is the byte itself
+
+Shift is not kept (Shift-Down is recorded as Down).  The text is not
+split into lines, so a keystroke block can contain the byte 0x0A; the
+macro file is therefore read and written directly and not through the
+document reader.  A macro set that Strata saved is read by the original
+(Tools, Macros, Edit shows its description and keystrokes), and guide.mac of
+the samples can be retrieved and run.
+
+Not known: whether Include in Macro Set? No still leaves the macro usable
+(Strata keeps it for the run and does not save it), the codes of the
+other keys (Keypad + is recorded with a different flag), and what Shift does.
+
+Spell (Document, Block, Section, Word, and Ctrl-C) is done: see SPELL.txt.
+
+Thesaurus (also Ctrl-T).  Done: it looks the word of the cursor up in the
+MyThes data of the package mythes-en-us and shows the synonyms in a panel
+like the original's; Enter replaces the word (the case and the attributes of
+the old word are kept), Ctrl-T looks up the highlighted word, Ctrl-PgUp goes
+back, Esc leaves.  A word that is not found gives the list of the words next
+to it in the dictionary.  Without the data a popup names the package.  The
+whole of it, with what the original does, is in THESAURUS.txt.
+
+Worksheet.  Removed (it imported 1-2-3 spreadsheets; see REMOVAL.txt).

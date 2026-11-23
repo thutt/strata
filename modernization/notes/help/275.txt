@@ -1,0 +1,25 @@
+------------------------------------ Markers -----------------------------------
+The Equation marker inserts an equation or formula.  You define an equation as
+part of the equation marker or in a separate file, which you then specify in the
+File Name prompt of the Equation marker. Use text, numbers, and equation 
+keywords to define an equation. (For an equation file defined in Manuscript 
+Release 1, use the Equation Update utility to upgrade the file to Release 2). 
+
+Position:      Specify whether the image should retain its relative place in 
+               the text (Fixed), allow following text to move forward if the 
+               image must be moved to the next page (Floating), or be sized to 
+               fit in a line of text (In Text).  
+
+Height/Width:  Specify the dimensions for the image or use Scale to adjust the
+Scale          size of the image relative to its original size. Width and Height
+               use the units of measurement specified on the Options panel
+               unless another unit is specified as part of the value. The
+               scale can be from 0 to 10.
+
+Name:          Specify the name, if any, to use in the Table of Figures.
+
+Print/Preview: Print or preview the image using the primary printer before 
+               returning to the editor.
+--------------------------------------------------------------------------------
+Equation Definition     Equation Keywords     Options     Print/Preview Options
+   Markers      Equation Update Utility       Keyboard Summary      Help Index

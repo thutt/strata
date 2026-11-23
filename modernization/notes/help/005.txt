@@ -1,0 +1,25 @@
+
+------------------------------- Preview Document -------------------------------
+
+Preview Document can be accessed either from the Document Manager or from 
+Menu (F10) Print Preview in the editor.  Use Print Preview to preview fully 
+formatted document pages, including equations and graphics, on the screen.
+
+  +----------------------------- Preview Document ---------------------------+
+  |                                                                          |
+  | Working Directory:                                                       |
+  |                                                                          |
+  | Document Name:                                                           |
+  +--------------------------------------------------------------------------+
+  | Preview:                         Preview from Section:                   |
+  |                                          to Section:                     |
+  |                                                                          |
+  |                                  Preview from Page:                      |
+  |                                          to Page:                        |
+  |                                                                          |
+  |                                  Graphics Preview Options:               |
+  | Printer:                                                                 |
+  +----------------------- Press Ins to Preview Document --------------------+
+--------------------------------------------------------------------------------
+    Document Manager     Preview     Hyphenation Settings     Optional Settings
+          Menu               Keyboard Summary               Help Index

@@ -1,0 +1,25 @@
+
+--------------------------------- Set Attribute --------------------------------
+Set Attribute (Alt F6) assigns local text attributes to text as you type.
+
+Accelerators:    Ctrl B - Bold on/off          Ctrl I - Italics on/off  
+                 Ctrl N - Normal on/off        Ctrl U - Underscore Words on/off
+--Procedure---------------------------------------------------------------------
+                                        +-------- Set Attributes -----+
+ Press Set Attr.                       |   Normal                    |
+ Select the attributes from the        |   Bold                      |
+  list and press Ins.                   |   Italics                   |
+---------------------------------       |   Underscore All            |
+                                        |   Double Underscore All     |
+# To add attributes to the current      |   Underscore Words          |
+  column or block attributes, position  |   = Double Underscore Words |
+  the cursor next to the attribute      |   Small Caps                |
+  and press Space Bar.                  |   Strikethrough             |
+                                        |   - Subscript               |
+# To remove attributes, position the    |   + Superscript             |
+  cursor next to the attribute and      |   1 Printer Specific        |
+  press Space Bar.                      |   2 Printer Specific        |
+                                        | v [Normal]                  |
+                                        +-----------------------------+
+--------------------------------------------------------------------------------
+  Format Block    Accelerators    Attributes    Keyboard Summary    Help Index

@@ -1,0 +1,25 @@
+
+------------------------------- Optional Settings ------------------------------
+
+Print Comments?     Select No to not print the contents of Comments markers.
+                    Select In Text to print the comment and author's initials
+                    at the location of the marker. Select At End of Document to
+                    place a reference to the comment in the document body and 
+                    to print comments alphabetically by author's initials at 
+                    the end of the document.
+
+Print Line Numbers? Select Yes to print a line number in the left margin next to
+                    each line of text and each graphic image, white space, and 
+                    equation.  Line numbers increment by 1 and start at 1 on 
+                    each page.
+
+Save Page Breaks?   Select Yes to save page breaks that are created when the 
+                    document is formatted.  Saved page breaks are displayed on
+                    the edit screen the next time you retrieve the document.
+
+Optimize Graphics?  Select Yes to save formatted graphics images between final
+                    print or preview sessions, thus shortening formatting time.
+                    Select No to conserve disk space.
+
+--------------------------------------------------------------------------------
+  Print Document       Comment Marker       Keyboard Summary       Help Index

@@ -1,0 +1,25 @@
+
+------------------------------- Working Directory ------------------------------
+
+The Working Directory prompt appears on all panels that prompt for a file name. 
+The working directory is where you specify the default directory for retrieving
+and saving documents.
+
+--Procedure---------------------------------------------------------------------
+ Move the cursor to the Working Directory prompt.       
+ Enter the name of the directory to which     +-------------------------------+
+  you want to save or retrieve files.          |                               |
+                                               | Working Directory:            |
+                  or                           |                               |
+                                               | Document Name:                |
+  Press Gray + to display a list of            |                               |
+  directories. Move the highlight to the       |:::::::::::::::::::::::::::::::|
+  directory you want and press Enter.
+--------------------------------------------------------------------------------
+# When you change the working directory, the new working directory stays active
+  for the remainder of the edit session or until you change it again.
+# You can also specify the directory of a specific file in the file name. For 
+  example, enter C:\MS\NEWDATA\MEMO.DOC to search for the file MEMO.DOC in 
+  the directory \MS\NEWDATA\, regardless of the current working directory.
+--------------------------------------------------------------------------------
+          Document Names          Keyboard Summary          Help Index

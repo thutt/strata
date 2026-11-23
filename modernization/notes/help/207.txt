@@ -1,0 +1,25 @@
+
+---------------------------- Typeface List Settings ----------------------------
+
+Font #:    Displays the number of the font (1 - 20).
+
+Font Name: Enter up to 15 characters to describe the font. For example, use 
+           Notes for your note font.
+
+Typeface:  Press Space Bar to display a list of typefaces.  Move the highlight
+           to your selection and press Enter to accept the selection. The
+           typefaces available vary by printer.
+
+Size:      Press Space Bar to display a list of point sizes/pitches.  Move the
+           highlight to your selection or enter a custom size.  Press Enter to 
+           accept your selection.  (Point sizes vary by printer.)
+
+Printer:   Displays the printer specified for the current document.  To change 
+           the document printer, press Space Bar, move the highlight to your 
+           choice, and press Enter to accept the selection.  Changing the 
+           document printer replaces the old typeface list with a typeface list
+           for the new printer.  Use this setting to save a specific printer and
+           typeface list with your document, no matter what printers are defined
+           in Setup.
+--------------------------------------------------------------------------------
+ Global Typeface      Custom Point Size      Keyboard Summary      Help Index

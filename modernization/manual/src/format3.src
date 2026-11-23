@@ -1,0 +1,399 @@
+# Chapter 4, third part: Global, Format.  Part of the chapter source.
+
+.h2 Format [format-format]
+.ix Global Format
+.ix Global Format panel
+.ix Level 1 Format
+.ix Level Format panels
+.ix Global section settings
+.ix Format panels, ring of
+Global, Format sets the formats that a whole document takes unless a more
+local setting overrides them ({n:format-order}).  It holds the settings of
+the headlines and of the text, the spacing between blocks and sections, the
+numbering of sections, and the same again for each of the five levels of
+section.  The subjects that these settings are about (attributes, indents,
+justification, section tags, tab stops, spacing, fonts) are each explained
+after the panels, in the order in which the fields use them.
+
+.h3 How to reach the command [format-format-reach]
+Press {k:F12}, choose Global and then Format (the first entry; the hint line
+reads "Global section settings"), as described in {x:format-global-menu}.  The
+first panel is Global Format (headline and text).
+.pic pictures/format-global-format.png 5 Global Format (headline and text).
+
+.h3 The fourteen panels [format-format-panels]
+.ix Global Format (headline and text)
+.ix Global Format (spacing)
+.ix Level Format (headline and text)
+.ix Level Format (spacing)
+.ix PgUp, PgDn in Global Format
+The global settings and each of the five levels have two panels, so that
+every panel fits on the screen: a panel of the rulers (attributes,
+justification, indent, font and tab stops of the headline and of the text)
+and a panel of the spacing and of the numbering.  The global settings have
+a third panel, for the numbering of the printed lines
+({n:format-fields-linenum}), and a fourth, for the contents and the lists
+({n:format-fields-lists}).  That makes fourteen panels in a ring, in this
+order: Global Format (headline and text), Global Format (spacing), Global
+Format (line numbering), Global Format (contents and lists), Level 1 Format
+(headline and text), Level 1 Format
+(spacing), and so on to Level 5
+Format (spacing).  {k:PgUp} goes forward in that order and {k:PgDn} backward;
+after the last panel {k:PgUp} returns to the first.  {k:Ins} applies all
+fourteen at once and {k:Esc} none.  A section of level 6 or
+deeper takes the global settings.
+
+.h3 Global Format (headline and text) [format-fields-rulers]
+.ix Headline Attributes
+.ix Headline Justification
+.ix Headline Indent
+.ix Headline Font
+.ix Headline Ruler
+.ix Text Attributes
+.ix Text Justification
+.ix Text Indent
+.ix Text Font
+.ix Text Ruler
+.ix Attributes
+.ix Bold
+.ix Italics
+.ix Underscore Words
+.ix Normal
+The first panel has the five settings of the headline blocks, then the same
+five of the text blocks.  A text field is on a row of dots, a choice is in
+square brackets.
+.table 20 27 10
+Field | Values | Default
+Headline Attributes | Normal, Bold, Italic, Underscore Words | Normal
+Headline Justification | Left, Right, Center, Even | Left
+Headline Indent | None, First, All but First, All | None
+Headline Font | one of the 20 fonts | Font 4
+Headline Ruler | tab stops, or empty | none
+Text Attributes | Normal, Bold, Italic, Underscore Words | Normal
+Text Justification | Left, Right, Center, Even | Left
+Text Indent | None, First, All but First, All | None
+Text Font | one of the 20 fonts | Font 2
+Text Ruler | tab stops, or empty | none
+.end
+The default is what a panel shows for a document whose setting nobody has
+changed.  A new document has a bold headline and evenly justified text with a
+ruler at 5 ({n:format-default}), so its panel shows those.
+
+{b:Attributes.}  The attribute of a format is the look that all the
+characters of a block have unless the text itself says otherwise.  Bold,
+Italic and Underscore Words are drawn on the screen and printed as bold,
+italic and underlined text; the headline attribute applies to the whole
+headline, its tag included.  An attribute of the text is added to the
+attribute of the format ({n:format-order}).  The {k:F6} panel also offers
+Bold Italics, and a block that has it keeps it; the panels then show the
+choice as a fifth entry.  The attribute keys are in
+{x:format-screen-attrkeys}.
+
+The other fields are explained in {x:format-set-justification},
+{x:format-set-indents}, {x:format-set-tabs} and {x:format-set-typefaces}.
+
+.h3 Global Format (spacing) [format-fields-spacing]
+.ix Line Spacing
+.ix Headline Spacing
+.ix Block Spacing
+.ix Subsection Spacing
+.ix Peer Section Spacing
+.ix Indent per Level
+.ix Auto Numbering
+.ix Auto Numbering to Level
+.ix Page Break Level
+.ix Page Number Level
+.ix First Block Type
+.ix Print, Global Format field
+.ix Ruler, Global Format field
+.ix Winding Columns
+.pic pictures/format-global-spacing.png 5 Global Format (spacing).
+The second panel has fourteen fields: the spacings, which are numbers of
+lines with two decimals, the indent of the sections on the screen, the
+switch of the section tags and the depth to which they are given, and the
+settings of the page, of the first block, of the ruler and of the columns.
+.table 20 28 9
+Field | Values | Default
+Line Spacing | 0.00 to 99.99 | 1.00
+Headline Spacing | 0.00 to 99.99 | 1.50
+Block Spacing | 0.00 to 99.99 | 1.50
+Subsection Spacing | 0.00 to 99.99 | 1.50
+Peer Section Spacing | 0.00 to 99.99 | 2.00
+Indent per Level | whole number | 0
+Page Break Level | whole number | 0
+Page Number Level | whole number | 0
+Auto Numbering? | No, Yes | Yes
+Auto Numbering to Level | whole number | 99
+First Block Type | Headline, Joined | Headline
+Print | Headlines and Text, Only Headlines, Only Text | Headlines and Text
+Ruler | Relative, 10/inch, 12/inch, 15/inch | Relative
+Winding Columns | whole number | 1
+.end
+Spacing is explained in {x:format-set-spacing}, Indent per Level in
+{x:format-set-indents} and Auto Numbering in {x:format-set-tags}.
+
+{b:Auto Numbering to Level} is the deepest level that has a section tag, on
+the screen and in print: a section deeper than that has none.  The default
+99 numbers every level; with 2 the headlines of levels 1 and 2 have a tag
+and those of level 3 and deeper have not.  A level that has a Section Tag of
+its own keeps it ({n:format-set-tags}).
+
+{b:How deep sections nest.}  The format has no limit to the nesting of
+sections that a person would meet: a document of 3000 nested levels is read,
+shown and printed.  The levels 1 to 99 have a section tag, which is the number
+of the place of the section (1.1.1.1 ...), and a section of level 100 or deeper
+has none; its status line shows the number of its ancestor of level 99.  The
+screen and the print give the same number to every section: the status line,
+the tag before the headline, Go To, the cross references, the Section marker
+and the printed headline.  Only the Global Format panel and the five Level
+Format panels have settings of their own; a section deeper than level 5 takes
+those of the Global Format panel.  The indent of a deeply nested section stops
+24 cells short of the width of the text, on the screen and in print, so that
+there is room left to read it, and a tag of more than 40 characters is broken
+after a point when it is printed.  The deepest level of the table of contents
+is a number from 1 to 99 (Contents Levels in {n:print-contents}).
+
+{b:Page Break Level} starts a new page at every headline of that level or of
+a higher one, in a print and in a preview.  The default 0 makes no page break
+of its own.  With 1 each section of the first level, each chapter of a book,
+starts a page; with 2 every section of the first and the second level does,
+and so on.  The first headline of the document leaves no blank page, the
+title page is still on a page of its own, and a part that is printed alone
+begins on its first page.  A Draft print has the page breaks
+too.  A Keep region is not split by a page break ({n:marker-keep}), and the
+headline of a section that starts a page is at the top, without the space
+that is added before a headline.  A level that is deeper than any section of
+the document changes nothing.  To have a page break at some other place, use
+a Page Break marker ({n:marker-page-break}).
+
+{b:Page Number Level.}  The page number starts again at 1 at every headline of
+this level or of a higher one (a smaller number); 0, the default, numbers the
+pages of the whole document in one run.  With the level 1, every chapter
+starts at page 1 and the pages that follow it, with the sections below it,
+go on from there; with the level 2, every section of level 2 or 1 starts at
+page 1.  The page on which the headline stands is the page 1, even when the
+headline is in the middle of that page.  The Page Number marker of a header
+or a footer, the table of contents and the cross-references that give a page
+use these numbers.  Only the print has pages; the screen is unchanged.
+
+{b:Print.}  Headlines and Text, the default, prints the whole document.  Only
+Headlines prints the headline blocks only: the outline of the document, each
+headline with its tag, under the one before with the headline spacing; the
+table of contents is still made.  Only Text prints the text blocks only: no
+headline, no tag and no table of contents.  The title page is printed in both.
+The Editor shows the whole document whatever the field says; Only Text is
+useful when the headlines are comments to the author.
+
+{b:Ruler.}  The size of a ruler unit on the printed page.  Relative, the
+default, makes a unit one eightieth of the width between the margins, so that
+the ruler of the screen, which has 80 units, is as wide as the text; 10/inch,
+12/inch and 15/inch make a unit a tenth, a twelfth or a fifteenth of an inch.
+The unit is the one of the tab stops, of the widths of the columns and of the
+gaps, of the left and right block indents (Block Indent) and of the indents of
+the levels ({b:Indent per Level}, {b:Indent to Next Level}).  A tab stop, a
+column or an indent that would be wider than the text is made as wide as the
+text.  The screen is always 80 columns wide.  A block with a left indent of 20
+starts 1.625 inches from the left edge of the text in Relative on a text 6.5
+inches wide, and 2 inches from it at 10/inch.
+
+{b:First Block Type.}  Headline, the default, prints the headline of a section
+on a line of its own.  Joined prints the headline and the first block of text
+of the section as one paragraph: the headline, in its own font and attributes,
+at the start of the first line, then two spaces, then the text; the lines that
+follow begin at the left margin.  The table of contents is the same.  The
+Editor keeps the two blocks on two lines.  The Printer joins nothing, and puts
+a line in the Error Log, when the headline and the text have different fonts
+("Cannot join headline/text blocks - different fonts"), when Print is not
+Headlines and Text ("Cannot join headline/text blocks - unprinted") or when a
+block has several columns ("Cannot join multicolumn headline/text blocks"); the
+two blocks are then printed apart.  The level panels have the same field for
+the sections of one level.
+
+{b:Winding Columns.}  The number of columns, 1 to 9, in which the printed text
+is set; 1, the default, is no columns.  The text flows down one column and
+winds to the top of the next when the column is full, and the words are
+broken at the end of a line to the width of the column.  A headline keeps the
+full width of the page, and so do the title page and the rows of a table.  The
+Editor shows one column.  A block can have its own number, gutter and rule ({b:Winding Columns} of
+the Named Block Format, which has the same layout panel,
+{n:format-named-edit}) and a level its own.  With {k:F2} (or {k:Keypad +})
+on the field the {b:Winding Column Layout} panel opens, with three fields:
+Number of Columns, {b:Gutter Size} (the space between the columns, an inch
+with up to three decimals, 0.250 by default) and {b:Vertical Rules} (None, the
+default, Single, Double or Wide: a line between the columns, thin, thicker or
+thickest; the Printer draws Double as one thicker line).  The Printer balances the last page of a text in columns.  {k:Ins} keeps the panel and {k:Esc} leaves it.
+.pic pictures/format-global-winding.png 5 The Winding Column Layout panel, with two columns and a gutter of 0.3 inch.
+
+.h3 Global Format (line numbering) [format-fields-linenum]
+.ix Line numbering
+.ix Numbered lines
+.ix Lines, numbers in the margin
+.ix Citing a line
+.pic pictures/format-global-linenum.png 5 Global Format (line numbering).
+The third panel numbers the printed lines of the document: each printed line
+gets its number in the margin, in a small sans serif type, so that a number
+is never taken for text.  The numbers are in a Print, in a Preview and in an
+exported LaTeX file, all the same; they are not on the screen of the Editor.
+A document that is not numbered is printed as before.
+.table 18 30 9
+Field | Values | Default
+Numbering | Off, Pagewise, Running, Each Section | Off
+Number Every | 1 to 99 | 1
+Side | Left, Right, Outer, Inner | Left
+Number Size | Tiny, Script, Footnote | Tiny
+Number Font | Sans, Roman, Typewriter | Sans
+Number Format | Arabic, Roman, Capital Roman | Arabic
+Distance | 0.00 to 2.00 inches | 0.15
+Equations | No, Yes | No
+.end
+{b:Numbering} says how the lines are counted.  Off prints no numbers.
+Pagewise starts again at 1 at the top of each page, as pleadings and
+contracts are numbered.  Running counts through the whole document, so that
+a line is named by one number.  Each Section counts through the document
+and starts again at 1 at each section of the first level; a document without
+sections is counted as with Running.
+{b:Number Every} puts a number on every n-th line only: with 5 the lines 5,
+10, 15 and so on have a number and the others have none (the count is
+the same).  {b:Side} puts the numbers at the left or the right of the text.
+Outer and Inner are for pages that are printed on both sides: the odd
+pages are the right-hand ones, so Outer puts the number at the right of an
+odd page and at the left of an even one, and Inner the other way round.
+{b:Number Size}, {b:Number Font} and {b:Number Format} are the look of the
+number: its type size (smaller than the text), its type family and the
+digits (1 2 3, i ii iii or I II III; a roman number shows 1 to 3999 and
+the line 4000 and the lines after it are numbered in arabic digits).  {b:Distance} is the space between the
+number and the text, in inches.  {b:Equations} Yes numbers the lines of a
+displayed equation as lines of the text; with No a displayed equation takes
+no number.
+Number Every must be a whole number from 1 to 99, and Distance a number
+from 0.00 to 2.00, or a message reports this and the panel is shown again.
+
+.h3 Global Format (contents and lists) [format-fields-lists]
+.ix Table of Contents Level
+.ix Table of Figures
+.ix Automatic list
+.ix Marker counts
+.pic pictures/format-global-lists.png 5 Global Format (contents and lists).
+The fourth panel sets what the print makes of the contents, the index and the
+lists of the document, and it is stored in the document.  It is the choice of
+the document; the Print panel starts with it, and a change there is for one
+print ({n:print-contents}, {n:print-index}).
+.table 20 40
+Field | What it does
+Table of Contents Level | A number from 0 to 99: the deepest level of headline
+ that the contents list.  0 means no contents.  A structured document that has no
+ level set lists every level (99).  A document that is not structured, or has no
+ headline, has no contents page.
+Table of Figures | Automatic, On or Off for the list of the Figure markers.
+Table of Pictures | The same for the names of the Picture markers.
+Table of Tables | The same for the Table markers.
+Index | The same for the index that the Index markers make.
+Figure Markers, Picture Markers, Table Markers, Index Markers | The number of
+ markers of the kind that the document has now.  It is shown, not a field.
+.end
+{b:Automatic} is the first choice of each list and the usual one: the list is
+made when the document has at least one marker of its kind, and not otherwise.
+The document keeps the count of each kind as you work: a marker that you type,
+paste or bring back with Undo adds one, a marker that you delete, cut or take
+away with Undo takes one off, and a block or a section that has markers does
+the same for the markers inside it, so the list turns on with the first marker
+and off with the last.  {b:On} makes the list whatever the count is (a list with
+no entry is not printed) and {b:Off} never makes it; both stay in the document
+until you change them.  The count is saved with the document.  When a count
+cannot be right (it would go below 0, or it has reached 9999999) it is marked,
+and the document is counted again the next time it is opened; the panel shows a
+note of this beside the number.  A document that was made by an earlier
+version, or by
+another program, has no counts and is counted when it is opened.
+Table of Contents Level must be a number from 0 to 99, or a message reports this and
+the panel is shown again.
+
+.h3 What counts as a line [format-linenum-lines]
+.ix Line numbering, what is counted
+.ix Numbered lines, tables
+.ix Numbered lines, Keep blocks
+Every printed line of a headline or of a block of text is a line, whether it
+ends because the text wraps or because the text ends there.  A picture in a
+block is one line, however high it is.  The space between blocks is not a
+line and an empty block takes no number.  The lines of a Keep block are
+numbered like the others.
+Some printed lines have no number, and the count goes on past them:
+{b:the rows of a table} (a block of several columns), {b:footnotes} and
+{b:endnotes}, the headers and the footers, the Error Log page, and the lines
+of a Keep block that floats to the top of a page ({n:marker-keep}).  When
+a print fails, the banner and the marks of the errors are on the pages as
+always, and the numbers do not move them.
+
+.h3 Level 1 to Level 5 Format [format-fields-levels]
+.ix Level 1 Format
+.ix Level 2 Format
+.ix Level 3 Format
+.ix Level 4 Format
+.ix Level 5 Format
+.ix Section Tag, Level Format
+.ix Inherited value, brackets
+.ix Value in brackets
+.pic pictures/format-level1.png 5 Level 1 Format (headline and text).
+Each level has two panels, Level n Format (headline and text) and Level n
+Format (spacing), with the title of the level in the title bar.  The first of
+them has the same ten fields as the global panel; the second has the five
+spacings, the Indent to Next Level, the First Block Type, the Section Tag and
+the Winding Columns.
+.table 24 20 13
+Field | Values | Shows
+Line Spacing | 0.00 to 99.99 | [1.00]
+Headline Spacing | 0.00 to 99.99 | [1.50]
+Block Spacing | 0.00 to 99.99 | [1.50]
+Subsection Spacing | 0.00 to 99.99 | [1.50]
+Peer Section Spacing | 0.00 to 99.99 | [2.00]
+Indent to Next Level | whole number | [0]
+First Block Type | Headline, Joined | [Headline]
+Section Tag | text | []
+Winding Columns | whole number | [1]
+.end
+Auto Numbering? and Auto Numbering to Level are set on the global panel only.
+Indent to Next Level adds the indent of the sections below the level
+({n:format-set-indents}); First Block Type joins the headline of the sections
+of the level with their text; Winding Columns, with its gutter and rules, sets
+the columns of the sections of the level ({n:format-fields-spacing}).
+
+A level field shows, in brackets, the value that the level takes from the
+global settings: [Bold], [Left], [1.50], [None] for a ruler that has no
+stops.  A field that shows its bracket has no value of its own.  Pick another
+choice, or type another value, and the level gets a value of its own; put the
+bracket back (the first entry of the choice list, or an emptied text field)
+and the level follows the global value again.  If the global value changes
+later, the bracket changes with it.
+
+.pic pictures/format-level1-spacing.png 5 Level 1 Format (spacing).
+
+.h3 How the panels are applied [format-format-apply]
+.ix Applying the Format panels
+.ix Empty field in Format panels
+When {k:Ins} is pressed the program first checks every number of every
+panel, then applies each field whose value is not what it showed at the
+start.  A field that was not touched is never changed, even when its
+value is equal to the default.
+.table 22 38
+Case | Result
+Global field set to its default | The global setting is the default again.
+Global field emptied | The default is used.
+Global ruler emptied | No tab stops.
+Level field set to its bracket | The level follows the global value.
+Level field emptied | The level follows the global value.
+Level choice, first entry | The level follows the global value.
+Any other value | The value is used.
+Spacing typed with three decimals | The third decimal is dropped.
+Whole number typed with a sign | Refused: whole numbers only.
+.end
+The checks are these: every spacing field must be a number with at most two
+digits before the point and, if there is a point, digits after it (a
+second point or a letter is refused, a leading point such as .5 is
+accepted and means 0.50); every whole number field (Indent per Level, Page
+Break Level, Page Number Level, Auto Numbering to Level, Winding Columns and
+Indent to Next Level) must be made of digits only.  A
+message names the field: "Line Spacing must be a number such as 1.50" or
+"Indent per Level must be a whole number".  The panel that holds the faulty
+field is shown again, and nothing has been applied; correct the field and
+press {k:Ins} again.  A number is not checked against a range: 0 is allowed
+for a spacing, and any whole number for the indent.

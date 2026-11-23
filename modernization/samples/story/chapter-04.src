@@ -1,0 +1,69 @@
+.chapter 4
+.h1 Conditional printing [conditional]
+The markers If, Else and Endif select text, so one document prints as several
+editions.  The old program had them as part of bulk printing and mail merge,
+with a fourth marker, Merge.  Strata implements the three as conditional text.
+Merge is a label only.
+.h2 Origin [conditional-start]
+The manual first held text for the people who build Strata: command lines of
+the programs behind the Document Manager, environment variables and exit
+codes.  On 14 November the project maintainer decided to purge that text, then
+reversed the decision the same day:
+.quote
+  "Hold off on removing all that information from the documentation.  This is a
+  perfect use of the conditional markers!"
+.end
+The work ran in two steps: the markers first, as a feature for every
+document, then the text for developers between them.
+.h2 Rules [conditional-rules]
+.ix Variables
+{Tab:rules} states the rules of the markers.  Examples of the comparison:
+{c:10 > 9} is true because both sides are numbers; {c:10 < 9a} is true because
+one side is text and the character 1 comes before 9; {c:undefined = undefined}
+is true for two unset variables.
+.tabcap rules Rules of the conditional markers
+.table 14 50
+Topic | Rule
+Expression | A variable, an operator and a value, such as
+ | {c:.STRATA_BUILD_TYPE # release}.  Operators: {c:=}, {c:#} (not equal),
+ | {c:<}, {c:>}, {c:<=}, {c:>=}.  Conditions nest ten deep.
+Variables | A string.  A name starts with a letter and holds letters, digits,
+ | hyphens and underscores.  A value is printable 7-bit ASCII without a
+ | quotation mark, at most 255 characters.  An empty value counts as not set;
+ | an unset variable has the string {c:undefined}.
+Special names | A name that begins with a period cannot be given by the user.
+ | {c:.STRATA_BUILD_TYPE} tells whether the build is debug, release or asan.
+Scope | The Document Manager passes the variables to the Editor, the Printer
+ | and the Viewer and does not save them between runs.
+Comparison | Numeric when both sides are digits that fit an unsigned 32-bit
+ | integer; otherwise text, in the order of the ASCII codes, not of UTF-8.
+Errors | A bad expression, an Else or Endif without an If, an If without an
+ | Endif, nesting deeper than ten.  Each is reported with its position and
+ | marked with a Print Error marker.  A bad expression is false.
+.end
+.h2 Printing and screen [conditional-how]
+The Printer makes a filtered copy of the document before it writes LaTeX; the
+text of branches that are not chosen is not copied.  Diagnostics keep the
+positions of the original document.  The Editor shows all text and the
+markers, because the project maintainer decided that nothing is hidden on the
+screen.  The generator of the manual has a directive for each marker and stops
+with a message in three cases:
+1. A headline is left out in the middle of its parent in a document whose
+headline numbers are typed.  A gap would remain.  Where the product makes the
+numbers, as in this document, the Printer numbers what it prints.
+2. Text that is always printed has a cross reference to a section that is not.
+3. A condition is not closed in the file that opened it.
+.h2 Use in this document [conditional-this]
+Sections on defects of method, the measurement of passes, borders, faulty tests
+and the organisation of the work stand inside an If marker with the condition
+{c:.STRATA_BUILD_TYPE # release}.  Every build except a release prints them.
+The contents, the lists and the section numbers follow the edition.  A
+paragraph for developer builds only has no Else branch.  The one Else branch is
+in {x:beginning-reading}, and its two texts differ.  Print the document from a
+debug build and from a release build to compare.
+.h2 Labels [conditional-honest]
+Merge prints as {c:MERGE "name"} and its variable overrides nothing, because
+Strata has no merge files.  The Figure, Picture, Table and Index markers are no
+longer labels: the Printer makes the lists and the index from them and prints
+nothing at their place.  The Batch Print Utility of the old program is not
+implemented.

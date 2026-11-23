@@ -1,0 +1,56 @@
+.if .STRATA_BUILD_TYPE # release
+.chapter 8
+.h1 Organisation of the work [machines]
+Work ran in parallel on two machines.  The project maintainer set the goals and
+decided.  Assistant sessions, instances of Claude, did the jobs, several at a
+time.  This document names no machine and no person.
+.h2 Roles [machines-people]
+{Tab:roles} lists the three roles of the record.
+.tabcap roles Roles in the work
+.table 24 40
+Role | Tasks
+The project maintainer | A human.  Set the goals, answered questions, reviewed
+ | documents, grouped and ranked the worklist.  Every decision is in the
+ | worklist with its date.
+The coordinator | An assistant session.  Kept the main line, scheduled jobs,
+ | merged the returned branches, measured and wrote notes across jobs.
+The jobs | Assistant sessions.  Each took one task from a task file, worked on a
+ | branch of its own and reported.  Jobs do not talk to each other.
+.end
+The release criterion is an example of a decision: the project maintainer
+grouped the worklist items of one document as R1, and no item outside R1
+starts unless the project maintainer asks.  Review comments asked that every
+statement about memory, speed and disk be measured in pages and words, not
+"small".  That request is the origin of {x:memory}.
+.h2 Machines [machines-two]
+The first machine had 16 threads and a Debian 13 system; the second had 8
+threads and a newer kernel.  The first held the text collection, so the
+measurements that quote it were taken there.  The second used a text made from
+the project documents ({x:memory-survey}).  The second machine took the numbered
+backups, the long temporary path, the attribute table and the colour of
+pictures, and later steps of the Border and the Section marker.  A task came
+as a file and returned as a branch and a report.  Two things made the division
+possible: the verification
+of a branch showed whether a job broke what other jobs rely on, and every job
+received the same rules: the C style, the form of commit messages, and a
+feature is finished only with its manual text, help and tests.
+.h2 Verification and commits [machines-verify]
+A branch is merged when it is verified: the build, the unit tests, the smoke
+and the X11 tests pass, and the tree is unchanged ({x:testing-counts}).  The
+generated manual is committed alone after each verification, from "after the
+merge of five jobs" on 16 November to "after verification 58" on 19 November.
+Every commit message has a summary of at most 80 characters, a section
+Description with What, How and Why, and a section Testing with the exact
+commands and results.
+.h2 Unattended runs [machines-overnight]
+Tasks were queued and ran unattended.  Of the @commits_to_19@ commits to the end
+of 19 November, @commits_night@ were made between midnight and seven in the
+morning.  A job follows four rules without asking: decide, and write the
+decision in the report; commit and write a progress note every fifteen minutes;
+build debug and release, because a release build with strict warnings finds
+what a debug build does not; end with a report that lists what was not
+finished, the decisions made and the open questions.
+The project maintainer reads these lists in the morning.  A wrong decision
+stays in until a report is read: the first guess for the level indent
+({x:probing-learned}) and the slower save of {x:memory-slower} are examples.
+.endif

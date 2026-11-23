@@ -1,0 +1,476 @@
+# Appendix E: the X11 version.
+.doc Strata Reference: The X11 Version
+.chapter E
+.h1 The X11 Version [appx11]
+.ix Appendix E
+.ix X11 version
+.ix X Window System
+.ix Window, X11
+This appendix describes the X11 version of the Editor and the Document
+Manager, and the Viewer that goes with it: the window, the fonts, the
+colors, the keyboard and the trouble that a keyboard map or a window manager
+can make, the size of the window, moving text between programs, and the
+Viewer.  The terminal version is described in {n:appterm}, and
+{x:view-screen-kinds} lists the differences that matter in daily
+work.
+.if .STRATA_BUILD_TYPE # release
+The environment variables of the window are listed with all the others
+in {x:appcmd-env-x11}; this appendix says what they do.
+.endif
+
+The sections follow what a user meets when the window opens: what the machine
+must have ({n:appx11-needs}); the window, its fonts, its colors and its size
+({n:appx11-window}, {n:appx11-fonts}, {n:appx11-colour}, {n:appx11-size});
+the keyboard and the faults that a keyboard map or a window manager can cause
+({n:appx11-keys}, {n:appx11-keymap}); how text moves between programs
+({n:appx11-clip}); the pictures that the window shows ({n:appx11-pictures});
+and last the Viewer, which has a window of its own ({n:appx11-viewer}).  The
+window is a grid of character cells, like the screen of the terminal version,
+so the Editor and the Document Manager offer the same commands.  The window
+adds the following.
+- Alt, Ctrl and Shift arrive as they are: every key that a PC keyboard has
+  can be used.
+- The key labels at the foot of the screen follow the modifier keys.
+- The Equation, Picture, Keycap and LaTeX markers whose display mode is Inline
+  are drawn as pictures, when LaTeX is installed ({n:appx11-pictures}).
+- The text has bold and italic faces, and any color that you choose for
+  every kind of text ({n:appx11-colour}).
+
+.h2 What the X11 version needs [appx11-needs]
+.ix X11, requirements
+.ix DISPLAY
+.ix Xft
+.ix X display
+.table 16 44
+Need | Detail
+A display | The environment variable {c:DISPLAY} names the X server; the program
+  | opens it at start.  When that fails, the program writes
+  | {c:needs an interactive terminal (or an X display with the x11 build)}
+  | on the standard error and ends.  It never
+  | falls back to a terminal.
+A font | A monospaced font: an outline font (the family DejaVu Sans Mono
+  | is the first choice) or a bitmap font of the server
+  | ({n:appx11-fonts}).  If none can be opened the program ends as above.
+LaTeX programs | Optional.  Equations are typeset on the screen when {c:latex}
+  | and {c:dvipng} are in the system directories for programs at the
+  | time the program starts ({n:eq-screen}).  Pictures, keycaps and
+  | LaTeX markers need {c:pdflatex} and {c:pdftoppm}.  Without
+  | them these markers are shown in their Short form.  The Viewer
+  | needs more ({n:appx11-viewer}).
+.end
+
+.h2 The window [appx11-window]
+.ix Window, size
+.ix Window title
+.ix WM_CLASS
+.ix Window class
+.ix Window, close
+The program opens one window and draws everything in it: the status line, the
+text, the menus and the boxes are the cells of one grid.
+.table 11 49
+Matter | What is so
+Size | 80 columns by 50 rows of character cells at first
+  | ({n:appx11-size}).  You may change the height of the window,
+  | in whole rows, and it is kept for the next time; the width
+  | cannot be changed.
+Position | The window manager places the window.
+Title | The name of the program that owns the window (the Editor and
+  | the Document Manager each set their own).  It does not show
+  | the name of the document, and it does not change while you
+  | work.
+Class | The class is {c:Strata}; the instance is the same for the Editor
+  | and the Document Manager.  Use the class for the rules of a window
+  | manager.
+Close | Closing the window with the window manager acts as {k:Ctrl-Q}:
+  | if the document has unsaved changes a prompt offers "Save and quit",
+  | "Discard changes and quit" or "Cancel", and the window stays when you
+  | choose Cancel or press {k:Esc}.  An unchanged document ends at once.
+.end
+Two programs of Strata can have a window at the same time.  The Document
+Manager keeps its window while the Editor that it started has a window of its
+own: they lie side by side and are windows of the same kind.  The same holds
+for the Editor and the Viewer of Preview.  A window that waits for the
+program that it started repaints itself but takes no keys: keys that are
+pressed in it meanwhile are lost.
+
+.h2 Fonts [appx11-fonts]
+.ix Fonts of the screen
+.ix Xft
+.ix DejaVu Sans Mono
+.ix Bitmap fonts
+.ix Cell size
+All text is drawn on a grid.  The width of a cell is that of the letter M of
+the font, and its height is the ascent and the descent of the font together.
+Letters are placed on the cells one by one, so a font that is not monospaced
+does not break the grid, but it is spaced unevenly.  The program looks for a
+font in two steps.
+.if .STRATA_BUILD_TYPE # release
+.ix STRATA_X11_FONT
+.ix STRATA_X11_XFT
+.ix STRATA_X11_SIZE
+.table 10 50
+Step | What it does
+1 Outline | Unless {c:STRATA_X11_XFT} is {c:0}.  The family is the value
+  | of {c:STRATA_X11_XFT}, or DejaVu Sans Mono when it
+  | is not set, is empty or is {c:1}.  The pixel size is
+  | {c:STRATA_X11_SIZE} (16 when it is not set, not a number or
+  | less than 8).  Four faces are used: normal, bold,
+  | italic and bold italic. A face whose M is not as wide as
+  | that of the normal face is dropped (bold is then shown
+  | by its color only, italic by its color). A letter that the
+  | font lacks is taken from the family DejaVu Sans at the
+  | same size, if it is installed.  If the normal face cannot
+  | be used, or is smaller than 4 by 6 pixels, step 2
+  | follows.
+2 Bitmap | The fonts of the server.  The name in
+  | {c:STRATA_X11_FONT} is the full name of the normal font; the
+  | bold font has the same name with the word {c:medium}
+  | replaced by {c:bold}.  When it is not set the
+  | names are
+  | {c:-misc-fixed-medium-r-normal--N-...-iso10646-1}, with
+  | the size N from {c:STRATA_X11_SIZE}: 13, 15, 18 or 20 (any
+  | other value gives 15).  If the font cannot be opened, the
+  | 15 pixel font is tried, and then the font named
+  | {c:fixed}.  If none opens, the program ends as in
+  | {x:appx11-needs}. A bold font that is not as wide as the
+  | normal one is not used.
+.end
+The font that {c:STRATA_X11_FONT} names must be of the encoding {c:iso10646-1},
+or
+the box drawing characters of the screen are drawn with wrong shapes.  The
+environment variable {c:STRATA_X11_FONT} is read only in step 2: it has no
+effect
+unless {c:STRATA_X11_XFT} is {c:0}, or the outline font cannot be used.
+.else
+.table 10 50
+Step | What it does
+1 Outline | The family is DejaVu Sans Mono.  The pixel size is 16.  Four
+  | faces are used: normal, bold, italic and bold italic. A face whose M is
+  | not as wide as that of the normal face is dropped (bold is then shown
+  | by its color only, italic by its color). A letter that the
+  | font lacks is taken from the family DejaVu Sans at the
+  | same size, if it is installed.  If the normal face cannot
+  | be used, or is smaller than 4 by 6 pixels, step 2
+  | follows.
+2 Bitmap | The fonts of the server.  The names are
+  | {c:-misc-fixed-medium-r-normal--15-...-iso10646-1} for the normal font
+  | and the same with the word {c:medium} replaced by {c:bold} for the bold
+  | one.  If the font cannot be opened, the font named
+  | {c:fixed} is tried.  If none opens, the program ends as in
+  | {x:appx11-needs}. A bold font that is not as wide as the
+  | normal one is not used.
+.end
+.endif
+
+If the family of the outline font is not installed, the font system supplies
+the nearest font that it has.  When that is not monospaced, the letters are
+still put on the cells but not evenly.  Name a monospaced family that is
+installed.
+.note Bold text is drawn in the color of bold text and in the bold face; an
+  italic text is drawn in the color of italic text and in the italic face
+  when there is one ({n:appx11-colour}).  A face that is dropped because of
+  its width is replaced by the normal face, and only the color shows the
+  style.
+
+.h2 Colors [appx11-colour]
+.ix Colors, X11
+.ix Palette
+.ix Cursor, X11
+.ix Reverse video, X11
+.ix Keycap, box
+.ix Underline, X11
+The colors of the window are those of the Colors panel of Setup
+({n:str-colours}) for the X11 version: yellow text on a blue ground, until you
+change them.  The Editor and the Document Manager both use them, and the
+Viewer has its own.  Any color can be chosen: the palette of the panel holds
+80, and a name or {c:#rrggbb} typed in gives any other.  The settings are
+x11_color_KIND_fg and x11_color_KIND_bg ({n:appcfg-key-colors}), apart from
+those of the terminal version, and a change is shown at once.
+.table 18 17 24
+Use | Colors at first | Notes
+Normal text | Yellow on blue | The text of a document, and the page.
+Bold text | White on blue | Also the bold face.
+Italic text | Light green on blue | Also the italic face, when there is
+  |  | one.
+Dim text | Light grey on blue | The dots for spaces, the signs of
+  |  | tabs and line ends, and the ruler.
+Markers | Light cyan on blue | The text of markers in the line.
+Highlight | Black on cyan | The area that Copy, Cut, Delete or Move
+  |  | acts on.
+Status line and others | Black on light grey | The status line, the
+  |  | message line, the key labels, menus and
+  |  | panels.
+Selected entry | White on black | The entry that has the focus.
+Cursor | Black on amber | A solid block with its character in
+  |  | black.
+.end
+The page color of an equation in the text is the color of normal text, and
+its ink the foreground of normal text, so that an equation follows the colors
+that you choose.  Underlined text has a line one pixel below the baseline,
+in the color of its text.  A Keycap marker is drawn as a picture of a box of
+thin lines with round corners, in the colors of the Keycap Format
+({n:marker-keycap}).  Where a picture is on the screen (an equation, a
+picture, a keycap or a LaTeX marker) the cursor is drawn as a frame around the
+picture.
+
+.h2 The keyboard [appx11-keys]
+.ix Keyboard, X11
+.ix Keys, X11
+.ix Modifier keys, X11
+.ix Keypad, X11
+.ix Alt, X11
+.ix Num Lock
+The window receives the keys of the keyboard as the keyboard map defines
+them, and turns them into the keys of Strata.  The modifier keys are Shift,
+Ctrl and Alt, which is the modifier that the keyboard map calls Mod1.
+.table 20 40
+Key | What the program makes of it
+{k:Up}, {k:Down}, | The key, with Shift, Ctrl and Alt as held.  The
+ {k:Left}, {k:Right}, | keys of the keypad with the same names, when Num
+ {k:Home}, {k:End}, | Lock is off, are the same keys.
+ {k:PgUp}, {k:PgDn}, |
+ {k:Ins}, {k:Del} |
+{k:Esc} | {k:Esc}; Shift, Ctrl and Alt make no difference.
+{k:Backspace} | {k:Backspace}; Alt is kept, so {k:Alt-Backspace}
+  | deletes a word; Shift and Ctrl are dropped, so
+  | {k:Ctrl-Backspace} deletes a character.
+{k:Tab} | A tab; with Shift, {k:Shift-Tab}.  Ctrl and Alt
+  | make no difference.
+{k:Enter}, | {k:Enter}, whatever is held with it.
+ {k:Keypad Enter} |
+{k:F1} to {k:F12} | The key, with Shift, Ctrl and Alt as held.  The
+  | Editor uses {k:F1} to {k:F9} and {k:F12}; {k:Ctrl-F10} and
+  | {k:Ctrl-F11} are Undo and Redo (so are {k:Ctrl-/} and {k:Alt-/}), and {k:F10} and {k:F11} have no other
+  | command.
+{k:Keypad +}, | {k:Alt-+}, {k:Alt--} and {k:Alt-*}, with Num Lock
+ {k:Keypad -}, | on or off: the outline keys.  They never type a
+ {k:Keypad *} | plus, a minus or a star; type those with the keys
+  | of the main keyboard.
+Keypad digits, | The character, when Num Lock is on.
+ {k:Keypad /} and the |
+ decimal point |
+A letter, digit or sign | The character.  With Alt it is {k:Alt} and the
+  | character, in the case that is typed ({k:Alt-O}
+  | and {k:Alt-o} are the same command).  With Ctrl it
+  | is the control key; with Ctrl and Alt together it
+  | is {k:Alt} and the control key.
+A letter of Latin-1 | A letter of Latin-1 that is in the character set
+  | is typed as that letter ({n:appx11-chars}).
+{k:Shift}, {k:Ctrl}, | By themselves they give no key.  The program only
+ {k:Alt}, Meta, | notes the modifier keys, for the labels of the
+ {k:Caps Lock}, | function keys.
+ {k:Num Lock}, |
+ {k:Scroll Lock}, Super, |
+ AltGr |
+.end
+
+.note The key labels at the foot of the screen change while a modifier is held
+  ({n:view-status}).  When the window loses the focus the labels go back to the
+  plain ones.
+
+.h3 Characters [appx11-chars]
+.ix Characters, X11
+.ix Latin-1
+.ix Dead keys
+.ix Compose key
+A key that produces a letter of Latin-1 that the character set has is typed as
+that letter: the accented letters of the western languages that are in the
+set, and the German double s, among others.  The keys of a keyboard map that
+give the accented letter at once (for instance on the level of the right Alt
+key of many layouts) work.  What happens with a letter that the set does not
+have, and with dead keys and Compose sequences, is described in
+{x:edit-special-chars}; the characters are listed in {x:appchar-high}.
+
+.h2 Keyboard maps and window managers [appx11-keymap]
+.ix Keymap
+.ix Keymap, problems
+.ix Window manager, keys
+.ix Alt-F12
+.ix F12, wrong menu
+.ix xev
+.ix xmodmap
+The Editor uses the function keys with Alt and Ctrl, which a keyboard map
+or a window manager can spoil.  The program takes the keys as the server
+delivers them; the only remedy is to change what the server delivers.  The
+program xev, which shows each key event with its state, is the tool to find
+out; the modifier Mod1 is Alt, and Control is Ctrl.
+.table 16 20 23
+What you see | Cause | Remedy
+No {k:Alt} key | The key is not on Mod1 | Look at the modifiers with
+ works | in your keyboard map: | xmodmap, and give Alt_L to
+  | some maps put Alt on | Mod1 (an option of setxkbmap,
+  | Mod4. | or xmodmap).
+The right Alt key | On many layouts it is | Use the left Alt key.
+ does not work | the key of the third |
+  | level (AltGr), which |
+  | the program does not |
+  | use as Alt. |
+{k:F12} shows the | The server reports Alt | Look at the state with xev
+ Marker commands, or | with the key. A keymap | and fix the keymap.
+ another special key | that has the special |
+ key acts as if Alt | keys on several levels |
+ were held | can do it. |
+{k:Alt-F1} to | The window manager | Use {k:Ctrl-F}, {k:Ctrl-F12}
+ {k:Alt-F12} do | keeps them for its | and the others of
+ nothing, or | menu, a run box, | {x:view-terminal-keys}, or
+ something else | closing, moving, | change the keys of the window
+  | resizing, minimising | manager.
+  | and maximising. |
+{k:Alt-F4} closes | The window manager does | The close acts as {k:Ctrl-Q}:
+ the window | it. | answer the question about
+  |  | saving.
+{k:Ctrl-Alt-F1} to | The X server does it | The keys are not used.
+ {k:Ctrl-Alt-F6} | before the key reaches |
+ switch to a text | the program. |
+ console |  |
+The keypad plus, | They are the outline | Use the keys of the main
+ minus and star do | keys of this program. | keyboard.
+ not type |  |
+A letter with an | The letter is not in | Use a layout that gives the
+ accent cannot be | the character set, or | letter on one key, or import
+ typed | the layout needs a dead | the text ({n:appx11-clip}).
+  | key for it. |
+{k:Ctrl-Backspace} | It is read as | Use {k:Alt-Backspace}.
+ deletes one | {k:Backspace}. |
+ character |  |
+.end
+
+.h2 The size of the window [appx11-size]
+.ix Window size
+.ix Rows and columns, X11
+.ix Resize, X11
+The window is as big as its grid: the number of columns times the width of a
+cell, the number of rows times the height of a cell.  The grid is 80 columns
+by 50 rows, or the number of rows that you kept (see below).
+.if .STRATA_BUILD_TYPE # release
+.ix STRATA_X11_GEOM
+.table 16 44
+Name | Effect
+{c:STRATA_X11_GEOM} | {c:COLSxROWS}, for example {c:100x40}.  Fewer
+  | than 20 columns are made 20, fewer than 20 rows
+  | are made 20. A value that is not two numbers
+  | leaves the grid as it was.  When it is set, the
+  | rows that you kept are not used and a change of
+  | the height is not kept.
+{c:STRATA_X11_SIZE} | The size of the font, in pixels
+  | ({n:appx11-fonts}).  Together with the family it
+  | fixes the size of a cell.
+.end
+.endif
+You may change the height of the window with the window manager: drag its
+lower edge or its corner.  The height changes in whole rows, from 20 rows to as
+many as the screen holds, and the Editor follows it as the terminal version
+follows its terminal: the text is laid out again, the status line stays at the
+top and the key labels stay at the foot.  The width cannot be changed: a width
+that the window manager gives all the same is not used.  The text is laid out
+in at most 80 columns and at least 40, whatever the grid.  A window needs the
+room that its grid takes on the screen.  A cell is higher than the pixel size
+of the font, so a grid of 50 rows does not fit a screen that is 768 pixels
+high with the default font: use fewer rows (for example 80 by 35) or a smaller
+font, or make the window lower.  Boxes and panels are as in the terminal
+version ({n:appterm-size}); the tallest, the Typeface List, needs about 24 rows.
+.h3 The height is kept [appx11-size-kept]
+.ix Window height, kept
+.ix Height of the window, kept
+The Editor and the Document Manager keep the height that you give the window.
+When the height has not changed for a second, and at the latest when the
+program ends, the number of rows is saved in your settings, and the next window
+of either program opens with that height.  There is one height for the
+Editor, not one for each document, and the Document Manager has the same
+one.  The height is never more than the rows that the screen holds.  You may
+also type the number of rows in Setup, in the field Window Rows, X11
+({n:str-setup-fields}); an empty field means 50 rows.  A height that cannot
+be saved is used until the program ends, and nothing is shown on the screen.
+The width is always 80 columns and is not kept.  The terminal version has a
+number of its own ({n:appterm-size}).
+
+.h2 Moving text between programs [appx11-clip]
+.ix Clipboard
+.ix Selection, X11
+.ix Copy and paste between programs
+.table 25 35
+To move text | Use
+Between places of one document | Copy, Cut, Paste and Move ({k:F3}, {k:F4},
+ or of two documents of the | {k:F5}, {k:F7}): the text is kept in the
+ same session | program.
+Between sessions and documents | The library ({k:Ctrl-F3}, {k:Ctrl-F4},
+ over time | {k:Ctrl-F5}), which Tools, Library, Save
+  | writes to a file.
+Out of Strata to another | File, Export: a text file of the document or
+ program | of the section, which any program reads.
+Into Strata from another | Save the text in a file with that program
+ program | and use File, Import.
+.end
+In the X11 version the selection and the clipboard of the display are not
+used.  In the terminal version the paste of the terminal types the text as
+keys ({n:appterm-chars}).
+
+.h2 Equations and keycaps on the screen [appx11-pictures]
+.ix Equations, X11
+.ix Keycaps, X11
+.ix Pictures on the screen
+.ix Ctrl-W, equation
+The X11 version draws a marker as a picture when the display mode of its type
+is Inline, which is the default of the Equation, the Picture, the Keycap and
+the LaTeX marker ({n:markers-screen}).  An Equation marker that is a valid
+formula is typeset when {c:latex} and {c:dvipng} were found at the start, and
+drawn in the colors of the window, in the line of the text.  The Picture, the
+Keycap and the LaTeX marker are drawn the same way when {c:pdflatex} and
+{c:pdftoppm} were found ({n:marker-picture}, {n:marker-keycap},
+{n:marker-latex-picture}).  While a picture is being made the cells show the
+label of the marker.  A picture that cannot be made is shown in the Short form
+of the marker, never as an empty box.  {k:Ctrl-W} in the equation
+editor (the status line shows EQUATION EDIT) shows an enlarged picture of the
+equation, or the message that {c:latex} gave when it could not typeset it; it
+needs the X11 version, {c:latex} and {c:dvipng}, and {k:Esc} goes back to the
+Editor.
+The pictures are kept in the cache of the user ({n:appcfg-search-cache}).  See
+{x:eq-screen} for the details.
+
+.h2 The Viewer [appx11-viewer]
+.ix Viewer
+.ix Viewer, status bar
+.ix Preview, viewer
+.ix Zoom
+.ix Go to page
+The Viewer is the program that shows the pages of Preview ({n:print-dviview}).
+The Editor starts the Viewer, waits for it, and takes its window back when the
+Viewer is closed; the Viewer runs under X11 only.  Its window is as large as the
+page at 100 percent zoom and the status bar, but not larger than the screen
+(not smaller than 100 by 100 pixels): a page that does not fit is scrolled.
+The window can be resized, and the page and the bar follow it.  The title of
+the window is the name of the file shown.
+.h3 The status bar [appx11-viewer-bar]
+.ix Viewer, bar
+.ix Viewer, legend
+At the foot of the window a grey bar has two lines.  The first one shows
+{c:Page N of M   Zoom Z%   F1 or ? hides keys}; while a page number is being
+typed the line shows {c:Go to page (1-M): digits_   Enter goes, Esc cancels}.
+The
+second line is the legend of the keys, in one of four forms, the longest that
+fits the width of the window; it is hidden and shown again with {k:F1} or
+{k:?}, and then the bar has one line only.
+.h3 The keys of the Viewer [appx11-viewer-keys]
+.ix Viewer, key table
+The keys are in {x:print-dviview}.  The key {k:g} opens the
+entry for a page number in the bar: type up to eight digits, {k:Backspace}
+deletes one, {k:Enter} goes (a number out of range is brought into range) and
+{k:Esc} cancels; in the entry no other key does anything.  The zoom runs from
+25 to 800 percent and keeps the center of the window where it was.  A new
+page starts at the top left.  Closing the window with the window manager also
+closes the Viewer.
+.if .STRATA_BUILD_TYPE # release
+For developers: the options of the Viewer and its exit status are in {n:appcmd}
+({n:appcmd-dviview-opt}, {n:appcmd-dviview-exit}).
+.endif
+.h3 What the Viewer needs [appx11-viewer-needs]
+.ix Viewer, requirements
+.ix TrueColor
+The display must be a TrueColor display of 32 bits per pixel.  When it is not,
+the Viewer writes {c:a 32 bits per pixel display is needed} or {c:unsupported
+pixel format} on the standard error and ends.  The programs
+that the Viewer needs for the fonts of the pages and for pictures are in
+{x:appcmd-external}.
+.note When the Editor and the Viewer run on a display of another machine (a
+  remote X connection), the Editor works well over a slow link; the Viewer
+  needs a fast link.

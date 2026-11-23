@@ -1,0 +1,25 @@
+
+------------------------------------- Append -----------------------------------
+Append (Alt F2) adds a column, block, or section after the current column,
+block, or section.
+
+Add an empty column with the      Add a block with        Add a subsection
+same format as the current        the global block        to the current
+column.                           format.  (Ctrl O)       section.  (Shift Ins)
+          |                      +--------+                     |
+     +------------------------------------------------------------------+
+     |  Column    Block    Global-block    Peer-section    Sub-section  |
+     +------------------------------------------------------------------+
+           +--------+                          |
+Add an empty block with the         Add a section with the global section 
+same format as the current          format at the same level as the current
+block (including column, table,     section.  (Ins)
+and border settings).  (Ctrl A)     
+
+--Procedure---------------------------------------------------------------------
+
+ Press Append.
+ Select Column, Block, Global-block, Peer-section, or Subsection.
+ Press Enter.
+--------------------------------------------------------------------------------
+  Split      Join     Accelerators     Keyboard Summary      Help Index

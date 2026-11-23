@@ -1,0 +1,1090 @@
+.doc Equation probe
+.h1 Probe
+
+N1 {eq:\alpha}
+
+N2 {eq:\beta}
+
+N3 {eq:\gamma}
+
+N4 {eq:\delta}
+
+N5 {eq:\epsilon}
+
+N6 {eq:\varepsilon}
+
+N7 {eq:\zeta}
+
+N8 {eq:\eta}
+
+N9 {eq:\theta}
+
+N10 {eq:\vartheta}
+
+N11 {eq:\iota}
+
+N12 {eq:\kappa}
+
+N13 {eq:\varkappa}
+
+N14 {eq:\lambda}
+
+N15 {eq:\mu}
+
+N16 {eq:\nu}
+
+N17 {eq:\xi}
+
+N18 {eq:\pi}
+
+N19 {eq:\varpi}
+
+N20 {eq:\rho}
+
+N21 {eq:\varrho}
+
+N22 {eq:\sigma}
+
+N23 {eq:\varsigma}
+
+N24 {eq:\tau}
+
+N25 {eq:\upsilon}
+
+N26 {eq:\phi}
+
+N27 {eq:\varphi}
+
+N28 {eq:\chi}
+
+N29 {eq:\psi}
+
+N30 {eq:\omega}
+
+N31 {eq:\digamma}
+
+N32 {eq:\Gamma}
+
+N33 {eq:\Delta}
+
+N34 {eq:\Theta}
+
+N35 {eq:\Lambda}
+
+N36 {eq:\Xi}
+
+N37 {eq:\Pi}
+
+N38 {eq:\Sigma}
+
+N39 {eq:\Upsilon}
+
+N40 {eq:\Phi}
+
+N41 {eq:\Psi}
+
+N42 {eq:\Omega}
+
+N43 {eq:\varGamma}
+
+N44 {eq:\varDelta}
+
+N45 {eq:\varTheta}
+
+N46 {eq:\varLambda}
+
+N47 {eq:\varXi}
+
+N48 {eq:\varPi}
+
+N49 {eq:\varSigma}
+
+N50 {eq:\varUpsilon}
+
+N51 {eq:\varPhi}
+
+N52 {eq:\varPsi}
+
+N53 {eq:\varOmega}
+
+N54 {eq:+}
+
+N55 {eq:-}
+
+N56 {eq:\pm}
+
+N57 {eq:\mp}
+
+N58 {eq:\times}
+
+N59 {eq:\div}
+
+N60 {eq:\cdot}
+
+N61 {eq:\ast}
+
+N62 {eq:\star}
+
+N63 {eq:\circ}
+
+N64 {eq:\bullet}
+
+N65 {eq:\cap}
+
+N66 {eq:\cup}
+
+N67 {eq:\uplus}
+
+N68 {eq:\sqcap}
+
+N69 {eq:\sqcup}
+
+N70 {eq:\wedge}
+
+N71 {eq:\vee}
+
+N72 {eq:\setminus}
+
+N73 {eq:\wr}
+
+N74 {eq:\diamond}
+
+N75 {eq:\oplus}
+
+N76 {eq:\ominus}
+
+N77 {eq:\otimes}
+
+N78 {eq:\oslash}
+
+N79 {eq:\odot}
+
+N80 {eq:\bigcirc}
+
+N81 {eq:\triangleleft}
+
+N82 {eq:\triangleright}
+
+N83 {eq:\bigtriangleup}
+
+N84 {eq:\bigtriangledown}
+
+N85 {eq:\amalg}
+
+N86 {eq:\dagger}
+
+N87 {eq:\ddagger}
+
+N88 {eq:\boxplus}
+
+N89 {eq:\boxminus}
+
+N90 {eq:\boxtimes}
+
+N91 {eq:\boxdot}
+
+N92 {eq:\circledast}
+
+N93 {eq:\circledcirc}
+
+N94 {eq:\circleddash}
+
+N95 {eq:\dotplus}
+
+N96 {eq:\ltimes}
+
+N97 {eq:\rtimes}
+
+N98 {eq:\barwedge}
+
+N99 {eq:\veebar}
+
+N100 {eq:\curlywedge}
+
+N101 {eq:\curlyvee}
+
+N102 {eq:\intercal}
+
+N103 {eq:\divideontimes}
+
+N104 {eq:\smallsetminus}
+
+N105 {eq:\Cap}
+
+N106 {eq:\Cup}
+
+N107 {eq:=}
+
+N108 {eq:\neq}
+
+N109 {eq:\equiv}
+
+N110 {eq:\not\equiv}
+
+N111 {eq:\approx}
+
+N112 {eq:\sim}
+
+N113 {eq:\simeq}
+
+N114 {eq:\cong}
+
+N115 {eq:\doteq}
+
+N116 {eq:\propto}
+
+N117 {eq:<}
+
+N118 {eq:>}
+
+N119 {eq:\le}
+
+N120 {eq:\ge}
+
+N121 {eq:\leq}
+
+N122 {eq:\geq}
+
+N123 {eq:\ll}
+
+N124 {eq:\gg}
+
+N125 {eq:\prec}
+
+N126 {eq:\succ}
+
+N127 {eq:\preceq}
+
+N128 {eq:\succeq}
+
+N129 {eq:\subset}
+
+N130 {eq:\supset}
+
+N131 {eq:\subseteq}
+
+N132 {eq:\supseteq}
+
+N133 {eq:\sqsubseteq}
+
+N134 {eq:\sqsupseteq}
+
+N135 {eq:\in}
+
+N136 {eq:\ni}
+
+N137 {eq:\notin}
+
+N138 {eq:\perp}
+
+N139 {eq:\parallel}
+
+N140 {eq:\mid}
+
+N141 {eq:\nmid}
+
+N142 {eq:\vdash}
+
+N143 {eq:\dashv}
+
+N144 {eq:\models}
+
+N145 {eq:\asymp}
+
+N146 {eq:\bowtie}
+
+N147 {eq:\smile}
+
+N148 {eq:\frown}
+
+N149 {eq:\leqslant}
+
+N150 {eq:\geqslant}
+
+N151 {eq:\lesssim}
+
+N152 {eq:\gtrsim}
+
+N153 {eq:\lessgtr}
+
+N154 {eq:\nless}
+
+N155 {eq:\ngtr}
+
+N156 {eq:\nleq}
+
+N157 {eq:\ngeq}
+
+N158 {eq:\ncong}
+
+N159 {eq:\nsim}
+
+N160 {eq:\nsubseteq}
+
+N161 {eq:\subsetneq}
+
+N162 {eq:\supsetneq}
+
+N163 {eq:\nparallel}
+
+N164 {eq:\nvdash}
+
+N165 {eq:\approxeq}
+
+N166 {eq:\thickapprox}
+
+N167 {eq:\backsim}
+
+N168 {eq:\eqsim}
+
+N169 {eq:\triangleq}
+
+N170 {eq:\therefore}
+
+N171 {eq:\because}
+
+N172 {eq:\between}
+
+N173 {eq:\pitchfork}
+
+N174 {eq:\Vdash}
+
+N175 {eq:\vartriangleleft}
+
+N176 {eq:\vartriangleright}
+
+N177 {eq:\trianglelefteq}
+
+N178 {eq:\leftarrow}
+
+N179 {eq:\rightarrow}
+
+N180 {eq:\to}
+
+N181 {eq:\gets}
+
+N182 {eq:\leftrightarrow}
+
+N183 {eq:\uparrow}
+
+N184 {eq:\downarrow}
+
+N185 {eq:\updownarrow}
+
+N186 {eq:\Leftarrow}
+
+N187 {eq:\Rightarrow}
+
+N188 {eq:\Leftrightarrow}
+
+N189 {eq:\Uparrow}
+
+N190 {eq:\Downarrow}
+
+N191 {eq:\Updownarrow}
+
+N192 {eq:\longleftarrow}
+
+N193 {eq:\longrightarrow}
+
+N194 {eq:\longleftrightarrow}
+
+N195 {eq:\Longleftarrow}
+
+N196 {eq:\Longrightarrow}
+
+N197 {eq:\Longleftrightarrow}
+
+N198 {eq:\implies}
+
+N199 {eq:\impliedby}
+
+N200 {eq:\iff}
+
+N201 {eq:\mapsto}
+
+N202 {eq:\longmapsto}
+
+N203 {eq:\hookleftarrow}
+
+N204 {eq:\hookrightarrow}
+
+N205 {eq:\leftharpoonup}
+
+N206 {eq:\leftharpoondown}
+
+N207 {eq:\rightharpoonup}
+
+N208 {eq:\rightharpoondown}
+
+N209 {eq:\rightleftharpoons}
+
+N210 {eq:\nearrow}
+
+N211 {eq:\searrow}
+
+N212 {eq:\swarrow}
+
+N213 {eq:\nwarrow}
+
+N214 {eq:\leadsto}
+
+N215 {eq:\rightsquigarrow}
+
+N216 {eq:\twoheadrightarrow}
+
+N217 {eq:\rightarrowtail}
+
+N218 {eq:\rightrightarrows}
+
+N219 {eq:\leftrightarrows}
+
+N220 {eq:\rightleftarrows}
+
+N221 {eq:\curvearrowright}
+
+N222 {eq:\circlearrowleft}
+
+N223 {eq:\nrightarrow}
+
+N224 {eq:\nRightarrow}
+
+N225 {eq:\nLeftrightarrow}
+
+N226 {eq:\Lsh}
+
+N227 {eq:\Rsh}
+
+N228 {eq:\looparrowright}
+
+N229 {eq:\upuparrows}
+
+N230 {eq:\dashrightarrow}
+
+N231 {eq:\Rrightarrow}
+
+N232 {eq:\infty}
+
+N233 {eq:\partial}
+
+N234 {eq:\nabla}
+
+N235 {eq:\forall}
+
+N236 {eq:\exists}
+
+N237 {eq:\nexists}
+
+N238 {eq:\emptyset}
+
+N239 {eq:\varnothing}
+
+N240 {eq:\neg}
+
+N241 {eq:\lnot}
+
+N242 {eq:\angle}
+
+N243 {eq:\measuredangle}
+
+N244 {eq:\sphericalangle}
+
+N245 {eq:\triangle}
+
+N246 {eq:\vartriangle}
+
+N247 {eq:\blacktriangle}
+
+N248 {eq:\square}
+
+N249 {eq:\blacksquare}
+
+N250 {eq:\lozenge}
+
+N251 {eq:\blacklozenge}
+
+N252 {eq:\bigstar}
+
+N253 {eq:\prime}
+
+N254 {eq:\backprime}
+
+N255 {eq:\hbar}
+
+N256 {eq:\hslash}
+
+N257 {eq:\ell}
+
+N258 {eq:\Re}
+
+N259 {eq:\Im}
+
+N260 {eq:\aleph}
+
+N261 {eq:\beth}
+
+N262 {eq:\gimel}
+
+N263 {eq:\daleth}
+
+N264 {eq:\wp}
+
+N265 {eq:\top}
+
+N266 {eq:\bot}
+
+N267 {eq:\surd}
+
+N268 {eq:\imath}
+
+N269 {eq:\jmath}
+
+N270 {eq:\complement}
+
+N271 {eq:\mho}
+
+N272 {eq:\Finv}
+
+N273 {eq:\Game}
+
+N274 {eq:\eth}
+
+N275 {eq:\checkmark}
+
+N276 {eq:\maltese}
+
+N277 {eq:\circledR}
+
+N278 {eq:\circledS}
+
+N279 {eq:\diagup}
+
+N280 {eq:\diagdown}
+
+N281 {eq:\clubsuit}
+
+N282 {eq:\diamondsuit}
+
+N283 {eq:\heartsuit}
+
+N284 {eq:\spadesuit}
+
+N285 {eq:\flat}
+
+N286 {eq:\natural}
+
+N287 {eq:\sharp}
+
+N288 {eq:\backslash}
+
+N289 {eq:\ldots}
+
+N290 {eq:\cdots}
+
+N291 {eq:\vdots}
+
+N292 {eq:\ddots}
+
+N293 {eq:\dotsc}
+
+N294 {eq:\dotsb}
+
+N295 {eq:\dotsm}
+
+N296 {eq:\dotsi}
+
+N297 {eq:\dotso}
+
+N298 {eq:x^2}
+
+N299 {eq:x_i}
+
+N300 {eq:x_i^2}
+
+N301 {eq:x^{{n+1}}}
+
+N302 {eq:x_{{ij}}}
+
+N303 {eq:x^{{y^z}}}
+
+N304 {eq:a_{{i_j}}}
+
+N305 {eq:x^{{a}}_{{b}}}
+
+N306 {eq:x^2_3}
+
+N307 {eq:x'}
+
+N308 {eq:x''}
+
+N309 {eq:f'(x)}
+
+N310 {eq:x^\prime}
+
+N311 {eq:{{}}^{{14}}_{{6}}\mathrm{{C}}}
+
+N312 {eq:e^{{-x^2/2}}}
+
+N313 {eq:\sum_{{i=1}}^{{n}}}
+
+N314 {eq:\sum\nolimits_{{i=1}}^{{n}}}
+
+N315 {eq:\int\limits_0^1}
+
+N316 {eq:\lim_{{x\to 0}}}
+
+N317 {eq:\max_{{1\le i\le n}}}
+
+N318 {eq:\overset{{!}}{{=}}}
+
+N319 {eq:\underset{{n\to\infty}}{{\lim}}}
+
+N320 {eq:\sideset{{_a^b}}{{_c^d}}\sum}
+
+N321 {eq:\frac{{a}}{{b}}}
+
+N322 {eq:\frac12}
+
+N323 {eq:\dfrac{{a}}{{b}}}
+
+N324 {eq:\tfrac{{a}}{{b}}}
+
+N325 {eq:\cfrac{{1}}{{1+\cfrac{{1}}{{x}}}}}
+
+N326 {eq:\frac{{x+1}}{{\frac{{y}}{{2}}}}}
+
+N327 {eq:{{a \over b}}}
+
+N328 {eq:{{n \choose k}}}
+
+N329 {eq:\binom{{n}}{{k}}}
+
+N330 {eq:\dbinom{{n}}{{k}}}
+
+N331 {eq:\tbinom{{n}}{{k}}}
+
+N332 {eq:{{a \atop b}}}
+
+N333 {eq:\genfrac{{(}}{{)}}{{0pt}}{{}}{{a}}{{b}}}
+
+N334 {eq:\sqrt{{x}}}
+
+N335 {eq:\sqrt{{x^2+y^2}}}
+
+N336 {eq:\sqrt[3]{{x}}}
+
+N337 {eq:\sqrt[n]{{a+b}}}
+
+N338 {eq:\sqrt{{1+\sqrt{{1+x}}}}}
+
+N339 {eq:\frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}}
+
+N340 {eq:x^{{1/2}}}
+
+N341 {eq:\frac{{\partial f}}{{\partial x}}}
+
+N342 {eq:\frac{{d}}{{dx}}\left(x^2\right)}
+
+N343 {eq:\sum}
+
+N344 {eq:\prod}
+
+N345 {eq:\coprod}
+
+N346 {eq:\int}
+
+N347 {eq:\iint}
+
+N348 {eq:\iiint}
+
+N349 {eq:\oint}
+
+N350 {eq:\bigcup}
+
+N351 {eq:\bigcap}
+
+N352 {eq:\bigvee}
+
+N353 {eq:\bigwedge}
+
+N354 {eq:\bigoplus}
+
+N355 {eq:\bigotimes}
+
+N356 {eq:\bigodot}
+
+N357 {eq:\biguplus}
+
+N358 {eq:\bigsqcup}
+
+N359 {eq:\sum_{{k=1}}^{{n}} k^2}
+
+N360 {eq:\prod_{{i=1}}^{{n}} a_i}
+
+N361 {eq:\int_a^b f(x)\,dx}
+
+N362 {eq:\oint_C \vec{{F}}\cdot d\vec{{r}}}
+
+N363 {eq:\iint_D f\,dA}
+
+N364 {eq:\bigcup_{{i\in I}} A_i}
+
+N365 {eq:\sum_{{\substack{{i<n\\ j<m}}}} a_{{ij}}}
+
+N366 {eq:\sin x}
+
+N367 {eq:\cos x}
+
+N368 {eq:\tan x}
+
+N369 {eq:\cot x}
+
+N370 {eq:\sec x}
+
+N371 {eq:\csc x}
+
+N372 {eq:\arcsin x}
+
+N373 {eq:\arccos x}
+
+N374 {eq:\arctan x}
+
+N375 {eq:\sinh x}
+
+N376 {eq:\cosh x}
+
+N377 {eq:\tanh x}
+
+N378 {eq:\coth x}
+
+N379 {eq:\log x}
+
+N380 {eq:\ln x}
+
+N381 {eq:\lg x}
+
+N382 {eq:\exp x}
+
+N383 {eq:\lim_{{n\to\infty}} a_n}
+
+N384 {eq:\limsup_{{n}} a_n}
+
+N385 {eq:\liminf_{{n}} a_n}
+
+N386 {eq:\max_{{i}} x_i}
+
+N387 {eq:\min_{{i}} x_i}
+
+N388 {eq:\sup_{{x}} f(x)}
+
+N389 {eq:\inf_{{x}} f(x)}
+
+N390 {eq:\det A}
+
+N391 {eq:\gcd(a,b)}
+
+N392 {eq:\deg p}
+
+N393 {eq:\dim V}
+
+N394 {eq:\hom(A,B)}
+
+N395 {eq:\ker f}
+
+N396 {eq:\arg z}
+
+N397 {eq:\Pr(A)}
+
+N398 {eq:\operatorname{{sgn}} x}
+
+N399 {eq:\operatorname*{{argmax}}_{{x}} f(x)}
+
+N400 {eq:a \bmod b}
+
+N401 {eq:a \equiv b \pmod n}
+
+N402 {eq:a \equiv b \mod n}
+
+N403 {eq:a \equiv b \pod n}
+
+N404 {eq:( x )}
+
+N405 {eq:[ x ]}
+
+N406 {eq:\{{ x \}}}
+
+N407 {eq:\langle x \rangle}
+
+N408 {eq:\lvert x \rvert}
+
+N409 {eq:\lVert x \rVert}
+
+N410 {eq:\lfloor x \rfloor}
+
+N411 {eq:\lceil x \rceil}
+
+N412 {eq:| x |}
+
+N413 {eq:\| x \|}
+
+N414 {eq:\vert x \vert}
+
+N415 {eq:\Vert x \Vert}
+
+N416 {eq:\ulcorner x \urcorner}
+
+N417 {eq:\big( x \big)}
+
+N418 {eq:\Big( x \Big)}
+
+N419 {eq:\bigg( x \bigg)}
+
+N420 {eq:\Bigg( x \Bigg)}
+
+N421 {eq:\bigl( x \bigr)}
+
+N422 {eq:\left( \frac{{a}}{{b}} \right)}
+
+N423 {eq:\left[ \frac{{a}}{{b}} \right]}
+
+N424 {eq:\left\{{ \frac{{a}}{{b}} \right\}}}
+
+N425 {eq:\left\langle \frac{{a}}{{b}} \right\rangle}
+
+N426 {eq:\left| \frac{{a}}{{b}} \right|}
+
+N427 {eq:\left\| \frac{{a}}{{b}} \right\|}
+
+N428 {eq:\left\lfloor \frac{{a}}{{b}} \right\rfloor}
+
+N429 {eq:\left. \frac{{df}}{{dx}} \right|_{{x=0}}}
+
+N430 {eq:\left( \frac{{a}}{{b}} \middle| \frac{{c}}{{d}} \right)}
+
+N431 {eq:\left\uparrow x \right\downarrow}
+
+N432 {eq:\hat{{a}}}
+
+N433 {eq:\check{{a}}}
+
+N434 {eq:\tilde{{a}}}
+
+N435 {eq:\acute{{a}}}
+
+N436 {eq:\grave{{a}}}
+
+N437 {eq:\dot{{a}}}
+
+N438 {eq:\ddot{{a}}}
+
+N439 {eq:\dddot{{a}}}
+
+N440 {eq:\breve{{a}}}
+
+N441 {eq:\bar{{a}}}
+
+N442 {eq:\vec{{a}}}
+
+N443 {eq:\mathring{{a}}}
+
+N444 {eq:\widehat{{abc}}}
+
+N445 {eq:\widetilde{{abc}}}
+
+N446 {eq:\overline{{abc}}}
+
+N447 {eq:\underline{{abc}}}
+
+N448 {eq:\overbrace{{a+b+c}}}
+
+N449 {eq:\underbrace{{a+b+c}}}
+
+N450 {eq:\overbrace{{a+b+c}}^{{3}}}
+
+N451 {eq:\underbrace{{a+b+c}}_{{3}}}
+
+N452 {eq:\overrightarrow{{AB}}}
+
+N453 {eq:\overleftarrow{{AB}}}
+
+N454 {eq:\overleftrightarrow{{AB}}}
+
+N455 {eq:\underrightarrow{{AB}}}
+
+N456 {eq:\xrightarrow{{f}}}
+
+N457 {eq:\xleftarrow[g]{{f}}}
+
+N458 {eq:\xrightarrow{{n\to\infty}}}
+
+N459 {eq:\stackrel{{def}}{{=}}}
+
+N460 {eq:\overset{{*}}{{\to}}}
+
+N461 {eq:\underset{{x}}{{\min}}}
+
+N462 {eq:\hat\imath}
+
+N463 {eq:\mathrm{{d}}x}
+
+N464 {eq:\mathbf{{v}}}
+
+N465 {eq:\mathit{{diff}}}
+
+N466 {eq:\mathsf{{A}}}
+
+N467 {eq:\mathtt{{A}}}
+
+N468 {eq:\mathcal{{L}}}
+
+N469 {eq:\mathbb{{R}}}
+
+N470 {eq:\mathfrak{{g}}}
+
+N471 {eq:\boldsymbol{{\alpha}}}
+
+N472 {eq:\mathnormal{{x}}}
+
+N473 {eq:\text{{if }} x>0}
+
+N474 {eq:\text{{ and }}}
+
+N475 {eq:\mbox{{for all }} x}
+
+N476 {eq:\textrm{{rm}}}
+
+N477 {eq:\textbf{{bold}}}
+
+N478 {eq:\textit{{italic}}}
+
+N479 {eq:\textsf{{sans}}}
+
+N480 {eq:\texttt{{mono}}}
+
+N481 {eq:\operatorname{{Hom}}(A,B)}
+
+N482 {eq:x \in \mathbb{{R}}^n}
+
+N483 {eq:\mathcal{{F}}\{{f\}}(\omega)}
+
+N484 {eq:\mathrm{{e}}^{{\mathrm{{i}}\pi}}+1=0}
+
+N485 {eq:\text{{area}} = \pi r^2}
+
+N486 {eq:f(x)=\begin{{cases}} 1 & \text{{if }} x>0 \\ 0 & \text{{otherwise}}\end{{cases}}}
+
+N487 {eq:\displaystyle\sum_{{i=1}}^n}
+
+N488 {eq:\textstyle\sum_{{i=1}}^n}
+
+N489 {eq:\scriptstyle x}
+
+N490 {eq:\scriptscriptstyle x}
+
+N491 {eq:\boxed{{E=mc^2}}}
+
+N492 {eq:\fbox{{text}}}
+
+N493 {eq:\smash{{\frac{{a}}{{b}}}}}
+
+N494 {eq:a\,b}
+
+N495 {eq:a\:b}
+
+N496 {eq:a\;b}
+
+N497 {eq:a\!b}
+
+N498 {eq:a\ b}
+
+N499 {eq:a\quad b}
+
+N500 {eq:a\qquad b}
+
+N501 {eq:a \thinspace b}
+
+N502 {eq:a \medspace b}
+
+N503 {eq:a \thickspace b}
+
+N504 {eq:a \negthinspace b}
+
+N505 {eq:a \negmedspace b}
+
+N506 {eq:a \negthickspace b}
+
+N507 {eq:a \phantom{{xyz}} b}
+
+N508 {eq:a \hphantom{{xyz}} b}
+
+N509 {eq:x\vphantom{{\frac{{1}}{{2}}}}}
+
+N510 {eq:\mathstrut}
+
+N511 {eq:a~b}
+
+N512 {eq:a\mathbin{{\#}}b}
+
+N513 {eq:a\mathrel{{R}}b}
+
+N514 {eq:\mathop{{\mathrm{{Res}}}}_{{z=0}}}
+
+N515 {eq:\mathopen{{[}}\mathclose{{]}}}
+
+N516 {eq:\mathord{{+}}}
+
+N517 {eq:\mathpunct{{;}}}
+
+N518 {eq:\mathinner{{\ldots}}}
+
+N519 {eq:a{{+}}b}
+
+N520 {eq:a+b}
+
+N521 {eq:a = b}
+
+N522 {eq:a   =   b}
+
+N523 {eq:\begin{{matrix}} a & b \\ c & d \end{{matrix}}}
+
+N524 {eq:\begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}}}
+
+N525 {eq:\begin{{bmatrix}} a & b \\ c & d \end{{bmatrix}}}
+
+N526 {eq:\begin{{Bmatrix}} a & b \\ c & d \end{{Bmatrix}}}
+
+N527 {eq:\begin{{vmatrix}} a & b \\ c & d \end{{vmatrix}}}
+
+N528 {eq:\begin{{Vmatrix}} a & b \\ c & d \end{{Vmatrix}}}
+
+N529 {eq:\begin{{smallmatrix}} a & b \\ c & d \end{{smallmatrix}}}
+
+N530 {eq:\left(\begin{{smallmatrix}} a & b \\ c & d \end{{smallmatrix}}\right)}
+
+N531 {eq:\begin{{pmatrix}} 1 & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots & 1 \end{{pmatrix}}}
+
+N532 {eq:\begin{{array}}{{ccc}} a & b & c \\ d & e & f \end{{array}}}
+
+N533 {eq:\begin{{array}}{{lr}} x & 1 \\ yy & 22 \end{{array}}}
+
+N534 {eq:\begin{{array}}{{c|c}} a & b \\ \hline c & d \end{{array}}}
+
+N535 {eq:\left(\begin{{array}}{{cc|c}} 1 & 0 & 2 \\ 0 & 1 & 3 \end{{array}}\right)}
+
+N536 {eq:\begin{{cases}} x & x\ge 0 \\ -x & x<0 \end{{cases}}}
+
+N537 {eq:|x|=\begin{{cases}} x & \text{{if }} x\ge 0 \\ -x & \text{{if }} x<0 \end{{cases}}}
+
+N538 {eq:\begin{{aligned}} a &= b+c \\ &= d \end{{aligned}}}
+
+N539 {eq:\begin{{aligned}} x &= 1 & y &= 2 \\ z &= 3 & w &= 4 \end{{aligned}}}
+
+N540 {eq:\begin{{gathered}} a=b \\ c=d \end{{gathered}}}
+
+N541 {eq:\begin{{matrix}}a\\b\end{{matrix}}}
+
+N542 {eq:\substack{{i<n\\ j<m}}}
+
+N543 {eq:\begin{{subarray}}{{l}} i<n \\ j<m \end{{subarray}}}
+
+N544 {eq:\begin{{pmatrix}} \begin{{matrix}} 1 & 0 \\ 0 & 1\end{{matrix}} & 0 \\ 0 & 2 \end{{pmatrix}}}

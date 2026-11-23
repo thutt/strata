@@ -1,0 +1,514 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+KEYS-ENVIRONMENTS: WHICH KEYS REACH THE EDITOR, AND WHERE THEY ARE LOST
+=======================================================================
+
+Worklist item W29 (release 1, rank 5): "Function keys taken by window
+managers and terminals".  This is a study.  Nothing in the program was
+changed.  Written 2026-11-18.  The probing tool is tools/keyprobe.py (not
+part of the smoke tests; its header says how to run it).
+
+Contents
+  1. The findings in eleven lines
+  2. How the study was done: probed or documented
+  3. The keys of the Editor
+  4. What each environment does with them
+       4.1 Terminals, probed (xterm, xfce4-terminal, tmux)
+       4.2 What the Editor reads from the terminal types of terminfo
+       4.3 Terminals and the console, documented
+       4.4 Window managers and desktops
+       4.5 ssh, forwarding and the Linux console
+  5. The commands that lose their key, and what is left for them
+  6. Recommendation for release 1
+  7. What is left for the live key mapping (W27, W28)
+  8. Questions for the owner, with defaults
+  9. Not verified
+
+
+1. THE FINDINGS IN ELEVEN LINES
+----------------------------
+  1. A default xterm does NOT send Esc for Alt.  It sends the character
+     with the eighth bit set (written as UTF-8): Alt-o arrives as the
+     letter i with a diaeresis.  Every Alt-letter command of the Editor
+     (Alt-O overtype, Alt-I italics, Alt-0 to Alt-9 outline levels,
+     Alt-Backspace, Alt-[ and Alt-]) types a character instead.  One
+     resource cures it: XTerm*metaSendsEscape: true (probed, section 4.1).
+     The manual says xterm "has a resource"; it does not say that the
+     default is the bad one.
+  2. xfce4-terminal keeps F1 (its help), F10 (its menu), F11 (full
+     screen), Shift-F10, Ctrl-Minus (zoom), Ctrl-Insert, Shift-Insert,
+     Shift-Home, Shift-End, Shift-Up, Shift-Down, Shift-PgUp, Shift-PgDn
+     and the Menu key.  F1 is the Help key of the Editor, and Shift-Up,
+     Shift-Down, Shift-Home and Shift-End move to the headline of the
+     section and to the start and end of the document.
+  3. xterm and tmux keep only Shift-Insert, Shift-PgUp and Shift-PgDn
+     (xterm: paste and scrollback) and, for tmux, its prefix Ctrl-B.
+  4. GNOME (probed from the installed schemas of GNOME 48) takes Alt-F1,
+     Alt-F2, Alt-F4, Alt-F5, Alt-F6, Alt-F7, Alt-F8 and Alt-F10, and
+     Alt-Tab, Alt-Space and Ctrl-Alt-letters and arrows.  Xfce takes
+     Alt-F4, F6, F7, F8, F9, F10, F11 and ALL of Ctrl-F1 to Ctrl-F12
+     (workspaces).  KDE takes Alt-F2, Alt-F3, Alt-F4 and Ctrl-F1 to
+     Ctrl-F4 (and by its manual Ctrl-F7, F9, F10 and F12).  So there is no
+     Alt-function key and no Ctrl-function key that is safe everywhere.
+  5. The Editor has an alternative for the Alt-F commands: Ctrl-F (a
+     menu), Ctrl-F12, Alt-O.  But FOUR groups of commands have NO key and
+     NO menu entry that works when their key is taken: Border (Alt-F8:
+     taken by GNOME and Xfce), Math (Ctrl-F2), Case (Ctrl-F6) and
+     Lib Copy, Lib Cut, Lib Paste (Ctrl-F3 to Ctrl-F5: taken by Xfce, and
+     by KDE for Ctrl-F3 and Ctrl-F4).  Search Again (Ctrl-F9) and Redo
+     (Ctrl-F11, menu only) are the same kind of case.
+  6. Compose (Alt-F1) and Alt-F10 and Alt-F11 do nothing yet, so losing
+     them costs nothing.
+  7. The F12 menu is safe in every environment tried except the quake
+     style terminals (Guake, Yakuake: documented, not probed).
+  8. Ctrl-Alt-F1 to Ctrl-Alt-F12 switch virtual consoles (Linux console,
+     GNOME on Wayland) and are not used by the Editor.
+  9. Over ssh a line that begins with a tilde followed by a full stop
+     ends the connection: typing "~." at the start of a line in a document
+     over ssh disconnects (documented in ssh(1)).
+ 10. The Editor does not read the key forms Esc O m P to S (a modifier
+     digit after Esc O), which the terminfo entry of konsole gives for
+     Shift-, Ctrl- and Alt-F1 to F4: the commands of those keys fail and
+     the letter after the digit is typed (section 4.2).
+ 11. The smallest fix for release 1 is one popup that lists EVERY command
+     that has an Alt or Ctrl function key, reached by Ctrl-F and by the
+     F12 menu (section 6), and a small change of the terminal driver to read
+     Esc O m P to S.  No key has to be moved.
+
+
+2. HOW THE STUDY WAS DONE: PROBED OR DOCUMENTED
+-----------------------------------------------
+Each row of the tables says how it is known.
+  probed         A program was run on this machine and the result was read.
+                 xterm 407, xfce4-terminal (Debian 13), tmux 3.5a, each in
+                 a private Xvfb; the keys were sent with xdotool; a key
+                 logger inside the terminal wrote the bytes that the
+                 terminal sent (tools/keyprobe.py term).
+  probed, Editor The terminal version of the Editor was run in a pty and
+                 given the sequences of terminfo; the screen was compared
+                 (tools/keyprobe.py terminfo).
+  schema         Read from the files that the installed desktop uses
+                 (GNOME 48: gsettings schemas org.gnome.desktop.wm.
+                 keybindings, org.gnome.shell.keybindings, org.gnome.mutter.
+                 keybindings, org.gnome.settings-daemon.plugins.media-keys,
+                 org.gnome.mutter.wayland.keybindings).  These are the
+                 defaults of the shipped program.
+  documented     From the documentation of the program: the official page
+                 is named in the row.  A search result that could not be
+                 confirmed is marked "unconfirmed".
+  not found      The sources do not give an answer; the row says so.
+  A live GNOME Shell (mutter 48.7, started with gnome-shell --x11 in a
+  private Xvfb and a private D-Bus session) did run, and the key probe was
+  tried with it, but the keys never reached any client (the window stayed
+  without the keyboard focus, in a session that has no seat), so the GNOME
+  rows come from the schemas and not from a live run.  A run of the same
+  probe without a window manager shows that, with none, EVERY key arrives
+  (all 154 keys of the list; tools/keyprobe.py x11 --wm none).
+  Not probed at all, for lack of the program or of the platform: KDE, Xfce,
+  MATE, Cinnamon, LXQt, Openbox, i3, sway (no package installed; nothing was
+  installed), gnome-terminal and konsole (not installed), screen (not
+  installed), kitty, alacritty, the real Linux console (a pty is not a
+  console), macOS Terminal and iTerm, Windows Terminal and WSL.
+
+
+3. THE KEYS OF THE EDITOR
+-------------------------
+From the key strip (src/view.c), the key handler (src/ui.c) and
+docs/KEYSTROKES.txt.  "Command" is what the key does in the Editor now.
+
+  Plain function keys
+    F1 Help          F2 Split        F3 Copy          F4 Cut
+    F5 Paste         F6 Format       F7 Move          F8 Table
+    F9 Search        F10, F11 none   F12 Menu (reserved for the menu)
+  Shift-function keys: none (the key strip shows empty labels).
+  Ctrl-function keys
+    Ctrl-F1 Learn        Ctrl-F2 Math         Ctrl-F3 Lib Copy
+    Ctrl-F4 Lib Cut      Ctrl-F5 Lib Paste    Ctrl-F6 Case
+    Ctrl-F7 Prev Error   Ctrl-F8 Next Error   Ctrl-F9 Search Again
+    Ctrl-F10 Undo        Ctrl-F11 Redo        Ctrl-F12 Marker
+  Alt-function keys
+    Alt-F1 Compose (message "not available")   Alt-F2 Append
+    Alt-F3 Join          Alt-F4 Delete        Alt-F5 Overtype
+    Alt-F6 Set Attribute Alt-F7 Go To         Alt-F8 Border
+    Alt-F9 Replace       Alt-F10, Alt-F11 message "not available"
+    Alt-F12 Marker
+  Control letters (the terminal sends the same byte for the key)
+    A append block   B bold            C spell word      D delete word
+    E format editor  F Alt commands    G text indent     H hanging indent
+    I = Tab          J, M = Enter      K cut block       L cut section
+    N normal         O append block    P print (Final)   Q quit
+    R retrieve       S save            T thesaurus       U underscore
+    V split block    W equation view   X cut text        Y split section
+    Z undo           Ctrl-^ edit section or document     Ctrl-[ = Esc
+    Ctrl-Space, Ctrl-Shift-Space (no-break space), Ctrl-Backspace, Ctrl-Minus
+  Alt with a character
+    Alt-O overtype   Alt-I italics     Alt-0 to Alt-9 outline levels
+    Alt-+ Alt-- Alt-* expand, collapse, outline   Alt-[ Alt-] and Alt-< Alt->
+    and Alt-, Alt-. move the section   Alt-Backspace   Alt-letter a macro
+  Cursor and editing keys
+    Left Right Up Down Home End PgUp PgDn Ins Del Enter Tab Backspace Esc
+    Shift-Left, Right, Up, Down, Home, End, PgUp, PgDn, Ins, Tab
+    Ctrl-Left, Ctrl-Right, Ctrl-Home, Ctrl-End, Keypad + - *
+  Not used: the Super (Windows) key, the Menu key (the terminal version
+  receives it as a sequence it does not read), Ctrl-Alt keys.
+
+The commands that have a key and ALSO a route without that key today:
+    Menu F12: File (Save, Retrieve, New, Delete, Import, Export), Global,
+    Edit, Print (Draft, Final, Preview, Next Error, Previous Error, Remove
+    Error), Tools (Macros with Learn, Library, Spell, Thesaurus, Autosort,
+    Count, Undo, Redo), Quit.
+    Ctrl-F popup "Alt commands": Append, Join, Delete, Overtype, Set
+    Attribute, Go To, Replace, Marker, Promote section, Demote section.
+
+
+4. WHAT EACH ENVIRONMENT DOES WITH THEM
+---------------------------------------
+Rows list only keys that the Editor uses.  "arrives" means the program
+gets the key unchanged.  "taken" means the environment keeps it and the
+Editor never sees it.
+
+4.1 Terminals, probed (Xvfb, no window manager, xdotool keys, key logger)
+  xterm 407 with its default resources: every key of section 3 arrives as
+  the xterm sequences, EXCEPT:
+    Shift-Insert, Shift-PgUp, Shift-PgDn      taken (paste, scrollback)
+    Alt with a character                      ARRIVES AS A DIFFERENT KEY:
+        the character with the eighth bit set, in UTF-8: Alt-o is the two
+        bytes c3 af, Alt-i is c3 a9, Alt-1 is c2 b1, Alt-Backspace is c3 bf,
+        Alt-+ is c2 ab, Alt-[ is c3 9b.  The Editor types these characters.
+    Ctrl-Alt with a function key              nothing arrives (not used)
+  xterm with  -xrm 'XTerm*metaSendsEscape: true':  Alt-o is Esc o (1b 6f),
+    Alt-1 is Esc 1, Alt-Backspace is Esc DEL, Alt-[ is Esc [ ...: the form
+    that the Editor reads (docs/KEYSTROKES.txt).  Everything else as above.
+    The manual's appendix D (appterm-esc) tells the reader that the terminal
+    must send Esc for Alt, but it does not say that xterm does not, and a
+    reader who starts xterm and tries Alt-O sees a character.
+  xfce4-terminal (GTK, VTE), its default shortcuts: taken are F1 (help),
+    F10 (menu), F11 (full screen), Shift-F10 (context menu), Ctrl-Minus
+    (zoom out), Ctrl-Insert, Shift-Insert, Shift-Home, Shift-End, Shift-Up,
+    Shift-Down, Shift-PgUp, Shift-PgDn and the Menu key.  Alt with a
+    character arrives as Esc and the character (the form the Editor reads).
+    Ctrl-Alt with a function key: nothing arrives.  The installed program
+    has the switches "Disable all menu access keys (such as Alt + f)" and
+    "Disable menu shortcut key (F10 by default)" in its preferences
+    (found in the program; the label "Advanced" is not verified); F1 and
+    F11 are changed in its Shortcuts page.
+  tmux 3.5a inside xterm: taken are Shift-Insert, Shift-PgUp, Shift-PgDn
+    (the outer xterm) and Ctrl-B (the tmux prefix; Ctrl-B is Bold in the
+    Editor: press it twice, or set the prefix in ~/.tmux.conf).  Home and
+    End arrive as Esc [ 1 ~ and Esc [ 4 ~ (the older form; the Editor reads
+    them as Home and End); the Menu key arrives as the sequence of Shift-F6.
+    Alt with a character: as the outer terminal.  Modified function keys
+    arrive as the xterm sequences.
+  One key list, 154 keys, each with the bytes: tools/keyprobe.py term.
+
+4.2 What the Editor reads from the terminal types of terminfo
+  Method (probed, Editor): for 15 terminal types the sequences that the
+  terminfo entry gives for the function keys were typed into the terminal
+  version of the Editor in a pty, and the screen was compared with the
+  screen after the key that the sequence stands for (tools/keyprobe.py
+  terminfo; the Editor does not read TERM).  The terminfo entry says what a
+  terminal type should send; a real terminal may send something else (see
+  xfce4-terminal below), so the run finds the sequences the Editor does not
+  read, not what a terminal does.
+    Plain F1 to F12   read correctly for linux, xterm, xterm-256color,
+                      screen, tmux-256color, rxvt-unicode-256color, st,
+                      kitty, alacritty, foot, konsole, gnome, xfce, putty.
+                      For vt100 F5 to F9 (Esc O t, u, v, l, w) are NOT read
+                      (a vt100 has no F11 and F12 either).
+    Ctrl-F1 to F12 and Alt-F1 to F12 (kf25 to kf36 and kf49 to kf60 of the
+                      xterm family) are read correctly when the sequence is
+                      Esc [ 1 ; m P to S or Esc [ n ; m ~ : xterm,
+                      xterm-256color, tmux-256color, st, kitty, alacritty and
+                      foot.  (Two pairs look wrong in the comparison, Ctrl-F7
+                      with Ctrl-F8 and Ctrl-F12 with Alt-F12; they are the
+                      same on the screen because the commands give the same
+                      message, so they are right.)
+    NOT READ: Esc O m P to S (m is the modifier digit).  The terminfo entry
+                      of konsole gives Esc O 5 P for Ctrl-F1, Esc O 3 P for
+                      Alt-F1 and Esc O 2 P for Shift-F1, in the same form
+                      for F2, F3 and F4.  The Editor reads Esc O 5 as a key
+                      and then TYPES the letter P into the document (tried:
+                      the text gets the letter).  So in a terminal that
+                      sends these (Konsole by its terminfo entry; not
+                      probed live) the commands of Ctrl-F1 to Ctrl-F4 (Learn,
+                      Math, Lib Copy, Lib Cut) and of Alt-F1 to Alt-F4
+                      (Compose, Append, Join, Delete) do not work, and
+                      Shift-F1 to Shift-F4 type P, Q, R, S.  The terminfo
+                      entries gnome and xfce give Esc O 1 ; 5 P, which is
+                      read in the same way (the letters ;5P are typed), but
+                      xfce4-terminal was probed live and sends Esc [ 1 ; 5 P
+                      (section 4.1), so those two entries do not describe it.
+    No sequence at all: the entries of linux, screen, rxvt-unicode-256color,
+                      vt100 and putty have no Ctrl-F or Alt-F keys.  In them
+                      Ctrl-F1 to Ctrl-F12 and Alt-F1 to Alt-F12 cannot be
+                      typed (the console sends Shift-F1 to Shift-F10 as the
+                      codes of F11 to F20).  Every command on those keys
+                      needs the popup (section 6).
+    Cursor keys, Home, End, Ins, Del, PgUp, PgDn: the comparison cannot tell
+                      them apart on the screen of a one line document, so
+                      they are not reported; the probed sequences of xterm,
+                      xfce4-terminal and tmux (4.1) are the xterm forms and
+                      the older Esc [ 1 ~ and Esc [ 4 ~, which the Editor
+                      reads (src/term.c: the codes 1, 7 and 4, 8).
+
+4.3 Terminals and the console, documented
+  gnome-terminal   documented (help.gnome.org gnome-terminal, advanced
+                   keyboard shortcuts): Full Screen is F11; Copy and Paste
+                   are Shift-Ctrl-C and Shift-Ctrl-V; the tab shortcuts
+                   could not be read in the search result: Alt-1 to Alt-9
+                   as tab switches is UNCONFIRMED; F10 (menu) UNCONFIRMED.
+                   It uses the same VTE as xfce4-terminal, which was probed:
+                   expect the same for F10, Shift-F10 and the Shift-cursor
+                   keys.
+  konsole          documented (docs.kde.org konsole command reference):
+                   Shift-Right and Shift-Left switch tabs (so Shift-Right and
+                   Shift-Left, Editor keys for columns, are taken),
+                   Ctrl-Shift-Ins pastes the selection, Ctrl-Alt-Left and
+                   Ctrl-Alt-Right move a tab.  F11 full screen: not found.
+  Guake, Yakuake   F12 shows and hides the window (general knowledge; no
+                   source read).  F12 is the Editor's menu.
+  screen           the prefix is Ctrl-A (Append block); documented in its
+                   manual, not installed here.
+  Linux console    see 4.5.
+
+4.4 Window managers and desktops
+  GNOME 48 (schema: probed from the installed files)
+    Alt-F1     panel main menu (the activities overview)
+    Alt-F2     run dialog
+    Alt-F4     close window
+    Alt-F5     unmaximize (also Super-Down)
+    Alt-F6     cycle windows of the application (Shift-Alt-F6 backward)
+    Alt-F7     move window
+    Alt-F8     resize window
+    Alt-F10    toggle maximized
+    Alt-Space  window menu          Alt-Tab, Shift-Alt-Tab   switch windows
+    Ctrl-Alt-Left, Right, Up, Down   workspaces      Ctrl-Alt-Tab  panels
+    Ctrl-Alt-Delete   log out       Print, Shift-Print, Alt-Print  screenshots
+    Super-F1  help    Super-letter and Super-cursor keys: many
+    Wayland session only: Ctrl-Alt-F1 to Ctrl-Alt-F12 switch to a session
+    NOT taken: Alt-F3, Alt-F9, Alt-F11, Alt-F12, all Ctrl-F keys, all
+    Shift-F keys, all plain F keys, Alt-O, Alt-I and the digits.
+  Xfce (xfwm4; documented, docs.xfce.org xfwm4 keyboard shortcuts, read in
+  full)
+    Alt-F4 close   Alt-F6 stick   Alt-F7 move   Alt-F8 resize
+    Alt-F9 hide    Alt-F10 maximize   Alt-F11 full screen
+    Alt-F1 applications menu   Alt-F2 application finder, Alt-F3 finder
+    Alt-Insert and Alt-Delete workspaces   Alt-Space window menu
+    Alt-Tab   Ctrl-F1 to Ctrl-F12 switch to workspace 1 to 12 (ALL TWELVE)
+    Ctrl-Alt-letters and cursor keys, Ctrl-Alt-Home, Ctrl-Alt-End
+    Shift-Alt-PgUp, Shift-Alt-PgDn
+    NOT taken: Alt-F5, Alt-F12, Alt-letters, plain F keys, Shift-F keys.
+  KDE Plasma (KWin; documented, docs.kde.org khelpcenter common keyboard
+  shortcuts; a search result lists Alt-F1 as the launcher, unconfirmed)
+    Alt-F2 or Alt-Space  run command      Alt-F3  window operations menu
+    Alt-F4 close       Ctrl-F1 to Ctrl-F4  switch to desktop 1 to 4
+    Ctrl-F7, Ctrl-F9, Ctrl-F10, Ctrl-F12   window overview and show desktop
+    (the page lists them; a defect of 2025 moves the desktop switches to the
+    Meta key: unconfirmed which version has which)
+    Alt-Tab  Ctrl-Esc  Ctrl-Alt-Esc  Ctrl-Alt-letters
+    NOT listed: Alt-F5 to Alt-F12 except as above.
+  MATE (Marco)   not found: the search gave only other desktops; Alt-F1
+                 (menu) and Alt-F2 (run) are named; Ctrl-Alt-F1 to F6 are
+                 virtual consoles (kernel).  The defaults are in the Marco
+                 schema, which is not installed: UNCONFIRMED.
+  Cinnamon       partly found (Linux Mint community pages): Alt-F2 run
+                 dialog, Alt-F5 unmaximize, Alt-F8 resize, Alt-Tab,
+                 Ctrl-Alt-Up and Ctrl-Alt-Down overview; Alt-F4 not
+                 confirmed; the Muffin schema is not installed.
+  LXQt, Openbox, i3, sway   not found for the function keys.  i3: by its
+                 user's guide the modifier of its default configuration is
+                 Alt (Mod1), with the Windows key as the usual choice: with
+                 Alt as the modifier EVERY Alt-letter and Alt-digit that i3
+                 binds is taken (the default binds mod+d, mod+Return, mod+1
+                 to mod+9, mod+Shift-letters): Alt-1 to Alt-9 are outline
+                 levels in the Editor.  Not confirmed from the default
+                 file, which is not installed.
+  Over ssh -X or -Y   the window manager of the LOCAL machine decides (the
+                 keys never leave the local machine if it takes them).
+
+4.5 ssh, forwarding and the Linux console
+  ssh (documented, ssh(1) on this machine): "The escape character must
+    always follow a newline to be interpreted as special."  The escape
+    character is the tilde: ~. disconnects, ~^Z suspends ssh, ~? shows
+    help, ~C opens a command line.  In the terminal version of the Editor
+    over ssh, typing a tilde and a full stop at the start of a line (right
+    after Enter) ends the connection.  Cures: ~~ sends one tilde; -e none
+    or EscapeChar none turns the feature off.
+  Linux console (the kernel keymap, documented in kbd(4); not probed: a pty
+    is not a console):  Alt-F1 to Alt-F12 switch to virtual console 1 to 12
+    in the default keymap; Ctrl-Alt-F1 to F12 as well; Shift-PgUp and
+    Shift-PgDn scroll the history; the function key sequences of terminfo
+    linux are Esc [ [ A to Esc [ [ E for F1 to F5 and Esc [ 17 ~ for F6 and
+    so on; Shift-F1 to Shift-F10 send the codes of F11 to F20 (the manual's
+    appendix D says this too).  The manual's appendix D has a row for each.
+
+5. THE COMMANDS THAT LOSE THEIR KEY, AND WHAT IS LEFT FOR THEM
+---------------------------------------------------------------
+Where the key is taken:    G = GNOME   X = Xfce   K = KDE   t = a terminal
+Alternative: the other route that works with the key taken.
+
+  Key        Command      Taken by         Alternative today        Gap
+  ---------- ------------ ---------------- ------------------------ ----
+  F1         Help         t (xfce4-term.)  none: no menu entry      YES
+                                           for Help
+  F10 F11    (none)       t, X, G          not a command            no
+  F12        Menu         quake terminals  none                     (rare)
+  Alt-F1     Compose      G, X, (K)        not available anyway     no
+  Alt-F2     Append       G, X, K          Ctrl-F popup             no
+  Alt-F3     Join         X, K             Ctrl-F popup             no
+  Alt-F4     Delete       G, X, K          Ctrl-F popup             no
+  Alt-F5     Overtype     G                Ctrl-F popup, Alt-O      no
+  Alt-F6     Set Attr.    G, X             Ctrl-F popup             no
+  Alt-F7     Go To        G, X             Ctrl-F popup             no
+  Alt-F8     Border       G, X, (K)        NONE                     YES
+  Alt-F9     Replace      X                Ctrl-F popup             no
+  Alt-F12    Marker       (none)           Ctrl-F12, Ctrl-F popup   no
+  Ctrl-F1    Learn        X, K             Tools > Macros > Learn   no
+  Ctrl-F2    Math         X, K             NONE                     YES
+  Ctrl-F3    Lib Copy     X, K             NONE                     YES
+  Ctrl-F4    Lib Cut      X, K             NONE                     YES
+  Ctrl-F5    Lib Paste    X                NONE                     YES
+  Ctrl-F6    Case         X                NONE                     YES
+  Ctrl-F7    Prev Error   X, K             Print > Previous Error   no
+  Ctrl-F8    Next Error   X                Print > Next Error       no
+  Ctrl-F9    Search Again X, K             NONE (F9 asks again)     small
+  Ctrl-F10   Undo         X, K             Ctrl-Z, Tools > Undo     no
+  Ctrl-F11   Redo         X                Tools > Redo (menu only) no
+  Ctrl-F12   Marker       X, K             Alt-F12, Ctrl-F popup    no
+  Shift-Ins  Append sub-  xterm, xfce4-t.  Ctrl-F popup (Append)    no
+             section
+  Shift-PgUp Previous     xterm, xfce4-t.  Alt-F7 Go To             no
+             section
+  Shift-Up, Shift-Down, Shift-Home, Shift-End   xfce4-terminal      Alt-F7 no
+  Ctrl-Minus Soft hyphen  xfce4-terminal   Alt-_ or Ctrl-F, Soft hyphen (task 36)  no
+  Alt-letter Overtype etc. xterm default   a resource (section 6)   fix
+  Ctrl-B     Bold         tmux prefix      press twice              no
+
+Dangerous (no alternative): Help (F1) in xfce4-terminal, Border, Math, Case,
+Lib Copy, Lib Cut, Lib Paste and Search Again.  Redo has only the menu.
+
+
+6. RECOMMENDATION FOR RELEASE 1
+-------------------------------
+Smallest set of changes that makes every command reachable in the common
+environments (a terminal on GNOME, Xfce or KDE; the Linux console; xterm,
+xfce4-terminal and tmux), keeping every key as it is:
+  1. ONE POPUP FOR ALL COMMANDS.  Extend the Ctrl-F popup ("Alt commands")
+     to a list of every command that has an Alt or Ctrl function key, with
+     the key shown: add Border, Math, Case, Lib Copy, Lib Cut, Lib Paste,
+     Search Again, Undo, Redo, Learn and Help to the ten entries it has,
+     and put the same entries in the F12 menu (Tools gets Math, Case and
+     the three Library commands; Edit gets Border).  Every command is then
+     reached by Ctrl-F (the byte 6: no terminal, window manager or console
+     keeps it, section 4) or by F12.  Size S: the handlers exist.
+  2. HELP WITHOUT F1.  Put Help in the F12 menu (it has no entry) and in the
+     popup.  F1 stays.
+  3. TELL THE USER ABOUT XTERM.  In the manual's appendix D and in the
+     getting started text: for xterm, start it with
+         xterm -xrm 'XTerm*metaSendsEscape: true'
+     or put the line in ~/.Xresources.  This is the only Alt cure that
+     the study found; it is worth a start check (the terminal start check
+     W15 cannot see it: the Editor cannot tell the character a user typed
+     from the same character sent by Alt).
+  4. TELL THE USER ABOUT THE TERMINALS' OWN KEYS.  Add rows for
+     xfce4-terminal (F1, F10, F11, Shift-cursor keys, Ctrl-Minus), xterm and
+     tmux (Shift-Insert, Shift-PgUp, Shift-PgDn, Ctrl-B), konsole
+     (Shift-Left and Shift-Right) to the table "Keys that a terminal keeps
+     for itself" (appterm-reach), each with the way to give the key back or
+     the alternative (section 5).
+  5. A TABLE FOR WINDOW MANAGERS in the terminal and X11 appendices: GNOME,
+     Xfce and KDE from section 4.4, with the line that every command has a
+     route by Ctrl-F or F12.
+  6. THE ssh TILDE: one line in the terminal appendix (links and slow
+     lines): "~." at the start of a line over ssh disconnects; type ~~ or
+     start ssh with -e none.
+  7. READ THE SHIFTED SS3 FORMS.  The terminal driver (src/term.c) should
+     read Esc O m P to S and Esc O 1 ; m P to S as F1 to F4 with the
+     modifier m (m is 1 plus 1 for Shift, 2 for Alt and 4 for Ctrl: 2 is
+     Shift, 3 Alt, 5 Ctrl, 6 Shift-Ctrl), as it reads Esc [ 1 ; m P to S
+     now.  Size S; the test is a
+     table of sequences in the terminal tests (tests/tui.py KEYS gets
+     'konsole' forms) that must fail when the change is taken out.  This is
+     the only change of program code the study asks for besides the popup.
+  8. NO NEW KEYS in release 1: the alternatives above make every command
+     reachable without moving any key; Redo's second key stays W21's
+     decision (Ctrl-Y is Split section today).  Do not move the Alt
+     commands to Shift (idea 1 of the worklist): the terminals that were
+     probed take the Shift cursor keys (xfce4-terminal) and Shift-F10.
+  Order of work: 1, 2 and 7 (code, tests, the popup text), then 3 to 6
+  (manual).
+
+
+7. WHAT IS LEFT FOR THE LIVE KEY MAPPING (W27, W28; RELEASE 2)
+--------------------------------------------------------------
+  - A key per command in Setup, captured by the user (the worklist item
+    "Keys: a mapping for each environment"): after the popup of
+    section 6 exists, the mapping only needs to move keys; every command
+    has a name there already.
+  - The key survey (log the keys that arrive): this study shows how it
+    would be used (tools/keyprobe.py is a version of it from outside).  The
+    owner has deferred it; nothing was built.
+  - The Esc prefix (idea 2 of the worklist): in a terminal, Esc followed by
+    a function key.  Probed facts for it: the terminal sends Esc then the
+    key as two reads only when the sequences are cut; xterm and the VTE
+    terminal send whole sequences; Esc followed by an Alt-form already means
+    Alt (docs/KEYSTROKES.txt).  Not built.
+  - A key bindings panel (W27: list of the current bindings): the table of
+    section 3 is its content.
+  - Super (Windows) key and the Menu key in X11 only.
+
+
+8. QUESTIONS FOR THE OWNER, WITH DEFAULTS
+-----------------------------------------
+  Q1  Do the popup of section 6 (item 1 and 2) in release 1?  Default: yes.
+  Q2  Is a popup that lists about thirty commands too long?  Default: no,
+      with the keys shown and a type-ahead letter for each entry.
+  Q3  May the manual name the probed terminals and the three desktops (by
+      their names, as in section 4)?  Default: yes (they are product names
+      of other programs, not of the original).
+  Q4  Should the Editor refuse to start in an xterm that sends the eighth
+      bit?  Default: no (it cannot know).
+  Q5  Which other terminals should the study probe (the task for the second
+      machine, W02, has xterm, urxvt, lxterminal, st, mlterm and others)?
+      Default: those of that study.
+
+
+9. NOT VERIFIED
+---------------
+  - Everything marked unconfirmed in 4.3 and 4.4.
+  - Whether KDE's Ctrl-F7, F9, F10, F12 are still defaults.
+  - gnome-terminal, konsole, kitty, alacritty, screen: not installed.
+  - The real Linux console and the keymap of kbd: not available here.
+  - A live window manager: the GNOME Shell ran but gave no key to a client
+    (see section 2); the tables rest on the schemas and the documents.
+  - Keys on keyboards other than the US layout (xdotool names keys by the
+    keysyms of that layout).
+  - macOS Terminal, iTerm2, Windows Terminal, WSL, PuTTY: only the terminfo
+    entry of putty was compared (section 4.2).
+
+
+STATUS OF THE RECOMMENDATION (task 36, 2026-11-18)
+  Done with the owner's approval (W21, W29.1, W29.3):
+    Undo is Ctrl-/ (the byte 1F in a terminal, the keysym slash with Control in
+    X11: one key for the Editor), Ctrl-F10 and Ctrl-Z.  Redo is Alt-/ (ESC /)
+    and Ctrl-F11.  The soft hyphen moved from Ctrl-Hyphen (also the byte 1F) to
+    Alt-_ (Alt-Shift-Hyphen, ESC _): Alt-- is the collapse of a section since
+    the first release and the original's key, so it could not take the soft
+    hyphen (decision in REPORT-36).  Ctrl-F lists every command that has a
+    function key, from the table that binds the keys (stred --fkey-table), and
+    Alt-[, Alt-], the soft hyphen.  A terminal that sends ESC O m P to S (Konsole)
+    for a modified F1 to F4 is read like ESC [ 1 ; m P to S.

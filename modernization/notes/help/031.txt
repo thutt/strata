@@ -1,0 +1,25 @@
+----------------------------------- Delete -------------------------------------
+Delete (Alt F4) permanently removes highlighted material from the document.  
+Cut (F4) temporarily removes material to the clipboard to Paste (F5) elsewhere.
+
+Delete highlighted text.                Delete blocks in the current section.
+         +---------------+                 +-------+
+                    +--------------------------------------+
+                    |  Text    Column    Block    Section  |
+                    +--------------------------------------+
+               +------------------+                  |
+Delete columns in the current       Delete sections, including their 
+block.  To delete columns that      subsections, at the same level.  (This 
+span more than one block, use       selection is only available in Structured
+the Column and Table Editor.        mode.)
+
+--Procedure---------------------------------------------------------------------
+
+ Press Delete.
+ Select Text, Column, Block, or Section and press Enter.
+ Highlight the area to delete.
+ Press Enter to delete the material from the document.
+
+--------------------------------------------------------------------------------
+     Paste         Cut         Highlighting         Column and Table Editor
+                   Keyboard Summary                 Help Index

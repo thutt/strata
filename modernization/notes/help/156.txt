@@ -1,0 +1,25 @@
+
+------------------------------------- Font -------------------------------------
+
+Font settings are made on the local column or block (F6) panels, global format
+(F10 Format) panels, or with the Font marker and control the typeface that is 
+used to print the text.
+
+
+# At the Font prompt, press Space Bar to display a list of the fonts available 
+  from the Typeface List (F10 Global Typeface) panel.
+
+# The font options vary depending on the printer you select on the Setup panel.
+
+# Any changes you make on the Typeface List panel affect the font selected at
+  the Font prompt. For example, if you select Font 4 for headlines on the 
+  Global Format panel and then change the typeface assigned to Font 4 on the 
+  Typeface List, the headlines will print in the new typeface.
+
+# The font setting for the current block or column is displayed on the
+  Current Block or Column Format panel (F6) and on the expanded Status Line.
+
+
+--------------------------------------------------------------------------------
+Global Format     Typeface List     Setup Panel     Status Line     Font Marker
+   Current Block       Current Column       Keyboard Summary        Help Index

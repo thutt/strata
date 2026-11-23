@@ -1,0 +1,52 @@
+THE TERMS OF THE REFERENCE MANUAL
+
+One name stands for one thing everywhere in the manual.  This file lists
+the names and the spellings that the manual uses, and the forms that are
+wrong.  manual/checkeditorial.py (rule E8) reads the lines that begin with
+the word WRONG: the line holds a pattern, the right form and the reason,
+separated by the sign =>.  The check looks at running text, headlines, index
+entries and captions, and not at quoted words (the messages of the
+programs), keycaps and the program font.  An exception goes into
+manual/checkeditorial.allow.
+
+SPELLING
+
+  The manual uses American spelling, the spelling of the screens of
+  Strata (Colors, Center, Status Line).  The names of values that the
+  program defines (the colors light-grey and dark-grey) stay as the
+  program writes them.
+
+WRONG \b[Cc]olour\w* => color => American spelling
+WRONG \b[Cc]entr(?:e|es|ed|ing)\b => center => American spelling
+WRONG \b[Bb]ehaviours?\b => behavior => American spelling
+WRONG \b[Nn]eighbours?\b => neighbor => American spelling
+
+NAMES OF THINGS
+
+  The four programs are the Editor, the Document Manager, the Printer
+  and the Viewer, always with capital letters.  A physical printer is a
+  printer, in lower case.  An editor inside the Editor (the editor of a
+  note, of a title page) is an editor, in lower case.  The programs of the
+  system are named in the program font.
+
+  panel      A box of fields that a command opens (Save File, Setup).  The
+             word dialog is only for the box of another program.
+  field      One entry of a panel.
+  pop-up     A small box with a list of choices (a pop-up list), written
+             with a hyphen.
+  directory  A directory of the file system.  The Strata screens say
+             Working Directory.  The word folder is not used.
+  headline   The title line of a section of a structured document.  The
+             word heading is for a column of a table.
+  status line  The line of the Editor.  The Viewer has a status bar.
+  keycap     The picture of a key in the text, written {k:Ctrl-S}.
+  program font  The font of file names, commands, settings and values,
+             written {c:text}.
+  section sign  The sign that a cross reference puts before a number,
+             written by the generator: {x:label} for the number and the
+             title, {n:label} for the number alone.
+
+WRONG \b[Dd]ialogues?\b => panel => panel; dialog is for other programs
+WRONG \b[Ff]olders?\b => directory => the manual says directory
+WRONG \b[Pp]opups?\b => pop-up => one spelling
+WRONG \b[Aa]ppendixes\b => appendices => the plural of appendix is appendices

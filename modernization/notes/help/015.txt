@@ -1,0 +1,25 @@
+
+------------------------ Import from 1-2-3/Symphony File -----------------------
+
+Use Import from 1-2-3/Symphony File on the Document Manager to convert 1-2-3 
+or Symphony files into Manuscript document files.  With this utility you can 
+import an entire worksheet or just a range of data, and you can import any 
+SHEET, DOC, or FORM window from a Symphony worksheet.
+
+ +-------------------- Import from 1-2-3/Symphony File ----------------------+
+ |                                                                           |
+ |              Working Directory:                                           |
+ |            Worksheet File Name:                                           |
+ |                    Window Name:                                           |
+ |                     Range Name:                                           |
+ |                         Format:                                           |
+ |    International Configuration:                                           |
+ |                  Document Name:                                           |
+ |                                                                           |
+ +----------------------- Press Ins to Import File --------------------------+
+
+You can also import 1-2-3 or Symphony worksheets directly into a document using
+the Worksheet marker.
+                  
+--------------------------------------------------------------------------------
+    Document Manager     Worksheet Marker     Keyboard Summary     Help Index

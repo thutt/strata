@@ -1,0 +1,25 @@
+---------------------------------- Define Macro --------------------------------
+
+Use Learn (Ctrl F1) to start or end defining a macro.
+
+---Procedure--------------------------------------------------------------------
+
+ Make sure that you are in the            
+  appropriate place to begin defining +------------- Define Macro ------------+
+  the macro.                          |                                       |
+                                      |  Macro Key: Alt-                      |
+ Press Learn (Ctrl F1).              |  Description:                         |
+                                      |  Include in Macro Set?                |
+ Enter a single alphabetic character |                                       |
+  to name the macro.                  +- Press Ins to Start Macro Definition -+
+                                   
+ Enter a description, if desired. Set Include in Macro Set to Yes if you
+  want the macro to be saved as part of the current macro set in memory.
+
+ Press Ins to start macro definition, then perform the task to be saved.
+
+ Press Learn (Ctrl F1) to end defining the macro.
+
+Note that encountering an error condition cancels the Learn process.
+--------------------------------------------------------------------------------
+   Macro Overview       Macro Edit        Keyboard Summary        Help Index

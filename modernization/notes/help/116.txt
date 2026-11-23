@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Invalid block range -- 
+
+You cannot change the document name on the print formatter panel after using
+the Menu Print Preview Block command in the editor. 
+
+-- Invalid command line: <description> -- 
+
+There are an incorrect number of arguments on the command line or an incorrect
+option has been specified. A sample command line is displayed on screen. 
+Reenter your command line using the sample as a guide.
+
+-- Invalid date/time string --
+
+The date or time string entered on the Global Marker panel or a specific Date
+or Time marker panel does not contain valid date or time keywords.  Refer to 
+chapter 8 of the Reference manual for acceptable entries.
+
+-- Invalid drive --
+
+The diskette drive or hard disk drive specified during the automatic installa-
+tion procedure is invalid or does not exist.  Re-enter the drive name and 
+proceed with installation
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

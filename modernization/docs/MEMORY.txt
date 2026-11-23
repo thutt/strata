@@ -1,0 +1,188 @@
+MEMORY: WHERE THE MEMORY OF THE EDITOR GOES, AND WHAT WAS REDUCED
+================================================================
+
+NOTE (task 42, 2026-11-20): every figure of this file that says "pages" was
+measured with pages of 735 words (the page that the Printer fills at the default
+layout).  The owner asked for the page of a typed text, 500 words.  The figures
+that the story and the manuals quote were measured again on another machine
+(Intel Core i7-6700HQ, 15 GB, Ubuntu 26.04), release builds of the commits
+9a329148 (before the memory work) and the tip of the main line (after), on the
+same documents made with 500 words to a page: docs/MEASUREMENTS.txt has the
+tables.  Section 2 below and the figures marked (task 42) are the new ones; the
+other figures of sections 1 to 7 are those of the survey of 18 November, on the
+second machine, and keep their 735 word pages.  The old table of section 2 is
+kept after it.  The counting run of the first version of the save takes 19 ms at
+1000 pages and 65 ms at 3625 pages (500 word pages, this machine; build
+cc32d06b3 with a timer round the run).
+
+NOTE (2026-11-18, the coordinator and a later job): the figures below were
+measured on the second machine with a text made from our own documents.  The
+same change was measured again on the owner's Mark Twain text, on the first
+machine, before and after, with the same documents: the memory after a save at
+3625 pages is 220 -> 145 MB (34 percent lower), at 1000 pages 64 -> 42 MB.
+THE SAVE WAS SLOWER after the first version of the change (278 -> 345 ms at
+3625 pages, 86 -> 106 ms at 1000 pages), which the first survey did not see.
+Cause: reduction 2 below made the buffer of a save exact with a first run over
+every token that only counted the bytes (88 ms at 3625 pages), before the run
+that wrote them.  Fix: doc_serialize (src/msdoc.c) makes the bytes in ONE run
+into a buffer that starts at an estimate (a pass over the blocks and the
+columns, not the tokens) and is cut to the size of the file at the end; the
+part of the buffer that was not written is not resident, so the memory after a
+save is the same.  A save now takes 267 ms at 3625 pages and 82 ms at 1000
+pages, a little less than before the memory work (278 and 86 ms).  The saved
+files are the same bytes.  See docs/MEASUREMENTS.txt, AFTER THE MEMORY
+REDUCTIONS.  The statement of reduction 2 that the buffer is "exact" is now:
+the buffer is cut to the file (up to a page left over).
+
+Task 32.  The owner asked for a survey of the code for memory ("you have done
+it before") and for a print that needs several passes of LaTeX.  This file is
+the survey.  The prints are in docs/MEASUREMENTS.txt.  The format of the file,
+the screen and the printed output did not change (section 5).
+
+1. HOW IT WAS MEASURED
+----------------------
+  A counting malloc (a shared object, made in the scratch folder, loaded with
+  LD_PRELOAD; valgrind and heaptrack are not installed here) counts the bytes
+  that are alive per allocation site (the return addresses of four frames).
+  The Editor ran the steps of tests/measure.py (open, Ctrl-End, a search, a
+  save after one typed character) and was sent SIGUSR1 after each step; the
+  addresses were turned into function names with nm.  The same Editor under
+  tests/measure.py gives the peak resident memory (VmHWM) of the steps.
+  Documents: tests/measure.py text makes a prose-like text of 2.9 million words
+  from the words of our own documents (the owner's collection is not on this
+  machine); gen makes the documents of 1 to 3625 pages: the largest is 15.2 MB,
+  as the file of the earlier measurement.  The machine: AMD Ryzen 7 7840HS,
+  8 threads, 15 GB, Linux 7.0, a release build.  Medians of three runs.
+
+2. THE BREAKDOWN (terminal Editor, 1000 pages of 500 words, plain document,
+   2.9 MB file; task 42)
+---------------------------------------------------------------------------
+  Megabytes that are alive, from the counting malloc, after Ctrl-End:
+
+  what                                       before    after
+  -----------------------------------------  ------   ------
+  the text of the document (parse_doc)         12.3     12.3   4 bytes a token
+  the records of the blocks (block_new)         0.3      0.3
+  the Undo shadow: the text                    15.3      2.7   (see 3.1)
+  the Undo shadow: lines, columns, blocks       1.7      1.8
+  the layout of the screen (rows, cells)        3.2      3.2   not the whole doc
+  help file, buffers of the screen, other       0.4      0.4
+  -----------------------------------------  ------   ------
+  total alive                                  33.2     20.7
+  peak resident (VmHWM) after the save         42.7     28.4
+
+  The same table of the survey of 18 November (1000 pages of 735 words, 4.2 MB
+  file; not the numbers of the tables of the other files):
+  text 17.9 / 17.9, records 0.3 / 0.3, shadow text 22.8 / 4.0, shadow lines
+  2.1 / 2.2, layout 4.7 / 4.7, other 0.5 / 0.5, total 48.3 / 29.7, peak after
+  the save 59.1 / 38.6.
+
+  At the open the Editor holds 16 MB (the text 12.3, the layout of one screen
+  and a half 3.2, the rest small; 24 MB in the survey of 18 November);
+  everything else at the end is the shadow.
+  The figures for 3625 pages are 3.6 times these.  What the first measurement
+  guessed (a layout of the whole document, a backup copy at the save) was not
+  found: the layout is made for the screen only (rows are packed at one byte
+  a cell, LROW_PACKED), the save writes through one buffer of the size of the
+  file (backup.c compares in chunks and copies files with the system), and the
+  search keeps no buffers.  The 15 times of the first measurement were the
+  shadow: a second copy of the text, at four bytes a character, made at the
+  first key, with the growth of a buffer that doubles (22.8 MB for 17.9 MB of
+  text) on top.
+
+3. WHAT WAS REDUCED
+-------------------
+  3.1 The Undo shadow (src/undo.c).  Undo keeps a copy of the whole document,
+      the shadow, made at the first key, and compares the document with it
+      after each key that changed it.  The copy was a clone of every block:
+      four bytes a token and a text that grew by doubling.  Now the text of a
+      column that holds no marker is kept packed: a plain character is one
+      byte; any other token that is no marker is the byte 0xFF and its four
+      bytes; a column with a marker keeps its tokens (a marker token is an
+      entry of a table, and the comparison looks at what it holds).  The
+      comparison reads the packed bytes next to the tokens of the document,
+      and an item that goes into a patch is unpacked to the exact room that
+      it needs.  Saves 12 MB at 1000 pages and 44 MB at 3625 pages (task 42;
+      19 and 67 MB in the survey of 18 November: about two thirds of the
+      shadow); the first key is also faster (the clone is cheaper): Ctrl-End
+      on 3625 pages takes 253 ms before and 142 ms now (task 42; 322 and 134
+      ms in the survey).
+      Risk: the shadow is the place that decides what Undo restores; the 142
+      earlier checks of tests/undotest.c (the fuzz test included) all pass,
+      and 12 new checks are made for it (section 4).
+  3.2 The buffer of a save (src/msdoc.c, doc_serialize).  The buffer grew by
+      doubling (the capacity was twice the bytes written plus 64).  The size
+      is counted first (a second run of the same code that only adds up) and
+      the buffer is made of exactly that size.  Saves up to half a file of
+      memory at the moment of the save (8 MB at 3625 pages: 140.1 -> 131.9)
+      and costs a second run of the serializer (the save step took 609 ms
+      before and 587 ms after on 3625 pages: no slower that can be seen).
+  3.3 A copy of a block (src/editor.c, block_clone_full) takes the room that
+      the text needs and no more.  It is used for the patches of Undo, the
+      clipboard, the library, the file operations and the Printer.
+  Together, the terminal Editor on the largest document (3625 pages, 15.2 MB):
+      Ctrl-End 180.8 -> 113.9 MB, search 184.3 -> 117.3, save 207.2 -> 131.9;
+  on 1000 pages:   52.1 -> 33.5, 53.0 -> 34.5, 59.1 -> 38.6;
+  on 100 pages:    7.8 -> 5.9, 7.9 -> 6.0, 8.5 -> 6.5.  The open is the same
+  (87.5 and 26.9 MB: the document itself), and takes the same time.
+
+4. THE TESTS
+------------
+  tests/undotest.c, test_shadow_memory (12 checks): a document of 3000 blocks of
+  400 characters (1.2 MB): the shadow after one typed character is more than
+  half and less than twice the characters (5.3 MB before: it fails), the buffer
+  of doc_serialize has the size of the file (malloc_usable_size; 2.2 MB for
+  1.2 MB before: it fails), a block copy has text.cap == text.n (512 for 402
+  before: it fails), the shadow is the document (undo_verify), Undo of typing in
+  a packed block and Undo of Replace All give the saved bytes back.  Each of the
+  three changes was put back to the file of maude-main in turn: the check of
+  that change failed and the others did not (REPORT-32.txt).  The tests of the
+  whole system pass (smoke, xtest).
+
+5. NOTHING THAT A USER SEES CHANGED
+-----------------------------------
+  13 documents (the samples of the manual, the test documents with markers,
+  notes, equations and tables, a plain and a structured document of 100 pages
+  and the document of the multi-pass print) were edited with the same keys in
+  the old and in the new Editor and saved: the files are byte for byte the
+  same; the PDF that the Printer makes of each (the options contents, index,
+  lists) has the same text (pdftotext, 13 of 13 the same).
+
+6. FOUND AND NOT DONE
+---------------------
+  - The token is four bytes (kind, esc, a, b) for every character, and the
+    text of the document is 12.3 of the 20.7 MB at 1000 pages (45 of the 78
+    at 3625; task 42).  A token of two bytes for a plain character (a text
+    run of bytes with the other tokens beside it) would save 23 MB at 3625
+    pages (task 42; 30 MB in the survey),
+    but every function that reads a Text (the editor, the layout, the search,
+    the printer, the loader, 60 files) would change: too large and too risky
+    for this task.  It is the next step if the memory matters more.
+  - A save writes through one buffer of the size of the file (15 MB at 3625
+    pages).  Writing the blocks to the temporary file as they are made would
+    save it, but the test that the file is unchanged (nothing is written when
+    the bytes are the same) needs the bytes first; a streaming compare is
+    possible and was not done.
+  - The load reads the whole file (15 MB) and then makes the tokens: the peak
+    of the open holds both for a moment (the open peak is not the largest of
+    the steps, so it does not set the memory that is needed).
+  - The shadow of a document that is full of markers keeps its tokens (the
+    marker table entries must be copied); a manual (many markers) therefore
+    still has a shadow of the size of the document.  A marker could be packed
+    by its payload; not done.
+  - The Printer (strprint) holds the document (60 MB at 3625 pages) and the
+    LaTeX text (12 MB), 84 MB in all; it makes no shadow.  pdflatex needs
+    69 MB at 10 pages and 87 MB at 3600 pages (docs/MEASUREMENTS.txt).
+  - The X11 version was not measured again (the changes are the same code);
+    the layout and the window use the same memory as before.
+
+7. REPEATING IT
+---------------
+    python3 -I -B tests/measure.py text TEXT 2900000
+    python3 -I -B tests/measure.py gen TEXT DOCS 1,10,100,500,1000,2000,3625
+    python3 -I -B tests/measure.py term BUILD DOCS RESULTS 3
+    python3 -I -B tests/measure.py compare OLD_RESULTS NEW_RESULTS
+    python3 -I -B tests/measure.py multipass BUILD OUT RESULTS 10,100,500,1000
+  The counting malloc is tests/memshim.c (a study tool, not part of the build);
+  its header says how to make it; tests/memdrive.py runs the Editor with it
+  and tests/memsites.py names the sites.

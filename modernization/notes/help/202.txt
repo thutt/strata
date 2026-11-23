@@ -1,0 +1,25 @@
+
+---------------------------------- Column Types --------------------------------
+
+There are three types of columns: Fixed, Adjustable, and Floating.
+
+     +---------------------------------------------------------------------+
+     |Column Number: 1   Width: 10  Type: Fixed                Pos: 1      |
+     |+--------------+|+--------+|+----------------~~~~~~~~~~~~~~~~~~~~~~~+|
+     +---------------------------------------------------------------------+
+
+# Fixed columns have fixed print widths, determined by the number of ruler
+  units specified at the Width prompt. The Column and Table Editor displays 
+  fixed columns as a solid line (column 1 above).
+
+# Adjustable columns have variable widths. The longest entry in the column is
+  used as the width of the printed column. The number of ruler units at
+  the Width prompt is used only for the screen display. The Column and Table
+  Editor displays adjustable columns as a dashed line (column 2 above).
+
+# Floating columns are columns that extend to the right margin. Only the last
+  column in a table can be floating. The width, displayed as a solid line, is
+  the minimum width of the column on the edit screen. The remaining space is 
+  displayed with tildes (column 3 above).
+--------------------------------------------------------------------------------
+       Table      Table Editor Keys      Keyboard Summary      Help Index

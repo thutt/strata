@@ -1,0 +1,25 @@
+------------------------------------- Setup ------------------------------------
+Setup is accessed from the Document Manager and is where you specify configura-
+tion options for your system.
+ +---------------------------------- Setup ---------------------------------+
+ |             Text Display Driver: IBM Monochrome                          |
+ |         Graphics Display Driver: None                                    |
+ |                                                                          |
+ |          Primary Printer Driver: Generic                                 |
+ |                            Port: PRN                                     |
+ |                                                                          |
+ |        Secondary Printer Driver: Generic                                 |
+ |                            Port: PRN                                     |
+ +--------------------------------------------------------------------------+
+ |  Virtual Memory Setup: Standard    Sound: On                             |
+ |                                                                          |
+ |  Initial Macro Set:                Dictionary Language: American English |
+ |  Initial Library:                  Decimal Separator: . (period)         |
+ |                                                                          |
+ |  Initial Working Directory:                                              |
+ |                                                                          |
+ +-------------------- Press Ins to Use Displayed Settings -----------------+
+
+Use Menu (F10) Global Options to configure your working environment.
+--------------------------------------------------------------------------------
+   Document Manager        Options        Keyboard Summary        Help Index

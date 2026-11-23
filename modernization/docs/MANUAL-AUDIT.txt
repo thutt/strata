@@ -1,0 +1,133 @@
+THE EDITORIAL AUDIT OF THE REFERENCE MANUAL
+
+Date of the audit: 21 November 2026.  The tool is manual/checkeditorial.py
+(rules E1 to E18, run by build.sh check-style); the test is
+tests/editorial.py; the terms are in docs/MANUAL-TERMS.txt.  The numbers
+below were made with the final rules on the sources of the day before the
+pass and on the sources after it.
+
+THE ATTRIBUTES OF A GREAT REFERENCE MANUAL
+
+  The ten of the request, and the ones that were added (marked +).
+
+  1. Accurate and complete: every key, panel, field, setting and message
+     once, with default, range and effect; nothing that the program does
+     not do.  (The statement of at most eight pictures to a line was
+     removed: the Editor has no such limit.)
+  2. One voice of terms and one spelling (docs/MANUAL-TERMS.txt, E8).
+  3. Typography: keycaps, program font, units, spaces, dashes, quotation
+     marks, heading case, list and table punctuation (E6, E7, E10, E11,
+     E15).
+  4. Technical writing style: first sentence states the thing, present
+     tense, no filler, no narration, no hedges, no contractions (E1 to E5,
+     E12, E14).
+  5. Predictable structure: entries of one kind follow one pattern
+     (reviewed by sample; not enforced by a tool).
+  6. Findable: contents, index, glossary, cross references by the
+     generator (E9, E18); no typed chapter or appendix number.
+  7. Examples that are correct (reviewed by sample).
+  8. No dead or duplicate text (E3, E13).
+  9. Verifiable: every rule is a check with a test that fails when the
+     rule is broken (tests/editorial.py).
+ 10. Reader's aids: "How this manual is written" (section 1.1) now tells
+     the notation of the program font, messages, measures, bold names and
+     the section sign.
+  + 11. Tables that print as written: a row is not cut in the middle of a
+     cell, a command does not go over the lines of a cell, a column is as
+     wide as its text (E15, E16, E17 and the widths of 49 tables).
+  + 12. No nested parentheses in a cross reference: a reference inside
+     parentheses is the sign and the number only (E18, {n:label}).
+  + 13. The same checks reach every chapter, the Messages chapter too (it
+     was skipped by the style check).
+  + 14. A document that is stable under edition: the developer edition and
+     the release edition both pass check-edition after every change.
+
+THE RULES AND THE HITS
+
+  Rule  What                                              Before  After
+  E1    filler words                                          21      0
+  E2    narration                                              4      0
+  E3    stale and future words (will, planned, soon)          17      0
+  E4    hedges                                                 3      0
+  E5    contractions                                           2      0
+  E6    units glued to the number, thousands separators        4      0
+  E7    spaces after a period and elsewhere                  499      0
+  E8    terms and spelling (colour, centre, folder ...)      336      0
+  E9    typed chapter and appendix numbers                   152      0
+  E10   headlines in title case                               10      0
+  E11   a list whose items end differently                     0      0
+  E12   a sentence that begins This is, This has ...          19      0
+  E13   a sentence said twice                                  4      0
+  E14   a section that announces itself                        6      0
+  E15   a column whose cells end differently                  23      0
+  E16   a table row that is the rest of the row before         9      0
+  E17   a command that goes over the lines of a table          8      0
+  E18   a reference with a title inside parentheses          755      0
+  Total                                                    1872      0
+
+  Eighteen places are allowed (manual/checkeditorial.allow), each with its
+  reason: a field named Just, a viewer line typed as shown, messages of the
+  program that are quoted, a note that is a noun, and compatibility
+  statements about files of earlier versions.
+
+HITS BEFORE THE PASS, BY CHAPTER
+
+  Chapter                                    Hits
+  1 A View of Strata                           50
+  2 File                                      128
+  3 Edit                                      205
+  4 Format                                    101
+  5 Markers                                   121
+  6 Print and Preview                         164
+  7 The Document Manager                      135
+  8 Spell Check and Thesaurus                  15
+  9 Equations                                 103
+  10 Conversion                                42
+  11 Messages                                 211
+  A Programs, command lines, environment       48
+  B Configuration                             101
+  C Special characters                         24
+  D The terminal version                       80
+  E The X11 version                            95
+  F Glossary                                  249
+
+  The glossary and the chapters 3, 6 and 11 had the most: the glossary and
+  the Messages chapter used one space after a period, chapter 3 had its
+  headlines in title case, and every chapter put the title of a section
+  inside parentheses ("(Section 2.3 (Working directory))").
+
+DEFECTS OF THE PRINTED MANUAL THAT THE TOOL FOUND
+
+  - 25 table rows were cut in the middle of a cell: a line that began in the
+    first column was the rest of the cell above it, and the table printed
+    it as a row of its own (for example the check of the settings
+    directory in appendix B and the Retrieve table of chapter 2).
+  - Seven cells of the Messages chapter printed a bar: "No space | left on
+    device", because a command in the program font went over the lines of a
+    table and the bar of the next line became text.
+  - Cross references inside parentheses printed a title in parentheses
+    inside the parentheses, 755 times.
+  - The Messages chapter, a tenth of the manual, was not checked by the
+    style rules at all.
+
+THE NOTATION
+
+  One notation of a menu path: the keycap, then the entries, separated by
+  commas ({k:F12}, File, Save).  A message of a program is in double quotes
+  as shown; an italic word in it is text that varies.  The program font is
+  for file names, directories, commands of the system, settings and the
+  values of a setting.  A measure is a number, a space and the unit.  A
+  reference to a section is the sign and the number, with the title after
+  it in parentheses; inside parentheses, the sign and the number.
+
+OPEN POINTS
+
+  - The statements of the manual about the Printer field, Ins in a pop-up
+    list, envelopes and templates were not compared with the program one by
+    one: this pass changed the form of the text, not its facts, except the
+    ones named above.
+  - Where a table has rows that are one logical row (the keys of chapter 1),
+    the tool cannot tell a continuation from a new row; the 25 defects that
+    were found had a first cell that began in lower case.
+  - The index has no See and See also entries for the two names of a thing;
+    that needs a decision of the author.

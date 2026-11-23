@@ -1,0 +1,25 @@
+
+--------------------------------- Print Document -------------------------------
+
+Print Document can be accessed either from the Document Manager or from 
+Menu (F10) Print Final in the editor.  Use Print Document to print a fully 
+formatted document.
+  +----------------------------- Print Document -----------------------------+
+  |                                                                          |
+  | Working Directory:                 Copies:                               |
+  |                                    Print Quality:                        |
+  | Document Name:                     Double Sided?                         |
+  |                                    Sort Output Pages?                    |
+  +--------------------------------------------------------------------------+
+  | Print:                             Print from Section:                   |
+  |                                            to Section:                   |
+  |                                    Print from Page:                      |
+  |                                            to Page:                      |
+  |                                                                          |
+  |                                    Graphics Print Options:               |
+  | Printer:                                                                 |
+  +----------------------- Press Ins to Print Document ----------------------+
+
+--------------------------------------------------------------------------------
+    Document Manager         Hyphenation Settings         Optional Settings
+          Menu               Keyboard Summary               Help Index

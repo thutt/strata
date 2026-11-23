@@ -1,0 +1,32 @@
+\input{x} ;; x
+\begin{align} a \end{align} ;; x
+a$b ;; x
+a%b ;; x
+a#b ;; x
+\hspace{1cm} ;; x
+\badcmd{x} ;; x
+x^ ;; x
+{a ;; x
+a} ;; x
+\label{x} ;; x
+\tag{1} ;; x
+a \\ b ;; x
+\begin{split} a &= b \\ &= c \end{split} ;; x
+\color{red} x ;; x
+\begin{equation} a \end{equation} ;; x
+\begin{matrix} a & b \end{matrix} ;; x
+\verb|x| ;; x
+a^^41 ;; x
+\newcommand{\foo}{x} ;; x
+\frac{1}{2 ;; x
+\left( x ;; x
+\sqrt[3 ;; x
+\text{caf} ;; x
+\begin{array}{cc} a & b & c \end{array} ;; x
+\left( x \right] ;; x
+a_1_2 ;; x
+a^1^2 ;; x
+\over ;; x
+\end{aligned} ;; x
+\if a b c \fi ;; x
+x &= y ;; x

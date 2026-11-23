@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+
+-- There is no hard disk available for Manuscript installation -- 
+
+Manuscript must be installed on a hard disk and there is no hard disk configured
+for your system.  Press any key to quit installation and return to DOS.
+
+-- There is not enough space available on the hard disk to install Manuscript --
+
+There is not enough free space on the hard disk specified in the automatic 
+installation procedure to install Manuscript. Press any key to quit installation
+and return to DOS.  Make more space available on your hard disk or install 
+Manuscript on another hard disk.
+
+-- Too many columns or rows; maximum of 100 allowed -- 
+
+A maximum of 100 columns (matrix or stack) and 100 rows (matrix) can be entered
+in an equation.  Edit the equation and reprint the document.
+
+-- Too many footnotes on a single page (cannot exceed 50) -- 
+
+Edit the document to rearrange the placement of notes
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

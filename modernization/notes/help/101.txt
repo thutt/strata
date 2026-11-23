@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- Cannot find file (<description>: <filename>) --
+
+The file specified cannot be found.  Check to make sure that the file name is
+spelled correctly, including a file name extension if necessary, and that the 
+file is in the appropriate directory.  Also, check that all files from the 
+Manuscript disks have been copied onto the hard disk and are in the same 
+directory, or that the data file specified exists.
+
+
+-- Cannot find <description> --
+
+The item you have specified cannot be found. Make sure that it exists and that
+it is typed correctly. If you are specifying a section or page number, the 
+section or page you want must be in the current section. The page number must 
+match the formatted version of the page number tag. The section number must 
+match Manuscript's internal section number as displayed in the Sect prompt of 
+the Status line.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

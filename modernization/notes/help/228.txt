@@ -1,0 +1,25 @@
+
+------------------------------------ Markers -----------------------------------
+The following markers automatically insert information about your system or
+file into your document at the marker location.  To use any of these markers, 
+highlight the appropriate marker on the Marker panel and press Ins.
+
+Author:     Inserts the author's name from the New File or Save File panels.
+
+Date:       Inserts the current date or the date the document was last modified.
+Filedate
+
+Description:Inserts the file description from the New File or Save File panels.
+
+Filename:   Inserts the DOS file name of the document.
+
+Pathname:   Inserts the complete DOS path of the document.
+
+Printer:    Inserts the name of the printer that printed the document.
+
+Revision:   Inserts the revision number from the New File or Save File panels.
+
+Time:       Inserts the current time or the time the document was last modified.
+Filetime
+--------------------------------------------------------------------------------
+  Date and Time Formats       Markers       Keyboard Summary       Help Index

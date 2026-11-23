@@ -1,0 +1,25 @@
+
+------------------------------------- Move -------------------------------------
+
+Move (F7) moves highlighted columns, blocks, or sections and changes section 
+levels within a structured document. All notes, index entries, and cross-
+references move with the highlighted element.
+
+Move columns within current block.     Move sections, including subsections, to
+(To move columns that span blocks,     another location or level.  (This option
+use the Column and Table Editor.)      is available only in Structured mode.)
+                   +-----------+                +--------+
+                          +--------------------------+
+                          | Column   Block   Section |
+                          +--------------------------+
+                                       |
+                          Move blocks (within the current
+                          section in a structured document).
+--Procedure---------------------------------------------------------------------
+
+ Press Move and select Column, Block, or Section.
+ Highlight the columns, blocks, or sections to move and press Enter.
+ Move the highlighted columns, blocks, or sections and press Enter.
+--------------------------------------------------------------------------------
+ Highlighting     Move Column Keys     Move Block Keys     Move Section Keys
+      Column and Table Editor          Keyboard Summary          Help Index

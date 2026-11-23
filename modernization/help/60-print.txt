@@ -1,0 +1,134 @@
+; Printing and previewing.
+= Print Menu
+~ Menu:Print
+The Print menu has Draft, Final and Preview for printing, and four entries for
+the Print Errors that a print finds.  {Ctrl-P} opens Print, Final directly.
+
+See [[Print Draft]], [[Print]], [[Preview]] and [[Print Errors]].
+
+= Print
+~ Menu:Print:Final
+~ Print Document
+~ Print Document:Output File
+~ Print Document:Printer
+~ Final
+Final is the print of the best quality.  It typesets the whole document, with
+its line spacing, the pictures and the title page, and no comments.  The
+panel has these fields:
+
+- Output File: the PDF that is made.  The default is the name of the document
+  with .pdf.  It is inactive (dim, the cursor skips it) while a queue is
+  chosen: a print to a queue keeps no PDF.
+- Printer: a choice field.  {Space} steps through File only, PDF viewer, the
+  queues of the system, System default printer and Search for printers...,
+  and goes round.  File only makes the PDF and stops.  PDF viewer opens the
+  PDF in a program that shows PDF files, and you print it from that program.
+  A queue sends it to that printer and keeps no file.  {F2} lists the
+  choices.  Search for printers... runs when you press {Enter} on it.  The
+  panel starts with the Printer, the sides, the order of the pages and the
+  black and white of your last print.
+- Copies, Print Double Sided?, Sort Output Pages?: for a queue.
+- Print Current Section Only?: Yes prints the section of the cursor.
+- Print Title Page?, Print from Section, to Section: what part to print.
+- Print Double Spaced?: doubles the line spacing.
+- Print from Page, to Page: a range of pages, for a queue.
+- Error Log?: Yes ends the PDF with a list of the errors and warnings.
+- Table of Contents?, Contents Levels: Yes puts a page of contents first, with
+  the headlines down to that level (1 to 9) and the page of each.  See
+  [[Table of Contents]].
+- Index?, List of Figures?, List of Tables?: Yes makes the index at the end, or
+  the list of figures or of tables after the contents, from the markers of the
+  document.  See [[Index and Lists]].
+- Print in Black and White?: Yes prints every colour of the print as a grey,
+  for a printer that has no colour.  See [[Colours in Print]].
+
+If the file exists you are asked whether to replace it; a print to a queue
+asks nothing, because it makes no file.  See [[Print Draft]],
+[[Preview]], [[Print Errors]].
+
+= Index and Lists
+~ Print Document:Index?
+~ Draft Print:Index?
+~ Print Document:List of Figures?
+~ Draft Print:List of Figures?
+~ Print Document:List of Tables?
+~ Draft Print:List of Tables?
+Index? Yes puts an index at the end of the PDF, made from the Index markers:
+the main headings in alphabetical order, the subheadings under them, and the
+pages of each; three pages or more in a row are written as a run, such as 3-5.
+A Reference Text such as See Map takes the place of the pages.  List of
+Figures? and List of Tables? put a list after the table of contents, from the
+Figure markers (and the names of pictures) and the Table markers, with the page
+of each.  The markers print nothing at their places when their list is made.
+A document with no marker of a kind gets nothing for it.  See [[Table of
+Contents]].
+
+= Colours in Print
+~ Print Document:Print in Black and White?
+~ Draft Print:Print in Black and White?
+A document holds no colour, so the colours of a print are the fixed ones of the
+Printer: the marks of the Print Error markers (red and orange) and the banner of
+a failed print.  The colours of the screen that Setup lets you choose are never
+printed.  Print in Black and White? Yes turns every colour of the print into a
+grey of the same brightness, for a printer that has no colour, and prints the
+pictures in greys.  No, the default, keeps the colours, and a picture that has
+colour prints in colour.  A Preview keeps the colours of its pictures.  A
+Draft and a Final print have the same rule.
+
+= Table of Contents
+~ Print Document:Table of Contents?
+~ Draft Print:Table of Contents?
+~ Print Document:Contents Levels
+~ Draft Print:Contents Levels
+A print can have a page of contents.  Set Table of Contents? to Yes in the
+Print Document panel (or the Draft Print panel) and the PDF has, after the
+title page, a page that lists the headlines of the document.  Each line has
+the tag that the screen shows, the title, a row of dots and the page on which
+the headline begins.
+
+Contents Levels is how deep the list goes: 1 lists the chapters, 2 the chapters
+and their sections, up to 9.  The default is 3.  The pages of the contents are
+numbered i, ii and so on, and the body starts again at 1.
+
+A document with no headline gets a page with one line that says so.  With
+Print Current Section Only? or a range of sections only those sections are
+listed, with the numbers that the screen shows.  The Preview has no contents
+page.  See [[Print]], [[Print Draft]].
+
+= Print Draft
+~ Menu:Print:Draft
+~ Draft Print
+~ Draft Print:Output File
+~ Draft
+Draft is the quick print: one line spacing, no extra space between blocks, and
+the comments of the document printed with their author and time.  The pictures
+are printed in colour as in a Final print.  The Output File is the name of the
+document with -draft.pdf, so that a Draft does not replace the final PDF.  The
+other fields are those of [[Print]], without the title page and the range of
+sections.
+
+= Preview
+~ Menu:Print:Preview
+~ Menu:Print:Preview:Document
+~ Menu:Print:Preview:Block
+~ Menu:Print:Preview:Section
+~ Preview Document
+~ Preview Document:Preview Title Page?
+Preview shows the pages on the screen, in the Viewer, and keeps nothing.  Choose
+Document, Block or Section.  The panel for Document asks for the Preview Title
+Page?, the Preview from Section, to Section, and the Error Log?.
+
+The Viewer needs an X display.  In the Viewer: {N}, {Space} or {PgDn} for the
+next
+page, {P} or {PgUp} for the previous one, {G} to go to a page, {+} and {-} to
+zoom,
+{0} for 100 percent, the arrow keys to pan, and {Q} to leave.  {F1} or {?} hides
+and shows the keys.
+
+If the print found errors the pages carry a banner, and the Viewer shows a
+red line: PRINT FAILED.  See [[Print Errors]].
+
+= Printers
+Choose a printer from the list of the queues of the system.  The list always
+has File only, which makes the PDF and stops, and PDF viewer, which opens
+the PDF in a PDF viewer.

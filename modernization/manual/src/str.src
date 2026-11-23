@@ -1,0 +1,24 @@
+# Chapter 7 of the Reference Manual: the Document Manager.
+# The chapter is kept in four files that this one includes.
+.doc Strata Reference: The Document Manager
+.chapter 7
+.h1 The Document Manager [str]
+The Document Manager is the first screen of Strata.  It is a menu that opens
+a document in the Editor, keeps the list of fonts for printing and keeps the
+settings of the user.  This chapter describes its menu, every panel with every
+field, every key, every message, and the files that it reads and writes.
+
+The chapter follows the menu of the Document Manager.  It describes first
+what the Document Manager is, how it starts, its screen and its keys; then one
+section for each entry of the menu, in the order of the menu; then what
+several panels share (the lists of files, the font list, the help viewer);
+and last the menu that the Editor shows when started with no document,
+Quit, the messages and the two versions.  Look up a panel under the name that
+the menu gives it.
+.ix Document Manager
+.ix Master menu
+.ix Start screen
+.include str1.src
+.include str2.src
+.include str4.src
+.include str5.src

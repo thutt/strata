@@ -1,0 +1,194 @@
+AUTOMATIC CONTENTS AND LISTS: STORED IN THE DOCUMENT, MADE WHEN IT IS PRINTED
+===========================================================================
+
+Status: done (task 43).  The owner asked (2026-11-20) that the samples and the
+Reference Manual drop their hand made table of contents and use the ones that
+the Printer makes; that the choices be stored in the document, with the
+contents on and the lists off for a structured document; that a list turn on
+by itself when the document has a marker of its kind and off when the last is
+gone; and that this not need a search of the document at each delete: a
+counter of each kind of marker, kept at the edits.  The original makes these
+parts when the document is printed (docs/CONTENTS-INDEX-PROBE.txt); so does
+Strata now.
+
+1. WHAT IS STORED
+-----------------
+
+  Record     Where      Meaning
+  ---------  ---------  --------------------------------------------------
+  YCL<n>     header     The level of the table of contents: 0 none, 1 to 99.
+                        The original's record.  Absent: 99.
+  FZLF       header     The list of figures (Figure markers): 1 on, 0 off.
+  FZLP       header     The list of pictures (the names of Picture markers).
+  FZLT       header     The list of tables (Table markers).
+  FZLI       header     The index (Index markers).
+                        Each is left out for AUTOMATIC, the default.
+  ZNF ZNP    before *B  The number of Figure and of Picture markers.
+  ZNT ZNI    before *B  The number of Table and of Index markers.
+  ZNX<n>     before *B  The kinds whose count is not exact (1, 2, 4, 8).
+
+  A document that has none of them is read as: contents level 99, every list
+  automatic, counts made at the load.  An old document therefore loads and,
+  when it is not edited in a marker, saves with the same bytes.  A new
+  structured document has YCL99, as every shipped sample has had.
+
+2. THE COUNTERS
+---------------
+
+  One counter for each kind: Figure (marker type 11), Picture (25), Table (29)
+  and Index (3), in Doc.mk_count (src/msdoc.h), the number of such markers
+  that are in the blocks of the document.  A counter is an unsigned number of
+  at most 7 digits (LIST_COUNT_MAX 9999999, what a record holds).
+
+  The count changes at the edit, never by a search:
+    doc_count_marker(d, type, +1 or -1)     one marker came in or went out;
+    doc_count_text(d, text, from, to, sign) the markers of those tokens;
+    doc_count_block(d, block, sign)         the markers of one block.
+  They read the tokens they are given and nothing else.  The places:
+    - doc_insert_item and doc_delete_items (every block that enters or leaves
+      the document: new block, paste of blocks, cut, delete, block and section
+      operations, files put in, library);
+    - the edits of the text of a block in src/editor.c: tins and tdel (a typed
+      or pasted marker, Delete, Backspace, delete word, the range of a text
+      selection that is cut or deleted, a Replace, a join that moves the text
+      of a block into another, a split that moves the tail out);
+    - Undo and Redo (src/undo.c apply): the blocks of the patch that go out
+      and the blocks that come in, the items of the patch only;
+    - ed_replace_marker: a change of the type of a marker moves one count (the
+      panel of a marker changes fields, not the type);
+    - a part of a document (Print of a section, Save Section) forgets the
+      counts that it copied from the whole (doc_count_forget): a part has none
+      and is counted when it is read.
+  A marker of an Include marker's file is another document: it is not in the
+  blocks of this one and is not counted here; the Printer counts what it
+  prints (section 4).
+
+  Guards.  A +1 at LIST_COUNT_MAX leaves the count there and marks the kind
+  stale (the bit in Doc.mk_stale); a -1 at 0 leaves 0 and marks the kind stale.
+  A stale count is written with ZNX and is made again, once, when the file is
+  next loaded.  While it is stale the list is decided by the count as it is
+  (the Editor shows it, with a note); the Printer does not use it.
+
+  The load.  parse_doc sets mk_loading, so the blocks that it makes are not
+  counted; the records ZN* give the counts; at the end finish_counts keeps
+  the count of a kind that has a record that is not named by ZNX and counts
+  every other kind in ONE pass (doc_recount).  The records are not kept in the
+  header: the writer makes them again from the counters, just before *B.
+
+  Writing.  A kind with a count of 0 and no stale mark has no record.  Counts
+  are written only when Doc.mk_write is 1: the document was read with counts,
+  or an edit changed a count.  A document read with none and not edited in a
+  marker is written as it was (the check target round trips the manual, and
+  the unit tests round trip the samples).  The generators of the manual write
+  the counts of the markers that they make.
+
+  What the tests show (tests/listtest.c, 819 checks): after every kind of edit
+  the counters are those of a loop of the test file over the document (1500
+  random edits with Undo and Redo among them); a Delete in a document of
+  20000 blocks reads 1 token to count and calls doc_recount 0 times
+  (doc_count_tokens_read and doc_count_recounts are the counters of the
+  test); a hand made file with a count of 0 and a marker gives a count that
+  stays 0 and is marked; a count at the largest value stays and is marked.
+
+3. HOW THE CHOICES COMBINE
+--------------------------
+
+  For a list of a kind k:
+    setting(k) = the record FZLx: 1 on, 0 off, none automatic;
+    list_on(k) = setting(k) when it has one, else count(k) != 0.
+  So On is the owner's choice and stays; Off stays; and Automatic follows the
+  counter: the first marker turns the list on and the deletion of the last
+  turns it off.  An explicit choice is not changed by an edit.
+
+  The contents is on when the level (YCL) is not 0, the document is
+  structured and has a headline of the levels 1 to the level; an explicit
+  --contents LEVEL of the command line, or a change of the Print panel, wins.
+
+  A list with no entry is never printed: On with no marker, or a Picture
+  marker with no name, makes no page.  The Index and the Figure, Table lists
+  take their entries as before: a Figure marker's name (field 1), a Table
+  marker's name (field 1), an Index marker's main heading (2), subheading (3)
+  and reference text (4), a Picture marker's name (field 6).
+
+4. THE PRINT
+------------
+
+  strprint with no option prints the contents (level of the document) and the
+  lists that list_on(k) says.  The options win: --contents LEVEL (0 for none),
+  --index, --list-figures, --list-pictures, --list-tables, and --no-index,
+  --no-list-figures, --no-list-pictures, --no-list-tables.  In the code
+  LatexOpts and PjOpts have LATEX_AUTO and PJ_AUTO (-1) for "the document
+  says"; a caller that clears the options gets 0 (nothing), as before.
+  resolve_parts (src/latex.c) turns them into 0 and 1 for the document that
+  is printed: after the Include and If markers are done, so the parts are
+  those of what is printed.  It counts the markers of that document once
+  (doc_recount) before it decides, so that a wrong count in a file cannot hide
+  a list; the Editor trusts the file, the print does not need to.
+
+  The markers print nothing at their place when their list is made, as before
+  (lm_marker_kept); when their list is off they are printed as the text of the
+  marker.  The order of the parts is as before: the title page, the contents,
+  the list of figures, the list of pictures, the list of tables (each on its
+  own page, numbered i, ii, ...), the text from page 1, the index.  This is
+  not the order of the original (docs/CONTENTS-INDEX-PROBE.txt, question 2):
+  the owner has not asked for a change.  The row of the contents shows the
+  LaTeX markers of its headline (put_toc_title), so that the logo of a name in
+  a headline is in the row.
+
+  The Picture markers have a list of their own, the List of Pictures.  The
+  original puts the name of a Picture in the Table of Figures; the owner asked
+  for the lists of figures, pictures and tables as three, so the names of
+  pictures are not in the list of figures any more.
+
+5. THE PANELS
+-------------
+
+  Global Format has a fourth global panel, Contents and Lists
+  (src/globalmenu.c, NGLOBAL 4): Table of Contents Level (0 to 99), Table of
+  Figures, Table of Pictures, Table of Tables and Index (Automatic, On, Off),
+  and the four counts, shown beside them, not fields.  The ring has fourteen
+  panels.  Ins writes YCL and FZL*; Automatic removes the record.
+
+  The Print and Draft Print panels have the fields Table of Contents?,
+  Contents Levels, Index?, List of Figures?, List of Pictures?, List of
+  Tables?; their first values are the document's (the contents level when the
+  document is structured; list_on for each list).  The Editor gives strprint
+  an option only for a field that differs from the document's value (part_option
+  in src/printmenu.c), so a print with no change says nothing and the document
+  decides.  stred --print and the Document Manager pass no option.
+
+6. DECISIONS
+------------
+
+  D1  The index is treated as the lists are: its counter, Automatic, On, Off.
+  D2  A document that is not structured has no contents by default (it has no
+      headline); a structured document has contents level 99 and prints a
+      contents when it has a headline.
+  D3  The Picture marker has a list of its own (the owner named it).
+  D4  Counters are not written for a document that has none and whose markers
+      were not edited: the bytes of an old document stay.
+  D5  The Printer counts again what it prints.  The counts of the file serve
+      the Editor (the panel and the lists of a document that is edited).
+  D6  The order of the parts is kept: the contents first.
+  D7  The hand made parts of the Reference Manual and of the story sample are
+      gone.  The documents made for the separate chapters by the target docs
+      of manual/build.sh still have a table of contents, an index and a list
+      of figures as documents of their own (--toc, --index, --figures of
+      manual/mkmanual.py), because a part cannot hold the contents of the
+      other parts; no sample teaches cross-reference markers with them.
+  D8  The cards and the guides store YCL0; the Reference Manual and the story
+      sample store YCL3.  The test documents store YCL0 unless the test is
+      about the contents.
+  D9  A program that does not know the records (an earlier version) keeps
+      them as they are when it saves, whatever it does to the markers, so a
+      count in a file can be wrong.  The Editor believes a count that is in the
+      file (that is the point of storing it) until an edit makes it stale; the
+      Printer counts what it prints and does not.
+
+7. OPEN
+-------
+
+  O1  The field label of the Picture marker is the original's, "Name (for
+      Table of Figures)".
+  O2  The count of a kind that is stale shows in the panel; the Editor does not
+      recount at once (the owner asked for no search at an edit).

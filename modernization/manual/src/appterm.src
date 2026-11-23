@@ -1,0 +1,533 @@
+# Appendix D: the terminal version.
+.doc Strata Reference: The Terminal Version
+.chapter D
+.h1 The Terminal Version [appterm]
+.ix Appendix D
+.ix Terminal version
+.ix Terminal
+.ix Text terminal
+This appendix describes the terminal version of the Editor and of the
+Document Manager: what the terminal must be able to do, how the screen looks
+in it, how big it is, which keys a terminal sends and how the keys that Strata
+uses for its own commands are reached in other ways.  The terminal version is
+the
+one that runs in a terminal window, over a remote login and in a multiplexer.
+The X11 version, which opens a window of its own, is
+described in {n:appx11}; {x:view-screen-kinds} gives
+the list of the differences that matter in daily work.
+
+The sections follow the order in which a problem between the keyboard and the
+screen shows itself: what the terminal must provide ({n:appterm-needs},
+{n:appterm-term}); how the screen looks ({n:appterm-colour},
+{n:appterm-chars}, {n:appterm-size}); the keys, which vary most from terminal
+to terminal ({n:appterm-esc}, {n:appterm-ctrl}, {n:appterm-reach}); a remote
+login ({n:appterm-links}); and last
+the differences from the X11 version, how Strata hands the terminal over, and
+a table of problems ({n:appterm-diff}, {n:appterm-leave},
+{n:appterm-trouble}).  The two versions offer the same commands, so the
+appendix has few commands and many keys.
+
+.h2 What the terminal version needs [appterm-needs]
+.ix Terminal, requirements
+.ix Standard input and output
+.ix Interactive terminal
+.ix UTF-8
+The terminal version needs three things.
+.table 16 44
+Need | Detail
+A terminal on input | The keys must come from a terminal.  A program that
+  | reads its keys from a file or from another program cannot be driven.
+A terminal on output | The screen must be a terminal too.  The standard
+  | error may go elsewhere.
+A UTF-8 terminal | The screen is written in UTF-8, and the keys are read
+  | as UTF-8 when they are not plain ASCII ({n:appterm-chars}).  The
+  | terminal must support the usual control sequences of the {c:xterm}
+  | family, as the terminal emulators of desktops do.
+.end
+When the keys or the screen are not a terminal, the program writes one line on
+the standard error and ends.  The line of the Editor reads {c:needs an
+interactive terminal (or an X display with the x11 build)}; the line of the
+Document Manager reads the same, with the name of its program in front, and the
+line of the Preview that the Editor makes for a document reads {c:Preview needs
+an interactive terminal} and then the same words in brackets.  Nothing else is
+written, and no file is touched.
+.note A terminal version never switches to a window: it does not look at
+  the environment variable {c:DISPLAY}.  Likewise the X11 version never falls back
+  to a terminal: when it cannot open its display it writes the same line and
+  ends.
+
+.h2 Terminals and the environment variable TERM [appterm-term]
+.ix TERM
+.ix terminfo
+.ix Alternate screen
+.ix Title of the terminal
+The terminal version does not use the terminal descriptions of the system.  It
+reads the environment variable {c:TERM} only for two things: how many colors
+the terminal shows ({n:appterm-colour}) and whether the terminal is a
+multiplexer such as tmux ({n:appterm-charset}).  It runs in any
+terminal that understands the usual sequences, whatever {c:TERM} holds; a wrong
+{c:TERM} changes the number of colors and nothing else.  When it
+starts, Strata switches to
+the alternate screen of the terminal, so that the text of the shell comes back
+at the end.  After a change of the size of the terminal the whole
+screen is drawn again.  Strata never rings the bell.
+
+The terminal is put in raw mode while Strata runs: no echo, no line editing,
+and no signals from the keyboard.  Three consequences matter
+to the user.
+- {k:Ctrl-S} and {k:Ctrl-Q} are keys of Strata (Save and Quit), not the flow
+  control of the terminal; the terminal does not stop when you press them.
+- {k:Ctrl-C} is Spell Word; it does not interrupt the program, and
+  {k:Ctrl-Z} does not suspend it.  Strata cannot be put into the background
+  with the keyboard.
+- When the program ends in any way, the terminal is given back as it was
+  found: the attributes are reset, the cursor is shown, the alternate screen
+  is left and the settings of the terminal are restored.  The terminal is also
+  given back when the program is stopped by a signal such as {c:HUP}, {c:INT}, {c:QUIT} or {c:TERM}.  A program
+  that is killed with KILL cannot do it; then the command {c:reset} of the
+  shell repairs the terminal.
+
+.h2 Colors and text attributes [appterm-colour]
+.ix Color, terminal
+.ix Attributes, terminal
+.ix Monochrome
+.ix Reverse video
+.ix Marker color
+The terminal version paints its text in the colors that the Colors panel of
+Setup sets ({n:str-colours}): blue with yellow text, until you change them.
+It sets the background of every cell and clears the screen with the color of
+normal text, so that the colors of your terminal do not show through, and it
+puts the colors of the terminal back when it ends.  How many colors it can
+use depends on the terminal.
+.table 12 48
+Terminal | What the program does
+Any color | The terminal reports this in COLORTERM (truecolor or 24bit) or in
+ | {c:TERM} (a name with truecolor or direct): every color is sent as it is.
+256 colors | {c:TERM} has 256color in its name: a color that is not one of the
+ | 256 is replaced by the nearest of them.
+16 colors | The other terminals that have colors ({c:xterm}, {c:linux}, screen and the
+ | like): the nearest of the 16 colors of the VGA palette.
+No colors | {c:TERM} is not set, is dumb or unknown or starts with vt, or the
+ | variable {c:STRATA_COLORS} is none or 0: the program sends the text
+ | attributes that follow and no color but cyan.
+.end
+The variable {c:STRATA_COLORS} (none, 16, 256 or truecolor; 0 and 24bit are
+the same as none and truecolor) settles the question when the terminal reports
+it wrongly.  Any other value is ignored.  The colors of the terminal version
+and
+those of the X11 version are separate settings ({n:appcfg-key-colors}).
+.table 17 43
+Meaning | On a terminal that has no colors
+Bold text | Text in bold, and the messages on the bottom row (which are also
+  | in reverse video).
+Dim | The dots for spaces and the signs for tabs and line ends, the filler of
+  | the fields of a panel, the hints in a box, and menu entries that are
+  | not available.
+Italic text | Text in italics.
+Underlined text | Text in underscored words.
+Reverse video | The status line, the key labels, a menu, a chosen entry of a
+  | list, a highlighted area, and a Keycap marker (its text).
+Cyan | Markers in the text.
+.end
+On such a terminal a marker that is also in reverse video is a cyan
+background.  If the terminal has no italic (or draws it as a color), the
+text in italics is shown in whatever way the terminal does it, and nothing in
+Strata changes; the status line
+still says {c:Attr: Italic} when the cursor is in such text.  The same holds
+for dim text.
+.note The cursor is the cursor of the terminal, and Strata hides it while a
+  menu or a box is open.  A terminal that cannot hide its cursor leaves it
+  where the last cell was drawn.  Where the terminal has colors, the cursor
+  color of the Colors panel (amber at first) is set through the terminal and
+  the color of the terminal is restored at the end.
+
+.h2 Characters [appterm-chars]
+.ix Characters, terminal
+.ix Box drawing characters
+.ix Paste, terminal
+The screen of Strata is a grid of cells that hold the characters of the set
+of {n:appchar} (the Latin letters, the accented letters, the box drawing
+characters, the arrows and the dots).  The terminal version shows each cell
+as the Unicode character that has that shape, so the font of the terminal
+must have the box drawing characters (the lines and corners of boxes), the
+dotted and shaded blocks and the two triangle arrows that mark the end of a
+block.  The fonts that desktop terminals use by default have them; the plain
+bitmap font that {c:xterm} uses when you give it no font does not, and shows
+squares in place of the lines and the triangle.  A terminal that shows other
+shapes for them makes the boxes and the guidelines look untidy and does
+nothing worse.  When the terminal cannot read UTF-8 at all, the Editor draws
+the screen with plain ASCII characters instead ({n:appterm-charset}).
+
+Which characters can be typed, and what happens to the others, is in
+{x:edit-special-chars} and {x:appchar-type}.  A text that you paste into the
+terminal arrives as typed keys, one character after another: a character that
+is not in the set is lost, a line end becomes {k:Enter} and so makes a new
+block, and a tab is a tab.  The selection and the paste of the terminal work
+as in any other program.
+.note The terminal must be in UTF-8 mode.  The Editor checks it when it
+  starts ({n:appterm-charset}) and draws ASCII characters when it is not.
+
+.h2 The start check and the ASCII characters [appterm-charset]
+.ix Start check, terminal
+.ix ASCII characters
+.ix Terminal Characters
+.ix STRATA_ASCII
+.ix UTF-8, check at start
+.ix Font, terminal
+When the Editor or the Document Manager starts in a terminal, one box character
+is written in a corner of the screen, the terminal is asked where the cursor
+is, and the answer is read before the first key is read.  A terminal that reads
+UTF-8 moves the cursor by one column; a terminal that reads Latin-1 or
+another set of eight bits shows three characters and moves it by three.  The
+answer is never taken for typed keys, and neither is any other answer that a
+terminal sends by itself.  If the terminal cannot read UTF-8, the screen
+would be rubbish, so the program draws the screen with ASCII characters that
+look like the shapes, in the same cells, so that nothing moves.  A note on the
+message line of the first screen reports this once:
+.code
+No UTF-8 terminal: ASCII is drawn. The font is not checked. See Setup.
+.end
+The line goes with the first key, and the choice is also written in the log
+of the run.  The choice follows this order.
+.table 22 38
+What | The result
+The variable {c:STRATA_ASCII} | 1 means ASCII characters, 0 means UTF-8,
+ | whatever the terminal reports.  Nothing is asked, and no message is shown.
+The field Terminal Characters of Setup | UTF-8 or ASCII is used as it is, like
+ | the variable.  Automatic, the usual value, goes on.  Saved as
+ | {c:terminal_charset} ({n:appcfg-key-charset}).
+A terminal multiplexer (tmux) | The name of the locale determines: a name
+ | with UTF-8 in {c:LC_ALL}, {c:LC_CTYPE} or {c:LANG} (the first that is set)
+ | means UTF-8, any other ASCII.  A multiplexer sets the characters from the
+ | locale itself, so the answer of the terminal behind it is not used.
+The answer of the terminal | One column is UTF-8, any other number is not.  A UTF-8
+ | terminal wins over a locale that says otherwise, and a terminal that reads
+ | eight bits wins over a locale that says UTF-8.
+No answer in 0.8 seconds | The locale determines as above.  The start is never
+ | held up for longer.
+.end
+What the ASCII characters are:
+.table 22 38
+Shape | ASCII
+Horizontal lines | {c:-}, and {c:=} for the double line
+Vertical lines | {c:|}
+Corners, crossings, tees | {c:+}
+Shaded blocks | {c::} and {c:#}
+Solid blocks and half blocks | {c:#}
+Triangles and arrows | {c:<} {c:>} {c:^} {c:v}
+Letters with an accent | The letter without the accent
+Greek letters and math signs | The nearest letter or sign
+Dots, the end of a block | {c:.} and {c:<}
+Any other shape | {c:?}
+.end
+The text of your document is not changed: only the way that the terminal
+draws it.  The keycaps are drawn as the key name in reverse video as always,
+and need nothing else.  The X11 version draws its own shapes and is not
+concerned.
+
+The check cannot test the font.  A terminal that reads UTF-8 but has a font
+without the shapes shows squares in place of the lines, the bars and the
+triangle.  That is not a fault of the Editor, and the check cannot see it; two
+cures exist.  Give the terminal a font that has the shapes, for example in
+{c:xterm}:
+.code
+xterm +lc -u8 -fa "DejaVu Sans Mono" -fs 11
+.end
+(the option {c:+lc -u8} makes {c:xterm} read UTF-8 whatever the locale names),
+or
+set the field Terminal Characters of Setup to ASCII, or start with
+{c:STRATA_ASCII=1} in the environment.  A terminal that reads Latin-1 and is
+told to read UTF-8 with {c:STRATA_ASCII=0} or the field shows rubbish, and
+some of them type an answer to a question that the program never asked; the
+program drops such answers, but do not force UTF-8 on a terminal that cannot
+read it.
+
+.h2 Screen sizes [appterm-size]
+.ix Screen size, terminal
+.ix 80 columns
+.ix 25 rows
+.ix Resize
+.ix Small terminal
+The terminal version uses the whole terminal, as many rows and as many columns
+as the terminal reports.  If the terminal cannot give a size,
+Strata uses 80 columns by 25 rows.  A change of the window is followed at
+once, without a key: the screen is cleared, drawn again at the new size, and
+the text is laid out again.
+.table 15 45
+Matter | What Strata does
+Height that is kept | The program never changes the size of the window of
+  | your terminal.  When you change the height of the terminal while the
+  | Editor runs, the Editor keeps the number of rows in your settings at the end of
+  | the run, and the next start uses at most that many rows.  Make the
+  | terminal taller while the Editor runs to use more rows again.  The same
+  | number is in Setup, in the field Window Rows, Terminal
+  | ({n:str-setup-fields}); an empty field means all the rows of the
+  | terminal, and so does a run in which you never changed the height.  The
+  | number is 20 to 200, and the Editor always has at least 20 rows.
+Width of the text | The text is laid out in at most 80 columns and at least
+  | 40, whatever the width of the terminal. In a terminal
+  | that is wider than 80 columns the text stays at the left
+  | and the status line, the menu bar and the key labels use
+  | the whole width.
+Narrower than 40 | The text is still laid out for 40 columns and what does
+  | not fit is cut off at the right edge of the screen.
+  | Nothing wraps for the sake of the screen; use at least
+  | 40 columns.
+Number of rows | Two rows at the top, the status line and the ruler (the
+  | menu bar and the entries of its menu cover them), two at
+  | the bottom for the key labels when Display On-Screen
+  | Help? is Yes, and the rest for the text.  The Editor
+  | needs a terminal of at least 20 rows.  In a terminal
+  | with fewer rows it still draws the screen, without an
+  | error, but a box that does not fit is cut off.
+Boxes | Menus, lists and panels are drawn in the middle of the
+  | screen.  The Marker Commands box is 17 rows high and
+  | Global Page Layout 16.  The Format panels are 12 or 13
+  | rows high in a short terminal and spread over as many as
+  | 23 rows in a tall one.  The Typeface List is the tallest:
+  | about 24 rows (a row for each of the 20 fonts and one for
+  | the printer, and the lines of the box).
+.end
+.caution A box that is taller than the screen is cut off at the top and at
+  the bottom.  In a terminal of 15 rows the top and bottom lines of the
+  Marker Commands box are not visible.  Use 24 rows or more: the panels of
+  Strata, the Typeface List included, are seen in full on 80 by 24.
+
+.h2 The Esc key and the Alt key [appterm-esc]
+.ix Esc, terminal
+.ix Alt, terminal
+.ix Meta key
+.ix Escape time
+A terminal sends the cursor keys, the function keys and the keys with Alt
+in a way that Strata has to read, and the terminal determines what is sent.
+The keys that terminals of the {c:xterm} family send for the cursor keys,
+{k:Home}, {k:End}, {k:Ins},
+{k:Del}, {k:PgUp}, {k:PgDn}, {k:Shift-Tab} and {k:F1} to {k:F12}, with Shift,
+Alt and Ctrl where the terminal sends them, are read.  A key that a terminal
+sends in
+another way is not seen: nothing happens, and no message is shown.
+
+A terminal sends Alt and a key as {k:Esc} followed by the key, and sends
+{k:Esc} itself alone.  The two are told apart by waiting: after an {k:Esc} the
+Editor waits 40 thousandths of a second for the next key.  If none comes,
+the key was {k:Esc}; if one comes, it is the second half of a key.
+.table 20 40
+Keys | Read as
+{k:Esc} and nothing for 0.04 seconds | {k:Esc}.
+{k:Esc} twice | {k:Esc}.
+{k:Esc} and a letter, digit or sign | {k:Alt} with that character: {k:Alt-O},
+  | {k:Alt-1}, {k:Alt-<}, {k:Alt-+}, and the like.
+{k:Esc} and {k:Backspace} | {k:Alt-Backspace}.
+{k:Esc} and {k:Enter} | {k:Alt-Enter}.
+{k:Esc} and another control key | {k:Alt} and {k:Ctrl} with that letter.  A macro
+  | can be defined on such a key; no command of Strata uses one.
+{k:Esc} and the start of a cursor or function key | The key.  Each part of
+  | it is waited for up to 0.05 seconds; if it does not come in time the key is
+  | read as {k:Esc} and the rest is typed as characters.
+.end
+Three things follow.  First, the terminal must send {k:Esc} for Alt.  A
+terminal that sets the eighth bit instead (the setting that is called "meta
+sends eighth bit" or "Alt sends 8-bit" in some terminals) makes Strata type a
+letter of the character set where you wanted a command.  The usual terminals
+send {k:Esc} by default; {c:xterm} has a resource for it ({c:metaSendsEscape}).
+Second, over a slow line or through a program that holds back what the
+terminal sends, the parts of a key can arrive more than 0.04 or 0.05 seconds apart;
+then a cursor key shows up as {k:Esc} followed by the characters {c:[} and
+{c:A}.  A line that does this needs a remedy outside Strata
+({n:appterm-links}).  Third, a real {k:Esc} is seen 0.04 seconds after it is
+pressed, which nobody notices.
+
+.h2 The control keys [appterm-ctrl]
+.ix Control keys, terminal
+.ix Backspace, terminal
+.ix Hanging indent
+Some control keys are sent by more than one key, and the keys cannot be told
+apart.
+.table 16 44
+Key | What Strata does
+{k:Ctrl-H} | Some terminals send it for {k:Backspace}, and then
+  | {k:Backspace} sets a hanging indent.  Strata reads the Delete key as
+  | {k:Backspace}: set the terminal to send Delete for {k:Backspace} (in
+  | most it is the choice "ASCII DEL" or "Backspace sends delete").  Some
+  | terminals send {k:Ctrl-H} for {k:Ctrl-Backspace}; use
+  | {k:Alt-Backspace}.
+{k:Ctrl-I}, {k:Tab} | A tab.  Italics is {k:Alt-I} in a terminal.
+{k:Ctrl-J}, {k:Ctrl-M}, {k:Enter} | All end the line.  {k:Ctrl-Enter} is
+  | {k:Enter}.
+{k:Ctrl-[} | The same as {k:Esc}.
+{k:Ctrl-^} | Edit Section or Edit Document.  Many keyboards need
+  | {k:Ctrl-Shift-6} for it.  The same is in the Edit menu.
+.end
+
+.h2 Keys that a terminal keeps for itself [appterm-reach]
+.ix Keys, alternates for terminals
+.ix Alternates for terminals
+.ix Ctrl-F menu
+.ix Keypad keys, terminal
+Many terminals, window managers and desktops keep some keys for themselves,
+and some keys have no way to reach a terminal program.  Strata has an
+alternate for each of the keys that this affects most; the alternates work in
+the X11 version too.  {n:view} lists them ({n:view-terminal-keys}); this is
+the full table.
+.table 16 18 25
+Key | In a terminal | Use instead
+{k:Alt-F2} to | Often kept by the | {k:Ctrl-F}: the Alt commands
+ {k:Alt-F7}, | terminal or the | menu, one entry for each,
+ {k:Alt-F9} | desktop. | chosen with {k:Enter}.
+{k:Alt-F5} | The same. | {k:Alt-O}, or the entry of the
+ (Overtype) |  | {k:Ctrl-F} menu.
+{k:Alt-F12} | The same. | {k:Ctrl-F12}, or the {k:Ctrl-F}
+ (Marker) |  | menu.
+{k:Ctrl-I} | Is {k:Tab}. | {k:Alt-I}, or {k:Alt-F6}.
+ (italics) |  |
+{k:Ctrl-Backspace} | Is {k:Backspace}. | {k:Alt-Backspace}.
+{k:Alt-[}, | {k:Esc} and [ start | {k:Alt-<}, {k:Alt->}, or
+ {k:Alt-]} | a cursor key. | {k:Alt-,}, {k:Alt-.}.
+{k:Keypad +}, | Send the plain | {k:Alt-+} (also {k:Alt-=}),
+ {k:Keypad -}, | characters, which | {k:Alt--}, {k:Alt-*}.
+ {k:Keypad *} | would be typed. |
+{k:Keypad +} in a | The same. | {k:F2}.
+ panel |  |
+{k:Shift-Ins} | Some terminals use it | {k:Alt-F2} and Sub-section, or
+  | to paste. | {k:Ctrl-F}, Append.
+{k:Ctrl-^} | Needs | {k:F12}, Edit, Section or Document.
+  | {k:Ctrl-Shift-6} on |
+  | many keyboards. |
+{k:Ctrl-Shift-Space} | Many terminals send | Both type the nonbreaking
+ (nonbreaking | the same code as | space; see {n:edit-nbsp}.
+ space) | {k:Ctrl-Space}. |
+{k:Shift-Home}, | Not passed on by | {k:Alt-F7} (Go To): Document
+ {k:Shift-End}, | many terminals. | start, Document end, Next
+ {k:Shift-Up}, |  | section, Previous section.
+ {k:Shift-Down} |  |
+.end
+The terminal and the desktop decide which keys reach Strata, and Strata does
+not.  To test a key, press it in Strata.  If the status line and the message
+line show nothing and the key does nothing, use the alternate or change the
+setting of the terminal (most terminals can give up their own use of {k:F12},
+{k:Alt-F4} and the like).
+
+.h2 Which terminals keep which keys [appterm-keptby]
+.ix Terminals, keys that they keep
+.ix xterm, keys
+.ix tmux, keys
+The table of {x:appterm-reach} says what to use in place of a key.  This table
+says where each key is lost: for each terminal and multiplexer that
+was tried, the keys that it keeps and what to do about them.  The table is a
+document of its own, kept apart from this manual
+because it follows the terminals and not the program; the manual
+includes it at this place with the Include marker, and the same document can
+be opened or printed alone. 
+.includedoc terminal-keys.doc
+
+.h2 Links, multiplexers and slow lines [appterm-links]
+.ix ssh
+.ix tmux
+.ix Slow line
+.ix Remote login
+Strata is built to be used over a remote login: only what changed is written,
+and nothing is requested of the terminal that a text terminal does not have.  A
+program that sits between the terminal and Strata (a multiplexer, a
+serial line, a proxy) can change two things.
+- It can take keys for itself, such as a prefix key, so that these keys never
+  reach Strata.  Change the prefix of the multiplexer if it is a key that you
+  need.
+- It can change what a key sends, or hold back what follows {k:Esc}, so that a
+  function key or a cursor key turns into {k:Esc} followed by letters.  Strata
+  waits only 0.04 to 0.05 seconds after an {k:Esc} ({n:appterm-esc}); a multiplexer
+  must be set to pass the keys with Shift, Ctrl and Alt as {c:xterm} sends them,
+  or these keys are lost.
+The program does not need the {c:TERM} of the terminal to be right.  It does
+need the multiplexer to pass what the program writes.  A multiplexer that is
+not in UTF-8 mode does not: tmux turns every character outside ASCII into an
+underscore unless it is started with its UTF-8 option or the locale is a UTF-8
+locale.  The Editor takes the locale as the
+word of a multiplexer ({n:appterm-charset}), and draws ASCII characters when
+it is not UTF-8.
+
+.h2 What is different from X11 [appterm-diff]
+.ix Terminal and X11, differences
+.ix Differences between the versions
+.table 16 21 22
+Matter | Terminal | X11 ({n:appx11})
+Window | The terminal. | One window of its own.
+Size | The terminal's; changes | Fixed, 80 by 50 cells.
+  | are followed. |
+Colors | 16, 256 or any, as the | Any color; the palette of the Colors
+  | terminal has them. | panel has 80.
+Italic, bold | Attributes of the | Faces of the font.
+  | terminal. |
+Cursor | The terminal's. | A block in the color of the
+  |  | cursor (amber at first).
+Keycap markers | Reverse video. | A picture of the key.
+Markers in the mode Inline | The Short form. | A picture, if it can be made.
+Alt keys | Sent as {k:Esc} and the | Arrive as they are.
+  | key; many are kept back. |
+Keypad + - * | Plain characters; use | Arrive as {k:Alt-+},
+  | Alt with them. | {k:Alt--} and {k:Alt-*}
+  |  | without Alt.
+Shift, Ctrl, Alt | Cannot be seen. | Seen: the key labels change.
+ alone |  |
+Key labels {k:F1} to | Always the plain ones. | Follow the keys that are
+ {k:F12} |  | held.
+Characters typed | Characters of the set | Latin-1 characters of the set.
+  | that the terminal sends. |
+Close | {k:Ctrl-Q}. | The close of the window, as
+  |  | {k:Ctrl-Q}.
+Preview | Needs {c:DISPLAY}. | The same.
+Paste | The terminal's own. | Not between programs
+  |  | ({n:appx11-clip}).
+.end
+
+.h2 Starting and leaving [appterm-leave]
+.ix Child programs, terminal
+.ix Preview, terminal
+The terminal is taken at the start and given back at the end.  In the course of
+a session it is given back for a short time in these cases.
+.table 23 37
+When | What happens to the terminal
+Edit / Preview / Print | The Document Manager gives the terminal to the
+  | Editor, which
+ Document in the Document Manager | takes it and gives it back when it ends.
+Preview | The terminal is given back to the shell while
+  | the Viewer shows the pages in its own window,
+  | and taken again when the Viewer is closed.
+  | Without an X display the Preview is refused.
+.end
+Nothing of this needs a key from you except the {k:Q} that closes the Viewer.
+
+.h2 Problems and their cures [appterm-trouble]
+.ix Trouble, terminal
+.ix Terminal problems
+.ix Remedies, terminal
+.table 19 19 21
+What you see | Cause | Remedy
+Box lines and the | The terminal is not in | Set UTF-8 and a font with
+ blocks are rubbish | UTF-8, or the font | box drawing characters.
+  | lacks them. | Or choose ASCII in Setup.
+Squares in place of | The font lacks the | Use a font with them, or set
+ the lines | shapes. | Terminal Characters to ASCII.
+The first line shows | The terminal does not | Set the terminal to UTF-8
+ that ASCII is drawn | read UTF-8. | ({n:appterm-charset}).
+A cursor key types | The parts of the | Use a terminal or a
+ {c:A} or {c:[A} | key were slow. | multiplexer that does not
+  |  | delay them; see above.
+{k:Backspace} sets a | The terminal sends | Make it send Delete
+ hanging indent | {k:Ctrl-H}. | for {k:Backspace}.
+{k:Alt-} keys type | The terminal sets the | Make it send {k:Esc}.
+ letters | eighth bit. |
+No menu on {k:F12} | The terminal keeps the | Turn off its use of
+  | key. | {k:F12}.
+Shift or Ctrl with a | The terminal does not | Use the alternates of the
+ cursor key does | pass the modifier on. | table above.
+ nothing |  |
+The screen is rubbish | The program was killed | Type {c:reset}.
+ after the program | by KILL. |
+ ended |  |
+A pasted text has lost | Not in the character | Type them with letters
+ characters | set. | that the set has.
+The text is cut off at | The terminal is under | Make it 40 columns wide
+ the right | 40 columns wide. | or more.
+Preview shows {c:DISPLAY} | There is no X display. | Make a PDF with Print.
+ is not set |  |
+.end

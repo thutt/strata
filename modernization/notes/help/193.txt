@@ -1,0 +1,25 @@
+
+----------------------------------- Markers ------------------------------------
+
+
+Markers perform a variety of functions such as including additional information
+into a document and providing preview and final print formatting instructions.
+For example, to print the current date in the document, enter the Date marker
+where you want the date to print. The print formatter interprets the Date
+marker to mean "print the current date here."
+
+
+Use Marker (Alt F10) to display the Marker Commands panel from which you can 
+select a specific marker.  (The markers displayed in parentheses are not 
+applicable in the current panel or document location.)
+
+
+You can also use Ctrl \ followed by a two-letter abbreviation as an accelerator
+to directly access a specific marker.  For example, use Ctrl \co to go directly
+to the Comment marker panel.  Refer to the Marker Index for a list of markers, 
+their accelerator abbreviations, and a brief description of each marker.
+
+
+
+--------------------------------------------------------------------------------
+  Marker Index      Global Marker Format      Keyboard Summary      Help Index

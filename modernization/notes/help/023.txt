@@ -1,0 +1,25 @@
+
+------------------------------------ No Help -----------------------------------
+
+
+
+
+           There is no help available for this function.  See 
+
+           the Reference manual for complete information on how
+          
+           to use any of Manuscript's functions.
+
+
+
+           Move the highlight to one of the options below and 
+
+           press Enter to access additional help screens, or press 
+          
+           Esc to return to Manuscript.
+
+
+
+
+--------------------------------------------------------------------------------
+                    Keyboard Summary               Help Index

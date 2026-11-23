@@ -1,0 +1,25 @@
+
+----------------------------- Repaginate/Clear-pages ---------------------------
+
+Use the Menu (F10) Print Repaginate and Clear-pages commands to display or 
+remove page breaks in the editor.
+
+Repaginate:   Paginates the document and displays page breaks in the editor.
+
+Clear-pages:  Removes page breaks that are displayed in the editor.
+
+--------------------------------------------------------------------------------
+
+# The display or removal of page breaks from the editor does not affect the 
+  actual page breaks of the final printed document.
+
+# Page breaks displayed in the editor reflect the locations of page breaks at
+  the time the document was last paginated.  They do not reflect subsequent
+  changes that you may have made to the document.
+
+# To Go To (Alt F7) a page, you must have paginated the document.
+
+# If a page break occurs within a marker, such as an Include marker, the 
+  page break is displayed next to the marker.
+--------------------------------------------------------------------------------
+  Print Menu          Go To Page         Keyboard Summary         Help Index

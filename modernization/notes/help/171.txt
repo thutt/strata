@@ -1,0 +1,25 @@
+
+---------------------------------- Note Style ----------------------------------
+
+
+The Note Style prompt determines the note type and where notes prints.
+
+
+Footnote:  Prints notes at the bottom of the page on which they occur.
+
+
+Levelnote: Prints notes at the end of a specified level of section (for 
+           example, the end of a chapter). The next section prints on a new
+           page.
+
+
+Endnote:   Prints all endnotes at the end of the document on a page titled 
+           End Notes.
+
+
+Use the Menu (F10) Global Marker command to set the format for each type of 
+note.  You can override the format for any note when you create or edit the 
+note.
+
+--------------------------------------------------------------------------------
+        Global Marker            Keyboard Summary             Help Index

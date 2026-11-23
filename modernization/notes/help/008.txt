@@ -1,0 +1,25 @@
+-------------------------- Check Document Spelling Menu ------------------------
+
+Accept: Accepts the word exactly as it appears and marks it in the rest of
+        the document as correct, but does not enter it in a custom dictionary.
+
+Define: Enters the word into a custom dictionary (if you are using one). If the 
+        word is lowercase, Define enters the word in lowercase and initial cap-
+        ital. If the word has an initial capital or is uppercase, Define enters
+        it exactly as it is capitalized. If you have specified more than one 
+        custom dictionary, you will be asked for the name of the dictionary.
+
+Ignore: Accepts the word but continues to flag it as misspelled if it 
+        appears in other locations in the document.
+
+Edit:   Moves the cursor to the word so you can correct it. Press Ins to use 
+        the corrected word. If Auto Correct is set to Yes, the edited 
+        correction will automatically be made for all occurrences of the word.
+
+Guess:  Displays words with similar spelling or sound. Select an alternative 
+        or press Esc to return to the correction options.
+
+Line:   Moves the cursor to the current line so you can edit it.  Press Ins to 
+        use the corrected line.
+--------------------------------------------------------------------------------
+        Check Document Spelling       Keyboard Summary        Help Index

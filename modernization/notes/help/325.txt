@@ -1,0 +1,25 @@
+
+--------------------------------- Counter Format -------------------------------
+
+Use Counter Format to define up to nine different counter styles to use in your
+document with the Counter marker.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Global      +----------- Counter Format --------+
+  Marker.                                 |                                   |
+ Press Space Bar at the Counter Format   | Counter  Description        Tag   |
+  prompt.                                 |                                   |
+ Enter a description of the counter      |   C1)    Numeric            \1\.  |
+  you are defining.                       |   C2)    Alphabetic         \A\.  |
+ Press Right to move to the Tag prompt   |   C3)                             |
+  and type the style of tag you want.     |    :                              |
+ Press Ins to accept your settings.      +- Press Ins Use Displayed Settings +
+
+--------------------------------------------------------------------------------
+# There are two pre-defined counter tags.  Numeric prints counters as 1. , 
+  2. , 3. , etc.  Alphabetic prints counters as A. , B. , C. , etc.  You can
+  change either of these tags at any time.
+--------------------------------------------------------------------------------
+       Global Marker             Counter Marker              Counter Tags
+                Keyboard Summary                    Help Index

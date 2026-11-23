@@ -1,0 +1,25 @@
+
+----------------- Setting the Amount of Space to Indent Levels -----------------
+
+The Indent per Level and Indent to Next Level prompts on the Menu (F10) Global 
+Format and Level Format panels set the amount of space to indent or outdent 
+levels. You can specify different indents for each level.
+
+Example:      Indent per level: 3          (Global Format panel)
+              Indent to Next Level: 10     (Level 3 Format panel)
+
+ :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ :: 1 Level 1 heading
+ ::    ---------------------------------------------------------------------
+ ::    1.1 Level 2 heading
+ ::       ------------------------------------------------------------------
+ ::       1.1.1 Level 3 heading
+ ::                 --------------------------------------------------------
+ ::                 1.1.1.1 Level 4 heading
+ ::                    -----------------------------------------------------
+ ::                    1.1.1.1.1 Level 5 heading
+
+All level headlines, except level 4, are indented 3 units from the the preceding
+level; level 4 headings are indented 10 units from level 3.
+--------------------------------------------------------------------------------
+  Section Tags        Global Format        Keyboard Summary        Help Index

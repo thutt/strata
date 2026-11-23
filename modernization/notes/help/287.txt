@@ -1,0 +1,25 @@
+
+------------------------------- Preview Menu -----------------------------------
+
+Use the preview menu (F10 in preview) options to select the page of a document
+to preview or to change the preview display characteristics.
+
+Previews a different     Zooms a graphics   Toggles the display between
+page of the document.    image only.        reverse and normal video.
+     |                         |                       |
+     |                         |                       |
+ +--------------------------------------------------------------------------+
+ |  Page  Content/Full-page   Zoom   Greeking  Reverse/Normal  Errors  Quit |
+ +--------------------------------------------------------------------------+
+                |                        |                        |          
+                |                        |                        |          
+      Toggles the preview        "Greeks" the text when        Displays log of
+      display from full-page     previewing in full-page       format errors
+      layout to page content     layout.
+      layout.
+
+Use Right or Left to highlight your selection and press Enter, or type the 
+first letter of your selection (for example, Q for Quit).
+--------------------------------------------------------------------------------
+ Page      Content/Full-page      Zoom       Greeking        Reverse/Normal
+ Errors     Preview Document         Keyboard Summary           Help Index

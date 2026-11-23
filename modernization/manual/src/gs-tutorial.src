@@ -1,0 +1,310 @@
+# Getting Started, part 5: the Tutorial, short sessions each with a document.
+.h1 The Tutorial: before you begin [begin]
+Each session of this tutorial teaches one part of Strata, and each takes about
+a quarter of an hour.  You can read them in any order, but the first two are
+the ones everything else uses.  The sessions use three small documents that come
+with Strata, {c:memo.doc}, {c:report.doc} and {c:showcase.doc}.  They are in the
+directory {c:share/strata/tutorial} of the prefix directory, with the pictures
+that they name in the directory {c:pictures} next to them.  Copy the whole
+directory to a place of your own, so that you can change the documents; after an
+install under {c:/usr} that is:
+.code
+cp -r /usr/share/strata/tutorial ${{HOME}}/tutorial
+.end
+.h2 What the Tutorial needs [tutorial-need]
+Strata, installed as described in this document.  The sessions about equations,
+pictures and Preview need LaTeX; the page that says so says which.  Most of the
+screens in this tutorial are the X11 version; the terminal version shows the
+same text and boxes, and shows keycaps, pictures and equations as markers.
+.h2 How the sessions are written [how]
+A line that starts with a number is a step to do.  A key in a box is a key to
+press.  The word {b:choose} means to move to a menu entry or a field and press
+{k:Ins}.  If you get lost, {k:Esc} backs out of anything and {k:F1} shows help.
+
+.h1 Session 1: Starting with text [s1]
+You will make a document, type in it, change how the text looks, and save it.
+.h2 Making a document [s1-new]
+1. Start the Document Manager.
+2. Choose {b:Edit / Preview / Print Document}.  The panel starts on the
+   {b:Document Name}.  Type {c:practice.doc} and press {k:Ins}.
+3. The file does not exist, so a question follows whether the new document is
+   to be structured or unstructured.  Choose {b:Structured}.
+4. A panel has fields for a description and an author.  Press {k:Ins}; they may
+   stay empty.
+
+The editor opens on an empty document.  The top line is the status line.  The
+dotted line below it is the ruler, and the cursor is in the first block.  A
+structured document starts with a section whose first block is its headline.
+.h2 Typing [s1-typing]
+1. Type {c:Notes on the new filing system} and press {k:Enter}.  The headline
+   is bold, because that is how this kind of text looks by default.
+2. Type a sentence of your own.  When a line fills, the text wraps by itself;
+   press {k:Enter} only at the end of a paragraph.
+
+Every time you press {k:Enter} the text ends a line, and the little mark at the
+end of the line is the sign of it.  Mistakes are mended with {k:Backspace},
+which deletes the character before the cursor, and {k:Del}, which deletes the
+character under it.  {k:Ctrl-D} deletes the next word.  {k:Ctrl-/} takes back
+the last change that you made, a word that you typed or a paste, and
+{k:Alt-/} makes it again; {b:Tools}, {b:Undo} and {b:Tools}, {b:Redo} do the
+same.
+.h2 Moving about [s1-moving]
+The cursor keys move by a character or a line.  {k:Ctrl-Left} and
+{k:Ctrl-Right} move by a word, {k:Home} and {k:End} go to the start or the end
+of the line, and {k:Ctrl-Home} and {k:Ctrl-End} to the start or end of the
+block.  {k:PgUp} and {k:PgDn} move about half a screen.
+.h2 Bold, italic and underscore [s1-attributes]
+1. Press {k:Ctrl-B}, type a few words, and press {k:Ctrl-B} again.  Those
+   words are bold.
+2. Do the same with {k:Alt-I} for italics and {k:Ctrl-U} for underscore.
+3. {k:Ctrl-N} puts the text back to normal.
+
+A change of attribute takes no room on the screen, but you can delete it
+like a letter.
+.h2 Menus and panels [s1-menus]
+Press {k:F12}.  A bar of menus appears at the top and a line under it lists the
+commands of the menu that is lit.
+.pic pictures/stred-menu.png 5.5 The menu bar, with File lit.
+Move with {k:Left} and {k:Right} over File, Global, Edit, Print, Tools
+and Quit, press {k:Enter} to open one, and move through its commands the same
+way.
+.pic pictures/stred-file-menu.png 5.5 The File menu.
+A command opens a panel: a list of fields with a name on the left and a value
+on the right.
+.pic pictures/stred-save-panel.png 5.5 The panel of File, Save.
+{k:Up} and {k:Down} move between fields.  You type over a text field; for a
+field with choices, {k:Left}, {k:Right} or the space bar change the choice.
+{k:Ins} accepts the panel and {k:Esc} cancels it.  In a field that holds the
+name of a file, {k:Keypad +} lists the files of the directory so that you can
+choose one.  The bottom of the panel lists the keys.
+.h2 Saving [s1-save]
+1. Press {k:Ctrl-S}.  A document that has no name yet shows the Save panel; this
+   one has a name, so it is saved at once.
+2. The message line shows what was done.  The old version of a document is
+   kept as a numbered file in the folder {c:.backup} next to it, such as
+   {c:.backup/report.bak01}, whenever a changed document is saved ({b:Backups
+   Kept} sets how many), so that one mistake is never the end of your work.  The
+   Document Manager entry {b:Restore Backup} brings one back.
+.h2 Leaving [s1-quit]
+Press {k:Ctrl-Q}.  If the document has changes that are not saved (a star shows
+in front of its name in the status line), a menu gives the choice to save and
+quit, discard the changes and quit, or cancel.  You are back at the Document
+Manager.
+
+.h1 Session 2: Sections and the outline [s2]
+A structured document is an outline.  You will fold and open the sections of
+{c:report.doc}, add sections, and move them about.
+.h2 Opening the report [s2-open]
+1. In the Document Manager choose {b:Edit / Preview / Print Document} and open
+   {c:report.doc}.
+
+Each headline has a number before it, made from its place in the outline.  The
+headlines of the sections below a section are indented.
+.h2 Folding and unfolding [s2-fold]
+1. Press {k:Alt-1}.  Only the headlines of the first level are shown.
+.pic pictures/stred-outline.png 5.5 Alt-1: only the first level of headlines.
+2. Press {k:Alt-2}.  The second level opens as well.
+.pic pictures/stred-outline-open.png 5.5 Alt-2: the second level is open too.
+3. {k:Alt-0} shows the headlines of every level; press it again to show the text
+   of the whole document, and a third time to go back to the headlines.
+   {k:Alt-3} to {k:Alt-9} show the headlines down to that level.  A mark in the
+   line above a headline shows whether the section has sections below it ({c:+})
+   or not ({c:*}).
+4. Put the cursor on a headline and press {k:Keypad -} to fold its section, and
+   {k:Keypad +} to open it.  On a terminal these keys are {k:Alt--} and
+   {k:Alt-+}.  {k:Keypad *} (or {k:Alt-*}) shows the text of the blocks of the
+   section.
+.h2 Moving between sections [s2-moving]
+{k:Shift-Up} goes to the headline of the section, {k:Shift-Down} to the next
+headline, and {k:Shift-PgDn} and {k:Shift-PgUp} to the next and the previous
+section of the same level.  {k:Shift-Home} and {k:Shift-End} go to the start and
+the end of the document.  {k:Alt-F7} opens the {b:Go To} menu: the start or the
+end of the document, a section number that is typed in, and the next or the
+previous section.
+.h2 Adding and moving sections [s2-adding]
+1. Put the cursor in the section {b:Costs}.
+2. Press {k:Ins}.  A new section of the same level appears below.  Type a
+   headline.
+3. Press {k:Shift-Ins} to add a section below it, one level deeper.
+4. {k:Alt-]} moves the section to the right, one level deeper, and {k:Alt-[}
+   moves it back to the left.  A section can only go deeper when a section of
+   its own level stands before it; if not, the message line shows that.
+
+The numbers change as sections come and go.  A cross-reference marker (Session
+5) follows the section that is named, wherever the section goes.
+.h2 Working on one section [s2-one]
+1. Press {k:Ctrl-^}.  Only the section the cursor is in, with the sections
+   below it, is shown, and the status line shows {c:SECTION EDIT}.
+2. Press {k:Ctrl-^} again to bring back the whole document.
+
+.h1 Session 3: Blocks and formats [s3]
+The text of a section is made of blocks.  A block is a paragraph, or a list
+item, or a line of data; it is the unit that you copy, move and format.
+.h2 Cutting, copying and pasting [s3-cut]
+1. Put the cursor in a block of {c:memo.doc}.
+2. Press {k:F3}.  A menu lists what to copy: Text, Column, Block or Section.
+3. Choose {b:Block}.  The block is highlighted.
+4. Move the cursor to the place for the copy and press {k:F5}.
+
+{k:F4} cuts instead of copying, and {k:F7} moves.  The highlight can be made
+larger or smaller with the cursor keys; {k:Enter} accepts it and {k:Esc}
+cancels it.  {k:Ctrl-K} cuts a block at once.
+.h2 Splitting blocks [s3-split]
+{k:F2} opens a menu to split a column, a block or a section; {k:Ctrl-V} splits
+the block at the cursor.  {k:Alt-F3} joins blocks or sections (on a terminal,
+press {k:Ctrl-F} and choose {b:Join}).
+.h2 The format of a block [s3-format]
+1. Put the cursor in the headline of a section and press {k:F6}.
+.pic pictures/stred-format-panel.png 5.5 The first question of Format (F6).
+Format puts one question after the other: the left indent of the block, the
+justification (left, right, center or even), the indent (none, first, all but
+first or all), the attributes (such as normal, bold or italics) and the tab
+stops.  {k:Enter} accepts an answer and goes on to the next question, and
+{k:Esc} stops.  What you answer is the block's own format; what you do not
+change stays as the global format has it.
+2. Press {k:Enter} at the left indent, choose {b:Center} in the menu of the
+
+justification, and press {k:Enter} at the questions that follow.
+The settings for the whole document, and for each level of sections, are in
+{b:Global}, {b:Format}.
+.pic pictures/stred-global-format.png 5.5 Global, Format: the document settings.
+{k:PgDn} and {k:PgUp} turn through the panels of the levels.  A level takes the
+global setting unless you change it.
+
+.h1 Session 4: Columns and tables [s4]
+A block can have several columns, side by side.  A block of columns is a row of
+a table, and the blocks below it can be more rows.
+1. In {c:memo.doc} put the cursor in a block and press {k:F8}.
+2. Choose {b:Add column}.  The block has a second column to its right, with a
+   colon between the columns.
+3. Type in each column.  {k:Shift-Left} and {k:Shift-Right} move from one column
+   to the next.
+4. Press {k:Ctrl-A} at the end to append another row with the same columns.
+
+{b:Tools}, {b:Autosort}, {b:Table} sorts the rows of a table, by their
+first column; {b:Tools}, {b:Count} gives the number of words in the document.
+.h2 A table in the showcase [s4-showcase]
+{c:showcase.doc} has a table of three columns.  Open it and look at it with
+{k:Shift-Right}, {k:Shift-Left} and {k:Ctrl-Home}.  When you print it the
+columns become the columns of a table, with a rule at the left of each.
+
+.h1 Session 5: Markers [s5]
+A marker is a mark in the text that stands for something else: a footnote, a
+key, an equation, a picture, a page break.  Markers are what make a Strata
+document more than text.  This session uses {c:showcase.doc}.
+.h2 The marker menu [s5-menu]
+Press {k:Alt-F12} (on a terminal, {k:Ctrl-F12}).  A panel lists the markers in
+three columns.
+.pic pictures/stred-marker-menu.png 5.5 The marker commands.
+Choose one with {k:Ins}, or press the first letter of its name and {k:Ins}.  If
+the marker has fields, a panel holds them; if
+you press {k:Alt-F12} on a marker that is already in the text, the panel shows
+its fields so that you can change them.
+.h2 Keycaps [s5-keycap]
+1. Put the cursor in a sentence and press {k:Alt-F12}.  Choose {b:Keycap}.
+2. Type {c:Ctrl-S} in the field {b:Legend}.  The other fields show the settings
+   of the document in brackets.  Press {k:Ins}. In the window the legend appears
+   in a rounded box like a key; in a terminal it is shown between brackets.  The
+   keys in this manual are keycaps.  In the panel the foreground, background,
+   scale and font are shown in brackets: they come from the keycap format of the
+   document, which {b:Global}, {b:Marker} sets for all the keycaps at once.
+.h2 Equations [s5-equation]
+1. Choose {b:Equation}.  A full screen editor opens, headed {c:EQUATION EDIT}.
+2. Type the text of the equation: {c:\frac{{a}}{{b}} + x^2}.  {k:Ctrl-W} shows
+   how the equation looks (in a terminal a message states that viewing an
+   equation needs the window version); {k:Ins} saves it and {k:Esc} restores
+   what it was.
+3. In the window, an image of the equation appears in the line.  (It needs LaTeX
+   and {c:dvipng}; without them the marker keeps its label.)
+
+The text is TeX.  The sum in the showcase is typed as {c:\frac{{n(n+1)}}{{2}}}.
+.h2 Footnotes and notes [s5-note]
+Choose {b:Note}.  An editor headed {c:NOTE EDIT} opens in which you type the
+text of the note; press {k:Ins} when you are done, or {k:Esc} to give it up.
+The note's type is footnote by default; it can also be a levelnote or an
+endnote.  The notes are numbered when the pages are made.
+.h2 Pictures [s5-picture]
+Choose {b:Picture} and type the name of an image file in {b:File Name}: PNG,
+JPEG, PDF or EPS.  {k:Keypad +} lists the image files of the directory.  The
+panel has a position (fixed, floating or in text), a width, a height, a unit, a
+scale, and a name for the table of figures.
+.pic pictures/stred-showcase.png 5.5 The showcase: keycaps, equations and a picture.
+.h2 Cross-references [s5-xref]
+{b:Cross-reference} names a section by its number.  The panel has fields for
+the number and a style (the tag, the headline or both); after {k:Ins} the tag
+and the headline of the section that was found are shown, and a number that is
+not a section is refused with the message that the section number cannot be
+found.
+.h2 Whitespace and page breaks [s5-space]
+{b:Whitespace} sets a vertical space of a size and a unit (the default is
+inches), with a treatment that decides what happens to it at the end of a page.
+{b:Page Break} starts a new page, an odd page or an even page, and {b:Column
+Break} also ends the page.  These show as labels in the text, such as {c:[WS 0.3
+in]}, and take effect when the document is printed.
+.h2 How markers are shown [s5-modes]
+{b:Global}, {b:Marker} has a panel for the markers of the document.  {k:PgUp}
+shows the display mode of each marker (most are in short form by default): as a
+diamond, as its name, in short form, in long form, hidden, or inline as an
+image.  Try the modes on the equation marker to see the difference.
+
+.h1 Session 6: Printing and previewing [s6]
+.h2 Print, Draft and Final [s6-draft]
+{b:Print}, {b:Draft} and {b:Final} write the document as a PDF file.  Draft is
+a quick proof; Final has the line spacing, pictures and title page that the
+document asks for.
+.pic pictures/stred-draft-panel.png 5.5 The Draft Print panel.
+The field {b:Output File} names the PDF, and the field {b:Printer} names a print
+queue of your system to send it to (the field shows {c:File only} until a queue
+is chosen).  Both need LaTeX.  The other fields hold the number of copies,
+whether to print on both sides, which pages or sections, and whether to keep a
+log of the errors.  The rest of the {b:Print} menu is for the errors that a
+print found: {b:Next Error}, {b:Previous Error}, {b:Remove Error} and {b:Remove
+Print Errors}.
+.h2 Preview [s6-preview]
+Preview shows the document as it will be printed, with its fonts, keycaps,
+pictures and equations.  Preview needs LaTeX and an X display.
+1. Choose {b:Print}, {b:Preview}, {b:Document}.  The panel has the title page,
+
+the sections to show and the log of the errors.
+.pic pictures/stred-preview-panel.png 5.5 The panel that asks what to preview.
+{b:Block} previews the block that the cursor is in and {b:Section} the section.
+2. Press {k:Ins}.  A panel shows the progress.
+.pic pictures/stred-preview-wait.png 5.5 The wait panel of a Preview.
+The panel shows the stage, the page that LaTeX is making and the estimated
+number of pages, with a bar.  {k:Esc} stops the work.
+3. When the pages are ready the panel shows that the Viewer is starting, and a
+   window opens with them.
+.pic pictures/dviview-page.png 4.5 The Viewer shows the pages of the showcase.
+Move with {k:PgDn}, {k:PgUp}, {k:Home} and {k:End}; {k:+} and {k:-} zoom; {k:q}
+closes the window and you are back in the editor.
+.h2 A PDF [s6-pdf]
+Print, Final makes a PDF of the document: the file named in the field Output
+File of the panel (chapter 6).
+A document that contains an Orientation marker for landscape prints those pages
+turned sideways: the Key Reference leaflet is one.
+.h2 Fonts [s6-fonts]
+A document names its fonts by number.  {b:Global}, {b:Typeface} is the place to
+name them in the document, and a font marker changes the font from that point to
+the end of the block.  A typeface named {c:Program} is printed in a monospaced
+font.  The fonts themselves are in the TeX Font Association of the Document
+Manager.
+
+.h1 Session 7: Libraries and macros [s7]
+.h2 The library [s7-library]
+A library keeps pieces of text that you use again.  Press {k:Ctrl-F3}, choose
+what to copy (text, column, block or section), highlight it and press {k:Enter};
+a panel has fields for the name of the entry and a description.  {k:Ctrl-F5}
+pastes an entry; its name is typed in a panel ({k:Keypad +} lists the names).
+{b:Tools}, {b:Library} edits and deletes entries, saves the library in a file
+and retrieves one.
+.h2 Macros [s7-macros]
+A macro is a series of keys that is saved.  Choose {b:Tools}, {b:Macros},
+{b:Learn}, type the letter of the macro key (and, if you like, a description)
+in the panel, press {k:Ins}, and do the work.  The message line shows that the
+macro is being defined.  Press {k:Ctrl-F1} to end the recording.  {k:Alt} and
+the key then run the macro.  {b:Save} keeps the macros in a file.
+
+.h1 Where to go from here [next]
+The Reference describes everything that a session only touched.  The Key
+Reference is a leaflet of the keys; print it, fold it in three, and keep it by
+the keyboard.

@@ -1,0 +1,25 @@
+
+-------------------------------- Template Files --------------------------------
+
+A template file contains basic format settings and/or text that you are likely 
+to use in many documents. Template files have the extension .SET. 
+
+
+A template file can save you time setting up individual documents that have the
+same basic format. For example, you might create a template called MEMO.SET,
+which contains the settings for all interoffice memos. In the template file 
+you would enter global format settings and text common to all memos such as 
+a centered title of INTEROFFICE MEMO and headings for TO: and FROM:. 
+
+                        
+Each time you create a file, you are prompted for the name of the template to 
+use. The template DEFAULT.SET is used if you do not specify an alternative file.
+You can also retrieve another document file's global format settings to use 
+with the current document.
+
+
+You can edit the DEFAULT.SET template file to include your own settings. 
+
+
+--------------------------------------------------------------------------------
+            File Types          Keyboard Summary          Help Index

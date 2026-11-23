@@ -1,0 +1,22 @@
+# Phrases that may stay as plain text, one per line, matched without regard
+# to case.  Keep this list short.  Each phrase is the text of a message that
+# a program writes, or a name that only looks like a path, a command or a
+# variable.  A phrase protects the 40 characters around it.
+#
+# The fields of the Pathname and Filename markers: PATH, FNAME and the other
+# words are the text that the marker prints, not the variable of the system.
+Pathname | Long | PATH
+Pathname | PATH |
+DATE, TIME, FNAME, PATH, PRINTER, REV
+Name: [PATH]
+# Messages with a place holder in the text of a message of a program.
+Settings saved to PATH
+Cannot run the editor: PATH
+was not found in PATH
+or in PATH.
+Print needs LaTeX: pdflatex
+Wrote FILE.pdf
+# The prefix key of a terminal multiplexer is a key, not a directory.
+a prefix key
+the prefix of the multiplexer
+Terminal: key prefix

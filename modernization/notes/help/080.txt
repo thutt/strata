@@ -1,0 +1,25 @@
+
+------------------------------- Custom Point Size ------------------------------
+
+Use the Point Size panel to enter a point size not included on the typeface 
+Size list.
+                            +----------------------+
+                            | Point Size:          |
+                            +----------------------+
+
+--Procedure---------------------------------------------------------------------
+
+ Move the cursor to a Size prompt on the Typeface List.
+ Press Space Bar to display the point sizes available.
+ Highlight Custom and press Ins to display the Point Size panel.
+ Enter a point size.
+ Press Ins.
+
+--------------------------------------------------------------------------------
+
+# You can enter any point size; however, very large sizes may affect printed
+  output in unexpected ways. 
+# If Custom is not available, the selected printer does not support custom 
+  point sizes.
+--------------------------------------------------------------------------------
+           Typeface List          Keyboard Summary          Help Index

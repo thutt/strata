@@ -1,0 +1,378 @@
+# Chapter 5, part 2: the markers from Author to Equation.
+
+.h2 Author [marker-author]
+.ix Author marker
+.ix Marker, Author
+The Author marker prints the name of the author of the document.  Use it on a
+title page or in a line such as "Prepared by" so that the name is typed once
+and kept with the document.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+Source of the text | The Author field of the Save panel (File, Save), which
+ is saved in the document; see {x:file-revision}.
+.end
+.h3 On the screen
+Long mode (the default): [AUTHOR].  Name and Short: [AUTHOR].  The label never
+shows the name of the author, which may be long; the name is put in at print
+time.
+.h3 When printed
+Final and Draft: the author, as text, in the font of the text around it.  A
+document that has no author prints nothing for the marker (an empty text).
+.h3 Edges
+The marker is not a copy: it follows the Author of the document, so if the
+Author is changed on the Save panel all the Author markers of the document
+print the new name at the next print.  The text of the marker cannot be
+changed on its own.
+
+.h2 Column Break [marker-column-break]
+.ix Column Break marker
+.ix Marker, Column Break
+A Column Break marker ends the page and starts the text that follows at the
+top of a new page.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+Place | Best in a block of its own.
+.end
+.h3 On the screen
+Short mode (the default): [CB].  Long: [COLUMN BREAK].  Name: [CB].
+.h3 When printed
+A Final or Draft print makes a page break where the marker stands: the text
+after it starts on a new page.  In the cell of a table the marker is printed
+as a Box (COLUMN BREAK).
+.h3 Edges
+- A Keep region that holds a Column Break marker is not kept: the Keep markers
+  are dropped, because the page changes inside the region.
+- Two Column Break markers in a row make a page break each, so a page can be
+  left with only the text between them.
+- See Page Break ({n:marker-page-break}) for the other marker that breaks a
+  page.
+
+.h2 Comment [marker-comment]
+.ix Comment marker
+.ix Marker, Comment
+.ix Notes to oneself
+A Comment is a piece of text that is shown on the screen and is not printed,
+for notes to yourself or to the people who work on the document.  It prints
+only in a Draft print.  The text can be as long as you like and is edited in a
+full editor of its own.
+.table 12 48
+Item | Value
+Panel | The text editor first (the status line shows COMMENT EDIT), then the
+ panel.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Comment | The text, edited in its own editor | Empty | The text of the comment.
+ Press {k:Ins} in the editor to keep it and go on to the panel, or
+ {k:Esc} to cancel the whole command.
+Name | Text | The name in the environment variable USER | Who wrote the comment;
+ printed in a Draft print.
+Created | Shown only | The time of the creation | The date and time in the
+ form 2026-11-13 10:05.  It is set when the comment is made and does not
+ change when the comment is edited.
+.end
+.pic pictures/markers-comment.png 5.4 The panel of the Comment marker, with the name of the author and the time of its creation.
+If the environment variable USER is not set the Name is empty and can be typed.
+The Created time is filled in when the panel opens and the field is
+empty, so a comment that came from a file without a time gets the time of the
+first edit.
+.h3 On the screen
+The default mode is Short, in which the label is COM "text"; in Long
+mode it is COMMENT "text", where the text is the comment on one line (the ends of
+lines become spaces) and is cut at about 95 characters.  Name mode shows [COM].
+.h3 When printed
+- Final and Preview: nothing.
+- Draft: the comment is printed where it stands, in small typewriter type, as
+  [[Comment by NAME, TIME: TEXT]], for example [[Comment by Ann, 2026-11-13
+  10:00: Check this]].  The text is plain: the line ends become spaces and the
+  attributes and blocks of the comment are not kept.
+.h3 Edges
+A comment that holds a block, several columns or formats shows its text on
+the screen label as plain text.  A marker of a comment that has no text
+prints [[Comment by NAME, TIME: ]] in a Draft print.  Search does not look into
+a comment, and the Words command does not count its words.
+
+.h2 Counter [marker-counter]
+.ix Counter marker
+.ix Marker, Counter
+.ix Numbered lists
+.ix Counter Format
+.ix Roman numerals, letters as numbers
+A Counter marker prints the next number of a counter.  Use it for numbered
+items that are not sections: the items of a list, the figures or the tables of a
+chapter, the steps of a procedure.  There are 99 counters, each with its own
+count, and the look of the number (arabic, roman, letters, with a text around
+it) is set once for the document and may be changed by a marker.
+.table 12 48
+Item | Value
+Panel | Counter, Set Value, Number Style.
+Global settings | Counter Format, in Global, Marker: 99 counters, nine to a
+ page, each with a Description and a Tag ({n:format-marker-ring}).
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Counter (1-99) | A whole number 1 to 99 | 1 | Which of the 99 counters this marker
+ uses.
+ Other numbers give the message Counter must be 1 to 99.
+Set Value | A whole number 0 to 4294967295, or empty | Empty | Sets the counter
+ to this number, and the marker prints it.  Empty: the marker adds one to the
+ counter and prints that.  Any other text gives the message Set Value must be
+ 0 to 4294967295.
+Number Style | [Style of the counter], Arabic (1), Lower Case Roman (i),
+  | Upper Case Roman (I), Upper Case Letters (A),
+  | Lower Case Letters (a) | [Style of the
+  |  | counter] | The style of the number.  The first entry takes the style
+ of the counter's tag.  Roman numerals show 1 to 3999 and the letters
+ show 1 and more: a number that the style cannot show (0, or above 3999 in
+ roman) is written in arabic digits.
+.end
+.pic pictures/markers-counter.png 5.4 The panel of the Counter marker: counter 1, the value set to 5, the style Lower Case Roman.
+.h3 How the numbers are counted
+The counters are counted in the order of the text of the document (the blocks
+one after another, and in a block the columns from left to right); they have
+nothing to do with pages.  For each counter:
+1. The first marker of the counter in the document prints its Set Value if it
+   has one, and 1 if it has not.
+2. Every later marker adds one to the counter and prints that, unless it has a
+   Set Value, which sets the counter to that value.  So Set Value 7 makes
+   the numbers go on 7, 8, 9 and so on; a Set Value of 1 starts again from 1.
+   Each counter counts up to 4294967295, the largest number that fits in 32
+   bits, and stops there: a marker after the counter has reached it prints
+   4294967295 again, and the counter does not go back to 0.  The Printer
+   reports this once in its log (the warning counter-limit).
+3. A style that a marker chooses stays with its counter from that marker on,
+   until another marker chooses another style.  Choosing the first entry
+   [Style of the counter] does not undo it.
+The counters are independent: items counted by counter 1 and counter 2 in the
+same list print 1. 2. 3. and A. B. C. each in its own count.
+.h3 The tag
+The tag of a counter, which is set in Counter Format, is the text that the
+marker prints, with the number in it.  The tag has at most 90 characters.  It
+is made of ordinary characters and one style letter between backslashes, which
+is one of the characters in this table.
+.table 6 54
+Code | The number is written as
+\1\ | Arabic: 1, 2, 3.
+\i\ | Lower case roman numerals: i, ii, iii, iv.
+\I\ | Upper case roman numerals: I, II, III, IV.
+\A\ | Upper case letters: A, B, ..., Z, AA, AB, ...
+\a\ | Lower case letters: a, b, ..., z, aa, ab, ...
+.end
+The first code in the tag stands for the number and the rest of the tag is
+kept as it is: the tag "Table \I\." prints Table I., Table II., and
+the tag "\1\)" prints 1), 2).  A tag with no code gets the number at its
+start.  A second code in the same tag is printed as it is.  The tags that a
+new document has are "\1\." for every counter except counter 2, which has "\A\."
+(a counter that has no tag of its own uses these).  The Number Style of
+a marker replaces the style of the tag and keeps the rest of the tag: a marker
+with Upper Case Roman Numerals and the tag "\1\." prints III.
+.h3 Edges
+- A number that the style cannot show is written in arabic: a roman numeral
+  needs a number from 1 to 3999 and a letter style needs a number of 1 or
+  more.
+- The Description of a counter, also set in Counter Format, is a comment for
+  the reader.  It is never printed; it is added to the label of the marker on
+  the screen in the Short mode: C1, list of books.
+- Counters in the text of a note or a comment are not counted.
+
+.h3 On the screen
+The default mode is Long: the marker is drawn as its text, such as 3., without
+brackets and in the color of markers, so a list of counters looks like a list
+of numbers.  Short: [C1] (with the description if there is one, as in [C1, list
+of books]).  Name: [C].  Diamond and Hidden as usual.  The numbers on the
+screen follow every change of the text.
+.h3 When printed
+Final and Draft: the text of the counter, in the font of the text around it.  It
+is printed in every display mode (the mode does not hide it).
+.h3 Messages
+- Counter must be 1 to 99: the Counter field is not a whole number from 1 to
+  99.
+- Set Value must be 0 to 4294967295: the field holds something that is not a
+  whole number in that range (a sign, a decimal point and letters are not
+  allowed).
+
+.h2 Cross-reference [marker-cross-reference]
+.ix Cross-reference marker
+.ix Marker, Cross-reference
+.ix Section numbers in the text
+.ix Refer to a section
+A Cross-reference prints the tag, the headline, both, or the page number of
+another section of the document.  Use it instead of typing "see section 3.2",
+so that the reference stays right when sections are added, deleted or moved.
+It can only be used in a structured document.
+.table 12 48
+Item | Value
+Panel | Section Number, Style, and the shown values Section Tag and Headline.
+Place | Structured documents only.  In an unstructured document the name is in
+ parentheses on the Marker Commands table and the command gives Invalid marker
+ selection.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Section Number | The number of a section as the status line shows it, such as
+  | 1, 3.1 or 2.4.1 | None (required) | The section that is referred to.  A
+ number that is not a section gives Cannot find section number.
+Style | [Tag], Tag, Headline, Both, Page Number | [Tag] | What is printed (the
+ table below).
+Section Tag | Shown only | | The tag of the section that the number names.
+Headline | Shown only | | The headline of that section.
+.end
+.pic pictures/markers-xref.png 5.4 The panel of the Cross-reference marker for the section 1.2: the tag and the headline of the section are shown.
+The Section Number is always the decimal number that the status line shows
+(1.2.1), whatever the section tag looks like: a section whose tag is "Part II"
+is still number 2 here.  The two shown fields change when the number is typed
+and let you see that the right section was found before you press {k:Ins}.
+.h3 The styles
+.table 12 48
+Style | What is printed
+[Tag] | What the Cross-reference Format of the Global menu says: the tag, the
+ headline or both (the tag when the format is not set).  The marker follows the
+ format when it is changed later ({n:format-marker-format}).
+Tag | The tag of the section, such as 2.1.  If the section has no tag (the
+ Section Tag of its level is empty or Auto Numbering gives it none) the number
+ is printed instead.
+Headline | The text of the headline, as plain text on one line (the first 160
+ characters).
+Both | The tag, a space and the headline.
+Page Number | The number of the page on which the section starts.
+.end
+.h3 How the marker follows its section
+The marker keeps the section it was made for.  When a section is added,
+deleted, moved, promoted or sorted, the marker follows that section, and the
+number in the marker is changed to the new number of the section; the document
+counts as changed when a number moved.  If the section is deleted the marker
+prints [no section] and keeps its last number.  When a document is opened,
+the marker refers to the section that has the number it shows.
+.h3 On the screen
+The default mode is Long: the marker is drawn as the text that it prints
+(for the style Page Number the words "page of" and the tag), without brackets.
+Short: [XREF 1.1].  Name: [XREF].  Diamond: a diamond.
+.h3 When printed
+The text of the style.  The headline, the tag and the number are typeset in
+the font of the text around the marker.
+.h3 Edges
+- A cross-reference to the section it is in is allowed.
+- The headline is taken from the first column of the headline block, as plain
+  text: attributes are lost.
+- With the Page Number style the number is the page on which the headline of
+  the section stands.
+.h3 Messages
+- Cannot find section number: the number is not that of a section.
+- Invalid marker selection (Not available in an unstructured document).
+
+.h2 Date [marker-date]
+.ix Date marker
+.ix Marker, Date
+.ix Date format
+.ix Month, Mon, Year, YY, MM, DD
+A Date marker prints the date on which the document is printed.  Use it for
+the date of a letter or of a report so that it is always the date of the print.
+.table 12 48
+Item | Value
+Panel | Format.
+Global setting | Date Format on the Marker Format panel of Global, Marker.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Format | Text made of the date words below and ordinary characters |
+  |  | Month D, Year (or the Date Format of the document) | How the date is
+ written.
+.end
+.pic pictures/markers-date.png 5.4 The panel of the Date marker, with the format Mon D, Year.
+The words are not case sensitive.  Anything else in the format is printed as
+it is.
+.table 6 54
+Word | Meaning
+Month | The name of the month in full: November.
+Mon | The first three letters of the name: Nov.
+Year, YYYY | The year with four digits: 2026.
+YY | The year with two digits: 26.
+MM | The month as two digits: 11.
+M | The month as a number without a zero in front: 11.
+DD | The day of the month as two digits: 07.
+D | The day of the month: 7.
+.end
+.table 20 30
+Format | Gives (13 November 2026)
+Month D, Year | November 13, 2026
+M/D/YY | 11/13/26
+DD Mon YYYY | 13 Nov 2026
+YYYY-MM-DD | 2026-11-13
+.end
+.caution Every letter D, M or Y in the format is a date word, wherever it
+  stands.  The format "Today is Month D" prints "To13ay is November 13",
+  because the d of "Today" is the day.  Words in a format must not have those
+  letters: a text of your own is better put outside the marker.
+.h3 On the screen
+Long and Short: the date of today in brackets, such as [November 13, 2026].
+Name: [DATE].
+.h3 When printed
+The date at the time of the print, as text.  The month names are in English.
+The Printer prints the date according to the display mode of the Date marker:
+see {x:markers-print-modes}.
+.h3 Edges
+- A format that is left as the default follows the Date Format of the Global
+  menu.
+- The format cannot hold an empty string: an empty field is the default.
+
+.h2 Description [marker-description]
+.ix Description marker
+.ix Marker, Description
+The Description marker prints the description of the document, the text that was
+typed in the Description field of the Save panel.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+Source of the text | The Description field of the Save panel; see
+ {x:file-revision}.
+.end
+.h3 On the screen
+Long: [DESCRIPTION].  Short and Name: [DESC].
+.h3 When printed
+The description as text.
+.h3 Edges
+- A document without a description prints nothing.
+
+.h2 Equation [marker-equation]
+.ix Equation marker
+.ix Marker, Equation
+.ix Formulas
+An Equation marker holds a formula that is typeset as mathematics.  The formula
+is written in TeX math, as {x:equations} describes.
+.table 12 48
+Item | Value
+Panel | The text editor only (the status line shows EQUATION EDIT); there are no
+ other fields.
+.end
+.h3 How it is entered
+{k:Alt-F12}, Equation opens a full editor for the formula.  Type the formula
+as TeX math.  {k:Ins} saves it and inserts the marker, {k:Esc} throws it away
+and {k:Ctrl-W} shows the formula as it looks.  To change it, put the cursor
+on the marker and press {k:Alt-F12}: the editor opens with the formula.
+.h3 On the screen
+The default mode is Inline: in the X11 version the formula is shown as the
+picture that LaTeX makes of it; in the terminal version, and while the picture
+is not ready, the label.  The other modes show EQN, EQN x^2 (Short, the formula
+on one line) and EQUATION x^2 (Long).
+.h3 When printed
+The formula is typeset as mathematics.  A formula that is alone on its line
+(only spaces or attributes are beside it) is printed as a display equation,
+centered on a line of its own; in any other place it is printed inline, in the
+line of text.  In the cell of a table it is always inline.  The ends of lines in
+the formula become spaces.
+.h3 Edges
+- A formula that TeX could not typeset is printed as a Box: EQUATION followed by
+  the formula.  A formula is rejected before a run of TeX is made: an empty
+  one, one
+  longer than 4000 characters, one with a character outside plain ASCII, one
+  with the characters %, # or $, braces that do not match, a begin or end of
+  an environment that is not on its list, or a command that can write files or
+  run programs.  The rest is tried, and the ones that TeX does not accept are
+  boxed.
+- The Search command does not look into the formula.

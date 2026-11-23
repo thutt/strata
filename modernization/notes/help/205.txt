@@ -1,0 +1,25 @@
+
+-------------------------------- Search Strings --------------------------------
+
+Search String: Enter any string of characters as the search string (up to
+               80 characters). When entering the string, be sure to include
+               all punctuation and spaces that are in the actual text.
+
+  You can enter the following special characters in a search string:
+
+  Character                   Enter by Pressing
+  -----------------------------------------------------------------------------
+  Compose characters        Compose (Alt F1) and a 2-character compose sequence
+  Tab ()                   Tab
+  Enter ()                 Ctrl Enter
+  Soft hyphen ()           Ctrl - (hyphen)
+  Nonbreaking space ()     Compose (Alt F1) Space Bar Space Bar
+  Marker                    Marker (Alt F10) and the marker you want
+  -----------------------------------------------------------------------------
+
+Direction: Select whether to search forward, backward, or all of the document.
+           All searches the title page, headers, and footers in addition to 
+           the document body, notes, equations, and comments.
+--------------------------------------------------------------------------------
+    Search         Search Options         Compose Characters         Markers
+                 Keyboard Summary                 Help Index

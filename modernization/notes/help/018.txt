@@ -1,0 +1,25 @@
+
+-------------------------- DCA (Revisable) File Import -------------------------
+
+DCA (Revisable) File Import converts files in DCA revisable text format into 
+Manuscript documents. 
+
+  +----------------------- DCA (Revisable) File Import ----------------------+
+  |                                                                          |
+  |         Working Directory:                                               |
+  |                                                                          |
+  |             DCA File Name:                                               |
+  |                                                                          |
+  |             Document Name:                                               |
+  |                                                                          |
+  +------------------------- Press Ins to Import File -----------------------+
+
+# Many word processing programs can convert their files into DCA format. This
+  is a convenient way of transferring those files into Manuscript while 
+  maintaining most of the original document's format.
+
+# For the Document file name, any extension is acceptable. If an extension is 
+  not specified, .DOC is automatically appended.  Be sure to specify the full 
+  path name if a file is not in the current working directory.  
+--------------------------------------------------------------------------------
+       File Conversion Utilities       Keyboard Summary        Help Index

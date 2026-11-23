@@ -1,0 +1,25 @@
+
+---------------------------------- Line Indents --------------------------------
+
+
+Indent settings on the local column or block (F6) and global format (F10 Format)
+panels control which lines begin at the first tab or, if a tab is not set, 
+at the sixth ruler position.
+
+
+None:          Does not indent any lines of text.
+
+First:         Indents the first line of text only.
+
+All but First: Indents all lines of text except the first (a hanging indent).
+
+All:           Indents all lines of text.
+
+--------------------------------------------------------------------------------
+
+# The indent of the current block or column is displayed on the Current Block
+  or Column Format panel (F6) and on the expanded Status line.
+
+--------------------------------------------------------------------------------
+Global Format     Current Block Format     Current Column Format     Status Line
+       Hanging Indents            Keyboard Summary            Help Index

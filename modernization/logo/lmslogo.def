@@ -1,0 +1,42 @@
+% The Logic Magicians Software marks, as the commands \lms and \lmslogo.
+%
+% \lms prints the name in italics: Logic Magicians Software.  It is spaced
+% correctly before punctuation and cannot break across lines.
+%
+% \lmslogo draws an AND gate with two inputs on the left, the letters LMS
+% inside and an output on the right that ends in a five-point star.  The
+% command takes the scale as an option: \lmslogo[2] is twice as big.  Without
+% it the scale is 1 and the mark is about 2.5 cm wide at the size of the
+% text of a document (11 pt): the drawing is made in units of the font, so
+% that it follows the size of the text around it.
+%
+% The mark is black.  It is a drawing made with TikZ, which every file of the
+% Printer loads, so that no font file is needed and the edges are clean at
+% every size.  Both commands are robust: they can be used in running text,
+% in headlines, in the cells of a table, and in headers and footers.
+%
+\usetikzlibrary{shapes.geometric}
+\makeatletter
+\DeclareRobustCommand{\lms}{\mbox{\textit{Logic Magicians Software}}\xspace}
+\DeclareRobustCommand{\lmslogo}{%
+  \@ifnextchar[{\lmsl@go}{\lmsl@go[1]}}
+\def\lmsl@go[#1]{%
+  \leavevmode
+  \begingroup
+  \begin{tikzpicture}[baseline=-0.9ex,x=2.6em,y=2.6em,scale=#1,
+    every node/.style={transform shape},line width=0.05em*#1]
+    % The body of the gate: flat on the left, round on the right.
+    \draw (0,0.45) -- (0.9,0.45) arc[start angle=90,end angle=-90,radius=0.45]
+          -- (0,-0.45) -- cycle;
+    % The two inputs and the output.
+    \draw (-0.35,0.22) -- (0,0.22);
+    \draw (-0.35,-0.22) -- (0,-0.22);
+    \draw (1.35,0) -- (1.75,0);
+    % The star at the end of the output.
+    \node[star,star points=5,star point ratio=2.2,fill,inner sep=0pt,
+          minimum size=0.73em] at (1.97,0) {};
+    % The initials inside the gate.
+    \node[font=\sffamily\bfseries\footnotesize] at (0.62,0) {LMS};
+  \end{tikzpicture}%
+  \endgroup\xspace}
+\makeatother

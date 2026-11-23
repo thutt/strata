@@ -1,0 +1,25 @@
+
+--------------------- Unstructured and Structured Documents --------------------
+
+To accommodate a wide range of documents, you can have unstructured or
+structured documents.
+
+Unstructured: An unstructured document is created in unstructured edit and
+              has one or more text blocks or columns; it does not have 
+              sections, levels, or headline blocks. 
+
+              Use unstructured edit to create simple documents such as memos,
+              letters, or notes.
+
+Structured:   A structured document also has one or more blocks or columns, 
+              but they are organized into sections and levels. The first 
+              block of each section is a headline block, which is used as 
+              a section title, in the table of contents, and when collapsing 
+              sections to outline or reorganize a document.
+
+              Use structured edit to create more complex documents, such as
+              technical papers, or for any document that needs sophisticated 
+              formatting.
+
+--------------------------------------------------------------------------------
+              Edit          Keyboard Summary           Help Index

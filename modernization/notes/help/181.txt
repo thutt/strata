@@ -1,0 +1,25 @@
+
+------------------------------------ Footnotes ---------------------------------
+
+
+The following prompts are unique to the Footnote Format panel.
+
+
+Separator Bar:     Enter the length of the line that will print to separate
+                   the first footnote on a page from the text. For example, to
+                   print a two inch line, type 2 in.
+
+
+Renumber:          Select No to number the footnotes in the document 
+                   sequentially.  Select Yes to renumber the footnotes on
+                   each page.
+
+
+Position of Notes: Select Bottom of Page to align footnotes with the bottom of
+                   the page.  Select After Text to print the footnotes 
+                   immediately following the last line of text.
+
+
+
+--------------------------------------------------------------------------------
+           Note Format          Keyboard Summary          Help Index

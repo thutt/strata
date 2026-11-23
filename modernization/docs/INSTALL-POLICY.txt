@@ -1,0 +1,108 @@
+INSTALL POLICY (WORKLIST W61)
+=============================
+
+The owner's rule: "If the user running the installer is root, query for
+permission and install everything if allowed.  If running as non-root, install
+in the user's home directory, if the minimum set of prerequisites are
+available.  If the prerequisites are not all available, do not install."
+
+The script is scripts/strata-install; 'strata-build install' runs it.  The
+tests are tests/installtest.py (prereq_question_test for an administrator,
+prereq_default_test, user_prereq_test for anybody else).  No test installs a
+package or uses sudo: a directory of small programs first in the PATH plays
+apt-get, apt-cache and id.
+
+The cases
+---------
+
+1. An administrator (id -u is 0, no --destdir).
+   - The default prefix is /usr.
+   - The script prints what is present and what is missing, then a table of
+     the packages that apt would install with the estimated sizes, then asks
+
+         Install these packages? [y/N]
+
+   - Only y or Y installs.  Any other answer, or an empty one, installs
+     nothing and the status is 3.  --yes answers yes.  Without a terminal and
+     without --yes nothing is installed and the status is 4.
+   - The packages go in with apt-get install.  The offer to run apt-get
+     update after a failure with the symptom of an old index is unchanged.
+   - When nothing is missing, Strata is installed with no question.
+
+2. Anybody else (no --destdir).
+   - The default prefix is ${HOME}/usr.  Without a HOME the option
+     --prefix is required.
+   - The programs that Strata can use at run time are OPTIONAL prerequisites
+     (LaTeX with the files of the Printer, dvipng, ghostscript, aspell or
+     hunspell, the thesaurus data, a print queue, curl and unzip).  Only the
+     terminal or X server and the font are required, and the script cannot
+     check those.
+   - A missing optional program never stops the install: Strata is
+     installed, and the exit status is 0.
+   - Nothing about the missing programs is printed in the middle of the run,
+     where it could scroll off the screen.  The check records them.
+   - The warning is the LAST block of the output, after the list of what
+     was installed.  Its first line is "Optional programs are missing:".  It
+     lists each missing package with what is lost without it, a sentence that
+     Strata runs without them, and the command for an administrator on one
+     line (sudo apt-get install --no-install-recommends PACKAGES), or the
+     advice to use the package manager of the system when there is no
+     apt-get.  The block is printed on the error output, also with --quiet.
+   - When nothing is missing no block is printed.  --dry-run writes nothing;
+     --list-prereqs only reports at once and the status is 0.
+   - A prefix on the command line (--prefix DIR) follows the same rules.
+   - For an administrator who declines the question the same block ends the
+     output (the status is 3 and nothing is installed).
+
+3. --no-prereqs installs Strata alone, with no check and no warning, for
+   everybody.  It is the user's own request.
+
+4. --destdir (building a package) keeps its meaning: no prerequisites are
+   looked for, the files go under DESTDIR/PREFIX, and the home directory is
+   not used as a default.
+
+What was removed
+----------------
+
+An ordinary user's install used to download the missing packages with
+apt-get download, unpack them with dpkg-deb into lib/strata/prereq below the
+prefix, write share/strata/prereq-env.sh, prepare the TeX files in that tree
+and ask "Download N packages into PREFIX?".  All of that is gone, with the
+private apt state (the variable STRATA_APT_STATUS) and the test that fetched
+125 packages from a network (STRATA_TEST_PREREQS).
+
+Kept for installs that an older script made: strata-run still reads
+share/strata/prereq-env.sh when it exists, the check still looks in the old
+tree, and the uninstall still removes a manifest entry of a tree.
+
+
+The release directory (the install without the build tree)
+----------------------------------------------------------
+
+A user never has the build script or the source.  What is delivered is a
+release directory with two entries:
+
+  strata-install     the install script, a copy of scripts/strata-install
+  payload/           the files to install, with the layout of an installed
+                     prefix: bin/ (str, stred, strprint, dviview and the
+                     X11 versions), share/strata/ (the help file, VERSION,
+                     the documents, the templates, the samples and the
+                     Tutorial) and share/doc/strata/
+
+A developer makes it from a build with 'strata-build release DIR' (the
+option --make-release DIR of the script).  The payload has no manifest and
+no launcher: the script makes them.
+
+The script uses the directory payload next to itself when no --payload and
+no --build-dir is given, and --payload DIR names another one.  An install
+from a payload, like every install, writes only below the prefix (below
+${HOME}/usr for an ordinary user); the uninstall (--uninstall) reads the
+manifest and removes what the install put there and nothing else, so the
+user needs no other tool.  --list-prereqs and --check need no payload.
+
+The specification of the file formats (strata-file-format) is a document for
+developers.  It is never delivered: an install from the build directory
+leaves its document and its PDF out, and a payload that holds it is refused
+before anything is installed.  The test tests/installuser.py checks all of
+this as an ordinary user, with a private home directory, from a release
+directory with no source.

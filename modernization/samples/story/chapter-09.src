@@ -1,0 +1,30 @@
+.chapter 9
+.h1 Open items and lessons [lessons]
+The record, read to the last commit of 19 November, leaves these open items and
+lessons.
+.h2 Open items [lessons-left]
+{Tab:open} lists the open items; the worklist has all of them.
+.tabcap open Open items
+.table 22 42
+Item | State
+UTF-8 | Stage 0 is done: UTF-8 and Latin-1 are character sets of Import and
+ | Export, and the keyboard takes any character.  Documents stay in the
+ | character set of the old program, so an import turns a character with no
+ | place in it into a question mark.
+Mouse | The study recommends a staged plan.  Neither version takes mouse input.
+Colour in documents | The study is written.  Screen and pictures have colour,
+ | but text has none.
+Merge, Batch Print | Not built ({x:conditional-honest}).
+Token of two bytes | Next step for memory ({x:memory-notdone}).
+.end
+.h2 Lessons [lessons-lessons]
+Each lesson names its evidence ({tab:lessons}).
+.tabcap lessons Lessons and their evidence
+.table 36 28
+Lesson | Evidence
+Measure every number that a change can move. | {x:memory-slower}
+Keep what the program does not understand. | {x:beginning-goal}
+A check that never failed proves nothing. | {x:testing-mutation}
+Wait for a condition, not for a time. | 13 checks failed
+Tag each statement as fact or guess. | {x:probing-limits}
+.end

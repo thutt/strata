@@ -1,0 +1,25 @@
+
+------------------------------------- Sound ------------------------------------
+
+
+
+Sound is an option on the Setup panel that determines whether the computer 
+beeps when an error is encountered during a Manuscript session.
+
+
+
+
+--Procedure---------------------------------------------------------------------
+
+
+
+ Move the cursor to Sound and press Space Bar to switch between On and Off.
+
+
+ Press Ins to save changes and return to the Document Manager. 
+
+
+
+
+--------------------------------------------------------------------------------
+      Document Manager       Setup       Keyboard Summary       Help Index

@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+
+-- Page number tag more than 20 characters -- 
+
+Change the page number tag to be less than 20 characters.
+
+-- Picture error (picture/equation occurs after line wraps) -- 
+
+A picture or equation with position set to Fixed or Floating occurs after the
+line of text surrounding it wrapped.  Change the position of the marker to
+In text or place the marker in its own block 
+
+-- Picture height exceeds page length -- 
+
+The picture is too large to fit on a page.  Change the size or scale options in
+the Picture marker and reprint the document.
+
+-- Picture is too large; will be automatically scaled --
+
+The image size specified in a Picture marker is larger than the space available
+or the natural size of the picture is larger than the space available. Change 
+the size and reprint the document.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

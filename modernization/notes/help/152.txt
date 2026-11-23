@@ -1,0 +1,25 @@
+
+----------------------------- Setting Tabs on the Ruler ------------------------
+The ruler, which is the dotted or dashed line across the top of a format panel,
+is where you set tabs. The ruler displays block indents as well as tab settings.
+
+--Procedure---------------------------------------------------------------------
+
+ On a panel that has a ruler, move the cursor to the ruler.
+ Press Right and Left to position the cursor where you want a tab. (The Pos
+  indicator displays the cursor location.)
+ Press Tab to enter a left-aligned tab; ^ to enter a centering tab; Shift Tab 
+  to enter a right-aligned tab; . to enter a decimal tab; , to enter a comma 
+  tab; # to enter a number tab.
+ Press Ins.
+
+--------------------------------------------------------------------------------
+# Adjust the spacing between tabs by positioning the cursor on the ruler and 
+  pressing Space Bar, Backspace, or Delete. 
+# To delete a tab without moving other tabs, move to the tab character on the 
+  ruler and press the same tab key.
+# Use the Block Indicator prompt on the Options panel (Menu (F10) Global 
+  Options) to display the ruler as the block indicator between blocks.
+--------------------------------------------------------------------------------
+  Ruler Keys       Block Indents       Tab Types       Tab Fill       Options
+               Keyboard Summary                        Help Index

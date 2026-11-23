@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+
+
+-- Named block format not found (name:<name>) -- 
+
+The named block format specified for a block does not exist in the current
+document.  The block may have been imported from another document.  Specify
+a local block format, create a named block format with the desired name, or
+retrieve the named block settings from the appropriate document.
+
+
+
+
+-- Need DOS 2.0 or later --
+
+Your system must be configured with DOS version 2.0 or later.  Type VER at the
+DOS prompt to determine the current version of DOS.
+
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

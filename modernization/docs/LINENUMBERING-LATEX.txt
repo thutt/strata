@@ -1,0 +1,247 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+LINE NUMBERING IN LATEX: A SURVEY, AND WHAT STRATA DOES
+=======================================================
+
+This is the survey that the worklist item "Line numbering (the LaTeX package
+lineno)" asked for before the work.  It states only what was read on this
+machine or tried on it.  Where a package is not installed here, it says so
+and says nothing else about the package.  Part 1 is the survey; part 2 is
+the design that follows from it; part 3 says what was found when lineno met
+the LaTeX that Strata writes.
+
+The machine: Debian 13 (trixie), TeX Live 2025, pdfTeX.  The trials of part
+1 are in /tmp/lntry (not kept in the repository: they are throw-away
+documents; the commands are written down below so that they can be run
+again).  The trial document is an article of 8.5 by 11 inches with 1 inch
+margins, twelve paragraphs of the lipsum package, one numbered equation
+after the sixth paragraph and a two by two tabular after the eighth, so two
+pages.  The numbers were read from the PDF with pdftotext -bbox (the words
+made only of digits that stand in the left or right margin).
+
+
+1. THE SURVEY
+-------------
+
+1.1 lineno
+----------
+
+Name and version: lineno 5.4, dated 2025/01/29, authors Stephan I.
+Boettcher, Uwe Lueck and Karl Wette (read from the head of the file).
+Where read: the package source, /usr/share/texlive/texmf-dist/tex/latex/
+lineno/lineno.sty.  There is no separate PDF manual installed (texdoc has no
+entry for it); the documentation is written inside the .sty file as a
+documented source, and that is what was read.
+
+What it does: it hooks the output routine of LaTeX and puts a number in the
+margin for every line that TeX has set in a paragraph, so the numbers follow
+the lines that TeX really breaks, whatever the font, width or hyphenation.
+It needs no change of the text, only \linenumbers after \begin{document}.
+
+The options and commands that the source offers (all of them were read; the
+ones marked "tried" were run):
+
+  left, right      the side of the number (tried).
+  switch, switch*  the number on the outer (inner) margin of a two-sided
+                   document (tried, with the class option twoside).
+  pagewise         the count starts again at 1 on each page (tried).
+  running          one count through the text (tried).
+  columnwise       the count starts again in each column of a two-column
+                   page (read).
+  modulo           only the lines whose number is a multiple of five (tried);
+                   \modulolinenumbers[n] sets another step (read).
+  modulo*          as modulo, but the first line of a paragraph also (read).
+  mathlines        the lines of a displayed equation are numbered (tried).
+  sep, width       the distance of the number from the text, and the width
+                   of the number box (read; version 5.3 and later).
+  \linenumberfont  the font of the number: the default is
+                   \normalfont\tiny\sffamily (read, line 1546).
+  \linenumbersep   the distance of the number from the text, 10 pt by
+                   default (read).
+  \thelinenumber   the format of the number, \arabic{linenumber} by default;
+                   it can be redefined to \roman, \Roman, \alph or \Alph
+                   (read).
+  \resetlinenumber  sets the running counter, so that it can start again at
+                   a section (read).
+  \nolinenumbers   stops the numbering; \linenumbers starts it again (read).
+  \linelabel       a label on a line, for references (read; not needed).
+
+Results of the trials (pdfLaTeX, two passes):
+
+  options              page 1       page 2           side
+  pagewise             1 to 45      1 to 37          left, x = 58.9 pt
+  running              1 to 45      46 to 82         left
+  pagewise,modulo      5, 10 ... 45 5, 10 ... 35     left
+  pagewise,right       2 to 45      1 to 37          right, x = 556.8 pt
+  pagewise,mathlines   42 to 46 on the lines of the equation and after it;
+                       the equation takes one number, its own
+  switch (twoside)     page 1 right, page 2 left   (odd pages: outer margin)
+  switch* (twoside)    page 1 left, page 2 right
+
+What fails or is only partial (from the source, section on arrays and
+tabular environments, and from the trials): a standard tabular is one box,
+so it takes one number for the whole table (the count steps once) unless the
+options edtable or longtable are used; lines inside a box (a minipage, an
+\hbox, a \vbox) are not numbered; footnotes are not numbered; the source says
+that displayed mathematics works "not too well" without the mathlines
+option, and that footnotes and floats needed special care in the output
+routine.
+
+1.2 vruler
+----------
+
+Name and version: vruler 2.3, October 1996, by Zhuhan Jiang (read from the
+head of the file).  Where read: /usr/share/texlive/texmf-dist/tex/latex/
+vruler/vruler.sty.  Tried.
+
+What it does: it draws a ruler of numbers at fixed distances at the margin
+of every page, whatever the text is: \setvruler[scale][first][step][digits]
+[mode] with a distance of 12 pt gave 55 numbers on a page, at x = 22.2 pt.
+What it does well: nothing in the text can disturb it (displayed equations,
+tables, pictures), and the count is the same on every page.  What fails: the
+numbers are not tied to the lines of the text: a line of another height, a
+heading or a picture does not move them, so a number is not "the number of
+the line beside it".  That is not line numbering as a person who cites a
+passage ("line 17") needs it.
+
+1.3 Overlays of the whole page (eso-pic, everypage, tikzpagenodes)
+------------------------------------------------------------------
+
+These three packages are installed here (kpsewhich finds eso-pic.sty,
+everypage.sty and tikzpagenodes.sty).  They put material on every page at a
+fixed place; a ruler of numbers can be made with them, which is the same
+method as vruler and has the same limit: the numbers do not follow the
+lines.  They were not read further and not tried.
+
+1.4 Pleading-paper packages and classes, numline, ledmac, reledmac
+------------------------------------------------------------------
+
+Not installed on this machine (kpsewhich finds no pleading.sty, pleading.cls,
+numline.sty, ledmac.sty or reledmac.sty).  They were not read and not tried,
+and nothing is claimed about them here.  The idea of court-form pleading
+paper (a fixed number of lines on every page, at exact line spacing, with a
+ruled margin) is the optional extra of the worklist item: it can be made with
+lineno and an exact \baselineskip, see part 2.
+
+1.5 Why lineno
+--------------
+
+The owner's decision: use the LaTeX package lineno and support the styles
+that it supports.  What the trials add: lineno is the only installed
+method that numbers the lines that TeX really sets; it is installed with the
+TeX Live of this machine, so the exported file compiles alone; it works with
+pdfLaTeX and the DVI route (the Viewer reads the DVI of the same
+typesetting); and it has everything the
+owner listed: pagewise and running numbers, modulo, left, right, inner and
+outer, the font and the distance of the number, and the format.
+
+
+2. WHAT STRATA DOES
+-------------------
+
+The setting lives in the document: the Global Format panels have a third
+panel of the global scope, Line Numbering, saved as global F records of the
+header (docs/DOC-FORMAT.txt).  A document that has none of the records is
+written exactly as before: the LaTeX of every document of tests/data was
+compared with the output of the program before the feature, byte for byte.
+The letter of the records is Z, because FN is the start of a named format
+(a first try with N would have been read as one).
+
+  Field            Record  Values (the first is the default)
+  Numbering        FZM     Off, Pagewise, Running, Each Section
+  Number Every     FZE     1 (every line); 2 to 99
+  Side             FZS     Left, Right, Outer, Inner
+  Number Size      FZZ     Tiny, Script, Footnote
+  Number Font      FZY     Sans, Roman, Typewriter
+  Number Format    FZF     Arabic, Roman (i ii iii), Capital Roman
+  Distance         FZD     the distance of the number from the text, in
+                           inches and hundredths (0.15 by default)
+  Equations        FZQ     No, Yes (the lines of a displayed equation)
+
+The default look is the one the owner asked for: a number in a smaller sans
+serif font than the text, so that it is never taken for text (the tiny size
+of lineno's own default).  Pagewise numbering, every line, left, are the
+choices when Numbering is switched on.  "Each Section" is running numbering
+that starts again at 1 at each section of the first level (\resetlinenumber
+before each such headline).
+
+A format of letters (\alph) is not offered: LaTeX stops with "Counter too
+large" after 26 lines, which would make a Preview fail.  Roman numerals are
+unbounded.
+
+Outer and Inner put the number at the outer or the inner margin of a page
+that is printed on both sides: odd pages are the right-hand pages.  The
+document class is one-sided, so the margins are equal and the numbers
+alternate with the parity of the page.
+
+What counts as a line, and what is not numbered (tried on every document of
+tests/data and on the sample documents; see part 3 for the trials):
+
+  - Every printed line of a paragraph of text (a block, a headline, a
+    wrapped line, a line that ends where the text ends) is a line.
+  - A blank line between blocks is not a line: it is vertical space.  An
+    empty block takes no number.
+  - A Keep block is set in a box, which lineno cannot number.  With
+    numbering, the lines of the box are put on the page (\unvbox) instead of
+    the box, and then they are numbered; the space is asked for first, so the
+    block stays together as before.
+  - A Keep block that floats (in a figure) is not numbered.
+  - A table (a block of several columns) is a longtable.  The option
+    longtable of lineno was tried and breaks the rows (they print on top of
+    each other), so tables are not numbered; the count goes on past them.
+  - A picture is one line of its paragraph and takes one number.
+  - Footnotes and notes, headers, footers, the failed-print banner and the
+    Error Log page are not numbered.  The Print Error marks are text of the
+    paragraphs; the numbers do not move them.
+  - Displayed equations are numbered only with the field Equations (the
+    option mathlines): the equation takes one number.
+
+
+3. WHAT WAS FOUND WITH THE LATEX THAT STRATA WRITES
+---------------------------------------------------
+
+The body that the Printer writes is made of paragraphs, so lineno works with
+it as it is.  What was tried, with the Printer on the sample documents of
+tests/data (all print to the same number of pages with and without numbers):
+
+  - Pagewise numbers need two runs.  The first run gives running numbers; the
+    second reads the page of every line from the .aux file.  The Printer
+    already runs LaTeX twice when the file has page references; line
+    numbering with pagewise numbers (and the outer or inner side, which is
+    made of them) asks for that too.
+  - The option left, although it is the default, must not be written: given
+    with pagewise it makes the numbers running (options are processed in the
+    order in which lineno declares them).
+  - The Preview, the DVI of the same typesetting: the numbers are the same on
+    every page as in the PDF (tests/lineno.py compares them), and the
+    Viewer draws them like the text (tools/dviview/tests/run_tests.sh,
+    test_lineno: the window agrees with the picture that dvipdfmx makes of
+    the DVI, and there is ink at the left margin and none at the right).  A
+    screenshot of a Preview of a numbered document in the Viewer under X11
+    shows the numbers 1 to 14 in the left margin, small and sans serif, one
+    beside each line.
+  - A landscape page is numbered like the others.
+  - The Error Log page is written with \nolinenumbers.
+  - An exported file lists lineno among its packages in the header comment
+    and compiles alone to the same numbers (tests/lineno.py).
+  - Text left out by the conditional text markers is not in the LaTeX at
+    all, so the count follows the text that is printed.
+
+Not numbered exactly: tables (the rows), Keep blocks that float, notes and
+the other things in the list of part 2.  What was done about them: tables and
+floats have no remedy in lineno (the longtable option breaks the layout);
+Keep blocks were made numberable with \unvbox; the count is not disturbed.

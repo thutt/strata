@@ -1,0 +1,191 @@
+# Chapter 11, part 3: spell check and thesaurus, equations, and what the
+# programs write at start.
+.h2 Spell check and thesaurus [msg-spell]
+.ix Messages, Spell check
+.ix Messages, Thesaurus
+.ix Spell check, messages
+.ix Thesaurus, messages
+These are the texts of the spell check (Tools, Spell, the key {k:Ctrl-C}) and
+of the thesaurus ({k:Ctrl-T}).
+{n:spell} describes the commands and {x:spell-messages} gives the
+messages in their order of use.
+.h3 Boxes [msg-spell-boxes]
+.ix Spelling checker not found
+.ix Spell, box
+.table 18 12 30
+Text | Title | Meaning and what to do
+A tab or a marker cannot be changed here | Line | The command Line of the
+ | | spell check was given a line that has a tab or a marker: that line cannot
+ | | be edited in the box.  Use Edit for the word, or correct the text
+ | | afterwards.
+Cannot make a pipe: REASON | Spell | The program that checks cannot be
+ | | connected (no more processes or files).  Try again later.
+Cannot start PROGRAM: REASON | Spell | The checker PROGRAM exists and cannot
+ | | be run.  Check the program and its rights.
+Define: the reason of a failed write | Define | The word cannot be added to
+ | | the personal dictionary: the file cannot be written.  The texts are those
+ | | of {x:msg-start-config}.
+No spelling checker was found.  Install the packages hunspell and
+ hunspell-en-us (or aspell and aspell-en); the install script of Strata
+ installs them. | Spell | Spell (document, block, section or word) or
+ | | {k:Ctrl-C} was used with no checker on the machine.  Install the packages,
+ | | or run the install script again.
+No spelling checker was found.  Install the packages hunspell and
+ hunspell-en-us (or aspell and aspell-en); the install script of Strata
+ installs them.  Another program can be named in the variable STRATA_SPELL.
+ | Spell | The same, when the spell check is started from the Document
+ | | Manager.  The environment variable STRATA_SPELL names a checker
+ | | ({n:appcmd-env}).
+The spelling checker PROGRAM did not start for the language LANG: its
+ dictionary is not installed.  Install the dictionary of that language for
+ PROGRAM, or change the Dictionary Language in Setup of the Document Manager.
+ | Spell | The same, for a language whose package name is not known: look
+ | | for the dictionary of the language in the packages of the checker.
+The spelling checker PROGRAM did not start for the language LANG: its
+ dictionary is not installed.  Install the package PACKAGE, or change the
+ Dictionary Language in Setup of the Document Manager. | Spell | The checker
+ | | started and stopped at once: it has no dictionary for LANG. PACKAGE is the
+ | | Debian package of that dictionary for that checker, such as hunspell-en-us
+ | | or aspell-en.  Install it, or choose another Dictionary Language in Setup.
+The spelling checker stopped. | Spell Check, Spell Word | The checker ended in
+ | | the middle of a check.  The check is ended; start it again.
+There is no word at the cursor | Spell Word | The cursor is on spaces, a
+ | | marker, or a place with no letters.  Move onto a word.
+.end
+.h3 On the check screen and in the word panel [msg-spell-screen]
+.ix Check screen, texts
+.ix Spelled correctly
+.ix Unknown word
+These texts are shown on the screen, in the top two rows (the bar) or in the
+body.  None of them is an error.
+.table 26 34
+Text | Where and meaning
+Accept correction?  Yes No | The bar, when the only suggestion differs from the
+ | word in case only: Yes takes it.
+Checking the spelling (Esc quits) | The bar, while the checker works for a
+ | long time.
+Continue with auto corrections?  Yes No | The bar, after Quit when corrections
+ | were made that could be repeated for the rest.
+Correct word: | The label of the word in Edit, and of the correction being
+ | offered.
+Dictionaries: LANG (PROGRAM) | The foot of the screen: the language and the
+ | checker, with the file of the personal dictionary on the next line.
+Document: NAME | The foot of the screen: the file name, or {c:(not saved)}.
+No alternatives found | The bar, when Guess finds no suggestion.
+No spelling errors found | The end box: no unknown word was found, or none was
+ | changed.
+Not found in dictionary | The title of the word panel of Spell Word for a word
+ | that is not in the dictionary.
+Press any key to exit | The last line of the end box.
+Section: Body | The foot of the screen: where the word is ({c:Body (Note)} in
+ | a note).
+Select word | The bar of suggestions (Guess): choose with the cursor and press
+ | {k:Enter}.
+Spell Check completed | The end box: the check reached the end.
+Spell Check terminated | The end box: the check was ended with Quit.
+Spelled correctly | The title of the word panel of Spell Word for a word that
+ | is right.
+Undo is off: Undo Levels is 0 | Undo or Redo when the setting Undo Levels is
+ | 0 ({n:edit-b-undo}).
+Undone: and Redone: | The name of the operation that Undo or Redo made, such as
+ | "Undone: Paste".
+Unknown word: | The label of the word that is not in any dictionary.
+Word is too long - maximum length is 65 characters | The title of the word
+ | panel of Spell Word, when the word has more than 65 letters.  It is not
+ | checked.
+.end
+.h3 Thesaurus [msg-thesaurus]
+.ix Thesaurus not installed
+.ix No word selected
+.ix Please choose another word
+.table 23 12 25
+Text | Title | Meaning and what to do
+No word selected | Thesaurus | There is no word before the cursor on its line.
+ | | Move to a word.
+The thesaurus is not installed.  Install the package mythes-en-us; the install
+ script of Strata installs it. | Thesaurus | The data of the thesaurus is not
+ | | found.  Install the package, or run the install script again.
+{c:The word has no synonyms - Please choose another word} | the title of the panel
+ | | The word is in the thesaurus but has only generic or related terms,
+ | | which are not shown.  Type another in the Look Up box.
+{c:The word was not found - Please choose another word} | the title of the panel
+ | | The word is not in the thesaurus.  Type another in the Look Up box (the
+ | | box opens when a letter is typed).
+.end
+.h2 Equations [msg-eq]
+.ix Messages, equations
+.ix Equation, messages
+The equation viewer ({k:Ctrl-W}) and the screen show the result of a LaTeX run
+on the equation.  An equation that fails keeps its label in the text.  The
+messages are listed with their causes in {x:eq-messages}; for the lookup:
+.table 33 27
+Message | Meaning
+Cannot start latex | The program could not be started (no process).  Try again.
+dvipng did not make an image | LaTeX made the page and dvipng gave no picture.
+latex could not typeset the equation: | A line in the equation viewer, over
+ | the message of TeX that follows.
+latex took more than 5 seconds | LaTeX ran for more than 5 seconds and was stopped.
+No temporary directory for latex | The working directory of the job could
+ | not be made.
+That TeX command is not allowed in an equation | The text has a refused
+ | command ({n:eq-refused}); LaTeX was not run.
+The equation did not typeset | LaTeX ended with an error and the log has no
+ | line that begins with an exclamation mark.
+The equation is empty | The text is only spaces and line ends.
+the first lines of the log of LaTeX | The first line that begins with an
+ | exclamation mark and up to three after it ({n:msg-other-latex}).
+The picture is too large or has no | The picture that LaTeX made is
+ size | refused, as is one with more than eight million
+ | dots, a cut off or damaged one, or an
+ | interlaced one; the message shows which.
+Typesetting... | The equation viewer while the job runs.
+.end
+.h2 What the programs write at start [msg-start]
+.ix Messages, start
+.ix Interactive terminal, needed
+.ix Standard error, start messages
+These are the messages of a program that cannot begin, written on the standard
+error.
+.table 33 27
+Message | Meaning and what to do
+<Document Manager> needs an interactive terminal (or an X display with the x11
+ build) | There is no terminal and no display.  Start it in a terminal.
+<Editor> needs an interactive terminal (or an X display with the x11 build)
+ | The same.
+FILE: cannot open file | The document is not a file or
+ | cannot be opened.
+FILE: damaged document: a piece of text has no end | The file is damaged: it
+ is cut short.
+FILE: read error | The file could not be read through.
+FILE: The file is not a document of this software. | The file is a text file
+ or another kind of file.
+FILE: The file is version N.  This software reads up to version 3. | The file
+ was written by a newer version of the software.
+FILE: The file version is N.  This software reads versions 2 to 3. | The
+ version of the file is below the oldest that is read, or it is damaged.
+.end
+.table 26 34
+Message | Meaning
+latex: out of memory | Memory ran out while the document was prepared for
+ | typesetting.
+out of memory | The program ran out of memory while reading a document.
+too many markers | The document has more markers than the program can hold.
+.end
+.h3 Settings and the files of the user [msg-start-config]
+.ix Settings, write messages
+.ix Config file, messages
+The file of settings, the list of fonts and the personal dictionary are written
+the same way ({n:appcfg-write-errors}).  The two ways have one different
+wording: the settings (Setup, Options) say that a directory is not yours in the
+form {c:DIR is not a directory of yours}, and the writes of the other files say
+{c:Not a directory of yours: DIR}.
+.table 33 27
+Message | Meaning
+Cannot make DIR: REASON | The directory of the settings cannot be made.
+Cannot write FILE: REASON | The file cannot be written.
+DIR is not a directory of yours | The directory is a link, a file, or belongs
+ | to another user (the settings).
+Not a directory of yours: DIR | The same, in the form of the list of fonts and
+ | the dictionary.
+There is no home directory | No STRATA_HOME and no HOME.
+.end

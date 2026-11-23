@@ -1,0 +1,25 @@
+
+------------------------------------ Search ------------------------------------
+
+Search (F9) looks through the current document for a character or string of 
+characters.
+
+                                        +--------------- Search ---------------+
+--Procedure---------------------------  |                                      |
+                                        | Search String:                       |
+ Press Search (F9).                    |                                      |
+ Complete the Search panel.            |     Direction:                       |
+ Press Ins to search for the first     |                                      |
+  occurrence of the search string.      |------------ Search Options ----------|
+ Press Search and Ins again to search  |                                      |
+  for the next occurrence.              | Match Lowercase With:                |
+                                        |           Attributes:                |
+--------------------------------------  |  Match Complete Word?                |
+                                        |                                      |
+                                        +--------- Press Ins to Begin ---------+
+
+# A message is displayed if a matching string is not located. Press any key to
+  return to the document.
+
+--------------------------------------------------------------------------------
+              Replace         Keyboard Summary          Help Index

@@ -1,0 +1,25 @@
+
+----------------------------------- Format Section -----------------------------
+
+Format (F6) Section assigns settings to the highlighted sections. Use Menu (F10)
+Global Format or Global Page to assign settings to all sections in a document.
+
+
+                                     +--------- Current Section Format -------+
+Most of the local section formats    | Keep Section on One Page?              |
+affect only the highlighted          | First Block Type:                      |
+section(s).  However,                | Print:                                 |
+                                     | Include in Table of Contents:          |
+# changes to the section tag         |----------------------------------------|
+  continue to new sections at the    | Section Tag:                           |
+  same level                         | Starting Value:                        |
+                                     | Page Number Tag:                       |
+# changes to the page number tag     | Starting Value:                        |
+  contine to the current section's   |----------------------------------------|
+  subsections, but not to subsequent | Spacing to Subsection:                 |
+  sections                           | Spacing to Peer Section:               |
+                                     +-- Press Ins to Use Displayed Settings -+
+
+--------------------------------------------------------------------------------
+    Global Format-Structured      Global Page      Highlighting      Format
+                 Keyboard Summary                      Help Index

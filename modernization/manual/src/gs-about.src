@@ -1,0 +1,98 @@
+# Getting Started, part 3: what Strata is.  The terms are defined before they
+# are used: the two kinds of documents first, then the outline.
+.h1 About Strata [about]
+Strata is a technical document processing system for writing long documents,
+such as reports, proposals and manuals.  The hands stay on the keyboard, the
+shape of a long document stays in order, and the pages are set through LaTeX,
+so that they come out well made.
+.h2 Two kinds of documents [kinds]
+A document is one of two kinds.  You choose the kind when you make the
+document.
+.h3 Unstructured documents [kind-flat]
+An unstructured document is text in {b:blocks}.  A block is what you know as a
+paragraph: text that ends with the {k:Enter} key.  A block can also have several
+{b:columns}; a block of several columns is a table.  Letters, memos and lists
+are unstructured documents.  The blocks follow each other in a row, and that
+is all that there is to say about the shape of the document.
+.h3 Structured documents [kind-outline]
+A structured document is for the big ideas that need an outline.  Its text is
+divided into {b:sections}.  A section has a headline, which is its first block,
+then more blocks of text, and then sections of its own below it.  So a
+structured document is a tree of sections: an outline, like the contents of a
+book.  Each section has a number that comes from its place in the tree, and the
+numbers change by themselves when you add, move or take away a section.
+.h3 How the outline works [outline]
+You can fold a structured document up, to see only its shape, and open it again
+to read and write. {k:Alt-1} shows the headlines of the first level and nothing
+below them; {k:Alt-2} opens the second level too, and so on to {k:Alt-9}. The
+keypad keys {k:Keypad +}, {k:Keypad -} and {k:Keypad *} open and fold sections.
+Other commands add a section next to the one that you are in or below it, join
+two sections, and move a section in the outline. The Tutorial shows each of
+them.
+.h3 Which to choose [kind-choose]
+Use an unstructured document for anything that is a few pages of text.  Use a
+structured document for anything long that you want to find your way around.
+A document made unstructured can be turned into a structured one later, with
+{b:Edit}, {b:Structured}: the whole text becomes one section.  A structured
+document can be turned back only while it is still one section with no sections
+below it, with {b:Edit}, {b:Unstructured}.  So choose with care when you start.
+.h2 Strata is not WYSIWYG [wysiwyg]
+Strata does not show the page as it will be printed while you type, and that
+is a deliberate choice.  A program that has to draw every page while you type
+is slower, and the time spent waiting comes out of the time to write.  The
+text and its outline are shown, and the screen keeps up with your fingers.  The
+window version shows equations, pictures and keycaps in the text as images, but
+they are static images that give an idea of how the text will look.
+The layout of the finished pages is seen in either of two ways.  {b:Preview}
+shows the real pages in a window of the Viewer.  {b:Print} to a PDF file makes
+the real pages as a file, which is then opened in a PDF viewer.  Both typeset
+the document with LaTeX, so both show the same pages.  Most of the time Preview
+is the better choice, for these reasons:
+- Preview writes no file that has to be named, kept or replaced.  Print to a
+  PDF file writes the file named in its Output File field.
+- The pages appear in the Viewer as soon as they are typeset.  A PDF file has
+  to be opened in a PDF viewer first.
+- Preview can show only the block or the section that holds the cursor, so a
+  single change is checked without typesetting the whole document.
+- Closing the Viewer ({k:Q} or {k:Esc}) returns to the Editor at once, so the
+  cycle of changing the text and looking at the page is short.
+
+Print is the way to get the final PDF file, or the pages on paper.
+.h2 Who Strata is for [who]
+Strata is for people who do serious work with their hands on the keyboard:
+writers, engineers and editors who produce long documents and want to stay on
+the home row while they do it.  Everything that Strata does is reached by a key.
+A command has a key, or a short path of menu keys, a panel is filled in by
+typing, and nothing is hidden behind a button that has to be found and clicked.
+The price is that you learn the keys.  The Tutorial teaches them in short
+sessions, and the Key Reference puts them on one sheet of paper to pin up by
+your desk until you no longer need to look.
+.h2 The documentation [books]
+Strata comes with all of its documentation, and the documentation is in the
+file format of Strata itself.  Few document processing systems ship every manual
+as a document of their own, which you can open in the program, and read as a
+blueprint of how to use it.  The documents of the set are:
+- {b:Getting Started}, this document, is the guide that takes you from the
+  system that Strata needs, through the install, to your first document, and
+  teaches Strata in short sessions with documents that you type and keep.
+- {b:The Reference Manual} is a real reference manual.  It is not a help file
+  and it is not a web search: it describes every menu, every marker and every
+  file, and how the program really works.
+- {b:The Key Reference} is a leaflet of the keys, to print and to fold in
+  three.
+- {b:The Math Symbols card} is a sheet of every symbol that an equation can
+  have, to print on both sides and to fold in three.
+
+All of these documents are written using what Strata can do: sections, keycaps
+such as {k:F12}, pictures, tables, footnotes{fn:A footnote is a marker that
+holds text. Strata prints it at the foot of the page.} and equations such as
+{eq:\sum_{{k=1}}^{{n}} k = \frac{{n(n+1)}}{{2}}}. Open them in Strata to see
+how they are made: each one is a working example of the features that it
+describes.
+.h2 How the books show keys [conventions]
+A key is shown in a box, like a key of the keyboard: {k:Enter}, {k:Ctrl-S},
+{k:Alt-F12}.  A name with a hyphen means that you press and hold the first key,
+and press the second.  The names of menus and panels are in bold, such as
+{b:Print} and {b:Save Entire Document}; the names of files, commands and
+settings are in the program font, such as {c:memo.doc} and {c:config}.  A line
+set apart in the program font is something to type, as it stands.

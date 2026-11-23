@@ -1,0 +1,17 @@
+# The tri-fold card of the TeX math symbols: landscape, one sheet of two
+# sides, three panels on each side (six panels).  The symbols are in the
+# list that the last line names, which the generator turns into the panels;
+# the first side is the outside of the sheet and its last panel is the cover.
+.doc Strata Math Symbols
+.landscape
+# The margins are 0.2 inch on all four sides (the sheet is turned, so the
+# right margin of the sheet is the top margin of the page).  The panels of
+# the first two columns have the widths 33 and 35 cells, which put the rules
+# between the panels at a third and two thirds of the sheet; the last panel
+# takes what is left.
+.margins 0.2 0.2 0.2 0.2
+.keyscale 0.7
+.numbering off
+.linespace 1.0
+.h1 Strata math symbols
+.mathsyms mathsyms.txt

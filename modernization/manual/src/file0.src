@@ -1,0 +1,490 @@
+# Chapter 2, part 0: types, working directory, names, checklists, panels.
+.h2 File types [file-types]
+.ix Document file
+.ix Template file
+.ix Backup file
+.ix Extension of a file
+.ix .DOC
+.ix .SET
+.ix .BAK
+.ix Types of file
+.ix File extension
+The Editor works on three types of file.  All have the Strata document
+format (settings followed by text).  The extension of the name and the way a file is made tell
+them apart.
+.table 10 50
+Type | What it is
+Document | A file with the extension {c:.doc}.  It holds the text of the
+ | document (the body) and all the settings of the document (the header):
+ | the global formats, the page layouts, the fonts, the marker formats, the
+ | description, the author and the revision.  It is what Save writes.
+Template | A file with the extension {c:.set}.  A template is a document that
+ | is kept as the pattern for other documents.  It has the settings of a
+ | document and, optionally, a starting text.  The New command copies a
+ | template; Save with the option Save Global Settings Only makes one.
+Backup | A file whose extension is {c:.bak} and a number, such as
+ | {c:report.bak01}, in the directory {c:.backup} next to the document.  It is a
+ | copy of a document as it was before a Save, kept as many as Backups Kept
+ | says.  It can be restored with Restore Backup, or retrieved like any other
+ | file.  A file of an older version that is loaded also has a special
+ | backup beside it, such as {c:V2-report.doc}; see {n:file-backup-special}.
+.end
+Two kinds of file that are not documents are written and read by other
+menus: a library of cut text (extension {c:.lib}, the Library commands of
+the Tools menu) and a set of macros (extension {c:.mac}, the Macros commands
+of the Tools menu).  The File commands do not offer them in their checklists.
+.note The extension is a convention and not a type.  The type of a file is taken from its content, whatever its name is.  A name such as
+  {c:letter.txt} can be saved and retrieved; only the checklists of Save,
+  Retrieve and New, which show the files whose names end with the usual
+  extensions, do not list it.  The checklists of Delete, Import and Export
+  show every file; or type the name in full.
+.h3 Document files [file-types-doc]
+.ix Document file, content
+A document file holds the settings of the document and its text: sections,
+blocks and columns.  It also holds the version of the file format
+({n:file-versions}).
+.h3 Template files [file-types-set]
+.ix Template file, content
+A template is a full document.  The part of it that matters most is its
+settings, because a document that is made from the template takes its global
+formats, its page layouts, its fonts and its marker settings from there.
+The text of a template is the starting text of the new document, and a
+template with no text at all, as Save Global Settings Only makes it, gives a
+document that is empty.  The extension {c:.set} is added by Save only when the
+option Save Global Settings Only is chosen and the name has no extension.
+.h3 Backup files [file-types-bak]
+.ix Backup file, content
+A backup file is an exact copy of the file that Save replaced.  {X:file-backup} says when it is made and how to use it.  A backup is
+distinguished from a document only by its name: a backup that is retrieved
+with Retrieve Entire Document becomes the current document under the name of
+the backup, so that the next Save writes to the backup file.
+.h2 File versions [file-versions]
+.ix File versions
+.ix Version, file format
+.ix File format version
+.ix Format version of a file
+.ix Older version of a file
+.ix Unsupported format
+.ix Newer version of a file
+Every document, template, library file and macro file carries the version of
+its file format.  The version is a whole number: the number that follows the
+letter R in the first line of the file, as in {c:*R3}.  The current version is
+{b:3}.  A file whose first line is {c:*R2} has the older format that was in
+use before Strata, version 2, and is read as it is.  The version of a file
+is not the version of the program that wrote it: a document that was made
+with any build of the programs has the version of the format that the
+build writes.
+.h3 What the programs do with a version [file-versions-rule]
+.ix File versions, reading and writing
+.ix File versions, saving an older file
+Every program that reads or writes these files reads the current version and
+all older versions, and writes only the current version.  So a file of
+version 2 is read, and the next Save writes it as version 3.  No program
+lowers the version of a file, because a file that was written in a newer
+version can hold what an older version cannot keep.
+.table 24 36
+Version of the file | What is done
+2 | The file is read.  It is written as version 3 when it is saved.
+3 | The file is read and written.
+Above 3 | The file is not read: see {x:file-versions-errors}.
+Below 2, or not a number | The file is not read: see
+ | {x:file-versions-errors}.
+.end
+An older file that is loaded keeps its version on the disk until it is saved;
+before that happens a special backup preserves it ({n:file-backup-special}).
+.h3 The errors [file-versions-errors]
+.ix File versions, errors
+.ix Software too old for a file
+.ix Not a document of this software
+Each program that reads a document reports these errors: the Editor when it
+loads a document, a template or a file named in a panel, the Document
+Manager in Compare Document Versions and in Restore Backup, and the Printer
+when it prints a document.  A file that gives one of them is not changed.
+.table 30 30
+Message | Meaning and what to do
+"The file is version 4.  This | The file was written by newer software
+ software reads up to version 3." | than this.  The file is not usable
+ | here.  Use a newer version of the
+ | software.
+"The file version is 1.  This | The version is below 2, or it is
+ software reads versions 2 to 3." | damaged (not a number, negative or
+ | empty); the message names the value.
+ | The format is not supported and the
+ | file is not usable by this software.
+"The file is not a document of this | The first line of the file is not
+ software." | {c:*R} and a number: the file is a text
+ | file, a file of another program or a
+ | file that is not complete.  It is not
+ | a document, and it is not usable here.
+.end
+.h3 The version of the software [file-versions-software]
+.ix File versions, --version
+.ix --version, file format
+.ix Release, file format version
+The option {c:--version} of the programs writes the version of the program
+and, after it, the version of the file format that the software writes, such
+as {c:file format 3}.  The notes of a release list the same number.  Two
+releases with the same file format version write files that each of them
+reads; software of a lower version cannot read the files of a higher one.
+.h2 Working directory [file-workdir]
+.ix Working Directory
+.ix Directory, working
+.ix Current directory
+.ix Working directory, shared
+.ix Directory checklist
+Every panel of the File menu begins with the field {b:Working Directory}.
+It names the directory in which the file of the panel is looked for or
+made.  A name that is typed in the next field without a directory is placed
+in the working directory; a name that begins with a slash is taken as it is,
+and the working directory is then not used.
+.h3 How it begins and how it changes [file-workdir-rules]
+.ix Working Directory, initial value
+.ix Working Directory, shared by panels
+The working directory is one value that all the panels share.  The rules are
+these.
+.table 24 36
+Situation | Working Directory
+The first File panel of the session | The directory part of the name of the
+ | document, if the name was given with a
+ | slash (the name {c:notes/plan.doc} gives
+ | {c:notes}); otherwise the directory in which
+ | the program was started.
+A panel accepted with {k:Ins} | The value of the field becomes the new
+ | working directory for all the panels,
+ | even if the command then fails.
+A panel canceled with {k:Esc} | The working directory is not changed.
+A checklist of files | Choosing a file in another directory also
+ | changes the Working Directory field of
+ | the panel (see {n:file-checklist}).
+The Macro and Library commands of the | They show the same working directory and
+ Tools menu | change it in the same way.
+.end
+.caution The field is not checked when the cursor leaves it.  A directory that
+  does not exist is accepted, and the command that follows fails with a
+  message of its own: "cannot write file" for Save, "cannot open file" for
+  Retrieve, "Cannot find the file" for Delete.  The directory remains the
+  working directory after the failure.  A tilde is not expanded: {c:~/work}
+  names a directory called {c:~} in the current place, not the home
+  directory.
+.h3 Working directory and the Document Manager [file-workdir-docmgr]
+.ix Setup, working directory
+The Document Manager has a Working Directory of its own on its
+Edit / Preview / Print Document panel and in its Setup panel (the field
+Initial Working Directory, the setting {c:workdir} of the file
+{c:~/.strata/config}).  When the Editor is started, the full name of the
+document is given, and the Editor takes the directory part of the name for the
+first File panel as the table above says.  A change of the working directory
+inside the Editor does not change the one of the Document Manager.
+.h2 File names [file-names]
+.ix File names, rules
+.ix Extension, default
+.ix Names with spaces
+.ix Long file names
+.ix Case of letters in file names
+Strata accepts every file name that the system accepts.  No extension is
+required.  A name can contain spaces, dots and punctuation, but a name with a
+slash is read as a path.  The field in a panel holds up to 511 characters.
+.h3 Extensions that the commands add [file-names-ext]
+.ix Default extension
+.ix Extension added by Save
+.ix Extension added by Retrieve
+A command adds an extension when the last part of the name (after the last
+slash) has no dot in it, or has a dot only as its first character, as
+{c:.notes} has.  A name that has a dot anywhere else, even at its end, is left
+exactly as it is, and a name may have several dots: the last one starts the
+extension.
+.table 18 12 29
+Command and field | Adds | Rule
+Save, Document Name | {c:.doc} | {c:.set} instead if the option is Save
+ | {c:.set} | Global Settings Only.
+Retrieve, Document Name | {c:.doc} | Only if the name as typed is not a
+ | | file: {c:report} is tried as {c:report}
+ | | and then as {c:report.doc}.  A name
+ | | with dots, such as {c:notes v1.2}, is
+ | | tried with {c:.doc} added as well.
+New, Document Name | {c:.doc} | Always, when there is no dot.
+New, Template | nothing | The name is looked for as typed.
+Delete, File Name | nothing | The name must be complete.
+Import, ASCII File Name | nothing | The name must be complete.
+Export, ASCII File Name | nothing | The name must be complete.
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: the Editor started by hand with a name adds nothing to it: the
+name {c:report} makes a new document called {c:report}.
+.endif
+.note Delete does not add {c:.doc}.  For the name {c:report} it shows "Cannot
+  find the file" even though {c:report.doc} exists.  Type the full name or
+  choose it from the checklist.
+.h3 Case of letters [file-names-case]
+.ix Upper and lower case in names
+.ix File name, case
+The file system of the machine determines whether {c:Memo.doc} and {c:memo.doc}
+are the same name; on Linux they are two files.  Strata adds to this only two
+things.  The name of a template is looked for without regard to the case of
+its letters, so that {c:default.set} finds {c:DEFAULT.SET}
+({n:file-templates-path}).  And the filters of the checklists and the test for a
+backup compare the extension without regard to case, so that a file called
+{c:LETTER.DOC} is listed with the documents and gets backups called
+{c:LETTER.BAK01} and so on, in the directory {c:.backup}.
+.h3 Long names and backups [file-names-long]
+.ix Long file names, limit
+.ix Backups of a long name
+.ix File name, longest
+The system does not accept a name of a file that is longer than 255 letters
+of the English alphabet, and a letter outside that alphabet counts as two or
+three of them.  Strata allows the whole length.  The name of a backup is the
+name of the document with {c:.bak01} to {c:.bak99} in place of {c:.doc} (or
+after the name, when it does not end in {c:.doc}), so a document whose name
+leaves less than six places of room has no backups.  Save accepts such
+a document: it is saved, and the message line shows that no backup was made
+because the name is too long for a backup.  A name that is longer than the
+system allows is refused by Save and by New with the message of the system, and
+an output name of more than 255 is rejected by the Printer in the same way.  To
+have
+backups, keep the name, with its extension, to 249 or fewer.
+.h3 Letters outside the English alphabet [file-names-utf8]
+.ix UTF-8 in file names
+.ix Accented letters in file names
+.ix Japanese file names
+A name of a file may have any letter that the system accepts.  The field of a
+panel that holds a name takes a letter that the keyboard gives, moves over it
+as one character, and Backspace and Del remove it whole.  The screen of the
+Editor has the characters of the document format, so a letter that is not in
+that set (a Chinese or Japanese character, for example) is shown as a question
+mark in the lists, the fields and the message line; the file is still found, and
+choosing it from a checklist opens that file.  A name that is typed can have
+only the letters that the keyboard gives and the screen can show, and a name
+inside a document (the file of a Picture or an Include marker) is written in
+the characters of the document format, so a file with a name that has
+characters outside that set is named in a document only by a document that was
+made with that name in it.  The marker Filename prints the letters of the
+format that the name has, and a question mark for the others.
+.h3 How a long name is shown [file-names-shown]
+.ix Long name, how it is shown
+.ix Name shortened on the screen
+A name that is wider than the room that a line or a list has is shown by its
+end, after three dots: {c:...long-name.doc}, because the end of a name and its
+extension tell one document from another.  The status line of the Editor
+keeps the fields after the name where they are, the message line shortens the
+first long name or path in a message, and the lists of names (the checklists,
+the list of the documents of a directory) show the end of an entry that is
+wider than the list.  A name is never changed on the disk by being shown short.
+.h3 Names that look like commands [file-names-signs]
+.ix Shell characters in names
+.ix Quotes, in file names
+.ix Special characters in file names
+A name may have spaces, quotes, semicolons, ampersands, dollar signs and
+other signs that a command line gives a meaning to.  Strata hands a name to
+another program as one piece, never as a line of text for a command
+interpreter, so a name such as {c:x; touch y.doc} is a name and nothing
+else.  The signs that TeX reads in its own way (percent, hash, dollar,
+ampersand, underscore, tilde and caret) are written so that the Printer prints
+them as they are, in the text and in the name of a Picture; a name with a brace
+or a backslash is refused for a Picture in a file that is written for TeX and
+kept in its place ({n:print-export-latex}), and is accepted when the pictures are
+copied.
+.h3 Directories in a name [file-names-path]
+.ix Path in a file name
+.ix Absolute path
+.ix Relative path
+A name with a slash is a path.  If it begins with a slash it is absolute and
+the Working Directory field is ignored for that panel (it is still saved as
+the working directory).  Otherwise the path is placed under the working
+directory: with the working directory {c:/home/ann/work}, the name
+{c:drafts/plan.doc} is the file {c:/home/ann/work/drafts/plan.doc}.  The
+directory in a path must exist; Save does not make directories.
+.h2 Directory and file checklists [file-checklist]
+.ix Checklist
+.ix F2, checklist
+.ix Keypad +, checklist
+.ix Alt-+, checklist
+.ix Directory list
+.ix File list
+.ix Use this directory
+.ix Selecting a file
+.ix Selecting a directory
+A checklist is a list of the directories or of the files of a directory;
+choosing an entry replaces typing the name.
+.h3 How to ask for a checklist [file-checklist-ask]
+.ix Checklist, key
+Put the cursor on a text field that has a checklist and press {k:F2}, or the
+key {k:Keypad +} in the X11 version, or {k:Alt-+} in the terminal version
+(the same key as {k:Keypad +}).  The text
+fields that have one are the Working Directory field (a list of directories)
+and the fields that hold a file name: Document Name, Template, File Name and
+ASCII File Name (a list of files).  The fields Description, Author and
+Revision have no checklist, and the keys do nothing there.  On a field with
+a choice of values (Options, Character Set, Scope) the same keys open the
+list of the values, so that {k:F2} always shows the possibilities.  In a
+list, {k:Ins} or {k:Enter} takes the entry that is
+chosen and {k:Esc} closes the list without a choice; the border of the list
+reports this.
+.pic pictures/file-checklist-files.png 5 The checklist of files of the Retrieve panel.
+.h3 What the lists show [file-checklist-lists]
+.ix Checklist of files, contents
+.ix Checklist of directories, contents
+.ix Hidden files in a checklist
+The checklist is a box with the directory as its title; a directory with a
+long name is shown by its end, with three dots in front.  It is a menu that
+scrolls.
+.table 19 41
+List | Contents, in this order
+Directories (Working Directory) | The entry {c:[Use this directory]}; the
+ | entry {c:../} (not at the root of the file
+ | system); the subdirectories, each with a
+ | slash after the name.
+Files (a name field) | The entry {c:../}; the subdirectories, each with
+ | a slash after the name; the files whose names
+ | end with the extensions of the panel.
+.end
+Each group is sorted so that names that begin with a capital letter come
+before those that begin with a small one.  The files whose names begin with a
+dot are listed, like all others.  A directory that cannot be read gives the box
+"Directory" with the message "Cannot read the directory".
+.pic pictures/file-checklist-dirs.png 5 The checklist of directories of the Retrieve panel.
+.h3 Which files each panel shows [file-checklist-filters]
+.ix Checklist filter
+.ix Wildcards in checklists
+The files that a panel lists are chosen by the end of the name, without regard
+to case.  The choice belongs to the panel and is as the table shows.
+.table 31 29
+Field | Shown
+Save, Document Name | {c:.doc}, {c:.set} and {c:.bak}
+Retrieve, Document Name | {c:.doc}, {c:.set} and {c:.bak}
+New, Document Name | {c:.doc}
+New, Template | {c:.set}
+Delete, File Name | every file
+Import, ASCII File Name | every file
+Export, ASCII File Name | every file
+.end
+To see a file with some other ending, for instance a text file to retrieve,
+type its whole name, or use Import, Export or Delete whose lists show every
+file.
+.h3 Keys in a checklist [file-checklist-keys]
+.ix Checklist, keys
+.ix Menu of choices, keys
+The checklist is the same kind of menu that the Editor uses everywhere for a
+choice from a list.
+.table 17 43
+Key | Effect
+{k:Up}, {k:Down} | Move the highlight one entry.
+{k:Home}, {k:End} | The first and the last entry.
+{k:PgUp}, {k:PgDn} | Move by a page of the box.
+{k:Enter} | Choose the highlighted entry.
+{k:Esc} | Close the list and change nothing.
+A letter or digit | Move to the next entry that begins with that character
+ | (capitals and small letters are the same).  In a list of
+ | twelve entries or fewer the entry is chosen at once; in a
+ | longer list press {k:Enter} to choose it.
+.end
+Choosing {c:../} or a name that ends with a slash moves into that directory
+and shows its list; the list stays open.  Choosing {c:[Use this directory]}
+or a file closes it.  What goes into the panel depends on what was chosen.
+.table 26 34
+Chosen | Effect on the panel
+A directory, in the Working Directory field | The field takes the full path
+ | of the directory, with links
+ | followed.
+A file, in a name field | The name field takes the bare
+ | name of the file, and the
+ | Working Directory field takes the
+ | directory in which it was found.
+{k:Esc} | Both fields are left as they were.
+.end
+.note The directory list shows the directories only, and its entry
+  {c:[Use this directory]} is the way to accept the one you are in.  Entering a
+  directory is not the same as choosing it: nothing is put in the field until
+  you choose {c:[Use this directory]}.
+.h2 The File panels: keys and rules [file-panels]
+.ix Panel keys
+.ix Ins accepts a panel
+.ix Esc cancels a panel
+.ix Fields of a panel
+.ix Text field, editing
+.ix Choice field
+.ix Replacing the text of a field
+All six commands of the menu show a panel: a box with a title, a column of
+fields, and at the bottom edge the words "Ins accepts, Esc cancels".  The
+keys are the same for all of them, and this section is their one description.
+.pic pictures/file-save.png 5 The Save File panel.
+.h3 Moving and accepting [file-panels-move]
+.ix Next field
+.ix Previous field
+.table 19 41
+Key | Effect
+{k:Enter}, {k:Down}, {k:Tab} | Go to the next field.  On the last field
+ | nothing happens: {k:Enter} does not accept
+ | the panel.
+{k:Up}, {k:Shift-Tab} | Go to the previous field.  On the first field
+ | nothing happens.
+{k:Ins} | Accept the panel: the program checks the fields and,
+ | if they are valid, does the command.
+{k:Esc} | Cancel the panel at once.  No field is kept, no
+ | file is touched and the document is not changed.
+.end
+.h3 A text field [file-panels-text]
+.ix Text field
+.ix First key replaces the text
+.ix Home, End in a field
+When the cursor arrives in a text field the whole text of the field is shown
+highlighted.  The first key that you type replaces it, so that to type a new
+name you only start typing; the first press of {k:Backspace} or {k:Del} empties the
+field.  To keep the text and edit it, press {k:Left}, {k:Right}, {k:Home} or
+{k:End} first: the highlight goes and the keys edit the text.
+.table 19 41
+Key | Effect in a text field
+A printable character | Insert it at the cursor (replace the text, if it
+ | is the first key).
+{k:Left}, {k:Right} | Move the cursor one character.
+{k:Home}, {k:End} | The start and the end of the text.
+{k:Backspace} | Delete the character before the cursor.
+{k:Del} | Delete the character under the cursor.
+{k:F2}, {k:Keypad +} | Open the checklist, if the field has one.
+.end
+A field holds at most 511 characters.  The panel does not scroll the fields
+sideways until the text is longer than the box: then the end of the text is
+shown.
+.h3 A field with choices [file-panels-choice]
+.ix Choice field
+.ix Options field
+.ix Space bar in a choice field
+A field that offers a few values (Options, Character Set, Scope) shows the
+chosen value in square brackets.  The values are changed in three ways.
+.table 13 47
+Key | Effect in a choice field
+{k:Right} | The next value; on the last value nothing happens.
+{k:Left} | The previous value; on the first value nothing happens.
+{k:Space} | The next value, and the first one after the last (the
+ | values go round).
+{k:F2}, {k:Keypad +} | A list of all the values, from which {k:Enter}
+ | chooses one and {k:Esc} leaves the value as it was.
+.end
+.h3 Panels that refuse a value [file-panels-check]
+.ix Panel validation
+.ix No file name specified
+.ix Not a valid revision number
+When {k:Ins} is pressed the panel checks its fields.  If a value is not
+acceptable a small message box opens, with the title of the panel and the reason,
+and the panel stays open with its fields as you left them; press any key to
+go on.
+.table 31 29
+Message | Cause
+No file name specified | The name field is empty (Save,
+ | Retrieve, New, Delete, Import
+ | and Export).
+Not a valid revision number | The Revision of Save or New is not
+ | digits with at most three decimals.
+.end
+.h3 Questions and messages [file-panels-yn]
+.ix Yes or No question
+.ix Press any key
+.ix Overwrite old version on disk
+.ix Message line
+Two other kinds of box appear in the File commands.  A question has the
+question as its title and two entries, Yes and No; the highlight starts on
+Yes, so that {k:Enter} answers Yes.  Press {k:Y} or {k:N} to answer at once, or
+{k:Esc} to answer No.  A message box has a title, one line of text and the
+words "Press any key": any key closes it.  After a command has done its work
+the Editor writes one line on the message line, above the status line, for
+example "Saved" followed by the full name of the file.  It stays until the
+next key.

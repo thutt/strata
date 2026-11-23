@@ -1,0 +1,25 @@
+.doc Boxes and pictures in sublevels probe
+.numbering on
+.h1 Level one
+Text of level one, a paragraph long enough to show where the left margin of this level is.
+
+.note A boxed note in level one.
+
+.pic probe.png 2 Picture in level one [pic1]
+
+.h2 Level two
+Text of level two, a paragraph long enough to show where the left margin of this level is.
+
+.note A boxed note in level two.
+
+.pic probe.png 2 Picture in level two [pic2]
+
+.h3 Level three
+Text of level three, a paragraph long enough to show where the left margin of this level is.
+
+.note A boxed note in level three.
+
+.pic probe.png 2 Picture in level three [pic3]
+
+.h1 Level one again
+Text of the second section of level one.

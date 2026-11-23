@@ -1,0 +1,25 @@
+
+---------------------------------- Copy to Library -----------------------------
+
+Use Lib Copy (Ctrl F3) to copy a region of a document to a new library entry.
+
+---Procedure--------------------------------------------------------------------
+
+ Make sure that you are at the          +--------- Copy to Library -------+
+  start or end of the area to copy.      |                                 |
+                                         |  Entry name:                    |
+ Press Lib Copy.                        |  Description:                   |
+                                         |  Include in Library?            |
+ Select the type of area to copy        |                                 |
+  (text, column, block, or section)      +---- Press Ins to Create Entry --+
+  and highlight the region to copy.
+
+ Enter a name for the entry and a description if desired.
+
+ Set Include in Library to Yes to include the new entry in the current library.
+
+ Press Ins to create the entry.
+--------------------------------------------------------------------------------
+# Use Lib Paste (Ctrl F5) to paste a library entry into a document.
+--------------------------------------------------------------------------------
+Library Overview    Lib Paste    Highlighting    Keyboard Summary    Help Index

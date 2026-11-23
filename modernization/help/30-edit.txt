@@ -1,0 +1,295 @@
+; Editing: copy, cut, paste, delete, append, split, join, search, go to.
+= Copy Cut and Paste
+~ Copy
+~ Cut
+~ Paste
+~ Move
+{F3} copies, {F4} cuts and {F5} pastes.  {F7} moves: it cuts, and the next
+{F5} puts the text in its new place.
+
+After {F3} or {F4} choose what to work on, a unit of Text, a Column, a Block
+or a Section (see [[Units of Text]]).  Move the cursor to highlight it and
+press {Enter}.  {Esc} cancels.  The cut or copied text is kept; {F5} puts it in
+front of the cursor, and can be used again and again.
+
+- {Ctrl-X} cuts text, {Ctrl-K} cuts the block that holds the cursor, and
+  {Ctrl-L} cuts the section.
+- {Ctrl-F3}, {Ctrl-F4} and {Ctrl-F5} do the same with the [[Library]], which
+  keeps named entries.
+
+See [[Delete]], [[Search]].
+
+= Border
+~ Border Layout
+Alt-F8 puts lines around columns and blocks.  Highlight the column or columns
+with the cursor keys and press {Enter}; the panel Border Layout opens.  All,
+Outside, Top, Left, Inside, Right and Bottom are None, Single, Double or
+Wide; All is every border, Outside the four outer sides, Inside the lines
+between columns.  Top Gutter and Bottom Gutter are inches with up to three
+decimals, Connect Borders? is Yes or No and Shading is a percent.  Ins uses the
+settings that you changed, Shift-Ins every setting.
+The highlight can cover several columns and several rows (blocks): the
+cursor keys extend it as a rectangle, and the settings go to every column
+in it.  Where the columns differ, a field shows n/a (or is empty) and
+changes nothing.  Do a row, then the rows below it, to give a table
+different borders; a line that two neighbours share is drawn once, and
+the stronger one is the one that shows.  The screen shows the
+borders at once, and the Printer draws them with closed corners and junctions,
+the gutters, the shading and the spacing of Connect Borders.  Undo takes them
+away.  See [[Print]].
+
+= Math
+~ Math of
+Ctrl-F2 calculates the numbers in a part of the document.  Choose what to
+calculate, a Text, a Column, a Block or a Section (see [[Units of Text]]),
+highlight it with the cursor keys and press {Enter}.  The result is on the
+clipboard: Paste (F5) puts it in the text, before you cut or copy anything
+else.  The message line shows Result: and the number.  The numbers are added
+when no operator is between them; the operators are () ^ - * / + -, % divides by
+100, e or E gives a power of ten, other characters are ignored.  The period is
+the decimal point.  A division by zero is refused.  The document is not
+changed.  See [[Case]].
+
+= Case
+~ Case of
+Ctrl-F6 changes the case of letters.  A box prompts for Upper (every letter a
+capital), Lower (every letter a small letter) or Capitalize (the first letter
+of each word a capital, the others small).  Then choose what to change, a Text,
+a Column, a Block or a Section (see [[Units of Text]]), highlight it with the
+cursor keys and press {Enter}.  {Esc} cancels.  With Text and nothing
+highlighted, {Enter} changes the word under the cursor.
+
+Only letters change. The letters with an accent that the character set has in
+two cases change; the others, and the German sharp s, stay. {Ctrl-/} takes the
+change back as one step. See [[Copy Cut and Paste]].
+
+= Delete
+~ Delete (Alt-F4)
+Alt-F4 deletes text, a column, a block or a section after you highlight it.  To
+remove less, use a key:
+
+- {Del} removes the character at the cursor, and {Backspace} the one before it.
+- {Ctrl-D} removes the rest of the word, and {Alt-Backspace} the word before the
+  cursor.
+- {Ctrl-K} removes the block that holds the cursor, {Ctrl-L} the section.
+
+At the end of the last line of a block, {Del} joins the next block to it.
+See [[Copy Cut and Paste]], [[Join]].
+
+= Append
+~ Append (Alt-F2)
+Append adds something after the cursor.  {Alt-F2} opens the list:
+
+- Column: a new column in the block.
+- Block: a new block after this one, with the format of this block ({Ctrl-A}).
+- Global-block: a new block with the global format ({Ctrl-O}).
+- Peer-section: a new section at the same level.
+- Sub-section: a new section below this one.
+
+The last two are for a structured document.  {Ins} also starts a new section.
+See [[Split]], [[Join]].
+
+= Split
+~ Split (F2)
+{F2} splits at the cursor.  The list offers Column, Block and, in a structured
+document, Section.  {Ctrl-V} splits the block and {Ctrl-Y} splits the section.
+See [[Append]], [[Join]].
+
+= Join
+~ Join (Alt-F3)
+{Alt-F3} joins what is split: Block puts the next block after the text of this
+one, and Section (in a structured document) joins the next section.  If nothing
+can be joined the message line shows so.  See [[Split]], [[Delete]].
+
+= Overtype
+~ Overtype (Alt-F5)
+{Alt-F5} turns Overtype on or off.  With Overtype on, what you type replaces
+the characters under the cursor instead of pushing them to the right.  The
+status line shows OVR while it is on.
+
+= Set Attributes
+~ Attributes
+{Alt-F6} opens a list: Normal, Bold, Italics and Underscore Words.  Each puts a
+change of attribute into the text at the cursor; everything after it, up to the
+next change, has the attribute.  The keys are quicker:
+
+- {Ctrl-B} bold on or off.
+- {Alt-I} italics on or off.
+- {Ctrl-U} underscore on or off.
+- {Ctrl-N} normal text: all off.
+
+= Block Format Editor
+~ Justification
+~ Indent
+~ Format
+{F6} (or {Ctrl-E}) changes the format of the block that holds the cursor.  The
+panels follow one another:
+
+- the left indent of the block, in ruler units;
+- Justification: Left, Right, Center or Even;
+- Indent: None, First, All but First or All;
+- Attributes: Normal, Bold, Italics, Bold Italics or Underscore Words;
+- Tabs: the tab stops, such as 5,20R,40D (0 for none).
+
+{Esc} in any one cancels the change.  {Ctrl-H} sets a hanging indent: type the
+characters that are to hang, a bullet and a space, then press it.
+
+= Search
+~ Search (F9)
+~ Search:Search for
+~ Search:Find
+~ Search:Direction
+~ Search:Match Case
+~ Search:Whole Word
+~ Search:Attribute
+{F9} searches.  The panel prompts for what to Search for and what to Find (Text,
+the next Print Error, a Tab, an End of Line, a Nonbreaking Space or a Marker),
+the Direction, Forward or Backward, whether to Match Case, whether to match a
+Whole Word and which Attribute the text must have (Any, Plain, Bold, Italics
+or Underscore).  Match Case and Whole Word apply to Text only.  With no string
+and an Attribute, the search goes to the start of the next text that has it.
+{Ctrl-F9} repeats the search with the same settings.
+
+The search goes round the document: from the end it goes on from the start
+and the message line shows so.  The message line shows Found or Not found, and
+what was looked for.  Search finds text; to find markers choose Marker in Find.
+See [[Replace]], [[Print Errors]].
+
+= Replace
+~ Replace (Alt-F9)
+~ Replace:Search for
+~ Replace:Replace with
+~ Replace:Find
+~ Replace:Match Case
+~ Replace:Whole Word
+~ Replace:Attribute
+~ Replace:Replacement Case
+~ Replace:Ask at Each
+? N replacement
+? Replace?
+{Alt-F9} replaces text.  Type the text to search for, the text to put in its
+place and the options: the same Match Case, Whole Word and Attribute as Search,
+the Find (Text, Tab or Nonbreaking Space), the Replacement Case (As Typed, or
+Follow Found, which gives the replacement the capitals of the text found) and
+whether to Ask at Each place.
+
+With Ask at Each Yes, Replace goes from the cursor, on from the start of the
+document when it reaches the end, up to where it began, and stops at each place:
+{R} replaces and goes on, {O} replaces and stops, {S} skips the place, {A}
+replaces this place and all the others, {Q} or {Esc} stops.  With No it
+replaces every place at once.  The message line shows how many were replaced.
+{Ctrl-/} takes the whole Replace back.  See [[Search]].
+
+= Go To
+~ Go To (Alt-F7)
+{Alt-F7} jumps to a place: Document start, Document end, Section number (you
+are asked for the number), Next section and Previous section.  See
+[[Go To Section]].
+
+= Go To Section
+Type the number of a section, such as 2.1, and press {Enter}.  If there is no
+such section the message line shows so.  The sections are those of a
+[[Structured and Unstructured|structured document]].
+
+= Table
+~ Table (F8)
+{F8} opens the Table list: Add column puts a new column in the block, and Split
+column here splits the column at the cursor.  A table is a block with several
+columns, drawn side by side.  See [[Append]], [[Split]].
+
+= Edit Menu
+~ Menu:Edit
+~ Menu:Edit:Title
+~ Menu:Edit:Structured
+~ Menu:Edit:Unstructured
+~ Menu:Edit:Section
+~ Menu:Edit:Document
+~ Menu:Edit:Window
+The Edit menu depends on the document.
+
+- Title edits the title page.
+- Structured makes an unstructured document structured, and Unstructured does
+  the reverse.
+- Section edits only the section that holds the cursor, and Document brings
+  back the whole document ({Ctrl-^} does either).
+- Window is not available.
+
+See [[Title Page]], [[Structured and Unstructured]].
+
+= Title Page
+~ Text Editor:Title Page
+The title page is the text before the first section of a structured document.
+Choose Title on the Edit menu to edit it.  See [[Page Layout]] for how it is
+printed.
+
+= Word Count
+~ Menu:Tools:Count
+~ Count
+Count tells you how many words the document has, in a small box.  It is on the
+Tools menu.
+
+= Nonbreaking Spaces
+~ Nonbreaking space
+Press {Ctrl-Shift-Space} to type a space that does not let the line end.  Use it
+between a title and a name, or a number and its unit.  On the screen it looks
+like a small cap between the words, and it prints as a space.
+
+= Soft Hyphens
+~ Soft hyphen
+~ Hyphenation, soft
+Press {Alt-_} (Alt with Shift and the hyphen key) to say where a word may be
+broken at the end of a line. Type it inside the word: pro{Alt-_}ject.  If the
+word falls at the end of a line in the print, it is broken there and a hyphen
+is printed; if not, the word is whole.  A word with a soft hyphen is broken
+only where you said. On the screen it is a small dim triangle.  If your
+terminal does not pass {Alt-_}, press {Ctrl-F} and choose Soft hyphen.  Find
+with Soft Hyphen finds them, and a search for a word goes through them.  Words
+that you want always broken in the same way can go into the hyphenation list:
+see [[Maintain Dictionaries]].
+
+= Typing Special Characters
+~ Special characters
+Text is made of the characters of the PC character set (code page 437), which
+has the accented letters, the Greek letters and the box drawing characters.
+Type a character with the key that your keyboard layout gives it.  Text that
+comes from a file keeps its characters when you [[Import]] it with the right
+character set.
+
+
+= Text Editor
+~ Text Editor
+The text of a note, a comment, an equation and a title page is edited in a
+text editor of its own, which fills the screen.  The status line names it:
+NOTE EDIT, COMMENT EDIT, EQUATION EDIT or TITLE PAGE EDIT.  You type and edit
+as on the [[Edit Screen]], and the same keys work.
+
+- {Ins} keeps your changes and takes you back to the document.
+- {Esc} throws the changes away and takes you back to the text as it was.  While
+  text is highlighted, {Esc} cancels the highlight first, and a second {Esc}
+  leaves.
+- {F1} shows this help, or the help of the kind of text that you are editing:
+  [[Note Text]], [[Comment Text]], [[Equation Text]] or [[Title Page]].
+
+A note may have several paragraphs.  Nothing is changed in the document until
+you press {Ins}.
+
+= Note Text
+~ Text Editor:Note
+You are editing the text of a note: a footnote, a levelnote or an endnote.  The
+text may have several paragraphs.  Press {Ins} to keep the text and {Esc} to
+leave it as it was.  The [[Note Marker]] tells how the note is printed.  The
+editor itself is described in [[Text Editor]].
+
+= Comment Text
+~ Text Editor:Comment
+You are editing the text of a comment, a remark for yourself or for the people
+who work on the document.  A comment is printed only in a Draft print.  Press
+{Ins} to keep the text and {Esc} to leave it as it was.  See [[Comment Marker]]
+and [[Text Editor]].
+
+= Equation Text
+~ Text Editor:Equation
+You are editing the text of an equation, written in TeX math.  Press {Ctrl-W}
+to see the equation as it will be typeset, {Ins} to keep the text and {Esc} to
+leave it as it was.  See [[Writing Equations]], [[Equation Marker]] and
+[[Text Editor]].

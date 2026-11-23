@@ -1,0 +1,231 @@
+Audit of the tests of tasks 22 to 25 for vacuous checks
+========================================================
+
+A check is vacuous when it passes although the feature does nothing.  The
+method is mutation testing: one line of the program is changed so that the
+feature is lost (and the program still builds with -Werror), the test is run,
+and the program is restored.  A good check must fail.  The program was
+restored after every run; no mutation was committed.
+
+Tests and what they are made of
+-------------------------------
+
+tests/printcolor.py   Print in Black and White: LaTeX text, pixels of page 1.
+tests/headfoot.py     Headers and footers: made documents, pdftotext by page.
+tests/indexlist.py    Index and lists: made documents, pdftotext by page.
+tests/pagenumlevel.py Page Number Level: made documents, pdftotext.
+tests/printfield.py   Print field, Joined headlines, borders: made documents.
+tests/levelindent.py  Indent to Next Level and Ruler: x positions in points.
+tests/winding.py      Winding Columns: LaTeX text and word positions.
+tests/calctest.c      The calculator: 50 expressions with exact results.
+tests/bordertest.c    The border masks: exact values.
+tests/smoke.py        The blocks Case, Math, Global (headers, Winding), Border,
+                      Initial Macro Set and Library, backups, Include.
+
+All of the scripts above except smoke.py build their own documents in a
+temporary directory, so the input never holds the expected result.  smoke.py
+mostly copies sample/cns10pp.doc; that is where the Border checks were vacuous
+(fixed in commit ed362854).
+
+Results of the mutations (test, mutation, result)
+-------------------------------------------------
+
+printcolor.py   black_white never set                 5 of 19 fail: caught
+headfoot.py     header and footer blocks not rendered 12 of 19 fail: caught
+headfoot.py     section marker prints nothing         4 of 19 fail: caught
+headfoot.py     odd and even footers swapped          3 of 19 fail: caught
+headfoot.py     first page uses the odd/even style    2 of 19 fail: caught
+pagenumlevel.py page number level always 0            9 of 9 fail: caught
+indexlist.py    index never made                      7 of 18 fail: caught
+indexlist.py    index sort case sensitive             4 of 18 fail: caught
+indexlist.py    runs of pages never joined            1 of 18 fail: caught
+indexlist.py    lists hold figures and tables         0 FAIL: VACUOUS (fixed)
+printfield.py   Only Headlines prints everything      2 fail: caught
+printfield.py   Only Text keeps the contents          2 fail: caught
+printfield.py   joined headlines never wanted         7 fail: caught
+printfield.py   double vertical rule printed single   1 fail: caught
+printfield.py   wide vertical rule printed single     1 fail: caught
+printfield.py   left, right, top, bottom border read
+                as none (four mutations)              2, 3, 2, 1 fail: caught
+levelindent.py  level indent ignored                  8 of 23 fail: caught
+levelindent.py  ruler 12 per inch treated as 10       1 fail: caught
+levelindent.py  ruler limit to the text width removed 1 fail: caught
+winding.py      gutter fixed to 0.25 inch             1 fail: caught
+winding.py      single rule invisible                 1 fail: caught
+winding.py      number of columns of a block ignored  1 fail: caught
+smoke.py part 1 Case Upper does nothing               4 fail: caught
+smoke.py part 2 header column records wrong           3 fail: caught
+smoke.py part 6 initial macro set never loaded        5 fail: caught
+smoke.py part 6 initial library never loaded          4 fail: caught
+smoke.py part 7 Include never expands                 1 fail, then the
+                                                      script stops on the
+                                                      missing text: caught
+
+calctest.c      rounding at the 101st digit half down 0 FAIL: VACUOUS (fixed)
+calctest.c      rounding never up                     2 fail: caught
+calctest.c      subtraction as addition, implicit sum
+                dropped, division as multiplication,
+                exponent with primary only, percent
+                ignored (five mutations)              3, 4, 5, 2, 2 fail
+bordertest.c    mask not limited to 8 bits            0 FAIL: VACUOUS (fixed)
+bordertest.c    format writes no flag                 0 FAIL: VACUOUS (fixed)
+bordertest.c    nine other mutations of border.c      1 to 4 fail each: caught
+smoke.py part 2 Border apply disabled                 6 fail (all Border
+                                                      checks that need a
+                                                      change): caught
+smoke.py part 2 three header parts swapped            1 fail: caught
+smoke.py part 2 bracket text emptied                  1 fail: caught, after
+                                                      the check was made
+                                                      exact (see below)
+
+edtest.c        search and replace wrap removed
+                (editor.c search loop)                2 fail ("the search
+                                                      wraps round", "from the
+                                                      first beta backward"):
+                                                      caught
+smoke.py part 7 search wrap removed, Replace does
+                not go round (editor.c and ui.c)      8 fail (search, backward
+                                                      search, Replace asks
+                                                      before the start, A
+                                                      replaces all, a text that
+                                                      holds the pattern, a
+                                                      place only before the
+                                                      start): caught
+smoke.py part 6 default of backups 3 changed to 1     5 fail (default of five
+                                                      saves, the box, Setup
+                                                      note, Setup saves one,
+                                                      Setup saves the default):
+                                                      caught
+backuptest.c    default of backups 3 changed to 1     5 fail: caught
+loadtest.c      the missing end record accepted       2 fail ("every cut at
+                                                      every byte is refused",
+                                                      "a header with no end
+                                                      record"): caught
+edtest.c        roman limit 3999 removed (marker.c)   20 fail (4000, 65535,
+                                                      the largest counter in
+                                                      both roman styles):
+                                                      caught
+lxtest.c        roman limit 3999 removed (marker.c)   4 fail: caught
+romanbig.py     roman limit removed in marker.c       0 FAIL: not the path of
+                                                      this script (it tests the
+                                                      numbers that the Printer
+                                                      makes itself in latex.c:
+                                                      line numbers and page
+                                                      numbers); see the next
+                                                      rows
+
+romanbig.py     roman limit of line numbers and page
+                numbers in latex.c removed (two
+                mutations)                            9 of 13 fail: caught
+smoke.py part 1 the calculator returns nothing        6 fail (result message,
+                                                      clipboard, parentheses,
+                                                      sum of numbers, letters,
+                                                      division message):
+                                                      caught.  Two checks
+                                                      still passed: "the
+                                                      division by zero leaves
+                                                      the clipboard" and "Undo
+                                                      takes back the typing":
+                                                      VACUOUS (fixed)
+include.py      the include depth limit 8 raised to
+                80                                    1 fail ("nine levels are
+                                                      too deep"): caught
+
+A mutation that changed an unrelated line (the first occurrence of a text that
+also occurs elsewhere) was found and repeated with an exact text; the table
+above lists only effective mutations.
+
+Vacuous checks found and fixed
+------------------------------
+
+indexlist.py, the lists.  The check of the list of figures only looked for the
+names of the figures, and the check of the list of tables only for the names of
+the tables.  A list that held every kind passed.  Two checks were added: the
+list of figures holds no table name, the list of tables holds no figure name.
+The check of the index of an Include marker had the form A or (B and C); it
+now requires both entries.
+
+calctest.c, the rounding.  No expression had a cut-off digit of exactly 5, so
+half-down rounding passed.  Two checks were added: 100 nines plus 0.5 rounds up
+to 1E+100 and 100 nines plus 0.4 rounds down to 100 nines.
+
+bordertest.c, the text of the record.  The flag written by border_format and
+the limit of a mask to eight bits were not tested.  Three checks were added.
+
+smoke.py, the Odd Page Layout panel.  The check named "in brackets" looked only
+for the words Odd Page Layout and Header.  It now sets the Global Header first
+and asserts Header: [Chapter | \page\ | Strata], and asserts before that the
+text is not there.
+
+smoke.py, Math.  Two negative checks held although the calculator did nothing:
+the clipboard after a division by zero (nothing was put there either way) and
+Undo after a calculation (Undo took back the typing either way).  Both now
+first assert the message of the calculation: "Cannot divide by zero" in the
+first, "Result: 4" in the second.
+
+Batches not audited (cut short)
+-------------------------------
+
+The Case block was audited by the earlier job.  Not audited by mutation: the
+smoke blocks of the Initial Macro Set messages for a missing file, the Compare
+and Maintain Dictionaries blocks (they are older than tasks 22 to 25), the
+install prompt checks (that job made four mutations itself), the guard test of
+the sample documents (tests/samplesguard.py) and the sample documents
+themselves, tests/printcolor.py after the one race fix, and the loader recovery
+(not merged yet).
+
+Work still open when this file was written
+------------------------------------------
+
+The Include block of smoke.py (part 7), the unit tests of the calculator and
+of the borders, the weak smoke checks (for example the Odd Page Layout check
+that is named "in brackets" but looks only for a title and a label), and the
+complete runs of the test suites after the fixes.
+
+
+AUTOMATIC CONTENTS AND LISTS (task 43: tests/listtest.c, tests/autolists.py)
+===========================================================================
+
+Each change of the code was made in a copy of the tree, the test was run, and
+the change was taken out again.  Every change is caught by the test named,
+except one that makes no difference (below).
+
+  listtest (counters of the markers)
+    no count when a token is deleted (tdel)       caught: backspace, cut, ...
+    no count when a marker is typed (tins)        caught: insert
+    Undo: the blocks that go out not counted      caught: undo
+    Undo: the blocks that come in not counted     caught: undo
+    doc_delete_items does not count               caught: join, block delete
+    doc_insert_item does not count                caught: split, paste
+    no guard at the largest value                 caught: saturation
+    no guard below 0                              caught: underflow
+    a delete that counts the whole document       caught: no search at a delete
+    the load believes a count marked stale        caught: stale, saturation
+    the load never counts                         caught: load, old file
+    a part keeps the counts of the whole          caught: part
+    a split that does not take the tail's markers caught: split
+    a join that does not add the markers          caught: join
+    a paste of text that does not count           caught: paste
+    a cut of text that does not count             caught: cut text
+    the writer adds one to a count                caught: saved records
+  autolists (what is printed, the panels)
+    the contents ignores YCL                      caught: YCL1, YCL0
+    the explicit Off of a list ignored            caught: explicit off
+    the print does not count what it prints       caught: a wrong count
+    a marker prints at its place when its list is caught: a marker with no name
+      made
+    an option does not win (--no-index)           caught: option
+    the Picture names in the list of figures      caught: the lists
+    a contents for a document with no headline    caught: no headline
+    the panel does not write a list or the level  caught: panel saved records
+    the Print panel always gives an option        caught: print panel arguments
+    The explicit On ignored                       NOT CAUGHT, and cannot be: a
+      list with no entry is not printed, and a list that has a marker is on
+      by its count, so On and Automatic print the same.
+  tests/story.py (contents of the printed sample)
+    every row of the contents shifted to the next  caught: every row names the
+      row's page                                   page (the first form of the
+                                                   check, chapters only, did
+                                                   not catch it; the check of
+                                                   all 112 rows was added)
+  manual/checkpdf.py reads 949 rows of the contents and 3132 of the index.

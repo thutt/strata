@@ -1,0 +1,25 @@
+
+------------------------------------- Edit -------------------------------------
+
+Edit commands determine whether you are editing the title page, the entire
+document or just one section of the document; whether you are working with 
+documents in two windows; or whether the document is structured or unstructured.
+
+
+  Switch an unstructured document to a structured          Display and edit two
+  document; switch a structured document containing        documents in one
+  only one section to an unstructured document.            edit session.
+              +--------------+                                        |
+                             |                                        |
+   +-------------------------------------------------------------------------+
+   |   Title      Structured/Unstructured   (Section/Document)      Window   |
+   +-------------------------------------------------------------------------+
+         |                                    +------+
+     +---+                                    |
+  Create and edit a             Display only the current section for editing or
+  document's title page.        display all sections for editing. (This 
+                                selection is available only in Structured mode.)
+
+--------------------------------------------------------------------------------
+     Title       Structured/Unstructured      Section/Document       Window
+         Menu            Keyboard Summary            Help Index

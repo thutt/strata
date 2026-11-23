@@ -1,0 +1,25 @@
+-------------------- Import from 1-2-3/Symphony File Options -------------------
+                
+Punctuation:       Select the separators from the list of options. The first 
+                   character is the decimal separator, the second is the 
+                   argument separator, and the third is the thousands separator.
+                
+Date Format:       The first date format component applies to worksheet dates 
+                   with an international long format.  The second component 
+                   applies to international short format dates.
+               
+Time Format:       The first time format component applies to worksheet times
+                   with an international long format. The second component 
+                   applies to international short format times.
+                   
+Currency String:   The currency string can be any character, such as a compose
+                   character. Set the currency string to the same symbol used
+                   in your worksheet so the symbol corresponds to the value.
+                             
+Currency String:   Specify whether the currency string will precede (Prefix)
+Position           or follow (Suffix) the currency value.
+                              
+Negative Currency: Specify whether negative numbers are enclosed in parentheses
+Format             or preceded by a negative sign.
+--------------------------------------------------------------------------------
+    Import from 1-2-3/Symphony File       Keyboard Summary        Help Index

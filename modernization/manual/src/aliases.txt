@@ -1,0 +1,5 @@
+# Labels for headlines whose chapter source has no label, for the build of
+# the single document.  A line is a label, a blank and the exact text of one
+# headline.  When a chapter source gets the label itself, the label of the
+# source wins and the line here is not used.
+print-hyph Hyphenation

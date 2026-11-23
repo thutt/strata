@@ -1,0 +1,238 @@
+# Chapter 1, part 4: the tools (programs of the package) and the help.
+.h2 The programs and the Help [view-tools]
+.ix Tools
+.ix Programs of Strata
+.ix Package, programs
+.ix Editor
+.ix Document Manager
+.ix Printer
+.ix Viewer
+.ix keycaps
+Strata is a set of programs that work together.  The Document Manager and the
+Editor are the programs that a user starts; the others work out of sight when
+a document is printed or previewed.  This section says what each program is
+for, how it is reached and what it needs.  {n:appcmd} describes the
+environment settings and the files.
+
+.table 12 22 25
+Tool | What it is | How you reach it
+The Editor | The program that edits | Edit / Preview / Print Document
+ | documents. | of the Document Manager.
+The Document Manager | The menu that starts the | The usual way to start
+ | Editor and keeps the | Strata.
+ | shared settings. |
+The Printer | Makes a PDF (or a DVI) from | Print, Draft or Final in the
+ | a document, through LaTeX. | Editor.
+The Viewer | Shows the pages of a DVI | Print, Preview in the Editor.
+ | file. |
+Keycaps | A marker and a style of | Marker, Keycap; and the keys
+ | picture: a key drawn as a key. | in this manual.
+Help | The topics of a help file, | {k:F1} in the Editor and in
+ | shown by the Editor and the | the Document Manager.
+ | Document Manager. |
+.end
+
+.h3 The Editor [view-stred]
+.ix Editor
+.ix Starting the Editor
+The Editor edits documents.  It reads and writes the Strata document format:
+the files with the suffix {c:.doc}, the templates {c:.set}, the libraries
+{c:.lib} and the macro files {c:.mac}, which are the same kind of file.  A
+document that is loaded and saved without a change is the same file.  The
+Editor runs in a terminal or in an X11 window, according to the version that
+was built.
+
+Started with no file, the Editor opens its own small Document Manager over an
+empty screen ({n:view-docmgr-inside}).
+.if .STRATA_BUILD_TYPE # release
+.ix Options of the Editor
+The Editor takes options and one document name; {x:appcmd-stred-opt} lists
+the options.  With a file name that does not exist, the Editor opens a new
+empty document that is saved under that name; with a name that exists but
+is not a document, it ends with the reason.
+.endif
+
+.h3 The Document Manager [view-str]
+.ix Document Manager
+.ix Master menu
+.ix Starting Strata
+The Document Manager is the first screen when Strata is started in the usual
+way.  It is a menu that starts the other programs and keeps the settings that
+they share.
+
+.pic pictures/view-str.png 5.0 The Document Manager (X11 version).
+
+.table 26 34
+Entry | What it does
+Edit / Preview / Print Document | Asks for a document, then starts the Editor
+ | on it; Print, Preview and Spell are on the menus of the Editor.
+Maintain Dictionaries | Edits the words of the user that the spell check
+ | accepts.
+Compare Document Versions | Shows what is different between two documents,
+ | such as a document and its backup.
+Restore Backup | Brings back one of the backups of a document.
+TeX Font Association | Chooses the TeX font for each font of the list.
+Setup | The working directory, the Editor program, the help
+ | file, Autosave, the printer and the language of the
+ | spell check.
+Quit | Leaves the Document Manager.
+.end
+The keys are those of a list of choices ({n:view-list}) with these
+differences: {k:Ins} chooses as {k:Enter} does, {k:F1} shows the help for the
+entry, and {k:Esc} at the foot says cancel.  {n:str} describes every
+entry, every panel and every field.  The Document Manager takes the option
+{c:-H} (the help file) and the name of a document; {n:appcmd-str-opt} lists
+the options.
+
+.h4 The small Document Manager of the Editor [view-docmgr-inside]
+.ix Document Manager inside the Editor
+.ix Editor with no file
+The Editor, started with no file, draws the same kind of list over an empty
+screen (the status line shows {c:(new)}).  It has four entries: Edit / Preview /
+Print Document, which offers Enter a file name, Choose from this directory
+and New document; Maintain Dictionaries and Compare Document Versions, which
+open the same panels as the entries of the Document Manager of the same
+names; and Quit, which leaves the Editor.  To check the spelling of a
+document, open it and use Tools, Spell.
+
+.pic pictures/view-docmgr.png 5.0 The Editor started with no file.
+
+.h3 The Printer [view-strprint]
+.ix Printer
+.ix Printing, the Printer
+.ix PDF
+.ix LaTeX
+.ix DVI
+The Printer turns a document into a PDF through LaTeX.  The Print and Preview
+commands of the Editor start it.  The Printer needs {c:pdflatex} (or {c:latex})
+and the packages that the document uses; a missing program is reported by name.
+.if .STRATA_BUILD_TYPE # release
+.ix Options of the Printer
+The Printer takes the name of a document and options; {x:appcmd-strprint-opt}
+lists the options.  With no document, or with an option that is not valid, the
+Printer shows its usage and ends with status 2; a document that
+cannot be read ends it with status 1.  {x:print-cmdline} describes the
+command line.
+.endif
+
+
+.h3 The Viewer [view-dviview]
+.ix Viewer
+.ix Preview, Viewer
+.ix DVI viewer
+.ix Zoom, Viewer
+.ix Go to page, Viewer
+The Viewer shows the pages of a Preview, one page at a time, in an X11
+window.  The Editor starts it for Print, Preview: the Printer makes the pages
+(the Editor shows a wait panel and {k:Esc} stops it), and the Viewer opens
+them.  The Viewer needs an X display; without {c:DISPLAY} the Editor reports
+{c:Preview needs an X display: DISPLAY is not set.}  The title of the window is
+the name
+of the file.  At the bottom is a status bar, {c:Page 1 of 2   Zoom 100%}, and
+a line of keys.
+.if .STRATA_BUILD_TYPE # release
+The Viewer takes the name of the DVI file and options; {x:appcmd-dviview-opt}
+lists the options.
+.endif
+
+.table 22 38
+Key | Effect
+{k:PgDn}, {k:Space}, {k:N} | The next page.
+{k:PgUp}, {k:P} | The previous page.
+{k:Home}, {k:End} | The first page, the last page.
+{k:G} | Go to a page: type its number, then {k:Enter}; {k:Esc} cancels.
+{k:Up}, {k:Down}, {k:Left}, {k:Right} | Scroll the page.
+{k:Keypad +}, {k:+}, {k:=} | Zoom in.
+{k:Keypad -}, {k:-} | Zoom out.
+{k:Keypad *}, {k:0}, {k:Keypad 0} | Back to 100 percent.
+{k:F1}, {k:?} | Show or hide the line of keys.
+{k:Q}, {k:Esc} | Close the Viewer.
+.end
+{n:print} describes the preview in full.
+
+.pic pictures/view-dviview.png 5.0 A page in the Viewer.
+
+.h3 Keycaps [view-keycaps]
+.ix Keycaps
+.ix Keycap marker
+.ix Key, drawn as a key
+.ix Legend (keycap)
+A keycap is a key drawn as a key: a word or a sign inside a box with rounded
+corners, set in the line of text.  The keys in this manual are keycaps.  The
+marker command Keycap ({k:Alt-F12}, Keycap) inserts one; its panel has the
+fields Legend (the text on the key, such as {c:PrtScr}), Foreground,
+Background (shades from 0.0 to 100.0), Scale and Font.  A keycap is a marker
+that behaves like a word: it sits in the line and moves with the text.  The
+global values of the shades, the scale and the font are on the Marker panel
+of the Global menu.
+
+In the X11 version the keycap is drawn as a picture when its display mode is
+Inline; when the picture cannot be made, and in the other modes, it is drawn
+by the mode (in the Short mode as {c:[Key: legend]}).  The terminal version
+draws the legend in reverse video with a space on each side.  Printed, the
+keycap is the picture.  {x:view-screen-text} shows the keycaps of a document.
+The Keycap marker is described in {n:markers}.
+
+.h3 Help [view-help]
+.ix Help
+.ix F1
+.ix Help file
+.ix Help topics
+.ix Hypertext links, help
+.ix Help Index
+.ix STRATA_HELP
+{k:F1} shows the help for the place where the cursor is.  The help is written
+in topics, and the topic shown is the one that fits: the highlighted entry of
+the menu bar, the panel or the field that holds the cursor, the table or list
+that is open, the marker under the cursor, the text editor of a note, a
+comment or an equation, or the message that was on the message line when the
+key was pressed.  At the edit screen with nothing else open the topic is Edit
+Screen.  When there is no topic for the place, the topic of the screen is
+shown.  {k:F1} works at the edit screen, in the menu bar, in every panel and
+list, in the text editors of the markers, while a highlight is on, and in the
+Document Manager.
+
+The help also has topics for the equations: the symbols that can
+be used, and what the messages mean when an equation cannot be typeset.
+
+.pic pictures/view-help.png 5.4 The help topic Edit Screen.
+
+The help is a window across the foot of the screen; the document stays in view
+above it.  The first line of the window names the topic after {c:HELP:}, the
+last line shows the keys, and between them is the text, broken to the width of
+the window.  Keys in the text are drawn as keycaps, and the names of other
+topics are links, drawn in bold and underlined; the chosen link is in reverse
+video.
+
+.table 24 36
+Key | Effect
+{k:Up}, {k:Down} | Scroll the topic by one line.
+{k:PgUp}, {k:PgDn}, {k:Space} | Scroll by a page.
+{k:Home}, {k:End} | The start and the end of the topic.
+{k:Tab}, {k:Right} | Choose the next link on the topic.
+{k:Shift-Tab}, {k:Left} | Choose the previous link.
+{k:Enter} | Follow the chosen link: show that topic.
+{k:Backspace} | Go back to the previous topic.  With nothing to go back
+ | to, close the help.
+{k:I} | The index: a list of all the topics in the order of the alphabet;
+ | choose one with {k:Enter}.
+{k:Z} | Make the window as large as the screen, and back to the window at the
+ | foot.
+{k:Esc}, {k:F1}, {k:Q} | Close the help and return to the edit screen.
+.end
+{k:F1} in a panel shows the topic of the field that holds the cursor when
+there is one, and the topic of the panel when not.  Closing the help leaves
+the document as it was.
+
+.h4 Finding the help file [view-help-file]
+.ix Help file, search
+.ix --help-file
+The program uses the first help file that it can read: the file named by
+{c:-H} (or {c:--help-file}); the file named by the environment variable
+{c:STRATA_HELP}; the file named by the setting Help File of Setup in the
+Document Manager; the file {c:strata.hlp} next to the programs, or in the
+directory above them; and the directories {c:/usr/local/share/strata} and
+{c:/usr/share/strata}.  If none is found, the Editor starts without help, and
+{k:F1} shows a notice that reports this.  Setup can store the name of the file
+for
+the next time.

@@ -1,0 +1,25 @@
+
+------------------------------------- Menu -------------------------------------
+The Menu (F10) commands perform a variety of functions. 
+
+Save, retrieve, and   Format the document text and    Exit to DOS    Quit the
+delete documents,     pages, set preference options,  without        editor.
+change the working    determine typeface and marker   quitting         |
+directory.            formats, and create master      Manuscript.      |
+        |             named blocks.                    |        +------+
+        +---+         +---------------+                |        |      
+       +-------------------------------------------------------------+
+       |    File    Global   Edit   Print    Tools    DOS     Quit   |
+       +-------------------------------------------------------------+
+             +----------------+        |       +-----------------------+  
+Write a title page, switch between   Draft or final print a   Select from addi-
+structured and unstructured docu-    document or a section;   tional utilities
+ments or between editing the docu-   preview or repaginate    such as spell    
+ment or a single section, and work   a document.              check, macros, 
+in two windows.                                               and thesaurus.
+
+# Use Right and Left to highlight your selection and press Enter, or type the
+  first letter of your selection (e.g., E for Edit or P for Print). 
+--------------------------------------------------------------------------------
+     File      Global      Edit      Print      Tools      DOS      Quit
+                  Keyboard Summary                 Help Index

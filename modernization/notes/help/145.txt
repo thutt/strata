@@ -1,0 +1,25 @@
+
+--------------------------------- Highlighting ---------------------------------
+
+To select text (for copying, deleting, adding attributes, etc.), highlight the
+desired region using the keys listed below, then press Enter.
+ +------------------------------------+---------------------------------------+
+ | Right       Next character         |  Left         Previous character      |
+ | Ctrl Right  Next word              |  Ctrl Left    Previous word           |
+ | Down        Next line              |  Up           Previous line           |
+ | End         End of line            |  Home         Beginning of line       |
+ | Ctrl End    End of block           |  Ctrl Home    Beginning of block      |
+ | PgDn        Down half a screen     |  PgUp         Up half a screen        |
+ +------------------------------------+---------------------------------------+
+
+In addition to the cursor movement keys, you can use the following keys to 
+move or change the operation of the highlight:
+
+   Press Gray + to anchor the cursor at the opposite corner of the highlight.
+   Use the left and right arrow keys to change the direction of the 
+    highlighting (left arrow for forward, right arrow for backward).
+   Press a character to expand the highlight to the next occurrence of that
+    character; for example, press s to highlight up to the next s in the text
+    or press the period (.) to expand the highlight to the next period.
+--------------------------------------------------------------------------------
+               Keyboard Summary                         Help Index

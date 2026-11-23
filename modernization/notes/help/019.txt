@@ -1,0 +1,25 @@
+
+-------------------------- DCA (Revisable) File Export -------------------------
+
+DCA (Revisable) File Export converts Manuscript documents into DCA 
+revisable format files.
+
+  +----------------------- DCA (Revisable) File Export ----------------------+
+  |                                                                          |
+  |         Working Directory:                                               |
+  |                                                                          |
+  |             Document Name:                                               |
+  |                                                                          |
+  |             DCA File Name:                                               |
+  |                                                                          |
+  +------------------------- Press Ins to Export File -----------------------+
+
+# Many word processing programs can read revisable format text files. This is a
+  convenient way of transferring Manuscript documents while maintaining most of
+  the original document's format.
+
+# For the DCA file name, any extension is acceptable. If an extension is not 
+  specified, .RFT is automatically appended.  Be sure to specify the full 
+  path name if a file is not in the current working directory.  
+--------------------------------------------------------------------------------
+      File Conversion Utilities       Keyboard Summary        Help Index

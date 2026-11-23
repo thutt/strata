@@ -1,0 +1,25 @@
+
+---------------------------------- Edit Screen ---------------------------------
+The edit screen has two parts: the Status line and the text area.
+
+# The text area is where you enter and edit text.
+# The Status line displays general information and frequently used settings.
+
++------------------------------------------------------------------------------+
+| PROPOSAL.DOC   Attr: Normal       Pos: 1    Sect: 1          STRUCTURED EDIT |
+| Just: Left     Indent: None            Font: Text (12pt Times Roman)         |
+| ........................................................................... |
++------------------------------------------------------------------------------+
+The top line displays the file name (an * precedes it if the file has been 
+modified since last saved), the current cursor position's attribute or marker 
+type, the current cursor position, the current section number (in structured 
+documents only), and the edit mode (for example, Structured Edit or Note Edit).
+
+The second line displays the current block's justification, indent, and font
+settings. This line is displayed only when you select Yes at the Expanded 
+Status Line prompt on the Options panel.
+
+The bottom line displays the ruler, tabs, block indents, and keyboard option
+indicators that are currently being used.
+--------------------------------------------------------------------------------
+   Options     Setting Tabs on the Ruler     Keyboard Summary     Help Index

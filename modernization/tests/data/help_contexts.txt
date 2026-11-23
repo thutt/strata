@@ -1,0 +1,100 @@
+# Places that the programs give to F1 and that are made at run time.
+Help
+Help Index
+Edit Screen
+Document Manager
+Global Format (headline and text)
+Global Format (spacing)
+Global Format (line numbering)
+Level 1 Format (headline and text)
+Level 1 Format (spacing)
+Level 2 Format (headline and text)
+Level 2 Format (spacing)
+Level 3 Format (headline and text)
+Level 3 Format (spacing)
+Level 4 Format (headline and text)
+Level 4 Format (spacing)
+Level 5 Format (headline and text)
+Level 5 Format (spacing)
+Counter Format (1 of 2)
+Counter Format (2 of 2)
+Marker Display Modes (1 of 3)
+Marker Display Modes (2 of 3)
+Marker Display Modes (3 of 3)
+Marker:Author
+Marker:Column Break
+Marker:Comment
+Marker:Counter
+Marker:Cross-reference
+Marker:Date
+Marker:Description
+Marker:Else
+Marker:Endif
+Marker:Equation
+Marker:Figure
+Marker:Filedate
+Marker:Filename
+Marker:Filetime
+Marker:Font
+Marker:If
+Marker:Include
+Marker:Index
+Marker:Keep
+Marker:Keycap
+Marker:LaTeX
+Marker:Line
+Marker:Merge
+Marker:Note
+Marker:Orientation
+Marker:Page Break
+Marker:Page Number
+Marker:Pathname
+Marker:Picture
+Marker:Printer
+Marker:Revision
+Marker:Section
+Marker:Table
+Marker:Time
+Marker:Whitespace
+Marker:Print Error
+Menu:Edit:Title
+Menu:Edit:Structured
+Menu:Edit:Unstructured
+Menu:Edit:Section
+Menu:Edit:Document
+Menu:Edit:Window
+Draft Print
+Print Document
+Preview Document
+Draft Print:Output File
+Print Document:Print Title Page?
+Macros
+Libraries
+Selecting a File:Document Name:
+Document Description:Description:
+Setup:Print To:
+Setup:Printer Queue:
+Setup:PDF Directory:
+Setup:PDF Viewer:
+Setup:Window Rows:
+Setup:Dictionary Language:
+Setup:Help File:
+Setup:Autosave:
+Setup:Paper for New Documents:
+Setup:Advanced:
+Setup:Terminal Characters:
+TeX Font Association:Name:
+Document Manager:Edit / Preview / Print Document
+Document Manager:Setup
+Document Manager:Quit
+Spell Check:Line
+Search:Find
+Marker Format:Date Format
+Save File:Options
+Retrieve File:Options
+Import ASCII Text File:Character Set
+Export ASCII Text File:Scope
+Define Macro:Macro Key: Alt-
+Library Entry:Entry Name
+Alt commands
+Marker Commands

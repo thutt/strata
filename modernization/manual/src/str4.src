@@ -1,0 +1,770 @@
+# Chapter 7, part 4: your own words and Setup.
+.h2 Maintain Dictionaries [str-spell-words]
+.ix Maintain Dictionaries
+.ix Dictionaries, maintaining
+.ix Word list, personal
+.ix Words of your own
+.ix Define, adding a word
+Maintain Dictionaries is the entry for the words of your own, the words that
+the spell check must not ask about.  The words that every language has come
+from the checking program of the machine ({c:aspell} or {c:hunspell}); your own
+words
+are a list that you keep.  One list serves every language of the spell check.
+Define on the check screen of Tools, Spell ({n:spell-dictionaries}) adds a
+word to the list at once, and Maintain Dictionaries shows the list and lets you
+change it.  The spell check reads the list at each start, so a change is seen
+at once, also while the Editor is running.  The same panel has a second
+list, your hyphenation list ({n:str-spell-words-hyphen}), which says where
+words may be broken at the end of a line in the print; {k:Tab} goes from one
+list to the other.
+.h3 The panel [str-spell-words-panel]
+.ix Maintain Dictionaries, panel
+The panel shows your words in order, without regard to the case of the letters,
+and shows at the top how many there are.  The cursor is on one word.  A list
+that is longer than the panel scrolls, with an arrow at the edge.  The keys are
+on the foot line.
+.table 10 50
+Key | What it does
+{k:Tab} | Shows the other list: the spelling words or the hyphenation list.
+ | The first line shows which list it is, its number of words and the key.
+{k:Ins} | Adds a word.  A box prompts for it; {k:Enter} adds it.
+{k:Del} | Takes out the word that has the cursor, after the question Delete
+ | WORD from your words?
+{k:F3} | Imports the words of a text file ({n:str-spell-words-import}).
+{k:F4} | Exports the list to a text file ({n:str-spell-words-import}).
+Letters | Move the cursor to the first word that begins with the letters typed,
+ | without regard to case.  The letters are shown on the foot line as Find.
+ | {k:Backspace} takes the last letter back.
+{k:Up} {k:Down} | Move the cursor one word.
+{k:PgUp} {k:PgDn} | Move it a page.
+{k:Home} {k:End} | Move it to the first or the last word.
+{k:F1} | Shows the help of the panel.
+{k:Esc} | Leaves the panel for the menu.
+.end
+.pic pictures/str-dict-spelling.png 5 The panel of Maintain Dictionaries: your own words for the spell check.
+Every change is saved when it is made; there is nothing to accept.  Each change
+is made on the list as it is at that moment, so a word that Define added while
+the panel was open is not lost.
+.h3 What is a word [str-spell-words-rules]
+.ix Words, what the list accepts
+A word has letters, apostrophes and hyphens, begins and ends with a letter,
+has no space and no digit, and is at most 65 characters long.  Accented
+letters are letters.  The list does not keep a word twice.  A word in lower
+case also stands for the same word with a capital first, so adding Garden when
+garden is in the list is not needed and shows that it is there already; any
+other entry is only that word.  Adding garden when only Garden is in the list
+is allowed, because it is a different word.
+.h3 The hyphenation list [str-spell-words-hyphen]
+.ix Hyphenation list
+.ix Words, where they may be broken
+.ix Hyphenation, your own words
+.ix Never break a word
+TeX breaks the words of a paragraph with patterns for English
+({n:print-hyphenation}) and breaks some words in the wrong place, and others
+(names, terms of a trade) in places that the rules do not cover.  The hyphenation list
+is the place to say it once.  Press {k:Tab} in the panel and the list of words with their
+places is shown; the keys are the same as for the spelling words.  The
+list is the file {c:hyphenation} of the settings directory, and the print reads
+it each time.  A change is in the next print.
+A word is written with a hyphen at each place where it may be broken:
+{c:hy-phen-a-tion}.  The word is then broken at those places and
+nowhere else.  A word with no hyphen is never broken; an equals sign in
+front ({c:=Jacksonville}) says so in so many words.  The case of the letters
+does not matter, and a word with a capital first is broken as the same word
+in lower case.  A word that the list has, with the same letters and other
+places, is the same word: the list keeps the first (delete it first to
+change the places).
+.table 13 47
+Rule | What it means
+Letters | Letters of the PC character set, accented ones too.  No digit, no
+ | apostrophe and no space: TeX cannot break such a word.
+Hyphens | Only between two letters, and not two in a row.
+Equals sign | Only in front, and then no hyphen follows: the word is never broken.
+Length | At most 65 characters.
+Order | The words are in order of their letters, without the hyphens.
+Find | Letters typed in the panel find a word through its hyphens.
+.end
+.pic pictures/str-dict-hyphenation.png 5 The hyphenation list: a hyphen where a word may be broken, an equals sign for a word that is never broken.
+The place where the file is read is the settings directory.  A line of the file that is not an entry is not shown
+and not used.  The print gives the words to TeX in front of the document;
+a word that has a character that the fonts of the print do not have is left
+out.  A soft hyphen typed in the text ({n:edit-shy}) is for one place in one document; the
+list is for every document.
+.h3 Import and export [str-spell-words-import]
+.ix Words, import
+.ix Words, export
+.ix Maintain Dictionaries, import and export
+{k:F3} prompts for the name of a text file with one word on a line and adds the
+words that the list does not have.  The text is read as UTF-8; a file that is
+not UTF-8 at all (a character that no UTF-8 text explains) is read in the PC
+character set, as old word lists are, so that the words with
+accents keep their letters.  A line that is
+not a word, or is longer than a word can be, is left out.  In the hyphenation
+list {k:F3} reads a text file with one word on a line, with its hyphens, in the same way, or a
+hyphenation dictionary in the old binary form: a file whose name ends in
+{c:.hyc} (any case) gives its words with the places at which each may be
+broken (a word with none is never broken); a word with a digit or an
+apostrophe is counted as not a word.  A box then shows how many words were
+added, how many
+the list had already (a word twice in the file counts as had already), and how
+many lines were not words.  Nothing is added when the file cannot be read.
+{k:F4} prompts for a name and writes the list that is shown to that file, one word on a line, in
+order.  A file of that name that is there is replaced only after the question
+NAME exists.  Replace it?  The list itself is not changed.
+Both panels ask for a Working Directory and a File Name.  A name that begins
+with a slash is taken as it is; any other name is in the working directory.
+{k:F2} or {k:Keypad +} in a field lists the directories or the files.
+.h3 Messages of Maintain Dictionaries [str-spell-words-messages]
+.ix Maintain Dictionaries, messages
+.table 31 29
+Text | Where and why
+Type a word | The box of Ins was accepted with no word.
+A word has no spaces | The word has a space.
+A word has no digits | The word has a digit.
+A word has letters, apostrophes and hyphens only | The word has another
+ | character.
+A word begins and ends with a letter | The word begins or ends with an
+ | apostrophe or a hyphen.
+A word has at most 65 letters | The word is longer than that.
+A word has letters and hyphens only | Hyphenation list: the word has another
+ | character.
+TeX cannot break a word with a digit or an apostrophe | Hyphenation list.
+A hyphen needs a letter on both sides | Hyphenation list: two hyphens in a row.
+A word with an equals sign has no hyphen | Hyphenation list: =word with a place.
+Type the word after the equals sign | Hyphenation list: only the sign.
+WORD is in the list already | The list has the word or stands for it.
+Added WORD | The word was added.
+Deleted WORD | The word was taken out.
+Imported: N added, N in the list already, N not words | An import is done.
+Wrote N words to NAME | An export is done.
+Enter the name of the file | The box of an import or an export was accepted
+ | with no name.
+Cannot read NAME: REASON | The file of an import cannot be read.
+Cannot write NAME: REASON | The list or an export cannot be written.
+.end
+
+.h2 Compare Document Versions [str-compare]
+.ix Compare Document Versions
+.ix Documents, comparing
+.ix Differences between documents
+.ix Versions of a document
+.ix Backup file, comparing
+Compare Document Versions shows what is different between two documents, such
+as a document and the backup file that was kept when it was saved.  The report
+lists the blocks that were inserted, removed, changed or moved, the sections
+that were added, removed, moved or put on another level, and the blocks whose
+words are the same but whose format, markers or attributes are not.  A block
+is a paragraph, a headline or a table.
+.h3 The panel [str-compare-panel]
+.ix Compare Document Versions, panel
+.table 20 40
+Field | What it does
+Working Directory | The directory that the names of the documents are
+ | taken from.  It begins with the working directory of the Document
+ | Manager.  {k:F2} lists the directories.
+First Document | The first document.  It begins with the document that was
+ | used last.  {k:F2} lists the documents of the working directory.  A
+ | name without a dot gets {c:.doc}; a name that begins with a slash is a
+ | full name.
+Second Document | The second document.  When the first document has a backup
+ | file ({c:.backup/name.bak01}, the newest backup), the backup file is
+ | offered here.
+Report Document | The name that the report is saved under, when it is
+ | saved.  It begins as the name of the first document with {c:-diff}
+ | added, in the same directory, when a document was used last.  Left empty,
+ | the name is made from the First Document in the same way.
+.end
+.pic pictures/str-compare-panel.png 5 The panel of Compare Document Versions.
+{k:Ins} compares the two documents.  The panel does not accept the same
+document twice, a document that cannot be found, or a report name that is the
+name of one of the two documents (the report never replaces them).  When the
+comparison is done the report is shown, and afterwards the panel is shown
+again, so that another pair can be compared.  {k:Esc} leaves the panel.
+.h3 The report [str-compare-report]
+.ix Comparison report
+.ix Report, comparison
+The report is shown in a box that fills the screen, with the title Comparison
+of two documents and the number of the line at the top right.
+.pic pictures/str-compare-report.png 5 The report of two versions of a memo: four blocks changed.
+.table 20 40
+Key | What it does
+{k:Up} {k:Down} | One line.
+{k:PgUp} {k:PgDn} | One screen.
+{k:Esc} {k:Enter} | Closes the report.
+.end
+The report has these parts.
+.table 10 50
+Part | What it holds
+The head | The names of the two documents and how many blocks and sections
+ | each has.
+Summary | How many blocks were inserted, removed, changed and moved, how
+ | many have another format, and how many sections were added,
+ | removed, moved or put on another level.
+Sections | One line for each section that was added, removed, moved or
+ | put on another level, with its number and its headline.  A section is
+ | named by its outline number, such as 2.1.
+Changes | One entry for each block.  Its first line shows what happened, the
+ | number of the block in each document and the section that it is in;
+ | the lines after it show the words.
+.end
+The entries of Changes are of these kinds.
+.table 20 40
+Entry | Meaning
+Inserted | A block that is only in the second document.  Its words are
+ | shown between [+ and +].
+Removed | A block that is only in the first document.  Its words are shown
+ | between [- and -].
+Changed | A block in both documents with other words.  The words that were
+ | removed are between [- and -] and the words that were added are
+ | between [+ and +]; the other words are as they are.
+Moved | A block that has the same words in both documents but is in
+ | another place.
+Format changed | The words of the block are the same, but its format is
+ | not.
+Markers or attributes changed | The words are the same, but a marker, or
+ | the bold, italic or underline of some of the words, is not.
+.end
+When the two documents have the same text, the same sections and the same
+format, the report says so and nothing is offered to save.
+.h3 Saving the report [str-compare-save]
+.ix Report, saving
+When the report is closed a prompt reads "Save the comparison as a document?".
+Yes writes the report to the Report Document as an ordinary
+document, which the Editor opens like any other: the words that were added are
+bold in it and the words that were removed are underlined, and the marks [+ +]
+and [- -] are in the text, so that a printed copy can be read without color or
+type.  When the file exists, a prompt reads "NAME exists.  Replace it?"; No
+leaves the file as it is.  The notice "Wrote NAME" says that the
+report was written.
+.h3 What is compared [str-compare-rules]
+.ix Compare Document Versions, rules
+- The words of each block are compared, without the markers, the format and the
+  attributes.  Table columns are compared as one text.  The space at the
+  start and the end of a block does not count.
+- A block that was removed and a block that was inserted at the same place are
+  one block that changed when at least four tenths of their words are the same.
+  Otherwise they are listed as removed and inserted.
+- A block that is removed in one place and inserted in another place with the
+  same words is listed as moved.  A moved headline is a section that moved.
+- The format, the markers and the attributes of two blocks with the same words
+  are compared, and a difference is listed on its own.
+- A document with no sections has blocks only.  The text before the first
+  section of a structured document is not a headline.
+- When more than three thousand blocks differ in one stretch of the two
+  documents, or more than fifteen hundred words of one block, the detail is
+  not worked out: the stretch is listed as blocks removed and inserted, and the
+  summary says that part of the documents is too different for a detailed
+  comparison.
+.h3 Messages of Compare Document Versions [str-compare-messages]
+.ix Compare Document Versions, messages
+.table 31 29
+Text | Where and why
+Enter the names of the two documents | The panel was accepted with a name
+ | missing.
+Cannot find NAME | One of the two documents does not exist.
+Choose two different documents | The two names are the same document.
+The report must not replace one of the two documents | The Report Document
+ | is one of the two documents.
+Cannot read NAME: REASON | A document could not be read (it is not a
+ | Strata document, or the file cannot be opened).
+NAME exists.  Replace it? | The report is saved and the file exists.
+Cannot write NAME: REASON | The report could not be written.
+Wrote NAME | The report was written.
+.end
+
+.h2 Restore Backup [str-restore]
+.ix Restore Backup
+.ix Backup, restoring
+.ix Documents, restoring a backup
+.ix Swap of a document and a backup
+Restore Backup brings back one of the backups of a document ({n:file-backup}).
+The panel prompts for the {b:Working Directory} and the {b:Document Name}
+({k:F2} lists the documents; a name without a dot gets {c:.doc}).  {k:Ins}
+shows a list of the backups of that document, newest first.  A line has the
+number, the date and time of the file, its size and the first words of the
+document, such as {c:01  02 Jan 2026 10:20  1893 bytes  Orchard Plan}; the
+word {c:old} after the number marks a backup that an earlier version left
+beside the document instead of in the directory {c:.backup}.  A special
+backup, the copy that the Editor made of a file of an older version of the
+file format when it loaded the file ({c:V2-memo.doc} for {c:memo.doc}, see
+{n:file-backup-special}), is listed after the numbered backups with {c:V} and
+its version, such as {c:V2}; the menu of the backup and the pager are titled
+{c:Special backup V2}.  A special backup is never removed.
+.pic pictures/str-restore-panel.png 5 The panel of Restore Backup.
+.pic pictures/str-restore-list.png 5 The backups of a memo, newest first.
+Choose a backup with {k:Enter} and a small menu offers {b:View the text}, which
+shows the text of the backup in a pager ({k:Esc} comes back), {b:Restore this
+backup} and {b:Back}.  The restore puts a question first, in a box that names the backup,
+its date and the document and reports that the present document becomes backup 1;
+{k:Y} restores and {k:N} or {k:Esc} leaves everything as it was.  The restore is
+a swap, described in {x:file-backup-use}.  {k:Esc} on the list returns to the
+panel and {k:Esc} on the panel to the menu.
+.pic pictures/str-restore-menu.png 5 The small menu of a backup.
+.pic pictures/str-restore-box.png 5 The question before a backup is restored.
+.h3 Messages of Restore Backup [str-restore-messages]
+.ix Restore Backup, messages
+.table 26 34
+Message | Meaning
+Enter the name of a document | The Document Name of the panel is empty.
+ | Type a name, or choose one with {k:F2}.
+NAME has no backup | The document has no backup in the directory .backup and
+ | none beside it.
+The backup has no text to show | View the text, on a backup that holds no
+ | text.  {k:Esc} closes the message.
+Backup NN holds the same text as NAME | The backup and the document are the same;
+ | nothing was done.
+Restored backup NN over NAME. | The swap is made; the document that was there is
+ | backup 1.
+Special backup V2 holds the same text as NAME | The special backup and the
+ | document are the same; nothing was done.
+Restored special backup V2 over NAME. | The swap is made with a special backup;
+ | the document that was there is backup 1 and the special backup stays.
+cannot restore: ... | The restore was not made (a file named .backup is in the
+ | way, the directory cannot be written, a step failed); the
+ | text says why and the document and the backups are as
+ | they were, or the text names the file that holds the old
+ | document.
+.end
+.h2 Setup [str-setup]
+.ix Setup
+.ix Setup panel
+.ix Settings, Document Manager
+.ix Settings saved
+.ix Panel, Setup
+Setup is the panel of the settings of the user: the working directory, the
+number of backups that Save keeps, the autosave, where a print goes and the
+program that shows a PDF, the paper of a new document, the language of the
+dictionary, the number of operations that Undo keeps, the height of the
+windows.  Setup is one panel of three pages, as the panels of the Editor
+that have more than one page are: the settings, the colors of the screen
+and the settings that are seldom changed (the macro set and the library that
+the Editor loads at start, the characters of the terminal, the Editor
+program and the help file).  {k:PgUp} goes to the next page and {k:PgDn} to
+the one before; after the last page {k:PgUp} returns to the first.  The
+values are kept in the
+file {c:~/.strata/config} (see
+{n:appcfg}; the environment variable {c:STRATA_HOME} names another directory).
+.pic pictures/str-setup-panel.png 5 The Setup panel.
+.h3 The fields of Setup [str-setup-fields]
+.ix Setup, fields
+.ix Initial Working Directory
+.ix Print To
+.ix Printer Queue
+.ix PDF Directory
+.ix PDF Viewer
+.ix Editor program
+.ix Help File
+.ix Autosave
+.ix Autosave Interval (Seconds)
+.ix Paper for New Documents
+.ix Setup, Advanced
+.ix Advanced, Setup
+.ix Default, Setup
+.ix Window Rows
+.ix Dictionary Language
+.ix Screen Colors
+.ix Terminal Characters
+The focus is on the first field when the panel opens.  The fields of the
+first page stand in four groups, each under a heading: Documents, Printing,
+Writing and Screen.  The title of the panel names the page: Setup (settings),
+Setup (screen colors) or Setup (advanced settings), and the frame at the
+bottom says {c:PgUp/PgDn: Page}.  A line at the foot
+of the panel gives a few words about the field that has the focus.  At the right
+of a field its default is shown, when there is room; {k:Del} puts the default
+back.  A value is checked when you leave the field with {k:Up}, {k:Down} or
+{k:Tab}: a wrong value keeps the focus in the field and the reason is shown in
+the line at the foot in place of the words about the field.  Nothing that you
+typed in another field is lost.
+The panel is as high as a screen of 25 rows, with the line of the foot; in a
+window of 20 rows the focus moves down and the panel scrolls (an arrow at the
+edge says that there are more fields).
+.pic pictures/str-setup-printto.png 4.4 Print To: F2 shows the list of the choices, File only and PDF viewer when the system has no print queue.
+.pic pictures/str-setup-viewer.png 4.4 A PDF Viewer that is only a name is refused: the full path is needed, and the panel stays open.
+.pic pictures/str-setup-scrolled.png 4.4 The Setup panel in a window of 20 rows: an arrow at the right edge says that there are more fields.
+.table 24 36
+Field | Value shown
+Initial Working Directory | The directory of the panel
+ | Edit / Preview / Print Document.
+Backups Kept (0 to 99) | 3 by default.
+Autosave | Yes or No: Yes by default.
+Autosave Interval (Seconds) | 120 by default.
+Print To | Printer, File only or PDF viewer: File only at the start.
+Printer Queue | System default, or the saved queue.
+PDF Directory | Empty, or the saved directory.
+PDF Viewer | Empty (a viewer of {c:/usr/bin} is used), or the saved full path.
+Paper for New Documents | Letter or A4: Letter by default.
+Dictionary Language | en_US, or the saved code.
+Undo Levels (0 to 500) | 100 by default.
+Window Rows | Two fields on one line, X11 and Terminal: empty, or the
+ | saved number of rows.
+.end
+The second page is the colors of the screen ({n:str-colours}).  The third
+page, the advanced settings, has these fields:
+.table 24 36
+Field | Value shown
+Initial Macro Set | Empty, or the saved name of a macro file.
+Initial Library | Empty, or the saved name of a library file.
+Terminal Characters | Automatic, UTF-8 or ASCII: Automatic at the start.
+Editor program | The Editor that was found, or the saved path.
+Help File | The help file that was found, or empty.
+.end
+Two lines of text under the fields tell where the templates are looked for and
+where the settings are kept.  {k:Ins} on any page keeps what was typed on all
+the pages and saves it; {k:Esc} on any page leaves every page as it was.
+A wrong value on a page keeps the focus there: {k:PgUp} and {k:PgDn} do not
+leave the page until the value is right.
+.pic pictures/str-setup-advanced.png 5 The third page of Setup: the settings that are seldom changed.
+.rows 26 44
+Initial Macro Set | The macro set that the Editor loads at start, as
+ | Tools, Macros, Retrieve with the option Overwrite Current Macros does, before
+ | the first key is read.  Empty means none.  A name that begins with a slash
+ | is the file itself; any other name is looked for in the working directory of
+ | the Editor and then in the settings directory ({c:~/.strata}); a name with
+ | no period gets {c:.mac}.  {k:Keypad +} or {k:F2} lists the files.  The name
+ | is not checked when Setup is accepted: a file that is missing, cannot be
+ | read or is not a macro set gives the message {c:Macro set not loaded:}
+ | and the reason on the message line of the Editor and a line in the log, and
+ | the Editor starts without it.  What is loaded at the start is not a change
+ | of the document and makes no Undo operation.  The setting is one for the
+ | terminal and the window version.  Saved as {c:initial_macros}; empty is
+ | saved as nothing.  Learn and Save ask for a file name as they always did;
+ | they do not write the file that was loaded.
+Initial Library | The library that the Editor loads at start, as
+ | Tools, Library, Retrieve with Overwrite does.  The name is found as for
+ | the macro set, with {c:.lib} added to a name with no period.  A file that
+ | cannot be used gives {c:Library not loaded:} and the reason, and the Editor
+ | starts without it.  The library is not marked as changed until you change
+ | it; Library Cut, Copy and Paste ({k:Ctrl-F3}, {k:Ctrl-F4}, {k:Ctrl-F5}) work
+ | on it as on one that you retrieved, and Save writes to the name that you
+ | give.  Saved as {c:initial_library}.
+Paper for New Documents | A choice, Letter or A4 ({k:Space} takes the next).  The paper of a document that is made new and does not come from a
+ | template, in the Document Manager or in the Editor: the Paper Size of
+ | Global, Page is the one that was chosen.  A template keeps its own paper,
+ | and a document that exists keeps its paper.  Letter, the default, is saved
+ | as nothing; A4 is saved as {c:default_paper=a4}.
+Dictionary Language | The language of the spell check, as a code such as
+ | en_US or de_DE: letters, digits and the characters underscore, minus and
+ | at sign.  Saved as {c:spell_language}; the default en_US is saved as
+ | nothing.  The dictionary of that language must be installed for
+ | {c:aspell} or {c:hunspell} ({n:spell}).
+Initial Working Directory | The directory in which the panel
+ | Edit / Preview / Print Document begins.  Empty is allowed and means the
+ | current
+ | directory of the start.  A directory that does not exist is refused.
+ | {k:Keypad +} lists directories only; the first line of the list,
+ | [Use this directory], takes the directory shown.  Saved as {c:workdir}.
+Print To | Where a print goes when you do not say otherwise in the Print
+ | panel: Printer (the PDF is made and sent to a print queue), File only
+ | (the PDF is made and nothing is sent), or PDF viewer (the PDF is made
+ | and opened in the PDF Viewer, to be printed from its own dialog,
+ | {n:print-sending}).  It is a choice, as in the panels of the Editor:
+ | {k:Right} takes the next entry (nothing happens at the last), {k:Left}
+ | the one before (nothing at the first), {k:Space} the next, round to the
+ | first, and {k:F2} or {k:Keypad +} shows the list; a letter does nothing.
+ | The foot of the screen names these keys.  An older settings file that has
+ | Open to print or open is read as PDF viewer, and is saved as {c:viewer}.
+ | The panels of the Print menu, and a print that is made without a panel,
+ | start with it.  When the system has no print queue, Printer is
+ | not offered; a saved Printer is kept, shown as not available now, and a
+ | print then makes the PDF only and reports this.  Saved as {c:print_to}.
+Printer Queue | The print queue that is used when Print To is Printer.  The
+ | list is made by the system when the panel opens: System default first (the
+ | queue that the system uses when none is named), then each queue by its
+ | name; the default queue of the system is marked, and so is a queue that
+ | does not accept jobs now.  You choose from the list with {k:Left},
+ | {k:Right}, {k:Space} or {k:F2}; you never type a name.  When the system has no queue
+ | the field says No printers found, which is not an error.  A queue that
+ | was saved and is not in the list now is kept and shown with "(not
+ | available now)", not dropped.  Saved as {c:print_queue}; the system default
+ | is saved as nothing.
+PDF Directory | The directory in which the PDF of File only and of PDF
+ | viewer is made.  Empty, the default, is the directory of the document.  A
+ | full path, or a path that starts with {c:~/} for your home directory; a
+ | relative path is refused.  The panels of the Print menu then offer
+ | {c:NAME.pdf} ({c:NAME-draft.pdf} for a Draft) in that directory; a name that you
+ | type in the panel is kept.  The directory must exist and be writable when
+ | it is used: Setup shows at the foot of the panel when it is not, and saves
+ | it all the same, because it may be made later; the Print panel then uses
+ | the directory of the document and reports this on the message line.  Saved as {c:pdf_dir}.
+PDF Viewer | The program that shows the PDF when Print To (or the Printer
+ | field of a Print panel) is PDF viewer.  It is the full path of the
+ | program, and nothing else, so that no program of your {c:PATH} can take
+ | its place: it starts with a slash, holds only letters, digits and the
+ | characters . _ + - /, no space and no {c:..}.  A name such as {c:evince} or a
+ | relative path such as {c:./viewer} is refused with the words "The PDF
+ | viewer needs its full path, such as {c:/usr/bin/evince}".  The
+ | program must be an executable file that other users cannot change: a file
+ | that its group or others can write, a file of another user (root is
+ | allowed), or a file in a directory that others can write (the sticky bit
+ | does not make it right) is not safe and is refused, with the reason at the
+ | foot.  An empty field, the default, means the first of evince, okular,
+ | atril, zathura, qpdfview, mupdf, xpdf and epdfview that is in {c:/usr/bin},
+ | {c:/usr/local/bin} or {c:/bin} (never in your {c:PATH} and never in the current
+ | directory); when there is none, a print says "No PDF viewer found: set one
+ | in Setup".  The line at the foot of the panel shows what was found, for
+ | example "Found: /usr/bin/evince", or "Not an executable file", or "Not
+ | safe".  A word processor (soffice, libreoffice, oowriter, oodraw, lowriter,
+ | lodraw, abiword, wps, calligra, winword) is refused, because it would open
+ | the PDF as a document to change and not to print; the names are a
+ | courtesy, and a program with another name is not stopped by them.  The
+ | program is run by its full path, with no shell, with the full path of the
+ | PDF as its only argument, with your environment but for {c:LD_PRELOAD} and
+ | {c:LD_AUDIT}, and is not waited for.  A {c:pdf_viewer} of an older settings file
+ | that is a name or a relative path is not run: it is treated as not given,
+ | and Setup reports this at the field.  A value in a settings file that other
+ | users can write is ignored.  Saved as {c:pdf_viewer}.
+Editor program | The path of the Editor, used as typed from now on.  The
+ | default is the path that was found at start (see {n:str-find-editor}); a
+ | path equal to it is saved as nothing.  {k:Keypad +} lists
+ | the files of a directory.  Saved as the Editor program key of the
+ file ({n:appcfg}).
+Help File | The path of the help file, one file for the Editor and the
+ | Document Manager in every version.  An empty field means no help.
+ | {k:Keypad +} lists the files that end in {c:.hlp}.  The file is read
+ | again when the panel is accepted.  Saved
+ | as {c:help}.
+Autosave | A choice, Yes or No: {k:Left} and {k:Right} change it.  Whether
+ | the Editor saves a changed document by itself.  Saved as {c:autosave}; a
+ | settings file may still have {c:yes} or {c:no} in any case of letters.
+Autosave Interval (Seconds) | A number from 1 to 86400.  The seconds between
+ | two autosaves.  It is read as a number, so that {c:90s} means {c:90}.  Saved
+ | as {c:autosave_seconds}.
+Window Rows | One line with two edit fields: X11 and Terminal.  {k:Tab} (or
+ | {k:Right} at the end of the text) moves from the first to the second, and
+ | {k:Shift-Tab} (or {k:Left} at the start) goes back.  Each is a whole
+ | number of rows; a number below 20 is saved as 20 and a number above 200
+ | as 200.  X11: the number of rows of the window of the X11 version; empty
+ | means 50 rows, and the window is never taller than the screen.  The
+ | Editor and the Document Manager open their window with this height, and
+ | keep the height here by themselves when you change the height of the
+ | window with the window manager ({n:appx11-size}).  Saved as {c:x11_rows};
+ | 50 is saved as nothing.  Terminal: the most rows that the Editor of the
+ | terminal version uses; empty means all the rows of the terminal, and a
+ | terminal that has fewer rows is used as it is.  The program never changes
+ | the size of your terminal window; the height that you gave
+ | the terminal is kept here when the run ends ({n:appterm-size}).  Saved as
+ | {c:terminal_rows}.
+Terminal Characters | How the terminal version draws its screen.
+ | Automatic: the program checks at its start whether the terminal reads
+ | UTF-8 and draws ASCII characters when it does not.  UTF-8 and ASCII
+ | decide without the check.  Choose with {k:Left} and {k:Right}.  It is for
+ | the terminal version; the window version is not concerned.  Saved as
+ | {c:terminal_charset}; Automatic is saved as nothing
+ | ({n:appterm-charset}).
+Undo Levels (0 to 500) | The number of operations that the Editor keeps
+ | for Undo ({n:edit-b-undo}).  0 turns Undo off.  A number above 500 is
+ | made 500.  The Editor uses it at the next start.  Saved as
+ | {c:undo_levels}.
+Backups Kept (0 to 99) | The number of numbered backups, such as
+ | {c:.backup/report.bak01}, that a Save keeps of the file that it replaces
+ | ({n:file-backup}).  The default is 3.  0 makes none.  A number above 99 is made 99.  The
+ | line under the field shows how many whole copies are kept and that they
+ | are in the directory .backup.  A lower number than before puts a question first, in a
+ | box ({n:file-backup-option}); {k:N} keeps the old number and the rest of
+ | Setup is saved.  Saved as {c:backups}; 3 is saved as nothing.  The old key
+ | {c:backup} (yes or no) of the first versions is not read, because those
+ | versions wrote it in every file; it is never saved.
+.end
+.h3 Choices and pages of Setup [str-setup-keys]
+.ix Setup, keys
+.ix Setup, pages
+.ix PgUp, Setup
+.ix Choice field, keys
+The keys of Setup are those of the panels of the Editor.  A panel of several
+pages: {k:PgUp} goes forward, {k:PgDn} goes backward, {k:Ins} accepts all the
+pages and {k:Esc} cancels all of them.  A field with choices (Autosave, Print
+To, Printer Queue, Paper for New Documents and Terminal Characters):
+.table 13 47
+Key | What it does
+{k:Right} | The next choice; nothing at the last.
+{k:Left} | The choice before; nothing at the first.
+{k:Space} | The next choice, round to the first after the last.
+{k:F2}, {k:Keypad +} | The list of the choices.
+{k:Del} | The default.
+.end
+A letter does nothing in a field with choices.  {k:Enter}, {k:F2} and {k:Keypad +} never
+open another panel in Setup: every page is part of the one panel.
+.h3 The colors of the screen [str-colours]
+.ix Colors, screen
+.ix Colors panel
+.ix Screen colors
+.ix Contrast, warning
+.ix Default colors
+.ix Colors, reset
+.ix Colors, recovery
+The second page of Setup (reached with {k:PgUp} from the first page) sets the
+foreground and the background color of every kind of text that the Editor
+and the Document Manager show.  The colors are for the screen only, in the
+Editor, the Document Manager and their panels; a printed page, the PDF and
+the Preview are not changed by them, and the Viewer has its own colors.  A
+screen that has no setting is blue, with yellow text.
+.pic pictures/str-colors-panel.png 5 The page of the colors in Setup: the colors that the programs have until you change them.
+.h4 The kinds of text
+Each row of the page is a kind of text, with its foreground color, its
+background color and a sample drawn in them.  These are the kinds and the
+colors that the programs have until you change them.
+.table 13 15 22
+Kind of text | Colors, foreground on background | Where it is used
+Normal text | yellow on blue | The text of a document, and the ground of the
+ | | screen.
+Bold text | white on blue | Bold text, headlines, the names of the fields of
+ | | a panel when they are bold.
+Italic text | light-green on blue | Text in italics.
+Underlined text | yellow on blue | Underlined text, with the line.
+Markers | light-cyan on blue | The labels of the markers in the text.
+Dim text, ruler | light-grey on blue | The dots for spaces, the signs of tabs
+ | | and line ends, the ruler and the rules.
+Highlight | black on cyan | The area that Copy, Cut, Delete or Move acts on.
+Print Error markers | light-red on blue | The markers that a failed Print
+ | | adds to the text.
+Keycaps | black on light-grey | A Keycap marker; the X11 version also draws a
+ | | box round it.
+Status line | black on light-grey | The first row of the Editor, and the
+ | | title bar of a long text.
+Message line | black on light-grey | The last row of the Editor and of the
+ | | Document Manager.
+Function key labels | black on light-grey | The two rows of key labels.
+Menus | black on light-grey | The menu of the Editor and the bar of the spell
+ | | check.
+Panels | black on light-grey | Every box and panel, and the text in them.
+Selected entry | white on black | The entry of a list, a menu or a panel on
+ | | which the focus is, and the chosen entry of a menu bar.
+Cursor | black on #ffb000 | The cursor of the X11 version (an amber block);
+ | | the terminal gets this color for its own cursor where it can set it.
+.end
+A color of a kind is a part of it: bold text in a panel keeps the
+color of the panel and gets the bold face, and dim text in a panel is
+between the colors of the panel.  Bold, italic and underlined text keep
+their faces and their lines whatever colors you choose.
+.h4 Choosing a color
+The page works with these keys.  The color of the entry is chosen as any
+choice of Setup is.
+.table 17 43
+Key | What it does
+{k:Up}, {k:Down}, {k:Enter} | Choose the kind of text; {k:Home} and
+ | {k:End} go to the first and the last.
+{k:Tab} | Switch between the foreground color and the background color of
+ | the kind.
+{k:Right} | The next color of the palette; nothing at the last.
+{k:Left} | The color before; nothing at the first.
+{k:Space} | The next color, round to the first after the last.
+{k:F2}, {k:Keypad +} | Open the palette, a grid of colors, to choose one.
+{k:Del} or {k:D} | Take the default color for this entry.
+{k:R} | Take the default colors for every kind of this version, after the
+ | question "Use the default colors for every kind of text?".
+{k:V} | Show and change the colors of the other version, the terminal or
+ | X11, whichever is not running.
+{k:PgUp}, {k:PgDn} | Go to another page of Setup.
+{k:Ins} | Keep the colors, and every other change of Setup, in the settings
+ | file and close Setup.
+{k:Esc} | Close Setup and take back every change, the colors too.
+{k:F1} | Help.
+.end
+A color that you choose is in use at once.  {k:Esc} takes it back, and
+{k:Ins} keeps it in the file {c:config} ({n:appcfg-key-colors}).  The Editor
+reads the colors at start, so a change is seen in an Editor that is started
+afterwards.
+The palette is a grid of colors; {k:Left}, {k:Right}, {k:Up} and {k:Down}
+move in it, {k:Enter} chooses the color that is marked and {k:Esc} closes
+the palette and keeps the color as it was.  A line under the grid names the color.  What the grid holds
+depends on the version.
+.pic pictures/str-colors-palette.png 5 The palette of the X11 version, opened with F2 on the color of the entry.
+.table 10 50
+Version | The palette
+X11 | The 16 colors of the VGA palette, 16 greys and 48 colors of 16 hues at
+ | three strengths: 80 colors.  {k:T} prompts for a name or any color
+ | {c:#rrggbb}.
+Terminal | The 16 colors of the VGA palette.  Where the terminal shows 256
+ | colors, the 240 others of its palette follow.  Where the terminal reports
+ | that it shows any color, {k:T} prompts for a name or any color
+ | {c:#rrggbb}.
+.end
+{k:T} (also {k:#}) in a terminal that shows 16 or 256 colors only gives the box
+{c:This terminal shows 16 or 256 colors: choose one from the palette}; choose
+the color in the grid.  A name that is not a color gives the box {c:That is not
+a color: write a name such as light-cyan, or #rrggbb}, and the box prompts
+again.
+The 16 colors of the VGA palette have these names, which can also be written
+in the file: black, blue, green, cyan, red, magenta, brown, light-grey,
+dark-grey, light-blue, light-green, light-cyan, light-red, light-magenta,
+yellow and white.  Capitals, spaces, hyphens and underscores do not
+matter, so Light Grey is light-grey; gray is the same as grey, and the names
+bright-green, bright-white and so on are the light colors.
+.h4 What a terminal shows
+The terminal version requests the colors of its text from the terminal, and it
+paints the background of every cell, which clears the screen with the color
+of normal text.  When the program ends, also when a signal stops it, the
+colors and the cursor of the terminal are put back.  How many colors the
+terminal shows is found in this order: the environment variable
+{c:STRATA_COLORS} (the words none, 16, 256 or truecolor), the variable
+COLORTERM (truecolor or 24bit), and the name of the terminal in {c:TERM}
+(a name with 256color has 256 colors; a name with truecolor or direct has
+all; dumb, vt100 and the other names that start with vt have none; the
+rest have 16).  A color that the terminal cannot show is replaced by the
+nearest that it can: of the 256, or of the 16.  A terminal that shows no
+colors gets the text attributes of the old terminals, as the programs always
+sent them: bold, dim, underline and reverse video, with cyan for markers;
+Setup still lets you set the colors for another terminal or for X11.
+.h4 Colors that are hard to read
+The page warns, in the row under the list, when the text color of the kind
+that is chosen is too near its background color: the contrast is less than
+3 to 1.  The warning rejects nothing.
+.h4 Getting the colors back
+A screen that has become unreadable is mended in either of three ways.  Start
+the Document Manager or the Editor with the option {c:--default-colors}, or
+set the environment variable {c:STRATA_DEFAULT_COLORS} to 1: the program uses
+the
+colors that it is delivered with and ignores the color settings; the
+Editor that the Document Manager starts does the same.  Or open Setup as
+usual, press {k:PgUp} for the colors, then {k:R} and {k:Ins}.  Or take the lines of the colors out of the
+file {c:config}.
+.h3 Accepting the panel [str-setup-accept]
+.ix Setup, accept
+.ix Setup, validation
+.ix Settings not saved
+.ix Settings saved to
+.ix Settings are in effect but could not be saved
+{k:Ins} accepts the panel and {k:Esc} cancels it: nothing is changed.  A
+value is checked when you leave its field, and all of them are checked when
+{k:Ins} is pressed.  A wrong value never closes the panel: the focus goes to
+the field that is wrong (or stays in it), the line at the foot shows the
+reason in bold in place of the words about the field, and every other value
+that you typed is kept.  Type the right value, or press {k:Del} for the
+default, and go on.  {k:Esc} still throws the whole panel away.
+.table 24 36
+Check | Reason shown
+The interval is not 1 to 86400 | The autosave interval is 1 to 86400 seconds
+A Window Rows field is not empty or a number | The window rows are a whole
+ | number, or empty
+Undo Levels is not a number | Undo Levels is a whole number from 0 to 500
+Backups Kept is not a number | Backups Kept is a whole number from 0 to 99
+The PDF Directory is a relative path | The PDF Directory is a full path or
+ | starts with {c:~/}
+The PDF Viewer is not a full path | The PDF viewer needs its full
+ | path, such as {c:/usr/bin/evince}
+The PDF Viewer is not an executable file | The PDF viewer is not an
+ | executable file
+The PDF Viewer can be changed by others | The PDF viewer or its directory can
+ | be changed by other users: it is not used
+The PDF Viewer is a word processor | A word processor is not a PDF viewer
+The Dictionary Language is not a code | The Dictionary Language is a code
+ | such as en_US or de_DE
+The Initial Working Directory does not exist | The initial working
+ | directory does not exist
+.end
+Autosave, Print To, Printer Queue, Paper for New Documents and Terminal
+Characters are choices: they cannot be wrong.  Backups Kept, when it is
+lowered, still puts a question first, in a box, after {k:Ins}.
+.pic pictures/str-setup-error.png 5 A refused value: the reason is in the line at the foot of the panel, and the focus stays in the field.
+When all checks pass the new values are in effect at once, the help file is
+read again, and the file is written.  The
+footer then shows "Settings saved to PATH", with the full path of the
+file.  If the file cannot be written the notice "Settings are in effect but
+could not be saved" is shown instead: the values are used until the program
+ends.  The file also holds the settings of the Editor (its Options panel);
+Setup does not change them.
+.pic pictures/str-setup-browse.png 5 The list of directories of Setup.
+.note The settings of the Document Manager are saved only by Setup.  The
+  directory and the document name that the panels remember last only for the
+  run of the program.  The list of fonts is saved on its own (see
+  {n:str-fonts}).

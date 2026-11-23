@@ -1,0 +1,25 @@
+
+------------------------------ Controlling Spacing -----------------------------
+
+Spacing between regions of a printed document can be controlled globally, by 
+level, or locally for individual blocks or sections.
+
+Settings on the Global Format and Block Format panels control spacing between
+lines, between the headline and the first text block, between text blocks, 
+between a section and its subsections, and between a section and its peer 
+sections. There are separate settings to control spacing for individual
+levels on the Level 1 - 9 Format panels.
+
+Settings on the Note Format panels control spacing between lines within a
+note, spacing between blocks within a note, and spacing between notes on a page.
+
+--------------------------------------------------------------------------------
+# You can enter any value between 0.00 and 300.00 at each of the spacing 
+  prompts. For example, for line spacing a value of 1.00 represents single 
+  spacing and a value of 2.00 represents double spacing.
+
+# When the document is printed, the actual size of the space is determined by 
+  the size of the largest typeface in the preceding line of text.
+--------------------------------------------------------------------------------
+        Global Format             Format Block             Note Format
+        Ruler Spacing          Keyboard Summary         Help Index

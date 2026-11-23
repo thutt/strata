@@ -1,0 +1,25 @@
+------------------- Convert Document to Spelling Dictionary --------------------
+
+Convert Document to Spelling Dictionary converts a document into a custom 
+spelling dictionary you can use to spell check a document.
+
+  +---------------- Convert Document to Spelling Dictionary -----------------+
+  |                                                                          |
+  |             Working Directory:                                           |
+  |                                                                          |
+  |                 Document Name:                                           |
+  |                                                                          |
+  |      Spelling Dictionary Name:                                           |
+  |                                                                          |
+  +--------------------- Press Ins to Convert Document ----------------------+
+--Procedure---------------------------------------------------------------------
+ Create and save a document containing the words you want to use.  Enter all
+  derivations of the word, such as plural, possessive, and capitalization (all
+  lowercase words are added in lowercase and with an initial capital).
+ Select Maintain Dictionaries from the Document Manager.
+ Select Convert Document to Spelling Dictionary.
+ Enter the name of the document containing the dictionary entries and a name
+  for the dictionary to create (the extension .SPC is assumed).
+--------------------------------------------------------------------------------
+          Document Manager                          Creating Custom Dictionaries
+          Keyboard Summary                                  Help Index

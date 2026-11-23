@@ -1,0 +1,70 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+OPEN QUESTIONS AND KNOWN DEVIATIONS
+===================================
+
+Things the analysis could not settle, so stred keeps the bytes verbatim and
+approximates the behaviour.
+
+Document format
+---------------
+  - MR<n>: 1003/1006/1023/1028 seen. Probably a writer revision; unknown.
+  - Block records BM<n>, BC1, BV<n>; column records CT, CV (CL/CR are now
+    known). Values and frequencies are known (BM takes 0, 8, 9, 10, 11, 15, 16;
+    BC1 marks ordinary paragraphs), meanings are not. Possibly block-mode bit
+    flags and column borders/spacing.
+  - Header YC.../YI.../P3Q1, P<n>C33, FU, FL. Unknown.
+  - Attribute bits. 1 bold and 4 italics are certain; 16 is used by the Ctrl-U
+    (underscore words) token; 2, 8 and the high bits (2048+) are not mapped to
+    the manual's list (strikethrough, sub/superscript, small caps, double
+    underscore, two printer-specific).
+  - The flags byte of the attribute token (12 m f): 00, 08, 80, 82. 08 wraps
+    keycap words such as PrtSc in scr.doc.
+  - 1C begins every document's first block. Probably a start-of-text / title
+    flag.
+  - Marker type numbers not in the table in DOC-FORMAT.txt never occur in the
+    samples; names for 15, 17/18 and 32 are guesses.
+  - Counter marker values are not evaluated; they display as [Counter].
+
+Layout
+------
+  - Tab stops in scr.doc: resolved. The 11 mismatching stored widths are stale
+    caches; the original recomputes tab layout from the stops and displays the
+    text at offset 5, as stred does (see ORIGINAL-OBSERVATIONS.txt).
+    tests/tabcheck.c still tolerates exactly those 11.
+  - Fonts and typography. Proportional fonts, even justification, widow/orphan
+    control, borders and spacing are properties of the *formatter*; the editor
+    shows a monospaced approximation, as the original did.
+  - Column width unit. CW is character cells; CL/CR are left/right gap cells
+    (verified).
+  - FLA0 very probably disables section tags (see ORIGINAL-OBSERVATIONS.txt).
+
+Other files
+-----------
+  - .SPL .HYP .EXC .SYN (spelling, hyphenation, thesaurus), .FNT, .PD/.GD/.TD
+    payloads, .LVF strokes, .SCT, .GMF: identified, not decoded. Spell check and
+    thesaurus in stred are therefore stubs.
+
+Terminal limitations (not format issues)
+----------------------------------------
+  - Alt-function keys and Gray + - * are not delivered by most terminals; Alt-Fn
+    is accepted in xterm form (ESC [ 1;3Q ...) and everything is reachable
+    through Ctrl-F (an "Alt commands" menu) or the F12 menu. Esc-prefix (Alt)
+    keys cover outline control.
+  - Ctrl-I = Tab, Ctrl-M = Enter and Ctrl-[ = Esc in a terminal, so italics is
+    Alt-I (the original's Ctrl-I), and section promote/demote is Alt-< / Alt->
+    (the original's Ctrl-[ / Ctrl-]).

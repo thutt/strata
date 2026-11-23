@@ -1,0 +1,356 @@
+REVIEW OF THE PREREQUISITES DOCUMENT (owner comments, 2026-11-17)
+======================================================================
+
+The owner annotated sample.docs/document-review/prereq.doc with 37
+comment markers (written 20:59 to 22:01).  This file lists each one
+with the text before it, then the tasks that follow from them.
+
+Comment 1
+  After: ...ce, programs and packages for the terminal version and the X11
+    version
+  Owner: Don't you think this is too long for a document title?
+
+Comment 2
+  After: ...l version and the X11 version TVersion 0.9.0 TLogic Magicians
+    Software
+  Owner: Use \lms.
+
+Comment 3
+  After: ... comes in two versions. The terminal version runs in any text
+    terminal
+  Owner: I don't think this is true. A 7-bit xterm looked horrible. An 8-bit
+    xterm had some weird characters. There must be more specificity about what
+    terminal is needed.
+
+Comment 4
+  After: ...ce T Item T Terminal version T X11 version TDisplay TAny text
+    terminal
+  Owner: Not quite 'any'!
+
+Comment 5
+  After: ...80 columns by 25 rows or more TAn X server; a window of 80 by 50
+    cells
+  Owner: rows, not cells.
+
+Comment 6
+  After: ...ows or more TAn X server; a window of 80 by 50 cells 800 by 950
+    pixels
+  Owner: The pixel size is not relevant to a person writing documents.
+
+Comment 7
+  After: ...s or more TAn X server; a window of 80 by 50 cells 800 by 950
+    pixels T
+  Owner: If this is claimed, it better be measured. And 'small' is relative.
+    More descriptive? Pages, words?
+
+Comment 8
+  After: ...els TMemory, small document T2 MB T8 MB TDisk, programs
+  Owner: This is unqualified and misleading. Is the entire size of the Strata
+    set of executables, or one program.
+
+Comment 9
+  After: ...nt T2 MB T8 MB TDisk, programs T0.7 MB T0.7 MB TImages in the text
+    TNo
+  Owner: This is also misleading. You can absolutely have images in the text;
+    they are only printed and not displayed. this is a crucial distinction.
+
+Comment 10
+  After: ... TPreview and Print to PDF TYes, if an X display exists for the
+    Viewer
+  Owner: Confusingly two items are stuck together which caused you to answer
+    poorly for the terminal version. You cannot preview for terminal, unless
+    there is X. But, you can print to PDF, as that is a separate concern.
+    Separate these two issues into two blocks.
+
+Comment 11
+  After: ...TYes, if an X display exists for the Viewer TYes TNetwork
+  Owner: This is a non-sensical line item. Remove it.
+
+Comment 12
+  After: ...no installation by an administrator: they run from the build
+    directory
+  Owner: That they can run from a build directory is not relevant to release
+    builds. Conditionalize this. Release builds are meant to be installed by
+    actual non-technical users.
+
+Comment 13
+  After: ...u copy them to, or from a prefix that the install script of the
+    source
+  Owner: The install script is not of the source. It could be called the
+    Strata Install Script.
+
+Comment 14
+  After: ...l 15( ) in your home directory (the document Getting Started tells
+    how
+  Owner: If you assume that people have read that, put that as a prerequisite
+    to read before doing using the tutorial. Or, combine the two documents
+    into one, and cross reference the section.
+
+Comment 15
+  After: ...ting Started tells how). Settings are kept in the directory
+    .strata of
+  Owner: In your home directory, not of.
+
+Comment 16
+  After: ... (the Editor needs at least 20 rows). A larger window is used as
+    it is
+  Owner: as is.
+
+Comment 17
+  After: ...r window is used as it is. Every common terminal and the Linux
+    console
+  Owner: Not true. Test this with probing. I see unusual characters in a 7-bit
+    and 8-bit xterm.
+
+Comment 18
+  After: ...minal and the Linux console will do. B T A keyboard with function
+    keys
+  Owner: Are there any keyboards without function keys? If you have an
+    example, you can leave this sentence in, otherwise remove it.
+
+Comment 19
+  After: ...he 37(1Alt-F ) commands, and 37(1Ctrl-F12 ) opens the marker
+    commands.
+  Owner: This is rather offhanded. Provide a place where the user can look to
+    find the key mappings. Maybe the editor needs some master panel that shows
+    the current bindings?
+
+Comment 20
+  After: ...mmands. S TMemory B TThe Editor needs about 2 MB with a small
+    document
+  Owner: Quantify 'small'.
+
+Comment 21
+  After: ...cuments of several megabytes; printing needs more, because LaTeX
+    does.
+  Owner: Do you really think anyone has a machine with only 64Mb of memory?
+    That's impossible to obtain. Be more realistic! Don't be loosey goosey on
+    the numbers. Measure it with some benchmarks. Perhaps another document
+    that shows memory usage from 1 page letter, to a 4500 page anthology of
+    Mark Twain's work in table format to give people an idea of what's
+    necessary to edit with the terminal program and the X11 program,
+    previewing and printing to a PDF.
+
+Comment 22
+  After: ...sk space T What T Disk space TThe source of the programs and
+    documents
+  Owner: Not a relevant statistic. Users don't care!
+
+Comment 23
+  After: ... the programs and documents T13 MB TThe build directory, release
+    build
+  Owner: Remove, this is not relevant to an install.
+
+Comment 24
+  After: ...y, release build T5.4 MB TThe Editor and the Document Manager,
+    release
+  Owner: You mean 'an installed product' here, right? If so, include the full
+    size of the release, including documentation and sample docs.
+
+Comment 25
+  After: ...cument Manager, release T0.7 MB TThe settings in the directory
+    .strata
+  Owner: Use tilde or ${HOME} notion to reference the config file.
+
+Comment 26
+  After: ... TComputer and display B T Everything that the terminal version
+    needs.
+  Owner: No, don't do this. Restate the requirements, do not make a user go an
+    search somewhere else.
+
+Comment 27
+  After: ...least 1024 by 1000 pixels for the default window of 800 by 950
+    pixels.
+  Owner: Again, no. You can list the minimum resolution, but not the size of
+    the edit window.
+
+Comment 28
+  After: ...t to a PDF, Preview, and the images of equations, pictures and
+    keycaps
+  Owner: Specify that Latex is required to get these things *in the editor*!
+
+Comment 29
+  After: ...l of it is optional: without it, Print and Preview say what is
+    missing
+  Owner: Like what? What could be missing? A 60W light bulb? A printer? Paper?
+    Be more specific.
+
+Comment 30
+  After: ...without it, Print and Preview say what is missing in the message
+    line.
+  Owner: If 'it' is optional, how can they be missing? It is also singular,
+    and it's not clear to what 'it' refers. Clean this up.
+
+Comment 31
+  After: ... as images B TThe total is about 270 MB. A Preview of a document
+    needs
+  Owner: I think 'in addition' is a comma clause?
+
+Comment 32
+  After: ...ocument needs in addition the Viewer, which is made next to the
+    Editor
+  Owner: Made next to the Editor? What does that even mean?
+
+Comment 33
+  After: ...sion of the Editor; without a display the Editor says so in a
+    message.
+  Owner: Tortured writing in the previous few sentences. Clean it up, be more
+    precise and more clear.
+
+Comment 34
+  After: ...; without a display the Editor says so in a message. S TExtra
+    features
+  Owner: These are core features, not extra. They are optional only if spell
+    check is never used, and thesaurus is never used. Have you checked what
+    happens if the prerequisites are not installed and a spell check is
+    attempted? Is the result good for the user?
+
+Comment 35
+  After: ...al feature that will not work; only the first line is needed to
+    build.
+  Owner: No! Do not make the user run all sorts of commands. Write a developer
+    too to see if they have the prerequisites to build the product *and* run
+    the product. The install should check if the prerequisites to *run* the
+    product are installed, but not if the prerequisites to *build* are
+    installed.
+
+Comment 36
+  After: ...Association, where each font of the list says whether it is
+    installed.
+  Owner: This is EXTREMELY confusing to someone who is trying to get the
+    program to run on their system. These words are meaningless because they
+    have never run the program. Be more clear.
+
+Comment 37
+  After: ...ont of the list says whether it is installed. S TInstalling
+    everything
+  Owner: Again, NO! The install should take care of all these prerequisite
+    installs. Do not make the user try to manage all this administrative
+    garbage! Do the right thing and make it work.
+
+TASKS THAT FOLLOW (not started)
+=======================================================================
+
+P1  Rewrite the document (comments 1-3, 4-11, 13-15, 17-22, 24-34, 36).
+    - Title shorter (1); "Logic Magicians Software" as \lms (2).
+    - Terminal version: find out and state WHICH terminal works: probe a
+      7-bit xterm, an 8-bit (UTF-8) xterm and others; state the font need
+      (3, 17).  Not "any" terminal (4).  Rows, not cells; no pixel sizes (5,
+      6, 27); list the minimum resolution only.
+    - Memory and disk: MEASURE them.  "Small" is replaced by pages and
+      words; a table from a one page letter to a 4500 page anthology (the
+      Mark Twain text, 16 MB, is in sample.docs) for the terminal and the
+      X11 version, memory and time to open (7, 20, 21).  Disk: say what
+      is counted: the complete installed product with documentation and
+      sample documents, and each program (8, 24).  Drop the 64 MB figure
+      (21) and the statistic users do not care about (22, 23).
+    - Images: the terminal version CAN hold images in a document; they are
+      only printed, not shown.  State this crucial point (9).  Preview and
+      Print to PDF are TWO blocks: PDF needs LaTeX only; Preview needs
+      the Viewer and an X display (10).
+    - Remove the nonsensical line item (11) and the run-from-a-build-
+      directory text from release documents: condition it (12).
+    - Say "the Strata Install Script" (13); a prerequisite reading or one
+      document with cross references, instead of a loose pointer (14, 26:
+      restate the requirements, do not send the reader away).
+    - "In your home directory" (15), "as is" (16), tilde or ${HOME} for the
+      configuration file (25), keyboards with function keys: keep only with
+      an example, else remove (18).  Say where the key mappings can be
+      found (19): see P3.
+    - LaTeX is required to get equations, pictures and keycaps IN THE EDITOR
+      (28).  Cut the vague "what could be missing" and the tortured
+      sentences about optional items, "made next to the Editor", "in
+      addition" (29-33).  Spell check and thesaurus are CORE features: say
+      what the Editor does when the packages are missing and make that
+      result good for the user (34): see P4.
+    - Replace the build-time wording of the requirements for someone who has
+      never run the program (36).
+
+P2  Measure memory and time (comments 7, 20, 21): a benchmark script and a
+    table document.  Sizes from one page to the 4500 page anthology
+    (sample.docs/twain.txt); terminal and X11; open, scroll, search, save and
+    print-to-PDF time and peak memory.  Report in docs/ and in the manual
+    (a plain table).
+
+P3  A master panel for the key bindings (19): ask the owner whether the
+    Editor should get a panel listing the current key bindings (a help
+    topic exists; this is a new view of live bindings).  Question Q1.
+
+P4  Spell check and thesaurus without their packages (34): test what
+    happens in the Editor when the dictionary or thesaurus packages are
+    absent; the message must say what to install; the install script
+    installs them by default (see P5).
+
+P5  The install script (35, 37): the install checks and installs the
+    packages needed to RUN the product, and does NOT check for the ones
+    needed to BUILD it; the user is never made to run a list of commands
+    and never to manage prerequisites: the script does it (with the
+    existing size list and the [y/N] question).  A separate developer tool
+    (a build script target, for example strata-build check-tools) tells a
+    developer whether the prerequisites to BUILD and to RUN are present.
+    This joins T3 of docs/GETSTARTED-REVIEW.txt.
+
+Questions for the owner
+-----------------------
+Q1  A key bindings panel in the Editor (comment 19): yes?
+Q2  Combine the Prerequisites and Getting Started documents, or keep two
+    documents with cross references (comment 14)?
+Q3  Which terminal emulators do you want named as supported (comment 3,
+    17)?  I will probe xterm (7-bit and UTF-8), the Linux console and
+    others and report what draws correctly.
+
+
+RESULT: THE PREREQUISITES ARE THE FIRST PART OF GETTING STARTED (W04)
+====================================================================
+The document of the prerequisites was merged into Getting Started
+(manual/src/gs-need.src; docs/GETSTARTED-REVIEW.txt, RESULT, has the
+comments of the other review).  How each comment was met:
+
+   1 No separate title; the part is the chapter "What you need".
+   2 The company name is \lms (the generator makes it).
+   3 The terminal section states what is needed: UTF-8, a font with the
+     shapes (named fonts, the xterm line), Alt as Esc; and says what the
+     Editor does at the start when the terminal cannot read UTF-8.
+   4 Not "any" terminal: the terminals that work and the ones with problems.
+   5 Lines, not cells (and the window height is a setting).
+   6 No pixel size of the window; only the minimum resolution of the screen.
+   7 Memory in pages and words, from 1 to 3625 pages, measured; no "small".
+   8 The disk table says what is counted (programs, documents, templates,
+     manuals, samples) and the prerequisites separately.
+   9 Pictures: they print in colour; the terminal version does not show them,
+     the window version does.
+  10 Preview and Print to a PDF are separate rows of the table of features.
+  11 The line item that made no sense (Network) is gone.
+  12 Running from a build directory is only in the section for people who
+     build.
+  13 "the Strata Install Script".
+  14 One document: Getting Started and the Tutorial are parts of it.
+  15 "in your home directory".
+  16 "as it is" (the wording is gone with the old sentence).
+  17 See 3 (the study of the terminals: docs/TERMINALS.txt).
+  18 The keyboard sentence is gone (no example of a keyboard without function
+     keys was known).
+  19 The section "If a key does not work" says where the keys are: the Key
+     Reference leaflet and the key tables of the Reference Manual.  A live
+     panel of the bindings is on the worklist for later.
+  20 "small" is quantified (see 7).
+  21 The 64 MB claim is gone; the recommended memory is 256 MB for a book of
+     3,600 pages and 64 MB for 1,000 pages (docs/MEASUREMENTS.txt).
+  22 The statistic that users do not care about is gone.
+  23 The line "closing the window acts as Ctrl-Q" is gone.
+  24 The disk sizes are of the installed product, with the manuals and the
+     samples (9.2 MB all together).
+  25 The settings directory is written ${HOME}/.strata.
+  26 The requirements are restated, not sent elsewhere.
+  27 Only the minimum resolution of the screen.
+  28 "Support from LaTeX" in the table of features: the graphics in the
+     Editor need it.
+  29-33 The vague sentences about optional items and "made next to the
+     Editor" are gone; the table of features says what each feature needs.
+  34 The spell check and the thesaurus are core features: the text says so,
+     and says what the Editor shows when their programs or data are missing
+     (a box that names the package; W13).
+  35 The install script installs what is needed to RUN Strata; the tool
+     "strata-build check-tools" is for people who build (W12).
+  36 The words are plain: the programs, what each needs, what you give up.
+  37 The install script installs the prerequisites (and asks first).

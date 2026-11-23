@@ -1,0 +1,15 @@
+# Worked examples of chapter 9: title ;; text ;; TeX.
+The quadratic formula ;; A fraction whose numerator holds a sign, a root and a power, in a displayed equation. ;; x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+A sum with limits ;; The limits are a subscript and a superscript of the large operator; the fraction on the right is large because the equation is displayed. ;; \sum_{k=1}^{n}k=\frac{n(n+1)}{2}
+An integral ;; The thin space \, before the differential is typed by hand; the command \infty is the sign for infinity. ;; \int_{-\infty}^{\infty}e^{-x^2}\,dx=\sqrt{\pi}
+The definition of a derivative ;; The name lim is a command, so it is upright; the subscript goes under it. ;; f'(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}
+The binomial theorem ;; The command \binom makes the coefficient; the braces are needed round exponents of more than one character. ;; (x+y)^n=\sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k
+A product of matrices ;; The environment pmatrix has parentheses; the cells of a row are separated by & and the rows by two backslashes. ;; \begin{pmatrix} a & b \\ c & d \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}=\begin{pmatrix} ax+by \\ cx+dy \end{pmatrix}
+A function defined in cases ;; The environment cases has two columns, the value and the condition; the words are set by \text. ;; |x|=\begin{cases} x & \text{if } x\ge 0 \\ -x & \text{if } x<0 \end{cases}
+A derivation in several lines ;; The environment aligned puts the lines under each other at the sign &, here the equals sign. ;; \begin{aligned} (a+b)^2 &= (a+b)(a+b) \\ &= a^2+2ab+b^2 \end{aligned}
+A continued fraction ;; The command \cfrac keeps every level in full size. ;; \varphi=1+\cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{1+\cdots}}}
+An inequality with large brackets ;; The commands \left and \right make the parentheses as tall as the sums between them. ;; \left(\sum_{k=1}^n a_kb_k\right)^2\le\left(\sum_{k=1}^n a_k^2\right)\left(\sum_{k=1}^n b_k^2\right)
+A law of physics with vectors ;; The commands \nabla, \times and \partial are symbols, and \vec puts an arrow over a letter. ;; \nabla\times\vec{E}=-\frac{\partial\vec{B}}{\partial t}
+A chemical equation ;; The letters of the elements are upright, by \mathrm, and the long arrow is a symbol. ;; 2\mathrm{H}_2+\mathrm{O}_2\longrightarrow 2\mathrm{H}_2\mathrm{O}
+A Fourier transform ;; The accent \hat is on one letter; the thin spaces \, are typed by hand. ;; \hat f(\xi)=\int_{-\infty}^{\infty} f(x)\,e^{-2\pi i x\xi}\,dx
+A norm ;; The commands \lVert and \rVert are the double bars of a norm, with the spacing of an opening and a closing sign. ;; \lVert x\rVert_2=\sqrt{\sum_i x_i^2}

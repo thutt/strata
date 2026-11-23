@@ -1,0 +1,1523 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+PRINTING AND PREVIEW THROUGH PDFLATEX (DESIGN)
+===============================================
+
+Status: the writer and the program are implemented as described in section
+14 (src/latex.c, src/strprint.c).  Preview (section 15) and Print, Draft and
+Final (section 16) call them from the editor; sections 1 to 13 are the
+original design, and where section 16 differs from it, section 16 is what
+the program does.
+
+1. Why
+------
+The original carried a printer driver for every printer and its own
+typographic formatter.  Today the operating system (CUPS) talks to the
+printer, so only the layout is left to the program, and a TeX engine
+already does line breaking, pagination, fonts, footnotes, tables and
+headers.  Using it gives Strata real pages, a real Preview and a working
+Repaginate without writing a formatter or a driver.
+
+The price is that the page breaks will not be those of the original.  (The
+design kept the text output as a fallback and as the Draft quality; Print no
+longer writes text, Draft is a quick LaTeX print, see section 16.)
+
+2. The chain
+------------
+  document -> name.tex -> pdflatex -> name.pdf -> lp (or lpr) -> printer
+                                          |
+                                          +-> Preview: xdg-open name.pdf
+                         -> latex -> name.dvi (kept, or dvipdfmx -> PDF)
+
+  - Engine: pdflatex, run as
+        pdflatex -no-shell-escape -interaction=nonstopmode
+                 -halt-on-error name.tex
+    in a private temporary directory, twice when the document has a table
+    of contents, a list of figures or an index, as the .aux file needs.
+    The page is typeset with the classic 8-bit fonts (T1 encoding, inputenc
+    utf8, lmodern), so the preamble does not depend on fonts of the system;
+    section 5 says how the characters of CP437 reach those fonts.
+  - Other routes: the same .tex also runs under latex (the DVI engine).
+    strprint --dvi keeps the DVI file and strprint --pdf-via-dvi runs
+    dvipdfmx on it for the PDF.  Section 14 says what differs.
+  - Output: PDF.  CUPS prints PDF; it does not print DVI without
+    conversion, so the DVI is for people who want it.
+  - Printing: "lp -n <copies> -d <printer> name.pdf".  lp comes with CUPS
+    (package cups-client) and is the same command lpr stands for; lpr
+    itself needs cups-bsd, which is not installed on every system, so lp
+    is tried first and lpr second.  The printer list for the panel comes
+    from "lpstat -e" (destinations) and "lpstat -d" (the default).
+  - Preview: the PDF is opened with xdg-open (or the program in
+    STRATA_PDF_VIEWER).  A terminal-only machine gets a message with the
+    path of the PDF.
+  - Failures: a missing program is reported by name ("pdflatex did not
+    run: sudo apt install texlive-latex-recommended") and a TeX error shows the
+    first error line and its line in the document (the .log is kept in
+    the temporary directory and its path is shown).
+
+3. Prerequisites (README.txt lists them when this is built)
+-----------------------------------------------------------
+  texlive-latex-base           pdflatex, latex
+  texlive-latex-recommended    geometry, amsmath, graphicx, tools... (common)
+  texlive-latex-extra          adjustbox, pdflscape (pmboxdraw is in
+                               texlive-latex-extra or texlive-fonts-extra)
+  texlive-pictures             tikz
+  lmodern                      the text and typewriter fonts
+  texlive-extra-utils          dvipdfmx (for --pdf-via-dvi)
+  cups-client                  lp, lpstat
+All are optional: without them Print and Preview fall back to text.  No font
+of the system is needed.
+
+4. Overview of the translation
+------------------------------
+A new module, src/latex.c with src/latex.h, turns a Doc (or a part of it:
+the section, the block, a range of sections, as printmenu.c already
+selects them) into a string of LaTeX.  The module only reads the document;
+it knows nothing about the screen.  API (sketch):
+
+    typedef struct {
+        int double_spaced, title_page, footers;
+        const char *printer_font;     /* default text font, may be NULL */
+    } LatexOptions;
+
+    char *latex_document(const Doc *d, int first, int last,
+                         const LatexOptions *o, size_t *len);
+    int   latex_run(const char *tex, size_t len, const char *dir,
+                    char *pdf, size_t pdfcap, char *err, size_t errcap);
+    int   latex_print(const char *pdf, const char *printer, int copies,
+                      char *err, size_t errcap);
+    int   latex_preview(const char *pdf, char *err, size_t errcap);
+
+and it is called from printmenu.c where the text export is called now.
+
+5. Mapping of the document
+--------------------------
+Preamble: \documentclass{article}; geometry for the margins and the paper
+(PML, PMR, PMT, PMB and the DP record of the Global Page Layout; the
+layouts of the other pages: see below); fontenc T1, inputenc utf8 and
+lmodern for the fonts; fancyhdr for headers and footers; multicol for
+winding columns.
+
+Structure (structured documents):
+  - A section's first block is its headline.  Every level is set by the
+    one macro \strhead{level}{setup}{text} (a paragraph in \Large for level
+    1, \large for level 2 and the size of the text for deeper levels, kept
+    with the lines after it by \nobreak); LaTeX's own sections, section
+    counters and \titleformat are not used, so that no second counter can
+    drift from the screen.  The tag is the text that fmt_resolve (layout.c,
+    make_tag) gives to the headline, the same function that the screen
+    calls (FLA, FLN, the F<n>G tags, any depth down to SECT_MAXDEPTH); the
+    writer puts it at the start of the first line of the headline text
+    (take_pretag).  A headline that has columns (a side head) is a row of
+    a table: the tag starts the text of its first column.  The level's FS,
+    FI and headline attributes feed block_setup.
+  - A part of a document (a section, a block, a range of sections) is a
+    document of its own that keeps the whole structure of the original:
+    the section start, plus and minus items before the part stay and only
+    the blocks before it are left out (fileops.c, part_items).  So a
+    headline has the same level and the same tag as in the whole document.
+    tests/secnum.py and tests/sectags.c check this for every part.
+  - Unstructured documents are plain paragraphs.
+Blocks:
+  - A block with one column is a paragraph.  Justification (J: 0 left,
+    1 right, 2 center, 3 even) maps to \raggedright, \raggedleft,
+    \centering and plain justified text; indent (I: 0 none, 1 first, 2
+    hanging, 3 all) maps to \parindent, \hangindent and \hangafter, and BL
+    and BR to a list-like left and right margin (\leftskip, \rightskip).
+  - Block, line and headline spacing (FSL, FSH, FST, FSC, FSS, BSB, BSL)
+    map to \baselinestretch and \vspace.  Double spacing is
+    \linespread{2}.  The BSL and BSB of a block, or of its named format
+    (fmt_block_prop: the block's own record, else the named one), replace
+    the FSL and the FST of the level for that block (emit_block); a
+    headline keeps the spacings of its level.
+  - Page Break Level (FLP): a headline whose level is at or above (a
+    number at or below) the setting is written after \clearpage with no
+    space before it (emit_headline, headline_breaks).  Not for the first
+    block of the document (so a part printed alone starts on its first page
+    and the first chapter leaves no blank page), and not inside a Keep box.
+    A draft has it too.  The estimate of the number of pages
+    (est_positions) rounds the position up to the next page in the same
+    cases.
+  - A block with several columns is a table row: a tabular with one cell
+    per column, widths from CW (character cells scaled to the line
+    width), borders from CB, cell alignment from CFJ.  A run of such rows
+    shares one tabular so that the columns line up.
+  - Tab characters: tab stops (T lists) become tabbing or, when a column
+    layout is clearer, a tabular; tab fill characters (dots) become
+    \dotfill.  This is the least exact part (section 8).
+Text:
+  - Attributes (A mask): bold \textbf, italic \emph, underscore words
+    \underline, small caps \textsc, strikethrough \sout (ulem),
+    subscript and superscript through \textsubscript and \textsuperscript.
+  - Characters: CP437 to Unicode through cp437_uni (src/layout.h), written
+    as UTF-8 for inputenc; the TeX specials # $ % & _ { } ~ ^ \ are
+    escaped.  The Latin letters and signs come from T1 and textcomp, the box
+    drawing and block characters (U+2500 to U+259F) from pmboxdraw, and the
+    arrows, card suits, Greek letters and mathematical signs of CP437 are
+    declared with \DeclareUnicodeCharacter (the table symdefs of latex.c,
+    which also writes the declarations, so the two cannot differ; the two
+    smileys are drawn with tikz).  A character that none of them gives is
+    printed as [U+XXXX] in the small typewriter font (\strmiss) and named
+    once on stderr; the run goes on.
+    The non-breaking space (1E) is ~; a text-indent character (1A) is a
+    hanging indent for that paragraph.
+  - Markers: Date, Time, Filedate, Filetime, Filename, Pathname, Printer,
+    Revision, Author, Description and Section are replaced by their value;
+    Note becomes \footnote{...} (its nested text is translated the same
+    way; levelnotes and endnotes through endnotes or a closing list per
+    NT); Page Break is \newpage (odd and even \cleardoublepage-like);
+    Column Break is \columnbreak; Whitespace is \vspace; Line is \rule;
+    Keep is a box that is placed on one page (section 14, "Keep markers");
+    If, Else and Endif are decided
+    when the file is written; Include puts the text of the part at the
+    marker (section 25) and Merge is expanded by the
+    program before translation; Font selects a family (roman, sans,
+    typewriter); Index, Figure and Table entries make the index and the lists
+    (see "The index and the lists" in section 8); Comment is dropped; Escape
+    Codes and
+    Markup are dropped (they address a printer).  Picture and Screen
+    markers: see section 7.
+
+6. Page layout and fonts
+------------------------
+  - Margins, paper size, header and footer indent and whitespace come from
+    the Global Page Layout (PML... and DP).  The first, even, odd, title
+    and index layouts (P1 to P6) become fancyhdr page styles (plain,
+    fancy) and \thispagestyle; the page number tag (\1\, \i\, \I\, \A\)
+    maps to \arabic, \roman, \Roman and \Alph for the page counter.
+    A roman page number (and a roman line number of the line numbering) shows
+    1 to 3999: \thepage and \thelinenumber are made arabic above that,
+    as the counters and the tags of the sections are (marker_number_text).
+  - Headers and footers: DONE (src/latex.c hf_load, hf_render, hf_styles; the
+    records P<n>HB<k> and P<n>FB<k> of the document header with their blocks,
+    read by doc_hf_doc in msdoc.c).  When some header or footer of the document
+    has text, the preamble loads fancyhdr, sets headheight, headsep (Header
+    Whitespace) and footskip (Footer Whitespace) inside the margins, and defines
+    the page styles strt (Title layout, \thispagestyle on the title page), strc
+    (Table of Contents layout), strf (First layout, the first page of the body),
+    strx (Index layout, for the index) and strn (the others: the Odd layout on
+    odd pages, the Even layout on even ones, chosen by \ifodd\value{page} at
+    shipout).  The three columns of the block are the left, centre and right
+    parts by their justification (CFJ0, CFJ2, CFJ1); a block of one column with
+    several lines is a \parbox.  A layout with no record of its own takes the
+    Global one (per header and per footer).  The Page Number marker is
+    \thepage; the Section marker is \firstmark, and every headline writes
+    \mark{{tag}{title}} (the title 80 characters; the tag as printed at the
+    headline, the blanks at its end taken off, empty when the numbering is
+    off), so a page shows the first headline on it, or the one before.  The
+    marker field S (task 29: absent or 1 = number and title, 2 = number only,
+    3 = title only; the header line forms \section\, \sectionnumber\,
+    \sectiontitle\) picks the macro: \strsecmark ("3.2 Search": the tag, one
+    space, the title; the title only when the tag is empty), \strsecnum (the
+    tag, else the title), \strsectitle; each takes the two groups of
+    \firstmark by \expandafter.  A mark {}{} is written after
+    \begin{document}, so that \firstmark is never empty (pages before the
+    first headline print nothing).  Tests: tests/sectionmark.py.  A document with no text in any header or footer gets the
+    same LaTeX as before (only the page number at the foot, none on the title
+    page); tests/headfoot.py checks that records with empty blocks change
+    nothing.  Not used: the margins of the layouts (PML.. of P1..P6), Header
+    Indent and Footer Indent, the Q field of P3Q1, the Index layout until the
+    index is written.
+  - Custom paper and envelopes (task 30): the record DP<n>,<w>,<h> holds any
+    width and height in thousandths of an inch and page_geometry gives them
+    to geometry as paperwidth and paperheight, so a landscape page is a
+    record with w larger than h (an envelope of 220 x 110 mm is DP14,8661,
+    4331): nothing is rotated.  The limits: the margins are taken as 1 inch
+    again when less than 2 inches of the width or of the height is left (an
+    envelope has margins of 0, written PML0 PMR0 PMT0 PMB0, which is
+    allowed); the Global Format panel names only the 17 papers of its list
+    (an envelope size not in the list shows as Custom); the print does not
+    turn the paper for a printer that wants the envelope the other way (that
+    is the printer's setting, not the document's).  The ruler has 80 cells
+    across the width between the margins whatever the paper, so the left
+    indent of a block is in eightieths of the text width.  The Whitespace
+    marker takes millimetres exactly (field U 2).  The shipped templates are
+    tested by tests/templates.py: the letters (order of the parts, the head
+    of the second page) and the five envelopes (the blocks within 3 mm).
+  - The 20 fonts of the Typeface list (the DF records) are names, not
+    fonts.  A table in latex.c maps the name of a font to
+    one of the three families of lmodern (roman, sans serif, typewriter) by
+    words in the name.  A user table (a file next to the document or in the
+    user's configuration directory, one "name = family" per line) can
+    override it; this is left for later.
+  - Draft quality prints with the same engine and \linespread{1}; the
+    difference from Final is the options of the panel, not the engine.
+
+7. Graphics
+-----------
+Picture markers point at .PIC, .GMF, .LVF and other files of the original,
+which no TeX engine reads.  First version: the picture is replaced by a
+framed box of the marker's width and height with the file name inside.  A
+later version can convert a format that is understood to PDF or PNG and use
+\includegraphics (graphicx).  PostScript pictures could be passed through
+if the machine has the conversion programs.
+
+8. Fidelity and limits
+----------------------
+  - Page breaks, line breaks and hyphenation differ from the original's;
+    the document is the same, the pages are not.  Tab layouts, hanging
+    indents and winding columns are approximations.
+  - Repaginate and Clear-pages (the dimmed Print entries) can be built on
+    this: Repaginate runs pdflatex and reads the page numbers of the
+    sections from the .aux file (\label at each headline), and shows them
+    as the "page lines" of the original; Clear-pages removes them.  The
+    numbers are those of the PDF, not of the original's formatter.
+  - Tables of contents, figures, tables and the index come from LaTeX
+    (\tableofcontents and the lists) instead of the original's Print
+    checklist; the checklist items map to which of them are included.
+  - The table of contents is DONE (src/latex.c, emit_contents).  The Print
+    panels (Draft and Final) have Table of Contents? and Contents Levels
+    (strprint and stred --print: --contents LEVEL, 1 to 9).  The page comes
+    after the title page, or first in a Draft, and is written with the
+    standard LaTeX line of a contents (\@dottedtocline); each listed
+    headline carries \label{sN}, the same label that a cross-reference to a
+    page uses, so that the second run fills in the page numbers (no other
+    mechanism).  The pages of the contents are numbered in roman numerals
+    and \pagenumbering{...} starts the body again at 1 in the style of the
+    document.  The entries are the headlines of the levels asked for; the
+    tag is the one the screen shows, the title is the plain text of the
+    headline (markers in it are left out).  A document with no headline gets
+    one line that says so.  A part print lists the sections of the part.
+    The Preview does not make it.  The Table of Contents Page Layout of
+    Global, Page is not used by it.
+  - Colour.  The documents hold no colour (checked: the attribute bytes of the
+    text use the bits 1, 4 and 16 only; the records BM, BC, BV, CT, CV and the
+    header records YC, YI have values that are not a palette; no field of
+    DOC-FORMAT.txt is a colour; none of the 55 sample documents carries a
+    colour), so the colours of a print are the fixed ones of src/latex.c: the
+    Print Error marks (red, orange), the banner (red), the keycap greys, and
+    the colours that pictures and equations have.  The xcolor package is
+    loaded as before.  DONE: the setting Print in Black and White? (Print
+    panels, default No; strprint and stred --print: --black-and-white; the
+    field black_white of LatexOpts and PjOpts) writes
+    \PassOptionsToPackage{gray}{xcolor} before the document class, so that
+    every colour of the print becomes the grey of its luminance; the text of a
+    print without the setting is not changed.  A picture file is not changed
+    by xcolor: with the setting, the preamble also redefines \strpic
+    (preamble_grey_pictures) to draw a rectangle with the blend mode
+    Saturation and a grey fill over each picture (\pdfliteral, PDF route
+    only), which keeps its lightness and removes its colour.  A Draft does
+    not pass the option draft to graphicx any more: the pictures are printed.
+    The route by DVI (Preview) cannot do it: a Preview keeps picture colours.
+    Tests: tests/picturecolour.py (PNG and JPEG, Final, Draft, black and white).  The screen colours of Setup are
+    not printed.
+  - The index and the lists: DONE (src/latex.c scan_lists, emit_index,
+    emit_list;
+    the Print fields Index?, List of Figures?, List of Pictures?, List of
+    Tables?, which start with what the document says (docs/AUTOLISTS.txt: a
+    list is made when its setting is on, or when it has none and the document
+    has a marker of the kind); strprint and stred --print: --index,
+    --list-figures, --list-pictures, --list-tables and the --no- forms, which
+    win over the document; --contents 0 to 99).  The
+    markers Index (3: fields 2 main heading, 3 subheading, 4 reference text),
+    Figure (11: field 1) and Table (29: field 1), and the Name (field 6) of a
+    Picture (25) are found before the text is written (the same Tok pointers
+    are looked up when the marker is written) and each carries \label{lmN};
+    makeindex is not used.  The index is sorted in C (main heading, then
+    subheading, case ignored, the order of the text breaking ties) and
+    written at the end by \strixline; the pages of an entry are
+    \strixpages{lm3,lm9}, a macro that reads the page of each label from the
+    .aux (\r@lmN) in the second run and joins runs of three pages or more
+    (\the\strixs--\the\strixe), two pages as "3, 4"; the joining works on
+    arabic numbers only (another page number style lists every page with
+    \pageref).  The lists are \@dottedtocline lines after the table of
+    contents (roman page numbers), each on its own page; the contents, the
+    list of figures and the list of tables come in that order.  A marker whose
+    list is made prints nothing.  Nothing is written for a kind that has no
+    marker, so a document without such markers gives the same LaTeX as
+    before (tests/indexlist.py).  Not used: the Index Page Layout (columns,
+    title style, separator), the page number attributes (field 1 of the
+    Index marker), the Name of an equation.
+  - The Global Format fields (task 25, docs/ORIGINAL-EDITOR-GAPS.txt):
+    Page Number Level (FLG): \setcounter{page}{1} at every headline of the
+    level or a higher one (emit_headline); the contents, \thepage and
+    \pageref use that counter.  Print (FP1, FP2): print_skip leaves out the
+    text blocks (Only Headlines) or the headlines (Only Text, which also has
+    no contents); the title page stays.  Indent to Next Level (F<n>I, FI):
+    doc_level_indent sums the levels above, added to the left block indent of
+    every block of the section, in ruler units.  Ruler (FU): ru() converts a
+    ruler unit to thousandths of an inch: Relative is 1/80 of the text width
+    (it was 1/10 inch before), FU2, FU3, FU4 are 1/10, 1/12, 1/15 inch; it
+    acts on tab stops, column and gap widths, BL, BR (the right indent is new
+    in the print) and the level indents, and never gives a length wider than
+    the text.  Documents made for 10 cells to the inch carry FU2
+    (manual/mkmanual.py, tests/data/print_lastcol.doc, print_panels.doc).
+    First Block Type Joined (FB2, F<n>B2): emit_joined writes the headline and
+    the first text block as one paragraph (headline in its font, two spaces,
+    the text); refused with an Error Log error when the fonts differ, a block
+    has columns or Print is not Headlines and Text.  Winding Columns (FWN,
+    F<n>WN, BWN): winding_set opens and closes a multicols environment around
+    the single-column text blocks of a section; the gutter is FWG (thousandths
+    of an inch, 250) and the rule FWR (1 single, 2 double, 3 wide; double and
+    wide are drawn as thicker rules); headlines, the title page and tables are
+    full width.
+  - Borders (CB<mask>,<flag>, see src/border.h): border_weight reads a side;
+    a table gets | or || or a thick rule at the sides and one, two or a thick
+    \cline between the rows (a double line is two \cline with the double
+    rule space between, a wide line a thick \arrayrulewidth, which needs the
+    array package, loaded only then).  A block of one column with a border or a
+    shading is set as a table of one column (block_boxed); a headline has no
+    border.  The gutters BT and BB are \rule struts inside the cell; the Shading
+    BH is \colorbox[gray]{(100-BH)/100} in a cell with no padding of its own
+    (colortbl painted over the top line), grey in a print in black and white;
+    Connect Borders (the flag of CB): No puts 150 hundredths of a line after the
+    table, Yes at most 100.  The Line Weight of Global Options is not used.
+  - Page ranges and sorted or double-sided output are handled by lp options
+    (page-ranges, sides=two-sided-long-edge, outputorder) instead of being
+    laid out by Strata.
+
+9. The panels
+-------------
+The Print panels keep their fields.  Changes:
+  - Printer: the choices are "Text file" and the CUPS destinations (from
+    lpstat); "Text file" keeps the present behaviour.
+  - Output File: kept for the text output; for a printer the PDF is
+    written to a temporary file and removed, unless "Keep file" is Yes (a
+    new field) which keeps name.pdf and name.tex next to the document.
+  - Copies, Print Title Page?, Print Current Section Only?, Double Spaced?
+    and the section range are passed to latex_document and lp.
+  - Preview, Document, Block, Section: build the same LaTeX for that part,
+    run pdflatex and open the PDF.  Until it finishes the screen shows
+    "Formatting..." (pdflatex takes about a second for a short document).
+  - Print, Draft and Final fall back to the text output with a message
+    when pdflatex is missing.
+
+10. Tests
+---------
+tests/smoke.py must not depend on TeX being installed.
+  - A unit test (tests/edtest.c) calls latex_document on tests/data
+    documents and compares the text with files in tests/data (the .tex is
+    plain text, so it can be checked exactly).
+  - The run tests are skipped, with a message, when pdflatex is missing;
+    when it is present one test formats a small document and checks that
+    name.pdf starts with "%PDF" and that "Total pages" is as expected.
+  - lp is replaced in tests by a script named in STRATA_LP that records its
+    arguments; the real lp is never called by a test.
+
+11. Security
+------------
+The document text goes into a .tex file that pdflatex runs.  A hostile
+document must not be able to run commands: pdflatex is started with shell
+escape off (-no-shell-escape, the default), the text is escaped as above,
+and Markup and Escape Codes markers are never copied into the file.  The
+temporary directory is created with mkdtemp (mode 0700) and removed after
+the print command returns.
+
+12. Open questions
+------------------
+  - Answered: a missing glyph is printed as [U+XXXX] (section 5), and the
+    default font is lmodern, which has the T1 and TS1 encodings in full, a
+    typewriter face for the box drawing and the same design as the math
+    fonts of amsmath.
+  - Should the PDF viewer be launched by Strata at all, or only its path
+    shown, on machines with no desktop?
+  - How faithful must the headings be (numbering and spacing per level)
+    compared with the simple \section commands?
+  - Which parts of the Print panel of the original (print quality, sort
+    pages, double sided, graphics options) are worth keeping now that lp
+    has the same options?
+
+13. Suggested order of work
+---------------------------
+  1. latex.c: paragraphs, headlines, attributes, escaping, page setup, the
+     options of Draft; unit tests on the generated text.
+  2. latex_run, preview and print with lp; the panels; the skip rules of
+     the tests.
+  3. Tables (multi-column blocks), notes, markers, headers and footers.
+  4. Repaginate and Clear-pages; the index.  (The table of contents is
+     done.)
+  5. Pictures.
+
+14. What is implemented (strprint)
+----------------------------------
+The printing is a separate program, not a part of the editor:
+
+    strprint FILE.DOC [-o OUT] [--dvi | --pdf-via-dvi]
+                      [--tex-only | --export-latex FILE.tex]
+                      [--keep] [--draft] [--double-spaced] [--long-list]
+                      [--progress] [--docdir DIR]
+
+It links the document (msdoc, layout), the markers and their evaluation
+(marker, markereval, note) and the writer latex.c, and nothing of the
+editor or of the user interface.  It loads the document, writes doc.tex in a
+private temporary directory, runs pdflatex (-no-shell-escape,
+-interaction=nonstopmode, -halt-on-error, twice when the log asks for a
+second run), copies the PDF to OUT (default: the name of the document with
+.pdf in the current directory) and exits with 0 only on success.  On a
+failure it prints the first error line of the TeX log on stderr.  --tex-only
+writes only the .tex file (as --export-latex does, see 18), --keep keeps
+the temporary directory (its name is
+printed), --draft prints the comments of the document, uses one line
+spacing (the pictures are printed as in a Final print, in colour),
+--double-spaced doubles the line
+spacing, --long-list prints the marker types that were typeset in the long
+form.  --dvi runs latex instead and copies doc.dvi to OUT (default: the
+name of the document with .dvi); --pdf-via-dvi runs latex and then dvipdfmx
+and copies the PDF.  The two cannot be used together.
+
+The three routes.  The file tests whether the engine writes a PDF
+(\ifdefined\pdfoutput with \pdfoutput>0) before \documentclass and passes the
+option dvipdfmx to graphicx, xcolor, geometry and lscape when it does not,
+and gives tikz the driver pgfsys-dvipdfmx.def.  Landscape pages use pdflscape
+in the PDF route; in the DVI routes they use lscape and a \special that sets
+/Rotate 90 on every landscape page for dvipdfmx.  In the DVI route the
+pictures, the colors and the tikz boxes (keycaps) are given to dvipdfmx: the
+viewers of DVI files (dviview, xdvi) do not draw them, and the pages of a
+DVI file do not turn, so only the PDF shows them.
+
+The characters (section 5): the stderr lines have the form
+    strprint: character U+2320 is not in the fonts, printed as [U+2320]
+once for each character.
+
+Markers.  Orientation (36): field 1 is 1 for portrait (also when there is no
+record) and 2 for landscape; \strlandbegin (\clearpage and the landscape
+environment) is written before the block that holds a landscape marker and
+\strlandend (the end of the environment and \clearpage) before the block that
+holds a portrait marker and at the end of the document.  When the marker is
+in the middle of a block the change is made at the beginning of that block;
+a second marker of another value in the same block (or in the rows of one
+table) takes effect after it.  Whitespace (31): field 1 is the size in
+thousandths and field U (written by Strata only) is the unit, none for
+inches, then 1 cm, 2 mm, 3 pt, 4 bp, 5 pc, 6 dd, 7 cc, 8 sp, 9 em, 10 ex;
+\vspace*{<size><unit>} is written, nothing when the size is 0; the
+"treatment" field of the original is not known and the default is printed.
+Keycap (37): field 5 (written by Strata only) is the font number, 1
+Headline, 2 Text (no record), 3 Header/Footer, 4 to 20 the fonts 4 to 20 of
+the Typeface list; the legend is set in the family that the name of that
+font stands for (roman for a font without a name that tells it).  Counter
+(17): the text of marker_eval, which marker_prepare computed (field 1 is
+which counter, field 2 sets it), is printed.
+
+Keep markers (4).  Nothing of a Keep marker is printed.  The blocks from a
+Start to the End are one region (the rules are in MARKERS.txt: the first End
+closes, a Start inside is ignored, an End alone is ignored, a Start alone keeps
+to the end of the document, a section start breaks the region into one part
+for each section, and the unit is the whole block, or the whole table when
+the marker is in one of its rows).  The writer (keep_plan in latex.c) finds the
+parts first; for each part write_body writes
+
+    \par\begingroup\setbox\strkeepbox\vbox{\hsize=\linewidth
+    ... the blocks ...
+    \par}
+    \strkeepplace\endgroup        (Start Fixed; \strkeepfloat for Floating)
+
+Why a box and not penalties: a page break can be forbidden with a penalty of
+10000 (\nopagebreak, \samepage), but then a part that is longer than the page
+is not broken at all and its end is lost below the page, and a penalty a
+little smaller than 10000 does not make TeX move the part to the next page,
+because the page that is left short has a badness that is worse than the
+penalty.  With the box the height is known: \strkeepplace compares it with
+\textheight.  When it is not more, \Needspace*{height} makes a page break
+if the box does not fit in the rest of the page (it uses \pagegoal and
+\pagetotal, which count the footnotes already on the page) and \box places
+it, so the whole part is on one page.  When it is more, \Needspace*{
+\textheight} starts a new page, as the original does, and \unvbox puts the
+material in the page again so that TeX breaks it between the lines and the
+rows as usual: a part that cannot fit is broken, not lost, and nothing can
+loop.  \strkeepfloat is the same for Start (Floating) with the box in a
+figure float [!ht] (the spaces of floats are 0pt): it is put here when it
+fits and otherwise at the top of the next page while the text after the End
+goes on in this page; LaTeX puts a float that is still waiting at the end of
+the document on a last page, so it is not lost; a box taller than nine
+tenths of the text area is placed like a Fixed one.
+
+Inside the box:  a table cannot be a longtable (longtable does not work in a
+box), so each row is a tabular of its own, with the same column widths, the
+same borders and no space between the rows, and \nointerlineskip\vskip0pt
+after a row that leaves a place where the rows can be broken when the box is
+opened again; the footnote texts wait (the hold counter of the writer; the
+marks are in the box) and are written after the box, in the page where it
+is placed; the \needspace of a headline is left out (it asks the page that
+the box is not on); a block that holds Keep markers only is not written (it
+takes no height in the original).  A part is not made when it holds a Page
+Break (23), Column Break (39) or Orientation (36) marker, which change the
+page inside the box, or when it begins in the text of the title page of a
+structured document; the markers are then dropped and the text is set as
+if there were no Keep.  Print Draft and Final (the text files of printmenu.c
+and export.c) leave a Keep marker and a block of Keep markers out too.
+
+Tests: tests/keep.py typesets tests/data/keep_*.doc (made by
+tests/mkkeepdata.py) and reads the pages with pdftotext: a pair near a page
+end, markers in the text of blocks, Floating, a Floating region at the end,
+an unmatched Start, an unmatched End, nested pairs, a region of 80 lines, a
+table, a pair across sections and a footnote, each against a control with
+the markers removed, and the route by DVI and the draft print; tests/lxtest.c
+checks the TeX text and tests/edtest.c the text printout.
+
+Pieces that TeX can refuse (an equation that is not TeX, a picture that the
+engine cannot read) are written on a line of their own that ends with the
+comment %F<n>.  strprint first compiles a small file that holds all the
+equations (latex_probe, always with pdflatex) and prints the ones TeX
+refuses in the long form; if the real run still stops at such a line, that
+piece is given up and the run is made again.  A document therefore always
+gives a PDF.
+
+Every marker that is not typeset is printed as the text of marker_render in
+the display mode Long (marker_long_label), in a small typewriter font in a
+box or in brackets.  The table of the markers is in the report of the test
+(results/REPORT.txt).  Not done: headers and footers other than the page
+number, tables of contents, figures and tables, the index, winding columns,
+Merge, the page layouts of the first, even, odd and index pages,
+and renumbering of notes on every page.
+
+15. Preview (F12, Print, Preview: Document, Block, Section)
+-----------------------------------------------------------
+The three entries of Preview show the part of the document that they name
+as pages, typeset by LaTeX and drawn by the DVI viewer dviview
+(tools/dviview).  The text viewer that the entries showed before is gone.
+The code is src/preview.c (the panel, the signals, the viewer),
+src/pvcore.c (everything that needs no screen: the reader of the progress,
+the estimate of the pages, the temporary directory, the child process) and
+the options --progress and --docdir of strprint.
+
+What happens, in order:
+
+  1. Checks.  strprint (STRATA_STRPRINT names it, else next to stred, else
+     PATH) and the viewer (STRATA_DVIVIEW, else dviview next to stred, else
+     PATH) must be found; the viewer needs DISPLAY.  If not, nothing is
+     started and the message line says what is missing, for example
+     "Preview needs the viewer dviview: not found next to stred or in PATH"
+     or "Preview needs an X display: DISPLAY is not set".  (STRATA_DVIVIEW
+     is for the tests: a program named by it is run without the DISPLAY
+     check.)
+  2. Writing.  A private directory strpv.XXXXXX is made with mkdtemp under
+     $TMPDIR (else /tmp), mode 0700.  The part is written to part.doc in it
+     from the document in the editor, with the changes that are not saved;
+     the file of the user is not touched and the document is not marked as
+     saved.  The part is the whole document (after the panel: title page and
+     range of sections), the block of the cursor or the section of the
+     cursor, as the entries chose it.
+  3. LaTeX.  stred starts "strprint part.doc --dvi -o preview.dvi
+     --progress --docdir DIR" in a process group of its own, with TMPDIR set
+     to the private directory, so that everything strprint makes is inside
+     it too.  strprint writes the .tex file (latex.c), checks the pieces that
+     TeX can refuse as for a PDF (section 14), and runs latex, not pdflatex.
+  4. Viewer.  When strprint has made preview.dvi, the panel says "Starting
+     viewer" and dviview is started on the file.  stred waits until it
+     ends.  Under the X11 terminal the viewer is a window of its own and
+     stred goes on serving its own window.  In a plain terminal stred gives
+     the terminal back (as for a shell) while the viewer runs, and takes it
+     again afterwards; the keys that were typed meanwhile are dropped.
+  5. Cleaning.  Whatever the end is, the child programs are killed (the
+     whole process group), the directory is deleted with everything in it
+     (links are removed, never followed) and the old signal handlers are put
+     back.  This is done after a normal end, after an error, after Esc, and
+     when stred gets SIGINT, SIGTERM or SIGHUP during the preview: the
+     handler stops the children at once, the loops of the preview look at
+     the signal about every 50 ms, clean up and raise the signal again, so
+     that stred ends as it would have (the terminal is restored by its own
+     handler).  Only SIGKILL leaves the directory behind.
+
+The wait panel.  A panel in the style of the other panels of stred, with
+the stage, "Page N of about M" (or "Page N of M" when M is known) and a
+gauge bar with the percentage; Esc cancels.  The stages are "Writing",
+"Running LaTeX (pass N)" and "Starting viewer".  The editor does not
+freeze: the loop reads the pipe without blocking and waits for a key for
+50 ms between two reads, so a key (Esc) acts at once, a resize redraws the
+panel and the panel is drawn again when something it shows changed.  Esc
+kills latex, cleans up and returns to the editor with "Preview cancelled".
+
+Reading the progress.  strprint --progress sends the standard output of
+latex through unchanged and adds lines that begin with "@@strprint ":
+
+    @@strprint stage writing        strprint is writing the files
+    @@strprint pass N               latex pass N starts (1, 2, 3)
+    @@strprint pos P                the position in the document, see below
+    @@strprint error LINE           the first error line of the log, the
+    @@strprint error2 LINE          line after it
+
+latex is given max_print_line=10000 in its environment, so that the page
+mark "[N]" is never cut at the end of a line, and TeX flushes its output
+after each page ("[1" is followed by update_terminal in tex.web), so the
+pipe delivers every page when it is shipped.  The reader (pv_prog_feed)
+counts a page for each "[" followed by digits and then a space, "]", "{",
+"<" or the end of a line: "[1] [2 <a.png>] [3]" is three pages, "[1{...map}]"
+is one, "[]", "[U+2320]" and "[2020/01/01 v1.0]" are none.  The text of a
+warning or an error (a line that begins with "!", "Overfull", "Underfull",
+"LaTeX Warning", "Package" and a few more, up to the next blank line) can
+quote a bracket in the document, so inside it only a mark at the start of a
+line, or a number that is one more than the last page, counts.  The reader
+accepts any splitting of the bytes: the tests feed it a byte at a time.
+
+The number of pages M.  Before latex runs it is an estimate and the panel
+says "of about M".
+
+  - The estimate from the document (latex_estimate_pages in latex.c).  It
+    uses the page size and the margins of the document, the number of
+    characters of each line of text and the width of the line (14.0
+    characters per inch, a table column has the width it is given), the
+    spacing before and after the blocks (the Global Format settings), the
+    spacing of the lines, 5.1 lines per inch, a headline, the rows of a
+    table and the forced page breaks (Page break markers, the title page).
+    The two constants were fitted to the page counts of the sample
+    documents; see the measurements below.  The estimate counts the text
+    that the print writes: when the document has If markers, the branches
+    that the variables of the process choose (vars_process, the same that
+    the Printer gets: .STRATA_BUILD_TYPE) are the text, as cond_filter makes
+    it for the print, so the estimate of the structured sample follows its
+    edition (developer or release).  A row of a table is 1.25 lines
+    high (EST_ROW_H) and a Picture marker adds 12 lines to its paragraph
+    (EST_PICTURE_H, the mean of the pictures of the manuals: the height of
+    the picture file is not read).  The pages that the print makes of the
+    document's own settings are added (est_generated_pages): the table of
+    contents (a row for each headline of the levels it lists), the lists of
+    figures, pictures and tables and the index, each when the stored settings
+    and the settings of docs/AUTOLISTS.txt say that it is printed, with 90
+    percent of the lines of a text page as the rows of a page (110 percent
+    for the index, which is set in a denser type).  The rows of a list are
+    the markers that have a name: a Figure, Picture or Table marker with no
+    name and an Index marker with no main heading are listed nowhere, as the
+    Printer has it, so they are not counted (the counters of the document
+    say whether a list is on; the entries are counted in one pass when the
+    estimate is asked for, never at an edit).  A list that a print option or
+    a field of the Print panel switches on or off is not known to the
+    estimate, which follows the document.
+    Measured against the pages of the PDF (tests/previewestimate.py): a
+    letter 1 and 1, the structured sample 46 and 45 in the developer edition
+    and 38 and 36 in the release edition, a generated document 114 and 119,
+    the Reference Manual 723 and 772.  Before this fit (with the counters
+    and with all branches of the If markers): the structured sample 51 and
+    45 (13 percent over).
+  - The position marks.  With --progress the .tex file has a line
+    \write16{@@strprint pos P} before each block, where P is the position
+    of the block in thousandths of the document, taken from the same model
+    (so P is the model's idea of how far the document is, not the number of
+    characters).  A \write is done when the page that holds it is shipped, so
+    for each page the last mark that the reader saw says how far the
+    document has come at that page.  The pages that were shipped at the
+    last mark, N, and P give an extrapolation N * 1000 / P of the total.
+  - pv_refine mixes the extrapolation and the estimate with the weight
+    P / 1000: M = (N * 1000 / P) * P / 1000 + prior * (1000 - P) / 1000,
+    that is, the part of the document that is behind is believed more and
+    more.  It is never less than the pages already shipped.
+  - A second pass.  When pass 1 ends and strprint starts pass 2, the number
+    of pages of pass 1 is exact (the pages of the same document) and the
+    panel shows "Page N of M" without "about".
+  - At the end of the last pass nothing more is shown: the viewer comes.
+
+Several passes.  strprint runs latex a second time when the writer wrote a
+page reference (a cross-reference to a page number) or when the log of the
+first pass says "Rerun to get cross-references right" or "may have
+changed", and a third time if the log of the second pass still says so
+(three at most, as LaTeX needs).  The panel says "Running LaTeX (pass 2)"
+and "Another pass, for the references."  A pass that fails is not repeated
+except for the pieces that TeX refuses (section 14): then the stage shows
+"Running LaTeX (pass 1)" again.
+
+Errors.  If latex fails, strprint reports the first error line of the log
+(the line that starts with "!") and the line after it with the lines
+"@@strprint error" and "error2", and the message line of stred shows both:
+"LaTeX failed: ! Undefined control sequence. l.12 \foo".  Nothing is kept.
+If latex fails but made a DVI file (the TeX engines write one in
+nonstopmode), strprint runs latex once more without -halt-on-error, keeps
+the DVI file and ends with status 3; stred shows the file all the same and,
+when the viewer ends, says "Preview shown in spite of errors of LaTeX:"
+followed by the two lines.  The status 1 of strprint (nothing made) keeps
+its old meaning.
+
+Measuring the estimate.  tests/pvmeasure.py OUTDIR FILE.DOC... runs the
+very run that the preview makes for each document (strprint --dvi
+--progress) and feeds its output to the reader of the editor (pvest -s),
+so that the page count that it compares with is the one of the panel, and
+compares: the real page count (the last pass), the estimate from the
+document, and the corrected estimate when 10, 25, 50 and 75 percent of the
+pages have been shipped.  The results of the run
+(results/REPORT.txt and results/measure-table.txt) are for 89 runs of the
+sample and test documents: 47 have 3 pages or more and 20 have 10 or more,
+among them twain.doc (4620 pages), intel-sdm.doc (6466) and REFERENC.DOC
+(258).  pvest -c CPI -l LPI prints the estimate with other constants; the
+grid search that chose 14.0 characters and 5.0 lines per inch was made with
+it (the mean error over the documents of 3 pages or more went from 9.1 to
+7.2 percent, the bias to about 0).  Over the documents of 10 pages or more
+the mean error is 5.1 percent before latex runs and 3.9, 3.4 and 3.8
+percent after 25, 50 and 75 percent of the pages.  The estimate is good for
+ordinary text (940408a.doc 35 of 35 pages) and less good for long plain text
+(twain.doc +9.2 percent) and for documents made of tables and pictures that
+the model does not know the height of (REFERENC.DOC -28.7 percent, intel-sdm.doc
+-8.4 percent); there the position marks bring the number to within 1 to 3
+percent when 90 percent of the pages are done.
+
+Tests.  tests/pvtest.c (unit tests, run by "strata-build test"): the reader
+of the progress, its stage lines, pv_refine, the estimate, the marks, the
+temporary directory and its removal (links are not followed, a path of
+another name is refused), the search for a program, and the child process
+with its pipe and its process group.  tests/preview.py (run by
+"strata-build smoke"): stred in a pty, a fake viewer (tests/fakeview.sh,
+named by STRATA_DVIVIEW) that records its argument, whether the DVI file
+exists while it runs, a copy of the part file and the mode of the directory;
+the three entries and what part each one passes; a document with changes
+that are not saved; the range of sections; no viewer and no DISPLAY; a
+failed latex and a latex that fails with a DVI file (tests/fakelatex.sh,
+put first in PATH under the name latex); the wait panel; Esc during a short
+and a long run (twain.doc); SIGTERM, SIGHUP and SIGINT during latex and
+SIGTERM and SIGHUP during the viewer; the real dviview under Xvfb; and after
+every run that TMPDIR, which is a private directory, is empty and that no
+process of the run is left.
+
+16. Print (F12, Print, Draft and Final; stred --print; str, Print Document)
+---------------------------------------------------------------------------
+Draft and Final make a PDF with strprint and send it to a CUPS queue with
+lp.  The panels and the messages are in PRINT-MENU.txt; this is the call
+path.  The code is src/printjob.c (everything that needs no screen:
+checking the values, the arguments of lp, the list of queues, the child
+processes), src/printmenu.c (the panel and the wait panel), src/printcli.c
+("stred --print" and the part of the document that a print covers) and, for
+the signals, the child process and the wait panel, the same src/pvcore.c
+and src/preview.c that Preview uses (the signal handlers were moved to
+pvcore.c, and the wait panel is preview_panel; there is one copy).
+
+  1. Panel (editor) or options (command line, str).  The values are
+     checked as in PRINT-MENU.txt; nothing is started when one is refused.
+  2. Checks, in pj_run: strprint (STRATA_STRPRINT, else next to stred, else
+     PATH) and pdflatex (PATH) must be found, else a popup says what is
+     needed.  lp is looked for only when a printer is named; if it is not
+     found the PDF is made and the end message says so.
+  3. Writing.  A private directory strpv.XXXXXX (mode 0700) under $TMPDIR is
+     made and the part (the whole document, the title page choice, a range
+     of sections, or the section of the cursor; the same functions
+     doc_part_* that Preview uses, through print_part) is written to
+     part.doc in it, as it is in memory, so that changes not saved are
+     printed.
+  4. strprint.  stred starts
+         strprint part.doc -o print.pdf --progress --docdir DIR
+                  [--draft] [--double-spaced]
+     in a process group of its own with TMPDIR set to the private
+     directory, and reads its output through a pipe without blocking: the
+     stages, the pages ("[N]" of pdflatex) and the position marks are read
+     by the same reader as for Preview (pv_prog_feed), which gives the
+     panel its "Page N of about M" and the gauge.  Esc, or a signal, kills
+     the group.  --double-spaced doubles the line spacing of the blocks
+     (latex.c, line_stretch).
+  5. The PDF is copied to a temporary name in the directory of the Output
+     File and renamed onto it, so that the old file stays until the new one
+     is whole.  The pages that were counted go into the message.
+  6. lp.  When a queue is named: lp is started the same way (argument list,
+     process group, pipe) with the arguments
+         lp -d QUEUE -n COPIES [-o sides=...] [-o collate=...]
+            [-P FROM-TO] [-t NAME] /full/path/NAME.pdf
+     and its answer is the end of the message.  It is stopped after a
+     minute without an answer and by Esc.
+  7. Cleaning, as for Preview (section 15, 5).
+
+No string goes through system() or popen(); a queue name is checked (no
+space, slash, quote or "#", no first "-") before it is used as an argument.
+
+The command line returns the same result as text and an exit status
+(PRINT-MENU.txt).  str runs "stred --print" as a child with the values of
+its panel and shows its text.
+
+Differences from the design of sections 2 and 9: no lp/lpr choice (lp
+only); no "Keep file" field (the PDF is the Output File and always kept);
+the printer list comes from "lpstat -a"; Draft does not fall back to text
+when pdflatex is missing, it says what is missing; the page range is given
+to lp (-P) and not cut from the PDF; the panel has Copies, Print Double
+Sided?, Sort Output Pages? and the pages as the design asked.
+
+17. Errors of the document: diagnostics, Error Log, error file, Print Errors
+=============================================================================
+
+The owner's rule: a document that cannot be printed as it is, is wrong, not
+the program; the program must say so and say where.  In the original, Print
+has an Error Log (a page group at the end), Error Log Markers and a count in
+the Document Print Summary (Reference, chapter 6, Appendix D).  Strata
+offers the Error Log and, in the Editor, a marker in the text at each
+place (17.6).  Error Log Markers (an E in the margin) and the count in a
+Print Summary are not done.
+
+17.1 The diagnostics (src/diag.c, src/diag.h)
+  A diagnostic has a kind (error or warning), a short code, a message in
+  plain English, the text that is wrong (cut to 72 characters) and a
+  position.  The LaTeX writer (latex.c, diag_here) collects them as it
+  writes.  The codes:
+    equation-invalid     not valid TeX math (an equation in the old equation
+                         language of the original, for example)
+    equation-refused     valid for the writer, but LaTeX refused it
+    equation-empty, equation-unreadable
+    char-missing         a character that no font has (warning, once for
+                         each character in a line of text)
+    picture-noname, picture-missing, picture-unreadable, picture-type,
+    picture-damaged, picture-refused, picture-link
+    marker-unsupported, marker-incell, symbol-unknown, xref-unresolved,
+    counter-unresolved, counter-limit
+    keep-unmatched, keep-doubled, keep-unclosed, if-unclosed, else-unmatched,
+    else-doubled, endif-unmatched   (markers that are unmatched or doubled)
+    tex-error            an error that LaTeX itself reports, one for each
+                         "! " line of the log of the run, up to 100
+  At most 200 diagnostics are kept (DIAG_MAX); the others are counted.
+
+17.2 The position
+  The truth is the ITEM of the block in the document that strprint read (an
+  index of the items, the same for a part of the document as written in the
+  part file), then the column of a table row, the line of the block, the
+  marker type and its text, and the offset of the token in the line (the
+  offset does not count Print Error markers).  The section (ordinal, number
+  such as 3.1.1, headline) and the block in its section are made from the
+  item (diag_locate), so that the message says "Section 3.1.1 Definition,
+  block 2, line 4, Equation marker".  For an error of LaTeX the writer
+  records which lines of the .tex file belong to which block: with
+  LatexOpts.posmarks it writes a comment line "%@P item column line" before
+  each line of text, and diag_tex_position takes the last mark at or before
+  the line of the error.  The marks are comments: they change nothing in
+  the pages.
+
+17.3 What strprint does
+  - Standard error: one line "strprint: error: POSITION: MESSAGE [code]
+    "text"" for each diagnostic (plain ASCII), and a count.
+  - With --progress, a line "@@strprint diag k=E i=7 ..." for each
+    (diag_encode: key=value words, every byte that is not a letter, a
+    digit or one of ".,:/-" written as %XX) and "@@strprint diagdropped N".
+  - Exit status: 0 made, no diagnostics; 1 failed; 2 usage; 3 as before
+    (the DVI was made in spite of errors of LaTeX, with --dvi --progress);
+    4 made, with diagnostics (a PDF or DVI is written and has the Error
+    Log).  Callers that knew only 0 and 3 must take 4 as "made".
+  - After the first error of LaTeX that is not a piece that can be given up
+    the run is repeated without the stop at the first error, so that the
+    file TeX writes in spite of errors is kept and the whole log of the run
+    is read (collect_tex_errors).
+
+17.4 The Error Log at the end of the document
+  When there are diagnostics, the file ends with a new page "Error Log": a
+  heading, a line with the count, and one numbered entry for each
+  diagnostic: the message, the position in words and the text that is
+  wrong.  It is made by a second writing of the file with the diagnostics
+  as text (latex.c, write_errlog; the log itself makes no diagnostic).  A
+  clean document has no Error Log and no empty page.  --no-error-log of
+  strprint, of "stred --print" and of "stred --preview", and the field
+  "Error Log?" (default Yes) of the Print panel and of the Preview Document
+  panel turn it off.  The diagnostics are still told and still go to the
+  error file.
+
+17.5 The error file (strprint --errors FILE)
+  The Editor makes a private file in the work directory of the run (or the
+  user names a path with "stred --print ... --errors FILE") and tells
+  strprint its name.  strprint writes the file complete before it exits,
+  also when it fails: then it has no records and "status=1".  The format
+  is text, ASCII, one record per line:
+      STRATA-ERRORS 1
+      diag k=E i=7 o=0 l=2 t=9 x=0 p=16 c=CODE m=MESSAGE w=TEXT
+      ...
+      end errors=N warnings=M dropped=K status=S
+  Keys: k kind (E or W); i item (-1 for none); o column of a table row
+  (0 for none); l line of the block (0 for none); t marker type (0 for
+  none); x line of the .tex file for an error of LaTeX; p offset of the
+  token in its line (-1 for none); c code; m message; w the text that is
+  wrong (for a marker, its text, so that the right marker is found).
+  Values are written as in the progress channel (%XX).  The last line ends
+  the file; a file without it is not complete and the Editor does not trust
+  it (it takes the lines of the progress channel instead).  Readers:
+  diag_file_read.  The Viewer takes no part.
+
+17.6 The Editor: Print Error markers (src/perr.c)
+  See MARKERS.txt, "Print Error (marker 40)".  After Preview or Print the
+  Editor reads the error file and puts a marker at each position.  The
+  Document Manager's Preview and Print ("stred --preview", "stred
+  --print") have no document to mark: they write the faults as text at the
+  end of the run (stderr) and the exit status is 5 for "made, with faults"
+  (stred --print: 5 as before; the PDF is there).
+
+17.7 Tests
+  tests/perrtest.c (strata-build test): the error file (format, escaping,
+  cut file, foreign file), the markers (places, replace, not piling up,
+  find next and previous, remove, copy and paste, save and load, a part of
+  the document), a clean document, the LaTeX and the text exports of a
+  document with markers equal to those of one without.  tests/errlog.py
+  (strata-build smoke): strprint on tests/data/print_errors.doc (a bad
+  equation, a missing picture, a missing character, an equation that LaTeX
+  refuses): the log, the PDF read with pdftotext and as a picture, the
+  option, the exit status, the file complete on failure, "stred --print
+  --errors", the keys in a terminal.
+
+17.8 The failed print: the banner, the marks and the Viewer
+  A print with errors (not only warnings) is a FAILED PRINT.  The file is
+  still made (status 4), and then written once more (strprint.c,
+  add_error_log) with LatexOpts.failed set to the whole list of diagnostics
+  (numbered from 1 as in the Error Log) and LatexOpts.banner set.  latex.c:
+  - write_banner: in the preamble, a \AtBeginShipout hook with
+    \AtBeginShipoutUpperLeft puts the banner "PRINT FAILED - N ERRORS - THIS
+    PRINT IS INACCURATE" (PREVIEW for a DVI, LatexOpts.preview) in red, large
+    and bold, in the top margin, on every page.  It changes no line of the
+    text.  A landscape page (\ifstrland) gets it along the left edge of the
+    sheet, which is the top of the turned page.  The same hook writes the
+    special "strata:print-failed N" in a DVI (not in pdflatex, which has no
+    \special), on every page.  --no-banner leaves out the banner and the
+    special, not the marks.
+  - put_marks: before the token at the place of a diagnostic (item, column,
+    line and offset as in 17.2) the writer puts \strmarke{N} (white on red)
+    or \strmarkw{N} (black on orange).  A diagnostic with an item and a line
+    but no offset is marked at the start of the line, one with no line at the
+    start of the block, one with no item (-1) has no mark.  The macros are
+    in the file only when the print failed, so a clean print writes the same
+    file as before.  The labels take a little room and may move a break.
+  - The Error Log option does not matter.  Only errors make a failed print: a
+    document with warnings only has no banner, no mark and status 4.
+  The tools/dviview Viewer reads "strata:print-failed N" on the first page
+  when it opens the file and shows a red first line in its status bar with the
+  number (Dvi.failed, dvi_scan_status); it makes no marks.  The messages say
+  PRINT FAILED when the errors are not zero: strprint (standard error), the
+  Print message line, "Preview done: PRINT FAILED, N print errors", "stred
+  --print" (standard output and error) and the pager of "stred --preview".
+  The exit statuses are not changed.  Tests: tests/banner.py (strprint and
+  "stred --print": the banner on every page, the marks and their numbers, the
+  options, the DVI special, a clean document and one with warnings only),
+  tests/errlog.py (the message lines and the special in the DVI that the
+  Viewer gets), tools/dviview/tests/run_tests.sh test_failed (the red area).
+
+
+18. Export as LaTeX (F12, File, Export, Export a LaTeX File)
+=============================================================
+
+The owner's words: "just a codified way of saving to disk the file that is
+used for print and preview".  The export is the SAME file, from the same
+writer (latex.c), not a second path: if the writer changes, the export
+changes with it.  What differs from a print is only what a kept file needs.
+
+18.1 The options and the call
+-----------------------------
+  strprint FILE.DOC --export-latex FILE.tex [--pictures copy|keep]
+           [--position-comments] [--check-latex] [--source-name NAME]
+           [--docdir DIR] [--errors FILE]
+
+The options exist for the Editor and the tests.  By the owner's rule the
+subprograms are not a supported use from a command line, so none of this is
+in the reference manual: the manual describes F12, File, Export, Export a
+LaTeX File only.
+
+--export-latex names the .tex file exactly (no extension is added or taken
+off).  --tex-only is kept and is now the same export, with the name made as
+before from -o: a trailing .pdf or .dvi is replaced by .tex, a trailing .tex
+is kept (it gave k.tex.tex before), else .tex is added; with no -o the name is
+the stem of the document and .tex.  --pictures with any other word than copy
+or keep is a usage error (status 2).  --source-name gives the name for the
+header (the Editor passes the name of the open document; the document that
+strprint reads is a temporary copy).  The status is 0, 4 (the document has
+diagnostics; there is no PRINT FAILED in the message) or 1 (the file cannot be
+written).  The diagnostics are written on stderr and to the --errors file as
+for a print.  The reason of a failure (status 1) is a diagnostic too, with the
+code export-failed: it is in the --errors file, and the Editor shows its text
+("Export failed: Cannot write NAME: ...") instead of reading the console.
+
+The Editor (filemenu.c, export_latex_file) writes the part (the whole
+document with its title page, or the current section) as a temporary .doc
+with print_part, calls pj_export_latex (printjob.c), which runs strprint as a
+child process and waits for it, reads the error file, and builds the message
+"Exported NAME [with N errors and M warnings]".  The settings come from
+config: latex_pictures (copy or keep) and latex_positions (yes or no), both
+written to the file only when they differ from the default.  The Document
+Manager has no export (it would only start the Printer with this option; see
+the worklist).
+
+18.2 What the file is
+---------------------
+  - A header of comment lines (latex.c, write_export_header): what made it,
+    the source document, the day (SOURCE_DATE_EPOCH, in UTC, when it is set,
+    so that tests are byte for byte; else the local day), the command to
+    compile (pdflatex twice), the packages (all of standard TeX Live), the
+    pictures folder, and the warning that the file is made again.  Names that
+    come from the document are written through comment_text, which turns each
+    byte that is not printable ASCII into a question mark, so that a name
+    cannot end the comment line.
+  - The body of a print: the preamble, the blocks.  No banner, no marks
+    (failed is NULL), no Error Log, no \write16 lines (marks 0).  The %@P
+    comments only with --position-comments (LatexOpts.posmarks).
+  - A list of the pictures at the end, after \end{document}, as comments:
+    "% FOLDER/picN.ext = name in the document".
+  - Pictures (emit_picture): with copy (LatexOpts.copy_pictures), each is
+    copied to FOLDER/picN.ext, FOLDER being the stem of the .tex name with
+    unsafe characters replaced by an underscore and _files added, created
+    next to the file (rmdir at the end when it is empty).  A PostScript picture
+    is always copied, and strprint makes picN.pdf from picN.eps with
+    ghostscript (convert_pictures) as a print does, because the file refers
+    to the PDF (eps_pdf is 1).  With keep, a picture is written with its full
+    path (when the path has only safe characters; else it is printed in the
+    long form with an error).  The pic files of the last export in the folder
+    are removed first (clear_pictures: the names pic<digits>.png|jpg|pdf|eps);
+    nothing else is touched.
+  - The pieces that TeX refuses are found as a print finds them: the first
+    write counts them, and when there are some a probe run of pdflatex finds
+    the equations that TeX refuses (probe_pieces, on a copy of the options
+    without export fields) and they are written in the long form.  A picture
+    that TeX cannot read and that passes picture_valid is NOT found by an
+    export (a print finds it in its main run); the check of 18.5 finds it.
+    Without pdflatex the export still works and finds nothing.
+  - The file is written to NAME.tex.new and renamed when it is whole.
+
+18.5 Check Validity (--check-latex)
+-----------------------------------
+The owner's words: "Add a check box that says 'check validity'.  If it's
+checked, run LaTeX and report errors.  If it's not checked, just write the
+latex file, and files that cannot actually be processed by LaTeX are the
+human's own fault."
+
+  - The Editor: the Export panel (filemenu.c, filemenu_export) has a field
+    "Check Validity" (a No/Yes choice, No at first, not remembered) that is
+    shown only while Options is Export a LaTeX File.  The widget of the
+    panels got two members of WField for this, dep and dep_sel: a field is
+    shown only while the field dep - 1 has the choice dep_sel (widgets.c,
+    field_shown and field_row; a hidden field is not drawn and the cursor
+    skips it).  The field is after Scope, so for a structured document it is
+    the sixth field and for another the fifth.
+  - Unchecked: nothing changes.  No TeX engine is started by the export
+    except by the probe of 18.2 that is made when the document has pieces that
+    TeX could refuse (equations, pictures).  The test proves it with a
+    stand-in for pdflatex that records its calls.
+  - Checked: the Editor passes --check-latex and a tick function
+    (export_tick) to pj_export_latex.  The Printer (strprint.c, check_export)
+    does the export as before, renames the file into place, writes the
+    --errors file with the diagnostics found so far (so that a stop leaves
+    them), and then makes the file again in a private directory with the
+    SAME writer and the same options but with the position comments (so that
+    an error of TeX has its place), the pictures in a folder of that
+    directory, and the same pieces given up.  It runs the engine of a print
+    there once (run_passes, pdflatex, no stop at the first error, up to
+    three passes as a print does) and turns each error of the log into a
+    diagnostic of the document (collect_tex_errors).  The file of the user
+    and its folder are never touched; the file that was checked is the one
+    that was exported but for its comments.
+  - What the engine says that has no line of the usual form: "!pdfTeX error:
+    ... (file ./F): REASON" is a picture that cannot be read
+    (picture_error): code picture-unreadable, with the place of the picture
+    from the line of the .tex file that names it.  An engine that stops with
+    no message at all gives the code check-stopped, with no place.
+  - The Printer tells the Editor how it went on the standard output, whether
+    or not --progress is given: "@@strprint check started" (the file is
+    complete from then on), then "check ok", "check errors N" or "check
+    skipped TEXT" (the engine did not run, TEXT is the text that a print
+    gives; or the directory could not be made).  pj_export_latex reads them
+    (check_line, note_text) and ends the message: ", LaTeX accepts it", "; not
+    checked: TEXT" or the errors are in the diagnostics.  A check that is
+    skipped is not an error of the document.
+  - Esc: while the check runs the tick may ask to stop.  Before "check
+    started" that stops the whole export (nothing was written); after it the
+    file is there, the diagnostics are read from the error file that was
+    written before the check, and the result is PJ_DONE with the message "the
+    check was stopped".  The Editor draws its own waiting box (export_tick).
+  - Status of the Printer: 4 when the document or the check has diagnostics.
+  - Tests: tests/xlatex.py (the fake pdflatex, the missing one, an engine that
+    stops, a picture that TeX cannot read, a bad equation, the equality of the
+    files, the Editor: the field is shown only for the LaTeX file, the
+    messages, the waiting box, Esc) and tests/xsmoke.py (the same in X11).
+
+18.3 Open points
+----------------
+  - The Error Log page is not added to an export (the worklist item calls it
+    optional).  The diagnostics are told by message.
+  - Print Error markers: none are made by an export.
+  - The Document Manager has no export.
+  - There is no version number in the header: the program has none.
+
+18.4 Tests
+----------
+tests/xlatex.py (in make smoke): a set of sample documents is exported and
+compiled by pdflatex alone in an empty directory (only the file and its
+folder), and the pages and the text are those of a print for the documents
+without errors; the header; the folder of the pictures, the list, keep and
+position settings; PostScript pictures; a document with errors; the names of
+--tex-only; the Editor's panel (terminal, pty): the choice, the file written,
+byte for byte the file of the command line, the pictures, the overwrite
+question, the name without extension, a document with errors, the two
+settings, the scope of a section.  tests/lxtest.c test_export (header, name
+sanitizing, pictures copied or named in place, no header for a print).
+tests/xsmoke.py: the panel in X11.
+
+19. Conditional text (the If, Else and Endif markers)
+=====================================================
+
+The markers 33, 34 and 35 choose the text that is written.  The rules are in
+src/cond.h; the worklist item "Conditional text that works" has the owner's
+decisions.
+
+19.1 The variables (src/vars.[ch])
+----------------------------------
+  - VarList: up to 8 variables of the user and 8 special ones.  A name starts
+    with a letter (or, for a special variable, is .STRATA_ and a name); names
+    and values hold printable 7-bit ASCII, at most 255 characters, no
+    quotation marks; an empty value is the same as an unset variable.
+  - The channel: two options of every program, --var NAME VALUE and --special
+    NAME VALUE (the special one only for names that begin with .STRATA_), read
+    by vars_option into the list of the process (vars_process).  str keeps its
+    list for the whole run, sets .STRATA_BUILD_TYPE from src/build_type.h
+    (vars_set_specials) and gives the list to stred (Edit Document, Preview
+    Document) and to stred --print (Print Document); the Editor gives it to
+    strprint (print, preview, export, check) and to dviview (which accepts the
+    options and ignores them).  No program reads a variable from the
+    environment.
+
+19.2 The expression and the comparison (src/cond.c)
+---------------------------------------------------
+cond_parse reads "name operator literal" (the literal is the rest of the text
+without the spaces at its ends); cond_compare compares by the rules: numeric
+when both sides are all digits and at most 4294967295, otherwise strcmp (the
+order of the ASCII codes).  The errors have codes if-empty, if-no-variable,
+if-bad-operator, if-no-literal, if-bad-literal, if-too-long, if-too-deep
+(more than ten levels), plus else-unmatched, else-doubled, endif-unmatched and
+if-unclosed.  The mirror of the rules in Python is manual/checkedition.py
+and manual/mkmanual.py (check_expression): keep them equal.
+
+19.3 The filtered copy (cond_filter)
+------------------------------------
+latex_write calls cond_filter after marker_prepare of the document.  When the
+document has no If, Else or Endif the document itself is written.  Otherwise
+the copy has only the tokens of the branches that are chosen; the three
+markers are gone; a block that lost tokens and holds only ends of line is
+dropped, unless it is the headline of a section that is kept; the section
+items of a branch that is left out go; the plus and minus items are made again
+from the depths that the kept sections had (a section is at most one level
+deeper than the one before it, so a section whose parent is left out moves up;
+that is the warning if-structure).  The cross-references of the copy are
+written again with the numbers of the sections of the copy (XN), so that they
+follow their sections; one that points at a section that is left out holds
+0.0.  The copy is freed at the end of latex_write, and the original is
+prepared again.
+  - The positions: the writer works on the copy, and a diagnostic, a mark of a
+    failed print and a %@P comment are given in the positions of the original:
+    the item through the map, and the line and the offset through the map of
+    the tokens (cond_orig_pos), so the Editor puts its Print Error markers in
+    the right place.  The errors of the markers themselves are made in
+    positions of the original.
+  - latex_probe calls latex_write, so the pieces are numbered the same.
+  - The estimate of the pages, the Editor and Export as text use the original.
+
+19.4 The manual
+---------------
+manual/mkmanual.py has the directives .if EXPR, .else and .endif: each writes
+its marker in a block of its own.  The rows of the contents, the index and the
+list of figures that belong to text inside a condition are written inside the
+same markers (wrap_columns), so a row that is left out leaves no block.  A
+headline inside a condition is refused, because the numbers of the headlines
+are written into their text (the item "Printed section numbers equal
+Strata's" has to be done first).  manual/build.sh prints the document as the
+release (--special .STRATA_BUILD_TYPE release) for "single", "cards" and
+"pdf"; "developer" prints it with debug into pdf/developer; "check-edition"
+runs manual/checkedition.py, which reads the sources and proves that the
+paragraphs a release leaves out are not in the text of the release PDF and
+are in the developer PDF.
+
+19.5 Tests
+----------
+tests/condtest.c (make test): the rules of the names and values, the options,
+the expression, the comparison table, the evaluation, the copy (branches, else,
+nesting, every error, positions through the map, sections, cross-references,
+a section whose parent is left out).  tests/conditional.py (make smoke): the
+printer on documents (branches, the special variable, the refused options, the
+errors and their positions, a hidden section with an Index marker and a
+picture, the cross-reference, the position comments), stred --print with
+--var, and str: the field Variables and its panel in a pty.  tests/xsmoke.py:
+the field and the panel in X11.  tests/condmanual.py (make smoke): the
+editions of a small manual and the refusals of the generator.
+
+
+20. The LaTeX marker (type 41)
+------------------------------
+
+See MARKERS.txt, "LaTeX (marker 41)".  The writer writes the text of the
+marker in the body, between "%\n" and "%\n{}", with nothing added or
+escaped; close_attr is called first so that a bold or italic group is not
+open around the text.  LatexOpts.no_latex (set from the Printer option or
+from latex_markers=no in the settings) makes the writer print the long form
+and tell latex-marker-off.  A text of more than 65536 bytes is not written
+(latex-marker-unreadable).  cond_filter (cond.c) copies the marker with the
+rest of the document, so the markers inside a branch that is left out are
+left out with it and their positions are those of the original document.
+
+
+21. Line numbering (the Line Numbering panel of Global, Format)
+===============================================================
+The survey of the methods, the design and what was found is in
+docs/LINENUMBERING-LATEX.txt.  This section says where the code is.
+
+20.1 The records and the panel
+------------------------------
+The settings are the global F records FZM (the mode), FZE (every n-th line),
+FZS (the side), FZZ (the size), FZY (the font), FZF (the format), FZD (the
+distance) and FZQ (equations); docs/DOC-FORMAT.txt has the values.  The letter
+is Z because FN is the start of a named format.  src/msdoc.c lists the codes
+in global_fmt_codes, which fixes their place in the header (after FWB).
+src/globalmenu.c has the panel: lineno_part, the third panel of the global
+scope (panel_scope and panel_part give the scope and the part of panel p of
+the ring of thirteen), and the checks of Number Every (1 to 99) and Distance
+(0 to 2.00) in fmt_check.  The panel of the global spacing had n = 15 for 14
+fields (the 15th was read past the end of the table); the counts are now the
+sizes of the tables.
+
+20.2 The LaTeX
+--------------
+src/latex.c: lineno_read reads the records (a value out of its range is the
+default; no FZM or FZM 0 is Off and nothing at all is written, which keeps a
+document without the setting byte for byte as before: compared on every
+document of tests/data).  lineno_package is called after the banner and
+before \begin{document}; it writes
+
+  \usepackage[OPTIONS,sep=0.15in]{lineno}
+  \def\linenumberfont{\normalfont\tiny\sffamily}
+  \renewcommand{\thelinenumber}{\roman{linenumber}}   (Roman, Capital Roman)
+  \renewcommand{\strkeepplace}{...}  (the Keep blocks, see below)
+  \let\strheadnumbered\strhead ... \resetlinenumber  (Each Section)
+
+and lineno_start writes \linenumbers (and \modulolinenumbers[n]) after
+\pagenumbering.  The options: pagewise or running; right; switch (outer) or
+switch* (inner); mathlines.  The option left must not be written: with it,
+pagewise is lost (the options are processed in the order of their
+declaration in lineno.sty).  Pagewise numbers, and the switch of the side that
+is made of them, are known only after a first run, so lineno_package sets
+pagerefs and the Printer runs LaTeX twice (strprint.c, the pass loop).  The
+Error Log page writes \nolinenumbers.
+
+The numbers of a left-out branch of conditional text are not in the file at
+all, so the count follows the text that is printed.
+
+20.3 What lineno does not number
+--------------------------------
+lineno numbers the lines of paragraphs that TeX breaks on the main vertical
+list; a line inside a box is not numbered.  Trials with the sample documents
+of tests/data (every one prints with the same number of pages with and
+without numbering):
+
+  - A Keep block is set in \strkeepbox.  \strkeepplace placed it with \box;
+    with numbering it uses \unvbox, which puts the lines of the box on the
+    page (the space is asked for first, as before): the lines are numbered.
+  - A Keep block that floats (\strkeepfloat, in a figure) is not numbered.
+  - A table is a longtable.  The package option longtable of lineno was
+    tried and breaks the rows (they overlap), so tables are not numbered;
+    nor is the first row.  The count goes on past a table.
+  - Notes are not numbered; headers, footers, the banner and the Error Log
+    page are not.
+  - A picture is one line of its paragraph.
+  - Displayed equations take a number only with FZQ1 (the option mathlines).
+  - The Print Error marks and the banner work as before (tests/lineno.py).
+
+20.4 Tests
+----------
+tests/lxtest.c test_lineno (the preamble for every setting, pagerefs),
+tests/lineno.py (make smoke: the numbers read from the PDF with pdftotext
+-bbox: pagewise, running, each section, every 5th line, right, outer, inner,
+roman, capital roman, the distance, the size and font, equations, the banner
+and the Error Log page, the DVI route against the PDF route, the exported file
+compiled alone), tests/smoke.py (the panel in a pty), tests/xsmoke.py (the
+panel in X11), tools/dviview/tests/run_tests.sh test_lineno (the Viewer draws
+the numbers like the reference made by dvipdfmx).  tests/data/
+print_lineno.doc is made by tests/mkprintdata.py.
+
+
+22 The command \strata
+======================
+Every LaTeX file that latex_write makes defines \strata, the word Strata set
+as the logo of the system (preamble_strata in src/latex.c).  It is text, like
+\LaTeX: it follows the size of the line (\f@size), so it fits in a headline,
+a note or a table cell, and the package xspace keeps the space after it.
+
+The design: the letters RA and the last A are set in Helvetica bold (Nimbus
+Sans, the psnfss family phv, upright) at 0.618 of the size and stand on the
+baseline under the crossbar.  The two stems of the Ts are rules as tall as a
+capital T of the line.  The crossbar is one rule, 0.176 em thick like the
+stems, that starts 0.206 em to the left of the first stem and ends 0.088 em
+after the last A, so it joins the two Ts and covers RA and the final A.  All
+the lengths are fractions of the size, so the word scales.
+
+The S is the drawn S of the logo (the stroke with bends of \stratalogo, in
+logo/stratalogo.def), not a letter of a font.  Its outline is drawn once, at
+the size of 10 pt, into the box \strlbS (macro \strlmakeS, made at the first
+use with global assignments) and scaled to the size of the line at every use
+(\strlputS: \scalebox by the size over 10 pt), so the manual, which has the
+name hundreds of times, pays for one drawing.  The proportions are those of
+the S of the logo: the stroke is 0.092 of the size (the stroke of the stems of
+the Ts), the outer radius of a bend is two strokes and the inner one stroke,
+the height is 0.726 (a capital), the width is 46 to 43.5 of the height, and
+the top arm ends at the width of the body (the arm of the logo S runs out to
+the right over the word).  In a PDF an invisible letter S sits under the
+drawing (text render mode 3), so that pdftotext still reads S RA A; in a DVI
+(the Preview) there is none.  tests/strataname.py measures the S in pixels and
+tests the same measurements on a copy that uses the letter of the font.
+
+A document writes \strata in a LaTeX marker (type 41).  An exported file has
+the definition and names xspace in the list of packages it needs.  The tests
+are in tests/latexmarker.py (a print, the font of the letters and an exported
+file compiled alone).
+
+An earlier design of the logo, with the words Technical Document and
+Processor, a Metafont letter S and a long top bar, was tried and dropped: the
+drawings are in claude-interchange (strata-logo-checkpoint-0 to 6).
+
+
+23 The command \stratalogo
+=========================
+The large logo.  The definition (logo/stratalogo.def) is in every LaTeX file
+that latex_write makes.  It is embedded in the program as C strings
+(src/logodata.c, made by tests/logodata.py --write; make test checks it), so
+nothing has to be installed, and a file that uses the logo needs no other
+file: the logo is made of letters, rules and one drawing made with TikZ,
+which every file loads.
+
+The logo is a hbox of sizes in points, made of: the S (a TikZ drawing, see
+below), the crossbar (a rule 6 pt thick) with the stems of the two Ts and
+the letters RA and A (Helvetica bold, 21 pt) under it, the word processor
+(Palatino small capitals, 12 pt) on the crossbar and Technical Document
+(Palatino, 11 pt) right-justified on the top bar.  The command takes the
+scale as an option, \stratalogo[2]: every size is multiplied by it (the
+drawing is in units of one length, \strbig@u, that is the scale in points),
+and the title page of the reference manual uses \stratalogo[3].
+
+The S (\strbig@drawS) is one filled outline made of straight lines and
+quarter circles: a stroke of 6 pt that follows a center line with bends of
+9 pt, a body of 46 pt by 43.5 pt, and a top bar that runs out to 126 pt, a
+squat S with flat exact ends and the bottom bar flush with the left side.
+The path is the left side of the stroke from the end of the top bar around to
+the bottom bar, the flat end of the bottom bar, and the other side back.  The
+box of the S is as wide as the body only (46 pt): the picture overhangs to
+the right (rlap), and the strut of the box gives its height.  The drawing
+replaced a Metafont font of the same shape (in claude-interchange:
+strata-logo-checkpoint-0 to 6, strataS*.mf).  That font needed a bitmap for
+each resolution, a TeX installation able to make it, its source file beside
+every file that used the logo, and code in the Viewer to find it; a dvips
+route that could not make the bitmap printed a normal S.  None of that is
+needed now.
+
+Compared with the font, at 600 dpi through the Printer, the new S differs on
+edge pixels only at the scale 1 (every differing pixel is within 1 pixel of
+the edge of the other drawing) and by up to 9 pixels at the scale 2 and 14
+pixels at the scale 3 at the far end of the top bar: the new drawing has the
+exact size (126 pt times the scale), the bitmap had rounded it.  The route
+through latex and dvipdfmx draws the same S as pdflatex (no differing pixel
+at the scale 1; 0.07 per cent of the ink at the scales 2 and 3).  The Viewer
+draws the path like the keycaps.
+
+Tests: tests/latexmarker.py (a print has no bitmap font and its top bar is
+126 pt long, in the PDF route and the DVI route; the scale 2; an export is
+the .tex file alone and is made into pages by pdflatex and by latex without
+any other file; a preview is the DVI file alone, and the Viewer, run under
+Xvfb, has nothing to report and draws a top bar of the right length),
+tests/logodata.py (the embedded text is the text of logo/stratalogo.def).
+
+
+24 The width of a table
+=======================
+A block of columns is a longtable (a tabular for each row in a Keep part,
+emit_table in src/latex.c) with a column p{w} for each column of the block;
+w is the width of the column in thousandths of an inch (CW, in cells of
+0.1 inch).  LaTeX puts \tabcolsep on both sides of every column, so a table
+of n columns is the sum of the w plus 2 n \tabcolsep wide.
+
+The file sets \tabcolsep to TABCOLSEP_PT points (6) after the packages, and
+COLPAD, twice that in thousandths of an inch rounded up (167), is the space
+that emit_table counts for each column.  Both come from the one definition
+TABCOLSEP_PT.  A block whose last column has no width (the generator of the
+manual writes none for the last column) gives that column what is left of
+the line: the room of the line less the bl indent, the other columns and n
+times COLPAD.  When the columns that have a width are too wide for the line
+they are made narrower in the same proportion, with the same space counted.
+Before this was written (the constant was 83, one side only) the last column
+was n times 0.083 inch too wide and the table went past the right margin.
+
+The text of the first column begins \tabcolsep after the left edge of the
+table, and the text of the last column ends \tabcolsep before the right edge,
+which is the right margin.  The sheets that are folded in three (the key
+leaflet and the cards) use this: with a margin of 0.2 inch and the panels 33,
+35 and the rest (3.3, 3.5 and 3.3 inches of text) the rules between the panels
+are at 3.67 and 7.33 inches, a third and two thirds of the sheet.
+
+Tests: tests/lastcol.py (2, 3 and 4 columns, measured with pdftotext -bbox),
+tests/sheets.py (the three sheets), tests/lxtest.c (the width of the last
+column of the landscape table of tests/data/print_panels.doc: 4.499 inches).
+
+
+25 The Include marker (type 16): a work made of parts
+=====================================================
+Purpose.  The owner's decision: Include is for COLLABORATIVE EDITING, not for
+long documents (Strata handles documents of 4000 pages; the limit is that
+only one person can edit a document at a time).  Several authors each edit a
+part in a file of their own and a master document includes the parts; one
+print or preview of the master is the whole work, made of the current saved
+text of every part.
+
+25.1 Where it is done (src/include.[ch])
+----------------------------------------
+latex_write calls include_expand(master, docdir, diags, &map) after
+marker_prepare, before cond_filter.  When the master has no Include marker
+the master itself goes on.  Otherwise the result is a joined document: the
+items of the master with the items of the parts in place of the marker
+blocks, copied block by block (sid of every block 0, so that marker_prepare
+makes the identities again).  Then marker_prepare of the joined document and
+cond_filter of it, so the variables of the print choose in the parts too.
+
+25.2 The rules (the decisions)
+------------------------------
+  - A marker is done when it is in a block of its own (only spaces,
+    attributes and ends of line besides it) and not in a headline; the block
+    is replaced by the part.  A block with other text keeps its marker, which
+    is printed as text (put_long_only, no second message).
+  - The name is looked for in the directory of the document that holds the
+    marker (the docdir of the print for the master, the directory of the
+    file for a part), then in the working directory.  An absolute name is
+    taken as it is.  The extension .doc may be left out and the case of the
+    last component does not matter (find_name, find_case).  A backslash is a
+    slash.  The pictures of a part are looked for where the pictures of the
+    master are.
+  - The parts are read at print time (doc_load).  The unsaved changes of an
+    open part are not in the print.  The print log (log_note, not in a
+    release build) lists each part file: path, size, time of change.
+  - A structured part is put one level below the section of the marker, in
+    front of the subsections that the section has (the marker has to be in
+    the last block of its section); its title page blocks come first as
+    blocks of the section.  A part with no sections puts its blocks at the
+    marker.  In an unstructured master every part is put as blocks.
+  - The master governs: the Global Format (header records), the named
+    formats and the page settings of a part are not used.  The part brings
+    its text, markers, pictures and the formats of its blocks (B and C
+    records) and sections (SE fold states).
+  - Numbering (sections, counters, notes, cross-references, the table of
+    contents with --contents, pages) is that of the joined document.  The
+    XN number of every cross-reference is written again with the number of
+    its section in the joined document (a part's cross-references point at
+    sections of that part).
+  - Nesting: INCLUDE_DEPTH_MAX 8 levels of parts; a loop is found by the
+    real path of every file on the stack (master included), so a file that
+    includes itself directly or through others is stopped at the second
+    include.
+  - Mistakes: code include-noname, include-missing, include-unreadable,
+    include-damaged (doc_load fails), include-loop, include-deep and
+    include-place (not alone, in a headline, a part with sections not in
+    the last block).  Message "Invalid Include request: REASON".  Each is a
+    DIAG_ERROR with mtype 16 at the marker of the master (for a mistake in a
+    part, the marker of the master that brought the part in).  A notice
+    block "[Invalid Include request: REASON]" is put in place of the marker.
+    The print goes on; the exit status is that of a print with errors.
+
+25.3 Positions
+--------------
+The writer works on the joined document (and on the filtered copy of it).
+orig_pos_off in latex.c turns a position through the map of cond_filter and
+then through include_orig_pos: an item from a part is at the marker of the
+master (item, column, line, offset), an item of the master is at its own
+item.  The errors of cond_filter are made in positions of the joined
+document and turned with include_remap_diags.
+
+25.4 Preview and part prints
+----------------------------
+Preview, Draft, Final, Export as LaTeX and the part prints (Print Current
+Section Only, from and to sections) all go through latex_write, so they
+include the parts.  A part print is made from a copy of the master that
+keeps the path and the docdir, so the same parts are found.
+
+25.5 Tests
+----------
+tests/incltest.c (make test): the joined stream, a section part, the loop
+guard (self, two files), the depth limit, a missing file, a file that is not
+a document, no name, the map of positions.  tests/include.py (make test): a
+master and two parts in a made directory, pdftotext order, numbering, the
+cross-reference, the table of contents (--contents 3), directories, absolute
+names, the case of the names, the working directory, the errors and their
+items, loops, depth, fresh text, the variables in a part.  tests/smoke.py:
+the block "the Include marker" (panel, F2 list, Draft and Final prints, a
+missing part).

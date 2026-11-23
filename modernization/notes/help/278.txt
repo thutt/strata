@@ -1,0 +1,25 @@
+
+------------------------------ File Import Options -----------------------------
+
+Select from the following options to determine how an ASCII file is imported:
+
+# Ignore Line Endings: Converts two consecutive end-of-line characters to 
+  block dividers and ignores all single end-of-line characters.  With this 
+  option, paragraphs separated by blank lines are imported as blocks, but
+  columns and tables do not retain their format.
+ 
+# Preserve Line Endings: Imports single end-of-line characters as carriage 
+  returns and converts two consecutive end-of-line characters to a block
+  divider.  This option is useful when importing tables and columns, however, 
+  you may need to delete end-of-line characters where you want word wrap
+  and to split blocks or sections to make the text easier to format.
+
+# 96 Character ASCII: First import the file using the selected code page. Then,
+  IBM Extended ASCII  if the file does not import correctly, import the file 
+          .           again using a different code page.  Manuscript initially
+          .           selects the code page appropriate for your system; 
+          .           however, you may need to change it to the code page that
+          .           was used to create the ASCII file.
+
+--------------------------------------------------------------------------------
+        File Import          Keyboard Summary           Help Index

@@ -1,0 +1,88 @@
+# Chapter 6, fifth part: fonts, hyphenation and what printing needs.
+# Included by the chapter file.
+
+.h2 Fonts [print-fonts]
+.ix Fonts, printed
+.ix Typeface, printed
+.ix Latin Modern
+.ix Font families
+.ix Typewriter, sans serif, roman
+The printed page is set in Latin Modern, the improved Computer Modern fonts
+of TeX.  Three families of it are used: the roman
+(serif) face for text, the sans serif face and the typewriter face.  Which
+one a piece of text has depends on the font number that applies to it and on
+the {b:name} of that font in the Typeface list of the Global menu (the
+20 fonts of the document).  Text is set in 11 points, and in 14 points on an
+envelope ({n:format-set-typefaces}); a document can name another size of 8, 9,
+10, 11, 12, 14, 17 or 20 points.  Headlines are larger and notes smaller.
+
+.h3 Which font applies
+The font number of a block comes from the first of these that has one.
+.table 5 55
+Step | The source
+1 | The font of the column (a table cell).
+2 | The font of the block.
+3 | The font of the named format that the block uses.
+4 | The font that the level gives to headlines (Headline Font) or to text
+ (Text Font), for the level that holds the block.
+5 | The Headline Font or the Text Font of the Global Format settings.
+.end
+A Font marker changes the family from where it stands to the end of the
+block.  A Keycap marker has a font number of its own.  A font number that has
+no name, or is out of 1 to 20, gives the roman face.
+
+.h3 From the name of a font to a family
+The Printer reads the name of the font in the Typeface list, in lower case,
+and chooses the family from the words in it.
+.table 13 47
+Family | Words in the name
+Typewriter | program, code, courier, mono, typewriter, fixed, listing, source.
+ These are looked for first.
+Sans serif | head, title, sans, helv, arial, gothic.  A name that holds
+ "header" (such as Header/Footer) does not count as a headline name.
+Roman | Any other name.
+.end
+With the names that a new document has, Intro head, Level 1 head and
+Level 2 head (fonts 1, 4 and 5) are sans serif, Text and Header/Footer (2 and
+3) are roman, and the fonts called Font 6 and up are roman.  A font called
+Program Listing would be typewriter.  To change what a font prints as,
+change its name in the Typeface list.
+
+.h3 Hyphenation [print-hyphenation]
+.ix Hyphenation, printed
+.ix Line breaking
+.ix Even justification
+.ix Soft hyphen, printed
+.ix Hyphenation list, printed
+The lines of a paragraph are broken as a whole, and words are hyphenated
+with English patterns, whatever the language of the document.  Lines are
+never left overfull when a way of breaking them exists.  Text that the block
+asks to have left, right or centered is not justified; text of even
+justification is.
+Where the patterns break a word wrongly, say where it may be broken.  A soft hyphen
+typed in a word ({n:edit-shy}) marks the places in that word; the word is then
+broken only there, and only if the line ends there.  Your hyphenation list
+({n:str-spell-words-hyphen}) does the same for a word in every document, and a
+word in the list with no hyphen is never broken.  Both work in the preview
+as in the print.
+
+.h2 What printing needs [print-prereq]
+.ix Prerequisites, printing
+.ix pdflatex
+.ix cups-client
+Printing and previewing need programs of the system: a TeX system for the
+Printer, the {c:lp} command and a queue to send a PDF to a printer, and an X
+display for the Viewer.  {x:prereqs} lists what each feature needs.  None of them is
+needed to edit: without them the commands of this chapter say what is
+missing and the Editor goes on.
+.table 26 34
+Without | What you see
+{c:pdflatex} | A Draft or a Final stops with "Print needs LaTeX: pdflatex was not
+ found in" and the system directories.
+{c:lp} | The PDF is made and the message shows that it was not sent.
+An X display or the Viewer | A Preview reports this ({n:print-preview}).
+.end
+The PDF needs the Printer and a TeX system, not CUPS.
+.note Printing never runs a program that the document names: the names of
+  queues and of files are checked before they are used, and the commands that
+  read or write files or run programs are refused in an equation.

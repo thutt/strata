@@ -1,0 +1,22 @@
+# Phrases that may stay, one per line, matched without regard to case.
+# Keep this list short.  Each phrase has a use in which it is plain English.
+the original text
+the original is not changed
+original text
+original and replacement
+# APPS: appcfg1.src, appcfg2.src, appcmd2.src: the configuration key stred and
+# the environment variable STRED are set by the user and keep their names.
+{c:stred}
+{c:STRED}
+stred=
+stred |
+STRED |
+environment variable STRED
+# GETTING STARTED (gs-install.src, gs-start.src): the owner asked
+# for the paths of what the install makes and for examples that start the
+# programs: the file names of the programs are part of those paths.  No other
+# use of the names is allowed.
+bin/str
+bin/dviview
+# The option of the terminal multiplexer tmux that starts it in UTF-8 mode.
+tmux -u

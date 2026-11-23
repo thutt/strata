@@ -1,0 +1,25 @@
+---------------------------- Global Format - Structured ------------------------
+
+The Menu (F10) Global Format panels control the appearance of headline and text
+blocks for all sections (Global) or for levels of sections (Level 1 through 9).
+The level 9 panel controls levels 9 and beyond.
+
++-------------- Global Format (Global, Level 1 through Level 9) ---------------+
+| HEADLINE and TEXT                                                   Pos: 1   |
+| ........................................................................... |
+|                                                                              |
+| Attributes:               Justification:               Indent:               |
+| Font:                                                                        |
+|------------------------------------------------------------------------------|
+| SPACING                                                                      |
+|         Line:             Indent per Level:             First Block Type:    |
+|     Headline:             Page Break Level:             Print:               |
+|        Block:            Page Number Level:             Section Tag:         |
+|   Subsection:               Auto Numbering?             Ruler:               |
+| Peer Section:                     to Level:             Winding Columns:     |
++---------------------- Press Ins to Use Displayed Settings -------------------+
+
+The section tag prompt is on the level panels only.
+--------------------------------------------------------------------------------
+        Local Format          Global Format-Unstructured          Global
+        Panel Keys            Keyboard Summary             Help Index

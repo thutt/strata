@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- File <operation> error --
+
+There is a problem referencing a file on the disk. Check to make sure there is
+space available on the disk, that the file name is valid, that the file or
+disk is not write-protected, and that the disk drive, directory, and file exist.
+A file name cannot be the name of a system file, hidden file, directory, or 
+device (like the CON console device name).
+
+In particular, be sure that there are no forward slashes (/) in the path or file
+name; use a backslash (\) to separate directory names within a path name. You 
+may need to go to a backup copy of the file.
+
+-- File does not exist (<filename>) --
+
+The file you are trying to open is not in the specified directory. Verify the 
+file's directory path or use Gray + at the directory or file name prompt to list
+the document files available on the current disk.  When downloading fonts,
+this message occurs if there are no font files in the current download font
+directory.  Verify the directory spelling and path and check that there are 
+fonts in the directory.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

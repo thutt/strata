@@ -1,0 +1,25 @@
+
+------------------------------------- Count ------------------------------------
+
+Use Menu (F10) Tools Count to display the approximate number of words in the 
+body of the current document.  The Count command does not count words in notes,
+index or title pages, include files, marker commands, etc.
+
+If your document is collapsed, all words in the document are counted. If you
+are using the Edit Section command to edit a single section of a document, 
+only the words in that section are counted.
+
+
+--Procedure---------------------------------------------------------------------
+
+ Press Menu.               
+ Select Tools Count.       
+ Press any key to return to the editor.            
+                            
+--------------------------------------------------------------------------------
+
+# Print the Document Summary during final print to get a total word count
+  for the formatted document.
+
+--------------------------------------------------------------------------------
+    Tools          Final Print          Keyboard Summary          Help Index

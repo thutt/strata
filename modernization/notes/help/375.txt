@@ -1,0 +1,25 @@
+
+------------------------------ Equation Update Utility -------------------------
+
+If you have created an equation in a separate file in Manuscript Release 1,
+you need to update that file before using it in an Equation marker in a 
+Manuscript Release 2 document.
+
+To upgrade an equation file, make sure you are in the Manuscript directory and
+type the following command at the DOS command line:
+
+                MS MSEQN12 <release1_filename> <release2_filename>
+
+--------------------------------------------------------------------------------
+
+# release1_filename is the name of the Release 1 equation file to update.
+
+# release2_filename is the name of the Release 2 equation file to create.
+  This file name is optional; if no release2_filename is specified the new
+  Release 2 file will overwrite the old Release 1 file.
+
+# When specifying the file names, be sure to specify the path if the file is
+  not in the current directory and the file name extension if it is other 
+  than .DOC.
+--------------------------------------------------------------------------------
+       Equation Marker            Keyboard Summary            Help Index

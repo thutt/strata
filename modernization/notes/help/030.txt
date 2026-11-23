@@ -1,0 +1,25 @@
+
+------------------------------------- Join -------------------------------------
+
+Join (Alt F3) joins the current column, block, or section to the following one 
+and retains the format settings of the current column, block, or section.
+
+Join the current column     Join the current block     Join the current section
+with the column to the      with the following         with the following
+right.                      block.                     section.
+         +--------------+                |                 +----+
+            +----------------------------------------------------------+
+            |        Column            Block            Section        |
+            +----------------------------------------------------------+
+--Procedure---------------------------------------------------------------------
+
+ Press Join.
+ Select Column, Block, or Section and press Enter.
+--------------------------------------------------------------------------------
+
+# To join columns that span multiple blocks, use the Column and Table Editor.
+# When joining sections, the joined section's headline block becomes a text 
+  block in the current section.
+--------------------------------------------------------------------------------
+          Append           Column and Table Editor           Split
+                 Keyboard Summary                 Help Index

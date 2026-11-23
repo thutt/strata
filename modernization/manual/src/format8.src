@@ -1,0 +1,207 @@
+# Chapter 4, eighth part: the local formats and the messages of the panels.
+# Part of the chapter source.
+
+.h2 Local formats [format-local]
+.ix Local format
+.ix Local formats
+.ix Current format
+.ix F6, Format
+.ix Ctrl-E, Block Format Editor
+.ix Block Format Editor
+.ix Resetting local formats
+A local format belongs to one piece of a document: a run of characters, one
+block, or one column of a table.  It is looked up before any global setting
+({n:format-order}) and so it wins over all of them.  The local formats are
+made with a few keys and one panel, and they are described by the piece
+of text that they format: a block or a column ({n:format-local-block}) and
+characters ({n:format-local-text}).
+.table 16 21 20
+Piece | How it is made | Applies to
+Characters | Attribute keys, {x:format-local-text} | The text after the mark.
+Block | {k:F6} or {k:Ctrl-E}, {k:Ctrl-H} | The block.
+Column of a table | {k:F6} or {k:Ctrl-E} in the column | The column.
+.end
+{x:edit} describes how the commands of the edit screen are chosen;
+this section describes only what they do to the format.  The width of a column
+and the gaps at its sides are set by the Table commands of {n:edit}, not by
+{k:F6}.
+
+.h3 The format of a block or of a column [format-local-block]
+.ix Block format, local
+.ix Column format, local
+.ix Left block indent, local
+.ix Format of one block
+Press {k:F6} (Format), or {k:Ctrl-E}, with the cursor in a block of the
+document.  The two keys do the same thing.  A panel called Block Format
+Editor puts five questions one after the other, each answered with
+{k:Enter}; the question shows the value that the block has now, as the lookup
+of {x:format-order} finds it, so that {k:Enter} alone keeps it.
+.table 5 18 34
+No | Question | Answers
+1 | L: left block indent (ruler units) | A number typed in a text line.
+2 | Justification | A list: Left, Right, Center, Even.
+3 | Indent | A list: None, First, All but First, All.
+4 | Attributes | A list: Normal, Bold, Italics, Bold Italics, Underscore Words.
+5 | Tabs (e.g. 5,20R,40D; 0 = none) | A text line of tab stops.
+.end
+The text lines are edited with the usual keys of a one line box ({k:Left},
+{k:Right}, {k:Home}, {k:End}, {k:Backspace}, {k:Del}); the lists are moved
+with {k:Up}, {k:Down}, {k:Home}, {k:End}, {k:PgUp} and {k:PgDn} and the
+highlight starts on the value that the block has.  The last box shows the
+tab stops of the block in the form that it takes back, for example
+{c:5,20R}, so that a stop can be changed in place.  The stops are described
+in {x:format-set-tabs}.
+.table 7 53
+Key | Effect
+{k:Enter} | Accept the answer and go on to the next question; after the last
+ question, make the change.
+{k:Esc} | In any question: leave the panel.  Nothing is changed, not even
+ what was answered before.
+.end
+The change is made when the fifth answer is accepted, and then all of it is
+made together.  A left block indent that is typed with letters is read as far
+as it goes: a text with no digit at the start is 0.  In a block of several
+columns (a table) the answers go to the column that holds the cursor; the
+left block indent belongs to the block, so the answer to the first question
+is read only in a block of one column.  The document is marked as
+changed, the block is drawn again with its new format and the ruler follows
+it at once.  When the cursor is not in a block no question is asked.
+.note A block that has gone through the panel and been accepted has a local
+  setting for each of the four answers, even for those that it did not
+  change, and no later change of the global setting reaches it.  A block that
+  has never been in the panel follows the global settings.
+.h4 Hanging indent
+.ix Hanging indent, local
+.ix Ctrl-H, hanging indent
+{k:Ctrl-H} makes a hanging indent for the block that holds the cursor: the
+first tab stop of the block is put where the cursor stands, counted from the
+left block indent, and the Indent is set to All but First.  The message line
+shows "Hanging indent set at N", N being the position.  The indents are
+described in {x:format-set-indents}.
+
+.h3 Characters [format-local-text]
+.ix Text format, local
+.ix Attribute marks
+.ix Attribute keys, local format
+.ix Set Attributes
+The format of characters is a mark in the text itself: the attribute that
+applies from that point to the next mark.  It is made with the keys of
+{x:format-screen-attrkeys}: {k:Ctrl-B} for bold, {k:Alt-I} for
+italics, {k:Ctrl-U} for underscored words, {k:Ctrl-N} for normal, and
+{k:Alt-F6} for the list Set Attributes (Normal, Bold, Italics, Underscore
+Words).  Each key puts a mark at the cursor that turns its attribute on when
+it was off and off when it was on, so that the text that is typed next has the
+attribute; with text highlighted the commands of {n:edit} apply it to the
+highlighted text.  The mark is added to the attribute of the block's format and
+cannot take it away (the Behavior in {n:format-order}): a bold block
+cannot be made normal word by word, only by changing the format of the block.
+.table 15 45
+Settings | Which one wins
+Block says Bold, text says Normal | Bold: the text adds, never removes.
+Block says Underscore, text says Bold | Bold and underscored.
+Block says Normal, text says Italics | Italics from the mark to the next mark.
+.end
+
+.h2 Messages of the format panels [format-messages]
+.ix Messages, format panels
+.ix Error messages, Global menu
+.ix Panel messages, Global menu
+.ix Refused value
+.ix Refused value, Global menu
+.ix Messages, F6 panel
+Every panel of the Global menu keeps what it is given until Ins is pressed,
+and then looks at all the values together.  A wrong value is refused with a
+box that has a title and one line of text.  The box is a notice: any key closes
+it, the panel that holds the fault is shown again, nothing has been applied,
+and the document has not been changed.  The tables below give the text of
+every message that these panels and the {k:F6} panel can show, the title of the
+box, and what to do.  The parts in capitals vary.
+.h3 Global Format [format-messages-format]
+.ix Format, messages
+.table 23 10 24
+Text | Title | What it means
+FIELD must be a number such as 1.50 | Format | A spacing field, or Distance, is
+ | | not a number.
+FIELD must be a whole number | Format | A whole number field has a sign,
+ | | a point or a letter.
+FIELD is a number from 0 to 99 | Format | Table of Contents Level is not a
+ | | whole number from 0 to 99.
+FIELD must be a number from 1 to 99 | Format | Number Every is not from 1 to 99.
+FIELD must be from 0 to 2.00 inches | Format | Distance is more than 2.00.
+.end
+FIELD is the label of the field: Line Spacing, Headline Spacing, Block Spacing,
+Subsection Spacing, Peer Section Spacing or Distance for the first message;
+Indent per Level, Page Break Level, Page Number Level, Auto Numbering to Level,
+Number Every, Winding Columns or Indent to Next Level for the second; Table of
+Contents Level for the third; Number Every for the fourth and Distance for the
+fifth.  The first fault in the order of the fourteen panels is reported, and
+that panel is shown.  Correct the field and press {k:Ins}
+again.  The rules of a good number are in {x:format-format-apply}.
+.h3 Page [format-messages-page]
+.ix Page Layout, messages
+.table 23 11 23
+Text | Title | What it means
+FIELD must be a number such as 1.000 | Page Layout | A margin is not a number
+ | | or has more than three decimals.
+FIELD must be 0 to 100 | Page Layout | Vertical Centering is not a whole
+ | | number from 0 to 100.
+.end
+The Page Number Tag and the Paper Size are not checked (the paper is chosen
+from a list).  The rules are in {x:format-page-checks}.
+.h3 Named [format-messages-named]
+.ix Named Block Format, messages
+.ix Delete Named Block, messages
+.table 21 13 23
+Text | Title | What it means
+Enter a name to save the format as | Named Block Format | Save as is empty.
+Invalid number | Named Block Format | A name with a control character,
+ | | or a Block Indent (Left) with a
+ | | character that is not a digit.
+There are no named block formats | Delete Named Block | Delete was chosen and
+ | | the document has none.
+.end
+The question "Delete the named block format NAME?" is a list of Yes and No,
+not a notice ({n:format-named-delete}).
+.h3 Keycap Format [format-messages-keycap]
+.ix Keycap Format, messages
+.table 43 17
+Text | Title
+Foreground and Background are 0.0 to 100.0, Scale is 0.100 to 10.000 | Keycap
+ | Format
+.end
+The Marker group has one message.  The others of the group (the
+note, counter and display panels) refuse nothing, as {x:format-marker-notes}
+says.  The text shown is the one in the table; the box is a notice, the Marker
+panel stays, and the values are not applied until all are right.  The messages
+that the panel of one marker gives (Marker, Alt-F12) are those of {n:markers}.
+.h3 Options and the other files of the user [format-messages-options]
+.ix Options, messages
+.ix Config file, error
+.ix Settings, could not be saved
+When Options is accepted the five settings take effect and the file
+{c:config} of the user is written.  If that fails a box titled Options gives
+the reason, and the settings keep their value until the Editor ends.
+.table 31 29
+Text | What it means
+There is no home directory | No home directory is known and {c:STRATA_HOME} is not
+ set.
+Cannot make DIR: REASON | The directory of the settings could not be made.
+DIR is not a directory of yours | The directory is a link, or belongs to
+ somebody else.  It is not used.
+Cannot write FILE: REASON | The file cannot be written;
+ the reason is the one of the system (a full disk,
+ a directory that cannot be written).
+.end
+The same four messages belong to the list of fonts of the Document Manager,
+which has the title Fonts there ({n:str}), in a slightly different wording.
+.h3 The F6 panel and the keys of the formats [format-messages-keys]
+.ix Messages, format keys
+.ix Hanging indent, messages
+These are not boxes: they are written in the message line of the screen and
+stay until the next key.
+.table 31 29
+Text | When
+Hanging indent set at N | {k:Ctrl-H}, N is the position of the stop.
+Type the hanging characters first, then | {k:Ctrl-H} with the cursor at the left
+ press {k:Ctrl-H} | block indent.
+.end

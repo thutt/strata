@@ -1,0 +1,25 @@
+
+------------------------------------ Global ------------------------------------
+
+The Menu (F10) Global commands control the format of the printed document.
+
+                                Assign typefaces for the    
+  Determine the global format   document (headline blocks,  Set user preference
+  of the different levels of    text blocks, headers and    options and file
+  sections and blocks in a      footers, and other          backup options.
+  document.  |                  specified areas).                    |
+             |                    +----------+         +-------------+
+             |                    |                    |
+         +-------------------------------------------------------------+
+         | Format     Page     Typeface    Marker   Options     Named  |
+         +-------------------------------------------------------------+
+                        |                    |                 +--+
+           +------------+               +----+                 |
+  Control page format (global,      Set global formats   Edit, save, or delete
+  title page, table of contents,    and display modes    master named blocks.
+  first page, even pages, odd       for markers.
+  pages, index pages).
+
+--------------------------------------------------------------------------------
+   Format - Unstructured    Format - Structured    Page    Typeface    Marker
+   Options        Named        Menu        Keyboard Summary        Help Index

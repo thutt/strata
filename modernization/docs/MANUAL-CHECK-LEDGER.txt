@@ -1,0 +1,1231 @@
+THE LEDGER OF THE SECOND EDITORIAL PASS OF THE REFERENCE MANUAL
+
+Date: 21 November 2026.  Sources: manual/src (master and included parts).
+The numbers are those of the single document made by build.sh single.
+
+WHAT "CHECKED" MEANS HERE
+
+  Two kinds of check were made, and the ledger says which one a section had.
+
+  M  Mechanical, for every section: the program is the truth and a tool
+     compares it with the text (checkfacts.py F1 to F6, checkeditorial.py
+     E1 to E22, checkspell.py, checkkeys, checknames, checkimpl, check-style,
+     check-edition, check-numbers, check-pictable).  Every section has M.
+  R  Read line by line against the program.  Only the sections that the
+     column read marks yes were read this way.  The rest of the manual was
+     NOT read line by line in this run; that part of the task is open (see
+     OPEN at the end).
+
+  The column changed says that a line of the section was changed in this
+  pass (the text, not only a heading).
+
+  Sections of the single document: 1100.  Read line by line: 27 (the
+  sections of the first part of the Print chapter, down to the messages
+  of a print, and section 1.1).
+  Changed in this pass: 43.  Checked mechanically only: 1073.
+
+THE CHECKS THAT THE PASS ADDED (all run by build.sh check-style)
+
+  F1  Every message of the Editor (ed_msg, popup_msg) is in the manual.
+  F2  Every menu entry that the Editor prints with --dump-menus is named as
+      menu, entry (Print, Preview).
+  F3  Every option that a program reads from its command line is in the
+      manual (13 of the Printer and Editor options were missing).
+  F4  Every marker type has its section.
+  F5  Every label of a field is in the manual.
+  F6  Every sample named in the manual is in the samples.
+  E19 The words See also are not used; E20 and E21 the patterns of a marker
+      entry and of a File command; E22 no word before a reference.
+  S   Spelling of the running text with aspell (it found 15 times centerd).
+  And the generator writes the index entries of the second names of things
+  (manual/src/synonyms.txt): Dialog, See Panel.
+
+COUNTS OF FAULTS FOUND BY CLASS
+
+  facts          Print menu had nine entries and two dimmed (seven, none);
+                 the Printer table said Open to print (PDF viewer); Contents
+                 Levels was 1 to 9 (1 to 99); the menu bar was said to be
+                 cut (it fits; the Print menu has a second row); the
+                 Printer was said to read no configuration file (it reads
+                 latex_markers); the dimmed Edit, Window was not named.
+                 Total 6.
+  completeness   13 messages and 17 command line options of the Printer and
+                 the Editor were not in the manual.  Total 30.
+  structure      3 marker entries and the Export command lacked the Edges
+                 section.  Total 4.
+  style          15 centerd; a the before a reference.  Total 16.
+  index          no second name of a thing was indexed: 35 entries added.
+  examples       the samples named in the manual exist (F6): 0 faults.
+  tables         no change (the first pass did the widths).
+
+THE SECTIONS
+
+number    title                                  read chg file
+1         A View of Strata                       no   no  view.src
+1.1       How this manual is written             yes  yes view.src
+1.2       The elements of a document             no   no  view1.src
+1.2.1     What text is                           no   no  view1.src
+1.2.2     What a block is                        no   no  view1.src
+1.2.3     What a column is                       no   no  view1.src
+1.2.4     What a section is                      no   no  view1.src
+1.2.4.1   Levels                                 no   no  view1.src
+1.2.4.2   The shape of a section as the editor s no   no  view1.src
+1.3       Documents with sections and documents  no   no  view1.src
+1.3.1     Making a document structured or unstru no   no  view1.src
+1.3.2     Editing one section                    no   no  view1.src
+1.4       Guidelines for large documents         no   no  view1.src
+1.4.1     A work with several authors            no   no  view1.src
+1.4.2     Saving, backup and autosave            no   no  view1.src
+1.5       Global and local formats               no   no  view1.src
+1.5.1     Global format settings                 no   no  view1.src
+1.5.2     Local format settings                  no   no  view1.src
+1.5.3     The expanded status line and the ruler no   no  view1.src
+1.6       The screen                             no   no  view2.src
+1.6.1     The two versions of the screen         no   no  view2.src
+1.6.2     The status line                        no   no  view2.src
+1.6.3     The expanded status line               no   no  view2.src
+1.6.4     The ruler                              no   no  view2.src
+1.6.5     The text area                          no   no  view2.src
+1.6.5.1   A terminal screen, as text             no   no  view2.src
+1.6.6     The labels of the function keys        no   no  view2.src
+1.6.7     The message line                       no   no  view2.src
+1.6.8     The cursor                             no   no  view2.src
+1.7       Panels, menus and prompts              no   no  view2.src
+1.7.1     Lists of choices                       no   no  view2.src
+1.7.2     Prompts                                no   no  view2.src
+1.7.3     Panels                                 no   no  view2.src
+1.7.3.1   The keys of a panel                    no   no  view2.src
+1.7.3.2   Checklists                             no   no  view2.src
+1.7.4     The Marker Commands grid               no   no  view2.src
+1.7.5     Questions and message boxes            no   no  view2.src
+1.7.6     The pager                              no   no  view2.src
+1.7.7     The menu bar                           no   no  view2.src
+1.7.8     Highlighting an area                   no   no  view2.src
+1.7.9     The Help                               no   yes view2.src
+1.8       The keys                               no   no  view3.src
+1.8.1     Typing text                            no   no  view3.src
+1.8.2     Moving the cursor                      no   no  view3.src
+1.8.3     The outline: showing and hiding        no   no  view3.src
+1.8.4     Sections, blocks and columns           no   no  view3.src
+1.8.5     Highlight, copy, cut, paste            no   no  view3.src
+1.8.6     Attributes and formats                 no   no  view3.src
+1.8.7     Search, replace, markers, files        no   no  view3.src
+1.8.8     The Ctrl-F menu                        no   no  view3.src
+1.8.9     Alternative keys for terminals         no   no  view3.src
+1.9       The function keys                      no   no  view3.src
+1.10      The F12 menu                           no   no  view3.src
+1.10.1    The menus entry by entry               no   no  view3.src
+1.10.2    Quit                                   no   no  view3.src
+1.11      Accelerators                           no   no  view3.src
+1.12      Markers in brief                       no   no  view3.src
+1.12.1    Inserting and changing a marker        no   no  view3.src
+1.12.2    The markers                            no   no  view3.src
+1.12.3    How a marker looks on the screen       no   no  view3.src
+1.13      The tools you use                      no   no  view4.src
+1.13.1    The Editor                             no   no  view4.src
+1.13.2    The Document Manager                   no   no  view4.src
+1.13.2.1  The small Document Manager of the Edit no   no  view4.src
+1.13.3    The Printer                            no   no  view4.src
+1.13.4    The Viewer                             no   no  view4.src
+1.13.5    Keycaps                                no   no  view4.src
+1.13.6    Help                                   no   no  view4.src
+1.13.6.1  Finding the help file                  no   no  view4.src
+2         File                                   no   no  file.src
+2.1       How the chapter is organized           no   no  file.src
+2.2       File types                             no   no  file0.src
+2.2.1     Document files                         no   no  file0.src
+2.2.2     Template files                         no   no  file0.src
+2.2.3     Backup files                           no   no  file0.src
+2.3       Working directory                      no   no  file0.src
+2.3.1     How it begins and how it changes       no   no  file0.src
+2.3.2     Working directory and the Document Man no   no  file0.src
+2.4       File names                             no   no  file0.src
+2.4.1     Extensions that the commands add       no   no  file0.src
+2.4.2     Case of letters                        no   no  file0.src
+2.4.3     Long names and backups                 no   no  file0.src
+2.4.4     Letters outside the English alphabet   no   no  file0.src
+2.4.5     How a long name is shown               no   no  file0.src
+2.4.6     Names that look like commands          no   no  file0.src
+2.4.7     Directories in a name                  no   no  file0.src
+2.5       Directory and file checklists          no   no  file0.src
+2.5.1     How to ask for a checklist             no   no  file0.src
+2.5.2     What the lists show                    no   no  file0.src
+2.5.3     Which files each panel shows           no   no  file0.src
+2.5.4     Keys in a checklist                    no   no  file0.src
+2.6       The File panels: keys and rules        no   no  file0.src
+2.6.1     Moving and accepting                   no   no  file0.src
+2.6.2     A text field                           no   no  file0.src
+2.6.3     A field with choices                   no   no  file0.src
+2.6.4     Panels that refuse a value             no   no  file0.src
+2.6.5     Questions and messages                 no   no  file0.src
+2.7       Templates                              no   no  file1.src
+2.7.1     Making a template file                 no   no  file1.src
+2.7.2     Starting a document from a template    no   no  file1.src
+2.7.3     Where the templates are looked for     no   no  file1.src
+2.8       Backup files                           no   no  file1.src
+2.8.1     The directory .backup                  no   no  file1.src
+2.8.2     Choosing how many backups are kept     no   no  file1.src
+2.8.3     When a backup is made                  no   no  file1.src
+2.8.4     Using a backup                         no   no  file1.src
+2.8.5     Autosave and the files                 no   no  file1.src
+2.9       Revision, description and author       no   no  file1.src
+2.9.1     The rule for the revision              no   no  file1.src
+2.10      Save                                   no   no  file2.src
+2.10.1    The Save File panel                    no   no  file2.src
+2.10.2    What the Options field writes          no   no  file2.src
+2.10.3    Description, Author and Revision       no   no  file2.src
+2.10.4    The question and the result            no   no  file2.src
+2.10.5    Ctrl-S, the quick save                 no   no  file2.src
+2.10.6    Where the cursor is when a document is no   no  file2.src
+2.10.7    Save at the edges                      no   no  file2.src
+2.10.8    The terminal version and the X11 versi no   no  file2.src
+2.10.9    See                                    no   yes file2.src
+2.11      Retrieve                               no   no  file2.src
+2.11.1    Ways to open a document                no   no  file2.src
+2.11.2    The Retrieve File panel                no   no  file2.src
+2.11.3    What the Options field takes           no   no  file2.src
+2.11.3.1  What Retrieve Global Settings replaces no   no  file2.src
+2.11.3.2  What Retrieve Typeface Settings Only r no   no  file2.src
+2.11.4    What happens after the panel           no   no  file2.src
+2.11.5    The part that can be read              no   no  file2.src
+2.11.6    Retrieve at the edges                  no   no  file2.src
+2.11.7    Using Retrieve                         no   no  file2.src
+2.11.8    See                                    no   yes file2.src
+2.12      New                                    no   no  file3.src
+2.12.1    Ways to begin a document               no   no  file3.src
+2.12.2    The new document                       no   no  file3.src
+2.12.3    The list of templates                  no   no  file3.src
+2.12.4    The templates that come with Strata    no   no  file3.src
+2.12.5    The sample envelopes                   no   no  file3.src
+2.12.6    The structured sample                  no   no  file3.src
+2.12.7    A letter and an envelope, step by step no   no  file3.src
+2.12.8    Sample letters                         no   no  file3.src
+2.12.9    The New File panel                     no   no  file3.src
+2.12.10   What happens after the panel           no   no  file3.src
+2.12.11   New at the edges                       no   no  file3.src
+2.12.12   See                                    no   yes file3.src
+2.13      Delete                                 no   no  file3.src
+2.13.1    The Delete File panel                  no   no  file3.src
+2.13.2    What happens after the panel           no   no  file3.src
+2.13.3    Delete at the edges                    no   no  file3.src
+2.13.4    See                                    no   yes file3.src
+2.14      Import                                 no   no  file3.src
+2.14.1    The Import ASCII Text File panel       no   no  file3.src
+2.14.2    The Options field                      no   no  file3.src
+2.14.3    The Character Set field                no   no  file3.src
+2.14.4    Where the text goes                    no   no  file3.src
+2.14.5    Import at the edges and messages       no   no  file3.src
+2.14.6    See                                    no   yes file3.src
+2.15      Export                                 no   no  file3.src
+2.15.1    The Export ASCII Text File panel       no   no  file3.src
+2.15.2    The Options field                      no   yes file3.src
+2.15.3    The Scope field                        no   no  file3.src
+2.15.4    The Character Set field                no   no  file3.src
+2.15.5    Export a LaTeX File                    no   no  file3.src
+2.15.6    Checking that LaTeX accepts the file   no   no  file3.src
+2.15.7    Making the pages of an exported file   no   no  file3.src
+2.15.8    The pictures of an exported file       no   no  file3.src
+2.15.9    Errors, and what an exported file is f no   no  file3.src
+2.15.10   After the panel                        no   no  file3.src
+2.15.11   Export at the edges                    no   yes file3.src
+2.15.12   See                                    no   yes file3.src
+2.16      Messages of the File commands          no   no  file3.src
+2.16.1    Panel refusals                         no   no  file3.src
+2.16.2    Boxes that report a failure            no   no  file3.src
+2.16.3    Questions                              no   no  file3.src
+2.16.4    The message line                       no   no  file3.src
+2.17      Examples                               no   no  file3.src
+2.17.1    Saving a document under a new name, ke no   no  file3.src
+2.17.2    Making a template and using it         no   no  file3.src
+2.17.3    Getting an older version back          no   no  file3.src
+2.17.4    Adding a standard text to a document   no   no  file3.src
+2.17.5    Moving text to and from a text editor  no   no  file3.src
+3         Edit                                   no   no  edit.src
+3.1       The Edit Screen                        no   no  edit.src
+3.1.1     The Status Line                        no   no  edit.src
+3.1.1.1   The modified flag                      no   no  edit.src
+3.1.1.2   Attr                                   no   no  edit.src
+3.1.1.3   Pos                                    no   no  edit.src
+3.1.1.4   Sect                                   no   no  edit.src
+3.1.1.5   The expanded line                      no   no  edit.src
+3.1.2     The Ruler                              no   no  edit.src
+3.1.3     The text area                          no   no  edit.src
+3.1.3.1   The end-of-line and tab characters     no   no  edit.src
+3.1.3.2   The rules between the blocks           no   no  edit.src
+3.1.3.3   Several columns                        no   no  edit.src
+3.1.3.4   The cursor and the highlight           no   no  edit.src
+3.1.3.5   What scrolls                           no   no  edit.src
+3.1.4     The key labels                         no   no  edit.src
+3.2       Using the keyboard to edit             no   no  edit.src
+3.2.1     Typing Text                            no   no  edit.src
+3.2.1.1   Enter                                  no   no  edit.src
+3.2.1.2   Tab                                    no   no  edit.src
+3.2.1.3   Ctrl-Shift-Space                       no   no  edit.src
+3.2.1.4   Alt-_                                  no   no  edit.src
+3.2.1.5   Attributes                             no   no  edit.src
+3.2.1.6   Hanging indent                         no   no  edit.src
+3.2.2     Typing special characters              no   no  edit.src
+3.2.3     Typing a Nonbreaking Space             no   no  edit.src
+3.2.4     Typing a Soft Hyphen                   no   no  edit.src
+3.2.5     Deleting Text                          no   no  edit.src
+3.2.5.1   Del                                    no   no  edit.src
+3.2.5.2   Backspace                              no   no  edit.src
+3.2.5.3   Ctrl-D and Alt-Backspace               no   no  edit.src
+3.2.6     Moving around the document             no   no  edit.src
+3.2.6.1   Left and Right                         no   no  edit.src
+3.2.6.2   Up and Down                            no   no  edit.src
+3.2.6.3   Home and End                           no   no  edit.src
+3.2.6.4   PgUp and PgDn                          no   no  edit.src
+3.2.6.5   Words                                  no   no  edit.src
+3.2.6.6   Start and end of a column, of the docu no   no  edit.src
+3.2.6.7   The section keys                       no   no  edit.src
+3.2.7     The keys by kind                       no   no  edit.src
+3.2.7.1   The function keys                      no   no  edit.src
+3.2.7.2   The Alt function keys                  no   no  edit.src
+3.2.7.3   The Ctrl function keys                 no   no  edit.src
+3.2.7.4   The Ctrl letters                       no   no  edit.src
+3.2.7.5   The Alt keys                           no   no  edit.src
+3.2.7.6   The keys of the cursor and of sections no   no  edit.src
+3.2.8     Keys that the terminal or the window m no   no  edit.src
+3.2.8.1   The keypad                             no   no  edit.src
+3.2.8.2   Keys that repeat other keys            no   no  edit.src
+3.3       Modes of the Editor                    no   no  edit.src
+3.3.1     Structured and Unstructured Edit       no   no  edit.src
+3.3.2     Section Edit                           no   no  edit.src
+3.3.3     Title Page Edit                        no   no  edit.src
+3.3.4     Notes, Comments, Equations and the Lib no   no  edit.src
+3.4       The menus                              no   no  edit.src
+3.4.1     The F12 Menu Bar                       no   yes edit.src
+3.4.1.1   The Edit menu                          no   no  edit.src
+3.4.2     The Alt Commands Menu                  no   no  edit.src
+3.4.3     The pop-up lists                       no   no  edit.src
+3.4.4     The prompts                            no   no  edit.src
+3.5       Blocks and Columns                     no   no  edit-a1.src
+3.5.1     Append                                 no   no  edit-a1.src
+3.5.1.1   The list Append                        no   no  edit-a1.src
+3.5.1.2   Column                                 no   no  edit-a1.src
+3.5.1.3   Block                                  no   no  edit-a1.src
+3.5.1.4   Global-block                           no   yes edit-a1.src
+3.5.1.5   Peer-section                           no   no  edit-a1.src
+3.5.1.6   Sub-section                            no   no  edit-a1.src
+3.5.1.7   In an unstructured document            no   no  edit-a1.src
+3.5.1.8   Notes on Append                        no   no  edit-a1.src
+3.5.1.9   Examples                               no   no  edit-a1.src
+3.5.2     Join                                   no   no  edit-a1.src
+3.5.2.1   Block                                  no   no  edit-a1.src
+3.5.2.2   Section                                no   no  edit-a1.src
+3.5.2.3   Notes on Join                          no   no  edit-a1.src
+3.5.2.4   Example                                no   no  edit-a1.src
+3.6       Copy, Cut and Delete                   no   no  edit-a1.src
+3.6.1     How to reach the commands              no   no  edit-a1.src
+3.6.2     The steps                              no   no  edit-a1.src
+3.6.3     What the choices take                  no   no  edit-a1.src
+3.6.3.1   Text                                   no   no  edit-a1.src
+3.6.3.2   Column                                 no   no  edit-a1.src
+3.6.3.3   Block                                  no   no  edit-a1.src
+3.6.3.4   Section                                no   no  edit-a1.src
+3.6.4     The highlight                          no   no  edit-a1.src
+3.6.5     The clipboard                          no   no  edit-a1.src
+3.6.6     Cut                                    no   no  edit-a1.src
+3.6.7     Delete                                 no   no  edit-a1.src
+3.6.8     Lib Copy, Lib Cut and the library      no   no  edit-a1.src
+3.6.9     Examples                               no   no  edit-a1.src
+3.7       Sections: Contract, Expand and Go To   no   no  edit-a1.src
+3.7.1     Contract and Expand                    no   no  edit-a1.src
+3.7.1.1   The four states of a section           no   no  edit-a1.src
+3.7.1.2   Contract: Alt--                        no   no  edit-a1.src
+3.7.1.3   Expand: Alt-+                          no   no  edit-a1.src
+3.7.1.4   Hide the text: Alt-*                   no   no  edit-a1.src
+3.7.1.5   The cursor and what is hidden          no   no  edit-a1.src
+3.7.1.6   What hidden text takes part in         no   no  edit-a1.src
+3.7.1.7   Examples                               no   no  edit-a1.src
+3.7.2     Go To                                  no   no  edit-a1.src
+3.7.2.1   Document start and Document end        no   no  edit-a1.src
+3.7.2.2   Next section and Previous section      no   no  edit-a1.src
+3.7.2.3   Section number                         no   no  edit-a1.src
+3.7.2.4   Notes on Go To                         no   no  edit-a1.src
+3.7.2.5   Example                                no   no  edit-a1.src
+3.8       Marker                                 no   no  edit-b.src
+3.8.1     How to reach the command               no   no  edit-b.src
+3.8.2     The table Marker Commands              no   no  edit-b.src
+3.8.3     Inserting a marker                     no   no  edit-b.src
+3.8.4     Editing a marker                       no   no  edit-b.src
+3.8.5     The panel of a marker                  no   no  edit-b.src
+3.8.6     The markers and their fields           no   no  edit-b.src
+3.8.7     What is drawn in the text              no   no  edit-b.src
+3.9       Move and Paste                         no   no  edit-b.src
+3.9.1     The Move command ({k:F7})              no   no  edit-b.src
+3.9.1.1   What is highlighted for each choice    no   no  edit-b.src
+3.9.1.2   Keys while the area is highlighted     no   no  edit-b.src
+3.9.1.3   Where the area goes                    no   no  edit-b.src
+3.9.2     Cursor movement keys                   no   no  edit-b.src
+3.9.3     The cursor and a picture               no   no  edit-b.src
+3.9.4     Moving a section to another level      no   no  edit-b.src
+3.9.5     Paste                                  no   no  edit-b.src
+3.9.5.1   What is pasted and where               no   no  edit-b.src
+3.9.5.2   Edge cases                             no   no  edit-b.src
+3.10      Split                                  no   no  edit-b.src
+3.10.1    How to reach the command               no   no  edit-b.src
+3.10.2    Split, Column                          no   no  edit-b.src
+3.10.3    Split, Block                           no   no  edit-b.src
+3.10.4    Split, Section                         no   no  edit-b.src
+3.10.5    Edge cases                             no   no  edit-b.src
+3.11      Undo and Redo                          no   no  edit-b.src
+3.11.1    What one operation is                  no   no  edit-b.src
+3.11.2    What is not undone                     no   no  edit-b.src
+3.11.3    Undo Levels                            no   no  edit-b.src
+3.11.4    Back to the saved document             no   no  edit-b.src
+3.11.5    Edge cases                             no   no  edit-b.src
+3.12      Search and Replace                     no   no  edit-b.src
+3.12.1    Search                                 no   no  edit-b.src
+3.12.1.1  How to reach the command               no   no  edit-b.src
+3.12.1.2  The panel                              no   no  edit-b.src
+3.12.1.3  What it does                           no   no  edit-b.src
+3.12.1.4  Examples                               no   no  edit-b.src
+3.12.2    Replace                                no   no  edit-b.src
+3.12.2.1  How to reach the command               no   no  edit-b.src
+3.12.2.2  The panel                              no   no  edit-b.src
+3.12.2.3  What it does                           no   no  edit-b.src
+3.12.2.4  Examples                               no   no  edit-b.src
+3.13      Outlines                               no   no  edit-b.src
+3.13.1    The keys                               no   no  edit-b.src
+3.13.2    The marks                              no   no  edit-b.src
+3.13.3    Rules of each key                      no   no  edit-b.src
+3.13.3.1  Alt-1 to Alt-9                         no   no  edit-b.src
+3.13.3.2  Alt-0                                  no   no  edit-b.src
+3.13.3.3  Alt-minus                              no   no  edit-b.src
+3.13.3.4  Alt-plus                               no   no  edit-b.src
+3.13.3.5  Alt-star                               no   no  edit-b.src
+3.13.4    Edge cases                             no   no  edit-b.src
+3.14      Sort and Count                         no   no  edit-b.src
+3.14.1    Sort                                   no   no  edit-b.src
+3.14.1.1  How to reach the commands              no   no  edit-b.src
+3.14.1.2  Autosort, Section                      no   no  edit-b.src
+3.14.1.3  Autosort, Table                        no   no  edit-b.src
+3.14.2    Words                                  no   no  edit-b.src
+3.14.2.1  The Word Count box                     no   no  edit-b.src
+3.14.2.2  What counts as a word                  no   no  edit-b.src
+3.14.2.3  What is counted                        no   no  edit-b.src
+3.14.2.4  Edge cases                             no   no  edit-b.src
+3.15      Options and Overtype                   no   no  edit-b.src
+3.15.1    How to reach the panel                 no   no  edit-b.src
+3.15.2    The fields                             no   no  edit-b.src
+3.15.3    Autosave                               no   no  edit-b.src
+3.15.4    Overtype                               no   no  edit-b.src
+3.15.4.1  What a character does in Overtype      no   no  edit-b.src
+3.16      Quit                                   no   no  edit-b.src
+3.16.1    When nothing has changed               no   no  edit-b.src
+3.16.2    When the document has changed          no   no  edit-b.src
+3.16.3    What happens after Quit                no   no  edit-b.src
+3.17      The Edit menu and the keys of this hal no   no  edit-b.src
+3.17.1    The F12 menu bar                       no   no  edit-b.src
+3.17.2    The Edit menu                          no   no  edit-b.src
+3.17.3    The keys of the menu bar               no   no  edit-b.src
+3.17.4    The menu of the Alt commands           no   no  edit-b.src
+3.17.5    All the keys of this half of the chapt no   no  edit-b.src
+3.18      Find Next Error                        no   no  edit-c.src
+3.18.1    How to reach it                        no   no  edit-c.src
+3.18.2    The Search panel                       no   no  edit-c.src
+3.18.3    What it does                           no   no  edit-c.src
+3.18.4    Search again                           no   no  edit-c.src
+3.18.5    Taking markers out                     no   no  edit-c.src
+3.18.6    Messages of Find Next Error            no   no  edit-c.src
+3.19      Case                                   no   no  edit-c.src
+3.20      Border                                 no   yes edit-c.src
+3.20.1    Borders on several columns and rows    no   no  edit-c.src
+3.21      Math                                   no   no  edit-c.src
+3.22      Tools: Macros and Library              no   no  edit-c.src
+3.22.1    Tools, Macros, Learn                   no   no  edit-c.src
+3.22.2    Tools, Macros, Edit                    no   no  edit-c.src
+3.22.3    Tools, Macros, Delete                  no   no  edit-c.src
+3.22.4    Tools, Macros, Save                    no   no  edit-c.src
+3.22.5    Tools, Macros, Retrieve                no   no  edit-c.src
+3.22.6    Tools, Library, Edit                   no   no  edit-c.src
+3.22.7    Tools, Library, Delete                 no   no  edit-c.src
+3.22.8    Tools, Library, Save                   no   no  edit-c.src
+3.22.9    Tools, Library, Retrieve               no   no  edit-c.src
+3.22.10   Copy to Library and Paste from Library no   no  edit-c.src
+4         Format                                 no   no  format.src
+4.1       Global and local formats               no   no  format1.src
+4.1.1     The two kinds                          no   no  format1.src
+4.1.2     The order in which a setting is looked no   no  format1.src
+4.1.3     The default format                     no   no  format1.src
+4.2       Formats on the edit screen             no   no  format2.src
+4.2.1     What the screen draws                  no   no  format2.src
+4.2.2     The status line and the expanded statu no   no  format2.src
+4.2.3     The ruler                              no   no  format2.src
+4.2.4     Attribute keys                         no   no  format2.src
+4.3       The Global menu                        no   no  format2.src
+4.3.1     Keys that every panel has              no   no  format2.src
+4.4       Format                                 no   no  format3.src
+4.4.1     How to reach the command               no   no  format3.src
+4.4.2     The fourteen panels                    no   no  format3.src
+4.4.3     Global Format (headline and text)      no   no  format3.src
+4.4.4     Global Format (spacing)                no   no  format3.src
+4.4.5     Global Format (line numbering)         no   no  format3.src
+4.4.6     Global Format (contents and lists)     no   no  format3.src
+4.4.7     What counts as a line                  no   no  format3.src
+4.4.8     Level 1 to Level 5 Format              no   no  format3.src
+4.4.9     How the panels are applied             no   no  format3.src
+4.4.10    Justification                          no   no  format4.src
+4.4.11    Indents                                no   no  format4.src
+4.4.12    Tab stops                              no   no  format4.src
+4.4.13    Section tags                           no   no  format4.src
+4.4.14    Spacing                                no   no  format4.src
+4.5       Page                                   no   no  format5.src
+4.5.1     How to reach the command               no   no  format5.src
+4.5.2     The fields                             no   no  format5.src
+4.5.3     Page breaks and the title page         no   no  format5.src
+4.5.4     Paper size                             no   no  format5.src
+4.5.5     Header and Footer                      no   no  format5.src
+4.5.6     What the panel checks                  no   no  format5.src
+4.6       Typeface                               no   no  format5.src
+4.6.1     How to reach the command               no   no  format5.src
+4.6.2     The Typeface List                      no   no  format5.src
+4.6.3     Typefaces and the printed page         no   no  format5.src
+4.7       Marker                                 no   no  format6.src
+4.7.1     How to reach the command               no   no  format6.src
+4.7.2     The ring of panels                     no   no  format6.src
+4.7.3     Marker Format                          no   no  format6.src
+4.7.4     Date and time formats                  no   no  format6.src
+4.7.5     Marker Display Modes                   no   no  format6.src
+4.7.6     Counter Format                         no   no  format6.src
+4.7.7     Note formats                           no   no  format6.src
+4.7.8     Keycap Format                          no   no  format6.src
+4.8       Options                                no   no  format7.src
+4.8.1     How to reach the command               no   no  format7.src
+4.8.2     The fields                             no   no  format7.src
+4.8.3     Where the settings are kept            no   no  format7.src
+4.9       Named                                  no   no  format7.src
+4.9.1     How to reach the commands              no   no  format7.src
+4.9.2     Edit                                   no   no  format7.src
+4.9.3     Delete                                 no   no  format7.src
+4.9.4     Limits                                 no   no  format7.src
+4.10      Local formats                          no   no  format8.src
+4.10.1    The format of a block or of a column   no   no  format8.src
+4.10.1.1  Hanging indent                         no   no  format8.src
+4.10.2    Characters                             no   no  format8.src
+4.11      Messages of the format panels          no   no  format8.src
+4.11.1    Global Format                          no   no  format8.src
+4.11.2    Page                                   no   no  format8.src
+4.11.3    Named                                  no   no  format8.src
+4.11.4    Keycap Format                          no   no  format8.src
+4.11.5    Options and the other files of the use no   no  format8.src
+4.11.6    The F6 panel and the keys of the forma no   no  format8.src
+5         Markers                                no   no  markers.src
+5.1       What a marker is                       no   no  markers1.src
+5.1.1     Where a marker may stand               no   no  markers1.src
+5.1.2     How a marker is made and changed       no   no  markers1.src
+5.2       The markers in one table               no   no  markers1.src
+5.3       Panels and fields                      no   no  markers1.src
+5.3.1     Defaults and brackets                  no   no  markers1.src
+5.3.2     Lengths and units                      no   no  markers1.src
+5.3.3     File name fields                       no   no  markers1.src
+5.4       How a marker looks on the screen       no   no  markers1.src
+5.5       How a marker is printed                no   no  markers1.src
+5.5.1     Four ways to print a marker            no   no  markers1.src
+5.5.2     Draft and Final                        no   no  markers1.src
+5.5.3     Value markers and the display mode     no   no  markers1.src
+5.5.4     Markers in tables and boxes            no   no  markers1.src
+5.5.5     Limits of the printed markers          no   no  markers1.src
+5.6       Author                                 no   no  markers2.src
+5.6.1     On the screen                          no   no  markers2.src
+5.6.2     When printed                           no   no  markers2.src
+5.6.3     Edges                                  no   no  markers2.src
+5.7       Column Break                           no   no  markers2.src
+5.7.1     On the screen                          no   no  markers2.src
+5.7.2     When printed                           no   no  markers2.src
+5.7.3     Edges                                  no   no  markers2.src
+5.8       Comment                                no   no  markers2.src
+5.8.1     The panel                              no   no  markers2.src
+5.8.2     On the screen                          no   no  markers2.src
+5.8.3     When printed                           no   no  markers2.src
+5.8.4     Edges                                  no   no  markers2.src
+5.9       Counter                                no   no  markers2.src
+5.9.1     The panel                              no   no  markers2.src
+5.9.2     How the numbers are counted            no   no  markers2.src
+5.9.3     The tag                                no   no  markers2.src
+5.9.4     Edges                                  no   no  markers2.src
+5.9.5     On the screen                          no   no  markers2.src
+5.9.6     When printed                           no   no  markers2.src
+5.9.7     Messages                               no   no  markers2.src
+5.10      Cross-reference                        no   no  markers2.src
+5.10.1    The panel                              no   no  markers2.src
+5.10.2    The styles                             no   no  markers2.src
+5.10.3    How the marker follows its section     no   no  markers2.src
+5.10.4    On the screen                          no   no  markers2.src
+5.10.5    When printed                           no   no  markers2.src
+5.10.6    Edges                                  no   no  markers2.src
+5.10.7    Messages                               no   no  markers2.src
+5.11      Date                                   no   no  markers2.src
+5.11.1    The panel                              no   no  markers2.src
+5.11.2    On the screen                          no   no  markers2.src
+5.11.3    When printed                           no   no  markers2.src
+5.11.4    Edges                                  no   no  markers2.src
+5.12      Description                            no   no  markers2.src
+5.12.1    On the screen                          no   no  markers2.src
+5.12.2    When printed                           no   yes markers2.src
+5.12.3    Edges                                  no   yes markers2.src
+5.13      Equation                               no   no  markers2.src
+5.13.1    How it is entered                      no   no  markers2.src
+5.13.2    On the screen                          no   no  markers2.src
+5.13.3    When printed                           no   no  markers2.src
+5.13.4    Edges                                  no   no  markers2.src
+5.14      Filedate                               no   no  markers3.src
+5.14.1    The panel                              no   no  markers3.src
+5.14.2    On the screen                          no   no  markers3.src
+5.14.3    When printed                           no   yes markers3.src
+5.14.4    Edges                                  no   yes markers3.src
+5.15      Filename                               no   no  markers3.src
+5.15.1    On the screen                          no   no  markers3.src
+5.15.2    When printed                           no   no  markers3.src
+5.15.3    Edges                                  no   no  markers3.src
+5.16      Filetime                               no   no  markers3.src
+5.16.1    The panel                              no   no  markers3.src
+5.16.2    On the screen                          no   no  markers3.src
+5.16.3    When printed                           no   yes markers3.src
+5.16.4    Edges                                  no   yes markers3.src
+5.17      Font                                   no   no  markers3.src
+5.17.1    The panel                              no   no  markers3.src
+5.17.2    On the screen                          no   no  markers3.src
+5.17.3    When printed                           no   no  markers3.src
+5.17.4    Edges                                  no   no  markers3.src
+5.18      Keep                                   no   no  markers3.src
+5.18.1    The panel                              no   no  markers3.src
+5.18.2    How the regions are made               no   no  markers3.src
+5.18.3    On the screen                          no   no  markers3.src
+5.18.4    When printed                           no   no  markers3.src
+5.18.5    Edges                                  no   no  markers3.src
+5.19      Keycap                                 no   no  markers3.src
+5.19.1    The panel                              no   no  markers3.src
+5.19.2    On the screen                          no   no  markers3.src
+5.19.3    When printed                           no   no  markers3.src
+5.19.4    Edges                                  no   no  markers3.src
+5.20      LaTeX                                  no   no  markers4.src
+5.20.1    How it is entered                      no   no  markers4.src
+5.20.2    On the screen                          no   no  markers4.src
+5.20.3    As a picture on the screen             no   no  markers4.src
+5.20.4    When printed                           no   no  markers4.src
+5.20.5    Examples                               no   no  markers4.src
+5.20.6    The word Strata                        no   no  markers4.src
+5.20.7    The large logo                         no   no  markers4.src
+5.20.8    A mistake in the text                  no   no  markers4.src
+5.20.9    What the text may hold                 no   no  markers4.src
+5.20.10   Safety                                 no   no  markers4.src
+5.20.11   Edges                                  no   no  markers4.src
+5.21      Line                                   no   no  markers4.src
+5.21.1    The panel                              no   no  markers4.src
+5.21.2    On the screen                          no   no  markers4.src
+5.21.3    When printed                           no   no  markers4.src
+5.21.4    Edges                                  no   no  markers4.src
+5.21.5    Messages                               no   no  markers4.src
+5.21.6    See                                    no   yes markers4.src
+5.22      Note                                   no   no  markers4.src
+5.22.1    The panel                              no   no  markers4.src
+5.22.2    On the screen                          no   no  markers4.src
+5.22.3    When printed                           no   no  markers4.src
+5.22.4    Edges                                  no   no  markers4.src
+5.22.5    See                                    no   yes markers4.src
+5.23      Orientation                            no   no  markers4.src
+5.23.1    The panel                              no   no  markers4.src
+5.23.2    On the screen                          no   no  markers4.src
+5.23.3    When printed                           no   no  markers4.src
+5.23.4    Edges                                  no   no  markers4.src
+5.24      Page Break                             no   no  markers4.src
+5.24.1    The panel                              no   no  markers4.src
+5.24.2    On the screen                          no   no  markers4.src
+5.24.3    When printed                           no   no  markers4.src
+5.24.4    Edges                                  no   no  markers4.src
+5.25      Pathname                               no   no  markers4.src
+5.25.1    On the screen                          no   no  markers4.src
+5.25.2    When printed                           no   no  markers4.src
+5.25.3    Edges                                  no   no  markers4.src
+5.26      Picture                                no   no  markers4.src
+5.26.1    The panel                              no   no  markers4.src
+5.26.2    On the screen                          no   no  markers4.src
+5.26.3    A picture whose file cannot be used    no   no  markers4.src
+5.26.4    Where the file is looked for           no   no  markers4.src
+5.26.5    When printed                           no   no  markers4.src
+5.26.6    Edges                                  no   no  markers4.src
+5.26.7    Messages                               no   no  markers4.src
+5.26.8    See                                    no   yes markers4.src
+5.27      Printer                                no   no  markers4.src
+5.27.1    On the screen                          no   no  markers4.src
+5.27.2    When printed                           no   no  markers4.src
+5.27.3    Edges                                  no   no  markers4.src
+5.28      Revision                               no   no  markers5.src
+5.28.1    On the screen                          no   no  markers5.src
+5.28.2    When printed                           no   no  markers5.src
+5.28.3    Edges                                  no   no  markers5.src
+5.29      Time                                   no   no  markers5.src
+5.29.1    The panel                              no   no  markers5.src
+5.29.2    On the screen                          no   no  markers5.src
+5.29.3    When printed                           no   no  markers5.src
+5.29.4    Edges                                  no   no  markers5.src
+5.30      Whitespace                             no   no  markers5.src
+5.30.1    The panel                              no   no  markers5.src
+5.30.2    On the screen                          no   no  markers5.src
+5.30.3    When printed                           no   no  markers5.src
+5.30.4    Edges                                  no   no  markers5.src
+5.30.5    Messages                               no   no  markers5.src
+5.31      Markers that are printed as a Box      no   no  markers5.src
+5.31.1    Figure and Table                       no   no  markers5.src
+5.31.2    Index                                  no   no  markers5.src
+5.31.3    Merge                                  no   no  markers5.src
+5.32      Include: a work made of parts          no   no  markers5.src
+5.32.1    The panel                              no   no  markers5.src
+5.32.2    Where the marker goes                  no   no  markers5.src
+5.32.3    What is printed                        no   no  markers5.src
+5.32.4    Where a part is looked for             no   no  markers5.src
+5.32.5    Parts inside parts                     no   no  markers5.src
+5.32.6    Mistakes in an Include                 no   no  markers5.src
+5.33      Working with several authors           no   no  markers5.src
+5.34      Conditional text: If, Else and Endif   no   no  markers5.src
+5.34.1    What is printed                        no   no  markers5.src
+5.34.2    The condition                          no   no  markers5.src
+5.34.3    Variables                              no   no  markers5.src
+5.34.4    The special variables                  no   no  markers5.src
+5.34.5    Comparing                              no   no  markers5.src
+5.34.6    Mistakes in a condition                no   no  markers5.src
+5.35      Messages of the markers                no   no  markers6.src
+5.35.1    When a marker is chosen                no   no  markers6.src
+5.35.2    On a marker panel                      no   no  markers6.src
+5.35.3    In the editor of a note, a comment, an no   no  markers6.src
+5.35.4    When a picture cannot be shown on the  no   no  markers6.src
+5.35.5    Texts that stand in the place of a mar no   no  markers6.src
+5.36      Print Error                            no   no  markers7.src
+5.36.1    What the marker holds                  no   no  markers7.src
+5.36.2    On the screen                          no   no  markers7.src
+5.36.3    The read-only box                      no   no  markers7.src
+5.36.4    When printed                           no   no  markers7.src
+5.36.5    Delete, copy, cut and paste            no   no  markers7.src
+5.36.6    Saving and loading                     no   no  markers7.src
+5.36.7    Edges                                  no   no  markers7.src
+6         Print and Preview                      no   no  print.src
+6.1       How printing works in Strata           yes  yes print1.src
+6.2       The Print menu                         yes  yes print1.src
+6.2.1     How to reach it                        yes  no  print1.src
+6.2.2     The entries                            yes  yes print1.src
+6.2.3     Esc and the other ways out             yes  no  print1.src
+6.2.4     Print and Preview with no document ope yes  no  print1.src
+6.3       Draft                                  yes  no  print1.src
+6.3.1     How to reach it                        yes  no  print1.src
+6.3.2     The panel                              yes  no  print1.src
+6.3.3     What happens when the panel is accepte yes  no  print1.src
+6.3.4     Edges                                  yes  no  print1.src
+6.4       Final                                  yes  no  print1.src
+6.4.1     How to reach it                        yes  no  print1.src
+6.4.2     The panel                              yes  no  print1.src
+6.4.3     The table of contents                  yes  no  print1.src
+6.4.3.1   What it lists                          yes  no  print1.src
+6.4.4     The index and the lists                yes  no  print1.src
+6.4.5     The range of sections                  yes  no  print1.src
+6.4.6     Pages: a range for the printer         yes  no  print1.src
+6.5       Colors in print                        yes  no  print1.src
+6.6       Sending to a printer                   yes  no  print1.src
+6.6.1     Searching for printers                 yes  no  print1.src
+6.6.2     The options given to lp                yes  no  print1.src
+6.6.3     Environment                            yes  no  print1.src
+6.7       While a print runs                     yes  no  print1.src
+6.8       The messages of a print                yes  yes print1.src
+6.9       Preview                                no   no  print2.src
+6.9.1     How to reach it                        no   no  print2.src
+6.9.2     The Preview Document panel             no   no  print2.src
+6.9.3     What happens                           no   no  print2.src
+6.9.4     The wait panel                         no   no  print2.src
+6.9.5     Messages                               no   no  print2.src
+6.9.6     Edges                                  no   no  print2.src
+6.10      The Viewer                             no   no  print2.src
+6.10.1    The window                             no   no  print2.src
+6.10.2    The status bar                         no   no  print2.src
+6.10.3    The red status area of a failed print  no   no  print2.src
+6.10.4    The keys                               no   no  print2.src
+6.10.5    Go to a page                           no   no  print2.src
+6.10.6    Options and environment                no   no  print2.src
+6.11      The Printer                            no   no  print3.src
+6.11.1    What the Printer makes                 no   no  print3.src
+6.11.2    An exported LaTeX file                 no   no  print3.src
+6.12      What is printed for each element       no   no  print4.src
+6.12.1    The page                               no   yes print4.src
+6.12.2    Borders and shading                    no   no  print4.src
+6.12.3    Headlines and section tags             no   no  print4.src
+6.12.4    Text, justification and spacing        no   no  print4.src
+6.12.5    Tables                                 no   no  print4.src
+6.12.6    Notes                                  no   no  print4.src
+6.12.7    Markers                                no   no  print4.src
+6.12.8    Pictures                               no   no  print4.src
+6.12.9    Equations                              no   yes print4.src
+6.12.10   Keep markers: blocks on one page       no   no  print4.src
+6.13      Fonts                                  no   no  print5.src
+6.13.1    Which font applies                     no   no  print5.src
+6.13.2    From the name of a font to a family    no   no  print5.src
+6.13.3    Hyphenation                            no   yes print5.src
+6.14      What printing needs                    no   no  print5.src
+6.15      Print errors                           no   no  print6.src
+6.15.1    What is an error and what is a warning no   no  print6.src
+6.15.2    The place                              no   no  print6.src
+6.15.3    The Error Log                          no   no  print6.src
+6.15.4    The Print Error markers                no   no  print6.src
+6.15.5    The message line after a print         no   no  print6.src
+6.15.6    A failed print: the banner, the marks  no   no  print6.src
+6.15.7    A print that makes no file             no   no  print6.src
+6.15.8    Export a LaTeX File and errors         no   no  print6.src
+6.15.9    Print and Preview with no document to  no   no  print6.src
+6.16      Command lines of the Printer and the E no   no  print7.src
+6.16.1    The Printer                            no   no  print7.src
+6.16.1.1  What the Printer makes                 no   no  print7.src
+6.16.1.2  The options of the Printer             no   no  print7.src
+6.16.1.3  Exit status of the Printer             no   no  print7.src
+6.16.2    The print and preview modes of the Edi no   no  print7.src
+6.16.2.1  The print mode                         no   no  print7.src
+6.16.2.2  The preview mode                       no   no  print7.src
+7         The Document Manager                   no   no  str.src
+7.1       What the Document Manager is           no   no  str1.src
+7.1.1     The Document Manager and the Editor's  no   no  str1.src
+7.1.2     Spell check                            no   no  str1.src
+7.2       Starting the Document Manager          no   no  str1.src
+7.2.1     What happens at start                  no   no  str1.src
+7.2.2     The help file                          no   no  str1.src
+7.2.3     Finding the editor                     no   no  str1.src
+7.2.4     Exit status of the Document Manager    no   no  str1.src
+7.3       The screen                             no   yes str1.src
+7.3.1     Fields in a panel                      no   no  str1.src
+7.4       Keys                                   no   no  str1.src
+7.4.1     Menus                                  no   no  str1.src
+7.4.2     Panels                                 no   no  str1.src
+7.4.3     Lists and notices                      no   no  str1.src
+7.5       The menu of the Document Manager       no   no  str2.src
+7.6       Edit / Preview / Print Document        no   no  str2.src
+7.6.1     The Edit / Preview / Print Document pa no   no  str2.src
+7.6.2     The variables                          no   no  str2.src
+7.6.3     What happens when the panel is accepte no   no  str2.src
+7.6.4     An existing document                   no   no  str2.src
+7.6.5     A new document                         no   no  str2.src
+7.6.6     When the editor ends                   no   no  str2.src
+7.7       Maintain Dictionaries                  no   no  str4.src
+7.7.1     The panel                              no   no  str4.src
+7.7.2     What is a word                         no   no  str4.src
+7.7.3     The hyphenation list                   no   no  str4.src
+7.7.4     Import and export                      no   no  str4.src
+7.7.5     Messages of Maintain Dictionaries      no   no  str4.src
+7.8       Compare Document Versions              no   no  str4.src
+7.8.1     The panel                              no   no  str4.src
+7.8.2     The report                             no   no  str4.src
+7.8.3     Saving the report                      no   no  str4.src
+7.8.4     What is compared                       no   no  str4.src
+7.8.5     Messages of Compare Document Versions  no   no  str4.src
+7.9       Restore Backup                         no   no  str4.src
+7.9.1     Messages of Restore Backup             no   no  str4.src
+7.10      Setup                                  no   no  str4.src
+7.10.1    The fields of Setup                    no   no  str4.src
+7.10.2    Choices and pages of Setup             no   no  str4.src
+7.10.3    The colors of the screen               no   no  str4.src
+7.10.3.1  The kinds of text                      no   no  str4.src
+7.10.3.2  Choosing a color                       no   yes str4.src
+7.10.3.3  What a terminal shows                  no   no  str4.src
+7.10.3.4  Colors that are hard to read           no   no  str4.src
+7.10.3.5  Getting the colors back                no   no  str4.src
+7.10.4    Accepting the panel                    no   no  str4.src
+7.11      Choosing a file or a directory from a  no   no  str5.src
+7.11.1    The list of files and directories      no   no  str5.src
+7.11.2    What the choice does to the panel      no   no  str5.src
+7.12      TeX Font Association                   no   no  str5.src
+7.12.1    The list of the twenty fonts           no   no  str5.src
+7.12.2    The panel of a font                    no   no  str5.src
+7.12.3    The values that a new user has         no   no  str5.src
+7.12.4    What is saved, and when                no   no  str5.src
+7.12.5    Install Now                            no   no  str5.src
+7.12.6    Where the list is used                 no   no  str5.src
+7.13      The help viewer                        no   no  str5.src
+7.13.1    Reaching the help                      no   no  str5.src
+7.14      The menu inside the Editor             no   no  str5.src
+7.15      Quit                                   no   no  str5.src
+7.16      Messages of the Document Manager       no   no  str5.src
+7.16.1    Footer messages                        no   no  str5.src
+7.16.2    Notices                                no   no  str5.src
+7.16.3    The standard error                     no   no  str5.src
+7.17      The terminal version and the X11 versi no   no  str5.src
+8         Spell Check and Thesaurus              no   no  spell.src
+8.1       Requirements and files                 no   no  spell.src
+8.2       Spell check                            no   no  spell.src
+8.2.1     What a word is                         no   no  spell.src
+8.2.2     Document                               no   no  spell.src
+8.2.3     Block                                  no   no  spell.src
+8.2.4     Section                                no   no  spell.src
+8.2.5     Word                                   no   no  spell.src
+8.3       The spell check screen                 no   no  spell.src
+8.3.1     Guess and the single suggestion        no   no  spell.src
+8.3.2     Auto Correct                           no   no  spell.src
+8.3.3     The end of the check                   no   no  spell.src
+8.4       Dictionaries                           no   no  spell.src
+8.5       Messages of the spell check            no   no  spell.src
+8.6       Limits of the spell check              no   no  spell.src
+8.7       Thesaurus                              no   no  spell.src
+8.7.1     The word that is looked up             no   no  spell.src
+8.7.2     The panel                              no   no  spell.src
+8.7.3     Keys of the thesaurus panel            no   no  spell.src
+8.7.4     The Look Up box                        no   no  spell.src
+8.7.5     A word that is not found               no   no  spell.src
+8.7.6     A word that has no synonyms            no   no  spell.src
+8.7.7     Inflected words                        no   no  spell.src
+8.7.8     Replacing the word                     no   no  spell.src
+8.7.9     When the data is missing               no   no  spell.src
+8.7.10    Limits of the thesaurus                no   no  spell.src
+8.8       A session step by step                 no   no  spell.src
+8.9       Summary of the keys of this chapter    no   no  spell.src
+8.10      The spell check mode of the Editor     no   no  spell.src
+9         Equations                              no   no  equations.src
+9.1       What an equation is                    no   no  equations-a.src
+9.2       Inserting and editing an equation      no   no  equations-a.src
+9.2.1     Insert                                 no   no  equations-a.src
+9.2.2     The editor of the equation             no   no  equations-a.src
+9.2.3     Edit an equation that is in the text   no   no  equations-a.src
+9.2.4     Other things done to an equation       no   no  equations-a.src
+9.3       Inline and displayed equations         no   yes equations-a.src
+9.4       Equations on the screen                no   no  equations-a.src
+9.4.1     How the picture is made                no   no  equations-a.src
+9.4.2     The cache                              no   no  equations-a.src
+9.4.3     What is shown meanwhile                no   no  equations-a.src
+9.4.4     The cursor, movement and wrapping      no   no  equations-a.src
+9.4.5     Viewing an equation: Ctrl-W            no   no  equations-a.src
+9.4.6     Marker display modes                   no   no  equations-a.src
+9.5       Printing equations                     no   no  equations-a.src
+9.5.1     What is refused when printing          no   no  equations-a.src
+9.5.2     Differences between the screen and the no   no  equations-a.src
+9.6       The text of an equation                no   no  equations-a.src
+9.7       Greek letters                          no   no  equations-t.src
+9.7.1     Lower case Greek letters               no   no  equations-t.src
+9.7.2     Upper case Greek letters               no   no  equations-t.src
+9.8       Binary operators                       no   yes equations-t.src
+9.9       Relations                              no   no  equations-t.src
+9.10      Arrows                                 no   no  equations-t.src
+9.11      Other symbols                          no   yes equations-t.src
+9.12      Superscripts and subscripts            no   no  equations-t.src
+9.13      Fractions, binomials and roots         no   no  equations-t.src
+9.14      Large operators and functions          no   no  equations-t.src
+9.15      Delimiters and their sizes             no   no  equations-t.src
+9.16      Accents, lines and braces              no   no  equations-t.src
+9.17      Text and fonts                         no   no  equations-t.src
+9.18      Spacing                                no   no  equations-t.src
+9.19      Matrices, arrays and alignment         no   yes equations-t.src
+9.20      Errors, refusals and limits            no   no  equations-d.src
+9.20.1    Messages                               no   no  equations-d.src
+9.20.2    What the Printer does with a failure   no   no  equations-d.src
+9.21      The commands that are refused          no   no  equations-d.src
+9.21.1    The short list of the screen           no   no  equations-d.src
+9.21.2    The long list of the Printer           no   no  equations-d.src
+9.21.3    Characters and environments            no   yes equations-d.src
+9.22      Limits                                 no   no  equations-d.src
+9.23      Documents that have equations that are no   no  equations-d.src
+9.24      Worked examples                        no   no  equations-d.src
+9.24.1    The quadratic formula                  no   no  equations-x.src
+9.24.2    A sum with limits                      no   no  equations-x.src
+9.24.3    An integral                            no   no  equations-x.src
+9.24.4    The definition of a derivative         no   no  equations-x.src
+9.24.5    The binomial theorem                   no   no  equations-x.src
+9.24.6    A product of matrices                  no   no  equations-x.src
+9.24.7    A function defined in cases            no   no  equations-x.src
+9.24.8    A derivation in several lines          no   no  equations-x.src
+9.24.9    A continued fraction                   no   no  equations-x.src
+9.24.10   An inequality with large brackets      no   no  equations-x.src
+9.24.11   A law of physics with vectors          no   no  equations-x.src
+9.24.12   A chemical equation                    no   no  equations-x.src
+9.24.13   A Fourier transform                    no   no  equations-x.src
+9.24.14   A norm                                 no   no  equations-x.src
+10        Conversion                             no   no  convert.src
+10.1      What do I do for ...                   no   no  convert.src
+10.2      The ways in and out                    no   no  convert.src
+10.2.1    What stays when a document goes out as no   no  convert.src
+10.3      Importing text                         no   no  convert1.src
+10.3.1    What each character becomes            no   no  convert1.src
+10.3.2    What the two values of Options do to o no   no  convert1.src
+10.3.3    A file in UTF-8                        no   no  convert1.src
+10.3.4    Recipe: a table from a spreadsheet     no   no  convert1.src
+10.3.5    Recipe: a letter or an article         no   no  convert1.src
+10.3.6    Recipe: an outline                     no   no  convert1.src
+10.4      Exporting text                         no   no  convert1.src
+10.4.1    Choosing a way                         no   no  convert1.src
+10.4.2    The text mode of the Editor            no   no  convert1.src
+10.5      The Printer as a way out               no   no  convert1.src
+10.6      Pictures                               no   no  convert1.src
+10.7      Equations                              no   no  convert1.src
+10.8      Old documents                          no   no  convert1.src
+10.9      Word lists and dictionaries            no   no  convert2.src
+10.10     Messages of the conversions            no   no  convert2.src
+10.11     Examples                               no   no  convert2.src
+10.11.1   A table of three rows, in and out      no   no  convert2.src
+10.11.2   A text with accents from a modern syst no   no  convert2.src
+10.11.3   A report to a plain text file          no   yes convert2.src
+10.11.4   A document to a PDF without sending it no   no  convert2.src
+11        Messages                               no   no  messages.src
+11.1      How to read this chapter               no   no  messages.src
+11.2      Where messages appear                  no   no  messages.src
+11.3      The sections of this chapter           no   no  messages.src
+11.4      The Editor: the message line           no   no  messages1.src
+11.4.1    Refusals and information               no   yes messages1.src
+11.4.2    After a command has done its work      no   no  messages1.src
+11.5      The Editor: boxes                      no   no  messages1.src
+11.5.1    File: Save, Retrieve, New, Delete, Imp no   no  messages1.src
+11.5.2    The panels: refused values             no   no  messages1.src
+11.5.3    Global: Format, Page, Options, Named   no   no  messages1.src
+11.5.4    Marker and the commands that make mark no   no  messages1.src
+11.5.5    Tools: Macros and Library              no   no  messages1.src
+11.5.6    Print and Preview                      no   no  messages1.src
+11.5.7    The equation viewer and the title page no   no  messages1.src
+11.5.8    The start of the Editor                no   no  messages1.src
+11.5.9    Word count and help                    no   no  messages1.src
+11.6      The Editor: questions                  no   no  messages1.src
+11.7      Print and preview jobs                 no   yes messages2.src
+11.7.1    Values that are refused                no   no  messages2.src
+11.7.2    The run and its end                    no   no  messages2.src
+11.7.3    The texts of the progress box          no   no  messages2.src
+11.7.4    Preview                                no   no  messages2.src
+11.8      The Printer                            no   no  messages2.src
+11.9      The Document Manager                   no   no  messages2.src
+11.9.1    The footer                             no   no  messages2.src
+11.9.2    Boxes                                  no   no  messages2.src
+11.9.3    Questions and the error output         no   no  messages2.src
+11.10     Spell check and thesaurus              no   no  messages3.src
+11.10.1   Boxes                                  no   no  messages3.src
+11.10.2   On the check screen and in the word pa no   no  messages3.src
+11.10.3   Thesaurus                              no   no  messages3.src
+11.11     Equations                              no   no  messages3.src
+11.12     What the programs write at start       no   no  messages3.src
+11.12.1   Settings and the files of the user     no   no  messages3.src
+11.13     Messages of the programs that Strata r no   no  messages4.src
+11.13.1   LaTeX                                  no   no  messages4.src
+11.13.2   The print command                      no   no  messages4.src
+11.13.3   The installation of fonts              no   no  messages4.src
+11.14     Messages that read oddly               no   no  messages4.src
+11.15     Messages of the Error Log              no   no  messages4.src
+11.15.1   The faults                             no   no  messages4.src
+11.15.2   The place of a fault                   no   no  messages4.src
+11.15.3   On the message line                    no   no  messages4.src
+11.16     Command lines: exit status and message no   no  messages5.src
+11.16.1   Exit status                            no   no  messages5.src
+11.16.1.1 The Editor                             no   no  messages5.src
+11.16.1.2 The Document Manager, the Printer and  no   no  messages5.src
+11.16.2   On the error output                    no   no  messages5.src
+11.16.3   The Viewer                             no   no  messages5.src
+11.16.4   The spell mode of the Editor           no   no  messages5.src
+11.16.5   What the programs write at start, for  no   no  messages5.src
+11.16.6   The usage line of the Printer          no   no  messages5.src
+A         Appendix A: Starting Strata, Environme no   no  appcmd.src
+A.1       The parts of Strata                    no   no  appcmd.src
+A.1.1     The terminal version and the X11 versi no   no  appcmd.src
+A.2       Starting Strata: the Document Manager  no   no  appcmd.src
+A.2.1     Options of the Document Manager        no   no  appcmd.src
+A.2.2     Exit status of the Document Manager    no   no  appcmd.src
+A.3       Environment variables                  no   no  appcmd2.src
+A.3.1     Environment variables of Strata        no   no  appcmd2.src
+A.3.2     Environment variables of the system    no   no  appcmd2.src
+A.3.3     Environment variables of the X11 windo no   no  appcmd2.src
+A.4       Programs that Strata runs              no   no  appcmd2.src
+A.4.1     Where each program is looked for       no   no  appcmd2.src
+A.5       Files                                  no   no  appcmd2.src
+A.6       Programs and their command lines       no   no  appcmd3.src
+A.6.1     The Editor                             no   no  appcmd3.src
+A.6.1.1   Options of the Editor                  no   yes appcmd3.src
+A.6.1.2   Starting the Editor                    no   no  appcmd3.src
+A.6.1.3   Exit status of the Editor              no   no  appcmd3.src
+A.6.1.4   The Editor in a terminal and under X   no   no  appcmd3.src
+A.6.2     The Printer: command line              no   no  appcmd3.src
+A.6.2.1   Options of the Printer                 no   yes appcmd3.src
+A.6.2.2   What a run does                        no   no  appcmd3.src
+A.6.2.3   Exit status of the Printer             no   yes appcmd3.src
+A.6.3     The Viewer: command line               no   no  appcmd3.src
+A.6.3.1   Options of the Viewer                  no   no  appcmd3.src
+A.6.3.2   Keys of the Viewer                     no   no  appcmd3.src
+A.6.3.3   Exit status and messages of the Viewer no   no  appcmd3.src
+A.6.4     Environment variables for developers   no   no  appcmd3.src
+A.6.5     Where the programs are looked for, in  no   no  appcmd3.src
+B         Appendix B: Configuration              no   no  appcfg.src
+B.1       The settings directory                 no   no  appcfg1.src
+B.1.1     What is checked about the directory    no   no  appcfg1.src
+B.1.2     What is checked about a file           no   no  appcfg1.src
+B.2       The files in the directory             no   no  appcfg1.src
+B.3       The log of a run                       no   no  appcfg1.src
+B.4       The file config                        no   no  appcfg1.src
+B.4.1     How the file is read                   no   no  appcfg1.src
+B.4.2     Yes-or-no values                       no   no  appcfg1.src
+B.4.3     Number values                          no   no  appcfg1.src
+B.5       The keys of config                     no   no  appcfg1.src
+B.5.1     print_to and print_queue               no   no  appcfg1.src
+B.5.2     pdf_dir                                no   no  appcfg1.src
+B.5.3     pdf_viewer                             no   no  appcfg1.src
+B.5.4     spell_language                         no   no  appcfg1.src
+B.5.5     x11_rows and terminal_rows             no   no  appcfg1.src
+B.5.6     terminal_charset                       no   no  appcfg1.src
+B.5.7     default_paper                          no   no  appcfg1.src
+B.5.8     The color keys                         no   no  appcfg1.src
+B.5.9     latex_pictures                         no   no  appcfg1.src
+B.5.10    latex_positions                        no   no  appcfg1.src
+B.5.11    latex_markers                          no   no  appcfg1.src
+B.5.12    initial_macros and initial_library     no   no  appcfg1.src
+B.5.13    workdir                                no   no  appcfg1.src
+B.5.14    The key for the Editor                 no   no  appcfg1.src
+B.5.15    autosave                               no   no  appcfg1.src
+B.5.16    autosave_seconds                       no   no  appcfg1.src
+B.5.17    expanded_status                        no   no  appcfg1.src
+B.5.18    onscreen_help                          no   no  appcfg1.src
+B.5.19    show_marks                             no   no  appcfg1.src
+B.5.20    show_dots                              no   no  appcfg1.src
+B.5.21    backups                                no   no  appcfg1.src
+B.6       When and how the settings are written  no   no  appcfg2.src
+B.6.1     Which action writes what               no   no  appcfg2.src
+B.6.2     Messages of a failed write             no   no  appcfg2.src
+B.7       The Setup panel and the keys           no   no  appcfg2.src
+B.8       The Options panel and the keys         no   no  appcfg2.src
+B.9       The older settings file                no   no  appcfg2.src
+B.10      The font list                          no   no  appcfg2.src
+B.10.1    Format of the file                     no   no  appcfg2.src
+B.10.2    How the file is read and written       no   no  appcfg2.src
+B.10.3    The list that Strata comes with        no   no  appcfg2.src
+B.10.4    Installing a font from CTAN            no   no  appcfg2.src
+B.11      Search paths                           no   no  appcfg2.src
+B.11.1    The Editor                             no   no  appcfg2.src
+B.11.2    Templates                              no   no  appcfg2.src
+B.11.3    Macro sets and libraries               no   no  appcfg2.src
+B.11.4    Helper programs                        no   no  appcfg2.src
+B.11.5    The cache of equations                 no   no  appcfg2.src
+B.12      Settings that are not in the settings  no   no  appcfg2.src
+B.13      Examples and troubleshooting           no   no  appcfg2.src
+B.13.1    A settings file for a project director no   no  appcfg2.src
+B.13.2    Trying settings without touching your  no   no  appcfg2.src
+B.13.3    Problems                               no   no  appcfg2.src
+C         Appendix C: Special Characters         no   no  appchar.src
+C.1       The character set of Strata            no   no  appchar.src
+C.2       The printable characters of ASCII      no   no  appchar.src
+C.3       The pictures                           no   no  appchar.src
+C.4       The accented letters, signs and box ch no   no  appchar.src
+C.5       Which characters can be typed          no   no  appchar.src
+C.6       The characters that the Editor draws b no   no  appchar.src
+C.7       How characters print                   no   yes appchar.src
+C.8       The code pages of Import and Export    no   no  appchar.src
+C.9       Characters in the other files of Strat no   no  appchar.src
+D         Appendix D: The Terminal Version       no   no  appterm.src
+D.1       What the terminal version needs        no   no  appterm.src
+D.2       Terminals and the environment variable no   no  appterm.src
+D.3       Colors and text attributes             no   no  appterm.src
+D.4       Characters                             no   no  appterm.src
+D.5       The start check and the ASCII characte no   no  appterm.src
+D.6       Screen sizes                           no   no  appterm.src
+D.7       The Esc key and the Alt key            no   no  appterm.src
+D.8       The control keys                       no   no  appterm.src
+D.9       Keys that a terminal keeps for itself  no   no  appterm.src
+D.10      Which terminals and desktops keep whic no   no  appterm.src
+D.11      The Linux console                      no   no  appterm.src
+D.12      Links, multiplexers and slow lines     no   no  appterm.src
+D.13      What is different from X11             no   no  appterm.src
+D.14      Starting and leaving                   no   no  appterm.src
+D.15      Problems and their cures               no   no  appterm.src
+E         Appendix E: The X11 Version            no   no  appx11.src
+E.1       What the X11 version needs             no   no  appx11.src
+E.2       The window                             no   no  appx11.src
+E.3       Fonts                                  no   no  appx11.src
+E.4       Colors                                 no   no  appx11.src
+E.5       The keyboard                           no   no  appx11.src
+E.5.1     Characters                             no   no  appx11.src
+E.6       Keyboard maps and window managers      no   no  appx11.src
+E.7       The size of the window                 no   no  appx11.src
+E.7.1     The height is kept                     no   no  appx11.src
+E.8       Moving text between programs           no   no  appx11.src
+E.9       Equations and keycaps on the screen    no   no  appx11.src
+E.10      The Viewer                             no   no  appx11.src
+E.10.1    The status bar                         no   no  appx11.src
+E.10.2    The keys of the Viewer                 no   no  appx11.src
+E.10.3    What the Viewer needs                  no   no  appx11.src
+F         Glossary                               no   no  glossary.src
+F.1       A                                      no   no  glossary.src
+F.2       B                                      no   no  glossary.src
+F.3       C                                      no   no  glossary.src
+F.4       D                                      no   no  glossary.src
+F.5       E                                      no   no  glossary.src
+F.6       F                                      no   no  glossary.src
+F.7       G                                      no   no  glossary.src
+F.8       H                                      no   no  glossary.src
+F.9       I                                      no   no  glossary.src
+F.10      J                                      no   no  glossary.src
+F.11      K                                      no   no  glossary.src
+F.12      L                                      no   no  glossary.src
+F.13      M                                      no   no  glossary.src
+F.14      N                                      no   no  glossary.src
+F.15      O                                      no   no  glossary.src
+F.16      P                                      no   no  glossary.src
+F.17      Q                                      no   no  glossary.src
+F.18      R                                      no   no  glossary.src
+F.19      S                                      no   no  glossary.src
+F.20      T                                      no   no  glossary.src
+F.21      U                                      no   no  glossary.src
+F.22      V                                      no   no  glossary.src
+F.23      W                                      no   no  glossary.src
+F.24      X                                      no   no  glossary.src
+F.25      Z                                      no   no  glossary.src
+
+OPEN
+
+  1. Line by line reading: only the sections marked read were read against
+     the program.  The others were checked by the tools above.
+  2. The reasons that a panel gives for a refused value are compared only
+     by python3 -I -B manual/checkfacts.py --reasons --list.  The run found
+     these 38 texts that the manual does not give word for word; most are
+     in the manual in other words (the PDF Directory and PDF viewer rows of
+     Setup), and some are not (the messages of the backup directory, of the
+     hyphenation dictionary, and "Named block settings are not decoded yet",
+     which is a program message that says a thing is not done):
+
+     F1 backup.c: the name of the folder
+     F1 backup.c: cannot make the folder
+     F1 backup.c: cannot write file: not a regular file
+     F1 backup.c: cannot restore: not a regular file
+     F1 backup.c: cannot move the backups:
+     F1 backup.c: cannot move a backup:
+     F1 backup.c: cannot make backup 1:
+     F1 filemenu.c: The description has at most
+     F1 filemenu.c: Named block settings are not decoded yet
+     F1 filemenu.c: The description has at most
+     F1 fileops.c: Named block settings are not decoded yet
+     F1 globalmenu.c: Number of Columns must be from 1 to 9
+     F1 globalmenu.c: Gutter Size must be a number such as 0.250
+     F1 globalmenu.c: A header or footer takes plain ASCII text
+     F1 globalmenu.c: A header or footer has at most three parts, separated by
+     F1 hyphlist.c: A word with an equals sign has no hyphen: it is never brok
+     F1 hyphlist.c: This is not a hyphenation dictionary (its size is not a wh
+     F1 hyphlist.c: The hyphenation dictionary is damaged
+     F1 hyphlist.c: The hyphenation dictionary is damaged
+     F1 hyphlist.c: The hyphenation dictionary says
+     F1 printcli.c: There is nothing to print
+     F1 printjob.c: Sides or sort is not a known choice
+     F1 printjob.c: The name of the output file is longer than 255 bytes
+     F1 printjob.c: lpinfo was not found in the system folders (/usr/bin, /usr
+     F1 printjob.c: lpinfo could not be started
+     F1 printjob.c: The PDF Directory starts with ~/, but the home directory o
+     F1 printjob.c: The PDF Directory is a full path or starts with ~/, not a 
+     F1 printjob.c: The PDF Directory does not exist
+     F1 printjob.c: The PDF Directory cannot be written
+     F1 printjob.c: The PDF viewer must be a program that shows PDF files, not
+     F1 printjob.c: The PDF viewer can be changed by other users (its file or 
+     F1 printjob.c: The PDF viewer is not an executable file that you can run
+     F1 printjob.c: The PDF viewer must be given with its full path, such as /
+     F1 printjob.c: the PDF was not given with its full path
+     F1 printmenu.c: Search for printers only looks for printers: choose File 
+     F1 ui.c: its text is too long or damaged
+     F1 ui.c: its text is too long to draw as a picture
+     F1 ui.c: LaTeX markers are not allowed in this setup
+     checkfacts: 38 hits
+
+  3. The program says "Text indent: not implemented" for Ctrl-G and has a
+     dimmed entry Edit, Window.  Both are in the manual now; a user may
+     expect that the commands work.
+  4. Pages read at 110 dpi: 4 (printed pages 143, 306, 353 and 652).  They
+     showed the extra word the before two references (fixed), the Edit menu
+     states without Window (fixed) and the row Count out of order (fixed).
+     The 40 pages of the task were not read.
+  5. build.sh pics-check flags 28 of 195 pictures (view-keycap, stred-marker-
+     menu, markers-all-default, stred-preview-wait, markers-modes-panel,
+     stred-draft-panel and 22 with under one percent).  This pass changed
+     no program and no picture; the flags come from the programs of the
+     earlier tasks (the mode Inline of the LaTeX marker, the keycap
+     pictures).  The pictures need a retake that someone reads.
+  6. Pages of the Reference Manual: 730 before this pass, 733 after it (the
+     new rows of the option tables, the messages, the Edges sections).

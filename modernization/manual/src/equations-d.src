@@ -1,0 +1,246 @@
+# Chapter 9, last part: errors, refused commands, limits, documents with
+# equations that are not TeX math, examples.
+
+.h2 Errors, refusals and limits [eq-errors]
+.ix Equation errors
+.ix Equation messages
+.ix Messages, equations
+.ix Error, equation
+The Editor and the Printer do not look at the same things.  The Editor, which
+makes the pictures of the screen, keeps the first message that LaTeX gives.
+The text is checked before it is printed, and what fails the check is set as
+text.  This section lists every message, the commands and characters that
+are refused, and the limits.
+
+.h3 Messages [eq-messages]
+.ix Equation, messages of the screen
+.ix That TeX command is not allowed in an equation
+.ix The equation is empty
+.ix latex took more than 5 seconds
+.ix The equation did not typeset
+.ix Undefined control sequence
+.ix Missing }} inserted
+.ix Extra }}, or forgotten $
+On the screen an equation that fails keeps its label ({c:[EQN text]}); the
+message is not drawn in the text.  It is seen in the editor of the equation
+with {k:Ctrl-W} ({n:eq-view}), under the line "{c:latex} could not
+typeset the equation:".  A message is shown again at once, without
+making the picture again, until the text is changed.
+.table 28 32
+Message | Meaning, and what to do
+That TeX command is not allowed in an equation | The text has a command of the
+ short list of {x:eq-refused}.  Take the command
+ out.
+The equation is empty | The text has nothing but spaces and line ends.  Write
+ the formula, or delete the marker.
+{c:latex} took more than 5 seconds | {c:latex} ran more than 5 seconds and was stopped.  The
+ formula is too large or has a loop: make it smaller or simpler.
+The equation did not typeset | {c:latex} ended with an error but the log has no
+ line that begins with an exclamation mark.  Try the text in smaller parts.
+{c:dvipng} did not make an image | LaTeX was satisfied but no picture was made.
+ Check that {c:dvipng} works (the prerequisites are in {n:appcmd}).
+The message of TeX | What TeX reports about the first thing that it cannot read;
+ the table below has the usual ones.
+.end
+The message of TeX is what TeX reports about the first thing that it cannot
+read;
+the text of the equation is wrong at or just before the place that the message
+names.  These are the messages that the commonest mistakes give, tried with
+the text shown.
+.table 23 16 19
+Message of TeX | Text | Cause
+Undefined control sequence. | {c:\badcmd{{x}}} | A command that TeX does not
+ have.  Check the spelling in the tables of this chapter.
+Missing {{ inserted. | {c:x^} | A command or a script lacks its argument.
+Missing }} inserted. | {c:{{a} | A group is not closed.
+Extra }}, or forgotten $. | {c:a}}} | A closing brace without an opening one.
+Double superscript. | {c:x^2^3} | Two superscripts on one thing; group one:
+ {c:x^{{2^3}}}.
+Double subscript. | {c:x_1_2} | The same for subscripts.
+Misplaced alignment tab character &. | {c:a & b} | The sign & outside an
+ environment of columns; write {c:\&} for the sign.
+Missing \right. inserted. | {c:\left( x} | A {c:\left} without its {c:\right}.
+Extra \right. | {c:\right)} | A {c:\right} without its {c:\left}.
+File ended while scanning use of \frac . | {c:\frac{{1}}{{2} | An argument that
+ is not closed; the same for {c:\text}.
+{c:Please use \mathaccent for accents in math mode.} | {c:\'e} | An accent of text,
+ or a letter typed with an accent, in math.
+Package amsmath Error: \tag not allowed here. | {c:\tag{{1}}} | A number
+ written inside an equation; leave it out.
+Package amsmath Error: \begin{{align}} allowed only in paragraph mode. |
+ {c:\begin{{align}} a \end{{align}}} | A whole displayed formula of amsmath
+ inside an equation; use {c:aligned}.
+{c:Package amsmath Error: \begin{{split}} won't work here.} |
+ {c:\begin{{split}}...} | The environment split needs a formula of amsmath
+ round it; use {c:aligned}.
+Misplaced \crcr. | {c:\end{{matrix}}} | An {c:\end} without its {c:\begin}.
+.end
+A mismatch of delimiters such as {c:\left( x \right]} is not an error: TeX
+sets it.  An equation that mixes in words that are not commands (letters side
+by side) is not an error either; it is set as variables, in italics
+({n:eq-text}).  So a formula that typesets is not necessarily the
+formula that was meant: read the picture.
+
+.h3 What the Printer does with a failure [eq-print-fail]
+.ix Printer, failed equation
+.ix Long form, equations
+The Printer never stops for an equation.  An equation that is refused by its
+checks, or that TeX cannot set, is printed in the long form: the word EQUATION
+and the text, in a small typewriter font, in a box ({n:eq-print}).  The run
+goes on and the PDF is made.  The Printer reports the equation as an error,
+which is listed in the Error Log ({n:print-errors}).
+
+.h2 The commands that are refused [eq-refused]
+.ix Refused commands
+.ix Refused equations
+.ix Equation, safety
+.ix Security, equations
+An equation comes from a document, and a document may come from somebody else.
+TeX can read and write files and can define commands, so some commands are not
+allowed, by two checks of different strength.  The reason is safety: the
+text of an equation goes to a program that can open files.  Both checks look
+at the name of a command: a backslash and the letters that follow it;
+{c:\input} is refused, {c:\inputx} is not on the list and is passed (to TeX,
+which does not know it).  The commands that are one backslash and one
+other character ({c:\,} {c:\{{} and so on) are never refused.
+
+.h3 The short list of the screen [eq-refused-screen]
+.ix Screen check of equations
+An equation that has any of these commands is rejected, with the message "That
+TeX command is not allowed in an equation".  They are the
+commands that open, read and write files, define commands or packages, and
+change the category of characters.
+.table 63
+Commands
+input include openin openout read write immediate catcode csname endcsname
+ usepackage RequirePackage documentclass newwrite newread closein closeout
+ special pdfshellescape scantokens endinput undefined
+.end
+
+.h3 The long list of the Printer [eq-refused-print]
+.ix Printer check of equations
+.ix Equation, long list of refused commands
+The Printer applies the list above, and more: all of the following commands,
+and any command whose name begins with {c:pdf}, {c:xetex} or {c:luatex}.  A text that has
+one of them prints in the long form.
+.table 22 38
+Group | Commands
+Files and the system | input include includeonly InputIfFileExists IfFileExists
+ read readline write write18 newwrite newread openin openout closein closeout
+ open close immediate special shipout output dump directlua scantokens endinput
+ batchmode scrollmode errorstopmode nonstopmode message errmessage typeout url
+ href includegraphics verb
+Definitions, packages | def gdef edef xdef let futurelet newcommand
+ renewcommand providecommand newenvironment renewenvironment
+ DeclareRobustCommand DeclareMathOperator usepackage RequirePackage
+ documentclass ProvidesPackage NeedsTeXFormat usetikzlibrary tikz pgfmathparse
+ ExplSyntaxOn ExplSyntaxOff makeatletter makeatother AtBeginDocument
+ AtEndDocument AtBeginShipout mathchardef chardef countdef dimendef toksdef
+ skipdef muskipdef newcount newdimen newskip newtoks newif global long outer
+ protected
+Codes, counters, boxes | catcode lccode uccode sfcode mathcode delcode
+ setcounter addtocounter stepcounter refstepcounter setlength addtolength
+ settowidth setbox box copy hbox vbox vtop everypar everymath everydisplay
+Expansion and control | csname endcsname expandafter noexpand relax
+ afterassignment aftergroup begingroup endgroup bgroup egroup loop repeat if
+ else fi ifx ifcase ifnum ifdim ifodd or par detokenize fontname font jobname
+ meaning string lowercase uppercase romannumeral number the
+Page and references | footnote label ref pageref pagestyle thispagestyle
+ newpage clearpage cleardoublepage vspace hspace
+.end
+The commands of that list that a user may miss are {c:\hspace} and
+{c:\vspace} (use {c:\quad}, {c:\qquad}, {c:\,}, {c:\phantom} and
+{c:\hphantom}, {n:eq-spacing}), {c:\label} and {c:\ref} (there are no
+numbers), {c:\footnote}, {c:\font}, {c:\box} and {c:\hbox} (use {c:\text} or
+{c:\mathrm}), {c:\number} and {c:\the}, and {c:\if} (an equation is not a
+program).  A command of the short list is refused in both places; the others
+are accepted by the screen (where TeX determines it) and refused by the Printer,
+which is why an equation can show as a picture and still print in the long form.
+
+.h3 Characters and environments [eq-refused-chars]
+.ix Equation, refused characters
+.ix Equation, allowed environments
+.ix Environments of equations
+The text is also rejected by the Printer for what it holds apart from commands.
+.table 26 34
+Text | Refused when
+Empty | The text has nothing but spaces, tabs and line ends.
+Long | More than 4000 characters.
+A character above 127 | Always; the accented letters of the keyboard, the Greek
+ letters typed as such, and so on.  Use the commands of the tables.
+A control character | Any below the space other than the tab and the line end.
+{c:% # $} | Unless written with a backslash: {c:\%}, {c:\#} and {c:\$}.
+{c:^^} | Always.
+A closing brace | With no opening brace before it.
+Unbalanced braces | At the end of the text, when the braces do not match.
+{c:\begin \end} | When the environment is not on the list below, or has no
+ name in braces.
+A backslash at the end | Always: a command that has no name.
+.end
+The environments that the Printer accepts are these 13; the Editor accepts
+any, but TeX can set only some of them in an equation.
+.table 17 43
+Environment | What it makes
+matrix pmatrix bmatrix Bmatrix vmatrix Vmatrix | Matrices without delimiters,
+ with parentheses, square brackets, braces, bars and double bars.
+smallmatrix | A small matrix for a line of text.
+array | A table of columns that have a letter each: c, l or r, and a bar for a
+ rule.
+cases | A brace with the cases of a definition.
+aligned gathered | Lines aligned at the sign &, and lines that are centered.
+split | Accepted, but rejected by TeX in an equation ({n:eq-structures}).
+subarray | Stacked lines under a limit, as {c:\substack}.
+.end
+The environments of amsmath that make a whole formula (equation, align, gather,
+multline, eqnarray, flalign) are not on the list.  A printed equation that
+holds one is set in the long form.
+
+.h2 Limits [eq-limits]
+.ix Limits of equations
+.ix Equation limits
+.ix 4096 pictures
+The limits of equations, with what happens at the end of each.
+.table 24 36
+Limit | Value and what happens
+Pictures in one session of the Editor | 4096 different pictures (an equation,
+ its mode and its size; the pictures that are enlarged by {k:Ctrl-W} count
+ too).  When the limit is reached, an equation that is new keeps its label.
+ Leave the Editor and start it again to begin anew.  The printed pages are not
+ affected.
+Length of an equation on the screen | 1023 characters of the text with the
+ lines joined; the rest is cut, and the cut text is what TeX receives.
+Length of an equation when printing | 4000 characters ({n:eq-refused-chars}).
+Time of a picture | 5 seconds, after which the equation gets the message
+ "latex took more than 5 seconds".
+Environments when printing | The 13 of {x:eq-refused-chars}.
+Lines of the message in the panel | The message of TeX and three lines after it.
+.end
+
+.h2 Documents that have equations that are not TeX math [eq-legacy]
+.ix Rewriting equations
+.ix Equation that is not TeX math
+The equations of Strata are TeX math.  A document of the earlier format may
+hold equations that are not.  The Printer reports each of them as an error,
+prints it as text in the long form, and puts it in the Error Log
+({n:print-errors}); the print has then failed, and every page has the banner
+and a label such as E1 in front of the equation ({n:print-failed}); on the
+screen the equation shows as a label or as a row of letters that is not the
+formula.  The document must be rewritten, one equation at a time.  Put the
+cursor on the marker and press {k:Alt-F12} or {k:Ctrl-F12}, delete the text,
+write the same formula in TeX math with the tables of this chapter
+({n:eq-greek} to {n:eq-structures}), press {k:Ctrl-W} to see the result and
+{k:Ins} to keep it, and print the document again to check that no equation is
+left as text.
+
+.h2 Worked examples [eq-examples]
+.ix Examples of equations
+.ix Equation examples
+Each example gives the text of an equation and its result.  The text is what
+is typed in the editor of the equation (a long text may be written on several
+lines: a line end is a space, which TeX ignores in math), and the result is
+the equation of this document, so it is the typeset form that Strata makes on
+the screen and on the printed page.  Every equation is alone in its paragraph,
+so it is displayed.  The examples were typeset by the same program as the
+tables.
+
+.include equations-x.src

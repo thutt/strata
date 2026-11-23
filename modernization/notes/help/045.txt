@@ -1,0 +1,25 @@
+
+------------------------------------- Border -----------------------------------
+
+Border (Alt F8) is where you specify border lines, gutter space, and shading 
+for blocks, columns, and tables.
+
+--Procedure---------------------------------------------------------------------
+
+ Press Border. 
+ Highlight the columns and blocks to work with or press Border again
+  to highlight adjacent blocks with the same table layout.
+ Make your selections.
+ Press Ins to use the defined borders.
+
+--------------------------------------------------------------------------------
+# Border lines can be drawn across the top, bottom, left, and right edges of 
+  blocks and columns, as well as around the inside edges of a column.
+# Borders can be single, double, or wide lines
+# The last border assigned takes precedence.
+# The weight of border lines can be changed through Menu (F10) Global Options.
+# Top and bottom gutters determine the amount of space between the text in
+  a block and the border (top or bottom) of that block.          
+# Shading is a gray scale value you assign to a highlighted area.
+--------------------------------------------------------------------------------
+ Table     Border Layout Panel     Options     Keyboard Summary      Help Index

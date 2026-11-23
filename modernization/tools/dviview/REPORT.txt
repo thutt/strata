@@ -1,0 +1,207 @@
+REPORT: dviview, an X11 viewer for DVI files (Strata project)
+
+Everything below was produced on this machine.  The test output in section
+4 is copied from the file test_output.txt of the results folder, which "make
+test" wrote.
+
+1. HOW TO BUILD AND RUN
+
+  make            builds ./dviview (objects go to ./build)
+  make test       builds and runs the Xvfb tests, one ok/FAIL line each
+  make clean      removes ./build and ./dviview
+  make help       lists the targets
+
+  ./dviview FILE.dvi [-p PAGE] [-d DPI]
+
+DPI defaults to 100, so 100 percent zoom is the same size as "dvipng -D
+100".  Needs libx11-dev, libfreetype-dev, libpng-dev, and a TeX installation
+with kpsewhich; pictures of PDF and EPS files also need ghostscript (gs) and
+pdfinfo.  The compiler options are the WARN list of
+modernization/Makefile (-std=c11 -Werror -Wall -Wextra -Wpedantic ...); the
+program builds with no warnings.  Setting DVIVIEW_TIMING=1 prints the draw
+time of each page on stderr; DVIVIEW_NOPFB=1 skips the Type 1 fonts so that
+the PK fallback is used (this is how the PK fallback is tested).
+
+Keys: Page Down, Space, n next page; Page Up, p previous page; Home first,
+End last; Up Down Left Right scroll (60 pixels); KP_Add, plus, equal zoom in;
+KP_Subtract, minus zoom out (steps of 25 percent, from 25 to 800); KP_Multiply
+and 0 return to 100 percent; q and Escape quit.  The title is
+"FILE.dvi - page N/TOTAL - ZOOM%".  Zooming keeps the centre of the window.
+
+2. WHAT WORKS
+
+- Own DVI version 2 interpreter: all opcodes, postamble for the page count,
+  the page offsets from the back-pointer chain (the file is read once), the
+  mag value, fonts from the postamble.
+- Own TFM reader (widths, heights, depths), own PK reader, own virtual font
+  (VF) reader.  The Times and Helvetica families of psnfss are virtual fonts
+  (ptmr7t, ptmr8t ...), so VF support is what makes them work.
+- Glyph shapes: Type 1 (.pfb) through FreeType at the exact size, with the
+  encoding file (.enc) and SlantFont/ExtendFont of the pdftex.map line.
+  Glyphs are drawn again at each zoom (cache keyed by font, character and
+  pixel size; the cache is emptied when the zoom changes).
+- Rules are filled rectangles (at least 1 pixel).
+- Specials: "color push/pop" with rgb, gray, cmyk and nine basic colour
+  names change the colour of text and rules.  "papersize=" sets the page
+  size (default US letter, 8.5 x 11 in).  Every other kind is named once on
+  stderr (for example 'header', 'ps', 'foo').
+- Missing fonts (no Type 1 file and no PK file) are drawn as outlined boxes
+  with the TFM size and named on stderr.  Missing TFM files are named too.
+- Fonts checked: Computer Modern (text, math, extension), Latin Modern
+  (lmodern, T1), Times and Helvetica (psnfss, T1 and OT1).
+- Graphics (added by the task dviview-graphics, described in its REPORT):
+  pictures (PNG, JPEG, PDF, EPS) from the specials of dvipdfmx (pdf:image) and
+  dvips (psfile=), with width, height, scale, angle, trim and clip; vector
+  graphics from pdf:code, pdf:literal, pdf:bcontent (pgf, dvipdfmx driver)
+  and from ps: and " specials (pgf, dvips driver); rotated and scaled text
+  (pdf:btrans, x:scale, ps: rotate and scale); landscape pages (/Rotate 90).
+- Only plain Xlib, FreeType and libpng are used.
+
+3. WHAT DOES NOT WORK OR IS LIMITED
+
+- The PK fallback cannot be sharp: a PK font has one resolution (600 dpi
+  ljfour), so its bitmaps are scaled by area averaging.  Only the PK sizes
+  that kpsewhich finds are used; here cmbx12 and cmtt10 have no PK file, so
+  with DVIVIEW_NOPFB=1 they come out as boxes (see tests/pk_stderr.txt of the results folder).
+  Normal runs use Type 1 fonts and are sharp.
+- Glyphs are placed at whole pixels and are not hinted.  At 100 percent
+  this differs a little from dvipng (see section 4).
+- Colour names other than black white red green blue cyan magenta yellow gray
+  are reported as unsupported; hsb and the "background" special are
+  reported and ignored.  The colour stack starts black on every page.
+- Shadings, transparency and form objects of PDF specials are not drawn
+  and are reported once; see the report of the task dviview-graphics.
+- The window is sized once (page size at the start zoom, at most the screen).
+  Zoom does not resize it.  There is no mouse handling.
+- Needs a 32 bits per pixel TrueColor display with 8-bit channels.
+- Fonts are found by running kpsewhich (a few process starts per font), so
+  the first draw of a page with many fonts is slower than later pages.
+- The screenshots could not use xwd/xwdtopnm/pnmtopng: they are not
+  installed.  tests/shot.c (XGetImage of the root window to a PPM) and
+  tests/imgtool.py (standard library only: no Pillow) take their place.
+
+4. TESTS
+
+"make test" needs Xvfb, xdotool, latex, dvipng and python3.  It makes the
+input documents from the TeX files in tests/data with latex, and writes the
+DVI files, the screenshots and the differences to the folder tests of the
+results folder, $STRATA_BUILD_DIR/dviview-results (never in the source tree).
+The text below was written
+by the task that built the viewer, with the test files named there.  Test
+files are in that folder: text, math, table, pages30, psnfss, color
+(the six asked for), plus dense (a page of 4726 characters), lmodern,
+specials, missing (a font with a TFM but no shapes), long (1500 pages).
+For every document there are screenshots at 100, 200, 400 and 50 percent
+(NAME_z100.png ...), zoom limits (text_z25.png, text_z800.png), page-change
+proofs (pages30_key_*.png), scroll proofs (scroll_*.png), the PK fallback
+(text_pk_z100.png, text_pk_z200.png) and the dvipng comparisons
+(cmp_*_dviview.png, cmp_*_dvipng.png, cmp_*_diff.png, cmp_*_diff.txt).
+In a diff picture dark pixels are differences.  The 400 percent and 200
+percent shots are scrolled to the top left corner first.
+
+--- output of make test (results/test_output.txt) ---
+
+bash tests/run_tests.sh
+ok   document text: opens, zoom 100 200 400 50, title
+ok   document math: opens, zoom 100 200 400 50, title
+ok   document table: opens, zoom 100 200 400 50, title
+ok   document pages30: opens, zoom 100 200 400 50, title
+ok   document psnfss: opens, zoom 100 200 400 50, title
+ok   document color: opens, zoom 100 200 400 50, title
+ok   document dense: opens, zoom 100 200 400 50, title
+ok   document lmodern: opens, zoom 100 200 400 50, title
+ok   zoom: KP_Add and KP_Subtract step by 25 percent
+ok   zoom: main keyboard plus and minus, KP_Multiply resets
+ok   zoom: the digit 0 resets to 100 percent
+ok   zoom: limits are 25 and 800 percent
+ok   page keys: Next space n Prior p End Home
+ok   option -p 7 starts on page 7
+ok   scroll: Down moves the page, Up returns
+ok   scroll: Right moves the page, Left returns
+ok   quit: q ends the program
+ok   quit: Escape ends the program
+ok   specials: each other kind reported once on stderr
+ok   missing font: named on stderr, drawn as boxes
+ok   PK fallback draws text at 100 and 200 percent
+     dense page: 4726 items, first draw 15.3 ms
+ok   speed: a page of 5000 characters draws in under 0.5 s
+     long.dvi (1500 pages): window up after .4944 s
+ok   speed: 1500 page file opens at once, End and Home work
+     text: diff>64: 3.0675% of all, 55.48% of ink
+     text: shift dvipng by 0,-1
+     text: diff>64: 1.1945% of all, 26.58% of ink
+ok   dvipng comparison text (see cmp_text_diff.txt)
+     math: diff>64: 0.3549% of all, 58.87% of ink
+     math: shift dvipng by 0,-1
+     math: diff>64: 0.0714% of all, 15.32% of ink
+ok   dvipng comparison math (see cmp_math_diff.txt)
+     table: diff>64: 0.4259% of all, 68.56% of ink
+     table: shift dvipng by 0,-1
+     table: diff>64: 0.0653% of all, 15.05% of ink
+ok   dvipng comparison table (see cmp_table_diff.txt)
+     psnfss: diff>64: 0.3505% of all, 45.23% of ink
+     psnfss: shift dvipng by 0,-1
+     psnfss: diff>64: 0.2216% of all, 31.48% of ink
+ok   dvipng comparison psnfss (see cmp_psnfss_diff.txt)
+     color: diff>64: 0.1472% of all, 45.13% of ink
+     color: shift dvipng by 0,-1
+     color: diff>64: 0.0336% of all, 12.71% of ink
+ok   dvipng comparison color (see cmp_color_diff.txt)
+all tests passed
+
+--- end of output ---
+
+Reading the dvipng comparison.  For each test the first "diff>64" line is
+the picture exactly as drawn (fraction of all pixels, and of the ink pixels,
+that differ by more than 64/255), the second line names the shift of the
+dvipng picture that matches best, and the third line is the result after
+that shift.  dvipng draws everything one pixel lower than dviview: even the
+rules of the table are one row lower in dvipng, and a rule whose bottom edge
+is at 1 inch + 73.9 px (from dvitype) lies in row 173 as dviview draws it.
+I judge dviview's row correct by that arithmetic, but I did not check the
+dvipng source.  After the shift, between 12 and 32 percent of the ink
+pixels (pixels that are not white in either picture) differ by more than
+64/255; this is the effect of unhinted glyphs at whole-pixel positions
+against dvipng's own rounding of each character position.  The "of all
+pixels" figures are small only because most of the page is white.  Per
+test the figures are in results/tests/cmp_*_diff.txt.
+
+PK against Type 1 (results/tests/text_pk_vs_type1_diff.txt): 0.73 percent of
+the ink pixels differ by more than 64/255, so the PK reader and its scaling
+agree closely with the FreeType output at 100 percent.
+
+Speed (results/tests/speed_stderr.txt): the page of 4726 characters (dense)
+was drawn in 15.6 ms from an empty glyph cache (the draw line is printed with
+DVIVIEW_TIMING=1; the test requires under 500 ms).  The 1500 page file
+opens with the window up after about 0.49 s, which includes the 0.3 s that
+the test script waits; End and Home work at once.
+
+Checks with the address sanitizer (built by hand with -fsanitize=address,
+undefined, not part of make): all test files, zoom, page keys and the PK and
+missing-font paths ran with no memory error and no undefined behaviour.  The
+only reports were leaks at exit of fonts and caches that the program does
+not free when it quits.
+
+The graphics tests (pictures of every format, both drivers, text rotation,
+pgf keycaps, landscape pages, 4000 pages, temporary files) were added later;
+their documents are made by tests/run_tests.sh and their output is in the
+REPORT of the task dviview-graphics.  The ok lines in the output above are
+from before that task; the specials test now expects ps: to be run.
+
+5. SOURCE FILES (src)
+
+  main.c      window, keys, drawing into an XImage
+  dvi.c       DVI parser and interpreter, specials, VF packets
+  font.c      font loading, FreeType, glyph cache
+  tfm.c pk.c  metric and bitmap font readers
+  fontmap.c   pdftex.map and .enc files
+  util.c      checked conversions (the only casts), files, kpsewhich
+  gfx.c       matrices, paths, anti-aliased fill and stroke
+  gstate.c    graphics state, PDF operators of pdf:code
+  psi.c       PostScript subset for the ps: specials of dvips
+  special.c   all specials (pdf:, ps:, psfile, color, papersize)
+  image.c     PNG (libpng), PDF and EPS (ghostscript), picture cache
+  jpeg.c      JPEG decoder (baseline and progressive)
+  render.c    drawing of a page: text, rules, paths, clips, pictures
+  dviview.h   shared declarations
+  tests/      run_tests.sh, shot.c, imgtool.py

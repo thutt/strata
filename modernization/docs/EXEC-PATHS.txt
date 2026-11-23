@@ -1,0 +1,127 @@
+EXEC-PATHS: how Strata finds and runs the programs of the system
+
+Status: done (W50).  The survey of 2026-11-18 found that most programs were
+looked up through PATH.  Now every program that the Editor, the Document
+Manager, the Printer and the Viewer start is looked for in a fixed list of
+system folders, is checked, and is started by its full path with fork and
+execv and an argument vector.  PATH is never read.  No shell reads a line:
+there is no call of system(), popen(), execlp() or execvp() in src/.
+
+    grep -rn 'execvp\|execlp\|system(\|popen(\|"PATH"' src/
+
+The last pattern finds only the setting of PATH in the child (sp_child_env,
+see 3 below) and the marker that is named PATH.
+
+1. The rule (src/sysprog.c, src/sysprog.h)
+   sp_find(name) looks for a program of that name, in this order, in
+       /usr/bin, /bin, /usr/local/bin, /usr/sbin,
+       /usr/local/texlive/YEAR/bin/SYSTEM  (newest year first).
+   The last folders are those of a TeX Live installation that the user made
+   by hand.  A name that holds a slash is never looked up.
+   A file is taken only if sp_state() says it is safe: a regular file that
+   the user may run, owned by the user or by root (or by "nobody", which is
+   how a sandbox shows root), not writable by its group
+   or by others, in a folder that others cannot write to.  A program that
+   fails the test is not started; the message of the Printer or of the
+   Editor says that it was not found.
+   A program that the user names is the one exception: the settings and the
+   variables STRATA_LP, STRATA_LPSTAT, STRATA_SPELL, STRATA_STRPRINT and
+   STRATA_DVIVIEW take a full path of a regular file that can be run (a
+   relative name is refused, and the folders are not looked at then).  They
+   are the choice of the user, like the PDF Viewer of Setup.
+   The Printer, the Editor and the Document Manager look for the programs of
+   Strata (strprint, dviview, stred) first in the folder of the program that
+   runs, so that a build that is run in place finds its own parts, and then
+   in the same fixed folders.
+
+2. Where each program is found now
+   program                 started by                       how it is found
+   ---------------------   ------------------------------   --------------
+   pdflatex, latex,        strprint (run_prog)              sp_find
+   dvipdfmx
+   gs                      strprint (ps_to_pdf)             sp_find
+   extractbb               strprint (extract_box)           sp_find
+   pdflatex, latex,        eqrender (run_program)           sp_find
+   dvipng, pdftoppm,
+   pdfinfo
+   kpsewhich, curl, unzip  fonts (run)                      sp_find
+   kpsewhich (the Viewer: finding fonts, and with -mktex=pk making a PK
+   file; mktexpk and mf are only looked for)                sp_find
+   aspell, hunspell        spell                            sp_find, or
+                                                            STRATA_SPELL (a
+                                                            full path, or a
+                                                            name for sp_find)
+   lp, lpstat              printjob (pj_find_lp,            sp_find_env
+                           lpstat_text), pv_job_start
+   strprint, dviview       printjob, preview                variable, folder
+                                                            of the program,
+                                                            then sp_find
+   pdflatex (the test      printjob                         sp_find; the
+   before a print)                                          message names
+                                                            the folders
+   the PDF Viewer          printjob (start_detached)        the full path of
+                                                            Setup, else the
+                                                            first of evince,
+                                                            okular, atril,
+                                                            zathura, qpdfview,
+                                                            mupdf, xpdf,
+                                                            epdfview in
+                                                            /usr/bin,
+                                                            /usr/local/bin,
+                                                            /bin
+   stred (the Editor of    str (run_child, default_msed)    Setup, STRED, the
+   the Document Manager)                                    one next to str,
+                                                            then sp_find
+   The thesaurus is a file, not a program.  The shell scripts of scripts/
+   (strata-build, strata-install, check-tools, str-dev) run commands
+   through PATH by design: the person who builds or installs runs them.
+
+3. The environment of a child
+   sp_child_env() is called in the child just before execv by every start
+   of a program of the TeX system, ghostscript, kpsewhich, the spell checker
+   and the jobs of the Printer.  PATH is then the folder of the program,
+   followed by /usr/bin, /bin and /usr/local/bin, so the programs that TeX
+   starts itself (mktexpk, mktextfm) are found there and nowhere else.
+   LD_PRELOAD and LD_AUDIT are removed.  LD_LIBRARY_PATH is kept: a TeX Live
+   installation of the user may need it.
+
+4. Messages
+   When a program is not found the Printer says which folders it looked in
+   ("Print needs LaTeX: pdflatex was not found in /usr/bin, /bin, ..."; "the
+   engine did not run (is it installed? sudo apt install ...; programs are
+   looked for in the folders ... and not in PATH)").
+
+5. The hook of the tests
+   sp_dirs_set() replaces the list of folders (the unit test of sysprog.c).
+   A debug or asan build also reads the variable STRATA_PROGRAM_DIRS, a list
+   of full paths separated by colons, and then uses only those folders.  A
+   release build never reads it (the constant strata_release decides, no
+   conditional compilation).  The tests use it to put a fake program in the
+   place of a real one without changing PATH: tests/printpdf.py,
+   preview.py, xlatex.py and errlog.py give the folders of their PATH.
+
+6. Tests
+   tests/sptest.c (part of strata-build test, debug and release): the list
+   is the only source, PATH is never read (a poisoned PATH, a PATH of "."),
+   a program that the group or others can write is refused, so is one in a
+   folder that others can write, a file that cannot be run is no program,
+   the variables name a full path only, the message names the folders, the
+   hook is read by a debug build and never by a release build, and the
+   environment of a child.
+   tests/progpath.py (smoke): a folder with a fake of every program is put
+   first in PATH; the PDF is made, the spell check works and no fake ran, for
+   pdflatex, latex, dvipdfmx, gs, extractbb, aspell, hunspell, lp, lpstat and
+   the Editor of the Document Manager.  A debug build then runs a fake that
+   is in the list by its full path, with its arguments as separate words and
+   the PATH of section 3.  tests/longnames.py already prints documents whose
+   names hold the signs of a shell (semicolon, backquote, dollar, ampersand,
+   bar) and shows that nothing in the name is run.
+
+7. What is left
+   - The PDF Viewer lookup keeps its own list of folders (the three of the
+     list above, without /usr/sbin and the TeX Live folders), because a
+     viewer is not a part of TeX.  It uses the same test of safety.
+   - LD_LIBRARY_PATH is not removed (see 3).
+   - A TeX Live installation under /opt, or anywhere but /usr/local/texlive,
+     is not looked at.  Its engines are found when they are linked into
+     /usr/local/bin, which is what the installer of TeX Live offers to do.

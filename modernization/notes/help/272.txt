@@ -1,0 +1,25 @@
+------------------------------------ Markers -----------------------------------
+Keycap: Inserts a graphic representation of a key. Use Legend to enter the text
+        to appear in the keycap. To use a graphic character as the Legend, press
+        Alt = and then the key containing the image to use (for example, the 
+        Down key). Specify a value between 0 (black) and 100 (white) for 
+        Foreground or Background gray shade. Specify a scaling value between 
+        0.001 and 10 to adjust the size of the keycap relative to surrounding 
+        text. Use Font to specify the font for the legend (the size of the font
+        is ignored). You can also globally define Scale, Foreground, Background,
+        and Font on the Marker Format panel.
+
+Symbol: Inserts a printer-specific symbol. Type the code for the symbol you want
+        (see chapter 12 of the Reference manual for printer symbol codes) or 
+        press Gray + to display a list of symbols. If your printer cannot print
+        the symbol selected, it prints a best approximation of the symbol.
+
+Line:   Inserts a horizontal line or sequence of characters (including compose
+        characters) that extends from the marker position to the right margin or
+        specified length.  Weight specifies the width of a graphics line in the
+        units of measurement specified on the Global Options panel unless you
+        override it. Center specifies the vertical centering within a text line
+        (0 for the top of the line, 100 for the bottom of the line).
+--------------------------------------------------------------------------------
+    Marker Format         Compose Characters         Markers         Options
+             Keyboard Summary                 Help Index

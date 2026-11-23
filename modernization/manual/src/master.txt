@@ -1,0 +1,25 @@
+# The order of the documents of the manual: number, basename, title.
+# A number of - means a document outside the numbered manual.
+1 view A View of Strata
+2 file File
+3 edit Edit
+4 format Format
+5 markers Markers
+6 print Print and Preview
+7 str The Document Manager
+8 spell Spell Check and Thesaurus
+9 equations Equations
+10 convert Conversion
+11 messages Messages
+A appcmd Programs, Command Lines and Environment
+B appcfg Configuration
+C appchar Special Characters
+D appterm The Terminal Version
+E appx11 The X11 Version
+F glossary Glossary
+- cheat Key Reference
+- mathcheat Math Symbols
+- GettingStarted Getting Started
+- tutorial Tutorial
+- prereq Prerequisites
+- strata-file-format Strata File Formats

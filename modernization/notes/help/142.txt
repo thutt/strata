@@ -1,0 +1,25 @@
+
+----------------------------- File Retrieve Options ----------------------------
+The Retrieve File panel options perform as follows:
+
+# Retrieve Entire Document retrieves the text and format settings of a document.
+
+# Retrieve Body Only retrieves only the text and local format settings of a 
+  document and uses the global settings of the current document. 
+
+# Retrieve Global Settings retrieves the global format settings of a 
+  document, replacing those of the current document. The current document 
+  retains all local format settings such as local block or text settings.
+
+# Retrieve Typeface Settings Only retrieves Typeface List settings and printer
+  information from the specifed document for use with the current document.
+
+# Retrieve Named Block Settings Only retrieves named block settings from the 
+  specified document to use with the current document.
+
+# Retrieve & Insert after Current Block/Section retrieves the text of a document
+  and inserts it after the current block (in an unstructured document) or sec-
+  tion (in a structured document). In a structured document, the first section 
+  of the retrieved file is inserted at the same level as the current section.
+--------------------------------------------------------------------------------
+       File        File Retrieve        Keyboard Summary        Help Index

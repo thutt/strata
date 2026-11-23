@@ -1,0 +1,25 @@
+
+------------------------------- Named Block Format -----------------------------
+
+A named block is a master collection of format settings that you have created 
+and saved with the Menu (F10) Global Named Edit command in the editor.  These 
+settings exist independent of any specific location in the document and can be
+applied to any block.  Named blocks are useful for block formats that you use 
+repeatedly, such as indented paragraphs containing quoted text.
+
+The Named Block Format prompt on the Format (F6) Block panel is used to retrieve
+a master named block to use for the current block. The master named block format
+settings are applied to the current block, overriding any local settings in the
+block.
+--------------------------------------------------------------------------------
+# Type the name of the master named block format to retrieve, or press Gray + to
+  display a list of existing named block formats and select one from the list.
+  The named settings are applied to the block. Make any local settings you may
+  need.
+
+# To reset a local setting to the named block setting, press [ at the applicable
+  prompt.  To remove just the named block settings from a block press Del at 
+  the Named Block Format prompt.
+
+--------------------------------------------------------------------------------
+  Named Block Edit       Format Block       Keyboard Summary       Help Index

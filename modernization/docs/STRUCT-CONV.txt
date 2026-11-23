@@ -1,0 +1,80 @@
+EDIT, STRUCTURED AND EDIT, UNSTRUCTURED: WHAT THE PROGRAM DOES
+==============================================================
+
+The owner asked (W62): "The text says so, but does it actually do that?
+Test it."  The Reference Manual (manual/src/edit.src, section "Structured and
+Unstructured Edit") says that Edit, Structured turns an unstructured
+document into one section, and that Edit, Unstructured turns a structured one
+back only while it has one section and no subsections.  The test is
+tests/structconv.py (part of the smoke runner).
+
+THE ANSWER
+----------
+
+Yes, with one exception in the text, which was wrong and is corrected.
+
+  Edit, Structured (F12, Edit, Structured; there is no key):
+    - The text becomes one section: the body records are S + S, the blocks
+      of the text, and -.  The first block is the headline of the section.
+    - The status line shows STRUCTURED EDIT and Sect: 1, the headline is
+      numbered 1, the cursor is at the start of the document, the document
+      is marked as changed, and the saved *B record says 1.
+    - No text is lost: the records of the blocks, with their markers, tables
+      (CW, CB, CL, CR records) and Picture markers, stand unchanged between
+      the new S and the -.
+    - The title page records (=1, S, the title) stay before the new
+      section.
+
+  Edit, Unstructured (F12, Edit, Unstructured):
+    - It is offered only when the document has one section with no
+      subsections.  For a document of two sections, or of one section with a
+      subsection, the entry is not in the Edit menu, and the letter U in the
+      menu does nothing: the document is not changed and there is no
+      message.
+    - The section and its group are taken away: the body is S and the
+      blocks.  The headline stays as the first block without a number, the
+      status line shows UNSTRUCTURED EDIT, the cursor is at the start, the
+      document is marked as changed, the saved *B record says 0, and the
+      title page and the text are unchanged.
+
+  Undo takes either command back in one step.  A round trip (Structured and
+  then Unstructured) gives back the body of the first document, byte for
+  byte.
+
+WHAT WAS WRONG IN THE TEXT
+--------------------------
+
+The table of messages of the Editor (manual/src/messages1.src) listed "A
+document with several sections cannot be made unstructured", as the
+refusal of Structured or Unstructured on a document of more than one
+section.  The program never shows it: the Edit menu has no Unstructured
+entry for such a document, so ed_set_structured() is not called with 0 for
+it.  The message is still in src/editor.c as a guard that cannot be reached
+from the menus (the function has no other caller).  Decision: the program
+is right (the entry is simply not offered, which the text of the section
+already said) and the text was wrong.  The row of the message table was
+taken out, the index entry was reworded, and the caution of the section now
+says that until the document is one section the entry is not in the menu,
+the letter U does nothing and there is no message.
+
+THE MUTATIONS
+-------------
+
+Each was made in src/editor.c, built, the test run, and the change undone:
+
+  M1  Structured does nothing (return 0 at the start of
+      ed_set_structured for structured != 0):           11 checks fail.
+  M2  doc_can_unstructure() always 1 (Unstructured
+      offered for every structured document):            6 checks fail.
+  M3  doc_can_unstructure() always 0 (never offered):   10 checks fail.
+  M4  the cursor goes to the last block instead of the
+      start:                                              7 checks fail.
+  M4b the cursor is not reset:                            7 checks fail.
+  M5  the *B record of the header is not rewritten:       4 checks fail.
+  M7  the closing - is not taken away by Unstructured:    4 checks fail.
+  M8  the S record is kept by Unstructured:               4 checks fail.
+
+One mutation does not change the result: taking doc_touch() out of
+ed_set_structured() leaves the check "the document is marked as changed"
+passing, because doc_insert_item() and doc_delete_items() already mark the
+document.  The check still fails when the feature is off (M1, M3).

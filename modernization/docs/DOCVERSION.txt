@@ -1,0 +1,107 @@
+THE TOOL THAT CHANGES THE FILE FORMAT VERSION OF DOCUMENTS
+==========================================================
+
+Purpose
+-------
+Every file that uses the header of a document (the .DOC documents, the .SET
+templates, the .LIB library files and the .MAC macro files) starts with the
+record '*R<n>'.  The number n is the version of the file format.  The
+original program wrote '*R2'; the current format of Strata is version 3,
+written '*R3'.  When the file format changes in an incompatible way, the
+version is raised by one and every document that the product holds has to be
+changed to the new version before a release.  The tool tools/docversion.py
+does that.  It is the tool of the worklist item W88.
+
+Usage
+-----
+    python3 -I -B tools/docversion.py [--check] [--quiet] [--to N] PATH...
+
+  PATH        A file, or a directory that is searched recursively (symbolic
+              links are not followed).  In a directory the files with the
+              extension .doc, .set, .lib or .mac, in any case, are
+              examined.  A file named on the command line is examined
+              whatever its extension is.
+  --to N      The target version.  The default is the current version of the
+              software (3).
+  --check     Change nothing.  Report the files that would change and exit
+              with status 1 when there is one.
+  --quiet     Leave out the lines of the files that are current already.
+
+What the tool does
+------------------
+  - A file whose first record is '*R<n>' with n below the target gets the
+    first record '*R<target>'.  Every other byte of the file is the same.
+    The bytes after the number in the first record (the 'h' of the old
+    library and macro files: '*R2h') are kept.
+  - The file is replaced through a temporary file in its directory and a
+    rename, so a file is never half written, and its permissions are kept.
+  - No other file is made: no backup, no log.  The temporary file is gone
+    when the program ends.
+  - A version above the target is never lowered.
+  - A file whose first record is not '*R<n>' is not a document: it is
+    reported and left alone.
+  - The program is idempotent: a second run changes nothing.
+
+Output
+------
+One line for each file examined:
+
+    changed: PATH (2 -> 3)       the first record was rewritten
+    would change: PATH (2 -> 3)  with --check, nothing was written
+    unchanged: PATH (version 3)  the version is the target already
+    skipped: PATH (REASON)       'not a document', 'symbolic link' or
+                                 'version 4 is above 3'
+    failed: PATH (REASON)        'read-only, version 2' (the owner has no
+                                 write permission), an error of the system,
+                                 or 'no such file'
+
+and a last line with the counts.
+
+Exit status
+-----------
+    0   Every file is current, was converted, or was skipped.
+    1   A file failed, or with --check a file would change.
+    2   A usage error.
+
+The first conversion
+--------------------
+The first run changed 252 documents from version 2 to version 3: the
+samples (36), the templates (119), the documents of the tests (74 in
+tests/data and 12 in tests/samples) and the documents of the manual
+pictures (11 in manual/samples).  Only the first record of each file
+changed.  Not changed on purpose:
+
+  - the generated manuals (manual/doc/*.doc): the build writes them, and
+    after the software writes version 3 they are rewritten with it;
+  - the documents of the original program (the directory lotus-manuscript/
+    and the directory documentation/): the programs read '*R2' as the older
+    format;
+  - the probe documents of docs/probe: they are inputs of the original
+    program, which reads only '*R2'.
+
+The generators that write documents of the product (tests/mktemplates.py,
+mkletters.py, mkfonts.py, mkkeepdata.py, mkprintdata.py, mksecdata.py,
+manual/mkmanual.py, manual/mklatexdemo.py and manual/scenes/mkpicdocs.py)
+write '*R3' in their header, so that what they write is what is committed.
+
+The build check
+---------------
+    strata-build docversion
+
+runs the tool with --check over the directories of the product and fails when
+a document is below the current version.  The unit tests run it, and
+tests/docversion.py tests the tool with documents of several versions, with
+mutations of the tool that every check has to find, and compares the default
+target of the tool with the constant STRATA_FILE_FORMAT of the sources when
+the constant exists.
+
+How a release uses it
+---------------------
+When the file format has changed in an incompatible way and the version of
+the software is raised, run
+
+    python3 -I -B tools/docversion.py --to N samples templates tests/data \
+        tests/samples manual/samples
+
+and set CURRENT_FORMAT in the tool to N.  Then build, so that the generated
+manuals are written with the new version, and run the tests.

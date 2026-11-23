@@ -1,0 +1,81 @@
+The lag of the cursor keys in the X11 Editor: what was measured
+================================================================
+
+Report of the owner (2026-11-17): cursor movement in the X11 version is laggy
+on getstart.doc and on the long paragraphs of the Reference manual, and the
+cursor goes on moving after the arrow key is released.  Vertical movement at
+the top of the Reference manual (many small blocks) is very fast.  The owner
+believes it is a regression and does not know since when.
+
+The measurement
+---------------
+tests/xlag.py (X11 Editor under its own Xvfb, keys sent with xdotool, the
+screen dump of the backend as the witness):
+  - idle_ms        the time from the end of the burst until the screen has
+                   stopped changing and the Editor has stopped using CPU
+                   (100 Down events sent as fast as xdotool can);
+  - cpu_ms_per_key the CPU time of the Editor for each key of the burst;
+  - xserver_cpu... the same for the X server (the drawing work);
+  - one_move_ms    the time of one move;
+  - frozen_draws   the Editor is stopped (SIGSTOP), 100 keys are sent, it
+                   goes on (SIGCONT): the number of drawings it makes;
+  - the final screen of the burst must equal the screen of the same keys
+    sent one by one (no key lost or doubled).
+Documents: getstart.doc, the Reference manual (at the top and after 400 page
+movements) and one block of 20000 characters made by the test.
+
+What the numbers say
+--------------------
+Four commits were measured with the same script and the same documents, 300
+keys, median of three runs, on a quiet 16-CPU machine under Xvfb:
+
+  commit     date            getstart  Reference  long block   (cpu ms/key
+                             top/400   top/400    top/400       of the Editor)
+  c145796e   11-16 05:11     .57/.73   .63/.50    .37/.20
+  9471f5da   11-16 16:42     .57/.70   .63/.50    .37/.20
+  b35506b3   11-16 23:52     .57/.70   .63/.50    .37/.17
+  current    11-17 evening   .50/.70   .60/.50    .30/.20
+
+The idle time after a burst of 100 keys is 60 to 100 ms at every commit (the
+numbers above 300 ms are the stable period that the script waits for), and
+one move takes 15 to 40 ms from the key to the end of the drawing.  A page
+movement burst on the Reference manual costs 3.7 ms of CPU for each key on
+the first pass over new blocks and 0.6 ms later.  The block under the cursor
+does not matter: a block of 20000 characters costs the same as a block of
+one line (0.2 to 0.4 ms of CPU for each key).  The function that was
+suspected from the clue about the size of the block, ed_attr_effective (the
+status line scans the marks from the start of the block to the cursor), is a
+loop over the tokens of one block: 20000 tokens are 20 microseconds.
+
+So the lag is NOT reproduced under Xvfb with these documents at any of the
+commits measured, and no regression between 11-16 and now shows up in the
+CPU of the Editor or of the server.  The commits before 11-16 and the
+exact first bad commit were not measured, because no commit is bad in this
+measurement: a bisect needs a good and a bad commit.
+
+What was done instead
+---------------------
+The main loop drew the screen after every key, even when more keys were
+waiting.  On a display that needs more time for one drawing than the keyboard
+repeat leaves between two keys (about 33 ms at 30 keys a second) the keys
+queue up, and the queue is worked off after the key is released: that is
+exactly the symptom.  Xvfb is too fast for this to show.  The loop now handles
+the waiting keys one after the other and draws once, when none is waiting
+(term_input_pending, and the draw that is owed is made by a read with
+term_getkey(0) that finds nothing).  100 keys that wait together are now
+drawn once instead of 101 times (tests/xlag.py), and the screen they end on
+is the screen of the same keys one by one.
+
+A debug build logs a drawing that takes 30 ms or more (log_debug in
+redraw), with the time, so that the cost of one drawing can be read on a
+display where the lag shows.
+
+What is needed from the owner to find the cause on their display
+----------------------------------------------------------------
+  - which keys lag (Down, Right, Page Down), and which window (rows, the
+    font: Xft or the core fonts), the display (local, remote, Wayland, WSL);
+  - a run of a debug build under str with the run log, and the lines
+    'drawing the screen took N ms': they say how long one drawing takes on
+    their display, and in which document position;
+  - the output of: XLAG_RUNS=3 python3 -I -B tests/xlag.py --measure on their
+    machine, with DISPLAY set to their display (see tests/xlag.py).

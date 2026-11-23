@@ -1,0 +1,25 @@
+
+------------------------------ File Export Options -----------------------------
+
+Select from the following options to determine how a document is exported:
+
+# Export a Screen Image: Exports the document as it appears on screen with 
+  end-of-line characters at the end of each line.  This option is useful when 
+  exporting tables and columns.  Notes are exported with an end-of-line 
+  character at the end of each note only.
+
+# Export Data Only: Exports the document text and ignores all single end-of-line
+  characters.  With this option, columns and tables will not retain their 
+  format and multiple columns export as a single column.
+
+# 96 Character ASCII: First export the file using the selected code page.  
+          .           Manuscript initially selects the code page appropriate for
+          .           your system. Then, if the file does not export correctly,
+          .           export the file again using a different code page.
+
+# Export Entire Document/Current Section: Select whether to export the entire
+  document or only the current section and its subsections.
+
+
+--------------------------------------------------------------------------------
+        File Export          Keyboard Summary           Help Index

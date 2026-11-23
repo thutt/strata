@@ -1,0 +1,268 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+HOW LOTUS MANUSCRIPT 2.1 WORKED
+===============================
+
+Reverse-engineered from the install media in ../lotus-manuscript/ (11 floppies
+unpacked into one directory per disk). Everything here was derived from the
+files themselves: the executables' headers and strings, the decoded on-line help
+(the help file, 379 topics, ~600 KB of text), and the 24 sample documents. Where
+something is inferred rather than verified, it says so; see also
+OPEN-QUESTIONS.txt.
+
+1. The product
+--------------
+
+*Lotus Manuscript* (Release 2.1, (c) 1986/1988/1989 Lotus Development) is a DOS
+technical-writing editor and formatter, aimed at long structured documents:
+reports, proposals, manuals. Its distinguishing ideas, all visible in the help
+text and sample files:
+
+  - A document is a tree of sections made of blocks (paragraph / list item /
+    table row / headline), and a block can be split into columns (tables are
+    just blocks with columns). Blocks, not lines, are the unit of
+    cut/copy/move/format.
+  - Structured documents have sections, levels and headline blocks, and can be
+    collapsed to an outline; unstructured documents are plain runs of blocks
+    (memos, letters).
+  - Markers are in-text objects: date, page number, counters, figure/table
+    captions, index entries, notes (footnotes), pictures, worksheets (1-2-3
+    .WK1), equations, keycaps, screen captures, comments, conditionals, merge
+    fields.
+  - Formatting is separated from editing: you edit a screen approximation
+    (monospaced, with a ruler), then Print or Preview runs a separate formatter
+    that handles fonts, page layout and drivers.
+  - Panels ("Press Ins to use displayed settings") and the F-key command set
+    drive everything; an on-line help system (F1) is indexed and acts as the
+    reference manual.
+
+2. Install media
+----------------
+
+install/install.vol is the volume list the installer (INSTALL.COM, INSTALL.MSG,
+MSINIT.EXE) walks. Eleven disks, identified by a sentinel file each:
+
+  - Edit: MSEDIT.EXE; editor + document read/write overlays, marker, macro
+  - Print 1: MSPRINT.EXE; formatter, previewer, table generator
+  - Print 2: MSEQNPDL.EXE; equation and graphics-to-PDL/PostScript compilers,
+    hyphenation data
+  - Spell: MSSPELL.EXE; spelling checker, dictionary manager, AMERICAN.SPL
+  - Thesaurus: AMERICAN.SYN; thesaurus data + image/ThinkTank converters
+  - Utility 1: MSDCADOC.EXE; DCA/worksheet import/export, version up/downgrade
+  - Utility 2: MSMENU.EXE; menu/panel engine, equations, comparison, DXF
+    converters
+  - Utility 3: the help file; help file, screen capture, viewer, printer setup
+  - Sample: CNS10PP.DOC; sample documents, fonts, macros, libraries
+  - Driver 1: IBMMONO.TD; MS.EXE, text/graphics display drivers, first printer
+    drivers
+  - Driver 2: PRSETUP1.COM; remaining printer drivers, PRSETUP
+
+The installer creates \MS (program) and \MS\MSDATA (documents, via the
+SF=.../TF=... source-file/target-folder rules in install.vol), and prompts once
+for the licensee name/company. PRSETUP (.COM + .TBL/.MSG) copies the printer
+drivers the user selects from prsetup.tbl.
+
+3. Runtime architecture: a host plus overlays
+---------------------------------------------
+
+The central discovery: there is no monolithic program. driver_1/ms.exe (63 KB, a
+plain MZ executable built with Microsoft C -- its startup text reads "Startup
+code for MSC modules linked by LINK") is a small host/kernel. Everything else --
+the editor, the formatter, the spell checker, every utility, every driver, even
+the compiled menus -- is an overlay the host loads on demand.
+
+  - An overlay file starts with an MZ stub ("Cannot run without Lotus Manuscript
+    (MS.EXE)") followed by an NE-style segmented module (header at the offset in
+    e_lfanew, segment table, resident-name table, module-reference table).
+    Segment alignment shift is 4, not the Windows 9; my first parser assumed 9
+    and produced garbage until I noticed (tools/ne.py).
+  - Overlay code is 16-bit real-mode C, compiled in separate segments (the
+    Editor has six segments, 232 KB of code). Unresolved far calls use 9A FF FF
+    00 00 placeholders that the overlay loader patches from the import table.
+  - Each overlay imports runtime modules from the host. These names appear in
+    the module-reference tables:
+
+| Module | Role (from names/strings) | |---|---| | OL | overlay loader
+(_OVLPURGE, _DOPROC, _PUSHPROC, _KILLPROC) | | LIB | C-library-like services
+(string, memory, panels) | | LOCAL | document local format handling (property
+records) -- also an overlay, MSLOCAL.EXE | | DOSIO | file/DOS I/O | | KYBD |
+keyboard, key maps (.KEY files) | | CON | console/screen (loads the .TD text
+display driver) | | VM | virtual memory manager (the "Out of Virtual Memory"
+help topics) | | GD | graphics display (loads the .GD driver; used by
+preview/view) | | MAIN | exports of the host program itself |
+
+  - ms.exe also contains the shell (_SHELL, COMSPEC, \command.com -- the DOS
+    escape on the Menu), config (MSCONFIG, MSOPTIONS, MS.CMF), the
+    resident-state flag MS_IS_RESIDENT, a driver-directory search
+    (msdriver\*.td), fallbacks (generic.pd, ibmmono.td, generic.td, ibmcga1.td)
+    and the Index/Read/Write #X1 $2 #X3 message templates used by file-I/O
+    errors.
+  - The Editor overlay (MSEDIT.EXE, "Editor V2.1") exports 70 symbols that other
+    overlays call back into: _MAINDOC, _CUR_MARK, _EDITMODE, _PD, _FONTLIST,
+    _AUTHOR, _PUTS/_PUTC/_PUTTS, GETTAG, GETWORD, GETMARKPTR, DSPTEXTL,
+    DSPROPERTY, VMGMEM/VMPMEM/VMCGMEM, STRMATCH, ITOS/FDTOS, ERROR, and so on.
+    MSPRINT.EXE ("Document Formatter V2.1") exports 111. These tell us the
+    editor keeps a *main document* object in virtual memory, with "marker"
+    lists, font descriptors and printer-description (PD) structures.
+  - Drivers are the same kind of overlay: .TD text display drivers (ibmmono,
+    ibmcga, ibmcga1, ibmega, hercplus), .GD graphics display drivers (hercules,
+    ibmcga, ibmega, plasma), and 36 .PD printer drivers (HP
+    LaserJet/DeskJet/PaintJet/ThinkJet, Epson, IBM, Okidata, NEC, Canon, Ricoh,
+    PostScript, ...). Each is an NE overlay (verified from the headers and the
+    "Cannot run without Lotus Manuscript" stub). Their payload -- presumably the
+    printer's escape sequences and metrics -- was not decoded. The
+    page-description-language printers also have a matching .FNT font file.
+  - Even the menus are code: util.mnu and pd.mnu are overlays ("Utilities
+    Script") interpreted by MSMENU.EXE, tying a panel label to an external
+    overlay -- e.g. *DCA (Revisable) File Import -> msdcadoc.exe, prompt "DCA
+    File Name:"*. msmenu.add lists the menu scripts to load (pd.mnu, util.mnu).
+
+Full inventory (generated by tools/survey.py): notes/overlay-survey.txt.
+
+4. Program inventory
+--------------------
+
+  - Editing: msedit (editor), msrddoc2/mswrdoc2 (document read/write), msmarker,
+    msmacro, mslocal, msstrip (strip local settings)
+  - Formatting/printing: msprint (formatter), msprev (preview), mstables,
+    mseqnpdl/mseqnps (math -> PDL/PostScript), msgmfpdl/msgmfps (Freelance
+    metafile -> PDL/PS), mspicps (1-2-3 PIC -> PS), mspdlbit (PDL interpreter),
+    msdxfpdl/msdxfps (DXF), mskeypdl/mskeyps (keycaps), msscrpdl/msscrps (screen
+    captures)
+  - Language tools: msspell, msspword, mslex (dictionary manager), msthes
+    (thesaurus)
+  - Import/export: msdcadoc/msdocdca (IBM DCA revisable text), msttkdoc
+    (ThinkTank), mswsdoc/mswshot (1-2-3/Symphony worksheets), bitmap converters
+    msmpbit (MacPaint), mspcxbit (PC Paintbrush), mstifbit (TIFF), msdcbit
+    (Datacopy), msmtbit (Microtek)
+  - Compatibility: msrddoc1/mswrdoc1/ms2to1 (upgrade/downgrade between V1 and V2
+    files), mseqn12 (equation upgrade)
+  - Utilities: msmenu, msfont/msfnedit (fonts), msrev (document comparison),
+    msmath, msview (graphics viewer), scr.exe (resident screen-capture TSR),
+    prsetup.com, install.com/msinit
+
+5. Data files
+-------------
+
+  - .DOC .SET .LIB .MAC: the same container: *R2 record file. .SET = a
+    header-only template (memo, envelope, outline, proposal); .LIB = library
+    entries; .MAC = macros; headers and *B...*E structure; fully decoded, see
+    DOC-FORMAT.txt
+  - .HLP: the help file of the earlier product; not read by Strata any more
+    (Strata reads its own strata.hlp, made from help/*.txt: src/help.h)
+  - .PD .TD .GD .MNU: overlay modules (drivers, menus); NE headers
+  - .FNT: printer/display bitmap fonts; sizes; not decoded
+  - .LVF: "LOTUS FONT" stroke fonts (Roman/Italic/Complex x
+    Duplex/Simplex/Triplex), used for graphics text; gdstroke.dat is the stroke
+    table; magic string LOTUS FONT, names inside
+  - .GMF: Freelance Plus metafile (Freelance Metafile Version 1); strings
+  - .PIC: 1-2-3 graph file; content (1984, shares by age)
+  - .WK1: 1-2-3 Release 2 worksheet; BOF record 00 00 02 00 06 04
+  - .SCT: screen capture (scr.exe); used by *Screen* markers
+  - .EQN: equation templates (INTEGRAL, PRODUCT, OPAREN); strings
+  - .SPL .HYP .EXC .SYN: spelling dictionary, hyphenation patterns/exceptions
+    (VERSION 005), thesaurus; headers; not decoded
+  - .KEY: key-binding source (laptop.key restores V1 shifted/control keys); text
+  - .TBL .MSG .ERR .VOL .ADD: printer table, message catalogs (SAS... binary
+    string tables), volume list, menu list; text/strings
+  - psinit: PostScript prologue (initialisation); text
+
+6. The processing pipeline
+--------------------------
+
+     keyboard -- KYBD --> Editor (MSEDIT) <-- MSLOCAL (formats)
+                                  <- MSMARKER, MSMACRO
+                             |  VM (virtual memory holds the document)
+                  MSWRDOC2 --+--> .DOC file  <-- MSRDDOC2
+                                     |
+            Print / Preview ---------+
+                                     v
+                             MSPRINT (formatter) -- MSTABLES (tables)
+                            |      |       |
+            MSEQN* (math)  -+      |       +- MSGMF*/MSPIC*/MSDXF*/MSSCR*/
+                                              bitmap converters (graphics)
+                                   v
+                        .PD printer driver (+ .FNT)  -->  printer
+                        MSPREV + .GD driver           -->  preview screen
+
+Spelling and thesaurus run as overlays over the same document in virtual memory
+(MSSPELL, MSTHES, via the AMERICAN.* data files). INSTALL/PRSETUP are standalone
+.COM programs.
+
+7. The user interface
+---------------------
+
+All of this is from the decoded help text (notes/help/).
+
+  - Edit screen: a status line (file, * if modified, attribute, position,
+    section number, mode), an optional expanded status line (justification,
+    indent, font), the text area, and a bottom ruler with tab stops (v left, >
+    right, ^ centre, , comma, . decimal, # number) and block indents (#). Blocks
+    are separated by a single rule, sections by a double rule, columns by dotted
+    vertical lines.
+  - Function keys (plain / Alt / Ctrl): Help-Split, Copy-Cut, Paste-Format,
+    Move-Table, Search-Menu; Alt: Compose-Append, Join-Delete, Overtype-Set
+    Attr, Go To-Border, Replace-Marker; Ctrl: Learn-Math, Library Copy-Cut,
+    Library Paste-Case. Commands that act on an area ask for a unit -- Text,
+    Column, Block, Section -- and then you highlight with the cursor keys and
+    press Enter.
+  - Accelerators (Ctrl + letter): A append block (same format), O append
+    global-format block, V/Y split block/section, K/L cut block/section, B/I/U/N
+    attributes, E block format editor, H hanging indent, G text indent, D delete
+    word, R/S/Q retrieve/save/quit, C spell word, T thesaurus.
+  - Outline control (structured docs): Gray - collapse, + expand a level, *
+    outline the section; Alt 1-9 show headlines down to that level, Alt 0 whole
+    document.
+  - Menu (F12): File Global Edit Print Tools DOS Quit; File = Save, Retrieve,
+    New, Delete, Import, Export; Global = Format, Page, Typeface, Marker,
+    Options, Named; Tools = Macros, Library, Spell, Thesaurus, Autosort,
+    Worksheet, Count.
+  - Document Manager: the first screen -- Edit / Preview / Print Document /
+    Maintain Dictionaries / Compare / TeX Font Association / Setup / Quit
+    (Print, Preview and Spell are on the menus of the Editor).
+
+8. Method and confidence
+------------------------
+
+  - Verified: overlay structure (headers parse; segment sizes match file sizes),
+    the help-file format (decodes all 379 topics, round-checked against an
+    independent C reimplementation), the whole .DOC container grammar (all 24
+    samples load/save byte-exactly and have balanced structure), the tab-width
+    model (254 of 265 stored widths reproduced by an independent layout).
+  - Inferred: the meaning of several property codes and marker numbers (see
+    OPEN-QUESTIONS.txt); the exact role of each runtime module (from export
+    names, strings and call structure, not from reading the machine code).
+  - Not attempted: disassembling the 16-bit code, decoding .SPL/.SYN/.HYP/.FNT/
+    .GD/.PD, or reproducing the formatter's typography.
+
+9. How the modern version maps to it
+------------------------------------
+
+  - MS.EXE host + overlays + VM: one process; the document is an in-memory model
+    (msdoc.c)
+  - MSRDDOC2/MSWRDOC2: doc_load/doc_save (lossless)
+  - CON + .TD drivers: term.h with two backends: term.c (ANSI terminal) and
+    term_x11.c (Xlib window)
+  - MS.EXE Document Manager: str.c, a master menu that runs stred (the overlay
+    host itself is not reproduced)
+  - LOCAL format properties: fmt_resolve() in layout.c (column -> block -> named
+    format -> global)
+  - Edit screen rendering: layout.c + view.c
+  - Editor commands: editor.c, move.c, ui.c
+  - The help file + F1: help.c reads the original help file, with hyperlinks
+  - Print/Preview: text rendering (export.c) -- not the typographic formatter
+  - Spell/thesaurus/macros/markers' back-ends: not implemented

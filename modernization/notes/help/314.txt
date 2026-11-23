@@ -1,0 +1,25 @@
+
+------------------------------------- Math -------------------------------------
+Use Math (Ctrl F2) to calculate a numeric expression in a document.
+
+# The result of the calculation is stored on the clipboard so you can Paste (F5)
+  it into your document. Remember to paste the result before cutting or copying
+  anything else to the clipboard.
+
+# The numbers to calculate can be in one or more columns or blocks. If you 
+  highlight more than one column or block the result is calculated from left 
+  to right and from top to bottom.
+
+# A math expression can include numbers, operators, parentheses, and special
+  characters.  All other characters are ignored.  If an operator is not 
+  specified, Manuscript adds the numbers.
+   Numbers can be up to 100 digits.
+   Operators, in order of precedence, are parentheses (), 
+    exponentiation ^, negation - , multiplication and division * / , and
+    addition and substraction + - .
+   Special characters can include a . (period) or , (comma) as a decimal 
+    separator. You must use the symbol selected as the decimal separator in 
+    Setup, % to divide the preceding number by 100, e or E to define a scienti-
+    fic notation exponent, and + or - to define a positive or negative number.
+--------------------------------------------------------------------------------
+     Paste           Setup           Keyboard Summary           Help Index

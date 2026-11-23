@@ -1,0 +1,231 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+WHAT IS NOT IMPLEMENTED YET: A REPORT BY MENU
+=============================================
+
+Written 2026-11-13 from the menu tables in src/ui.c and src/str.c, the
+panels in src/globalmenu.c, src/printmenu.c and src/filemenu.c, and the
+documents in docs/ (WORKLIST.txt, KEYSTROKES.txt, GLOBAL-MENU.txt,
+TOOLS-MENU.txt, PRINT-MENU.txt, MARKERS.txt).  Each item says how it shows
+to the user: DIMMED (the entry is shown and cannot be chosen), NOTICE (the
+entry can be chosen and says it is not implemented), SHOWN (the panel field
+is shown and ignored), MESSAGE (the key only prints a message) or SILENT
+(nothing in the menus says so).  "Running" means a task is working on it.
+
+
+1. SUMMARY
+----------
+
+  stred menu bar     Dimmed: Edit Window, Tools Spell (four commands) and
+                    Tools Thesaurus.  Everything else can be chosen.
+                    Print Repaginate and Print Clear-pages are not in the
+                    menu (removed 2026-11-18: the page breaks are made when
+                    a document is printed).
+  str menu           Every entry works (Maintain Dictionaries and Compare
+                    Document Versions were the two that gave a notice).
+  Panel fields      Shown and ignored: most of str Setup, six settings of
+                    stred Global Options, and several Global Format and Page
+                    fields.
+  Keys              See section 4.
+  Markers           Five are removed on purpose.  The others are stored and
+                    edited; about half have no effect yet when a page is
+                    made (section 5).
+
+  Running now:      Spell (str and stred) and Thesaurus.
+  Wrong, to fix:    nothing is known to be wrong in the Preview entries.
+
+
+2. stred: THE F12 MENU BAR
+--------------------------
+
+File.  All six commands work (Save, Retrieve, New, Delete, Import, Export).
+  Import and Export have UTF-8 and Latin-1 in the Character Set choices
+  (UTF-8 stage 0).  Documents are still CP437: a character with no place
+  in CP437 (a Chinese character, an emoji) is a ? after Import and is
+  counted in the message line, and nothing but the keyboard of the Editor
+  takes it.  UTF-8 in the document itself is the later stages of
+  docs/UTF8.txt.
+  Left: Retrieve Named Block Settings Only (what it replaces is not known),
+  refusing Ctrl-S on a .BAK file, borders in an exported screen image.
+
+Global.  All six commands open panels.  Not done inside them:
+  - Format: Spacing for Bottom Alignment of the Winding Column Layout panel.
+  - Format: nothing is stored and unused now.  The
+    spacings (also those that a block or its named format sets), Page Break
+    Level, Auto Numbering to Level and the fonts are used.
+  - Page: the paper sizes and margins are stored and shown; they are not yet
+    used by Print and Preview (SHOWN).  The Header and Footer fields ("...")
+    do not open the editor of the original: headers and footers cannot be
+    edited (SILENT).
+  - Options: six of thirteen settings are dimmed: Block Indicators (Solid
+    Lines), Display Even Justification, Display +/- with Section Tags,
+    Units, Autosave and Save Interval (the same truth is in str Setup), and
+    Line Weight (Borders and Other) (DIMMED).
+  - Marker: the Footnote, Levelnote, Endnote, Counter and Keycap Formats are
+    done.  Marker display modes are done.
+  - Named: Edit and Delete work.
+
+Edit.  Title, Structured, Unstructured, Section and Document work.
+  - Window (Open/Close, Adjust, Zoom, Switch): DIMMED.  Strata has no
+    windows.  Ctrl-W (switch windows) is "no" in KEYSTROKES.txt.
+
+Print.
+  - Draft and Final: DONE.  They make a PDF with strprint and send it to a
+    CUPS queue with lp (docs/PRINT-MENU.txt); "stred --print" does the same
+    from a shell.  The sending to a real CUPS queue was not tried (the tests
+    use a stand-in for lp).  The table of contents is DONE (the Print panel
+    fields Table of Contents? and Contents Levels, docs/PRINT-LATEX.txt).
+    Not done: the other parts of the original's check list (figures,
+    tables, the index, the print summary), Print Quality (no CUPS
+    setting is mapped to it), the graphics options, headers and footers
+    other than the page number (PRINT-LATEX.txt, 14).
+  - Preview (Document, Block, Section): works through LaTeX and dviview.
+    Not driven by a test in the X11 stred.
+  - Error Log, Print Errors and the failed-print banner: DONE (docs/
+    PRINT-LATEX.txt, 17 and 17.8; docs/MARKERS.txt, "Print Error").  Not
+    done: the Error Log Markers (an E at
+    the end of each line with an error), the error count in a Document Print
+    Summary (there is no summary), a list of the errors in a window, a
+    Preview that does not block the Editor, and a click in the Viewer that
+    goes to the error.  Undo takes the inserted markers out as one
+    operation, as Remove Print Errors does.  The Error Log
+    lists what the writer and LaTeX found: a defect that neither can see
+    (a wrong word, a bad layout) is not an error.
+  - Repaginate and Clear-pages: REMOVED from the Print menu (owner,
+    2026-11-18).  They were dimmed.  They depend on the typographic
+    formatter of the original, which Strata does not have, so page breaks
+    are known only at print time.  Ctrl-PgUp and Ctrl-PgDn (previous and next
+    page) need pages too and are "no".
+  - Not done anywhere: lists of figures and tables, the index (the Index,
+    Figure and Table markers are stored and ignored).  The table of
+    contents of a print is made from the headlines and is asked for in the
+    Print panel, not by a marker.
+
+Tools.
+  - Macros, Library, Autosort and Count work.
+  - Spell (Document, Block, Section, Word): DIMMED.  Ctrl-C (spell check the
+    current word) only prints a message.  RUNNING.
+  - Thesaurus: DIMMED.  Ctrl-T only prints a message.  RUNNING.
+
+Quit.  Works.  (The Shell entry was removed on purpose: the system is
+multitasking.)
+
+
+3. str: THE DOCUMENT MANAGER
+----------------------------
+
+  Edit / Preview / Print Document
+                           works.  It opens the Editor, where Print and
+                           Preview (and Tools, Spell) are on the menus.
+                           The entries Print Document, Preview Document,
+                           Check Document Spelling and Batch Print Utility
+                           of the earlier product were removed from the
+                           Document Manager by the owner.
+  Maintain Dictionaries    WORKS.  The personal word list: add, delete, find,
+                           import and export (src/dictmenu.c, dictlist.c).
+  Compare Document Versions  WORKS (src/comparemenu.c, compare.c).
+  TeX Font Association     works (Strata's own entry).
+  Setup                    works for the working directory, the editor
+                           program, the help file, Autosave and Printer (the
+                           default CUPS queue; it replaced Primary and
+                           Secondary Printer Driver and Port).  Text
+                           Display Driver, Graphics Display Driver, Virtual
+                           Memory Setup, Sound, Initial Macro Set, Initial
+                           Library and Dictionary Language are (n/a)
+                           (SHOWN).  Drivers and virtual memory have no
+                           meaning in Strata: remove them from the panel.
+                           Initial Macro Set and Initial Library could be
+                           made to work.  Dictionary Language belongs to
+                           Spell.
+  Quit                     works.
+
+
+4. KEYS NOT IMPLEMENTED (docs/KEYSTROKES.txt)
+---------------------------------------------
+
+  Ctrl-PgUp, Ctrl-PgDn     previous, next page (needs pages)
+  Ctrl-Enter               end of line, cursor stays
+  Ctrl-Hyphen              soft hyphen: DONE (task 35), see docs/DICTIONARIES.txt
+  Alt-F1                   Compose (special characters)
+  Ctrl-G                   text indent; MESSAGE only
+  Gray + in a marked area  anchor at the opposite corner
+  a letter in a marked area  extend to the next occurrence
+  Ctrl-W                   switch windows
+  Ctrl-M                   virtual memory status panel
+  Ctrl-Z                   zoom a graphic; MESSAGE only (Preview shows it)
+  Ctrl-C, Ctrl-T           spell and thesaurus; MESSAGE only; RUNNING
+  Ctrl-\ and two letters   marker by its letters (the original's
+                           accelerators); Alt-F12 and Ctrl-F12 work
+  Shift-Del                delete section and subsections; not checked
+
+
+5. MARKERS (docs/MARKERS.txt)
+-----------------------------
+
+Removed on purpose: Worksheet, Markup, Escape Codes, Symbol, Screen.
+
+All the others can be inserted, edited and saved.  Their effect when a page
+is made (strprint, Preview) is done for: Keycap, Picture, Equation, Page
+Break, Column Break, Orientation, Whitespace, Font, Cross-reference, Counter,
+Keep and the notes.  Keep is never printed and keeps the blocks between a
+Start and an End on one page (PRINT-LATEX.txt, MARKERS.txt); what the
+original does and Strata does not copy: a part with a Page Break, Column
+Break or Orientation marker, or in the text of the title page, is not
+kept; whether a Start without an End stops at the end of a section is not
+known (Strata keeps to the end of the document); the Table of Contents,
+the Index and Repaginate do not use Keep.  It is still to be written, or to
+be checked, for:
+
+  Line, Merge, If, Else, Endif, Figure, Table, Index,
+  Page Number and Section (headers and footers cannot be edited), Printer,
+  and the values Date, Time, Filedate, Filetime, Filename, Pathname,
+  Revision, Author and Description in printed output.
+
+Merge and If/Else/Endif: what the original's expression language and merge
+files are is not known (OPEN-QUESTIONS.txt).
+
+
+6. OTHER GAPS
+-------------
+
+  Not menu entries, but visible to the user:
+  - Search panel: direction, match case, attribute and whole word options.
+  - Colour: the screen has configurable colours (Setup, Screen Colors); the
+    default is yellow on blue.  The original colours of headlines and
+    borders are not drawn as such.
+  - Borders: the Line Weight (Borders) of Global Options is dimmed and not
+    used; the lines have a fixed weight (a thin line, two thin lines, a thick
+    line).  The screen draws wide as bold double.
+  - Hyphenation settings of the print panels (R3 of docs/DICTIONARIES.txt, later).
+    The soft hyphen and the personal hyphenation list are done (task 35).
+  - A text file save mode (the .DOC format is binary).
+  - A safe save: write to a temporary file, then rename; Autosave saves
+    under the name of the document.
+  - Mouse (studied in docs/MOUSE.txt; neither version takes mouse input).
+    The X11 window can be resized in height (the width is fixed).
+  - Guarding the PNG reader against hostile images (limits on pixels and
+    inflated size, tests under the address sanitizer).
+  - The Picture panel reported not to take input in some fields was fixed;
+    the smoke test that types into every field of the marker panels is
+    still to be written.
+
+
+7. SUGGESTED ORDER
+------------------
+
+  1. (Done) Preview uses the LaTeX preview.
+  2. Merge Spell and Thesaurus (running).
+  3. (Done: Print Draft and Final make a PDF and use a CUPS queue.)
+  4. Headers and footers (Page, Section, Page Number markers).
+  5. Line, and the table of contents, figures, tables, index (Keep
+     is done).
+  6. Remove the (n/a) driver fields from str Setup; make Initial Macro Set
+     and Initial Library work.
+  7. Search options, Options panel dimmed fields, Winding Column Layout.
+  8. Compare Document Versions, if wanted.

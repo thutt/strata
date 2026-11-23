@@ -1,0 +1,25 @@
+
+----------------------------- Date and Time Formats ----------------------------
+
+To change the global Date or Time marker format, select Menu (F10) Global 
+Marker, move the cursor to the Date Format or Time Format prompt, press Space 
+Bar, and type the desired format using the following symbols:
+
+Date Formats                         Time Formats
+---------------------------------    -------------------------------------------
+d      one- or two-digit day         h     one- or two-digit hour (12 hour form)
+dd     two-digit day                 hh    two-digit hour (12 hour form)
+day    day spelled out               h24   one- or two-digit hour (24 hour form)
+m      one- or two-digit month       hh24  two-digit hour (24 hour form)
+mm     two-digit month               m     one- or two-digit minute
+mon    three-letter month abbrev.    mm    two-digit minute
+month  month spelled out             s     one- or two-digit second
+yy     two-digit year                ss    two-digit second
+year   four-digit year               am/pm prints appropriate indicator
+
+--------------------------------------------------------------------------------
+The Date and Time markers insert the current date and time in a document using 
+the format specified on the Marker Format panel.  To override the global format,
+use the symbols above in individual Date and Time markers.
+--------------------------------------------------------------------------------
+    Global Marker       Markers       Keyboard Summary       Help Index

@@ -1,0 +1,25 @@
+
+---------------------------------- Counter Tags --------------------------------
+
+Counter tags define the format (printed appearance) of a counter.  Counter tags
+are defined on the Counter Format panel from the Menu (F10) Global Marker 
+Format panel.
+
+Counter tags can include a combination of text and any of the following 
+backslash commands that set the numbering style.
+
+
+Backslash Command     Prints
+----------------------------------------------------------------------------
+\1\                   Arabic numbers, for example 1, 2, 3
+\a\ or \A\            Lowercase or uppercase letters, for example A, B, C
+\i\ or \I\            Lowercase or uppercase roman numerals, for example i, ii
+
+
+For example, you could define a counter as \1\) which would print as 1),
+2), 3), 4), and so on.  Or you could define a counter as Table \I\ which would
+print as Table I, Table II, Table III, Table IV, and so on.
+
+               
+--------------------------------------------------------------------------------
+   Global Marker       Counter Marker       Keyboard Summary       Help Index

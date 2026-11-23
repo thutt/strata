@@ -1,0 +1,359 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+THE FILE MENU
+=============
+THE GLOBAL MENU
+===============
+
+F12, Global.  The entries are Format, Page, Typeface, Marker, Options and
+Named, each with the hint line shown in the original.  Every panel below
+was looked at in the original program (Manuscript 2.1 running under
+DOSBox-X).
+
+Done
+----
+Options.  One panel with thirteen settings:
+
+  Expanded Status Line?                 acted on
+  Display On-Screen Help?               acted on
+  Block Indicators: Solid Lines         shown, dimmed
+  Display Tab & End-of-Line Characters? acted on
+  Display Dots for Spaces?              acted on: a dot for every space
+  Display Even Justification?           shown, dimmed
+  Display +/- with Section Tags?        shown, dimmed
+  Units: Inches (in)                    shown, dimmed
+  Maintain Backup File (.DOC only)?     acted on: a .DOC file that is
+                                        saved keeps its old version as .BAK
+  Autosave: Off, Save Interval (Minutes): 15
+                                        shown, dimmed
+  Line Weight (Borders): 100 %, (Other): 100 %
+                                        shown, dimmed
+
+Strata used to have a "Display Ruler" option here; the original has none
+(its ruler is always shown), so it was taken out.  The settings are kept
+while the program runs; the original keeps them in its setup files.
+
+Typeface.  The "Typeface List" has twenty fonts, each with a name, a typeface
+and a size.  The names can be typed; the original's default names are
+"Intro head", "Text", "Header/Footer", "Level 1 head", "Level 2 head" and
+"Font 6" to "Font 20".  A name that was changed is saved as a record
+
+    DF6NZed<NUL>
+
+placed among the header's DF records in the order of their numbers (after
+DP, before the Y records).  A font that gets its default name again has
+no record.  The typeface and size come from the printer's font list; the
+only printer here is the generic one, with one typeface at 10 pitch, so
+those columns are not offered.
+
+Format.  "Global section settings".  The original stacks six panels (Global
+Format and Level 1 to Level 5 Format), each a screen with HEADLINE, TEXT and
+SPACING parts; PgUp shows the next one.  Strata shows each scope as two
+panels, because one column of 24 fields does not fit on a screen of 24
+rows: the rulers (Attributes, Justification, Indent, Font and the tab stops
+of the headline and of the text) and the spacing.  PgUp and PgDn go through
+the twelve panels; Ins applies all of them and Esc applies none.
+
+A level panel shows in brackets what it takes from the global settings
+([Bold], [1.50]); only a field that is changed gets a record of its own, and
+a level field that is emptied (or set back to its bracket) goes back to the
+global value.  The records were found by changing every field in the
+original and reading the saved header:
+
+  Global panel                       record     values
+  Headline / Text Attributes         FHA FTA    0 normal, 1 bold, 4 italic,
+                                                16 underscore words
+  Justification                      FHJ FTJ    0 left, 1 right, 2 center,
+                                                3 even (a new document of
+                                                Strata starts with FTJ3;
+                                                a file without the record
+                                                still means left)
+  Indent                             FHI FTI    0 none, 1 first,
+                                                2 all but first, 3 all
+  Font                               FHF FTF    font number 1 to 20
+  Ruler (tab stops)                  FHT FTT    list such as 5 (FTT5)
+  Line, Headline, Block, Subsection, Peer Section
+                                     FSL FSH FST FSC FSS
+                                                hundredths: FSL225 = 2.25
+  Indent per Level                   FI         number
+  Page Break Level                   FLP        number
+  Page Number Level                  FLG        number
+  Auto Numbering?                    FLA        0 for No (Yes: no record)
+  to Level                           FLN        number (99: no record)
+  First Block Type                   FB         2 Joined (Headline: none)
+  Print                              FP         1 Only Headlines
+                                                (Headlines and Text: none)
+  Ruler                              FU         2 for 10/inch (Relative:
+                                                none)
+  Winding Columns                    FWN        number (1: no record)
+  Gutter Size (Winding Column Layout) FWG       thousandths of an inch (250:
+                                                no record)
+  Vertical Rules (the same panel)    FWR        1 single, 2 double, 3 wide
+                                                (none: no record)
+
+A level panel uses the same codes behind the level digit (F1HA4, F2SS300),
+with Indent to Next Level (F<n>I), First Block Type, Section Tag
+(F<n>G, such as F1G\#\ ) and Winding Columns.  The records are written
+among the others in the order of the original: the global ones, then level
+1 to 5, each group by its list of codes (msdoc.c, doc_fmt_set).  A global
+setting that has its default value has no record.
+
+Acted on: the attributes, justification, indent and tab stops of the
+headline and text, Auto Numbering, Auto Numbering to Level and the Section
+Tag (screen and print), the five spacings (a Final print only; a block can
+set its own Line and Block Spacing, BSL and BSB, in the block or in its named
+format), Page Break Level (print: a page starts at each headline of that
+level and above, also in a Draft; the first block of a document or of a
+part and the inside of a Keep box are left out), Indent per Level (screen
+only) and the fonts.  Stored and shown but not used when the text is drawn
+or printed (checked by printing a document with each record set: the PDF is
+the same): nothing now.  Inferred, not seen:
+12/inch and 15/inch as FU3 and FU4, Only Text
+as FP2, the level codes B and WN.  The Winding Column Layout panel (F2 on
+Winding Columns) has Number of Columns, Gutter Size (the new record FWG, F<n>WG
+and, for a block, none) and Vertical Rules (FWR, F<n>WR); the codes are
+Strata's own, the original's WA and WB are not understood and are kept as they
+are.  Not done: Spacing for Bottom Alignment.
+
+Page.  "Page layout settings": the Global Page Layout and, behind it, the
+Title, Table of Contents, First, Even, Odd and Index Page Layouts, one panel
+each (seven in all, PgUp and PgDn as on the Format panels).  Each has Left,
+Right, Top and Bottom Margin (1.000 in), a Header and a Footer (shown as
+one line of text each, see below), the Indent (0.000 in) and Whitespace
+(0.500 in) of both, the Page Number Tag (\1\) and the Paper Bin.  The
+Global panel also has the Paper Size, the Title panel the Vertical
+Centering (33 %).  A layout panel shows what it takes from the global one
+in brackets and writes a record only for a field that was changed.  The
+records were found by changing every field in the original:
+
+  Left, Right, Top, Bottom Margin    PML PMR PMT PMB   thousandths: 1250
+  Header, Footer Indent              PHI PFI           thousandths
+  Header, Footer Whitespace          PHW PFW           thousandths
+  Page Number Tag                    PP<text>NUL       such as \i\
+  Paper Size                         DP<n>,<w>,<h>     n is the position in
+                                                       the list, Letter 0,
+                                                       Legal 1: DP1,8500,14000
+  Title Page Layout                  P1ML P1MR ...     the same codes behind
+                                                       P1; P2 Table of
+                                                       Contents, P3 First,
+                                                       P4 Even, P5 Odd, P6
+                                                       Index (P3 to P6
+                                                       inferred from the
+                                                       records of samples)
+  Vertical Centering (Title)         P1C33
+
+The original writes them after MR and before PP (global), and the layouts
+after PD and PT, in the order of their numbers (msdoc.c, doc_opt_set).  The
+Paper Bin allows only 1 for the generic printer ("Number out of acceptable
+range (use 1 - 1)") and is shown, not edited.  The list of papers is
+Letter, Legal, Fanfold A4, Half Letter, Computer Paper, Tabloid, Newspaper,
+A3, A4, A5, B4, B5, Monarch, Business, DL and C5 Envelope and Custom; the
+sizes other than Letter and Legal are worked out from the names and were
+not checked in the original.  The settings are stored and shown; they are
+used when the document is printed (margins and paper of the Global layout, the
+header and the footer of every layout, and their Indent: the left end moves in
+from the left margin, a layout without its own value takes the global one); the
+margins of the other layouts are not used yet.
+
+Header and Footer (Strata).  One line: the left, centre and right parts
+separated by |, with \page\ (Page Number marker) and \section\ (Section
+marker).  Stored as P<n>HB1 / P<n>FB1 (PHB, PFB for the Global layout) and a
+block of three columns (CW26 CFJ0, CW26 CFJ2, CFJ1), as the original writes
+them; a layout with HB0 has none; a layout without the record takes the Global
+one.  A header with other content is shown and cannot be edited.
+
+Marker.  "Marker settings": the panel Marker Format, with the Marker
+Display Modes behind it.  Strata shows the Marker Format panel first and
+PgUp and PgDn go through the three columns of the display modes (the
+original has them on one screen).  Ins applies all of them, Esc none.
+
+  Display Hidden Markers?               OH1 for Yes
+  Primary Note Type                     NT2 Levelnotes (Footnotes: none;
+                                        Endnotes is NT3, inferred)
+  Cross-reference Format                OC2 Headline, OC3 Both (Tag: none)
+  Date Format                           PD<text>NUL, after PP; default
+                                        Month D, Year
+  Time Format                           PT<text>NUL; default H:MM am/pm
+  Keycap Format                         OKF, OKB, OKS, OKT, see below
+  Marker Display Modes                  OM<type>,<mode>, see below
+
+The original writes NT after the DF records, OC, OH and the OM records after
+YI, and OM in the order of the marker numbers (msdoc.c, doc_opt_set). The date
+and time formats are the ones that a new Date or Time marker uses when it has
+no format of its own.  The marker types are those in DOC-FORMAT.txt.  The
+counters have a panel of their own, Counter Format, 11 pages of the PgUp and
+PgDn ring (PgDn from Marker Format shows the first): 99 counters, nine to a
+page, with a description and a tag each.  The description is a comment for the
+reader and is never printed; it is also shown in the label of a Counter
+marker, e.g. [C1, list of books]. The records are OT<n>N and OT<n>T (C1
+Numeric \1\., C2 Alphabetic \A\.).  The three markers that are
+images (Equation, Picture and Keycap) have one more display mode in Marker
+Display Modes: Inline (OM<type>,5, and the default of the three), which shows
+the image that LaTeX makes (equations need latex and dvipng, pictures and
+keycaps pdflatex and pdftoppm) in the X11 version.  Short and Long show the
+marker (its label), Hidden hides it, Diamond is the marker character and Name
+the short name; none of these shows the image.  Where the image is not made
+yet, or cannot be (the terminal version, no LaTeX, a bad file), Inline shows
+the label, and a keycap as a box of cells.  The mode is a change of the
+document.
+
+The Note Format (Footnote, Levelnote and Endnote Format panels, records in
+NOTE-FORMAT.txt) follow the counters in the ring (PgDn after the last page of
+Counter Format shows the Footnote Format).  The Keycap Format follows the
+Endnote Format (PgDn after the Endnote Format) and is followed by the three
+Marker Display Modes pages.  The whole ring, going with PgDn from Marker
+Format: Counter Format (11 pages), Footnote, Levelnote and Endnote Format,
+Keycap Format, Marker Display Modes 3, 2 and 1, Marker Format again.  The
+Screen Capture Format of the original is removed with the Screen marker
+(REMOVAL.txt).
+
+Keycap Format.  The Marker Format panel has the information row "Keycap
+Format: PgDn after the Note formats"; the panel is of the settings that a
+keycap marker without a value of its own takes (MARKERS.txt, Keycap):
+
+  Foreground     0.0 to 100.0, default 0.0          OKF<tenths>
+  Background     0.0 to 100.0, default 100.0        OKB<tenths>
+  Scale          0.100 to 10.000, default 1.000     OKS<thousandths>
+  Font           a font number, 1 to 20, default    OKT<font number>
+                 2 (Text); the list shows the
+                 role or number and the Name of
+                 the entry of the font list
+
+The records are written after OT, in the order OKF, OKB, OKS, OKT, and left
+out for the default value (OKF200 OKB800 OKS1500 OKT7 is 20.0, 80.0, 1.500
+and Font 7).  The order among OC, OH, OM and OT in the original is not known.
+A value outside the range is refused with a message.  Ins applies all the
+panels of the Marker Format, Esc none.
+
+Counter, Comment and Cross-reference (rules: WORKLIST.txt).  Counter and
+Cross-reference are drawn as their text on the screen in the Long mode,
+which is now their default mode (Counter was Short, Cross-reference
+Diamond); the other modes show the label as before.  A comment prints in a
+draft print as "[Comment by NAME, TIME: TEXT]" and is left out of a final
+print and of the preview.
+
+  Marker Display Modes shows how every marker is drawn, one of Diamond,
+  Name, Short Form, Long Form and Hidden, with "Global display mode" to set
+  all of them.  A mode that is not the default is saved as a header record
+
+    OM<marker type>,<mode>      OM5,4: Author hidden; OM17,3: Counter long
+
+  with the modes numbered Diamond 0, Name 1, Short Form 2, Long Form 3 and
+  Hidden 4 (0 to 2 inferred from the order of the list).  The defaults are:
+  Short for Comment, Figure, Font, Index, Note and Table (they were
+  Diamond until 2026-11-19), and for Column Break, Line, Orientation,
+  Page Break and Whitespace; Long for Cross-reference; Name for Else,
+  Endif, Page Number and Section (the original also had Hidden for Markup
+  and Name for Escape Codes, which are removed);
+  Inline (the image) for Equation, Keycap and Picture;
+  Long for all the others.  What each marker looks like in each mode,
+  from MK2.DOC:
+
+    Diamond   a diamond for every marker
+    Name      [AUTHOR] [CB] [COM] [C] [DATE] [DESC] [ELSE] [ENDIF] [EQN]
+              [FIG] [FDATE] [FNAME] [FTIME] [FONT] [IF] [INDEX] [KEEP]
+              [KEY] [LN] [MARK] [MERGE] [NOTE] [ORIENTATION] [PB] [PATH]
+              [PRINTER] [REV] [TIME]
+    Short     [AUTHOR] [CB] [COM ""] [C1] [date] [DESC] [ELSE] [ENDIF]
+              [EQN ] [FIG "FIG1"] [date] [file] [time] [FONT]
+              [IF "IFCOND"] [INDEX IDXMAIN] [Start Keep (Fixed)]
+              [Key: ENTER] [LN Length:RM] [MKUP] [MERGE "MRG.DAT"] [NOTE]
+              [ORIENTATION] [PB] [path] [printer] [revision] [time]
+    Long      [AUTHOR] [COLUMN BREAK] [COMMENT ""] [COUNTER1] [date]
+              [DESCRIPTION] [ELSE] [ENDIF] [EQUATION ] [FIGURE "FIG1"]
+              [date] [file] [time] [FONT] [IF "IFCOND"] [INDEX IDXMAIN]
+              [Start Keep (Fixed)] [Key: ENTER] [LINE Length:RM]
+              [MARKUP "MKUP"] [MERGE "MRG.DAT", Delete:Yes] [NOTE ""]
+    Hidden    nothing
+
+What the display modes are (note of the project owner's question).  Every
+marker type has a display mode that says how markers of that type are shown
+in the text: as a diamond, by name, in the short form, in the long form, or
+not at all (hidden).  Global, Marker, Marker Display Modes lists the types
+with their modes, and "Global display mode" sets all of them at once.  The
+help of the original (topic 057, Markers) says the panel changes "the way
+markers appear on screen and are formatted when printed": the modes are
+therefore also meant for print.  Strata so far only draws them on screen;
+what the original prints for each mode (for example whether a hidden marker
+is left out of the print, and whether the long form is what is printed) is
+not known and is to be settled when printing is built.
+
+Display modes are acted on: Diamond draws the marker as a diamond, Hidden
+draws nothing (unless Display Hidden Markers is Yes, which draws it in the
+short form: inferred), and Name, Short and Long draw the labels above.
+"Global display mode" sets every marker to one mode at once; n/a leaves
+them as they are.  Markers whose Name, Short or Long label was not seen
+in the original (Cross-reference, Include, Picture, Table,
+Page Number, Section) keep the label they
+have in their default mode, with the name of the marker in the Name mode.
+
+Not done (dimmed), with what the original shows
+-----------------------------------------------
+Named.  "Edit, Delete named block format settings": a menu of Edit ("Edit
+a named block format") and Delete.  Edit opens the panel Named Block Format:
+"Retrieve Named Block:" and "Save as:" names, and then the fields of the
+F6, Block panel, all empty ([]) because a named format only sets what it
+names.  Strata asks which format to retrieve first, from a list with
+"(new)" at the top, and then shows the panel with "Save as" and the fields;
+Delete asks which format and then whether to delete it.  The fields and the
+B records of the definition, found by setting them in the original:
+
+  Ruler (tab stops)                  BFT<list>     such as BFT24,49
+  Attributes                         BFA           as on the Format panels
+  Justification                      BFJ           0 left ... 3 even
+  Indent                             BFI           0 none ... 3 all
+  Font                               BFF           font number
+  Block Indent (Left), (Right)       BL BR         whole numbers
+  Keep Block on One Page?            BN            2 for Yes (No is 1,
+                                                   inferred)
+  Block Spacing, Line Spacing        BSB BSL       hundredths: BSB175
+  Ruler (type)                       BU            2 for 10/inch
+  Vertical Centering                 BV            percent
+  Winding Columns                    BWN           number
+
+The header holds the definitions after the F records, in alphabetical
+order, as
+
+    FN<name>NUL  records  FN<name>NUL  records  FN NUL
+
+where every FN record ends the definition before it and the last, which
+has no name, ends the list (msdoc.c, doc_named_set).  Blocks use a format
+with the record BG<name>, which the layout already resolves.  A format that
+is saved under a name that is already there replaces it; with a new name
+the format is copied.  The Winding Column Layout panel opens from Winding
+Columns of this panel too (F2 or Keypad +): Number of Columns, Gutter Size
+and Vertical Rules, stored as BWN, BWG (thousandths of an inch) and BWR (0
+none, 1 single, 2 double, 3 wide), the last two Strata's own records; an empty
+gutter and [] write no record and leave the gutter and the rule to the level
+and the document.  The Printer takes a block's number, gutter and rule from
+the block, else from its named format, else from its level and the document.
+Not done: choosing a named format for a block (the F6 panels).
+
+Autosave (str, Setup)
+---------------------
+
+Autosave is Yes or No (Yes by default) and the Autosave Interval is 1 to
+86400 seconds (120 by default).  Both are set in str, Setup, and kept for the
+user in ~/.strata/config; stred does not show them on F12, Global, Options,
+because the same value would then be printed in two places (the command line
+flags --autosave and --autosave-seconds of stred override them for one run).
+When Autosave is Yes, a document that has unsaved changes is saved under its
+name once the interval has passed since the first unsaved change.  It never
+asks: it just saves, as a Save does, and makes the backup file if Maintain
+Backup File (.DOC only) is Yes.  Strata checks once a second while it waits
+for a key.  A document with no name is not saved.  The original (probed in
+DOSBox-X) counts the time in the same way, but has three values (Off, With
+Prompt, On) and an interval in minutes, and keeps them in MS.VAL; Strata
+follows the user's decision instead.

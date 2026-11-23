@@ -1,0 +1,62 @@
+# Strata is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Strata.  If not, see <https://www.gnu.org/licenses/>.
+# Copyright (c) 2026 Logic Magicians Software
+
+# Strata C style.  Apply with clang-format; see docs/STYLE.txt.
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 80
+ContinuationIndentWidth: 4
+
+# Return type (with any '*') on its own line; function name on the next.
+BreakAfterReturnType: All
+PointerAlignment: Right
+
+# Parameters: fill to column 80, then continue aligned under the first.
+AlignAfterOpenBracket: Align
+BinPackParameters: true
+BinPackArguments: true
+
+# '&&' and '||' end a line; they never begin one.
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: false
+
+# One statement per line, braces always.
+InsertBraces: true
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortEnumsOnASingleLine: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeElse: false
+  SplitEmptyFunction: false
+
+IndentCaseLabels: true
+SortIncludes: Never
+ReflowComments: true
+MaxEmptyLinesToKeep: 2
+SpaceAfterCStyleCast: true
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+AlignTrailingComments: false

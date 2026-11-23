@@ -1,0 +1,25 @@
+
+------------------------------ Options (continued) -----------------------------
+
+Block Indicators:        The Block Indicators are the separators between blocks
+                         and sections on the edit screen. You can select one of
+                         three options: None (no indicators displayed), Solid
+                         Lines (unbroken solid lines between blocks), and Ruler
+                         Lines (each block displays its own ruler).
+                 
+Units:                   The Units setting is the unit of measurement displayed
+                         for settings such as margins, indents, and paper size.
+                         You can select one of four options: inches (in), 
+                         centimeters (cm), millimeters (mm), and points (pt).
+
+Maintain Backup File     Select Yes to have a backup file automatically 
+(.DOC only)?             created each time you save a document. Select No
+                         if you do not want a backup file.
+
+Autosave:                Select Yes to automatically save files you're
+                         editing to disk at a specific interval.
+
+Save Interval (Minutes): If you've set Autosave to Yes, specify the number of
+                         minutes between automatic saves. 
+--------------------------------------------------------------------------------
+       Options       Status Line       Keyboard Summary       Help Index

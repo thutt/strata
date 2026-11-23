@@ -1,0 +1,25 @@
+------------------------------------ Markers -----------------------------------
+Use the Worksheet marker to import data from a 1-2-3 or Symphony worksheet. 
+
+Window:       Defines the window to use when importing Symphony worksheets.Press
+              Gray + to display a list of windows in the current worksheet.
+
+Range:        Defines the data to import (either a pre-defined named range or
+              coordinates such as A1..D9 or A:A1..C:D9 for a three-dimensional
+              range). Gray + displays a list of ranges in the current worksheet.
+
+When to       Specifies when to import data. Now imports data and updates the
+Import Data:  document file when the marker is defined. On Command imports data
+              and updates the document file when you use the Menu (F10) Tools
+              Worksheet command. During Preview or Final Print imports data
+              during print or preview, but does not update the document file.
+              (If you have selected During Print or Preview, but want to update
+              the data in the document, choose On Command and use the Menu 
+              Tools Worksheet command to update the data.)
+
+Table Layout: Specifies whether to create a new table or to import the data into
+              an existing table. The Worksheet marker must be in a single column
+              block when creating a new table or in the first column of a block
+              when updating a table already created by the Worksheet marker. 
+--------------------------------------------------------------------------------
+      Markers          Tools          Keyboard Summary          Help Index

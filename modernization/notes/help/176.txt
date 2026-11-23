@@ -1,0 +1,25 @@
+
+--------------------------------- Window Switch --------------------------------
+
+Use Menu (F10) Edit Window Switch to move between two windows.
+
+Accelerator:      Ctrl W
+
+  # Before Window Switch                    # After Window Switch       
+    (cursor in top window).                   (cursor in bottom window).
+
+    ..........................                ..........................
+    .^^^^^^^^^^^^^^^^^^^^^^^^^                .^^^^^^^^^^^^^^^^^^^^^^^^^
+    . 3.4 Management Position                 . 3.4 Management Position 
+    .                                         .
+    .     The#initial reaction                .     The initial reaction
+    .     merger proposal was                 .     merger proposal was
+    ._________________________                ._________________________
+    . Schedule of Events in th                . Schedule of Events in th
+    .   Permissions and licens                .   Permissions#and licen
+    .     On-site drilling lic                .     On-site drilling lic
+    ..........................                ..........................
+
+The cursor always returns to its last position in a window.
+--------------------------------------------------------------------------------
+       Window       Accelerators       Keyboard Summary       Help Index

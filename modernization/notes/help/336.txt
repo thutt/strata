@@ -1,0 +1,25 @@
+
+------------------------------------ Library -----------------------------------
+
+Libraries are named, saved cut buffers containing text and format settings which
+you can paste into a document at any time.  Use the Menu (F10) Tools Library 
+commands to create or change individual library entries or manage library files.
+
+         Create new or edit existing        Save a library (a set of library
+         library entries.                   entries) to a file on disk.
+              |                                      |
+              +-------+                      +-------+
+              +----------------------------------------------------+
+              |      Edit      Delete      Save      Retrieve      |
+              +----------------------------------------------------+
+                                 |                       |
+                         +-------+                       |
+                 Delete an entry from      Retrieve an existing library 
+                 the current library.      from disk into memory.
+
+
+Use Lib Copy (Ctrl F3), Lib Cut (Ctrl F4), and Lib Paste (Ctrl F5) to create 
+and paste library entries in a document.
+--------------------------------------------------------------------------------
+  Edit     Delete     Save     Retrieve     Lib Copy     Lib Cut     Lib Paste
+  Library Overview         Tools         Keyboard Summary        Help Index

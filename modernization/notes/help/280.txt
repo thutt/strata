@@ -1,0 +1,25 @@
+
+----------------------------- Dictionary Language ------------------------------
+
+
+
+
+Dictionary Language:  Specify the language to be used by the spell checker and
+                      for hyphenation.  The dictionary language for which
+                      Manuscript is initially configured is the dictionary 
+                      supplied on your original Manuscript disks.  Dictionaries
+                      for additional languages are available from Lotus.
+
+
+Decimal Separator:    Specify the symbol to use as the decimal separator in 
+                      numbers on Manuscript's panels.  For example, a two inch
+                      left page margin would be entered and displayed as 2,0 
+                      on the Global Page Layout panel if you have specified a
+                      comma decimal separator.  The Decimal Separator is also 
+                      used in the document revision number maintained by 
+                      Manuscript.
+
+
+
+--------------------------------------------------------------------------------
+            Setup               Keyboard Summary                Help Index

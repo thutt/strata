@@ -1,0 +1,25 @@
+
+------------------------------- Marker Display Modes ---------------------------
+
+Use the Marker Display Modes panel to set the display style for markers on the 
+edit screen.
+
+ +----------------------------- Marker Display Modes -------------------------+
+ | Global display mode: n/a                                                   |
+ |                                                                            |
+ |          Author: Long          Filename: Long          Page Break: Short   |
+ |    Column Break: Short         Filetime: Long         Page Number: Name    |
+ |         Comment: Diamond           Font: Diamond         Pathname: Long    |
+ |         Counter: Short               If: Long             Picture: Short   |
+ ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+---Procedure--------------------------------------------------------------------
+
+ Move the cursor to the marker to change.
+
+ Press Space Bar to display the options, highlight your choice, and press
+  Enter. Or type the first letter of the option (for example, type N for Name).
+
+ Press Enter to accept your selection and press Ins to accept the panel.
+--------------------------------------------------------------------------------
+Global Marker     Display Modes Description     Keyboard Summary     Help Index

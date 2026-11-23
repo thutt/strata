@@ -1,0 +1,25 @@
+
+------------------------------- Hyphenation Settings ---------------------------
+
+The Hyphenation Settings panel specifies how a document is hyphenated during 
+final print, preview, or document compare.
+
+
+ +----------------------------- Hyphenation Settings -------------------------+
+ |                                                                            |
+ |  Hyphenation:                                                              |
+ |                                                                            |
+ |  Custom Hyphenation Dictionary:                                            |
+ +----------------------------------------------------------------------------+
+ |  Space Widths                                                              |
+ |                                                                            |
+ |  Maximum Consecutive Hyphenated Lines:                                     |
+ |  Minimum Consecutive Unhyphenated Lines:                                   |
+ |                                                                            |
+ |  Automatic Hyphenation Rules                                               |
+ |                                                                            |
+ +----------------------- Press Ins to Use Displayed Settings ----------------+
+
+--------------------------------------------------------------------------------
+         Final Print              Preview              Document Compare
+              Keyboard Summary                  Help Index

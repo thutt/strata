@@ -1,0 +1,25 @@
+
+------------------------------ Vertical Centering ------------------------------
+
+Use Vertical Centering to center text vertically across columns within a block 
+or on a page.
+
+
+# The Vertical Centering prompt on the individual Page Layout panels affects the
+  centering of an entire page of text between the top and bottom page margins.
+
+# The Vertical Centering prompt on the Current Block and Column Format panels
+  affects the centering of text within the current block. To center all columns
+  in a block use the Vertical Centering prompt on the Current Block Format 
+  panel; to center individual columns within a block use the Current Column 
+  Format panel.
+
+# The Vertical Centering values range from 0 to 100. A value of 0 leaves all the
+  empty space below the text; a value of 50 divides the empty space evenly above
+  and below the text; a value of 100 leaves all the empty space above the text.
+
+# Vertical centering does not affect the top and bottom margins.
+
+--------------------------------------------------------------------------------
+   Page Layout Panels       Current Block Format        Current Column Format
+                 Keyboard Summary               Help Index

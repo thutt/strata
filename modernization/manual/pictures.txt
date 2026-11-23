@@ -1,0 +1,213 @@
+# The pictures of the manual: one line for every file of doc/pictures.
+# The fields: the name of the picture, what makes it (scene: a scene of
+# shots.py or of manual/scenes/*.py; script: a page that the Printer prints,
+# made by a script of manual/scenes), the program that the scene starts (or
+# the Printer), the document that it opens (a document made for the manual,
+# never one of the original product; "-" for none), the date of the last
+# retake, and how to make it again.
+# A scene is made again with "build.sh pics NAME" (it writes into doc/pictures
+# of the source tree: the pictures are sources) and checked with "build.sh
+# pics-check".  After pictures are retaken run
+# "python3 -I manual/checkpictable.py --write" to bring this table up to date;
+# "build.sh check-pictable" (part of "build.sh check") fails when a picture
+# and a line do not belong together.
+appchar-print | script | strprint | chars.doc | 2026-11-20 | manual/scenes/appchar-pdf.sh PRINTER manual/samples/chars.doc OUT.png
+appchar-screen | scene | stred | chars.doc | 2026-11-19 | build.sh pics appchar-screen
+dviview-page | scene | stred | showcase.doc | 2026-11-22 | build.sh pics dviview-page
+edit-a-append | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-append
+edit-a-blocks | scene | stred | new2.doc | 2026-11-17 | build.sh pics edit-a-blocks
+edit-a-copy-menu | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-copy-menu
+edit-a-flat | scene | stred | new1.doc | 2026-11-16 | build.sh pics edit-a-flat
+edit-a-fold-1 | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-a-fold-1
+edit-a-fold-minus | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-a-fold-minus
+edit-a-goto-done | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-a-goto-done
+edit-a-goto-menu | scene | stred | report.doc | 2026-11-20 | build.sh pics edit-a-goto-menu
+edit-a-goto-panel | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-goto-panel
+edit-a-highlight-block | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-highlight-block
+edit-a-highlight | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-highlight
+edit-a-join-menu | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-join-menu
+edit-a-menubar-tools | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-menubar-tools
+edit-a-menubar | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-a-menubar
+edit-a-screen | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-screen
+edit-a-title | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-a-title
+edit-b-border-panel | scene | stred | border.doc | 2026-11-19 | build.sh pics edit-b-border-panel
+edit-b-count | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-count
+edit-b-marker-date | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-marker-date
+edit-b-marker-grid | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-marker-grid
+edit-b-move-done | scene | stred | report.doc | unknown | build.sh pics edit-b-move-done
+edit-b-move-section | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-move-section
+edit-b-options | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-options
+edit-b-outline-2 | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-outline-2
+edit-b-overtype | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-overtype
+edit-b-quit | scene | stred | report.doc | 2026-11-20 | build.sh pics edit-b-quit
+edit-b-replace | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-replace
+edit-b-section-edit | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-section-edit
+edit-b-sort-after | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-b-sort-after
+edit-b-sort-before | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-b-sort-before
+edit-b-split-section | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-b-split-section
+edit-b-split | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-b-split
+edit-b-undo | scene | stred | report.doc | 2026-11-16 | build.sh pics edit-b-undo
+edit-b-window-menu | scene | stred | report.doc | unknown | build.sh pics edit-b-window-menu
+edit-b-window-open | scene | stred | report.doc | unknown | build.sh pics edit-b-window-open
+edit-c-border-example | scene | stred | table.doc | 2026-11-19 | build.sh pics edit-c-border-example
+edit-c-border-highlight | scene | stred | table.doc | 2026-11-19 | build.sh pics edit-c-border-highlight
+edit-c-border-table | scene | stred | table.doc | 2026-11-19 | build.sh pics edit-c-border-table
+edit-c-case-menu | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-c-case-menu
+edit-c-case-unit | scene | stred | report.doc | 2026-11-17 | build.sh pics edit-c-case-unit
+edit-c-math-result | scene | stred | numbers.doc | 2026-11-17 | build.sh pics edit-c-math-result
+edit-c-math-unit | scene | stred | numbers.doc | 2026-11-17 | build.sh pics edit-c-math-unit
+edit-c-search-panel | scene | stred | print_errors.doc | 2026-11-22 | build.sh pics edit-c-search-panel
+edit-envelope-sample | scene | stred | sample-envelope-de-din5008-dl.doc | 2026-11-20 | build.sh pics edit-envelope-sample
+edit-story-sample | scene | stred | strata-story.doc | 2026-11-21 | build.sh pics edit-story-sample
+equations-bad | scene | stred | eqbad.doc | 2026-11-16 | build.sh pics equations-bad
+equations-cursor | scene | stred | eqdemo.doc | 2026-11-16 | build.sh pics equations-cursor
+equations-edit | scene | stred | eqdemo.doc | 2026-11-16 | build.sh pics equations-edit
+equations-grid | scene | stred | eqdemo.doc | 2026-11-17 | build.sh pics equations-grid
+equations-modes | scene | stred | eqdemo.doc | 2026-11-19 | build.sh pics equations-modes
+equations-screen | scene | stred | eqdemo.doc | 2026-11-17 | build.sh pics equations-screen
+equations-view | scene | stred | eqdemo.doc | 2026-11-16 | build.sh pics equations-view
+file-checklist-dirs | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-checklist-dirs
+file-checklist-files | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-checklist-files
+file-delete-confirm | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-delete-confirm
+file-delete | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-delete
+file-export-charset | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-export-charset
+file-export | scene | stred | memo.doc | 2026-11-22 | build.sh pics file-export
+file-import | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-import
+file-letter-screen | scene | stred | sample-letter.doc | 2026-11-20 | build.sh pics file-letter-screen
+file-new-description | scene | templates-stred.sh | memo.doc | 2026-11-21 | build.sh pics file-new-description
+file-new-labels | scene | templates-stred.sh | memo.doc | 2026-11-21 | build.sh pics file-new-labels
+file-new-list | scene | templates-stred.sh | memo.doc | 2026-11-21 | build.sh pics file-new-list
+file-new-type | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-new-type
+file-new | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-new
+file-overwrite | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-overwrite
+file-retrieve-failed | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-retrieve-failed
+file-retrieve-options | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-retrieve-options
+file-retrieve | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-retrieve
+file-save-options | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-save-options
+file-save | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-save
+format-counters | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-counters
+format-expanded-status | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-expanded-status
+format-footnote | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-footnote
+format-global-format | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-global-format
+format-global-linenum | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-global-linenum
+format-global-lists | scene | stred | memo.doc | 2026-11-20 | build.sh pics format-global-lists
+format-global-menu | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-global-menu
+format-global-spacing | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-global-spacing
+format-global-winding | scene | stred | numbers.doc | 2026-11-17 | build.sh pics format-global-winding
+format-keycap | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-keycap
+format-level1-spacing | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-level1-spacing
+format-level1 | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-level1
+format-marker-modes | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-marker-modes
+format-marker | scene | stred | memo.doc | 2026-11-21 | build.sh pics format-marker
+format-named-winding | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-named-winding
+format-named | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-named
+format-options | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-options
+format-page-global | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-page-global
+format-page-headfoot | scene | stred | headfoot.doc | 2026-11-19 | build.sh pics format-page-headfoot
+format-page-title | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-page-title
+format-section-marker | scene | stred | secmark.doc | 2026-11-18 | build.sh pics format-section-marker
+format-typeface | scene | stred | memo.doc | 2026-11-19 | build.sh pics format-typeface
+markers-all-default | scene | neutral-stred.sh | markers-all.doc | 2026-11-21 | build.sh pics markers-all-default
+markers-all-long | scene | neutral-stred.sh | markers-all.doc | 2026-11-21 | build.sh pics markers-all-long
+markers-all-name | scene | neutral-stred.sh | markers-all.doc | 2026-11-20 | build.sh pics markers-all-name
+markers-comment | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-comment
+markers-counter | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-counter
+markers-date | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-date
+markers-errors-box | scene | stred | print_errors.doc | 2026-11-20 | build.sh pics markers-errors-box
+markers-errors | scene | stred | print_errors.doc | 2026-11-20 | build.sh pics markers-errors
+markers-font | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-font
+markers-include | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-include
+markers-index | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-index
+markers-keycap | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-keycap
+markers-latex-edit | scene | stred | showcase.doc | 2026-11-16 | build.sh pics markers-latex-edit
+markers-latex-label | scene | stred | latexdemo.doc | 2026-11-21 | build.sh pics markers-latex-label
+markers-line | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-line
+markers-menu | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-menu
+markers-modes-panel | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-modes-panel
+markers-note-edit | scene | stred | showcase.doc | 2026-11-16 | build.sh pics markers-note-edit
+markers-note-type | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-note-type
+markers-picture-missing | scene | stred | picmissing.doc | 2026-11-20 | build.sh pics markers-picture-missing
+markers-picture | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-picture
+markers-whitespace | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-whitespace
+markers-xref | scene | stred | showcase.doc | 2026-11-21 | build.sh pics markers-xref
+print-border-page | script | strprint | border.doc | 2026-11-19 | manual/scenes/border-pdf.sh PRINTER border.doc OUT.png
+print-colour | script | strprint | colour.doc | 2026-11-17 | manual/scenes/colour-pdf.sh PRINTER manual/samples/colour.doc OUT.png
+print-draft-panel | scene | stred | report.doc | 2026-11-21 | build.sh pics print-draft-panel
+print-envelope-sample | script | strprint | sample-envelope-us-ca-10.doc | 2026-11-20 | manual/scenes/envelope-pdf.sh PRINTER samples/envelopes/sample-envelope-us-ca-10.doc OUT.png
+print-errlog | script | strprint | print_errors.doc | 2026-11-20 | manual/scenes/errlog-pdf.sh PRINTER tests/data/print_errors.doc OUT.png
+print-failed-message | scene | stred | print_errors.doc | 2026-11-16 | build.sh pics print-failed-message
+print-failed-page | script | strprint | print_errors.doc | 2026-11-20 | manual/scenes/failed-pdf.sh PRINTER tests/data/print_errors.doc OUT.png
+print-final-panel | scene | stred | report.doc | 2026-11-21 | build.sh pics print-final-panel
+print-headfoot-page | script | strprint | headfoot.doc | 2026-11-21 | manual/scenes/hf-pdf.sh PRINTER headfoot.doc OUT.png
+print-index-page | script | strprint | indexlist.doc | 2026-11-17 | manual/scenes/index-pdf.sh PRINTER indexlist.doc OUT.png
+print-label-sample | script | strprint | sample-label-us-5160.doc | 2026-11-21 | manual/scenes/envelope-pdf.sh PRINTER samples/labels/sample-label-us-5160.doc OUT.png
+print-letter-page | script | strprint | complaint-to-utility-us.doc | 2026-11-19 | manual/scenes/letter-pdf.sh PRINTER samples/letters/complaint-to-utility-us.doc OUT.png
+print-lists-page | script | strprint | indexlist.doc | 2026-11-17 | manual/scenes/lists-pdf.sh PRINTER indexlist.doc OUT.png
+print-menu | scene | stred | report.doc | 2026-11-18 | build.sh pics print-menu
+print-preview-doc-panel | scene | stred | report.doc | 2026-11-17 | build.sh pics print-preview-doc-panel
+print-preview-menu | scene | stred | report.doc | 2026-11-16 | build.sh pics print-preview-menu
+print-viewer-failed | scene | stred | print_errors.doc | 2026-11-20 | build.sh pics print-viewer-failed
+print-viewer-first | scene | stred | showcase.doc | 2026-11-22 | build.sh pics print-viewer-first
+spell-ctrl-c | scene | stred | spelldemo.doc | 2026-11-19 | build.sh pics spell-ctrl-c
+spell-ctrl-t | scene | stred | spelldemo.doc | 2026-11-20 | build.sh pics spell-ctrl-t
+spell-str-setup | scene | str | - | 2026-11-18 | build.sh pics spell-str-setup
+spell-thesaurus-menu | scene | stred | memo.doc | 2026-11-16 | build.sh pics spell-thesaurus-menu
+spell-tools-menu | scene | stred | memo.doc | 2026-11-16 | build.sh pics spell-tools-menu
+str-colors-palette | scene | str | - | 2026-11-18 | build.sh pics str-colors-palette
+str-colors-panel | scene | str | - | 2026-11-18 | build.sh pics str-colors-panel
+str-compare-panel | scene | str | - | 2026-11-17 | build.sh pics str-compare-panel
+str-compare-report | scene | str | - | 2026-11-17 | build.sh pics str-compare-report
+str-dict-hyphenation | scene | hyph-str.sh | - | 2026-11-18 | build.sh pics str-dict-hyphenation
+str-dict-spelling | scene | hyph-str.sh | - | 2026-11-18 | build.sh pics str-dict-spelling
+str-edit-panel | scene | str | - | 2026-11-17 | build.sh pics str-edit-panel
+str-font-panel | scene | str | - | 2026-11-16 | build.sh pics str-font-panel
+str-fonts-list | scene | str | - | 2026-11-16 | build.sh pics str-fonts-list
+str-fonts | scene | str | - | 2026-11-16 | build.sh pics str-fonts
+str-main | scene | str | - | 2026-11-17 | build.sh pics str-main
+str-menu | scene | str | - | 2026-11-17 | build.sh pics str-menu
+str-newfile-panel | scene | str | - | 2026-11-18 | build.sh pics str-newfile-panel
+str-newfile-type | scene | str | - | 2026-11-20 | build.sh pics str-newfile-type
+str-restore-box | scene | str | - | 2026-11-17 | build.sh pics str-restore-box
+str-restore-list | scene | str | - | 2026-11-20 | build.sh pics str-restore-list
+str-restore-menu | scene | str | - | 2026-11-20 | build.sh pics str-restore-menu
+str-restore-panel | scene | str | - | 2026-11-17 | build.sh pics str-restore-panel
+str-setup-advanced | scene | str | - | 2026-11-18 | build.sh pics str-setup-advanced
+str-setup-browse | scene | str | - | 2026-11-20 | build.sh pics str-setup-browse
+str-setup-error | scene | str | - | 2026-11-18 | build.sh pics str-setup-error
+str-setup-panel | scene | str | - | 2026-11-18 | build.sh pics str-setup-panel
+str-setup-printto | scene | str | - | 2026-11-18 | build.sh pics str-setup-printto
+str-setup-scrolled | scene | str | - | 2026-11-18 | build.sh pics str-setup-scrolled
+str-setup-viewer | scene | str | - | 2026-11-18 | build.sh pics str-setup-viewer
+str-setup | scene | str | - | 2026-11-18 | build.sh pics str-setup
+str-variables-panel | scene | str | - | 2026-11-17 | build.sh pics str-variables-panel
+stred-draft-panel | scene | stred | showcase.doc | 2026-11-21 | build.sh pics stred-draft-panel
+stred-file-menu | scene | stred | memo.doc | 2026-11-19 | build.sh pics stred-file-menu
+stred-format-panel | scene | stred | memo.doc | 2026-11-19 | build.sh pics stred-format-panel
+stred-global-format | scene | stred | memo.doc | 2026-11-19 | build.sh pics stred-global-format
+stred-marker-menu | scene | stred | showcase.doc | 2026-11-21 | build.sh pics stred-marker-menu
+stred-memo | scene | stred | memo.doc | 2026-11-19 | build.sh pics stred-memo
+stred-menu | scene | stred | memo.doc | 2026-11-19 | build.sh pics stred-menu
+stred-outline-open | scene | stred | report.doc | 2026-11-17 | build.sh pics stred-outline-open
+stred-outline | scene | stred | report.doc | 2026-11-17 | build.sh pics stred-outline
+stred-preview-panel | scene | stred | showcase.doc | 2026-11-21 | build.sh pics stred-preview-panel
+stred-preview-wait | scene | stred | strata-reference-manual.doc | 2026-11-21 | build.sh pics stred-preview-wait
+stred-save-panel | scene | stred | memo.doc | 2026-11-19 | build.sh pics stred-save-panel
+stred-showcase | scene | stred | showcase.doc | 2026-11-21 | build.sh pics stred-showcase
+view-altmenu | scene | stred | report.doc | 2026-11-20 | build.sh pics view-altmenu
+view-docmgr | scene | stred | - | 2026-11-20 | build.sh pics view-docmgr
+view-dviview | scene | stred | showcase.doc | 2026-11-22 | build.sh pics view-dviview
+view-envelope-preview | scene | stred | sample-envelope-us-ca-10.doc | 2026-11-20 | build.sh pics view-envelope-preview
+view-expanded | scene | stred | report.doc | 2026-11-17 | build.sh pics view-expanded
+view-help | scene | stred | report.doc | 2026-11-17 | build.sh pics view-help
+view-highlight | scene | stred | report.doc | 2026-11-16 | build.sh pics view-highlight
+view-keycap | scene | stred | showcase.doc | 2026-11-21 | build.sh pics view-keycap
+view-marker-grid | scene | stred | showcase.doc | 2026-11-21 | build.sh pics view-marker-grid
+view-menu-global | scene | stred | report.doc | 2026-11-16 | build.sh pics view-menu-global
+view-menu-top | scene | stred | report.doc | 2026-11-17 | build.sh pics view-menu-top
+view-outline | scene | stred | report.doc | 2026-11-17 | build.sh pics view-outline
+view-pick | scene | stred | report.doc | 2026-11-20 | build.sh pics view-pick
+view-save-quit | scene | stred | flat.doc | 2026-11-20 | build.sh pics view-save-quit
+view-section-edit | scene | stred | report.doc | 2026-11-16 | build.sh pics view-section-edit
+view-str | scene | str | - | 2026-11-17 | build.sh pics view-str
+view-structured | scene | stred | report.doc | 2026-11-17 | build.sh pics view-structured
+view-unit | scene | stred | report.doc | 2026-11-17 | build.sh pics view-unit

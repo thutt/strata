@@ -1,0 +1,25 @@
+
+------------------------------------ Macros ------------------------------------
+
+Macros record a series of keystrokes that you can play back at any time. Macros
+are named by a single alphabetic character and you use the Alt key with that 
+character to play back the macro.  For example, you can define a macro that
+searches for the occurrence of a word and then enters an Index marker, thereby 
+creating an index entry for the word.
+
+
+# Learn (Ctrl F1) saves keystrokes as you type.  Press Learn again to stop
+  saving keystrokes.
+
+
+Macros are stored temporarily in memory and must be in memory to run.  Macros 
+are erased from memory when you quit Manuscript unless you have saved them to 
+disk in a macro set.
+
+Use the Menu (F10) Tools Macro Save command to save a set of macros permanently
+to disk, or use the Menu Tools Macro Retrieve command to retrieve a set of 
+macros from disk into memory.  Use the Menu Tools Macro Edit command to edit 
+existing macro entries.
+--------------------------------------------------------------------------------
+      Learn          Macro Save          Macro Retrieve          Macro Edit
+                Keyboard Summary                     Help Index

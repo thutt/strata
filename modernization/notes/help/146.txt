@@ -1,0 +1,25 @@
+
+------------------------- Edit Structured/Unstructured -------------------------
+
+
+Edit Structured/Unstructured changes a document from unstructured to 
+structured and vice versa.
+
+
+# If your document is unstructured, selecting Edit Structured makes the current
+  contents of the document the first section and the first block the headline 
+  block.
+
+# If your document is structured and contains only one section, selecting Edit 
+  Unstructured makes the first block a text block.
+
+# A structured document that contains more than one section cannot be converted
+  to an unstructured document. 
+
+# The Status line displays whether a document is structured or unstructured.
+
+
+
+--------------------------------------------------------------------------------
+       Edit          Unstructured Document          Structured Document
+                Keyboard Summary                    Help Index

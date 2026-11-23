@@ -1,0 +1,72 @@
+# Appendix A of the Reference Manual: starting Strata, environment, files.
+# The appendix is kept in several parts that this one includes.  The command
+# lines of the Editor, the Printer and the Viewer are not a supported way to
+# start Strata: they are in the last part, between the lines that begin with
+# the directives for the build type, which the release edition leaves out.
+.doc Strata Reference: Starting Strata, Environment and Files
+.chapter A
+.h1 Starting Strata, Environment and Files [appcmd]
+This appendix says how Strata is started, the environment variables that
+Strata looks at, the other programs that are used, and the files that are read
+and written.
+.ix Starting Strata
+.ix Environment variables, overview
+.ix Appendix A
+.h2 The parts of Strata [appcmd-glance]
+.ix Program list
+.ix Installed programs
+Strata is started with the Document Manager.  The other parts are opened when
+they are needed.
+.table 18 12 29
+Part | Kind | Purpose
+The Editor | Interactive | Edits a document.
+The Document Manager | Interactive | The master menu ({n:str}).  It
+ | | starts the Editor.
+The Printer | Batch | Document to PDF through LaTeX.
+The Viewer | X11 only | Shows the pages of a Preview.
+.end
+
+.h3 The terminal version and the X11 version [appcmd-versions]
+.ix Terminal versus X11
+.ix Differences between the versions
+.ix Terminal build
+.ix X11 build
+The Editor and the Document Manager come in two versions.  The terminal
+version runs in the terminal of the shell ({n:appterm}); the X11 version
+opens a window ({n:appx11}).  The two versions read the same files.  The
+Printer is the same for both.  The Viewer exists only for X11: without it, or
+without a display, Preview shows that the Viewer is missing.  The differences
+that a user meets are in {x:appterm-diff}.  The X11 version alone reads the
+environment variables {c:STRATA_X11_*}.  Keep the programs together in one
+directory.
+
+
+.h2 Starting Strata: the Document Manager [appcmd-str]
+.ix Document Manager, command line
+.ix Document Manager, options
+Strata is started with the Document Manager, which is described in
+{x:str}; this section gives its options and its exit status.
+.h3 Options of the Document Manager [appcmd-str-opt]
+.table 13 47
+Option | Meaning
+{c:-h}, {c:--usage} | Write a usage text on the standard output and end with status 0.
+{c:--version} | Write the name and the version of the program and, on a second
+ | line, the version of the file format that it writes ({c:file format 3}),
+ | and end with status 0.
+{c:-H PATH} | The help file, instead of the one that the search finds
+ {c:--help-file PATH} | ({n:str-help-search}).
+{c:--default-colors} | Use the colors that the program is delivered with and not
+ | those of the settings; the variable {c:STRATA_DEFAULT_COLORS} does the same.
+DOCUMENT | Put DOCUMENT in the field Document Name of the panel
+ | Edit / Preview / Print Document.  Nothing is opened.
+.end
+.h3 Exit status of the Document Manager [appcmd-str-exit]
+.ix Exit status, Document Manager
+.table 8 52
+Status | Meaning
+0 | Quit from the menu, or {c:-h}.
+1 | No interactive terminal or X display.
+.end
+The same table is in {x:str-exit}.
+.include appcmd2.src
+.include appcmd3.src

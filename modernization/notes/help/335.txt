@@ -1,0 +1,25 @@
+
+---------------------------------- Delete Macro --------------------------------
+
+Use Macro Delete to delete a macro from the current macro set.  Once deleted a
+macro cannot be retrieved unless it was saved to disk as part of a set.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Tools        +--------- Delete Macro ----------+
+  Macro Delete.                            |                                 |
+                                           |  Macro Key: Alt-                |
+ Enter the alphabetic character name      |                                 |
+  of the macro to delete.  The macro's     |  Description:                   |
+  description is displayed so you can      |                                 |
+  confirm your choice.                     +--- Press Ins to Delete Macro ---+
+                                       
+ Press Ins to delete the macro.
+
+--------------------------------------------------------------------------------
+
+# Press Gray + at the Macro Key prompt to display a list of macros in the 
+  current macro set from which you can select the macro to delete.
+
+--------------------------------------------------------------------------------
+   Macro Overview        Macro Menu        Keyboard Summary       Help Index

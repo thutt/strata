@@ -1,0 +1,25 @@
+--------------------------------- Preview Keys ---------------------------------
+
+All preview screens:
+  Enter                     Proceeds to the next page of the document.
+  Menu (F10)                Displays the preview command menu.
+  Ctrl Q                    Exits Preview.
+
+Full page preview screen:
+  Gray +, Gray -            Increases/decreases the size of the selector box and
+                            decreases/increases the size of text in the 
+                            magnifier window.
+  Up, Down, Right, Left     Moves the selector box in the direction of the 
+                            arrow key.
+  Shift Up, Shift Down      Moves the selector box one pixel in the direction
+  Shift Right, Shift Left   of the arrow key.
+  Home, End                 Moves the selector box to the top left or bottom
+                            right of the page.
+  Ctrl E                    Toggle between page display and Error Log.
+
+Content preview screen:
+  Up, Down                  Scroll the page up or down one line.
+  PgUp, PgDn                Scroll the page approximately half of a screen.
+  Ctrl E                    Toggle between page display and Error Log.
+--------------------------------------------------------------------------------
+       Preview Document      Preview      Keyboard Summary      Help Index

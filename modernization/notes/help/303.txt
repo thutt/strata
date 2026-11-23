@@ -1,0 +1,25 @@
+
+-------------------------------------- DOS -------------------------------------
+
+Use the Menu (F10) DOS command to temporarily exit to DOS while still running 
+Manuscript.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Menu and select DOS.
+
+ When you are ready to return to Manuscript, type "exit" (without the quotes)
+  at the DOS prompt and press Enter.
+
+--------------------------------------------------------------------------------
+# As a safeguard, save the current document in Manuscript before exiting to DOS.
+
+# Since Manuscript is still in memory, you should not perform any functions that
+  might affect memory when you use the DOS command.  For example, do not load
+  or unload any memory-resident programs, such as Manuscript's Screen Capture
+  utility unless you have quit Manuscript from the Document Manager.
+
+# Do not turn the computer off or reboot unless you have quit Manuscript from
+  the Document Manager.
+--------------------------------------------------------------------------------
+Menu     Screen Capture     Document Manager     Keyboard Summary     Help Index

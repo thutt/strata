@@ -1,0 +1,25 @@
+-------------------------------- Printer Drivers -------------------------------
+
+The Primary Print Driver is the default printer for final printing; the 
+Secondary Print Driver is the default printer for draft printing.  When you 
+print, you can select either the primary or secondary printer.
+
+The Port specifies the communications port through which Manuscript sends 
+information to the printer.  Although most systems use the PRN port, some
+printers, such as the Apple LaserWriter, may use the COM1 port. If you are using
+Manuscript on a network, consult your network manager for the correct port.
+
+--Procedure---------------------------------------------------------------------
+
+ Move the cursor to the applicable prompt and press Space Bar.
+ Highlight the appropriate selection for your hardware and press Enter.
+ Many printers have a secondary panel of additional settings, such as page 
+  orientation. In such cases, make your selections and press Ins.
+ Press Ins to return to the Setup panel.
+--------------------------------------------------------------------------------
+# See the Hardware chapter in the Reference manual and print PDUPDATE.DOC for 
+  more information about printer drivers, including specific printer configur-
+  ations, available fonts, graphics resolution, special symbols, and notes.
+# See your DOS manual for more information about communications ports.
+--------------------------------------------------------------------------------
+      Document Manager       Setup       Keyboard Summary       Help Index

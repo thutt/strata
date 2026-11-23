@@ -1,0 +1,55 @@
+.chapter 7
+.h1 Large documents [large]
+The project made large documents with scripts and ran the Editor and the
+Printer on them.  No limit was reached at 4,062 pages.
+.h2 Documents [large-record]
+The large documents are four.  The Twain collection is the complete works of
+Mark Twain from Project Gutenberg, 15.6 MB.  The synthetic manuals big4062 (150
+chapters, 4,062 PDF pages, 13,041,779 bytes) and big1219 (45 chapters, 1,219
+pages, 3,899,341 bytes) are made.  The Reference Manual (753 pages, 2,212,980
+bytes, 17,945 items, 1,295 headlines, 135 pictures) is the manual of Strata as
+one document.
+The Twain collection has @pages_whole@ pages at @words_per_page@ words each, and
+the Printer makes @pdf_pages_whole@; the commit of 12 November counts 4,620
+without saying how.  The project recorded no hand test of this document.  Its
+record is the runs of the measuring script and the work that they caused
+({x:memory-first}).
+.h2 Method [large-tested]
+One script makes the synthetic manuals from chapter sources with a fixed seed.
+Another makes the documents of the memory measurement from a text, as plain
+documents and as structured documents with a section for every 25 pages.
+A program runs the commands of the Editor on a large document without a
+terminal and times each command and the layout that the next screen needs.  A
+script runs the Editor in a pseudo-terminal and times every key until the
+screen is quiet.  The Printer runs on the whole document, on a range of
+sections and by the DVI route.  The check reads each PDF: every row of the
+contents and of the index gives the page of its headline (1,165 and 4,713 rows
+for the Reference Manual), no cross reference is left as question marks and no
+page is blank.
+.h2 Results [large-numbers]
+{Tab:bigdocs} gives the Editor and the Printer on three documents.  The machine
+has eight threads and 15 GB of memory, and times are wall clock.  The
+measurement is older than the memory work of {x:memory}.
+.tabcap bigdocs The Editor and the Printer on three large documents
+.table 33 7 8 12
+Measure | manual | big1219 | big4062
+Pages of the PDF | 753 | 1,219 | 4,062
+Load the document (ms) | 33 | 45 | 151
+First layout (ms) | 78 | 92 | 303
+Memory after the layout, peak (MB) | 28 | 38 | 123
+Search from the start to the end (ms) | 80 | 97 | 330
+Type a character, with the layout (ms) | 6.6 | 9.5 | 36
+Save (ms) | 66 | 81 | 444
+The whole PDF (s) | 44.4 | 29.7 | 98.9
+LaTeX passes | 2 | 2 | 2
+The largest process, pdfTeX (MB) | 36 | 36 | 114
+.end
+The DVI file of the Reference Manual, 753 pages and 5.9 MB, opens in the Viewer
+in 0.32 s; the slowest page takes 55 ms to draw.
+.h2 Limits [large-limits]
+The record lists what could have had a fixed size, and none was reached: counts
+of items, blocks, headlines, cross references and index entries; 16-bit values
+of the layout, which use 32 bits when a distance does not fit; page numbers up
+to 99,999.  TeX printed 4,062 pages in 114 MB without "capacity exceeded".  The
+changes were for time: the quadratic search of cross references
+({x:memory-first}).

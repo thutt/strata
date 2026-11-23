@@ -1,0 +1,171 @@
+# Chapter 5, part 6: the messages of the markers.
+
+.h2 Messages of the markers [markers-messages]
+.ix Marker messages
+.ix Messages of the markers
+.ix Invalid marker selection
+.ix No string specified
+.ix Marker type cannot be edited
+.ix Not a valid number
+.ix Cannot find section number
+.ix Counter must be 1 to 99
+The messages that the marker commands and panels give, and the texts that
+stand in the place of a marker, are listed here with what to do about each.  The
+messages of the other commands are in {n:messages}.  A message of the panels is
+shown in a small box over the panel with the words Press any key under it; after
+a key the panel is as it was.  A message of the Marker command itself is shown
+in
+the same way or on the message line at the foot of the screen, as the table
+says.
+.h3 When a marker is chosen
+.table 23 11 23
+Message | Where | Cause and what to do
+Invalid marker selection (Not | Box titled | The Cross-reference marker was
+ available in an unstructured | Marker | chosen in an unstructured
+ document) |  | document.  It refers to a
+  |  | section and an unstructured
+  |  | document has none.  Make the
+  |  | document structured
+  |  | ({n:edit-b-structured}), or
+  |  | use another marker.
+Invalid marker selection (Not | Box titled | Page Number or Section was chosen
+ available in document body) | Marker | in the text of a document.  They
+  |  | stand only in a header or a
+  |  | footer ({n:format-page-headers}).
+Marker type N cannot be | Message line | {k:Alt-F12} was pressed on a
+ edited |  | marker that Strata cannot
+  |  | change, as a document made
+  |  | by another program can
+  |  | hold; N is its type number.
+  |  | The marker can be deleted,
+  |  | not changed.
+.end
+The name of the Cross-reference marker is in parentheses in the Marker Commands
+table of an unstructured document, and the names of Page Number and Section are
+in parentheses in every document, so that a marker that the command does not
+accept is seen before it is chosen ({n:markers-what}).
+.h3 On a marker panel
+These are shown over the panel when {k:Ins} is pressed, and no marker is made
+until the panel is accepted.
+.table 18 19 20
+Message | Panels | Cause and what to do
+No string specified | Cross-reference (Section | A field that must have
+  | Number), If | text is empty.  Type the
+  | (Expression), Include | text, or press {k:Esc} to
+  | (File Name), Index | cancel the marker.
+  | (Main Heading), Keycap
+  | (Legend), Merge
+  | (Variable Name), Picture
+  | (File Name), Table (Name
+  | for Table of Tables),
+  | Whitespace (Size
+  | (vertical))
+Not a valid number | Keycap (Foreground, | The text of a number
+ (Field) | Background, Scale), Line | field is not a number.  A
+  | (Length, Weight, | number is digits, and a
+  | Center), Picture (Width, | decimal point where the
+  | Height, Scale), | field has decimals; no
+  | Whitespace (Size | sign, no letters and no
+  | (vertical)); the name of | more decimals than the
+  | the field is in the | field has (none for
+  | parentheses | Center, one for
+  |  | the shades of a keycap,
+  |  | three for the others).
+  |  | The Length of a Line also
+  |  | takes RM in capitals.
+  |  | Correct the field.
+FIELD must be 0.0 to | Keycap (Foreground, | The shade is less than 0.0
+ 100.0 | Background) | or more than 100.0.  FIELD
+  |  | is the name of the field.
+  |  | Type a shade in that range.
+Scale must be 0.001 | Keycap (Scale) | The scale is less than 0.001
+ to 10.000 |  | or more than 10.  Type a
+  |  | scale in that range.
+Counter must be 1 to | Counter (Counter (1-99)) | The number of the counter
+ 99 |  | is not a whole number
+  |  | from 1 to 99.  Type a
+  |  | number in that range.
+Set Value must be 0 to | Counter (Set Value) | The Set Value is not a
+ 4294967295 |  | whole number from 0 to
+  |  | 4294967295 (digits only:
+  |  | no sign, no point).  Type
+  |  | a number in that range.
+Cannot find section | Cross-reference (Section | There is no section of
+ number | Number) | the document with that
+  |  | number.  Type a section
+  |  | number that the document
+  |  | has, such as 1.2, or move
+  |  | to the section before
+  |  | choosing the marker
+  |  | ({n:marker-cross-reference}).
+.end
+The panels check the fields in the order in which they stand, and give the
+message for the first field that is wrong.  A field of the Keycap panel that
+shows
+a value in brackets, such as [0.0], is not checked; it has no value of its own.
+.h3 In the editor of a note, a comment, an equation or a LaTeX marker
+.table 32 28
+Message | Where
+Press Ins to Save Changes or Esc to | The status line of the editor of a
+ Restore Previous Version | Note or a Comment.
+Ins saves, Esc restores, {k:Ctrl-W} views | The status line of the editor of an
+ the equation | Equation.
+Press Ins to Save Changes or Esc to | The status line of the editor of a
+ Restore Previous Version | LaTeX marker (LATEX EDIT).
+.end
+{k:Ins} keeps the text and goes on to the panel of the marker; {k:Esc} gives up
+the
+changes and the whole marker command.
+.h3 When a picture cannot be shown on the screen
+In the X11 version the picture of a Picture marker is shown in the text.  When
+it cannot be shown, the label of the marker is shown instead, and the reason is
+one of these texts.
+.table 32 28
+Message | Cause
+The picture has no file name | The File Name field of the marker is
+  | empty.
+LaTeX cannot read that kind of picture | The name of the file does not end in
+ file (use PNG, JPEG, PDF or EPS) | {c:.png}, {c:.jpg}, .jpeg, {c:.pdf} or .eps.
+The picture file cannot be read | The file is not there, or it cannot
+  | be read by the account that runs the
+  | Editor.
+LaTeX could not make the picture (is | The file ends in a right name but is
+ the file a valid image?) | damaged or is not a picture.
+The picture is too large or has no | The picture that was made is wider or
+ size | taller than 20000 dots, or has no size.
+The picture has too many pixels | The picture that was made has more than
+  | eight million dots (for example 4000 by
+  | 2000).  Make it smaller: a smaller Width
+  | or Height, or a lower Scale.
+The picture file is cut off | The picture that was made is not complete.
+The picture file or data is | The picture that was made is damaged;
+ damaged | the message shows what is wrong (the
+  | data, the palette or the colors).
+An interlaced picture is not | The picture that was made is stored in
+ supported | the interlaced form, which is not shown.
+.end
+A picture is checked before it is shown.  One that fails a check is treated
+like a picture that cannot be made: the label is shown and the message shows
+why.
+The Printer gives no message for a picture that cannot be made: the marker is
+printed as a Box, PIC and the name, and the print goes on ({n:marker-picture}).
+.h3 Texts that stand in the place of a marker
+These are not messages but text that a marker prints or shows.
+.table 24 36
+Text | Where and why
+[no section] | The text of a Cross-reference whose section
+  | is gone, on the screen and in print.  Delete
+  | the marker or make a new one for another
+  | section.
+page of 1.2 | The text of a Cross-reference with the style
+  | Page Number on the screen, where the page is
+  | not known; the printed page has the number
+  | ({n:marker-cross-reference}).
+Box with the label of the | In print, for the markers of
+ marker | {x:markers-labels}, for a marker that
+  | Strata cannot change, and for a picture or an
+  | equation that cannot be made
+  | ({n:markers-printed}).
+[Comment by NAME, TIME: TEXT] | A Comment in a Draft print
+  | ({n:marker-comment}).
+.end

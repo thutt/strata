@@ -1,0 +1,145 @@
+# Getting Started, part 4: starting, setting up and a first document.
+.h1 Starting Strata [starting]
+.h2 The Document Manager [manager]
+Start the Document Manager, in its terminal version or in its window version.
+After an install under {c:/usr}, the terminal version is started with:
+.code
+/usr/bin/str
+.end
+and the window version with:
+.code
+/usr/bin/str-x11
+.end
+The menu lists the things you do with documents.
+.pic pictures/str-menu.png 5.5 The Document Manager. [menu-figure]
+Move with {k:Up} and {k:Down}, or press the first letter of an entry, and press
+{k:Ins} or {k:Enter} to choose it.  {k:Esc} goes back and {k:F1} shows the help
+for the entry.  The selections are shown in {fig:menu-figure}.
+{b:Edit / Preview / Print Document} opens a panel with the
+{b:Working Directory}, the {b:Document Name} and {b:Variables}; the cursor is
+on the document name.  Type the name and press {k:Ins}, and the Editor opens
+the document.  A name that does not exist leads to the question whether the new
+document is to be {b:Structured} or {b:Unstructured}, and then to a panel for a
+description and an author, which may stay empty.  Printing, previewing and the
+spell check are done in the Editor.  {b:Maintain Dictionaries} keeps the words
+of your own, the words that the spell check must not report; the dictionary of
+the language itself comes from the spelling program of the system, and is not
+managed by Strata.
+{b:Compare Document Versions} shows what changed between a document and an older
+copy of it.  {b:TeX Font Association} and {b:Setup} are explained below.
+.h3 Names of documents [names]
+A document name is an ordinary file name of your system.  Use names that say
+what the document is, such as {c:2026-budget-proposal.doc} or
+{c:filing-system-memo.doc}.  The directory and the name may be as long as the
+system allows.
+.h3 Templates [templates]
+When the name does not exist, a list shows the templates that Strata comes with,
+as well as the two kinds of documents: letters in the style of the LaTeX letter
+class for US Letter and for A4 paper, and envelopes for many countries.
+Each template has a description, which is shown below the list when the template
+is chosen.
+.pic pictures/file-new-list.png 5.5 The list of the templates, with the description of the one that is chosen. [new-list-figure]
+{Fig:new-list-figure} shows the list.  The description is a line of text that
+you can write for any document of your own, in the panel of New File or Save
+File.
+.h2 The Editor [editor]
+You open a document from the Document Manager: choose Edit / Preview / Print
+Document and give the name of a document, such as {c:memo.doc}.  The screen has
+a status line at the top, the text in the middle, and the function keys at the
+bottom.
+.pic pictures/stred-memo.png 5.5 A document in the Editor.
+The status line shows the name of the document (with a star in front of it when
+it has changes that are not saved), the attribute of the text under the cursor,
+the position, the number of the section, and the mode: {c:STRUCTURED EDIT} for a
+document with sections, {c:UNSTRUCTURED EDIT} for one without.  The two lines at
+the foot name the function keys {k:F1} to {k:F12}.  Press {k:F12} for the menu
+and {k:F1} for help; {k:Ctrl-S} saves and {k:Ctrl-Q} leaves the Editor.  If you
+make a mistake, {k:Ctrl-/} takes back the last change and {k:Alt-/} makes it
+again.
+.h2 Terminal or window [terminal-or-x11]
+In a terminal, some keys never reach the program, because the terminal or the
+window manager keeps them; {x:keys-conflict} lists them.  Strata has
+other keys for those: {k:Ctrl-F} opens a menu of the {k:Alt-F} commands,
+{k:Ctrl-F12} opens the marker commands and {k:Alt-O} switches overtype.  In the
+window every key arrives as it is, unless the window manager keeps it.  The
+keypad keys {k:Keypad +}, {k:Keypad -} and {k:Keypad *} fold and open sections.
+Equations, keycaps and pictures are shown as images only in the window.
+The window is 80 columns wide and 50 lines high until you change it.  The height
+is the setting Window Rows of Setup, or you can change the height of the window
+with your window manager: the height that you give the window is kept.
+.if .STRATA_BUILD_TYPE # release
+The environment variables {c:STRATA_X11_GEOM} and {c:STRATA_X11_SIZE} change it.
+.endif
+.h2 Pictures keep their colours [colour-pictures]
+A picture that has colour is printed in colour.  A screenshot, a chart, a
+drawing or a photograph that you put into a document with a Picture marker keeps
+every colour that its file has, and a colour printer prints it in colour, in a
+draft and in a final print, whether the file is PNG, JPEG, PDF or EPS.  Only the
+field {b:Print in Black and White?} of the print panels turns the pictures into
+greys.  The window version of the Editor shows a picture in colour in the text
+too; a terminal cannot draw pictures at all.
+.pic pictures/print-colour.png 5.5 A picture with colour, as it is printed.
+
+.h1 Setting up Strata [setup]
+.h2 The Setup panel [setup-panel]
+In the Document Manager choose {b:Setup}.
+.pic pictures/str-setup.png 5.5 The Setup panel of the Document Manager.
+The fields stand in four groups.  {b:Documents}: {b:Initial Working Directory},
+the directory that panels start in, {b:Backups Kept}, {b:Autosave} and its
+interval.  {b:Printing}: {b:Print To} and {b:Printer Queue}, where a PDF or a
+print is sent, the {b:PDF Directory} and the {b:PDF Viewer}.  {b:Writing}:
+{b:Paper for New Documents}, {b:Dictionary Language} and {b:Undo Levels}.
+{b:Screen}: {b:Window Rows}.  Press {k:PgUp} for the next page, the colors of
+the screen, and again for the third page, the advanced settings that are seldom
+changed ({k:PgDn} goes back): {b:Initial Macro Set}, {b:Initial Library},
+{b:Terminal Characters}, the {b:Editor program} that {b:Edit / Preview / Print
+Document} starts and the {b:Help File}.  The default of a field is shown at its
+right, and {k:Del} puts it back.  A field that holds a name of a directory or a
+file lists the choices when you press {k:Keypad +}.  A wrong value is refused in
+its field, with the reason at the foot of the panel, and nothing else that you
+typed is lost.  Press {k:Ins} to keep the changes.
+.h2 The colors [colors]
+The screen is yellow on blue by default.  In {b:Setup} press {k:PgUp}: the
+second page lists the kinds of text, such as normal, bold, the menus and the
+status line, and lets you choose a foreground and a background for each,
+separately for the terminal and for the window; {k:Left}, {k:Right} and
+{k:Space} choose the color and {k:F2} shows the palette.  {k:Ins} keeps the
+colors and {k:Esc} leaves them as they were.
+.h2 Where the settings are [settings]
+The settings are kept in the directory {c:${{HOME}}/.strata}.
+The file {c:config} holds the settings of the Setup panel and the file
+{c:fonts} holds the font list below.  The environment variable {c:STRATA_HOME}
+names another directory, for a second set of settings.
+.h2 The fonts [fonts]
+A printed document names its fonts by number, from 1 to 20.  The list that says
+which LaTeX font each number is, is the {b:TeX Font Association}.
+.pic pictures/str-fonts.png 5.5 The fonts of the TeX Font Association.
+It starts with the standard fonts of LaTeX, such as Latin Modern, Times,
+Helvetica, Palatino and TeX Gyre, and a font that is not installed is marked
+as such.  A
+font that is free can be downloaded from the network of TeX archives with
+{b:Install Now}, if {c:curl} and {c:unzip} are installed; you can also add your
+own.
+.h2 The help [help]
+{k:F1} shows help.  The topic depends on where you are: in a panel the help is
+about the field, in the text about the command that you used last.  The help
+opens in a window: {k:Tab} moves to the next link and {k:Enter} follows it,
+{k:Backspace} goes back, {k:I} shows the index and {k:Esc} closes it.  The text
+comes from a help file, which the Setup panel names.
+
+.h1 Your first document [first]
+Here is a short walk, to show that it works. The Tutorial that follows takes
+you through each step in turn.
+1. Start the Document Manager, choose {b:Edit / Preview / Print Document}, type
+   {c:hello.doc} and press {k:Ins}.  The document does not exist, so choose
+   {b:Structured}, and press {k:Ins} on the panel that asks for a description
+   and an author.
+2. Type a headline, press {k:Enter}, and type a sentence.
+3. Press {k:Ctrl-S}.  The document is saved with the name {c:hello.doc}.
+4. Press {k:F12}, choose {b:Print}, then {b:Preview}, then {b:Document}.  Press
+   {k:Ins} on the panel.  After a moment the pages appear in a window; press
+   {k:q} to close it.
+5. Press {k:Ctrl-Q} to leave the Editor.
+
+If something does not work, the chapter {x:need} says what each step needs;
+Preview, for example, needs LaTeX and an X display.

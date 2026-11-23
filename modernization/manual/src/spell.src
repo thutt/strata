@@ -1,0 +1,599 @@
+# Chapter 8: Spell Check and Thesaurus.
+.doc Strata: Spell Check and Thesaurus
+.chapter 8
+.h1 Spell Check and Thesaurus [spell]
+.ix Spell check
+.ix Spelling
+.ix Thesaurus
+.ix Synonyms
+.ix Dictionary
+.ix Tools menu, Spell
+.ix Tools menu, Thesaurus
+This chapter describes the two word tools of the Editor: the spell check
+({k:F12}, Tools, Spell, and the key {k:Ctrl-C}) and the thesaurus ({k:F12}, Tools,
+Thesaurus, and the key {k:Ctrl-T}).  Both look and behave the same in the
+terminal version and in
+the X11 version.
+
+The chapter describes the tools one after the other: what the tools need,
+then the spell check, then the thesaurus, then an example and a summary of
+the keys.  The spell check section gives the commands of the Tools menu in
+the order of the menu, the screen on which each unknown word is shown, the
+dictionaries behind it, the messages and the limits.  The thesaurus section
+gives the word, the panel, the keys, a word that is not found and the
+replacement.
+
+.table 24 36
+Where | What it does
+{k:F12}, Tools, Spell, Document | Checks the whole document.
+{k:F12}, Tools, Spell, Block | Checks the blocks that you highlight.
+{k:F12}, Tools, Spell, Section | Checks the sections that you highlight.
+{k:F12}, Tools, Spell, Word | Checks the word at the cursor.
+{k:Ctrl-C} | The same as Spell, Word.
+{k:F12}, Tools, Thesaurus | Shows synonyms of the word at the cursor.
+{k:Ctrl-T} | The same as Tools, Thesaurus.
+.end
+
+.h2 Requirements and files [spell-requirements]
+.ix aspell
+.ix hunspell
+.ix STRATA_SPELL
+.ix STRATA_THESAURUS
+.ix mythes-en-us
+.ix Personal word list
+.ix ~/.strata/dictionary
+The spell check does not contain a dictionary.  A checker program of the system
+is used, {c:aspell} or {c:hunspell}, which names the words that are wrong and
+suggests others.  The table gives what is needed and what is read.
+.table 19 41
+Item | What it is
+{c:aspell} or {c:hunspell} | The spelling checker of the system.  {c:aspell} is
+ | looked for first, then {c:hunspell}.  With neither, the
+ | spell check shows a notice that shows what to install
+ | ({n:spell-messages}).
+{c:STRATA_SPELL} | An environment variable.  A program name or a path
+ | that is used in place of {c:aspell} and {c:hunspell}.  When
+ | it is set and is not a program, no other is tried.
+{c:~/.strata/dictionary} | The personal word list of the user: plain text, one
+ | word per line, UTF-8, written by the command Define and by
+ | Maintain Dictionaries.
+ | The environment variable {c:STRATA_HOME} names another
+ | directory for it, as for the other settings.
+Dictionary Language | A setting of the Document Manager's Setup, saved in
+ | the settings of the user as {c:spell_language}.  The
+ | default is en_US.  The value is passed to the checker.
+mythes-en-us | The data of the thesaurus: the package of that name,
+ | two files in {c:/usr/share/mythes} (an index and a data
+ | file, {c:th_en_US_v2.idx} and {c:th_en_US_v2.dat}).
+{c:STRATA_THESAURUS} | An environment variable.  A directory, the data file,
+ | or its path without the suffix; it replaces
+ | {c:/usr/share/mythes}.  Set to an empty or a wrong
+ | value it switches the thesaurus off.
+.end
+Nothing of this is needed to edit documents: without a checker the spell check
+reports this and the Editor goes on; without the data the thesaurus reports
+this and the Editor goes on.
+
+.h2 Spell check [spell-check]
+.ix Tools, Spell
+.ix F12, Tools, Spell
+.ix Spell command
+The spell check looks for words that are not in the dictionary, shows each
+one in its text, and lets you correct it, keep it, add it to your own word
+list or leave it.  The four commands are on the menu {k:F12}, Tools, Spell, in
+this order; the letters are the initials, so {k:F12} {k:T} {k:S} and then
+{k:D}, {k:B}, {k:S} or {k:W} choose one.  The line under the menu shows what
+the highlighted command does.
+.table 12 48
+Command | What is checked
+Document | The whole document, from the start to the end; the text of notes
+ | is checked where their markers are.  Opens the panel Check
+ | Document Spelling first.
+Block | The blocks that you highlight.  The message line shows "Use arrow
+ | keys to highlight block(s); then press Enter."  Enter then
+ | opens the same panel.
+Section | The sections that you highlight; the message line shows "Use
+ | arrow keys to highlight section(s); then press Enter."
+Word | The word at the cursor.  {k:Ctrl-C} does the same.
+.end
+Block and Section need the cursor in a block; otherwise the message line
+shows "The cursor is not in a block".  The check works on the text in the
+Editor, saved or not.
+
+.pic pictures/spell-tools-menu.png 5.0 The Tools menu of the Editor with Spell and Thesaurus.
+
+.h3 What a word is [spell-words]
+.ix Word, in spell check
+.ix Words with digits
+.ix 65 letters
+The text is cut into words at a space, a tab, a change of attribute and a
+marker.  Punctuation at the end of a word is dropped; punctuation inside a
+word stays, so that {c:qqa.qqb}, {c:qqc-qqd}, {c:qqf's} and {c:qqh,qqi} are
+one word each.  A word with a digit inside it is always unknown (the
+checker is not asked); a word that begins with a digit is skipped.  A word
+of more than 65 letters is skipped without a message in a check of a
+document or a block (the command Word rejects it, see {n:spell-word}).  A
+replacement keeps the attributes (bold, underline) that the old word had.
+.ix Attributes kept in a replacement
+The text of a note (footnote, endnote) is checked where its marker stands;
+the screen then names the place "Section: Body (Note)".  Index entries and
+the text of equations are not checked.  The document is marked as changed
+when a word was replaced.  Capitals do not matter for a word that is known.
+
+.h3 Document [spell-document]
+.ix Check Document Spelling panel
+.ix Document Name
+.ix Custom Spelling Dictionary
+.ix Auto Correct?
+{k:F12}, Tools, Spell, Document opens the panel Check Document Spelling.  In the
+Editor the first three fields only show a value; only Auto Correct? can be
+changed.
+.table 24 36
+Field | Meaning
+Document Name | The name of the document as the Editor has it: the full path
+ | when the Document Manager started the Editor (or "(not saved)").
+Custom Spelling Dictionary | The personal word list that is in use,
+ | {c:~/.strata/dictionary}.  There is one list for
+ | the user.
+Dictionary Language | The language code, such as en_US, and in
+ | brackets the program that checks ({c:aspell} or
+ | {c:hunspell}).  The language is set in the Setup of
+ | the Document Manager.
+Auto Correct? | Yes or No, default Yes.  With Yes, a
+ | correction that you made once is made again by
+ | itself when the same word comes later in the
+ | check.  The choice is kept until the Editor ends.
+.end
+{k:Ins} accepts the panel and starts the check; {k:Esc} cancels it.  The
+check stops at the first unknown word at once; a long document does not make
+you wait for the whole walk through the text.  While the checker works and
+finds nothing, the bar shows "Checking the spelling (Esc quits)" and
+{k:Esc} ends the check.  What happens from there is described in
+{x:spell-screen}.
+
+.h3 Block [spell-block]
+.ix Spell, Block
+{k:F12}, Tools, Spell, Block prompts you to highlight the blocks with the arrow
+keys as the commands of the Edit chapter that work on blocks do, then
+{k:Enter} shows the panel Check Document Spelling and checks the highlighted
+blocks.
+
+.h3 Section [spell-section]
+.ix Spell, Section
+The same for sections: the highlight selects sections, and {k:Enter} then
+shows the panel and checks them.
+
+.h3 Word [spell-word]
+.ix Spell, Word
+.ix Ctrl-C, spell check of a word
+.ix Spelled correctly
+.ix Word is too long
+{k:F12}, Tools, Spell, Word, and the key {k:Ctrl-C} anywhere in the text, check
+the word at the cursor, with the same rules for what a word is as in
+{x:spell-words}.  A box titled Spell Word shows the word and then one of
+these.
+.table 26 34
+The box shows | When
+Spelled correctly | The word is known.  Any key closes the box.
+Not found in dictionary | The word is unknown and the checker has no
+ | suggestion.  Any key closes the box.
+Not found in dictionary, then | The word is unknown and there are
+ Suggested alternatives: | suggestions, in a row.  {k:Left} and
+ | {k:Right} choose; {k:Ins} or {k:Enter}
+ | replaces the word in the document; {k:Esc}
+ | cancels.
+Word is too long - maximum length | The word has more than 65 letters.
+ is 65 characters |
+.end
+The cursor can be anywhere in the word.  A replacement keeps the attributes
+of the old word and marks the document as changed.  When the cursor is not
+on a word the box shows "There is no word at the cursor".
+
+.h2 The spell check screen [spell-screen]
+.ix Spell check screen
+.ix Accept
+.ix Define
+.ix Ignore
+.ix Edit, in spell check
+.ix Guess
+.ix Line, in spell check
+.ix Quit, in spell check
+.ix Unknown word
+When the check finds a word that is not known, the screen shows, from the
+top: a bar of seven commands with a line of description below it, the line
+"Unknown word:", the text round the word with the word highlighted, and at
+the bottom lines that say where the word is: Document (the name), Section
+(the headline, and "(Note)" in a note) and Dictionaries (the language and the
+program, and the personal list that is in use).  The bar reads
+.code
+ Accept  Define  Ignore  Edit  Guess  Line  Quit
+.end
+A command is chosen with its first letter ({k:A}, {k:D}, {k:I}, {k:E},
+{k:G}, {k:L}, {k:Q}) or by moving the highlight with {k:Left} and
+{k:Right} and pressing {k:Return}.  The highlight starts on Accept.  The line
+below the bar describes the highlighted
+command.
+.table 8 52
+Command | What it does
+Accept | "Accept word as correct".  Keeps the word as it is and does not
+ | ask about it again in the rest of this check.  It is not written to
+ | the personal list.
+Define | "Define word in the personal dictionary".  Writes the word into
+ | the personal word list at once, so that no later check puts a question about
+ | it (a lower case word stands for the word with an initial capital
+ | as well).
+Ignore | "Ignore this word".  Leaves this occurrence and goes on to the
+ | next unknown word.  The same word is asked about again if it comes
+ | again.
+Edit | "Edit the word".  Shows a line "Correct word:" with the word in
+ | it, to edit with {k:Left}, {k:Right}, {k:Home}, {k:End},
+ | {k:Backspace} and {k:Del}.  {k:Return} puts the word in place of
+ | the old one and the check goes on; {k:Esc} goes back to the bar.
+Guess | "List similar words".  Puts the suggestions of the checker on
+ | the bar, at most twelve, and "Select word" below.  {k:Left},
+ | {k:Right}, {k:Home} and {k:End} choose and {k:Return} takes the word;
+ | {k:Esc} goes back to the bar.  With no suggestion the bar shows "No
+ | alternatives found" and any key goes back.
+Line | "Edit the line".  Opens a box Line with the field "Corrected line:"
+ | that holds the line of the word; {k:Enter} accepts it, {k:Esc}
+ | cancels.  A line with a tab or a marker cannot be changed this way
+ | and the box shows "A tab or a marker cannot be changed here".
+Quit | "Quit the spell check".  Ends the check.  If corrections were
+ | made that can be repeated, a prompt reads "Continue with auto corrections?
+ | Yes No" first.
+.end
+
+.pic pictures/spell-ctrl-c.png 5.5 The Spell Word box: the word, its suggestions and the keys.
+.h3 Guess and the single suggestion [spell-guess]
+.ix Accept correction?
+.ix No alternatives found
+.ix Select word
+When the checker has exactly one suggestion and it differs from the word in
+case only, the bar prompts "Accept correction? Yes No" and the line "Correct
+word:" shows the suggestion, instead of the seven commands.  Yes replaces
+the word and No leaves it; in both cases the check goes on.  After a
+suggestion has been chosen the word is replaced in the text, with the
+attributes of the old one, and the check goes on to the next unknown word.
+
+.h3 Auto Correct [spell-autocorrect]
+.ix Auto Correct
+.ix Continue with auto corrections?
+With the panel field Auto Correct? set to Yes, each correction that you make
+(a suggestion, or an Edit) is remembered for the rest of the check, and the
+same word is replaced by itself when it comes again, without a stop.  When
+you choose Quit with such corrections stored, the question "Continue with
+auto corrections?  Yes No" is asked: Yes makes the stored replacements in the
+rest of the text, with no more questions, No leaves the rest.  When no
+correction is stored, Quit ends the check at once.
+
+.h3 The end of the check [spell-end]
+.ix Spell Check completed
+.ix Spell Check terminated
+.ix No spelling errors found
+.ix Press any key to exit
+At the end a box appears.  Its first line is "Spell Check completed" when
+the check ran to the end of the text, and "Spell Check terminated" when it
+was ended with Quit.  A line "No spelling errors found" follows when nothing
+was changed, defined or accepted (Ignore does not count as a change).  The
+last line is "Press any key to exit".  The document is marked as changed (the
+star in the status line) if a word was replaced; the check does not save the
+document, {k:F12}, File, Save does.  The cursor stays where it was; if the word
+it was in was replaced it is at the start of the new word.
+
+.h2 Dictionaries [spell-dictionaries]
+.ix Dictionaries
+.ix Personal dictionary
+.ix Dictionary Language
+.ix Custom dictionary
+There are two kinds of dictionary.  The main dictionary belongs to the
+checker ({c:aspell} or {c:hunspell}) and is chosen by the setting Dictionary
+Language of the Document Manager's Setup: a language code such as {c:en_US}
+or {c:de_DE}.  The dictionary of that language must be installed for the
+checker; when the checker does not start for the language, the notice
+names the program and the language ({n:spell-messages}).
+
+The personal word list is a text file, {c:~/.strata/dictionary}, with one
+word per line, for you alone: Define adds a word to it, and every later
+check uses it.  The file is
+private to you.  A word in lower case also stands for the word with an
+initial capital; any other entry is only that word.  To see the list, take a
+word back out of it, or import and export words, use Maintain Dictionaries
+({n:str-spell-words}).
+
+.pic pictures/spell-str-setup.png 5.0 Setup of the Document Manager with the dictionary language.
+
+.h2 Messages of the spell check [spell-messages]
+.ix Spell check messages
+.ix Messages, spell
+.table 31 29
+Message | When
+Use arrow keys to highlight block(s); then press Enter. | Block, before the
+ | highlight.
+Use arrow keys to highlight section(s); then press Enter. | Section, before the
+ | highlight.
+The cursor is not in a block | Block or Section, with
+ | the cursor outside a
+ | block.
+Unknown word: | The label on the check screen.
+Correct word: | The field of Edit, and the
+ | suggestion of the question
+ | below.
+Select word | The bar of suggestions
+ | (Guess).
+No alternatives found | Guess found nothing.
+Accept correction?  Yes No | One suggestion that
+ | differs in case only.
+Continue with auto corrections?  Yes No | Quit, with corrections to
+ | repeat.
+Checking the spelling (Esc quits) | The checker is working and
+ | has found nothing yet.
+Spell Check completed | The check reached the end.
+Spell Check terminated | The check was ended with
+ | Quit.
+No spelling errors found | Nothing was changed,
+ | defined or accepted.
+Press any key to exit | The last line of the end
+ | box.
+Corrected line: | The box of the command
+ | Line.
+A tab or a marker cannot be changed here | Line, for a line that has
+ | one.
+Spelled correctly | The word under {k:Ctrl-C} is
+ | right.
+Not found in dictionary | Spell Word: the word is
+ | unknown.
+Suggested alternatives: | Spell Word: the list.
+There is no word at the cursor | Spell Word, with no word.
+Word is too long - maximum length is 65 characters | Spell Word: a longer word.
+The spelling checker stopped. | The checker program ended
+ | in the middle of a check.
+Save corrected document? | The end of a check in the spell
+ | check mode of the Editor, after a change.
+.end
+Two notices are shown by the box titled Spell.  {c:No spelling checker was
+found.  Install the packages hunspell and hunspell-en-us (or aspell and
+aspell-en); the install script of Strata installs them.} appears when neither
+program is found.  {c:The spelling checker hunspell did not start for the
+language xx_YY: its dictionary is not installed.  Install the package
+hunspell-xx-yy, ...} appears when the program is there and the dictionary of
+the language is not (the name of the program, the language and the name of
+the package are those of the case).  The Editor goes on after either.
+
+.h2 Limits of the spell check [spell-limits]
+.ix Spell check, limits
+.table 13 47
+Limit | State
+Suggestions | The first twelve of the checker.
+Line | A box with one field, not an edit in the text area.
+Speed | The Editor does not wait long: a long text shows its first
+ | unknown word at once.  Checking all of a long text with
+ | every word ignored takes as long as the checker needs.
+.end
+
+.h2 Thesaurus [spell-thesaurus]
+.ix Tools, Thesaurus
+.ix F12, Tools, Thesaurus
+.ix Thesaurus command
+The thesaurus shows the synonyms of the word at the cursor.  {k:F12}, Tools,
+Thesaurus and the key {k:Ctrl-T} do the same.  The word is highlighted in the
+text, a panel opens over the lower or upper half of the screen, and one of
+the synonyms can replace the word.  The data is read from the MyThes files
+of the package mythes-en-us (see {n:spell-requirements}).
+
+.pic pictures/spell-thesaurus-menu.png 5.0 The Tools menu with Thesaurus.
+
+.h3 The word that is looked up [spell-thes-word]
+.ix Word under the cursor
+.ix No word selected
+The word is the run of letters that holds the cursor, from the first letter
+to the last: the cursor at the start of the word, in the middle of it, and
+just after its last letter all give the same word.  An apostrophe or a
+hyphen between two letters is inside the word ({c:don't}, {c:re-enter});
+digits are not.  A change of attribute ends a word (so a bold part {c:sec}
+of {c:section} is a word of its own and the highlight covers that part); a
+marker ends a word.  If the cursor is on spaces, on a marker, after trailing
+spaces or after a full stop, the lookup goes back along the same line to the
+word before the cursor.  When the line has no word before the cursor (an
+empty line, or the cursor in the leading spaces), a box titled Thesaurus shows
+"No word selected".  A word longer than 63 letters is cut at 63.
+
+.h3 The panel [spell-thes-panel]
+.ix Thesaurus panel
+.ix MORE
+.ix Senses
+The title of the panel is "Thesaurus".  The panel is twelve rows high and as
+wide as the screen.  When the cursor is in the upper half of the screen, the
+panel takes the bottom of the screen; when the cursor is lower, it takes the
+top; on a screen of fewer than 25 rows it has half the rows of the screen.
+The text is never scrolled to make room, so the line of the cursor is always
+visible.  The rows, from the top of the panel:
+.table 19 41
+Part | Contents
+First row | The word as it was typed, and a colon ("sections:"), and at the
+ | right the word MORE with an arrow down, an arrow up, or both,
+ | when there is more to see.
+Senses | One block for each sense.  The part of speech (noun, adj, verb,
+ | adv) is written at the first sense of that kind, right aligned
+ | in four columns.  Each sense starts with a hyphen; the words are
+ | separated by commas; a sense ends with a semicolon, the last
+ | with a full stop; long lines wrap with a hanging indent.
+Highlight | The first word is highlighted.
+Bottom border | The hint "Enter:replace  Esc:exit  CTRL-T:look up"; after a
+ | word has been looked up from the panel "Ctrl+PgUp:last word" is
+ | added.
+.end
+Only synonyms are shown: the words of a sense and the words marked as similar
+terms; antonyms, generic terms and related terms are not shown, and a sense
+that has nothing to show is left out.  A word that has no sense left is
+treated as not found.  A word may be in several senses.  At most 64 senses of
+an entry are kept.
+
+.pic pictures/spell-ctrl-t.png 5.5 The thesaurus panel for the word under the cursor.
+
+.h3 Keys of the thesaurus panel [spell-thes-keys]
+.ix Thesaurus keys
+.ix Ctrl-PgUp
+.ix Look Up box
+.ix Esc, thesaurus
+.table 15 45
+Key | Effect
+{k:Right}, {k:Left} | The next and previous word, over the ends of rows.  No
+ | wrap at the first or last word.
+{k:Down}, {k:Up} | The word of the next row down or up whose first column is
+ | nearest.
+{k:Home}, {k:End} | The first and last word of the row.
+{k:PgDn}, {k:PgUp} | Scroll nine rows (no overlap) and highlight the first word
+ | of the new top row; MORE shows the arrows.
+{k:Ctrl-Home} | The word of the heading.
+{k:Ctrl-End} | The last word on the screen.
+{k:Enter} | Replace the word in the text by the highlighted word
+ | ({n:spell-thes-replace}).
+{k:Ctrl-T} | Look up the highlighted word; the words looked up before are
+ | kept in a history of at most 20.
+{k:Ctrl-PgUp} | Go back to the last word of the history.  The hint shows
+ | while the history is not empty.
+A letter | Opens the Look Up box with the letter in it.
+{k:Esc} | Leave the thesaurus altogether, from any depth, with the text
+ | unchanged and the cursor where it was.
+.end
+Keys that have no meaning in the panel are ignored.
+
+.h3 The Look Up box [spell-thes-lookup]
+.ix Look Up
+Typing a letter in either panel opens a small box in the panel, titled Look
+Up and holding the letter; its own hint is on its bottom border ("Esc:exit
+CTRL-T:look up").  {k:Backspace} edits the word;
+{k:Enter} or {k:Ctrl-T} looks it up; {k:Esc} closes only the box and goes
+back to the panel.  A word of 70 letters can be typed.
+
+.h3 A word that is not found [spell-thes-notfound]
+.ix The word was not found
+.ix Similar words
+.ix Please choose another word
+When the word has no entry (after trying its stems, see below) the panel is
+titled "The word was not found -  Please choose another word" and lists ten
+words of the dictionary in one column, in alphabetical order, five above the
+highlighted word and four below.  The highlighted word is the
+nearest one before the word looked up.  The list is not a spelling guess: it
+lists the neighbors in the alphabet, not words of a small edit distance.
+At the ends of the dictionary the list is shorter.  The words of the data
+that have several words are in the list too.
+.table 15 45
+Key | Effect
+{k:Up}, {k:Down} | Move by one word; the list scrolls at the edge.
+{k:PgUp}, {k:PgDn} | A page of ten, the highlight staying at the same place.
+{k:Enter}, {k:Ctrl-T} | Look up the highlighted word.
+A letter | Starts a new look up in the Look Up box.
+{k:Esc} | Leave.
+.end
+The hint on the bottom border is "Enter:look up  Esc:exit  CTRL-T:look up".
+
+.h3 A word that has no synonyms [spell-thes-nosyn]
+.ix The word has no synonyms
+.ix Word without synonyms
+Some words are in the data but have only generic terms or related terms, which
+the thesaurus does not show: {c:zebra} has only the generic term "equine".
+For such a word (after trying its stems) the panel is titled "The word has no
+synonyms -  Please choose another word" and shows the same list of neighbors
+as for a word that was not found, with the word itself highlighted; the keys
+are the same as in {x:spell-thes-notfound}.  A word that is not in the data at
+all still gives "The word was not found".
+
+.h3 Inflected words [spell-thes-stems]
+.ix Stemming
+.ix Inflection
+The data holds the base forms only.  The thesaurus therefore looks up the base
+form of a word with a regular ending: {c:sections} finds {c:section},
+{c:headlines} finds {c:headline} and {c:running} finds {c:run}.  The heading
+still shows the word as you typed it.  An irregular form such as {c:ran} is
+looked up as typed.
+
+.h3 Replacing the word [spell-thes-replace]
+.ix Replace with synonym
+.ix Case of the replacement
+{k:Enter} puts the highlighted word in place of the word of the text, and the
+cursor stands after the new word.  The case of the old word is kept: a word
+written with a capital first letter gives a word with a capital first letter
+("Quick" gives "Center"), a word in capitals gives capitals ("QUICK" gives
+"CENTER"), a word in lower case gives the word as the data has it; for a
+synonym of several words only the first letter of the first word is changed
+("Quick" gives "Next day").  The new word is not inflected: "sections"
+becomes the base form that you chose, as it stands.  A bold word stays bold.
+The document is marked as changed.  {k:Esc} changes
+nothing.
+
+.h3 When the data is missing [spell-thes-nodata]
+.ix The thesaurus is not installed
+Tools, Thesaurus and {k:Ctrl-T} work even without the data; they then
+show a notice titled Thesaurus that shows "The thesaurus is not installed.
+Install the package mythes-en-us; the install script of Strata installs it.",
+and the Editor goes on.  A damaged index or data
+file gives "not found" and never stops the Editor.
+
+.h3 Limits of the thesaurus [spell-thes-limits]
+.ix Thesaurus, limits
+.table 26 34
+Point | State
+Word length | A word is cut at 63 letters; there is no "too long" error.
+Panel on a screen of another height | Half the rows of the screen under 25
+ | rows.
+.end
+
+.h2 A session step by step [spell-example]
+.ix Example, spell check
+.ix quikc
+The text has the line "The quikc brown fox" and the checker is {c:aspell} with
+the en_US dictionary.
+.table 5 55
+Step | What you do and what you see
+1 | {k:F12}, {k:T}, {k:S}, {k:D}: the panel Check Document Spelling.  Auto
+ | Correct? is Yes.  {k:Ins} starts the check.
+2 | The screen shows the bar, "Unknown word: quikc" and the line with
+ | {c:quikc} highlighted.  The letter {k:G} chooses Guess.
+3 | The bar shows the suggestions, {c:quick} first, and "Select word" on
+ | the description line.  {k:Right} moves to the next one,
+ | {k:Return} takes the highlighted word.
+4 | The word is replaced in the text, with the attributes it had, and
+ | the check goes on to the next unknown word.  If {c:quikc} comes
+ | again, Auto Correct?  Yes makes the same replacement by itself.
+5 | At the end the box shows "Spell Check completed" and "Press any key
+ | to exit".  The status line shows the star of a changed document.
+.end
+Another example, for the personal list: at an unknown word {c:wrold}, the
+letter {k:D} chooses Define.  The word is written to the file
+{c:~/.strata/dictionary} on its own line, and no later check, in any
+document, stops at it.
+
+.h2 Summary of the keys of this chapter [spell-keys]
+.ix Keys of spell check and thesaurus
+.table 12 14 24
+Key | Where | What it does
+{k:Ctrl-C} | Text | Check the word at the cursor.
+{k:Ctrl-T} | Text | The thesaurus for the word at the cursor.
+{k:F12}, {k:T}, {k:S} | Text | The Spell menu (Document, Block, Section, Word).
+{k:Ins} | Panel | Start the check.
+{k:Esc} | Panel | Cancel.
+{k:A} {k:D} {k:I} {k:E} {k:G} {k:L} {k:Q} | Check screen | The seven commands, by initial.
+{k:Left}, {k:Right}, {k:Return} | Check screen | Move the highlight on the bar, choose.
+{k:Enter} | Thesaurus | Replace the word.
+{k:Ctrl-T} | Thesaurus | Look up the highlighted word.
+{k:Ctrl-PgUp} | Thesaurus | The last word looked up.
+{k:Esc} | Thesaurus | Leave.
+.end
+.if .STRATA_BUILD_TYPE # release
+.h2 The spell check mode of the Editor [spell-cmdline]
+.ix --spell
+.ix --auto
+The Editor has a spell check mode that a script can use.  The options are
+these.
+.table 22 38
+Option | Effect
+{c:--spell FILE.doc} | Start the Editor on the file with the spell check shown at
+ | once, and no edit screen.  At the end, if the document was
+ | changed, a prompt reads "Save corrected document?"; Yes saves it.
+{c:--auto} yes or no | With {c:--spell}: the value of Auto Correct? (default yes).
+.end
+Without a document the mode ends with status 2 and a message that a document
+is needed; a document that cannot be read ends it with status 1; otherwise
+the status is 0.
+.endif

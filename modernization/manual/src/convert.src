@@ -1,0 +1,122 @@
+# Chapter 10: Conversion.  The chapter is kept in three sources that this
+# file reads: the guide and the ways in and out (this file), the ways in and
+# out in detail (convert1), and the rest, with the messages and the examples
+# (convert2).
+.doc Strata Reference: Conversion
+.chapter 10
+.h1 Conversion [convert]
+.ix Conversion
+.ix Conversion utilities
+.ix Import and export, overview
+.ix Chapter 10
+.ix Formats of other programs
+Strata reads and writes plain text, makes PDF and TeX files of a document,
+takes pictures in four formats, and reads old documents (the
+documents of the earlier format).  This chapter says exactly what that means,
+how to use it, what happens at the edges, and how to bring in a file that
+Strata cannot read itself.
+
+There is nothing in this chapter that is hidden behind a key of its own.
+The conversions are the commands Import and Export of the File menu of the
+Editor, which the chapter on files describes entry by entry ({n:file-import}
+and {n:file-export}) and the Printer, which is the way out to a PDF.  Those entries are not described again here.  This chapter adds
+what they leave open: how the conversions compare, what survives each of them,
+how to bring in a file that Strata cannot read itself, and how to get a
+document out in the form that another program takes.
+
+The chapter is arranged for looking up.  A table, {x:convert-guide}, answers
+the question "I have this, I want that".  {x:convert-have} lists every way in
+which data enters and leaves Strata.  The facts about text that comes in and
+goes out, with the recipes that depend on them, are in {x:convert-import} and
+{x:convert-export}; the Printer as a way out is {x:convert-printer} and the
+pictures are {x:convert-pictures}.  What is to be done with equations of an old
+document is in {x:convert-equations}, how old documents are read is in
+{x:convert-release}, and the word list of the spell check is in
+{x:convert-dict}.  The messages are in {x:convert-messages} and the worked
+examples in {x:convert-examples}.
+
+.h2 What do I do for ...  [convert-guide]
+.ix Conversion guide
+.ix Look-up table, conversion
+.ix How to convert
+The table is a way into the chapter.  The right-hand column names the section
+that has the steps.
+.table 24 36
+I have | What to do
+A plain text file | Import (File, Import); {x:convert-import}.
+A text file in UTF-8 | Import with the Character Set UTF-8;
+ {x:convert-import-utf8}.
+A table in a spreadsheet | Save it as text with tabs; Import with Preserve
+ Line Endings; set the ruler; {x:convert-recipe-table}.
+A letter or an article from another word processor | Save it as plain text
+ there; Import with Ignore Line Endings; {x:convert-recipe-prose}.
+An outline in a text file | Import it and make the sections;
+ {x:convert-recipe-outline}.
+A picture in another format | Convert it to PNG or JPEG;
+ {x:convert-pictures}.
+An old document | Retrieve it; {x:convert-release}.
+An equation of an old document | Rewrite it in TeX; {x:convert-equations}.
+A document that is to be mailed or edited elsewhere | Export; {x:convert-export}.
+A document that is to be printed or sent | The Printer: PDF;
+ {x:convert-printer}.
+A list of words for the spell check | A text file; {x:convert-dict}.
+.end
+
+.h2 The ways in and out [convert-have]
+.ix Ways in and out
+.ix Import, ways in
+.ix Export, ways out
+.ix Conversions, table
+Every conversion of Strata is one of the rows below.  The first column says
+what comes in or goes out, the second how it is done, and the third where it
+is described.
+.table 18 20 20
+What | How | Described in
+Plain text in | File, Import in the | {x:file-import}
+ Editor |
+Plain text out, as a screen | File, Export, Export a | {x:file-export}
+ image | Screen Image
+Plain text out, as data | File, Export, Export Data | {x:file-export}
+ | Only
+A part of a document | Save, Extract Current | {x:file-save-options}
+ | Section
+A whole document, a part of | Retrieve | {x:file-retrieve}
+ one, or settings |
+A document to PDF | Print Final or Draft | {x:convert-printer}
+A document to TeX | Export a LaTeX File | {x:convert-printer}
+Pictures in | The Picture marker | {x:convert-pictures}
+Equations in | The Equation marker, TeX | {x:convert-equations}
+ math |
+Text in or out by the | The terminal's own paste | {x:appchar-type}
+ terminal |
+.end
+All of the rows but the last work on the text of one document at a time.  The File
+menu has two commands for text, Import and
+Export.  They read and write text, in the character sets of the Character Set
+field ({n:appchar-pages}).
+.h3 What stays when a document goes out as text [convert-have-lost]
+.ix Loss of information on export
+.ix Attributes, lost in text export
+.ix Fonts, lost in text export
+Text does not carry everything that a document has.  This table says what is
+lost in each way out, so that the choice can be made knowingly.
+.table 28 15 15
+What the document has | Screen image | Data only
+Characters | kept | kept
+Bold, italic, underscore | lost | lost
+Fonts, sizes, spacing | lost | lost
+The layout of columns and tables | kept | lost
+Tabs | by the ruler | as tabs
+A blank line between blocks | one | none
+Section numbers | kept | lost
+The title page | lost | lost
+Pictures, equations | a name | lost
+Keycaps and other values | their text | their text
+Notes | a mark | lost
+.end
+The title page of the document, which is the text above the first level of a
+structured document, is not written by Export.  The marker of a note is its mark in the display mode (by default [NOTE]) in both;
+its text is in neither.
+
+.include convert1.src
+.include convert2.src

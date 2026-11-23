@@ -1,0 +1,13 @@
+.doc Equation demonstration
+.h1 Equations
+
+The roots of {eq:ax^{{2}}+bx+c=0} are given by the formula below.
+
+{eq:x=\frac{{-b\pm\sqrt{{b^{{2}}-4ac}}}}{{2a}}}
+
+The sum of the first n integers is {eq:\sum_{{k=1}}^{{n}}k=\frac{{n(n+1)}}{{2}}}, which Gauss found as a boy.
+
+{eq:\int_0^\infty e^{{-x^2}}\,dx=\frac{{\sqrt{{\pi}}}}{{2}}}
+
+{eq:\badcmd{{x}}}
+

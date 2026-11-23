@@ -1,0 +1,239 @@
+# Chapter 11, part 4: messages of other programs, odd wordings and the
+# messages of the Error Log.  The exit status of the programs and the
+# messages of their command lines are in the last part of the chapter, which
+# the release edition leaves out.
+.h2 Messages of the programs that Strata runs [msg-other]
+.ix Messages, other programs
+.ix Third party messages
+Strata runs LaTeX, the print command, the spell checker and a few programs that
+install fonts.  Their messages are passed on inside the messages above or are
+named by them; this section says what the commonest ones mean for a Strata
+user.  The words are those of the other programs and can change with their
+versions; this chapter does not list them all.
+.h3 LaTeX [msg-other-latex]
+.ix LaTeX, error messages
+.ix First error line
+.ix Undefined control sequence
+LaTeX stops at an error and Strata shows the first error line of its log (it
+begins with an exclamation mark and a space) and the line after it, in
+{c:LaTeX failed: } on the screen or after the name of the document on the
+error output.  A mistake in an equation or a picture does not stop a print:
+the Printer prints the piece in its long form ({n:eq-print-fail}).  What stops
+it is mostly a missing package or file.
+.table 31 29
+Text | Meaning and what to do
+{c:! I can't find file `NAME'.} | A file that the document needs is missing: a
+ | picture file, or a file of the font.  Check the name and where it is.
+! LaTeX Error: File `NAME.sty' not found. | A LaTeX package is not installed.
+ | A font of TeX Font Association needs it: install it ({n:msg-other-font}),
+ | or choose another font. {x:print-prereq} lists the packages of the
+ | prerequisites.
+! Package NAME Error: TEXT | A package of LaTeX refused something.  The text
+ | says what.
+! TeX capacity exceeded, sorry [TEXT] | The document is too large for the
+ | settings of LaTeX; print it in parts (a range of sections).
+! Undefined control sequence. | A command that LaTeX does not have.  In a
+ | document of Strata this comes from a hand-made text of a marker or an
+ | unusual font package.
+.end
+.h3 The print command [msg-other-lp]
+.ix lp, messages
+.ix CUPS, messages
+The text after {c:lp failed (status N): } is the text of lp.
+.table 31 29
+Text | Meaning
+lp: Error - The printer or class does not exist. | The queue named in Printer
+ | is not known to the print system.  The Print panel's {k:F2} list shows the
+ | queues that exist.
+request id is NAME (1 file(s)) | The job was taken. NAME is the number to give
+ | to the print system to cancel it.  Shown in
+ | {c:Wrote ... and sent it to QUEUE (...)}.
+.end
+.h3 The installation of fonts [msg-other-font]
+.ix Font installation, messages
+.ix Install failed
+.ix CTAN
+The command Install Now of TeX Font Association downloads an archive and
+enables its map file, with the programs kpsewhich, curl, unzip, mktexlsr and
+updmap-user.  While it runs a box titled Installing font names the step:
+"Downloading NAME..." with the size received so far, "Unpacking NAME...",
+"Making the file list of TeX (mktexlsr)..." and "Enabling the map file MAP
+(updmap-user)...".  {k:Esc} stops the download only.  The results are shown in a
+box titled Install failed or Installed.
+.table 33 27
+Message | Meaning and what to do
+Cannot make a temporary directory | The directory for the download cannot be
+ | made.  Check the room where the download is made.
+Font N has a character that cannot be used (only letters, digits and . _ - + =
+ , are allowed) | The list of fonts is refused before it is written
+ | ({n:appcfg}); the field has another character.
+Installation cancelled | {k:Esc} stopped the download.  Nothing is installed and
+ | the partial file is removed.
+Installed in DIR | The archive is unpacked into DIR and the font is installed.
+kpsewhich did not run (is TeX installed?) | TeX is not installed, or the
+ | program that finds its directories is missing.
+The archive could not be downloaded from URL | curl failed: no network, the
+ | name of the archive is wrong, or the server is not reachable.
+The archive could not be unpacked | The program unzip failed or is missing.
+The name of the archive or of the map file has a character that cannot be used
+ | The fields CTAN Archive to Download or Map File to Enable have a bad
+ | character or a slash.
+This font has no archive to download | The field CTAN Archive to Download is
+ | empty.
+updmap-user failed to enable the map file | The font is unpacked but its map
+ | file was not enabled.  Run the program by hand or fix the name.
+.end
+.h2 Messages that read oddly [msg-faults]
+.ix Odd wordings
+.ix Marker, title of refusal box
+.ix Messages, wording
+A few messages say less than they should or are headed with a title that does
+not fit.  They are listed so that a user is not misled.
+.table 29 31
+Message | Explanation
+Any panel refusal of the File, Print, Preview, Macros or Library commands | The box has the title of the panel; read the text.
+cannot open file, read error, write error | These words of the document reader
+ | name neither the file nor the system's reason.  The name was typed in the
+ | panel just before.
+The PDF cannot replace the document | Only the Print panel checks this.
+.end
+.h2 Messages of the Error Log [msg-errlog]
+.ix Error Log, messages
+.ix Print Error, messages
+.ix Find Next Error, messages
+.ix Faults of a document, messages
+A document that cannot be printed as it is gets its faults named: in the Error
+Log pages of the PDF, in Print Error markers in the text, and in lines on the
+error output.  The faults have one text each, listed here with their kind: an
+error is a piece that cannot be set and is printed as text, a warning is a
+piece that is set with something lost.  Each fault has a short name, which is
+given in square brackets in the lines of the error output.
+.h3 The faults [msg-errlog-faults]
+.ix Faults, list
+.table 35 9 16
+Message | Kind | Name
+{c:A counter has reached 4294967295 and stays there; its later uses show the same number.}
+ | Warning | counter-limit
+{c:A Keep was started while another is still open; the first has no End Keep.}
+ | Error | keep-doubled
+{c:A page break or column break inside a table or a line with tabs cannot be
+ honored; it is printed as text.} | Warning | marker-incell
+{c:Invalid Include request: A part with sections must be in the last block of
+ its section.} | Error | include-place
+{c:Invalid Include request: The file "NAME" cannot be found.}
+ | Error | include-missing
+{c:Invalid Include request: The file "NAME" cannot be read.}
+ | Error | include-unreadable
+{c:Invalid Include request: The file "NAME" includes itself, directly or
+ through other parts.} | Error | include-loop
+{c:Invalid Include request: The file "NAME" is not a Strata document or is
+ damaged.} | Error | include-damaged
+{c:Invalid Include request: The Include marker cannot be in a headline.}
+ | Error | include-place
+{c:Invalid Include request: The Include marker has no file name.}
+ | Error | include-noname
+{c:Invalid Include request: The Include marker must be alone in its block.}
+ | Error | include-place
+{c:Invalid Include request: The parts are nested more than 8 levels deep.}
+ | Error | include-deep
+{c:LaTeX markers are not allowed in this print: the text of this one is not
+ written and the marker is printed as text.} | Warning | latex-marker-off
+{c:NAME markers are not typeset by Strata; the marker is printed as text.}
+ | Warning | marker-unsupported
+{c:No font has the character U+XXXX; it is printed as [U+XXXX].} | Warning
+ | | char-missing
+{c:Picture file not found: NAME (looked in PLACES).} | Error
+ | | picture-missing
+{c:TeX rejects the equation (WHY), so it is printed as text.} | Error
+ | | equation-refused
+{c:TeX stopped without saying why, so no picture is printed.} | Error
+ | | picture-refused
+{c:Text that depends on an If cuts across the sections: a section whose
+ parent is left out moves up a level.} | Warning | if-structure
+{c:The cross-reference points at a section that is not in the document (or not
+ in this part of it).} | Warning | xref-unresolved
+{c:The equation cannot be read: it is too long or damaged, so it is printed as
+ text.} | Error | equation-unreadable
+{c:The equation is empty.} | Warning | equation-empty
+{c:The equation is not valid TeX math, so it is printed as text.} | Error
+ | | equation-invalid
+{c:The operator of this If is missing or not known: the operators are = # < >
+ <= >=, and # means not equal.} | Error | if-bad-operator
+{c:The picture cannot be used (WHY), so it is printed as text.} | Error
+ | | picture-refused
+{c:The picture file cannot be given to TeX here.} | Error | picture-link
+{c:The picture file NAME cannot be read: REASON.} | Error | picture-unreadable
+{c:The picture file NAME is incomplete or damaged.} | Error | picture-damaged
+{c:The picture file NAME is of a type that cannot be printed (only PNG, JPEG,
+ PDF and PostScript can).} | Error | picture-type
+{c:The picture marker has no file name.} | Error | picture-noname
+{c:The special symbol is not known to Strata; it is printed as text.}
+ | Warning | symbol-unknown
+{c:The text of this LaTeX marker is too long or damaged, so it is not written
+ and the marker is printed as text.} | Error | latex-marker-unreadable
+{c:The value of the counter cannot be worked out; it is printed as text.}
+ | Warning | counter-unresolved
+{c:The value of this If is not allowed: REASON} | Error | if-bad-literal
+{c:These Ifs are nested too deep: the limit is ten.} | Error | if-too-deep
+{c:This Else has no If before it.} | Error | else-unmatched
+{c:This End Keep has no Start Keep before it.} | Error | keep-unmatched
+{c:This Endif has no If before it.} | Error | endif-unmatched
+{c:This If already has an Else.} | Error | else-doubled
+{c:This If does not begin with the name of a variable: a name starts with a
+ letter.} | Error | if-no-variable
+{c:This If has no Endif after it.} | Error | if-unclosed
+{c:This If has no expression: it needs a variable, an operator and a value,
+ such as COLOR = red.} | Error | if-empty
+{c:This If has nothing after the operator to compare the variable with.}
+ | Error | if-no-literal
+{c:This Start Keep has no End Keep after it.} | Error | keep-unclosed
+.end
+NAME is a marker name or a file name, WHY the reason that the checks gave,
+REASON the reason of the system.  An error of the log of LaTeX is also a
+fault: its text is the first error line of TeX ({n:msg-other-latex}).  What to
+do: correct the thing that the text names (a missing picture file, an equation
+that is not TeX math, a Keep without its End Keep, a part that an Include
+marker cannot find) and print again; {x:eq-
+print-fail} says what the Printer prints in place of an equation that fails.
+.h3 The place of a fault [msg-errlog-place]
+.ix Fault, place
+.table 36 24
+Place | Meaning
+{c:Section TAG TITLE, block N, column N, line N, NAME marker} | The place in
+ | words: the section by its number and title, then the block, the column and
+ | the line, and the marker that is wrong.  The parts that do not apply are
+ | left out.
+{c:Title page, block N} | The fault is on the title page.
+{c:Block N} | The document is not structured.
+{c:Item N} | A place that is not in a block.
+{c:line N of the file that TeX read} | An error of TeX that could not be put
+ | in a block.
+{c:no position} | The place is not known.
+.end
+.h3 On the message line [msg-errlog-line]
+.ix Print Error, message line
+.ix Ctrl-F8
+.table 29 31
+Message | After
+{c:N print errors removed} | Remove Print Errors took out all of them.
+{c:No print errors} | Find Next Error, Find Previous Error and Remove Print
+ | Errors: there are no Print Error markers in the document.
+{c:No print errors.} | The end of the line of a good print when there was
+ | none.
+{c:Print error N of M: TEXT} | Find Next Error went to the marker N of M; TEXT
+ | is the fault. {c:Wrapped to the start.} or {c:Wrapped to the end.} stands
+ | before it when the search went round.
+{c:Print Error (read only; Del removes it)} | The title of the box that shows
+ | the text of a marker ({k:Alt-F12} on it).
+{c:Print Error removed} | Remove Error took out the marker under the cursor.
+{c:PRINT FAILED: Preview shown in spite of errors of LaTeX: TEXT} | A Preview
+ | whose pages LaTeX made in spite of an error of its own.
+{c:Print: no print errors} | After a Print that found none.
+{c:Print: PRINT FAILED, N print errors (Ctrl-F8 finds the next)} | After a
+ | Print that found errors: the number of markers made.
+ | {c:Preview done: PRINT FAILED, N print errors (Ctrl-F8 finds the next)} after a Preview.  With
+ | warnings only the words {c:PRINT FAILED, } are not there.
+{c:The cursor is not on a Print Error} | Remove Error with the cursor
+ | elsewhere.
+.end
+{x:print-errmarks} and {x:print-errline} describe the markers and the keys.

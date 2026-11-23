@@ -1,0 +1,25 @@
+
+--------------------------------- Window Close ---------------------------------
+
+Use Menu (F10) Edit Window Close to display only one document for editing.  
+Window Close closes the window that contains the cursor.
+
+  # View of the screen before               # View of the screen after
+    selecting Window Close                    selecting Window Close
+
+    ..........................                ..........................
+    .^^^^^^^^^^^^^^^^^^^^^^^^^                .^^^^^^^^^^^^^^^^^^^^^^^^^
+    . 3.4 Management Position                 . 3.4 Management Position 
+    .                                         .
+    .     The initial reaction                .     The initial reaction
+    .     merger proposal was                 .     merger proposal was
+    ._________________________                .     negative. However, t
+    .+ Schedule of Events in t                .     considerable support
+    . + Permissions and licens                .   
+    .  - On-site drilling lice                .     The current tendency
+    ..........................                ..........................
+
+You are prompted to save changes made to the file in the window you are closing.
+
+--------------------------------------------------------------------------------
+         Window      Window Open      Keyboard Summary      Help Index

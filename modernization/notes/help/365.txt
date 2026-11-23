@@ -1,0 +1,25 @@
+
+------------------------------ Worksheet and Count -----------------------------
+
+Worksheet: Select Worksheet from the Menu (F10) Tools menu when you want to 
+           import data for all of the Worksheet markers that have On Command 
+           selected for the When to Import Data prompt on the Worksheet marker
+           panel.
+
+
+Count:     Select Count from the Menu (F10) Tools menu to calculate the total 
+           number of words in the document.  All words in the document are 
+           counted, whether the document is expanded or collapsed.  If you 
+           have used the Edit Section command to edit a single section, only 
+           the words in that section are counted.  Only the words present in 
+           the editor are counted; words that will become part of the document
+           when it is printed, such as results of markers, are not counted.
+
+           To count all the words in the final printed document, select 
+           Document Print Summary under the Print prompt on the Print
+           Document panel.
+
+
+--------------------------------------------------------------------------------
+  Tools     Worksheet Marker     Edit Section     Markers     Print Document
+                Keyboard Summary                     Help Index

@@ -1,0 +1,379 @@
+000  No Help
+001  Document Manager
+002  Selecting a File
+003  Print Document
+004  Optional Settings
+005  Preview Document
+006  Preview
+007  Check Document Spelling
+008  Check Document Spelling Menu
+009  Maintain Dictionaries
+010  Convert Document to Spelling Dictionary
+011  Add Document to Spelling Dictionary
+012  Convert Spelling Dictionary to Document
+013  Compare Document Versions
+014  Full-Page Preview
+015  Import from 1-2-3/Symphony File
+016  Command File
+017  File Conversion Utilities
+018  DCA (Revisable) File Import
+019  DCA (Revisable) File Export
+020  ThinkTank File Import
+021  Setup
+022  Display Drivers
+023  No Help
+024  Printer Drivers
+025  Virtual Memory Setup
+026  Sound
+027  Common Compose Sequences
+028  Append
+029  Split
+030  Join
+031  Delete
+032  Copy
+033  Cut
+034  Set Attribute
+035  Format
+036  Format Text
+037  No Help
+038  
+039  Format Column
+040  
+041  Format Block
+042  
+043  Format Section
+044  Go To
+045  Border
+046  Border Layout
+047  Move
+048  
+049  Move Column Keys
+050  
+051  Move Block Keys
+052  
+053  Move Section Keys
+054  Table
+055  Column and Table Editor
+056  Replace
+057  Markers
+058  Note Marker
+059  Index Marker
+060  Cross-reference
+061  Search
+062  Menu
+063  File
+064  File Save
+065  File Retrieve
+066  File New
+067  File Delete
+068  File Import
+069  File Export
+070  Global
+071  Global Format - Structured
+072  Global Format - Unstructured
+073  Page Layout
+074  Custom Paper Size
+075  
+076  
+077  Custom Table Style
+078  Custom Index Style
+079  Typeface List
+080  Custom Point Size
+081  Note Format
+082  
+083  Count
+084  Options
+085  Edit
+086  Edit Title
+087  Print
+088  
+089  Window
+090  Window Adjust
+091  Block Format Editor
+092  
+093  Working Directory
+094  File Names
+095  H - E - L - P
+096  Replace Menu
+097  Block Format Editor
+098  Error Messages
+099  Error Messages
+100  Error Messages
+101  Error Messages
+102  Error Messages
+103  Error Messages
+104  Error Messages
+105  Error Messages
+106  Error Messages
+107  Error Messages
+108  Error Messages
+109  Error Messages
+110  Error Messages
+111  Error Messages
+112  Error Messages
+113  Error Messages
+114  Error Messages
+115  Error Messages
+116  Error Messages
+117  Error Messages
+118  Error Messages
+119  Error Messages
+120  Error Messages
+121  Error Messages
+122  Error Messages
+123  
+124  
+125  Error Messages
+126  Error Messages
+127  
+128  Error Messages
+129  Error Messages
+130  Error Messages
+131  Error Messages
+132  Error Messages
+133  Error Messages
+134  Error Messages
+135  Recovering From An Out Of Virtual Memory Error
+136  Virtual Memory Status
+137  
+138  
+139  
+140  Error Messages
+141  
+142  File Retrieve Options
+143  Quit
+144  No Help
+145  Highlighting
+146  Edit Structured/Unstructured
+147  Edit Section/Document
+148  File Settings
+149  No Help
+150  Keyboard Summary
+151  
+152  Setting Tabs on the Ruler
+153  Attributes
+154  Justification
+155  Line Indents
+156  Font
+157  Block Indents
+158  Controlling Spacing
+159  Controlling Page Breaks
+160  First Block Type
+161  Printing Selected Areas of a Document
+162  Setting the Section Tag Numbering Level
+163  Setting the Table of Contents Level
+164  Headers and Footers
+165  Setting Paper Size and Bins
+166  Vertical Centering
+167  Date and Time Formats
+168  Page Margins
+169  Setting the Amount of Space to Indent Levels
+170  Section Tags
+171  Note Style
+172  File Types
+173  Edit Screen
+174  Window Open
+175  Window Close
+176  Window Switch
+177  Window Zoom-up/Zoom-down
+178  Template Files
+179  
+180  Note Type
+181  Footnotes
+182  Levelnotes
+183  Endnotes
+184  Options (continued)
+185  Options (continued)
+186  Command Key Summary
+187  Accelerator Summary
+188  Editing Keys
+189  Expand/Collapse Section and Level Keys
+190  
+191  Cursor-Movement Keys
+192  Compose
+193  Markers
+194  Marker Index
+195  Marker Index (continued)
+196  Unstructured and Structured Documents
+197  Table Keys
+198  Ruler and Tab Keys
+199  Overtype
+200  Border Options
+201  Column and Table Editor Prompts
+202  Column Types
+203  Ruler Spacing
+204  
+205  Search Strings
+206  Search Options
+207  Typeface List Settings
+208  Import Worksheet Formats
+209  Custom Page Style
+210  
+211  Custom Index Style
+212  Replace Strings
+213  Replace Options
+214  Equation Edit
+215  Equation Keywords
+216  
+217  Equation Keywords
+218  Equation Keywords
+219  Equation Keywords
+220  Equation Keywords
+221  Equation Keywords
+222  Equation Keywords
+223  Equation Keywords
+224  Equation Keywords
+225  Equation Keywords
+226  Tab Types
+227  Tab-fill Characters
+228  Markers
+229  Markers
+230  Markers
+231  Markers
+232  Markers
+233  Hanging Indents
+234  Custom Virtual Memory Setup
+235  Import from 1-2-3/Symphony File Options
+236  Print Document
+237  Optional Settings
+238  Print/Preview/Compare Document
+239  Print/Preview/Compare Document
+240  Check Document Spelling
+241  Optional Settings
+242  Optional Settings
+243  Compare Document Versions
+244  Compare Document Versions
+245  Datacopy Image File Import
+246  Microtek Image File Import
+247  Preview Keys
+248  Preview Status
+249  Out of Virtual Memory
+250  Avoiding Virtual Memory Errors
+251  No Help
+252  No Help
+253  Indents and Margins
+254  Error Messages
+255  Error Messages
+256  Error Messages
+257  Error Messages
+258  Error Messages
+259  Error Messages
+260  Error Messages
+261  Error Messages
+262  Error Messages
+263  Error Messages
+264  Error Messages
+265  Error Messages
+266  Error Messages
+267  Error Messages
+268  Error Messages
+269  Error Messages
+270  Error Messages
+271  
+272  Markers
+273  Markers
+274  Markers
+275  Markers
+276  Markers
+277  Creating Custom Spelling and Hyphenation Dictionaries
+278  File Import Options
+279  Import from 1-2-3/Symphony File Options
+280  Dictionary Language
+281  Convert Document to Hyphenation Dictionary
+282  Add Document to Hyphenation Dictionary
+283  Convert Hyphenation Dictionary to Document
+284  Batch Print Utility
+285  Maintain Download Fonts
+286  Hyphenation Settings
+287  Preview Menu
+288  HP ScanJet Image File Import
+289  DEST Image File Import
+290  MacPaint File Import
+291  PC Paintbrush File Import
+292  Setup Options
+293  Change Case
+294  
+295  Named Block Format
+296  Winding Column Layout
+297  Section Tag
+298  Create Separate Documents
+299  Manuscript Document Downgrade
+300  Manuscript Local Format Reset
+301  Marker Display Modes
+302  Tools
+303  DOS
+304  File Export Options
+305  Marker Format
+306  Named
+307  Page Number Level
+308  Page Numbers
+309  
+310  Line Weight
+311  Repaginate/Clear-pages
+312  Print Draft Options
+313  Define Macro
+314  Math
+315  Copy to Library
+316  Cut to Library
+317  Paste from Library
+318  Thesaurus
+319  
+320  Screen Capture
+321  Markers
+322  
+323  Go To Page
+324  Note Format
+325  Counter Format
+326  Keycap Format
+327  Screen Capture Format
+328  Named Block Format
+329  Delete Named Block Format
+330  Macros
+331  Macro Edit
+332  Keystrokes Edit
+333  Save Macro Set
+334  Retrieve Macro Set
+335  Delete Macro
+336  Library
+337  Library Entry
+338  Contents Edit
+339  Save Library
+340  Retrieve Library
+341  Delete from Library
+342  Hyphenation Settings
+343  Hyphenation Settings
+344  Hyphenation Settings
+345  Create/Edit Command File
+346  Delete Command File
+347  Execute Command File
+348  Assign Font Directories
+349  Font Load Modes
+350  Delete Unassigned Font Files
+351  Document Printer
+352  Spell Word
+353  Header/Footer Edit
+354  Preview
+355  Spell
+356  Autosort
+357  
+358  Greeking Options
+359  Graphics Zoom Option
+360  
+361  
+362  Starting Value
+363  Libraries
+364  Macros
+365  Worksheet and Count
+366  
+367  Marker Display Mode Descriptions
+368  
+369  Counter Tags
+370  Comment Edit
+371  Text Indents
+372  Block and Column Conceptual Overview
+373  Section and Level Conceptual Overview
+374  
+375  Equation Update Utility
+376  Markers
+377  Evaluation Software
+378  

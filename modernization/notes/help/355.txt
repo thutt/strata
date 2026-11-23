@@ -1,0 +1,25 @@
+
+------------------------------------- Spell ------------------------------------
+
+Use the Menu (F10) Tools Spell commands to spell all or part of a document 
+without leaving the editor.
+
+
+          Spell check the entire            Spell check only the
+          document.                         current section and its
+                 |                          subsections.
+                 +----+                         +------+
+                      |                         |
+           +----------------------------------------------------------+
+           |      Document       Block       Section       Word       |
+           +----------------------------------------------------------+
+                                   |                         |
+                                +--+                         |
+                       Spell check only the            Spell check only
+                       current block.                  the current word.
+                                                       (Ctrl C)
+
+You can also spell check an entire document from the Document Manager with the
+Check Document Spelling option.
+--------------------------------------------------------------------------------
+Tools    Check Document Spelling    Spell Word    Keyboard Summary    Help Index

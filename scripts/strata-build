@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+# Strata is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Strata.  If not, see <https://www.gnu.org/licenses/>.
+# Copyright (c) 2026 Logic Magicians Software
+
+# strata-build builds Strata.  All output goes into the build directory.
+#
+# First choose a build directory, once per shell:
+#
+#     source scripts/setup [-b debug|release|asan] /tmp/strata
+#
+# Then run one of these commands:
+#
+#     strata-build           Build everything (the same as 'all').
+#     strata-build help      List the valid targets.
+#     strata-build term      Build only the terminal version.
+#     strata-build x11       Build only the X11 version.
+#     strata-build test      Build, then run the unit tests.
+#     strata-build smoke     Run the terminal smoke tests in parallel
+#                            (SMOKE_JOBS=n; 1 is serial).
+#     strata-build smoke-quick  The same, every script for 60 seconds only.
+#     strata-build verify    Run every test suite, then check that the
+#                            source tree was not modified.
+#     strata-build check-tools [--build] [--tests] [--run] [--quiet]
+#                            Report which programs, headers and libraries
+#                            that building, testing and running need are
+#                            present, and the package of each missing one;
+#                            installs nothing.  It needs no build directory.
+#     strata-build clean     Delete the build products.
+#     strata-build install [OPTIONS]
+#                            Install what is built under a prefix, by the
+#                            script scripts/strata-install (never part of
+#                            'all'); 'strata-build install --help' lists
+#                            the options.  'strata-build uninstall
+#                            [--prefix DIR]' removes it again.
+#     strata-build release DIR
+#                            Make the release directory DIR for delivery:
+#                            the install script and the directory payload
+#                            with the files that it installs.  The release
+#                            holds no build script and no source.
+#
+# Every argument is handed to make as a target name, so 'strata-build help'
+# always shows the current list.
+
+set -euo pipefail
+
+# Stop with a message.
+function die
+{
+    echo "strata-build: ${*}" >&2
+    exit 1
+}
+
+# The check of the tools needs no build directory.
+if [ "${1:-}" = "check-tools" ]; then
+    shift
+    exec "$(dirname "${BASH_SOURCE[0]}")/check-tools" "${@}"
+fi
+
+# The setup script must have been sourced first.
+if [ -z "${STRATA_BUILD_DIR:-}" ]; then
+    die "run 'source scripts/setup /tmp/strata' first."
+fi
+
+# The environment of an older setup script has no build root, and its
+# build directory does not end in the build type.
+if [ "${STRATA_BUILD_DIR}" != \
+     "${STRATA_BUILD_ROOT:-}/${STRATA_BUILD_TYPE:-debug}" ]; then
+    die "the environment is out of date; source scripts/setup again."
+fi
+
+if [ -z "${STRATA_DIR:-}" ] || [ -z "${STRATA_ROOT:-}" ]; then
+    die "run 'source scripts/setup /tmp/strata' first."
+fi
+
+# Refuse to build inside the source tree, even if the variables were
+# set by hand instead of by the setup script.
+build=$(realpath -m -- "${STRATA_BUILD_DIR}")
+
+case "${build}/" in
+    "${STRATA_ROOT}"/*)
+        die "the build directory ${build} is inside the source tree."
+        ;;
+esac
+
+case "${STRATA_ROOT}/" in
+    "${build}"/*)
+        die "the build directory ${build} contains the source tree."
+        ;;
+esac
+
+# Build with one job per processor.
+jobs=$(nproc 2>/dev/null || echo 2)
+
+# With no arguments, build the default target.
+if [ ${#} -eq 0 ]; then
+    set -- all
+fi
+
+# The install and the uninstall are done by a script of their own.
+case "${1}" in
+    install)
+        shift
+        exec "${STRATA_ROOT}/scripts/strata-install" \
+            --build-dir "${build}" "${@}"
+        ;;
+    uninstall)
+        shift
+        exec "${STRATA_ROOT}/scripts/strata-install" --uninstall "${@}"
+        ;;
+    release)
+        shift
+        exec "${STRATA_ROOT}/scripts/strata-install" \
+            --build-dir "${build}" --make-release "${@}"
+        ;;
+esac
+
+if [ "${1}" != "help" ]; then
+    echo "strata-build: ${STRATA_BUILD_TYPE:-debug} build in ${build}"
+fi
+
+make -C "${STRATA_DIR}" -j"${jobs}" "${@}"
+
+# Tell the user where the programs are after a build.
+case "${1}" in
+    all)
+        echo "strata-build: done."
+        echo "  Terminal: ${build}/term/stred and ${build}/term/str"
+        echo "  X11:      ${build}/x11/stred and ${build}/x11/str"
+        ;;
+esac

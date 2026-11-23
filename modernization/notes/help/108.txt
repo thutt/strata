@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+-- Display driver defined in Setup is inappropriate --
+
+Refer to Hardware in the Reference manual for the correct display driver.
+
+-- Distance between left/right margins is different for document pages --
+
+The distance between the right and left margins (that is, the sum of the right 
+and left margins) must be the same for the first, even, and odd pages in a 
+document. Edit the margins on the Page Layout panels and reprint the document.
+
+-- Document file contains invalid settings --
+
+The file you are retrieving has invalid settings.  Press Space Bar to retrieve 
+as much of the document as possible or Esc to cancel the command.
+
+-- Document has been modified since last access -- 
+
+Someone else has modified the document you are working on since you last saved 
+it.  This may happen if, for instance, you are working on a network and another
+user edits the same document you are working on.  Proceeding with the save will
+overwrite the other user's modifications.  You may want to save your file to a 
+new file name and then resolve the differences.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

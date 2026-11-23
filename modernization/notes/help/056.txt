@@ -1,0 +1,25 @@
+
+------------------------------------ Replace -----------------------------------
+Replace (Alt F9) searches through a document for a character or string of 
+characters and replaces them with another string of characters.
+
+                                       +--------------- Replace ---------------+
+---Procedure------------------------   |                                       |
+                                       |   Replace:                            |
+                                       |      With:                            |
+ Press Replace.                       | Direction:                            |
+ Complete the Replace panel.          |                                       |
+ Press Ins to search for the first    |------------ Search Options -----------|
+  occurrence of the search string.     |                                       |
+ If the string is found, select the   | Match Lowercase With:                 |
+  appropriate Replace Menu option.     |           Attributes:                 |
+ If the string is not found, press    |  Match Complete Word?                 |
+  any key to return to the document.   |                                       |
+                                       |----------- Replace Options -----------|
+                                       |                                       |
+------------------------------------   |          Attributes:                  |
+                                       |                Case:                  |
+                                       |                                       |
+                                       +---------- Press Ins to Begin ---------+
+--------------------------------------------------------------------------------
+       Search     Replace Menu      Keyboard Summary       Help Index

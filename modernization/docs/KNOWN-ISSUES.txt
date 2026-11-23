@@ -1,0 +1,210 @@
+KNOWN ISSUES OF STRATA
+
+This document lists the faults and the limits that the project knows and has
+decided not to fix, with the reason for each decision.  A fault that is being
+fixed is not listed here: it is in docs/WORKLIST.txt.  Every entry says what
+the issue is, where it shows, why it is accepted, how to see it, and what
+would fix it.
+
+Entries are numbered by the part of Strata that they concern: KI-1 is the
+Printer, KI-2 is the label templates, KI-3 is what the project cannot test in
+its own environment.
+
+
+======================================================================
+KI-1  THE PRINTER
+======================================================================
+
+KI-1.1  The tops of the accents widehat and widetilde touch the line above
+        their cell in the equation tables of the Reference Manual
+
+  What:    In the equation tables of the Reference Manual (chapter 9), the
+           result column shows the two accents \widehat and \widetilde in
+           display size.  The top of each wide accent touches the bottom of
+           the line above its cell.
+  Where:   The printed Reference Manual, chapter 9, the table of accents.  The
+           Editor draws the same equations on the screen without the fault.
+  Why:     The accents are drawn by LaTeX.  The fault is in the way that LaTeX
+           places a tall accent in a table cell with no space above it, not
+           in the text of the manual.  The owner decided on 2026-11-21 to
+           accept it: the table stays readable, and the fix would be a
+           change of the layout of every equation cell for two commands.
+  See it:  Print the Reference Manual to a PDF and look at the table of
+           accents in chapter 9 at a large zoom.
+  Fix:     A line of space above the cells of that one table.
+
+
+======================================================================
+KI-2  THE LABEL TEMPLATES (docs/LABELS.txt, task 50)
+======================================================================
+
+KI-2.1  The geometry comes from the gLabels template data, not from Avery's
+        own files
+
+  What:    The size, the margins and the pitch of each sticker sheet come from
+           the open template data of the program gLabels, read on 2026-11-21.
+           Avery's own product pages give only the size of a sticker and the
+           count of stickers on a sheet.  Avery's blank templates are Word
+           or PDF files that the research tool could not read, and two of
+           Avery's sites (avery.co.uk and Zweckform) refused the tool with
+           the status 403.
+  Where:   docs/LABELS.txt, every number of every sheet, with its source.
+  Why:     No other published source of the margins and the pitch was
+           available.  The sheets were printed to PDF and measured: the
+           stickers of the PDF lie within 0.036 mm of the data.  That proves
+           that the templates follow the data, and does not prove that the
+           data follow the real sheet.
+  See it:  Print a template to paper and hold the sheet against it.
+  Fix:     Read Avery's own template files, or measure a printed sheet.
+
+KI-2.2  The pitch of the sheet 5160 differs by 0.79 mm between two sources
+
+  What:    The pitch that the gLabels data give for the sheet 5160 is 0.79 mm
+           different from the pitch in the Microsoft knowledge base article
+           Q146892.  The sheets 5197 and 5295 differ in the same way.
+  Where:   docs/LABELS.txt, the notes of the three sheets.  The templates use
+           the gLabels pitch for every sheet, so that all margins and
+           pitches come from one source.
+  Why:     Only a printed sheet can say which pitch is right: the project has
+           no stock of Avery sheets and does not print on a physical
+           printer without the owner's permission.
+  See it:  Print the template of the 5160 on paper and lay a real sheet over
+           it; the stickers at the foot of the sheet show the difference.
+  Fix:     Measure one printed sheet and change the data in
+           tests/labeldata.py.
+
+KI-2.3  Seven sheets are not available, because no published number was found
+
+  What:    The sheets 5390, 5392, L7159, L7106, L7418 and 6240 and the spine
+           labels of the sheet 5931 have no template.  The sheet L4730 was
+           left out because its ten stickers across are more than a block of
+           the Printer can wind (nine columns at most).
+  Where:   docs/LABELS.txt, the section of the sheets that are missing.
+  Why:     The rule of the task is that no number is taken from memory: a sheet
+           with no number in a published source is not made.
+  Fix:     Find the published numbers and add the sheets to
+           tests/labeldata.py; the generator makes the templates.
+
+KI-2.4  Stickers fill down the first column, then the next
+
+  What:    When the text of a label template runs on, it fills the first
+           column of stickers from the top to the bottom and then the second
+           column.  Avery's own software fills the sheet along the rows: the
+           first row from left to right, then the second row.
+  Where:   Every label template of Strata.
+  Why:     The template is one block of text in winding columns, a layout in
+           which the text of a block fills one column and then goes to the
+           next.  A winding block has this order and no other.  A layout in
+           which the text fills the rows needs a table with a fixed width
+           for every cell, and the measurements showed that such a table
+           misses the stickers by up to 1.4 mm.
+  See it:  Type the numbers one to thirty on a template of the 5160 and
+           print it: the number two is below the number one.
+  Fix:     A table layout with the cell widths measured for each sheet, or a
+           new feature of the Printer that fills the stickers along the rows.
+
+KI-2.5  Text that is too long for a sticker is not cut and not reported
+
+  What:    A sticker holds as many lines as the block has.  A line more than
+           the sticker holds is printed, and it pushes the stickers below it
+           down the page; the program gives no message.
+  Where:   Every label template.
+  Why:     The Printer cannot cut a block at a height, and the program does not
+           count the lines of a sticker.  The manual says so.
+  See it:  Type six lines on a sticker of the 5160, which holds three, and
+           print.
+  Fix:     A check that counts the lines of each sticker and a message that
+           names the sticker.
+
+KI-2.6  Round stickers use the box around the circle, and the hole of a disc
+        is not left free
+
+  What:    The template of a round sticker, or of a disc label, has a
+           rectangular block of the size of the box that holds the circle.
+           Text can fall outside the circle, and on the hole in the middle of
+           a CD label.
+  Where:   The templates of the sheets 5195, 5193, 5194 and 5931 and the others
+           with a round or disc shape.
+  Why:     The Printer sets rectangular blocks.  The manual says that the
+           writer of the label must keep the text inside the circle.
+  Fix:     A block of a shape other than a rectangle, which the Printer does
+           not have.
+
+
+======================================================================
+KI-3  WHAT THE PROJECT CANNOT TEST IN ITS OWN ENVIRONMENT
+======================================================================
+
+The project builds and tests Strata on a Debian machine with no desktop
+session and on a second machine that runs commands over ssh.  The tests use
+a pseudo terminal and an X server that has no window manager.  These
+statements of the manual are therefore checked against the source of the
+program and not by a run.
+
+KI-3.1  The Linux console
+
+  What:    The Linux console is the text screen of the kernel that is shown
+           with no terminal program.  The manual says which keys the console
+           keeps for itself and which keys reach the program.
+  Why:     A pseudo terminal is not a console: the kernel keymap is not in
+           the path of its keys.  The project has no machine on which a
+           console can be driven by the tests.
+  How it is checked:  The reader of keys in term.c takes the forms of the
+           console for F1 to F5 and the numeric forms; no code is specific to
+           the console.  The rows of the manual that name the keys of the
+           kernel keymap are marked not testable here in the ledgers
+           (docs/MANUAL-CHECK-LEDGER-README.txt names them).
+  Fix:     Drive a real console, for example in a virtual machine with a
+           script that sends key codes to it.
+
+KI-3.2  The keys that a user's own terminal, window manager or desktop keep
+
+  What:    Many terminals, window managers and desktops take keys such as
+           Alt-F4, Ctrl-Alt-arrows or Alt-Tab before the program sees them.
+           The manual has a table of these keys for the terminal and for the
+           X11 version.
+  Why:     Each table row depends on a program that is not installed in the
+           test environment, in a version that changes with the desktop.
+  How it is checked:  Against the survey of terminals and desktops in
+           claude-interchange/TERMINAL-DOCS-SURVEY.txt and the key map in
+           claude-interchange/KEY-MAP.txt, which were made from the
+           documentation of each program.  No key was sent to each program.
+  Fix:     A matrix of tests that starts each terminal and desktop with a
+           script and records which keys arrive.
+
+KI-3.3  A terminal that reports modified keys
+
+  What:    Some terminals send a distinct code for a key with Ctrl, Alt or
+           Shift together, for example the Ctrl-Shift forms of the arrow keys.
+           The terminal version of the Editor reads these codes.
+  Why:     No terminal of that kind is installed in the test environment, and
+           the tests cannot make a terminal emulator send them.
+  How it is checked:  The reader of keys in term.c was read against the
+           documented sequences of these terminals.  No terminal of that kind
+           was run.
+  Fix:     Run the tests under a terminal emulator that sends the codes.
+
+KI-3.4  The close button of the window of the X11 version
+
+  What:    The manual says that the close button of the window of the X11
+           version acts as F12 and Quit, with the choices Save and Discard.
+  Why:     The X server of the tests, Xvfb, has no window manager, and a
+           window manager draws the close button and sends the close request.
+  How it is checked:  The owner confirmed on 2026-11-21 that the close button
+           behaves like F12, Quit; the program handles the close request of
+           the window in the same way that it handles that command.
+  Fix:     A test under a window manager, or a test that sends the close
+           request to the window with a protocol message.
+
+KI-3.5  The Control key held with xdotool --window
+
+  What:    A key sent with xdotool --window and the key Ctrl-F5 did not open the
+           Paste from Library box, but the same key pressed with a Control key
+           that was really held did.  A message box that the held Control key
+           opened closed when the key was released.
+  Why:     The cause is not known.  It may be a limit of the way that xdotool
+           sends a key to a window, which differs from a key from the keyboard.
+  How it is checked:  It is not checked: the behaviour is recorded here
+           because the test of the key did not give the same result as the
+           key of a real keyboard.
+  Fix:     Find out in a test that sends the key as the keyboard does.

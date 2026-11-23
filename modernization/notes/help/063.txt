@@ -1,0 +1,25 @@
+
+------------------------------------- File -------------------------------------
+  
+The Menu (F10) File commands manage your document and template files on disk.
+
+  Save the current           Create a                 Import an
+  document in a file.        new document.            ASCII text file.
+         +---+                    |                    +-----+
+        +--------------------------------------------------------------+
+        |  Save     Retrieve     New     Delete     Import     Export  |
+        +--------------------------------------------------------------+
+          +-------------+            +-----+                +----+ 
+  Retrieve a document           Delete a            Create an ASCII text file
+  from a file on disk.          file.               from the current document.
+--------------------------------------------------------------------------------
+# Documents are stored on disks as files. Each time you save a document, you
+  are creating or updating a file. You can automatically save backup copies of 
+  your documents by using the Maintain Backup File prompt on the Menu (F10) 
+  Global Options panel.
+
+# You must use the File commands to save your documents and templates on disk.
+  Otherwise you lose work each time you switch documents or quit Manuscript.
+--------------------------------------------------------------------------------
+     Save       Retrieve       New       Delete       Import       Export
+     Menu           Options           Keyboard Summary          Help Index

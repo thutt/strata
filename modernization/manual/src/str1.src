@@ -1,0 +1,262 @@
+# Chapter 7, part 1: what the Document Manager is, how it starts, the screen
+# and the keys.
+.h2 What the Document Manager is [str-what]
+.ix Document Manager, purpose
+.ix Master menu
+.ix Host program
+The Document Manager is the menu that starts a session.  The work on a document
+is left to the Editor: the entry Edit / Preview / Print Document opens the
+document in the Editor.  When the Editor ends, the Document Manager is on the
+screen again, with the same entry highlighted.
+.h3 The Document Manager and the Editor's menu [str-two]
+.ix Document Manager, inside the editor
+.ix Two Document Managers
+Strata has two screens of this kind.
+.table 19 41
+Screen | What it is
+The Document Manager | The screen of this chapter: a menu, panels with
+ | fields, a Setup panel, a list of fonts.  It is the usual way to start
+ | Strata.
+The Editor's own menu | The Editor, started with no document name, shows a
+ | smaller menu over an empty editing screen. A file name is requested in a
+ | one line box, and opens the panels of Maintain Dictionaries and Compare
+ | Document Versions.  See {x:str-inside}.
+.end
+The settings made in the Setup panel of the Document Manager reach the
+Editor through the file {c:~/.strata/config} (see {n:appcfg}).
+.h3 Spell check [str-two-print]
+.ix Spell check, Document Manager
+The Document Manager has no entry of its own for spell checking a document:
+Spell is in the Tools menu of the Editor ({n:spell}).
+
+.h2 Starting the Document Manager [str-start]
+.ix Starting the Document Manager
+.ix Command line, Document Manager
+.ix Starting Strata
+.ix Document Manager, options
+The Document Manager is started with no argument, or with the options and
+the word of the table below.  The full list of programs, with their
+options, is in {n:appcmd}.
+.table 26 34
+Argument | Effect
+{c:-H FILE}, {c:--help-file FILE} | Use FILE as the help file.
+{c:-h}, {c:--usage} | Print the usage text (the options, in a few lines) on the
+ | standard output and end with status 0, without opening the screen.
+{c:--version} | Print the name and the version of the program on the standard
+ | output, then a second line with the version of the file format that it
+ | writes ({c:file format 3}), and end with status 0, without opening the
+ | screen.
+{c:--default-colors} | Use the colors that the program is delivered with and
+ | ignore the color settings.  The variable {c:STRATA_DEFAULT_COLORS} set to 1
+ | does the same ({n:str-colours}).
+DOCUMENT | The name of a document, put in the field Document Name
+ | of the panel Edit / Preview / Print Document.  Nothing is
+ | opened.  Of several such words the last one counts.
+.end
+.h3 What happens at start [str-start-order]
+.ix Start, order of events
+.ix Search for the editor
+.ix Search for the help file
+At start the Document Manager takes your settings (see {n:appcfg}), looks for
+the help file and for the Editor, and shows the menu with Edit / Preview /
+Print Document highlighted.  A missing or unusable settings file gives the
+defaults.  Without an interactive terminal (or, in the X11 version, without an
+X display) it writes a message and ends.
+.if .STRATA_BUILD_TYPE # release
+For developers: at start the Document Manager does this, in order.
+1. It reads the settings from {c:~/.strata/config} (see {n:appcfg}).  The
+ values that the Document Manager uses are {c:workdir}, the Editor program,
+ {c:help}, {c:autosave}, {c:autosave_seconds}, {c:printer} and
+ {c:spell_language}.
+2. The command line is read.
+3. The help file is looked for, when {c:-H} was given, when the setting
+ {c:help} is empty, or when the file it names cannot be read (see
+ {n:str-help-search}).  If none is found the program starts without help
+ (see {n:str-help}).
+4. The Editor program is looked for (see {n:str-find-editor}).
+5.  The working directory is chosen: the setting {c:workdir} if it names a
+directory that exists, otherwise the current directory.
+6. It shows the menu with Edit / Preview / Print Document highlighted.  With
+no interactive terminal the program writes a message on the standard error
+and ends with status 1.
+.endif
+.h3 The help file [str-help-search]
+.ix Help file, search path
+.ix STRATA_HELP
+The help file is the first of these that can be read.
+.table 5 55
+Step | Place
+1 | The file named by {c:-H}.
+2 | The file named by the setting Help file of Setup.
+3 | The file named by the environment variable {c:STRATA_HELP}.
+4 | The file {c:strata.hlp} in the current directory.
+5 | The file {c:strata.hlp} next to the program, in the directory above it, or
+ | in {c:share/strata} of the directory above it.
+6 | The file {c:strata.hlp} in {c:/usr/local/share/strata} and then in
+ | {c:/usr/share/strata}.
+.end
+When {c:-H} names a file that cannot be read, the search goes on with the
+other places, and a file that it finds in step 3 or later takes the place of
+the setting.  The setting is used as it is when {c:-H} is not given and the
+file that the setting names can be read: {c:STRATA_HELP} is then not looked at.
+An empty {c:STRATA_HELP} is skipped.  Without a help file the program works as
+usual and {k:F1} shows a notice (see {n:str-help}).
+.h3 Finding the editor [str-find-editor]
+.ix Editor program
+.ix Editor program, environment variable
+.ix Editor, how the Document Manager finds it
+The Document Manager finds the Editor that was installed with it, so you
+need not name it.  The field Editor program of the Setup panel is for an
+Editor that is kept somewhere else; its value is used as typed, without a
+check.  A wrong value shows up as the message "Cannot run the editor: PATH"
+when Edit / Preview / Print Document is chosen (see {n:str-messages}).  When
+the Editor is the one that was found by itself, the Setup panel does not save
+it; only a path that you chose is kept.
+.if .STRATA_BUILD_TYPE # release
+For developers: the Editor is started from a path that is chosen like this.
+1. If the Editor program setting of the configuration file names a file that
+ exists and may be run, that file is used.
+2. Otherwise the environment variable that names the Editor program, if it is
+ not empty (the variable is named in {n:appcmd}).
+3. Otherwise the Editor program that is in the directory that holds the
+ Document Manager program itself, if it may be run.
+4. Otherwise the Editor program that is found in the system directories
+ ({n:appcmd-find}), which is looked for each time the Editor is started.
+The check is made once, at start.
+.endif
+.h3 Exit status of the Document Manager [str-exit]
+.ix Exit status, Document Manager
+.ix Document Manager, exit codes
+.table 8 52
+Status | Meaning
+0 | Quit was chosen, or {c:-h}, {c:--usage} or {c:--version} was given.
+1 | There is no interactive terminal or X display.
+.end
+The failure of a program that the Document Manager started is shown on the
+screen and the menu stays.
+
+.h2 The screen [str-screen]
+.ix Screen, Document Manager
+.ix Footer line
+.ix Message line, Document Manager
+.ix Status line, Document Manager
+A screen of the Document Manager has three parts.
+.table 12 48
+Part | Content
+The window | A box, centered, with a title in its top border and the
+ | instruction of the panel in bold in its bottom border: "Press Ins to
+ | Select Action" for the menus, "Press Ins to Use Displayed Settings"
+ | for the panels.  The title of the main menu is "Strata Document
+ | Manager".
+The panel | The entries of a menu, one to a line, or the fields of a form,
+ | each with its label at the left and its value at the right.
+The footer | The last line of the screen, in reverse video.  It shows
+ | "F1 Help   Esc Cancel" until a message is to be shown; then
+ | that message is shown in bold.  A message stays until the next key.
+.end
+.pic pictures/str-main.png 5 The Document Manager.
+.h3 Fields in a panel [str-fields]
+.ix Field, appearance
+.ix Dots in a field
+.ix Dimmed field
+A field of a panel is drawn as a label, right aligned against a colon, and
+a value area filled with middle dots where there is no text.  The dots show
+how long the field is.  The value can be much longer than the area (a name
+may have up to 4095 characters); the area then scrolls so that the cursor
+stays visible, and only the field that has the focus scrolls.
+.table 24 36
+Appearance | Meaning
+Normal label, dots | A field whose value can be changed.
+Value in reverse video | The field has the focus and its value is
+ | untouched: the first character typed replaces the whole value (see
+ | {n:str-keys-panel}).
+Block cursor | The place where the next character goes.
+.end
+
+.h2 Keys [str-keys]
+.ix Keys, Document Manager
+.ix Keyboard, Document Manager
+Three kinds of screen take keys: the menus, the panels (forms) and the
+lists (selection boxes).  A fourth, the help viewer, is described in
+{x:str-help}.  The keys are the same in the terminal and in the X11
+version.
+.h3 Menus [str-keys-menu]
+.ix Menu keys, Document Manager
+.ix Main menu, keys
+These keys work in the Document Manager menu and in the menu TeX Font
+Association.
+.table 17 43
+Key | Effect
+{k:Up} | Highlight the previous entry; from the first, the last.
+{k:Down} | Highlight the next entry; from the last, the first.
+{k:Home} | Highlight the first entry.
+{k:End} | Highlight the last entry.
+A letter or digit | Highlight the next entry, counting on from the
+ | highlighted one, whose first character is that letter (capital or
+ | small).  The entry is not chosen.  Press the letter again for the next
+ | entry that begins with it, and round to the first.
+{k:Enter} {k:Ins} | Choose the highlighted entry.
+{k:Esc} | TeX Font Association: leave the menu.  Document Manager menu:
+ | nothing.
+{k:F1} | Help on the menu (see {n:str-help}).
+.end
+Any other key is ignored.  After a panel is left, the menu is drawn again
+with the entry that was chosen highlighted.
+.h3 Panels [str-keys-panel]
+.ix Panel keys, Document Manager
+.ix Form keys
+.ix Field editing keys
+.ix Replace on first key
+These are the keys of every form of the Document Manager: Edit / Preview /
+Print Document, New
+File, Setup and the panel of a font.
+.table 19 41
+Key | Effect
+{k:Ins} | Accept the panel and act on it.  It works in any field.
+{k:Esc} | Cancel the panel: nothing is changed or saved.  The program goes
+ | back to the menu (from New File, back to Edit / Preview / Print Document).
+{k:Enter} | Accept the field and go to the next one.  In the last field it
+ | accepts the panel, as {k:Ins} does.
+{k:Down} {k:Tab} | The next field; from the last, the first.
+{k:Up} {k:Shift-Tab} | The previous field; from the first, the last.
+{k:Left} {k:Right} | Move the cursor one character in the value.
+{k:Home} {k:End} | Move the cursor to the start or to the end of the value.
+{k:Backspace} | Delete the character before the cursor.
+{k:Del} | Delete the character under the cursor.
+A printable character | Insert it at the cursor.
+{k:Keypad +} {k:Alt-+} {k:+} {k:F2} | On a field that names a file, a
+ | directory or a printer: list the choices ({n:str-browse}).
+{k:F1} | Help on the panel (see {n:str-help}).
+.end
+When the focus comes to a field that has text, the text is shown in reverse
+video.  The text is then selected: the first character that is typed
+replaces the whole value, and {k:Backspace} or {k:Del} empties it.  Any of
+{k:Left}, {k:Right}, {k:Home} and {k:End} ends the selection and leaves the
+value as it is, so that it can be edited in place.  An empty field has no
+selection.
+.caution The plus sign is taken by the listing on every field that names a
+  file, a directory or a printer, so a plus sign cannot be typed in the
+  fields Document Name, Printer, Working Directory, Initial Working
+  Directory, Editor program and Help file.  It can be typed
+  in the other fields.
+.h3 Lists and notices [str-keys-list]
+.ix List keys
+.ix Selection list
+.ix Notice, any key
+.ix Press any key
+Small boxes appear on top of a screen.
+.table 20 40
+Box | Keys
+A list (the file list, the choice of document type, the list of printers)
+ | {k:Up} {k:Down} {k:Home} {k:End} {k:PgUp} {k:PgDn} move the highlight;
+ | {k:Enter} chooses; {k:Esc} leaves with no choice.  A letter or digit
+ | moves to the next entry that begins with it and, in a list of twelve
+ | entries or fewer, chooses it at once.
+A notice ("Press any key") | Any key closes it.  It has a title and one
+ | line of text; a longer text is wrapped in a box of up to twelve
+ | lines.
+.end
+.note A list is moved by the letter keys in a different way from a menu: in
+  a list of twelve entries or fewer a letter chooses the entry without
+  {k:Enter}.  In the file list this can be a surprise when the directory has
+  few files: pressing {k:m} chooses the first entry that begins with m.

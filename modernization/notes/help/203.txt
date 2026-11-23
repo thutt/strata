@@ -1,0 +1,25 @@
+
+--------------------------------- Ruler Spacing --------------------------------
+
+Ruler spacing settings made on the local format (F6) and global format (F10 
+Global Format) panels control the size of a ruler unit when the document 
+final prints. Ruler units affect the following settings: column widths, tab 
+placement, left and right block indents, and level indents.
+
+Ruler units represent either a relative distance or an absolute measurement 
+from a margin.  The Ruler prompt has the following options:
+
+Relative: Text, blocks, and columns have the same relative position in the print
+          area that they have on the screen. For example, if you place a tab at
+          position 40, text aligned with the tab prints halfway between the left
+          and right margins of the paper (40 divided by 80 equals 1/2).
+
+10/inch:  With any of these absolute ruler settings, each space on the ruler 
+12/inch   represents a fraction of an inch. Use absolute spacing to position 
+15/inch   a column a precise distance in inches from the left margin.  For
+          example, if you set ruler spacing to 10/inch (10 units per inch)
+          and the tabs are at 10 and 25, the tabbed text prints 1 inch and 
+          2.5 inches from the left margin.
+--------------------------------------------------------------------------------
+Column Widths     Tab Placement     Left/Right Block Indents     Level Indents
+            Global Format           Keyboard Summary          Help Index

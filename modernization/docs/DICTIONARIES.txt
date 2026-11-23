@@ -1,0 +1,330 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+DICTIONARIES AND HYPHENATION OF THE ORIGINAL (W35)
+==================================================
+
+STATUS: finished 2026-11-18.  The experiments ran in the original under
+DOSBox-X on a scratch drive made from the install disks.  The repository got
+only this file, tools/hyc.py and a small change to the import of Maintain
+Dictionaries (section 5).
+
+STATUS OF THE RECOMMENDATION (task 35, 2026-11-18)
+  R1 soft hyphen:  DONE.  Ctrl-Hyphen (the byte 1F that a terminal sends for
+     Ctrl-Minus; also Ctrl-F, Soft hyphen, which works everywhere), the
+     character 1F in the text, a dim triangle on the screen (one cell; the
+     screen never breaks a line there, as the original), \- in the print,
+     nothing in the exports, a search goes through it and Find has Soft Hyphen,
+     the spell check and the word count read a word through it.
+  R2 personal hyphenation list:  DONE.  The file hyphenation in the settings
+     folder, one word to a line, a hyphen at each place a word may be broken;
+     a word with no hyphen (or =word) is never broken.  The list is the other
+     choice of Maintain Dictionaries (Tab).  The Printer writes
+     \hyphenation{...} in the preamble (src/hyphlist.c, src/latex.c).
+  Import of .HYC: DONE (F3 in the hyphenation list; src/hyphlist.c has the
+     reader that tools/hyc.py models; a word with no place becomes =word).
+  R3 hyphenation settings of the print panels:  later (release 2).
+  R4 old code page in the import of a spelling list:  DONE (a file with a byte
+     that is not UTF-8 is read as code page 437; the same for the hyphenation
+     list).
+  The answers to section 7 were the defaults: 1 yes, 2 one entry, 3 yes, 4
+  yes, 5 YES (the owner gave no answer; the default of the task text is that a
+  word may say never break: =word, or a word with no hyphen).
+
+Marks: [V] seen in the original (a screen or the bytes of a file), [H] read in
+the help file (strata.hlp, decoded with tools/hlp.py) or in the manual of the
+earlier release, [?] a guess.
+
+
+1. What the original did
+========================
+
+1.1 Maintain Dictionaries  [V]
+------------------------------
+The Document Manager has the entry Maintain Dictionaries (the fifth).  It
+opens a panel with six operations, in this order:
+
+    Convert Document to Spelling Dictionary
+    Add Document to Spelling Dictionary
+    Convert Spelling Dictionary to Document
+
+    Convert Document to Hyphenation Dictionary
+    Add Document to Hyphenation Dictionary
+    Convert Hyphenation Dictionary to Document
+
+Each opens a panel of three fields, for example Convert Document to Spelling
+Dictionary: Working Directory (C:\MS\MSDATA\), Document Name and Spelling
+Dictionary Name; Ins converts.  The menu remembers its last entry, so Home
+goes to the first one.  The names take their extension from the operation:
+.DOC for a document, .SPC for a spelling dictionary, .HYC for a hyphenation
+dictionary.  A name that does not exist gives "Cannot find file (Document
+Name: HY1.DOC)".
+
+1.2 Settings that use a hyphenation dictionary  [H]
+---------------------------------------------------
+The panel Hyphenation Settings (reached from Optional Settings of Final
+Print, Preview and Compare Document Versions) has: Hyphenation (a check list:
+Automatic, Custom Dictionary, Soft Hyphens, None; Space selects), Custom
+Hyphenation Dictionary (a name, .HYC assumed, F2 lists), Minimum, Maximum and
+Preferred Space Widths (0 to 999, 100 is the space of the font), Adjust
+Maximum in Narrow Columns? (never over 150 percent), Maximum Consecutive
+Hyphenated Lines, Minimum Consecutive Unhyphenated Lines, Minimum
+Characters in Word, Minimum Characters Before Hyphen and Minimum Characters
+After Hyphen.  A soft hyphen is typed with Ctrl-Hyphen and shows as a small
+triangle that points down.  Help topic 261: "Soft hyphen error - a word uses
+soft hyphens incorrectly: leading or final hyphens or more than one in the
+same place".  The setup of the Document Manager has Dictionary Language
+(American English), "the language to be used by the spell checker and for
+hyphenation".
+
+1.3 The rules for a document that becomes a dictionary  [H][V]
+--------------------------------------------------------------
+Words are separated by a space, a tab or an end of line (help topic 277).
+For a spelling dictionary a word in lower case is also added with an initial
+capital; a word with a capital is kept as typed.  For a hyphenation
+dictionary the word has a soft hyphen where it may be broken; a word with no
+soft hyphen stops the word from being hyphenated; the words are lower case
+(the original hyphenates every case of the word) and possessives are entered.
+
+
+2. The spelling dictionary (.SPC)  [V]  DECODED
+===============================================
+A custom spelling dictionary is a PLAIN TEXT FILE: words, each ended by
+CR LF, and the byte 1A (Ctrl-Z) at the end.  The words are in byte order
+(so every word with a capital comes before every word in lower case), with
+no duplicates.  Test: a document of the words zorbaflux, quimbleton,
+Xanthippe, BLORF, it's and aa-bb became (bytes shown as text):
+
+    Aa-bb CRLF BLORF CRLF It's CRLF Quimbleton CRLF Xanthippe CRLF
+    Zorbaflux CRLF aa-bb CRLF it's CRLF quimbleton CRLF zorbaflux CRLF 1A
+
+Add Document to Spelling Dictionary merges the words of a second document in
+the same way (flumdoodle, zorbaflux and Mxyzptlk added Flumdoodle,
+flumdoodle and Mxyzptlk and no second zorbaflux).  Convert Spelling
+Dictionary to Document writes a document of ONE block with the words as
+lines (each ended by the byte 1D), in order without regard to case, a lower
+case word before the same word with an initial capital, and a header record
+MD "Listing of dictionary T1.SPC, 18-Nov-DATE".  The main dictionary
+AMERICAN.SPL cannot be changed or converted (the manual says so).
+
+This is the same kind of file as the personal word list that Strata keeps (the
+file dictionary of the settings folder): one word to a line, the same capital
+rule.
+
+
+3. The hyphenation dictionary (.HYC)  [V]  DECODED
+==================================================
+A custom hyphenation dictionary is a file of PAGES OF 512 BYTES.  Page 0 is
+the index; pages 1 and up hold the words.  All numbers are big endian.  The
+layout is checked against 300 random words of two to four syllables (pages 1
+to 7 of a file of 4096 bytes) and against the small files below: every word
+and every hyphen position was read back exactly (tools/hyc.py).
+
+Page 0 (the index):
+    - 4-byte keys: key i is the first four letters of the first word of data
+      page i+1; the first key of a one page file of the words backhoe to
+      zorbaflux's is "back".
+    - the rest of the keys are FF FF FF FF (unused).
+    - the last four bytes are the number of words of the whole file.
+
+A data page (1 to n):
+    - the entries one after the other from the start of the page, in byte
+      order of the word; the same word is not twice;
+    - an entry is the word in LOWER case (a capital typed in the document
+      becomes lower case), then a 4-byte mask;
+    - the mask has bit i (counting from 0 as the lowest bit) set when the word
+      may be broken after the letter i+1: bulldozer (bull-dozer) has 08,
+      project (pro-ject) 04, quimbleton (quim-ble-ton) 48 (hex), zorbaflux
+      (zor-ba-flux) 14, a word with no hyphen 00000000;
+    - the unused part of the page is FF;
+    - at the end of the page: one byte for each entry with the length of the
+      entry in bytes (word plus 4), in the order of the entries, and then
+      the last byte of the page, the number of entries of the page.
+      Test: a page of the 6 words had the trailer 0B 0D 0B 0E 0D 0F 06.
+    - a page holds about 42 entries of short words (461 bytes were used of
+      508).  A new page is started when the next entry does not fit.
+
+Rules seen in the experiments:
+    - A leading soft hyphen is ignored; two in a row are one; a soft hyphen at
+      the end is kept as a bit after the last letter (it has no effect).
+      No error is given when a dictionary is made.
+    - A word that is already in the dictionary keeps its hyphenation when a
+      document that has it again is added (zor-ba-flux stayed and zor-baf-lux
+      was not taken).
+    - Digits and an apostrophe are part of a word (num-ber1-23, zorbaflux's).
+    - Long words are cut: a word of 28 letters with four hyphens was stored
+      whole, a word of 42 letters was stored as its first 28 letters; one of 43
+      letters as 32; one of 32 letters as 31.  The reason is not found.
+    - Convert Hyphenation Dictionary to Document writes one block with the
+      words in lower case and a soft hyphen (1F) where a word may be broken,
+      one word to a line (1D), with the same header record MD "Listing of
+      dictionary HQ.HYC, DATE".  The byte of a soft hyphen in a document is
+      1F (seen after typing Ctrl-Hyphen in the editor).
+
+
+4. The main dictionaries on the disks  [V]  NOT DECODED, NOT NEEDED
+====================================================================
+The disks hold the main dictionaries of the language "American English":
+
+    spell/american.spl         174915 bytes  the spelling dictionary
+    thesaurus/american.syn     327378 bytes  the thesaurus
+    print_2/hyamaa05.hyp         7090 bytes  automatic hyphenation: a table
+    print_2/hyamaa05.exc        46202 bytes  hyphenation exceptions
+
+What was learned from a look at the bytes, and no more than that:
+
+    - hyamaa05.exc begins with the text "VERSION 005" and NUL, then 16-bit
+      little endian fields (03 00, 1E 00, 00 01, 24 00, 06 00, ...), the
+      alphabet "'-.abcdefghijklmnopqrstuvwxyz" (29 characters), a table of
+      code lengths (0F 08 17 08 0C 11 ...) and from 0x100 packed data that
+      is not text.  It is a compressed list of the words that the automatic
+      rules get wrong, with their break places, built to be read by the
+      original's program only.
+    - hyamaa05.hyp begins with 16-bit fields, a table that folds the accented
+      letters (CP437 81 82 84 86 89 8A 8B 94 E1) to the letters ueaaeeios,
+      and then a table of 16-bit words (most of them 0065): the rules of the
+      automatic hyphenation, a table of letter patterns.
+    - american.spl is a compressed word list; the manual calls its words
+      "all derived forms except the possessive" (90,000 words of Webster).
+
+These files were NOT decoded.  Strata does not need them: it has no
+dictionary of its own.  The words of the spell check come from aspell or
+hunspell and the hyphenation of the print comes from the patterns of TeX
+(English, whatever the language of the document: manual, Print chapter).
+To copy the original's exceptions into Strata one would have to decode the
+.exc file (days of work with an uncertain result), and there is no use for
+it: the patterns of TeX and the personal list of section 6 cover it.
+
+
+5. What Strata has now
+======================
+Spelling  (done, see SPELL.txt and the manual, Maintain Dictionaries):
+    - Maintain Dictionaries of the Document Manager shows, adds, deletes,
+      imports (F3) and exports (F4) the personal word list; the spell check
+      reads the list at every start; Define adds to it.  The list is a plain
+      text file, one word to a line, with the same capital rule as the
+      original's .SPC file, so the two are the same kind of file.
+    - Import of a .SPC file of the original: works for words of ASCII.  Its
+      last byte, 1A (Ctrl-Z), was counted as a line that is not a word.  It
+      is now the end of the list (src/dictlist.c, tests/dicttest.c: Ctrl-Z
+      ends the list and is not counted).  A word with an accented letter in
+      the code page of the old program (a byte above 7F) is not UTF-8 and is
+      probably refused [?]: see question 4.
+    - Not done and not needed: the second custom dictionary, and the three
+      conversions (the list is edited in the panel; the conversions of the
+      original exist because its dictionary was a binary file).
+Hyphenation  (nothing of the original is there):
+    - The Printer breaks words with the patterns of TeX.  There is no way to
+      say where a word may or may not be broken, no soft hyphen, no choice
+      of Automatic, Custom Dictionary, Soft Hyphens or None, and none of the
+      Hyphenation Settings (consecutive lines, letters before and after).
+    - Ctrl-Hyphen is "no" in KEYSTROKES.txt: the key does nothing.  The soft
+      hyphen of the original is the byte 1F in the text of a block (shown
+      by the Editor as the triangle that points down, CP437 1F, which is
+      also the key's own code in a terminal: Ctrl-Minus sends 1F).  A file
+      that has such a byte today probably shows the triangle and prints it
+      as a character [?]: not tried.
+
+
+6. Recommendation
+=================
+Release 1 needs the way to say where a word may be broken, because every
+technical document has words that TeX gets wrong.  The smallest set that
+does it, in this order:
+
+  R1  Soft hyphen (size M).  Ctrl-Hyphen puts the byte 1F in the text; the
+      screen draws it as the triangle; the Printer writes \- at it (TeX then
+      breaks the word only where the author said: a word with a soft hyphen
+      is not otherwise hyphenated, as in the original); Search and Replace
+      find it (Soft hyphen in the Find list, like the nonbreaking space);
+      Export drops it; the spell check reads a word through it; Count does
+      not count it.  Risks: the byte must not be taken for a text indent or
+      a record end by the readers; the line layout must treat it as a
+      zero width cell that becomes a hyphen only at a break (the screen never
+      breaks lines at it, so the triangle is drawn as a character, as the
+      original did).
+  R2  A personal hyphenation list (size M).  A second list in Maintain
+      Dictionaries (the panel gets a choice of the two lists: Spelling,
+      Hyphenation), the file hyphenation in the settings folder (one word to
+      a line with a hyphen where it may be broken: pro-ject; a word with no
+      hyphen is never broken, as in the original), the same keys and checks as
+      the spelling list (letters, digits, apostrophes; at most 65 characters).
+      The Printer writes the list as \hyphenation{pro-ject ...} into the
+      preamble (the words are lower case; TeX also matches a capitalised
+      word).  Import of a .HYC file of the original by F3 (the layout is
+      section 3: a small reader, tools/hyc.py is the model) and export to a
+      text file.  Risks: a very long list slows the first LaTeX pass a little
+      (100,000 entries would be too many: the list is for the words of one
+      author).
+  R3  Hyphenation Settings in the print panels (size S to M, after R1 and
+      R2): Hyphenation (Automatic, Custom Dictionary, Soft Hyphens, None) as
+      \lefthyphenmin and \righthyphenmin (Minimum Characters Before and After
+      Hyphen), \hyphenpenalty at 10000 for None, and a limit of consecutive
+      hyphenated lines with \doublehyphendemerits (TeX has no hard limit, so
+      Maximum Consecutive Hyphenated Lines is an approximation: say so in the
+      manual).  The space widths of the panel have no use with TeX.  Later.
+  R4  A CP437 conversion in the import of a spelling list (size S), for words
+      with accents from the original's lists (question 4).
+
+NOT recommended: decoding american.spl, hyamaa05.hyp or hyamaa05.exc; an own
+spelling checker; the three conversions of spelling dictionaries to and from
+documents; a second custom spelling dictionary; the .SPC as the format of the
+list (the plain text file is the same thing with a better name).
+
+The sizes are in the work of one job: S a few hours, M a day.
+
+
+7. Questions for the owner (each has a default, so work can go on)
+==================================================================
+  1. Are the soft hyphen (R1) and the personal hyphenation list (R2) release
+     1, and the Hyphenation Settings (R3) later?  Default: yes and yes, and
+     R3 for release 2.
+  2. Should the personal hyphenation list be a second choice inside the one
+     entry Maintain Dictionaries, or an entry of its own?  Default: one
+     entry, with a choice of the list inside.
+  3. Import of a .HYC file of the original: yes?  Default: yes (section 3
+     gives the layout; about 40 lines of C).
+  4. Words with accents in a spelling list of the original are in the old
+     code page.  Convert them from CP437 when a file is not UTF-8?  Default:
+     yes (R4).
+  5. Should a hyphenation word be able to say "never break here" besides
+     "may break here"?  TeX has no such command for one place.  Default: no:
+     a word with no hyphen is not broken at all.
+
+
+8. How the research was done (for repeating it)
+===============================================
+The install disks of the original are in the folder lotus-manuscript/ of the
+project (driver_1 has ms.exe; the other disks have the programs and the
+spelling files).  A scratch DOS drive was made by copying all of them into
+C:\MS and the samples into C:\MS\MSDATA.  DOSBox-X ran on a private Xvfb with
+all its output in a file; a small script typed the keys with xdotool; screens
+were read from xwd.  The first start of the Document Manager asks for Setup
+(Ins accepts it and writes MS.VAL).  The documents were made by a script (a
+document of the format of DOC-FORMAT.txt with the words as blocks and the soft
+hyphens as the byte 1F) and the dictionaries read back with tools/hyc.py.  The
+menu of Maintain Dictionaries remembers its last entry (Home goes to the first
+one); files made outside DOSBox-X after it started are not seen until it is
+restarted.
+
+The test words and the answers of the original are in sections 2 and 3: a
+document with the words zorbaflux, quimbleton, Xanthippe, BLORF, it's and
+aa-bb became a .SPC file of 91 bytes; the words backhoe, bulldozer, project,
+quimbleton, zorbaflux and zorbaflux's with soft hyphens became a .HYC file of
+1024 bytes whose second page starts with backhoe and ends with the trailer
+0B 0D 0B 0E 0D 0F 06; 300 words of two to four syllables became 4096 bytes
+with the index keys defe, gras, lopo, netu, post, sami and tupl and the number
+0000012C at the end of page 0.

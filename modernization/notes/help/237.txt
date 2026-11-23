@@ -1,0 +1,25 @@
+
+------------------------------- Optional Settings ------------------------------
+
+Merge Data:    If you are printing a document that includes Merge markers, 
+Document Name  enter the name of the document containing the information to 
+               be merged (the data document).
+
+Print to File: To send the output of the document to a file (instead of a 
+               printer) enter a file name. Unless you specify otherwise, the
+               print file is saved in the working directory.  To print the 
+               print file from DOS, type: 
+
+                           copy /b <filename> prn
+
+               Note: The print file is not an ASCII text file.  To create an 
+               ASCII text file, use File Export.  Also, a print file cannot be
+               printed on a serial printer that uses XON/XOFF handshaking.
+
+Forms Type:    Select Continuous Form or Single Sheet (Auto Feed) if you want
+               paper fed to the printer as needed. Select Single Sheet 
+               (Manual Feed) if you want to be prompted each time a new 
+               sheet of paper is needed.
+
+--------------------------------------------------------------------------------
+   Print Document        File Export        Keyboard Summary        Help Index

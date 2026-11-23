@@ -1,0 +1,437 @@
+# Chapter 6, part 6: the errors of a document that Print and Preview find.
+# It holds the section "Print errors" [print-errors]: the Error Log in the
+# pages, the Print Error markers in the text, the messages, what a failed
+# print does (the banner, the marks, the Viewer's red status) and what a print
+# that makes no file does.  The Print Error marker has its own entry in
+# chapter 5 (markers-errors) and the search method Find Next Error is in
+# chapter 3 (edit-c-find-error).
+
+.h2 Print errors [print-errors]
+.ix Print errors
+.ix Error Log
+.ix Error Log?
+.ix Print Error markers
+.ix Find Next Error
+.ix Errors of a document
+.ix Diagnostics
+.ix Warnings of a print
+.ix PRINT FAILED
+.ix Banner
+A document that cannot be printed as it is, is wrong; the program is not.  An
+equation that is not TeX math, a picture whose file is not there, a character
+that no font has: Print and Preview still make their pages (the piece that
+cannot be set is printed as text, so that the PDF is always made), and they
+report what is wrong and where.  A print that has errors is a {b:failed print}: its
+pages are made, but they carry a large banner that says so ({n:print-failed}).
+What is wrong is shown in several places at once, so that nothing has to
+be written down:
+.table 17 43
+Where | What it holds
+The banner | A line of large bold red capitals on every page of a failed
+ print: "PRINT FAILED - 3 ERRORS - THIS PRINT IS INACCURATE" (
+ {n:print-failed}).
+The marks | A small red or orange label with the number of the entry of the
+ Error Log, on the pages, at the place of each fault ({n:print-failed}).
+The Error Log | A page group at the end of the PDF or of the Preview: a
+ heading, the count, and one numbered entry for each error or warning, with
+ the place in words ({n:print-errlog}).
+Print Error markers | Markers in the text itself, one in front of each thing
+ that is wrong, made by the Editor after a Print or a Preview (
+ {n:print-errmarks}, and {n:markers-errors}).
+The message line | How many were found, and the keys that go to them (
+ {n:print-errline}).
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: the same list goes to the standard error of the Printer and of
+the Editor's print and preview modes, one line for each.
+.endif
+A clean document has none of
+this: no banner, no mark, no Error Log, no empty page, no marker, and the
+status of every program
+stays what it was.
+
+.h3 What is an error and what is a warning [print-errkinds]
+.ix Error codes
+.ix Print error codes
+.ix equation-invalid
+.ix picture-missing
+.ix char-missing
+An {b:error} is a piece of the document that the page could not take as it
+was written: the page shows it in another form, or leaves it out.  A
+{b:warning} is a piece that is printed, but not as the author may have
+wished.  Each has a short code, which is written in the Error Log and in the
+marker.  The messages are in plain English.
+In the messages of the Include codes the file name is in quotation marks.
+.table 16 6 28
+Code | Kind | Message and what to do
+equation-invalid | Error | "The equation is not valid TeX math, so it is
+ printed as text."  The text of the Equation marker is not TeX.  Rewrite it
+ in TeX ({n:equations}).
+equation-refused | Error | "TeX rejects the equation (REASON), so it is printed
+ as text."  The text reads as TeX math but LaTeX stopped at it, for example
+ "Undefined control sequence.".  Correct the formula.
+equation-empty | Warning | "The equation is empty."  Fill it in or delete the
+ marker.
+equation-unreadable | Error | "The equation cannot be read: it is too long or
+ damaged, so it is printed as text."  Shorten the text of the equation.
+char-missing | Warning | "No font has the character U+XXXX; it is printed as
+ [U+XXXX]."  Use a character that the font has.  Told once for each such
+ character in a line of text.
+picture-noname | Error | "The picture marker has no file name."  Give the
+ marker a file name.
+picture-missing | Error | "Picture file not found: NAME (looked in PLACES)."
+ Put the file where the document is, or correct the name.  The page has a red
+ box with the words in the place of the picture.
+picture-unreadable | Error | "The picture file NAME cannot be read: REASON."
+ Correct the permissions of the file.
+picture-type | Error | "The picture file NAME is of a type that cannot be
+ printed (only PNG, JPEG, PDF and PostScript can)."  Convert the file.
+picture-damaged | Error | "The picture file NAME is incomplete or damaged."
+ Make the file again.
+picture-refused | Error | "The picture cannot be used (REASON), so it is printed
+ as text."  TeX refused the file.  Or, with no reason, "TeX stopped without
+ saying why, so no picture is printed."
+picture-link | Error | "The picture file cannot be given to TeX here."  The
+ picture is printed as text.
+marker-unsupported | Warning | "NAME markers are not typeset by Strata; the
+ marker is printed as text."  The marker is printed in its long form.  See
+ {x:markers-printed}.
+latex-marker-off | Warning | "LaTeX markers are not allowed in this print: the
+ text of this one is not written and the marker is printed as text."  The
+ setting {c:latex_markers} is off ({n:appcfg-key-latex-markers}).  Turn it on to
+ print the instructions.
+latex-marker-unreadable | Error | "The text of this LaTeX marker is too long or
+ damaged, so it is not written and the marker is printed as text."  Shorten the
+ text to under 65000 characters ({n:marker-latex}).
+marker-incell | Warning | "A page break or column break inside a table or a
+ line with tabs cannot be honored; it is printed as text."  Move the marker.
+symbol-unknown | Warning | "The special symbol is not known to Strata; it is
+ printed as text."
+xref-unresolved | Warning | "The cross-reference points at a section that is
+ not in the document (or not in this part of it)."  A Preview of a part
+ may say this about a section that the part does not hold.
+counter-unresolved | Warning | "The value of the counter cannot be worked out;
+ it is printed as text."
+counter-limit | Warning | "A counter has reached 4294967295 and stays there;
+ its later uses show the same number."  Said once for a document.
+keep-unmatched | Error | "This End Keep has no Start Keep before it."
+keep-doubled | Error | "A Keep was started while another is still open; the
+ first has no End Keep."
+keep-unclosed | Error | "This Start Keep has no End Keep after it."
+if-unclosed | Error | "This If has no Endif after it."
+else-unmatched | Error | "This Else has no If before it."
+else-doubled | Error | "This If already has an Else."
+endif-unmatched | Error | "This Endif has no If before it."
+if-empty | Error | "This If has no expression: it needs a variable, an
+ operator and a value, such as COLOR = red."  The branch is left out.
+if-no-variable | Error | "This If does not begin with the name of a variable:
+ a name starts with a letter."
+if-bad-operator | Error | "The operator of this If is missing or not known:
+ the operators are = # < > <= >=, and # means not equal."  (Another message
+ shows that <> and == are not operators.)
+if-no-literal | Error | "This If has nothing after the operator to compare the
+ variable with."
+if-bad-literal | Error | "The value of this If is not allowed", with the
+ reason: a quotation mark or a character that is not printable ASCII.
+if-too-long | Error | "The variable name of this If is longer than 255
+ characters", or the value.
+if-too-deep | Error | "These Ifs are nested too deep: the limit is ten."
+if-structure | Warning | "Text that depends on an If cuts across the
+ sections: a section whose parent is left out moves up a level."
+include-noname | Error | "Invalid Include request: The Include marker has no
+ file name."  A notice is printed in the place of the marker
+ ({n:marker-include-errors}).
+include-missing | Error | "Invalid Include request: The file NAME cannot be
+ found."  The name is looked for beside the document and in the working
+ directory ({n:marker-include-print}).
+include-unreadable | Error | "Invalid Include request: The file NAME cannot be
+ read."
+include-damaged | Error | "Invalid Include request: The file NAME is not a
+ Strata document or is damaged."
+include-loop | Error | "Invalid Include request: The file NAME includes
+ itself, directly or through other parts."  The second include is not made.
+include-deep | Error | "Invalid Include request: The parts are nested more
+ than 8 levels deep."
+include-place | Error | "Invalid Include request" with one of three reasons:
+ the marker is not alone in its block, it is in a headline, or a part with
+ sections is at a marker that is not in the last block of its section.
+tex-error | Error | "LaTeX reports: MESSAGE."  An error that LaTeX itself
+ found and that none of the checks above explains.  One for each "!" line of
+ the log, up to 100.  The place is the block that the line of the TeX file
+ came from, or "line N of the file that TeX read" when that is not known.
+.end
+At most 200 are kept for one run.  When there are more, the count reports this
+("more were found than are listed") and the Error Log ends with "N more
+diagnostics were found and not listed."
+
+.h3 The place [print-errplace]
+.ix Position of an error
+.ix Place of an error
+Every entry names the place in the document in words.  The form is
+.code
+Section 3.1.1 Definition, block 2, line 4, Equation marker
+.end
+that is: the section number and headline, the block counted within that
+section from 1 (the headline is block 1), the column (only for a block of
+columns: "column 2"), the
+line of the block, and, when the fault is in a marker, its name and the word
+marker.  Text before the first section is "Title page, block N"; a block
+outside any section is "Block N".  The line is the line of the block as it
+was typed: the lines that are made when the text is shown are not counted.  A
+fault that has no place at all is told as "no position".
+
+.h3 The Error Log [print-errlog]
+.ix Error Log, page
+.ix Error Log?
+.ix Error Log, Preview
+When a run has errors or warnings, the PDF (or the pages of a Preview)
+end with a new page that has the heading {b:Error Log} (with the banner of
+{n:print-failed} on it, when the print failed), a line such as "3
+errors and 1 warning found in this document.  Each entry gives the place in
+the document, so that it can be fixed in the Editor.", and then one entry
+for each fault, in the order of the document:
+.table 12 48
+Part of the entry | What it shows
+Number and kind | "1. Error." or "3. Warning." in bold.
+The message | The text of the table of {x:print-errkinds}.
+Position | "Position:" and the place of {x:print-errplace}.
+Text | "Text:" and the text that is wrong, in a typewriter font, cut to 72
+ characters: the words of the equation, the file name of the picture, the
+ character as U+XXXX.  Left out when there is none.
+.end
+For the example document of the tests, the last page of the PDF reads
+.code
+Error Log
+3 errors and 1 warning found in this document.
+1. Error. The equation is not valid TeX math, so it is printed as text.
+   Position: Section 1 Purpose, block 3, line 2, Equation marker
+   Text: the sum of a and b
+2. Error. Picture file not found: pics/missing.pcx (looked in /work).
+   Position: Section 2 Definition, block 3, line 1, Picture marker
+   Text: pics/missing.pcx
+.end
+.pic pictures/print-errlog.png 5 The Error Log, the last page of the PDF of the test document: the banner above it, then three errors and one warning, each with its place.
+The page carries the page number that the document's own numbering gives it
+(the title page has none).  The log is the last page
+of the part that was printed: the pages of the document before it are the
+same, with or without it, and a Preview of a block or of a section has a log
+for that part only.
+.table 18 12 20
+Field | Values | Meaning
+Error Log? | Yes (default), No | In the Draft, Final and Preview Document
+ panels.  Yes ends the PDF or the pages with the Error Log when there is
+ something to say.  No leaves the page out.
+.end
+With No the faults are still marked in the document and counted on the message
+line, and the banner and the marks of {x:print-failed} stay, with the numbers
+that the entries would have had.  Preview Block and Preview Section have no
+panel and always have the log.
+The markers in the text are described in {x:print-errmarks}.
+.if .STRATA_BUILD_TYPE # release
+For developers: the option {c:--no-error-log} of the Printer and of the Editor's
+print and preview modes does the same ({n:print-cmdline}).
+.endif
+
+.h3 The Print Error markers [print-errmarks]
+.ix Print Error marker, made by Print
+.ix Markers, Print Error
+After a Print (Draft or Final) or a Preview of the Editor has typeset the
+document, the Editor reads what the Printer found and puts a Print Error
+marker into the text in front of each fault.  Only the Editor makes them: no
+key, menu or command lets the user make one, and a document keeps them until
+they are fixed and removed.  The marker has its own entry in {n:markers-errors}:
+its fields, how it looks, that it is not printed, and how it is saved.
+How to go from one to the next is in {x:edit-c-find-error}.
+.table 19 41
+Rule | What happens
+Where the marker goes | In front of the character for a character that no
+ font has; in front of the marker (equation, picture, keycap, Keep ...) that
+ is at fault, found by its kind and its text; else at the start of the line
+ of the block.  A place that cannot be found (the document was changed after
+ the run) goes to the nearest place that can: the block, else the start of
+ the section, else the start of the part that was printed.  The message then
+ ends with "(The exact place was not found; this is the nearest.)".
+A new run | First takes out the old markers of the same kind of run (Print or
+ Preview) in the blocks that were printed, then puts the new ones in, so
+ they do not pile up.  A run that finds nothing takes them out, and shows "no
+ print errors".  The markers of the other kind of run, and those outside the
+ part that was printed, stay.
+A run that fails | Changes no marker ({n:print-failed}).
+A Preview of a block or of a section | Marks and replaces only the blocks of
+ that part.  What a Print of the whole document found elsewhere stays.
+Cancelled | A run that was stopped with {k:Esc} changes no marker.
+The file of the document | Not touched by a print; the document in the Editor
+ is marked as changed (the star in the status line), because markers were
+ put in.  {k:Ctrl-S} writes the markers with the text and they load again;
+ Remove Print Errors takes them out first if they are not wanted.
+.end
+A marker that has been put in is taken out with
+{k:Del}, with Remove Error or with Remove Print Errors of the Print menu
+({n:edit-c-find-error}).
+
+.h3 The message line after a print [print-errline]
+.ix Message line, print errors
+.ix Print error, count
+.ix No print errors
+The text of the message line depends on how the run ended.
+.table 33 27
+Message | When
+PRINT FAILED: Wrote /work/plan.pdf (3 pages).  3 errors and 1 warning. |
+ A Print with no queue named, with errors.  The pages have the banner and
+ the marks, and the markers are in the text.  With warnings only the text is
+ "Wrote /work/plan.pdf (3 pages).  The document has 0 errors and 1
+ warning." and nothing is marked.
+Wrote /work/plan.pdf (12 pages)  No print errors. | A Print with no queue
+ named, and none found.
+Print: PRINT FAILED, 4 print errors (Ctrl-F8 finds the next) | After the box
+ of a Print that used {c:lp}, with errors.  The box holds the text of the first
+ row of this table with the answer of {c:lp}, or the message that the PDF was not
+ sent.  "1 print error" in the singular.  With warnings only, the words
+ "PRINT FAILED, " are not there.
+Print: no print errors | The same, with none.
+Preview done: PRINT FAILED, 4 print errors (Ctrl-F8 finds the next) | A Preview
+ that was shown, with errors.  With warnings only, the words "PRINT FAILED, "
+ are not there.
+Preview done: no print errors | A Preview that was shown, with none.
+Print error 3 of 4: MESSAGE [code] | After {k:Ctrl-F8}, {k:Ctrl-F7} or
+ {k:Ctrl-F9} landed on a marker.  {x:edit-c-find-error}.
+Wrapped to the start.  Print error 1 of 4: ... | The same, after the search
+ went round the end of the document.
+Wrapped to the end.  Print error 4 of 4: ... | The same, backward.
+No print errors | A search for the next error, or Remove Print Errors, when
+ there
+ is none.
+Print Error removed | Remove Error took out the marker under the cursor.
+The cursor is not on a Print Error | Remove Error with the cursor elsewhere.
+4 print errors removed | Remove Print Errors took them out ("1 print error
+ removed" in the singular).
+PRINT FAILED: Preview shown in spite of errors of LaTeX: MESSAGE | The Viewer
+ ended after a preview whose pages LaTeX made in spite of an error of its own.
+.end
+.pic pictures/print-failed-message.png 5 The message line after a Print with errors, at the foot of the Editor's window (it is cut at the width of the window; the markers are in the text).
+Print and Preview count the number that the Printer told, not the number of
+markers: the two are equal unless the document has more than 200
+({n:print-errkinds}).
+
+.h3 A failed print: the banner, the marks and the Viewer [print-failed]
+.ix Failed print
+.ix Print failed
+.ix Banner, PRINT FAILED
+.ix Failed Preview
+.ix Marks of a failed print
+.ix Inaccurate pages
+A print that has {b:errors} is a {b:failed print}.  A print that has only
+warnings is not: its pages are as good as can be made, and the Error Log shows
+what was not.  A failed print still makes its PDF or its Preview (the piece
+that cannot be set is printed as text), but the pages are not what the document
+says, and nobody must take them for good pages.  So the pages say so, and so
+do the Editor and the Viewer:
+.table 13 47
+Part | What happens
+The banner | On {b:every} page, the page of the Error Log too, a line of large
+ bold red capitals: "PRINT FAILED - 3 ERRORS - THIS PRINT IS INACCURATE" in a
+ PDF, "PRINT FAILED - 3 ERRORS - THIS PREVIEW IS INACCURATE" in a Preview ("1
+ ERROR" in the singular).  It stands in the top margin, three quarters of the
+ way down it (not lower than 0.45 inch and not higher than 0.2 inch from the
+ edge), so that it does not move or hide a line of the text: the pages are
+ the same in number and in layout as without it.  Shrunk to fit if the page
+ is narrow.  On a page that is turned (an orientation marker) it stands along
+ the edge that is the top of the page as it is read.
+The marks | A small label at each place that has a fault: white letters on red,
+ {b:E3}, for an error, black letters on orange, {b:W3}, for a warning.  The
+ number is that of the entry in the Error Log, which gives the fault (the
+ label has the number also when the Error Log is left out).  It stands at the
+ place that the Printer gave: in front of the character that no font has, in
+ front of the equation, picture or other marker that is at fault, else at the
+ start of the line or of the block.  A fault that has no place on a page (for
+ example an error of LaTeX that cannot be traced to a block) has no label: the
+ banner and the log show it.  The labels are in the pages only, never in the
+ document.  A label is set in the line and takes a little room, so a line that
+ holds one may break at another word than it would; the page is inaccurate
+ anyway, and the label is the sign of it.
+The Viewer | When the print failed, the Viewer shows a
+ {b:red area} of its own above its status bar, with white bold letters: "PRINT
+ FAILED - 3 errors - THIS PREVIEW IS INACCURATE" ({n:print-viewer-status}).
+ The Viewer only shows it and makes no mark.
+The messages | The messages of the Printer and of the Editor begin or contain
+ "PRINT FAILED" ({n:print-errline} and {n:print-strprint}).
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: the status of a failed print is unchanged, 4 for the Printer and
+5 for the print mode of the Editor.  The word is added to the text, not to the
+numbers.
+.endif
+.pic pictures/print-failed-page.png 5 A page of a failed print (the test document): the banner in the top margin, and the marks E1, E2, W3 and E4 in front of the equation, the picture, the character and the second equation.
+A clean print has none of this: no banner, no label and no red area.  The
+Error Log does not matter: the
+option that turns it off ({n:print-errlog}) leaves the banner and the marks
+as they are.
+.table 10 8 32
+Option | Default | Meaning
+Banner | On | The banner on every page of a failed print.  The Print and
+ Preview panels have no field for it: they always make it.  The marks stay
+ when the banner is left out.
+Error Log? | Yes | Does not change the banner or the marks.
+.end
+In a Preview with errors the same happens in the pages, and the Editor's
+message line reports this ({n:print-errline}).  A Preview of a clean document, or
+one made without the banner, has no red area.
+
+.h3 A print that makes no file [print-nofile]
+.ix Print that made nothing
+.ix Print, no file made
+A print can also make {b:no file at all}: LaTeX stopped and left none, the
+Printer or {c:pdflatex} is missing, the document could not be read, the
+directory could not be written.  That is not a failed print in the sense of
+{x:print-failed}, because there are no pages to carry a banner; it is a
+failure of the program.  Strata then does exactly this, and nothing more:
+.table 20 40
+Part | What happens
+The screen | A box titled Print, with the message of the failure: "LaTeX
+ failed: ! TEXT l.12 THE LINE" (the first error line of the TeX log and the
+ line after it) or "Print failed: ..." or one of the other messages of
+ {x:print-messages}.  A Preview has no box: the message line shows "LaTeX
+ failed: ..." or "Preview failed: ...".
+The PDF | None is written; one that was there before stays as it was.
+The Error Log | None.  There is no PDF to hold it.
+The banner and the marks | None: there are no pages.
+The markers | No marker is put in, taken out or changed: a run that did not
+ get as far as the document tells nothing about it.  The count line of
+ {x:print-errline} is not shown.
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: with no pages the exit status is 1 for the Printer and for the
+print mode of the Editor.
+.endif
+A document whose pages were made with errors is the other case, and its
+messages are those of {x:print-errline}.
+
+.h3 Export a LaTeX File and errors [print-errexport]
+.ix Export a LaTeX File, errors
+The Error Log, the banner and the marks belong to the pages of a print.  Export
+a LaTeX File ({n:file-export-latex}) finds the same faults, but it writes the
+file without them: the message line gives their number and a box lists the
+first of them, and no Print Error marker is put in the document.
+
+.h3 Print and Preview with no document to mark [print-errtext]
+.ix Print Document, errors
+.ix Preview Document, errors
+.ix Exit status 5
+The print and preview modes of the Editor have no open document and so no
+marker.  They write the faults as text at the end of the
+run, under the line "FILE: the document has errors or warnings:" (followed,
+when there are errors, by the line "PRINT FAILED: the output was made, but it
+is inaccurate."; a preview says "the preview is inaccurate"): one numbered
+line for each (error or warning, the place, the message with its code in
+square brackets, the text in quotation marks) and a last line "PRINT FAILED: 3
+errors, 1 warning" (without the words "PRINT FAILED: " when there are warnings
+only).
+The PDF is made all the same.
+.if .STRATA_BUILD_TYPE # release
+For developers: the exit status of the print and preview modes of the Editor is 5
+when the document made its output and has faults ({n:print-cli}); a clean
+document keeps status 0.
+.endif
+
+.note The Error Log of a Preview is the same page, with the word PREVIEW in the
+  banner.

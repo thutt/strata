@@ -1,0 +1,193 @@
+# Chapter 4, second part: formats on the edit screen and the Global menu
+# with the keys that every panel has.  Part of the chapter source.
+
+.h2 Formats on the edit screen [format-screen]
+.ix Edit screen, formats
+.ix Formats on the edit screen
+.ix Screen, effect of formats
+.ix Ruler
+.ix Ruler line
+.ix Expanded status line
+The edit screen draws the text in character cells.  It shows the formats
+that a character cell can show, as the layout of the text: attributes,
+justification, indents, tab stops, section tags and column widths.  The
+lines at the top of the screen are described in {x:view-status},
+{x:view-expanded} and {x:view-ruler}; this section says what in them and in
+the text depends on the format.
+
+.h3 What the screen draws [format-screen-draws]
+.ix Justification on screen
+.ix Indent on screen
+.ix Tab stops on screen
+.ix Section tags on screen
+.ix Indent per Level on screen
+.ix Even justification on screen
+- {b:Attributes.}  Bold, italics and underscore words are drawn with the
+  display attributes of the terminal or window.
+- {b:Justification Left and Even.}  The text starts at the left edge of the
+  block and is not stretched; Even looks the same as Left.
+- {b:Justification Right.}  Each row ends one cell before the right edge,
+  which is kept for the end of line mark.
+- {b:Justification Center.}  Each row is centered between the left block
+  indent and the right edge.
+- {b:Indent First, All but First, All.}  The first row of a line, the other
+  rows, or both are indented by the first tab stop of the format, or by 5
+  cells when it has none.
+- {b:Tab stops.}  A tab character fills the cells up to the next stop of
+  the block, counted from the left block indent.  A stop of type R, C, D,
+  comma or N places the text that follows by its end, middle, decimal point
+  or comma.  Without any stop a tab goes to the next multiple of 5.  Past
+  the last stop a tab is one cell wide.
+- {b:Left block indent.}  The text, the section tag and the end of line mark
+  of the block are moved to the right by that many cells.
+- {b:Section tag.}  The tag (1.1.6, or the Section Tag of the level) is drawn
+  before the first row of a headline, in the attribute of the headline.
+- {b:Indent per Level.}  A block of a section of level L is moved to the
+  right by the sum of the Indent to Next Level of the levels above it (the
+  Indent per Level where a level sets none); a level 1 block is not moved.
+  The shift stops 24 cells short of the width of the screen.
+- {b:Column widths.}  A column that has a width keeps it; the other columns
+  share what is left.  The rows of the columns of a block go side by side.
+The font of a block, the spacing, the paper, the margins and the page
+layouts show only on the printed page.  The blank rows between blocks are the
+same whatever the spacing settings are.
+
+.h3 The status line and the expanded status line [format-screen-status]
+.ix Status line, format
+.ix Just: Indent: L:
+.ix Headline in the expanded status line
+The first row of the screen is the status line; it holds the name of the
+document, the attribute at the cursor, the position and the number of the
+section.  When Global, Options, Expanded Status Line? is Yes, a second row
+appears under it with the format of the block that holds the cursor, as the
+Editor looks it up ({n:format-order}):
+.code
+ Just: Even    Indent: None           L: 0   Headline
+.end
+Just is Left, Right, Center or Even; Indent is None, First, All but First
+or All; L is the left block indent of the block; and the word Headline
+appears when the block is the headline of a section.  The row follows the
+cursor and changes as it moves from block to block.  In a table it shows the
+format of the column that holds the cursor, except that L is the indent of the
+block.
+
+.pic pictures/format-expanded-status.png 5 Expanded status line and ruler.
+
+.h3 The ruler [format-screen-ruler]
+.ix Ruler line, glyphs
+.ix Tab stop marks on the ruler
+.ix Block indent mark on the ruler
+The ruler is the row under the status line (and under the expanded status
+line).  It is always shown.  It draws a row of small dots over the whole
+width and puts marks on it for the block that holds the cursor, counted from
+the left edge of that block's column.
+.table 15 45
+Mark | Meaning
+Filled squares | The left block indent: one mark for each cell of the indent.
+Right pointing triangle | A left tab stop (the indent plus its position).
+Left pointing triangle | A right tab stop (type R).
+Caret | A center tab stop (type C).
+Period | A decimal tab stop (type D).
+Comma | A comma tab stop (type comma).
+Number sign | A number tab stop (type N).
+.end
+A block with no tab stops shows no tab marks, though tabs in it still go to the
+next multiple of 5.  A block whose format changes (a local format with
+{k:F6}, a different global ruler) changes the ruler at once.
+
+.h3 Attribute keys [format-screen-attrkeys]
+.ix Attribute keys
+.ix Ctrl-B
+.ix Alt-I
+.ix Ctrl-U
+.ix Ctrl-N
+.ix Alt-F6
+.ix Set Attributes menu
+The attributes of the text can be changed while typing with these keys.
+They make a local setting of the text itself ({n:format-local-text}).
+.table 10 11 36
+Key | Attribute | Effect
+{k:Ctrl-B} | Bold | Switches bold on or off for the text typed next.
+{k:Alt-I} | Italics | The same for italics.  {k:Ctrl-I} is {k:Tab}.
+{k:Ctrl-U} | Underscore | The same for underscored words.
+{k:Ctrl-N} | Normal | Switches off all the attributes of the text.
+{k:Alt-F6} | Set Attributes | A menu of the four attributes.
+.end
+{k:Alt-F6} opens the list Set Attributes, and the choice acts like the
+key of the same name.  {x:edit} describes how an attribute is
+applied to a highlighted block of text.
+
+.h2 The Global menu [format-global-menu]
+.ix Global menu
+.ix F12, Global
+.ix Menu bar, Global
+.ix MENU-GLOBAL
+.pic pictures/format-global-menu.png 5 The Global menu bar.
+The Global menu is the second entry of the {k:F12} menu bar (File, Global,
+Edit, Print, Tools, Quit).  Press {k:F12}, move to Global with
+{k:Right} and press {k:Return}; or press {k:F12} and {k:G}.  The menu is a
+bar of six entries on the top row, with the word MENU-GLOBAL at its right end
+and a line of explanation under it, as in the picture.
+.table 10 15 32
+Entry | Hint line | Opens
+Format | Global section settings | Fourteen panels, {x:format-format}.
+Page | Page layout settings | Seven layouts, {x:format-page}.
+Typeface | Font assignments | The Typeface List, {x:format-typeface}.
+Marker | Marker settings | Nineteen panels, {x:format-marker}.
+Options | Other settings | One panel, {x:format-options}.
+Named | Edit, Delete ... | Edit or Delete, {x:format-named}.
+.end
+The whole hint of Named is "Edit, Delete named block format settings".
+In the bar, {k:Left} and {k:Right} move the highlight (and wrap round from
+the last entry to the first), {k:Home} and {k:End} go to the first and to the
+last entry, {k:Return}, {k:Ins} and {k:Down} choose, a letter chooses the entry
+whose name starts with it (F, P, T, M, O or N) and at once runs it,
+{k:Esc} goes back one level, and {k:F12} closes the menu.
+
+.h3 Keys that every panel has [format-panel-keys]
+.ix Panel keys
+.ix Ins accepts, Esc cancels
+.ix PgUp, PgDn in panels
+.ix Choice field
+.ix Text field
+.ix Dimmed fields
+.ix Information fields
+.ix Panel ring
+The panels of the Global menu are forms: a column of fields, each with a
+label at the left and a value at the right.  The keys of a form are
+described in {x:view-form-keys}; these are the ones that matter here.  A bad
+value is refused with one of the messages of {x:format-messages}.
+.table 13 47
+Key | Effect
+{k:Ins} | Accept: check and apply every panel of the group.
+{k:Esc} | Cancel: nothing of any panel of the group is applied.
+{k:PgUp} | The next panel of the group, wrapping from the last to the first.
+{k:PgDn} | The previous panel of the group, wrapping from the first to the last.
+{k:Down}, {k:Tab}, {k:Return} | The next field; there is no wrap from the last.
+{k:Up}, {k:Shift-Tab} | The previous field.
+{k:Left}, {k:Right} | Previous, next choice; or the cursor of a text field.
+{k:Space} | On a choice field the next choice, wrapping round.
+{k:F2}, {k:Alt-+} | On a choice field: the list of the choices.
+{k:Home}, {k:End} | The start and the end of a text field.
+{k:Backspace}, {k:Del} | Delete in a text field.
+.end
+A choice field is drawn in square brackets, such as [Bold].  A text field
+is drawn on a row of dots.  An information field is plain text without dots
+or brackets: the cursor skips it and it cannot be changed.  When the cursor
+arrives on a text field its text is highlighted; the first key that is typed
+replaces all of it, and the cursor keys or {k:Home} and {k:End} keep it.
+
+All the panels of one group (the fourteen of Global Format, the seven of Page,
+the nineteen of Marker) are read before the group is accepted and are
+applied together, so a change on the third panel is not lost by a visit to
+the fifth.  A panel is applied only where it differs from what it showed when
+it was opened, and the document is marked as changed (a star in front of its
+name) only when a setting changes.  A group that was cancelled leaves the
+document exactly as it was.
+
+The Typeface, Options and Named panels have no neighbors and no paging; their
+hint line reads "Ins accepts, Esc cancels".
+
+.note In the panels of the Format and Page groups, {k:PgUp} goes forward and
+  {k:PgDn} goes back.  In the Marker group the ring order is described in
+  {x:format-marker-ring}.

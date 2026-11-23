@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- Right margin is smaller than minimum required by printer --
+
+The printer requires a larger right margin than was specified on the Global
+Page Layout panels. Edit the margin selections and reprint the document.
+
+
+-- Save corrected document? -- 
+
+Changes have been made to the document during spell checking.  Press Y to save
+the changes or N to cancel the changes.
+
+
+-- Save document? -- 
+
+You have selected the With Prompt option for the Autosave prompt on the Options
+panel and the document has been modified but not saved.  Press Y to save and 
+continue editing or N to continue editing without saving.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

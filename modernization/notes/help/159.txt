@@ -1,0 +1,25 @@
+
+---------------------------- Controlling Page Breaks ---------------------------
+Although Manuscript automatically pages documents, there are several ways you
+can control page breaks.
+
+# The Page Break Level prompt on the Global Format panel controls which section
+  levels automatically begin on a new page. Sections at all levels up to the
+  level number you specify will begin on a new page.  For example, a page break
+  level of 3 begins level 1, 2, and 3 sections (1, 1.1, 1.1.1) on new pages. 
+  Level 4 sections and beyond do not automatically start on a new page.
+                                                    
+# The Keep Section/Block on One Page prompt on the Current Section Format and 
+  the Current Block Format panels control whether page breaks are allowed
+  within an individual block/section.
+
+# The Page break marker inserts a manual page break in your document.
+
+# The Keep marker specifies a region of text that must be kept together on
+  a single page, such as a table or bulleted list.
+
+--------------------------------------------------------------------------------
+To display page breaks in the editor, use Menu (F10) Print Repaginate.
+--------------------------------------------------------------------------------
+  Global Format         Section Format         Block Format         Repaginate
+  Page Break Marker     Keep Marker       Keyboard Summary       Help Index

@@ -1,0 +1,25 @@
+------------------------------------ Markers -----------------------------------
+The following markers automatically insert values into your document during 
+preview or final print.
+
+Counter:     Use the Counter marker to specify the position and tag (format) to
+             use for an automatically incrementing item. Each occurrence of a 
+             Counter marker with the same tag represents the next item in the
+             sequence.  For example, if the C1 counter tag is \1\., a C1
+             counter followed by a C1 counter represent items 1. and 2. If
+             the C2 counter tag is \A\., a C1 counter followed by a C2
+             counter represent item 1. and item A.  To start renumbering
+             with a counter tag that has already been used in the document,
+             set the counter's Starting Value to 1. The bottom portion of the 
+             Counter panel displays the counter's tag and description for
+             your information.  Use the Counter Format prompt on the Menu 
+             (F10) Global Marker Format panel to add or change counter tags
+             and descriptions.
+
+Page Number: Use the Page Number marker to specify where the page number will 
+             print on the page.  The Page Number marker is valid only in a 
+             header or footer.  Use the Page Number Tag prompts on the Page 
+             Layout panels to define the style of the page number.
+--------------------------------------------------------------------------------
+   Global Marker Format    Counter Format     Page Layout Panels     Markers
+                 Keyboard Summary                 Help Index

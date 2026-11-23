@@ -1,0 +1,25 @@
+
+------------------------------- Equation Keywords ------------------------------
+Binary Operators
+----------------------------------------+---------------------------------------
+Name                   Keyword          | Name                    Keyword
+----------------------------------------+---------------------------------------
+Plus                     +              | Circled plus              #o+
+Minus                    -              | Circled minus             #o-
+Plus or minus            +-             | Circled dot               #o.
+Minus or plus            -+             | Circled multiplication    #ox
+Division (/)             /              | Circled division          #o/
+Division (/)             /.             | Vector dot product        #..
+Multiplication (X)       #x             | Vector cross product      #X 
+Multiplication (.)       #.             | Composition               comp
+----------------------------------------+---------------------------------------
+
+                      Example equation:   a /. b    ->    a / b
+ 
+--------------------------------------------------------------------------------
+                              Relational Operators
+--------------------------------------------------------------------------------
+ Function Names     Greek Letters     Diacriticals    Pointers    Attributes
+     Grouping Symbols     Large Operators     Miscellaneous     Format Keywords
+--------------------------------------------------------------------------------
+         Equation Marker          Keyboard Summary          Help Index

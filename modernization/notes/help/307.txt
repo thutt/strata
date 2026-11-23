@@ -1,0 +1,25 @@
+
+--------------------------------- Page Number Level ----------------------------
+
+
+
+
+Page Number Level:  Enter the level of sections at which you want a page
+                    break and the page numbering sequence reset to 1.  For
+                    example, set Page Number Level to 1 if you want every
+                    level 1 section to start on a new page and to begin page 
+                    numbering at 1.  (The page number tag will reflect the 
+                    appropriate page number for that section of the document.)
+
+
+
+--------------------------------------------------------------------------------
+
+
+# To start every section of a certain level on a new page without restarting
+  page numbering, use the Page Break Level prompt on the Global Format panel.
+
+
+
+--------------------------------------------------------------------------------
+    Global Format      Page Number Tags     Keyboard Summary     Help Index

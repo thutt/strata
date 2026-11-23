@@ -1,0 +1,25 @@
+
+-------------------------- Microtek Image File Import --------------------------
+
+Microtek Image File Import converts files created on a Microtek digitizer into
+bit map image files.
+
+  +----------------------- Microtek Image File Import -----------------------+
+  |                                                                          |
+  |              Working Directory:                                          |
+  |                                                                          |
+  |       Microtek Image File Name:                                          |
+  |                                                                          |
+  |            Bit Image File Name:                                          |
+  |                                                                          |
+  +------------------------- Press Ins to Import File -----------------------+
+
+# Enter the name of the Microtek file to convert, including the full path name
+  if the file is not in the current working directory.
+
+# Enter a name for the converted bit mapped file, including a file name 
+  extension of either BIT or RLE.                                          
+
+# Use the Picture marker to include the converted image file in a document.
+--------------------------------------------------------------------------------
+File Conversion Utilities     Picture Marker     Keyboard Summary     Help Index

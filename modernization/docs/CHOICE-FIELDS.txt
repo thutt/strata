@@ -1,0 +1,129 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+CHOICE FIELDS (SURVEY AND THE PRINTER FIELD)
+============================================
+
+The owner (2026-11-20): "The UI for selecting printers is inconsistent.  Most
+places it's spacebar to toggle entries.  This Printer: field accepts text
+input and +.  This is terrible design.  Fix it."
+
+1. How a choice field works
+---------------------------
+Editor panels (src/widgets.c, WF_CHOICE): the field shows one entry in
+brackets.  Space steps to the next entry and wraps from the last to the
+first.  Right steps forward and Left steps back, and both stop at the last
+and at the first entry (no wrap).  F2 or the keypad plus (Alt-+) opens a
+list of the entries; Enter chooses one and Esc leaves the entry as it was.
+Typed letters and the plus without Alt do nothing.  Shift-Tab and Up move to
+the previous field, as in every panel.  The Editor panels have no hint line
+for the keys.
+
+Document Manager, Setup page (src/str.c, choice_key): the same keys; its
+foot line says "Space Next   Left Right Choose   F2 List"; the plus also
+opens the list.
+
+2. The Printer field
+--------------------
+Print panel and Draft Print panel of the Editor (src/printmenu.c): the field
+Printer is a choice field.  The entries, in the order of the space bar:
+
+  File only, PDF viewer, each queue that lpstat reports, System default
+  printer (only when there are queues), a value of the settings that the list
+  does not have (kept, shown as the current entry), and last Search for
+  printers...
+
+  - The list is asked for in the background when the program starts and is
+    asked for again when it is older than 30 seconds (src/printjob.c).  The
+    panel does not wait for it more than 0.3 second when it opens, and after
+    that it looks again without waiting before it draws and after each key
+    (refresh in WField), so that the queues that arrive later are entries as
+    soon as they are known; the entry that is chosen stays chosen.  While
+    the list is not there the entries are File only, PDF viewer and Search
+    for printers..., and the message "The printer list is not available yet"
+    says so.
+  - The entry Search for printers... is never a value to print to.  Enter on
+    the field, or Ins while it is chosen, runs the search (a message while
+    lpinfo runs, then the list of what was found), and the panel stays open
+    with the entry that was chosen before the search.  Print refuses the
+    value if it is ever the value ("Search for printers only looks for
+    printers"), and the command line refuses it as a name that is not a
+    queue.
+  - Typed text and the plus do nothing.  A queue name that comes from an old
+    settings file is kept as an entry.  The old command line and the old
+    settings files keep working: the name is read as the value.
+
+Setup page of the Document Manager (src/str.c): Print To (Printer, File only,
+PDF viewer) and Printer Queue (System default, each queue, a saved queue that
+is not reported now) were choice fields already, with the keys of section 1;
+this task did not change them and tests/printchoice.py checks the keys.
+
+3. The fields that choose among a known list (survey)
+-----------------------------------------------------
+Kind: C is a choice field (Space, Left, Right, F2); T+list is a text field
+that also takes a list (F2 or the keypad plus) of directories, files or
+names, and accepts typed text.
+
+  Panel                        Field                         Kind
+  ---------------------------  ----------------------------  ---------
+  Print, Draft Print           Printer                       C (changed)
+  Print, Draft Print           Output File                   T+list (files)
+  Print, Draft Print           Print Double Sided?, Sort     C
+                               Output Pages?, Print Current
+                               Section Only?, Title Page?,
+                               Double Spaced?, Error Log?,
+                               Table of Contents?, Index?,
+                               lists, Black and White?
+  Preview panels               Preview Title Page?, Error    C
+                               Log?
+  Setup (Document Manager)     Print To, Printer Queue,      C (already)
+                               Autosave, Paper for New
+                               Documents, Charset
+  Setup                        PDF Directory, Initial        T (typed;
+                               Working Directory, PDF        the Editor
+                               Viewer                        and str have
+                                                             no list)
+  Retrieve, Save, New, Import, Working Directory,            T+list
+  Export, Macro, Library,      Document Name, File Name,     (directory,
+  Restore, Compare, Dictionary ASCII File Name, Template     files; a
+  panels                                                     template is a
+                                                             call)
+  Library panels               Name of an entry              T+list (names)
+  Search, Replace              Find, Direction, Match Case,  C
+                               Whole Word, Attribute,
+                               Replacement Case
+  Marker panels                every field with a list of    C
+                               values (Position, Type, Unit)
+  Global Format panels         the marker display modes,     C
+                               fonts, borders, paper
+  Global Format, Page          Paper size, Window            C and a call
+  Border panels                Border lines, Connect         C
+                               Borders?
+  Spell panel                  Auto Correct?                 C
+
+Inconsistent and not changed (the owner decides): the fields that take a
+directory or a file name and offer a list with F2 or the plus
+(Working Directory, Output File, File Name and the like) accept typed text on
+purpose, because the name is not from a known list; the Library name field
+accepts a new name or one of the list.  They are not printers.
+
+4. Tests
+--------
+tests/printchoice.py: the space bar, Left and Right, typed letters and the
+plus, F2, a value of the settings that the list has not, a slow lpstat, the
+search entry, the command line, in the Print and the Draft Print panels and
+on the Setup page; the mutations that were tried are in the report of the
+task.  tests/printpdf.py, tests/printsearch.py and tests/smoke.py step the
+field with Space or choose from its list.

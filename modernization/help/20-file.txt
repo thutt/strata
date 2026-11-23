@@ -1,0 +1,197 @@
+; The File menu: save, retrieve, new, delete, import, export.
+= File Menu
+~ Menu:File
+The File menu holds the commands for the document files: Save, Retrieve, New,
+Delete, Import and Export.  Each opens a panel in which you give the name of
+the file and what to do with it.  {Ins} does the command and {Esc} cancels.
+
+See [[Save]], [[Retrieve]], [[New]], [[Delete File]], [[Import]], [[Export]],
+and [[Panels and Fields]].
+
+= Save
+~ Menu:File:Save
+~ Save File
+~ Save File:Document Name
+~ Save File:Options
+{Ctrl-S} saves the document.  The panel prompts for the Working Directory, the
+Document Name, what to write, and the Description, Author and Revision of the
+document.
+
+The Options field says what is written:
+
+- Save Entire Document: the whole document.  The document takes the name and the
+  directory of the file and is no longer marked as changed.  Only this choice
+  keeps numbered backups of the older file, as many as Backups Kept says.
+- Save Global Settings Only: the settings and no text.  The result is a
+  template, with .set for the extension when you give none.
+- Extract Current Section (or Extract Current Block in an unstructured
+  document): a complete document of the section that holds the cursor.
+
+The Working Directory and the Document Name have a checklist ({F2}).  See
+[[Checklists]], [[Backup Files]], [[Templates]].
+
+= Backup Files
+When a document is saved over an older version of the same file, the older
+version is kept as a backup.  Backups Kept (0 to 99, three by default) says how
+many: set it in Setup of the Document Manager or in [[Global Options]].  The
+backups are numbered and are in the folder .backup next to the document:
+report.doc has .backup/report.bak01 (the newest), .backup/report.bak02 and so
+on.  Restore Backup of the Document Manager brings one back.  A save of a
+document that has not changed makes none, and neither does Autosave.
+
+A document of an older version of the file format (version 2, written by
+earlier programs) is kept as it was: when the Editor loads it, it saves a
+special backup named V2-NAME next to the file (V2-report.doc for report.doc),
+once.  The save then writes version 3.  A special backup is never removed by
+the backup limit, and Restore Backup lists it.
+
+The name of a backup is the name of the document with .bak01 to .bak99 in
+place of .doc, and no name of a file can be longer than 255 characters: a
+document whose name leaves no room for .bak01 is saved without a backup, and the
+message line shows that the name is too long for a backup.  See [[File Names]].
+
+= File Names
+A name of a file may be long, may have spaces, several dots, a dot at the start
+and letters of other languages; the longest is 255 characters.  The last dot
+of the name starts the extension, unless it is the first character.  A command
+that adds .doc does so to a name with no extension, and Retrieve also uses a
+name with .doc added.  A name that is too wide for a list or for the status
+line is shown by its end, as ...long-name.doc; the file keeps its name.  A
+letter that the screen cannot show is a question mark, and the file is found
+all the same.  Signs such as ; & $ and quotes in a name are only part of the
+name.  See [[Save]], [[Retrieve]], [[Backup Files]].
+
+= Retrieve
+~ Menu:File:Retrieve
+~ Retrieve File
+~ Retrieve Document
+~ Retrieve File:Options
+{Ctrl-R} retrieves a document file.  The panel prompts for the Working
+Directory, the Document Name and what to take from the file.  The Options field
+says what:
+
+- Retrieve Entire Document: the open document is replaced by the file.
+- Retrieve Body Only: the text is replaced; the settings stay.
+- Retrieve Global Settings: the settings are replaced; the text stays.
+- Retrieve Typeface Settings Only: only the typefaces and the page size that
+  goes with them.
+- Retrieve & Insert after Current Section (or Block): the text of the file is
+  added at the cursor.
+
+A document is opened at the place where its last saved change was made: the
+cursor and the screen row are saved with the document.
+
+If the open document has unsaved changes you are asked first.  A file that is
+cut short or damaged is refused; the box shows how much can be read and puts the
+question "Open the part that can be read?": Y opens it as the new document
+NAME.recovered.doc (the file is not changed), N or Esc opens nothing.  See
+[[Save]], [[Checklists]].
+
+= New
+~ Menu:File:New
+~ New File
+~ New File:Template
+~ New File: document type
+~ New document type
+New starts a new document in the Editor.  The panel prompts for the Working
+Directory, the Document Name, a Template, a Description, an Author and a
+Revision.  The template (DEFAULT.SET to start) gives the settings of the new
+document.  A name with no dot gets .doc.
+
+When there are templates, a list of them comes first, with the description of
+the chosen one below it: Up and Down choose, Enter takes the template, Esc
+takes the built-in settings.  Type a product number, such as 5160, to choose
+a sheet of labels.  Strata brings templates for letters (letter-us,
+letter-a4), for envelopes of several countries and for Avery label sheets
+(label-us-5160, label-a4-l7160).
+
+You are asked whether the new document is structured or not.  See
+[[Templates]], [[Structured and Unstructured]].
+
+= File Types
+~ File types
+~ Extensions
+Strata works with a few kinds of file, told apart by the end of the name.
+
+- A document ends in .doc.  It holds the text and the settings of the
+  document.  Save writes it.
+- A template ends in .set.  It is the pattern for new documents; see
+  [[Templates]].
+- A backup ends in .bak and a number, such as .bak01.  It is the document as
+  it was before a Save; see [[Backup Files]].
+- A library ends in .lib (see [[Library]]) and a set of macros in .mac (see
+  [[Learn a Macro]]).
+
+The end of a name is a habit, not a rule: Strata determines what a file is from
+what is in it.  The lists of Save, Retrieve and New show the usual endings
+only; the lists of Delete, Import and Export show every file, or type the name
+in full.
+
+= Templates
+~ Template
+A template is a file of settings, made with Save, Global Settings Only, or a
+document that is the pattern of others.  Its description is shown in the list
+of New.  It carries the page layout, the formats, the typefaces and the marker
+settings.  Give its name in the Template field of [[New]], or apply one to the
+open document with Retrieve Global Settings in [[Retrieve]].
+
+= Delete File
+~ Menu:File:Delete
+Delete removes a document file from the disk.  The panel prompts for the Working
+Directory and the File Name.  Give the extension.  The command asks for
+confirmation before the file is removed.  A directory cannot be deleted.
+
+See [[Checklists]].
+
+= Import
+~ Menu:File:Import
+~ Import ASCII Text File
+~ Import ASCII Text File:Options
+~ Import ASCII Text File:Character Set
+Import reads a plain text file into the document, at the cursor.  The panel
+prompts for the Working Directory, the ASCII File Name, the Options and the
+Character Set.
+
+- Ignore Line Endings: for prose.  Lines run together and are wrapped again; a
+  blank line ends the block.
+- Preserve Line Endings: every line end stays, and the whole text goes into the
+  current block.  Use it for data in columns or a listing.
+
+The Character Set is the one that the file is written in.  The choices are the
+code pages CP 437 (the default), CP 850, CP 860 and CP 865, which the list
+names IBM Extended ASCII, IBM Multilingual, Portuguese and Norwegian/Danish;
+plain 7 bit ASCII; UTF-8; and Latin-1 (ISO 8859-1).  Characters that the
+document cannot hold are replaced.  See [[Export]].
+
+= Export
+~ Menu:File:Export
+~ Export ASCII Text File
+~ Export ASCII Text File:Options
+~ Export ASCII Text File:Scope
+~ Export ASCII Text File:Character Set
+Export writes the document, or the current section, to a plain text file.  The
+panel prompts for the Working Directory, the ASCII File Name, the Options, the
+Character Set and the Scope.
+
+- Export a Screen Image: the text laid out as the screen shows it, in lines of
+  at most 79 characters, with the borders of the blocks drawn as the screen
+  draws them (box characters, with the corners and tees; in Latin-1 and ASCII
+  the characters + - = and |).
+- Export Data Only: only the text, one line for each block and one line for each
+  column of a block, with tab characters.
+- Export a LaTeX File: the file that Print and Preview typeset.  The field Check
+  Validity can run LaTeX on it and report what it finds.
+
+The Scope is Export Entire Document or Export Current Section.  See [[Import]].
+
+= Quit
+~ Menu:Quit
+~ Document has unsaved changes
+{Ctrl-Q} leaves the Editor and returns to the Document Manager.  When the
+document has unsaved changes (an asterisk before its name) you are asked:
+
+- Save and quit: save the document, then leave.
+- Discard changes and quit: leave without saving.
+- Cancel: stay.  {Esc} does the same.
+
+See [[Save]].

@@ -1,0 +1,25 @@
+
+-------------------------------------- Cut -------------------------------------
+
+Cut (F4) removes highlighted material from the document and places it on a 
+clipboard. You can then paste the clipboard contents into other areas of the 
+document. When you end the editing session, the clipboard contents are erased.
+To use material over again or in multiple documents, use Library Copy (Ctrl F3).
+
+Cut selected text.  (Ctrl X)       Cut blocks in the current section.  (Ctrl K)
+         +---------------+                 +-------+
+                    +--------------------------------------+
+                    |  Text    Column    Block    Section  |
+                    +--------------------------------------+
+               +------------------+                  |
+    Cut columns in the           Cut sections, including subsections, at the
+    current block.               same level. (This selection is available only
+                                 in Structured mode.)  (Ctrl L)
+
+--Procedure---------------------------------------------------------------------
+ Press Cut.
+ Select Text, Column, Block, or Section and press Enter.
+ Highlight the area to cut.
+ Press Enter to cut the highlighted area to the clipboard.
+--------------------------------------------------------------------------------
+  Paste     Library Cut     Highlighting     Keyboard Summary      Help Index

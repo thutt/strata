@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Cross-reference is invalid; <description> -- 
+
+You deleted or changed the level of a section which made the section number in
+a cross-reference invalid.  Reenter the cross-reference number and reprint.
+
+-- Delete <description>? --
+
+Press Y to delete the region or item specified or N to cancel the command.  
+Deleting a section will also delete its subsections.
+
+-- Device name not allowed (<device name>) -- 
+
+You have specifed a reserved device name as a file or document name.  Reserved
+device names include CON, COM1, COM2, LPT1, LPT2, LPT3, LPT4, and PRN.
+
+-- Directory does not exist -- 
+
+The directory specified does not exist.  Verify the directory name spelling or
+use Gray + at a directory or file name prompt to list available directories.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

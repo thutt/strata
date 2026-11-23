@@ -1,0 +1,25 @@
+
+-------------------- Setting the Section Tag Numbering Level -------------------
+
+Use the Auto Numbering and To Level prompts on the Global Format panel to 
+specify the levels that have section tags displayed. 
+
+# Auto Numbering: Set to Yes to use automatic decimal numbering or No to remove
+  decimal numbering.
+# To Level: Specify the number of levels that have section tags displayed.
+
+Example:    Auto Numbering? Yes      
+            To Level: 3  -+   ::::::::::::::::::::::::::::::::::::::::::::::::::
+                          +>  :: 1 Level 1 heading    
+                          |   ::    --------------------------------------------
+The first three levels    +>  ::    1.1 Level 2 heading     
+are numbered with the     |   ::       -----------------------------------------
+decimal section tag       +>  ::       1.2.1 Level 3 heading
+format. Subsequent        +   ::          --------------------------------------
+levels are not numbered.      ::          Level 4 heading
+
+
+# Use the Level Format panels to change the section tag style.
+--------------------------------------------------------------------------------
+   Global Format        Level Format        Section Tag        Global Options
+            Panel Keys          Keyboard Summary          Help Index

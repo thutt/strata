@@ -1,0 +1,25 @@
+
+--------------------------- Compare Document Versions --------------------------
+
+Compare Document Versions is accessed from the Document Manager and highlights 
+the differences between two documents.
+
+  +------------------------ Compare Document Versions -----------------------+
+  |                                                                          |
+  | Working Directory:                 Copies:                               |
+  |                                    Print Quality:                        |
+  | Older Document Name:               Double Sided?                         |
+  | Newer Document Name:               Sort Output Pages?                    |
+  +--------------------------------------------------------------------------+
+  | Revision Markers:                  Ignore Punctuation?                   |
+  | Number of Deleted Words to Keep:   Print Only Changed Pages?             |
+  +--------------------------------------------------------------------------+
+  | Print:                             Print from Section/to Section:        |
+  |                                    Print from Page/to Page:              |
+  |                                                                          |
+  |                                    Graphics Print Options:               |
+  | Printer:                                                                 |
+  +------------------ Press Ins to Print Document Comparison ----------------+
+--------------------------------------------------------------------------------
+    Document Manager         Optional Settings         Hyphenation Settings
+                 Keyboard Summary                 Help Index

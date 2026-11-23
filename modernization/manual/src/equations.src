@@ -1,0 +1,65 @@
+# Chapter 9: Equations.  The chapter is kept in four sources that this file
+# reads: the editor, the display and the printing, the command words, and
+# the errors, limits and examples.
+.doc Strata: Equations
+.chapter 9
+.h1 Equations [equations]
+.ix Equation
+.ix Equations
+.ix Equation marker
+.ix TeX
+.ix LaTeX
+.ix Mathematics
+An equation in Strata is a marker, like a note or a date, that stands in the
+text where the formula goes.  Its content is the text of the formula written in
+the math notation of TeX: {eq:x=\frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}} is the
+text
+{c:x=\frac{{-b\pm\sqrt{{b^2-4ac}}}}{{2a}}}.  The Editor typesets that text to a
+picture in the X11 version and shows the picture in the document; the Printer
+has LaTeX set it on the page.  The terminal version has no pictures and shows
+the marker as a label with the text.
+
+The equations of Strata are TeX math and nothing else.  A document that has
+equations that are not TeX math must be rewritten, equation by equation, in TeX
+math ({n:eq-legacy}); the Printer reports each such equation as an error.  This
+chapter documents what Strata does with the text of an equation, and every
+command word that the notation has in Strata, with the result.
+
+The chapter is built as a reference:
+.table 19 41
+Section | What it holds
+{x:eq-what} | What an equation is and what is needed to typeset it.
+{x:eq-insert} | How to insert, edit, view, copy and delete an equation.
+{x:eq-place} | Inline and displayed equations; the rule that determines.
+{x:eq-screen} | How the equation is shown on the screen (pictures, labels,
+ display modes).
+{x:eq-print} | How it is printed and what is refused.
+{x:eq-text} | The rules for the text: spaces, groups, special characters.
+{x:eq-greek} to {x:eq-structures} | The command words, one group at a time, in
+ tables of source, result and meaning.
+{x:eq-errors} | Every message, the lists of refused commands, the limits.
+{x:eq-legacy} | Documents that have equations that are not TeX math.
+{x:eq-examples} | Worked examples.
+.end
+The tables show the source of a formula next to the typeset result.  The result
+is itself an equation of this document, so it is typeset by the same program
+that is described here: in the printed manual by LaTeX, on the screen by the
+pictures of {x:eq-screen}.  The Editor makes the pictures in the
+background, so a screen of the later tables shows labels in place of the
+results that are not ready yet; a picture that cannot be made keeps its label
+({n:eq-screen-label}).  One session of the Editor keeps up to 4096 different
+pictures ({n:eq-limits}).  The printed pages are not affected.
+
+A formula is not the only way to reach what LaTeX can do.  For anything else
+that the page needs, a LaTeX marker holds the instructions themselves
+({n:marker-latex}).
+
+The documentation has a card of the symbols: Math Symbols is one sheet of
+paper, printed on both sides and folded in three, that shows every symbol and
+every construct that works in an equation, each as it is printed and with the
+text to type beside it.  It is a Strata document, and its symbols are
+equations.
+
+.include equations-a.src
+.include equations-t.src
+.include equations-d.src

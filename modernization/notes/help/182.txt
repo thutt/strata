@@ -1,0 +1,25 @@
+
+---------------------------------- Levelnotes ----------------------------------
+
+
+The following prompts are unique to the Levelnote Format panel.
+
+
+Separator Bar:  Enter the length of the line that will separate the first
+                levelnote from the text. For example, to print a two-inch
+                line, type 2 in.
+
+
+Renumber:       Select No to number the levelnotes in the document 
+                sequentially.  Select Yes to renumber the notes for each level.
+
+
+Note Level:     Enter the level (1-9) after which you want levelnotes printed. 
+                For example, enter 2 to print notes following all level 1 
+                and level 2 sections. If level 2 sections have subsections,
+                levelnotes print after the last subsection, regardless of level.
+                The next section following levelnotes prints on a new page.
+
+
+--------------------------------------------------------------------------------
+            Note Format          Keyboard Summary          Help Index

@@ -1,0 +1,25 @@
+
+------------------------------------ Preview -----------------------------------
+
+Preview displays a formatted document one page at a time.  The following are the
+preview display modes.
+
+# Content/Full-page toggles content and full-page display modes.  Content 
+  displays the text of the document across the full width of the screen.  
+  Full-page shows the current page of the document, selector box, magnifier 
+  window, preview status, and message box.
+
+# Greeking displays all or part of the text as dashed lines.
+
+# Reverse/Normal toggles reverse and normal video modes.
+
+# Errors displays a log of format errors for the current previewed page.
+--------------------------------------------------------------------------------
+
+To change the display mode, press Menu (F10) in preview and select the option
+you want.  The menu also lists commands to go to another page, zoom a graphics
+image, or quit preview.
+
+-------------------------------------------------------------------------------
+Preview Keys     Preview Status     Preview Menu Commands     Full-page Preview
+       Preview Document            Keyboard Summary            Help Index

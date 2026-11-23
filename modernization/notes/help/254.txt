@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Overwrite modified <description> in memory? --
+
+The item specified has been modified since it was last saved. Continuing with
+the current operation will lose the modifications that have not been saved. 
+Press Y to replace the current item or N to cancel the operation.
+
+
+-- Overwrite old version on disk? --
+
+If you continue with the Save command you will replace the old version of the 
+file on disk. Press Y to save the new version on disk or N to cancel.
+
+
+-- Page break required <description> --
+
+A portion of text that Manuscript is trying to keep together on a page cannot
+fit in the remaining space on the page, or is larger than a single page.  
+Manuscript will automatically break the page or you can use the Page Break 
+marker to manually insert page breaks.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

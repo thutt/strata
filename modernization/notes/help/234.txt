@@ -1,0 +1,25 @@
+
+------------------------- Custom Virtual Memory Setup --------------------------
+
+Total Size (Kbytes):   Specifies the total amount of memory reserved for use as
+                       virtual memory. 
+
+     # The standard size is 1024K bytes (1 megabyte). For documents larger 
+       than 100 pages, add approximately 10K for each additional page, up to 
+       a maximum of 16000K.
+
+Swap Area 1 - 4:       Determines which devices or drives and directories have
+                       available memory. 
+
+     # You can enter up to four different swap areas, which are used in 
+       consecutive order as needed. If you include a device as a swap area 
+       that is not available, that area is ignored.
+
+Maximum Size (Kbytes): Determines the maximum amount of space to use of the
+                       space available in the swap area.
+
+     # Because memory in the swap areas is used consecutively, the total for 
+       all maximum size entries does not need to correspond to the Total Size.
+
+--------------------------------------------------------------------------------
+   Virtual Memory Setup    Document Manager    Keyboard Summary    Help Index

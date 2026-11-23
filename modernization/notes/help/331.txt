@@ -1,0 +1,25 @@
+
+----------------------------------- Macro Edit ---------------------------------
+
+Use Macro Edit to directly edit the keystrokes of a new or existing macro.
+          
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Tools   +-------------- Macro Edit -------------+
+  Macro Edit.                         |                                       |
+                                      |  Macro Key: Alt-                      |
+ Enter the alphabetic character name |  Description:                         |
+  of the macro at the Macro Key prompt|  Keystrokes: ...                      |
+  or press Gray + and select one from |  Include in Macro Set?                |
+  the list.                           |                                       |
+                                      +---- Press Ins to Return to Editor ----+
+ Enter or edit the macro description if desired.
+
+ Press Space Bar at the Keystrokes prompt to access the Keystrokes Edit panel.
+
+ Set Include in Macro Set to Yes if you want the macro to be saved as part of 
+  the current macro set in memory.
+
+--------------------------------------------------------------------------------
+       Macro Overview             Macro Menu             Keystrokes Edit
+                Keyboard Summary                     Help Index

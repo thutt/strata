@@ -1,0 +1,25 @@
+
+----------------------------- ThinkTank File Import ----------------------------
+
+
+ThinkTank File Import converts ThinkTank structured files into Manuscript 
+documents.
+
+
+  +-------------------------- ThinkTank File Import -------------------------+
+  |                                                                          |
+  |         Working Directory:                                               |
+  |                                                                          |
+  |       ThinkTank File Name:                                               |
+  |                                                                          |
+  |             Document Name:                                               |
+  |                                                                          |
+  +------------------------- Press Ins to Import File -----------------------+
+
+# The .TXT ThinkTank file name extension is required.  If an extension is 
+  not specified, the .TXT extension is automatically appended.  Be sure to 
+  specify the full path name if a file is not in the current working directory.
+
+
+--------------------------------------------------------------------------------
+       File Conversion Utilities       Keyboard Summary        Help Index

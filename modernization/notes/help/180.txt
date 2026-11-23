@@ -1,0 +1,25 @@
+
+----------------------------------- Note Type ----------------------------------
+
+
+Manuscript has three note types:
+
+
+# Footnotes print at the bottom of the page on which they appear.
+
+# Levelnotes print at the end of a specified level, for example, at the end of 
+  chapter, in which they appear.
+
+# Endnotes print at the end of the document.
+
+
+--------------------------------------------------------------------------------
+
+You select a primary or default note type on the Menu (F10) Global Marker 
+Format panel.  You can override the primary note type for a specific note on
+the Note marker panel.
+
+
+--------------------------------------------------------------------------------
+    Footnotes     Levelnotes     Endnotes     Note Marker     Global Marker
+                  Keyboard Summary                  Help Index

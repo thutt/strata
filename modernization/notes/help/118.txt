@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+-- Invalid filename (<description>) --      or
+-- Invalid filename extension (<description>) -- 
+
+The file name or file name extension is not valid.  Make sure that the 
+information is correct and retry the operation.
+
+-- Invalid graphics display driver (See Setup) --
+
+You cannot use Preview Document without first selecting the correct graphics 
+driver in Setup. Select a graphics driver and retry the Preview procedure.
+
+-- Invalid graphics image size --
+
+The graphics image size native to the graphics file is not valid in Manuscript.
+
+-- Invalid If marker <description> --
+
+Either the operator or argument in the If marker is not valid. Valid operators 
+are =, <>, <, >, >=, or <=, and must be preceded and followed by a space. An If
+marker must include an argument (data variable name, value, or string) before 
+and after the operator.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

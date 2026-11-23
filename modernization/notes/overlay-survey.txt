@@ -1,0 +1,102 @@
+file                          size kind      exp    code
+    description / imports
+driver_1/ms.exe              63612 MZ          0       0
+driver_2/prsetup1.com         6224 COM         0       0
+edit/msedit.exe             252152 overlay    70  232312
+    Editor V2.1 / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+edit/mslocal.exe              4139 overlay     1    2579
+    LOCAL / LIB
+edit/msmacro.exe             16170 overlay     9   13778
+    MAC / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+edit/msmarker.exe            36660 overlay     1   30672
+    Marker Overlay / MAIN,KYBD,OL,VM,LIB,LOCAL,CON
+edit/msrddoc2.exe            34664 overlay     1   32246
+    Document Read Overlay / MAIN,LIB,LOCAL,DOSIO,KYBD,VM
+edit/mswrdoc2.exe            15758 overlay     1   13852
+    Document Write Overlay / MAIN,LIB,LOCAL,DOSIO,KYBD,VM
+install/install.com          12592 COM         0       0
+install/msfont.exe          161720 overlay     1  148057
+    MSFONT / LIB,KYBD,CON,OL,LOCAL,DOSIO
+install/msinit.exe            3538 overlay     1    2020
+    INIT / LIB,OL,KYBD,CON
+print_1/msmpbit.exe           6678 overlay     1    4968
+    MacPaint File Converter / OL,LIB,LOCAL,DOSIO,KYBD,CON
+print_1/msprev.exe           40624 overlay     1   36634
+    PREV / MAIN,GD,OL,LIB,LOCAL,KYBD,CON,VM
+print_1/msprint.exe         261290 overlay   111  246270
+    Document Formatter V2.1 / CON,DOSIO,KYBD,OL,LIB,LOCAL,VM
+print_1/mstables.exe         26434 overlay     1   21595
+    Table Generation Overlay / MAIN,LIB,LOCAL,VM
+print_2/mseqnpdl.exe         55870 overlay     1   53791
+    PDL Math Formula Compiler / MAIN,LIB,LOCAL,KYBD,VM,OL
+print_2/mseqnps.exe          49206 overlay     1   47344
+    Postscript Math Formula Compiler / MAIN,LIB,LOCAL,KYBD,VM
+print_2/msgmfpdl.exe         62840 overlay     1   60076
+    Convert Metafile to PDL / MAIN,OL,LIB,KYBD,CON,VM,DOSIO
+print_2/msgmfps.exe          56542 overlay     1   53629
+    Convert Metafile to Postscript / MAIN,OL,LIB,KYBD,CON,VM
+print_2/mspcxbit.exe          6998 overlay     1    5286
+    PC Paintbrush File Converter / OL,LIB,LOCAL,DOSIO,KYBD,CON
+print_2/mspdlbit.exe         38547 overlay     1   36912
+    PDL Interpreter v2.1k / MAIN,OL,LIB,KYBD,VM
+print_2/mspicps.exe          31044 overlay     1   27418
+    123/Symphony PIC to Postscript / MAIN,OL,LIB,KYBD,CON,VM
+sample/readme.exe             1700 MZ          0       0
+spell/mslex.exe              32424 overlay    17   29659
+    Dictionary Manager / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+spell/msspell.exe            85190 overlay    17   81728
+    Spelling Checker / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+spell/msspword.exe           53108 overlay     1   50913
+    Spelling Checker / MAIN,OL,LIB,LOCAL,KYBD,CON,VM
+spell/msstrip.exe            12042 overlay    17    9751
+    Document Strip Local Settings Utility / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+thesaurus/mstifbit.exe       17552 overlay     1   15717
+    TIFF File Converter / OL,LIB,LOCAL,DOSIO,KYBD,CON
+thesaurus/msttkdoc.exe       15602 overlay    17   13343
+    Import ThinkTank Utility / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+utility_1/ms2to1.exe          9694 overlay    17    7516
+    Document Downgrade Utility / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+utility_1/msdcadoc.exe       33722 overlay    17   30968
+    Import DCA Utility / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+utility_1/msdocdca.exe       35242 overlay    17   32424
+    Export DCA Utility / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+utility_1/msrddoc1.exe       63032 overlay     1   55960
+    Document Upgrade Overlay / MAIN,OL,LIB,LOCAL,DOSIO,KYBD,VM
+utility_1/mswrdoc1.exe       47860 overlay     1   42341
+    Document DownGrade Overlay / MAIN,OL,LIB,LOCAL,DOSIO,KYBD,VM
+utility_1/mswsdoc.exe        83130 overlay    17   75794
+    Worksheet Import Utility / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+utility_1/mswshot.exe        77740 overlay     1   71165
+    Worksheet Import / MAIN,OL,LIB,LOCAL,KYBD,CON,VM
+utility_2/msdxfpdl.exe       51198 overlay     1   49375
+    DXF to PDL Overlay / MAIN,OL,LIB,KYBD,VM
+utility_2/msdxfps.exe        50176 overlay     1   48428
+    DXF to PostScript Overlay / MAIN,OL,LIB,KYBD,VM
+utility_2/mseqn12.exe        13736 overlay    17   11410
+    Equation Upgrade / OL,LIB,LOCAL,DOSIO,KYBD,CON,VM
+utility_2/msfnedit.exe        9420 overlay     1    7776
+    FNEDIT / OL,LIB,LOCAL,DOSIO,KYBD,CON
+utility_2/mskeypdl.exe       11170 overlay     1    9416
+    KEY to PDL Overlay / MAIN,LIB,LOCAL,KYBD
+utility_2/msmath.exe         28932 overlay     1   27101
+    Math Overlay / MAIN,LOCAL,OL,LIB,KYBD,CON,VM
+utility_2/msmenu.exe         69226 overlay     7   62040
+    MSMENU / OL,LIB,KYBD,LOCAL,DOSIO,CON
+utility_2/msmtbit.exe        32120 overlay     1   30427
+    Microtek file converter / OL,LIB,LOCAL,DOSIO,KYBD,CON
+utility_2/msrev.exe          27994 overlay    17   25410
+    Document Comparison / OL,LIB,DOSIO,KYBD,CON,VM
+utility_2/msthes.exe         58518 overlay     1   54006
+    Thesaurus / MAIN,OL,LIB,LOCAL,KYBD,CON,VM
+utility_3/msdcbit.exe        31814 overlay     1   30143
+    Datacopy file converter / OL,LIB,LOCAL,DOSIO,KYBD,CON
+utility_3/mskeyps.exe         8994 overlay     1    7229
+    KEY to Postscript Overlay / MAIN,LIB,KYBD
+utility_3/msscrpdl.exe       16484 overlay     1   14125
+    SCR to PDL Overlay / MAIN,LIB,LOCAL,KYBD,VM
+utility_3/msscrps.exe        21536 overlay     1   18639
+    SCR to PostScript Overlay / MAIN,LIB,LOCAL,KYBD
+utility_3/msview.exe         25014 overlay    36   21265
+    Graphics View V2.1 / CON,DOSIO,KYBD,OL,LIB,LOCAL,VM
+utility_3/prsetup.com         7760 COM         0       0
+utility_3/scr.exe            34554 MZ          0       0

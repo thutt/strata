@@ -1,0 +1,25 @@
+
+------------------------------------ Markers -----------------------------------
+Markers perform a variety of functions such as including information in a 
+document or controlling document formatting.  You enter markers into a document
+with Marker (Alt F10).
+           +------------------- Marker Commands -----------------+
+           |   Author              Filename        Page Break    |
+           |   Column Break        Filetime        Page Number   |
+           |   Comment             Font            Pathname      |
+           |   Counter             If              Picture       |
+           |   Cross-reference     Include         Printer       |
+           |   Date                Index           Revision      |
+           |   Description         Keep            Screen        |
+           |   Else                Keycap          Section       |
+           |   Endif               Line            Symbol        |
+           |   Equation            Markup          Table         |
+           |   Escape Codes        Merge           Time          |
+           |   Figure              Note            Whitespace    |
+           |   Filedate            Orientation     Worksheet     |
+           +------------ Press Ins to Select a Command ----------+
+
+Use the Marker Display Modes panel to change the way markers appear on screen
+and are formatted when printed.
+--------------------------------------------------------------------------------
+Marker Display Modes     Marker Accelerators     Keyboard Summary     Help Index

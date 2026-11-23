@@ -1,0 +1,25 @@
+
+------------------------------ Custom Table Style ------------------------------
+
+Use the Tables of Contents, Figures, and Tables Style panels to customize the
+style of these pages.
+
+  +--------------- Table of Contents Style ---------------+
+  | Page Title:                                           |
+  | Title Font:                                           |
+  | Title Attributes:                                     |
+  |                                                       |
+  | Level   Indent   Fill   Attribute   Font              |
+  |                                                       |
+  |                   +----------- Table of Figures/Tables Style ------------+
+  +-------------------|                                                      |
+                      | Page Title:                                          |
+                      | Title Font:                                          |
+                      | Title Attributes:                                    |
+                      |                      Fill   Attribute   Font         |
+                      | Start on New Page?                                   |
+                      |                                                      |
+                      +-------- Press Ins to Use Displayed Settings ---------+
+--------------------------------------------------------------------------------
+Page Title   Title Font    Title Attributes     Level    Indent    Fill    Font
+Attribute    Start on New Page    Global Page    Keyboard Summary    Help Index

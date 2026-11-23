@@ -1,0 +1,33 @@
+# What is known about the pictures of the manual, for checkpics.py (the syntax
+# is described in the header of checkpics.py and in README.txt).
+#
+# none NAME: no scene makes the picture NAME and it is not missing.  No picture
+# has this line now: the pages that the Printer prints are made by the scripts
+# of manual/scenes, and the target pics-check makes them again (the list is
+# "python3 -I manual/checkpictable.py --scripts") and compares them with the
+# other pictures.
+#
+# mask NAME X Y WIDTH HEIGHT reason: the rectangle is left out of the
+# comparison, in both pictures; the rest of the picture is compared.  The
+# rectangles were taken from the box that checkpics.py prints around the
+# pixels that differ (with a margin of a few pixels), so a change anywhere
+# else in the picture is still found.  When a picture is taken again and its
+# lines move, the rectangle moves with them: look at the picture and change
+# the numbers.
+#
+# The pictures of all the markers show the Time marker, which prints the time
+# of day of the run: the digits of the minutes differ from run to run.
+mask markers-all-default 150 470 110 24 the clock of the Time marker
+mask markers-all-long 150 262 120 24 the clock of the Time marker
+# The Comment marker shows the time of day at which it was made.
+mask markers-comment 150 455 180 22 the time of the Created field
+mask markers-all-long 680 246 54 20 the clock of the Time marker
+mask markers-comment 265 456 60 19 the clock of the Time marker
+#
+# The message line of the picture shows the folder of the build that took the
+# picture, in the name of the document that was written.
+mask print-failed-message 205 24 595 21 the build folder in the message
+#
+# The progress line of the LaTeX run shows a word that changes with the time
+# that the run needs (such as Running or Writing).
+mask stred-preview-wait 340 205 40 24 the progress word of the LaTeX run

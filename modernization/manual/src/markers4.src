@@ -1,0 +1,644 @@
+# Chapter 5, part 4: the markers from LaTeX to Printer, without those that are
+# printed as a label (they are in markers5).
+
+.h2 LaTeX [marker-latex]
+.ix LaTeX marker
+.ix Marker, LaTeX
+.ix Instructions to LaTeX
+.ix Typesetting instructions
+.ix Raw LaTeX
+A LaTeX marker holds instructions for LaTeX, the typesetting system that makes
+the pages of a print, and the Printer hands them to LaTeX exactly as you typed
+them.
+Use it for anything that LaTeX can do and that Strata has no marker for: a
+rule of a special weight, a table with its own borders, a mathematical
+display, a change of the space between lines.  The marker stands in the text
+where its result is wanted, in a line of text or in a block of its own.
+.table 12 48
+Item | Value
+Panel | The text editor only (the status line shows LATEX EDIT); there are no
+ other fields.
+Print | Typeset: the text of the marker, as it is typed.
+.end
+.h3 How it is entered
+{k:Alt-F12}, LaTeX opens a full editor for the instructions.  Type them as
+LaTeX requires them.  {k:Ins} saves them and inserts the marker, {k:Esc} throws
+them away.  To change the text, put the cursor on the marker and press
+{k:Alt-F12}: the editor opens with the text.  The text is kept as it is typed:
+the ends of lines, the tabs and the spaces are not changed, and a line is never
+wrapped for the printer.  A character that is not on the keyboard, such as an
+accented letter, is printed as that letter; a nonbreaking space typed with
+{k:Ctrl-Shift-Space} stays a nonbreaking space.
+.pic pictures/markers-latex-edit.png 5 The editor of a LaTeX marker, with the text of a centered rule.
+.h3 On the screen
+The marker shows as its label, LaTeX instructions, between square brackets
+and in the color of markers (its Short form), unless it is shown as a picture
+({n:marker-latex-picture}).  In the X11 version the word LaTeX is drawn as
+LaTeX draws its own name: the A is a smaller letter that is raised, and the E
+is lowered.  The terminal version shows the plain letters.  The other display
+modes show a diamond (Diamond), the word LaTeX (Name) or the words LaTeX
+instructions (Short and Long).  The text of the marker is not shown in the
+document; the editor of the marker shows it.  A text export and the picture of
+the screen have the plain words.
+.pic pictures/markers-latex-label.png 5.1 LaTeX markers on the screen of the X11 version: the logo and the bold word are pictures; the centered rule is a block, so it is a label.
+.h3 As a picture on the screen [marker-latex-picture]
+.ix LaTeX marker, as a picture
+.ix Picture, of a LaTeX marker
+.ix Inline, display mode of the LaTeX marker
+The display mode of the LaTeX marker is Inline, like that of the Equation, the
+Picture and the Keycap, and Inline is the default mode of the type.  In the
+X11 version a LaTeX marker whose mode is Inline is shown on the screen as what
+it prints, in the place where the marker stands, as an equation is: the logo
+{c:\TeX{{}}}, a word in bold, a symbol, a formula, a rule of a set length, a box
+or the large logo of the title page.  A picture that is as tall as a line of text, or
+a little taller, stands on the baseline of the line, and the line is as tall as
+the picture needs.  The picture has the size that the same instructions have
+in the print, next to the other words of the line.  It is made while the
+author works: until it is ready the marker shows as its label, no key waits for
+it, and the picture replaces the label when it is ready.  A picture that was
+made once is kept, so a document that is opened again shows its pictures at
+once.
+A picture that is taller than four rows of the line is a block.  It takes rows
+of its own, centered: the text before the marker ends its line, the picture
+follows on as many rows as it needs, and the text after the marker goes on
+below it, as it does for a Picture marker that is tall.  The height of a
+picture is not limited.  Its size is limited as that of a Picture marker is, to
+4000 by 4000 pixels, and a picture that is larger is shown in the Short form.
+A block makes the print and the screen as tall as it is, and the author deals
+with that.
+The cursor treats the picture as one thing, as it does an equation or a
+picture: one key moves onto it and one key off it, and a frame surrounds it when
+the cursor is on it.  {k:Alt-F12} on it opens the editor of the instructions,
+and the picture is made again for the new text.
+{b:The rule.}  The Editor gives the instructions of the marker to LaTeX alone,
+and the result determines it.  No list of instructions that are refused is kept
+beforehand.
+- If LaTeX reports an error, the marker is shown in its Short form.
+- If LaTeX takes more than five seconds, the marker is shown in its Short form.
+- If the result has nothing to see, the marker is shown in its Short form.  A
+  marker that only sets something that goes on after it (a font size, a color,
+  a definition, a package, a counter), breaks a page, or makes only space gives
+  such a result.
+- In every other case the result is shown as a picture.
+A marker that is shown in the Short form is shown so also when LaTeX is not
+installed, and when the picture is larger than the limit.  The same rule holds
+for every marker that can be shown Inline (Equation, Picture, Keycap and
+LaTeX): if the picture cannot be made, the Short form is shown, never an empty
+box.  The cursor on such a marker brings a message in the message line that
+says why, for example {c:LaTeX marker drawn as Short: LaTeX reported: Undefined
+control sequence.}, {c:LaTeX marker drawn as Short: it makes nothing visible} or
+{c:LaTeX marker drawn as Short: it took more than 5 seconds}.  An error of
+LaTeX is also in the log of the run ({n:appcfg-log}), with the block and the line of
+the marker and the first line of what LaTeX said.  A marker that makes nothing
+visible is not a failure and has no entry.  There is no dialog and nothing
+waits.
+Vertical space belongs in a Whitespace marker ({n:marker-whitespace}), not in a
+LaTeX marker that is meant to be drawn as a picture.  A LaTeX marker that holds
+vertical space and also something to see is drawn with the something to see.
+.table 24 36
+Text of the marker | On the screen
+{c:\TeX{{}}} | The logo, a picture.
+{c:{{\bfseries Bold}}} | The word in bold, a picture.
+{c:$\alpha+\beta$} | The formula, a picture.
+{c:\fbox{{box}}} | The word in a frame, a picture.
+{c:\stratalogo[1]} | The large logo, a block of several rows.
+{c:\vspace{{2ex}}} | The label: it makes nothing visible.
+{c:\newcommand{{\x}}{{y}}} | The label: it makes nothing visible.
+{c:\bfseries Hello} | The label: it makes nothing visible.
+{c:\begin{{verbatim}}} | The label: LaTeX reports what is wrong.
+{c:{{\bfseries open} | The label: LaTeX reports what is wrong.
+.end
+The display mode of the type LaTeX is set on the Marker Display Modes panel
+({n:format-marker-modes}); with any mode but Inline (Short, Name, Long,
+Diamond, Hidden) the marker is shown by that mode and no picture is made.  A
+marker whose display mode is Hidden stays hidden.  The setting
+{c:latex_markers} of the settings ({n:appcfg-key-latex-markers}) set to no keeps
+the pictures off too: a marker that is not allowed to be printed is not drawn.
+The terminal version has no pictures: a LaTeX marker whose mode is Inline is
+shown in its Short form there.
+{b:Documents of earlier versions.}  The setting Draw LaTeX Markers As Pictures?
+of earlier versions does not exist any more.  A document that stores it is read
+and the setting is ignored; it is not written again.  The default of the LaTeX
+marker is Inline: a document that stores no mode for the type shows its LaTeX
+markers as pictures, and the markers that give no picture in the Short form.
+A document that stores a mode for the type keeps it.
+.h3 When printed
+The text is written into the print at the place of the marker, on lines of
+their own, and LaTeX reads it as if it were part of the page.  Nothing is
+added to it, nothing is escaped (a percent sign or an ampersand in it keeps
+its meaning for LaTeX), and it is not wrapped or put in a box.  The text that
+follows the marker goes on from where the instructions leave off, and a space
+after the marker is kept.  The ends of the lines of the text are the ends of
+lines of the instructions.
+.h3 Examples
+.table 36 25
+Text of the marker | What is printed
+{c:\begin{{center}}\rule{{6cm}}{{0.8pt}}\end{{center}}} | A thick rule, 6 cm long,
+ | centered.
+{c:\textbf{{here}}} | The word here in bold, in the line of text.
+{c:\fbox{{boxed}}} | The word boxed in a frame, in the line of text.
+.end
+The text may have as many lines as the instructions need, such as the lines of
+a table of LaTeX; each line of the marker is a line of the instructions.
+.h3 The word Strata
+Every print has the command {c:\strata}, like {c:\LaTeX}: it prints the word
+Strata in capital letters, set as the logo of the system sets it, with the
+crossbar of the first T joined to that of the second one and the letters RA
+and the last A tucked under it.  The S is the drawn S of the logo, as high as
+the capital letters.  It is text: it takes the size of the line
+that it stands in, it sits on the baseline, and it can be used in a headline, a
+note or a table.  The space after it is kept, except before a sign of
+punctuation.  Put it in a LaTeX marker with the other words of the line, such
+as {c:This book was set with \strata.}.
+.h3 The large logo
+The command {c:\stratalogo} prints the large logo: the same word, with a
+large S whose top bar runs out to the right, the words Technical Document
+on that bar and the word Processor over the joined crossbar.  It is made of
+letters and rules, it stands on its own line, and a document uses it for a
+title page or a cover.  Its normal width is about 4.4 centimeters; a number in
+square brackets after the command makes it bigger or smaller, so that
+{c:\stratalogo[2]} is twice as wide and {c:\stratalogo[0.5]} half as wide.  A
+file made by Export as LaTeX ({n:file-export-latex}) that uses it needs no
+other file.
+.h3 A mistake in the text
+LaTeX reports a mistake in the instructions, such as a command that does not
+exist or a group that is not closed.  The mistake is an error of the document:
+it is in the Error Log at the end of the print and at the block and the line of
+the marker, with what LaTeX said ({n:print-errors}), and a Print Error marker
+stands in front of it, which {k:Ctrl-F8} finds ({n:markers-errors}).  The
+print is made as well as it can be, and a note reports that it is inaccurate.
+The
+Printer cannot repair instructions that are not balanced, such as an
+environment that is not ended, and it does not hide them either.
+.h3 What the text may hold
+The text goes into the page, not into the front matter of the print, so a
+command that LaTeX only allows at the beginning of a document, such as
+{c:\usepackage}, gives an error.  The commands that every print has are the
+ones that the text can use.
+.h3 Safety
+A LaTeX marker can do what its text says, and it is as powerful as the text it
+holds.  A print never lets the text run a program or write a file outside the
+print: a command that attempts it is rejected and is an error of the document.
+Text can still read the files that LaTeX can read and fill the pages with any
+content.  A document that comes from someone you do not know should
+be read before it is printed.  The markers of such a document can be left out
+of the print with the setting {c:latex_markers} ({n:appcfg-key-latex-markers}):
+with it off, a LaTeX marker is printed as its words, and each one is a warning in the
+Error Log.
+.h3 Edges
+- A marker without text prints nothing.
+- Text of more than 65535 characters is not written: the marker is printed as
+  its label and the Error Log reports this.
+- The Search command and the spell check do not look into the text.
+- Export as LaTeX writes the text of the marker as it is, like a print.
+
+.h2 Line [marker-line]
+.ix Line marker
+.ix Marker, Line
+.ix Rules and leaders
+.ix Horizontal line
+.ix Row of characters
+A Line marker draws a horizontal line in the text: a plain rule, or a row of
+one or more characters repeated, such as a row of asterisks or of dots.  Use it
+for the rule under a heading, for the blank to be filled in on a form, or for
+a row of dashes that separates two parts of a page.  The line begins where the
+marker stands and runs to the right margin, or for the length that you give.
+.table 12 48
+Item | Value
+Panel | Length, Weight, Center, String.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Length | A number with up to three decimals, in inches; or RM | RM | The
+ length of the line.  RM stands for the right margin: the line runs from the
+ marker to the end of the line of text, and the text that follows the marker
+ in the same paragraph is set at the right end of the line.  A length of 0
+ prints as RM.  The letters must be capitals: rm in small letters is not a
+ number and gives Not a valid number (Length).
+Weight | A number with up to three decimals, in inches | Empty | The
+ thickness of the rule.  An empty field gives the thickness of a hairline
+ (0.4 point).  Used only when String is empty.
+Center | A whole number | Empty | Shown in the label of the marker.  The rule
+ is put a little above the base of the letters.
+String | Text | Empty | The characters that make the line, repeated as often as
+ they fit: *, -, = or a word.  Empty gives a rule.  The text is typed as it
+ is; a character that is not on the keyboard is made as described
+ in {x:edit-special-chars}.
+.end
+.pic pictures/markers-line.png 5.4 The panel of the Line marker: a line 3 inches long, with a weight of 0.02 inch.
+Length, Weight and Center are numbers: any other text is refused with Not a
+valid number and the name of the field in parentheses.  A number may not be
+negative and may have no more than three decimals.  The unit is always the
+inch.
+.h3 On the screen
+The default mode is Short.  The label is [LN Length:2 in] and, after it, the
+fields that were set, each in the form shown: [LN Length:RM], [LN Length:2 in,
+Weight:0.02 in, Center:25, String:"*-"].  A field that is not set is left out,
+except the length (RM).  A number is written without trailing zeros (1.5 in, not
+1.500 in).  Long mode uses the whole word, [LINE Length:2 in ...], and Name mode
+[LN].  The screen does not draw the line itself.
+.h3 When printed
+Final and Draft (the same):
+- With no String: a rule.  With a Length the rule is that long; with no Length
+  (or a Length of 0) it fills the rest of the line up to the right margin.  The
+  rule is as thick as the Weight, but never thinner than 0.003 inch and never
+  thicker than 0.020 inch; with no Weight it is 0.4 point.
+- With a String: the string is repeated as many whole times as fit in the
+  length, or in the rest of the line when there is no length, and a copy that
+  does not fit is left out: 1.5 inch of the string {c:*-} is eleven copies,
+  22 characters, which are 1.39 inch wide.  The Weight is not used.
+- The marker is part of the line of text: the words before it stay on the line
+  and the words after it follow the rule (or, with no length, are set at the
+  right end of the line).
+.h3 Edges
+- A marker alone in a block makes a block that is only a line; this is the usual
+  way to rule a page.
+- A Line marker is never a page break and never holds space of its own: for
+  space use Whitespace ({n:marker-whitespace}).
+.h3 Messages
+Not a valid number (Length), Not a valid number (Weight) and Not a valid number
+(Center) ({n:markers-messages}).
+.h3 See
+Whitespace ({n:marker-whitespace}) for vertical room; Borders and the rule under
+headlines in the formats of {n:format}.
+
+.h2 Note [marker-note]
+.ix Note marker
+.ix Marker, Note
+.ix Footnote
+.ix Levelnote
+.ix Endnote
+.ix Note editor
+.ix NOTE EDIT
+A Note marker holds the text of a note: a footnote at the foot of the page, a
+levelnote at the end of a section, or an endnote on a page of its own at the end
+of the document.  The marker stands in the text where the mark of the note is to
+be.  The text of the note is edited in a full editor of its own, and may be as
+long as you like and have several paragraphs.
+.table 12 48
+Item | Value
+Panel | The text editor first (the status line shows NOTE EDIT),
+  | then the panel with one field, Type.
+Reached | The Marker Commands table, entry Note.
+Global settings | Note Format and Primary Note Type of Global, Marker
+  | ({n:format-marker-notes}).
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Note | The text of the note, edited in its own editor | Empty | The note.
+ Press {k:Ins} in the editor to keep the text and go on to the panel, or
+ {k:Esc} to cancel the whole command.  The status line of the editor reads
+ Press Ins to Save Changes or Esc to Restore Previous Version.
+Type | [Footnote], Footnote, Levelnote, Endnote | The Primary Note Type of the
+ document, shown in brackets | The kind of the note.  The first entry shows in
+ brackets the kind that the Primary Note Type of Global, Marker names
+ ([Footnote], [Levelnote] or [Endnote]), so the note follows that setting if
+ it is changed later; the other three entries stay in the marker.
+.end
+.pic pictures/markers-note-edit.png 5.4 The editor of the text of a Note marker; the status line says NOTE EDIT.
+.pic pictures/markers-note-type.png 5.4 The panel of the Note marker, with the type Footnote.
+{k:Space}, {k:Left} and {k:Right} step through the Type list; {k:Keypad +},
+{k:Alt-+} and {k:F2} show it.  A note that is left empty stays empty; the marker
+is still made.
+.h3 On the screen
+The default mode is Short: [NOTE].  Diamond: one diamond character.  Long:
+[NOTE "text"] with the text of the note on one line (the ends of line become
+spaces) and cut at about 95 characters.  Name: [NOTE].  The note text is not
+shown in the document; put the cursor on the marker and press {k:Alt-F12} to
+read
+or change it.
+.h3 When printed
+Final and Draft:
+.table 12 48
+Type | What is printed
+Footnote | The mark, in the style of the Reference Tag of the Footnote
+  | Format (by default a small raised number), where the marker
+  | stands; the note, under a short rule (the Separator Bar) at
+  | the foot of the same page, in a smaller type, behind the
+  | Note Tag (by default a bold number).
+Levelnote | The mark where the marker stands; the note after the end of
+  | the section of the level that the Note Level of the
+  | Levelnote Format names (the section of the marker itself if
+  | it is higher up), under a rule, in a smaller type.
+Endnote | The mark where the marker stands (by default the number in
+  | square brackets); all the endnotes on a page of their own
+  | at the end of the document, under the Note Page Title (by
+  | default Endnotes), each behind its Note Tag.
+.end
+Each kind is numbered by itself, in the order of the text from the beginning of
+the document to its end.  The numbers, letters or marks are made from the tags
+of
+the three Note Format panels.  The text of a note is printed as plain text: the
+attributes, the paragraphs and the tabs of the note editor are not kept, and a
+line end becomes a space.
+.h3 Edges
+- A footnote in a headline is set after the headline has been written.  A
+  footnote in the cell of a table waits until the table has ended and then goes
+  to the foot of the page.
+- Footnotes are always at the foot of the page and the numbers run through the
+  document without starting again.
+- Search does not look inside a note ({n:edit-b-search}).
+.h3 See
+Note Format ({n:format-marker-notes}) for the tags, the separator bar and the
+page title; the Comment marker ({n:marker-comment}) for a text that is not
+printed.
+
+.h2 Orientation [marker-orientation]
+.ix Orientation marker
+.ix Marker, Orientation
+.ix Landscape
+.ix Portrait
+.ix Sideways pages
+An Orientation marker turns the pages that follow it from upright (portrait) to
+sideways (landscape), or back.  Use it for a wide table or a picture that does
+not fit across an upright page.
+.table 12 48
+Item | Value
+Panel | Orientation.
+Reached | The Marker Commands table, entry Orientation.
+Place | Best in a block of its own.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Orientation | [Portrait], Portrait, Landscape | [Portrait] | The way that the
+ pages after the marker are set.  The first entry, in brackets, is the
+ orientation that the document has (upright); it is the same as Portrait.
+.end
+.h3 On the screen
+The default mode is Short.  The label is [ORIENTATION] for portrait and
+[ORIENTATION Landscape] for landscape, in Short and in Long mode; Name:
+[ORIENTATION].  The screen does not turn: the text is drawn in the same way
+whatever the marker says.
+.h3 When printed
+Final and Draft (the same):
+- A Landscape marker starts a new page, and all the pages after it, up to the
+  next Orientation marker, are landscape pages: the text is set along the long
+  side of the paper and each of these pages is marked in the PDF as turned by 90
+  degrees, so that a viewer shows it sideways.
+- A Portrait marker (or [Portrait]) after landscape pages starts a new page and
+  goes back to upright pages.  A Portrait marker where the pages are upright
+  is ignored, not even a page break is made.
+- The change is made at the beginning of the block that holds the marker, even
+  if the marker is in the middle of a block; a second marker in the same block
+  takes effect after the block.  Landscape pages that are still open at the
+  end of the document are closed there.
+- The margins, the page size and the numbering of the pages are those of the
+  document.
+.h3 Edges
+- Two Orientation markers in a row, with text between them, make a page of
+  text in the first orientation and the rest in the second.
+- A Keep region that holds an Orientation marker is not kept: the Keep markers
+  are dropped ({n:marker-keep}).
+- Both orientations use the one list of typefaces.
+
+.h2 Page Break [marker-page-break]
+.ix Page Break marker
+.ix Marker, Page Break
+.ix Odd page
+.ix Even page
+.ix Blank pages
+A Page Break marker ends the page and starts the text that follows on the next
+page, or on the next odd-numbered or even-numbered page.  Use it before a
+chapter that must begin on a right-hand page, or wherever the automatic breaks
+do not fall where you want them.
+.table 12 48
+Item | Value
+Panel | Start Following Text on Next.
+Reached | The Marker Commands table, entry Page Break.
+Place | Best in a block of its own.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Start Following Text on Next | Page, Odd Page, Even Page | Page | Where the
+ text after the marker begins: on the next page, on the next odd page, or on
+ the next even page.
+.end
+.h3 On the screen
+The default mode is Short.  The label is [PB] for a plain break, [PB Odd Page]
+and [PB Even Page] for the others, in Short and in Long mode; Name: [PB].  The
+screen does not draw a line or a page: it has no page boundaries
+({n:view-markers}).
+.h3 When printed
+Final and Draft (the same): the paragraph in which the marker stands ends there,
+the page ends and the text after the marker begins at the top of the next page.
+With Odd Page the next page is the next one with an odd number, and with Even
+Page the next with an even number; when that is not the page that follows at once, one
+page is left with nothing on it but its number.  The table shows what the
+Printer made in a try with a break before each text.
+.table 32 12 13
+Marker (on a page of the | Text begins on | Blank page
+ number) |
+Page, on page 2 | 3 | None
+Odd Page, on page 2 | 3 | None
+Odd Page, on page 3 | 5 | Page 4
+Even Page, on page 5 | 6 | None
+Even Page, on page 6 | 8 | Page 7
+.end
+.h3 Edges
+- A Page Break that is the first block after the headline of the first section
+  leaves the first page with the headline only: the break always takes effect.
+- In the cell of a table, and inside a Keep region, a Page Break cannot take
+  effect.  In a cell it is printed as a Box with its label (PB, PB Odd Page or
+  PB Even Page), and a Keep region that holds a Page Break is not kept
+  ({n:marker-keep}).
+- The Column Break marker ({n:marker-column-break}) makes the same page break
+  and has no panel.
+
+.h2 Page Number [marker-page-number]
+.ix Page Number marker
+.ix Marker, Page Number
+.ix Page number in a header or footer
+A Page Number marker prints the number of the page that it stands on.  It is
+made for headers and footers: {c:\page\} in the Header or Footer field of a
+page layout is this marker ({n:format-page-headers}).
+.table 12 48
+Item | Value
+Panel | None.
+Place | A header or a footer.  The Marker Commands table of the text of a
+ document shows the name in parentheses and rejects it ({n:markers-messages}).
+Global setting | Page Number Tag on the Global Page Layout
+ ({n:format-page-fields}).
+.end
+.h3 On the screen
+Name, the default: [PAGE].  Short and Long show [PAGE] as well.
+.h3 When printed
+The number of the page, written in the style of the Page Number Tag: Arabic,
+roman or letters.  The number follows the pages that the Page Number Level
+numbers again ({n:format-fields-spacing}).
+.h3 Edges
+- The title page has no page number.
+- A Page Number marker that stands in the text of a document, as a document of
+  another program can have it, prints the number of the page it is on at that
+  place.
+
+.h2 Pathname [marker-pathname]
+.ix Pathname marker
+.ix Marker, Pathname
+.ix Full path of a document
+A Pathname marker prints the path of the document file: the directory and the
+name.  Use it in the footer of a draft so that the paper says where its file
+is.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+.end
+.h3 On the screen
+Long and Short, the default being Long: the path of the document in brackets,
+as it was opened: /work/ann/proposal.doc.  A document that has no name
+yet shows the full path under which it would be saved.  Name: [PATH].
+.h3 When printed
+The path as text, according to the display mode ({n:markers-print-modes}).
+The path is that of your document, also when only a part of it is printed and
+in Preview.  A document with no name prints PATHNAME.
+.h3 Edges
+- See Filename ({n:marker-filename}) for the name without the directory.
+
+.h2 Picture [marker-picture]
+.ix Picture marker
+.ix Marker, Picture
+.ix PNG, JPEG, PDF, EPS pictures
+.ix Graphics in a document
+.ix Image files
+A Picture marker puts a picture from a file into the text: a drawing, a
+photograph, a diagram, a scan.  The file is not copied into the document; the
+document holds its name, and the Printer reads the file when the print is made.
+The
+files that Strata reads are PNG, JPEG, PDF and EPS files.  A picture keeps
+its colors: it prints in color on a color printer and shows in color on
+the screen of the X11 version.
+.table 12 48
+Item | Value
+Panel | File Name, Position, Width, Height, Unit, Scale, Name (for
+  | Table of Figures).
+Reached | The Marker Commands table, entry Picture.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+File Name | A file name or path | None (required) | The picture file.
+ {k:Keypad +}, {k:Alt-+} or {k:F2} show a checklist of the files that end in
+ {c:.png}, {c:.jpg}, .jpeg, {c:.pdf} and .eps ({n:file-checklist}).  An empty name gives
+ No string specified; the name of a file that is not there is accepted.
+Position | Fixed, Floating, In Text | Fixed | On the screen In Text makes the
+ picture a word that stands in a line with other text; the other two put a
+ picture that is alone on its line in rows of its own.
+Width | A number with up to three decimals | Empty | The width of the box that
+ the picture is fitted into, in the Unit.
+Height | A number with up to three decimals | Empty | The height of the box.
+ With only one of Width and Height the other follows the shape of the picture;
+ with both the picture is made as large as it can be inside the box and keeps
+ its shape.
+Unit | in, cm, mm, pt, bp, pc, dd, cc, sp, em, ex | in | The unit of Width and
+ Height ({n:markers-panels}).  On paper Width and Height are always read as
+ inches.
+Scale | A number with up to three decimals | Empty | A factor of the picture's
+ own size, for example 0.5.  Used only when both Width and Height are empty.
+Name (for Table of Figures) | Text | Empty | A name for the picture, kept in the
+ document.
+.end
+.pic pictures/markers-picture.png 5.4 The panel of the Picture marker, with a file name and a width of 2 inches.
+.h3 On the screen
+The default mode is Inline.  In the X11 version the picture is drawn in the
+text, with the Width, the Height, the Scale and the Unit; until it is ready,
+and when the picture cannot be made (a file that TeX cannot read, no LaTeX, or
+more than five seconds), the label is shown, with the cause in the message line
+and one entry in the log of the run ({n:appcfg-log}).  A picture alone on
+its line takes rows of its own; with In Text it is a word of the line.  In the
+terminal version, and in the other modes, the label is [PIC name] in Short and
+Long and [PIC] in Name; a diamond in Diamond mode.
+.h3 A picture whose file cannot be used [marker-picture-missing]
+.ix Picture marker, file not found
+.ix File not found, Picture marker
+.ix Missing picture file
+When the file of a Picture marker is not there, cannot be read or is not a
+picture, the Editor does not draw the marker like the label of a picture that
+is set to show in the Short or Long mode: the marker is drawn dim, with the
+name and the reason, for example
+{c:[PIC old-chart.png: file not found]}, in every display mode but Hidden.  In
+the Long mode the label is {c:[PICTURE "old-chart.png": file not found]}.  The
+reason is one of {c:file not found}, {c:cannot be read} and
+{c:not a picture}.  When the cursor is on the marker the message line shows
+"Picture file not found: NAME" (or "Picture file cannot be read: NAME",
+"Picture file is not a picture: NAME").
+.pic pictures/markers-picture-missing.png 5.5 A Picture marker whose file is not there (dim, on the first line) and a picture that is.
+To mend it, put the file where the document is or correct the File Name in the
+panel ({n:marker-picture}).  The Editor looks at a file that was not usable
+again two seconds later, after the next key, so a file that you make or copy
+while the document is open makes the marker a good one again; the cursor
+coming to the marker looks at once.  The marker keeps its name, the document
+is not changed, and it opens, saves and prints as any other.
+.h3 Where the file is looked for [marker-picture-path]
+.ix Picture marker, where the file is looked for
+.ix Working directory, pictures
+The Editor and the Printer use one rule for a File Name that is not a full
+path (one that does not start with a slash):
+- first the directory of the document;
+- then the working directory (the one the panels show);
+- then the directory the program was started in.
+The first place that has the file wins, so a picture that is in two places is
+the same one on the screen and on paper.  A full path is used as it is.  A
+name that has no directory also matches any case of its letters, and back
+slashes are read as slashes.
+.h3 When printed
+.table 10 50
+Print | What the Printer does
+Final | The picture is set in the line where the marker stands, as
+  | large as the box shows, never wider than the line and never
+  | higher than 85 percent of the text height.  With neither
+  | Width, Height nor Scale it has its own size.  Width and
+  | Height are read as inches.
+Draft | The picture, as in Final.
+Preview | As Final.
+.end
+.h3 Edges
+- The ending of the file name does not matter: the kind of the picture is
+  taken from the file.  A file that is not there, one that cannot be read and
+  one that is not a PNG, JPEG, PDF or EPS picture are printed as a red box
+  with the words "Picture file not found: NAME" (or the other reason), they
+  are in the Error Log with the places that were looked in, and the Printer
+  reports how many files were not found; the print goes on.  A file that TeX
+  cannot read is printed as a box with the label, PIC name.
+- A name with a directory is tried as it stands (a full path, or a path from
+  the directory of the document, the working directory or the directory of
+  the program).  A plain name is looked for in the directory of the document,
+  then in the working directory, then in the directory of the program, and
+  the letters may be of any case: Figure1.PNG finds {c:figure1.png}.  Back
+  slashes are read as slashes ({n:marker-picture-path}).
+- A Width of 2 with the Unit cm is 2 cm on the screen and 2 inches on paper.
+- A picture can be put in a line of text with other words; the line is then as
+  high as the picture.
+.h3 Messages
+No string specified, Not a valid number (Width), Not a valid number (Height),
+Not a valid number (Scale) ({n:markers-messages}).  A picture that cannot be
+made on the screen shows one of: The picture has no file name; LaTeX cannot
+read that kind of picture file (use PNG, JPEG, PDF or EPS); The picture file
+cannot be read; LaTeX could not make the picture (is the file a valid image?).
+.h3 See
+Figure and Table ({n:marker-figure}) and Equation ({n:marker-equation}); Print
+and Preview in {n:print}.
+
+.h2 Printer [marker-printer]
+.ix Printer marker
+.ix Marker, Printer
+.ix Name of the printer of a document
+A Printer marker prints the name of the printer that the document was made for.
+It is meant for the page of a technical report that says on what the
+document was set.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+Source of the text | The printer name of the document: Generic.
+.end
+.h3 On the screen
+Long and Short, the default being Long: the name in brackets, such as [Generic].
+Name: [PRINTER].
+.h3 When printed
+The name as text, by the display mode ({n:markers-print-modes}).  It is not the
+queue to which the document is sent: that is chosen on the Print panel
+({n:print-menu}).
+.h3 Edges
+The Typeface panel of Global shows the same name in its last line, Printer.

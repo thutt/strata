@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Cannot find Setup information in value file (MS.VAL) -- 
+
+The setup information necessary to run Manuscript cannot be found.  Use Setup
+on the Document Manager to enter information about your system configuration.
+
+-- Cannot find shape (shape name: <name>) -- 
+
+A shape used in an AutoCAD or AutoSketch .DXF file cannot be found.  Check that
+the shape exists and the shape file is in the same directory as the .DXF file.
+
+-- Cannot import data if more than one line of text preceded marker in block --
+
+Data for a Worksheet marker cannot be imported if the marker occurs after the 
+first line of text in a block.
+
+-- Cannot import data if text follows marker in block -- 
+
+Data for a Worksheet marker cannot be imported if there is text following the
+marker in the block when you create a new table.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

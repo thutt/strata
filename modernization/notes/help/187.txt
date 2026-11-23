@@ -1,0 +1,25 @@
+
+------------------------------ Accelerator Summary -----------------------------
+
+Accelerators quickly select commands without going through the command menu 
+structure.  Press the Ctrl key in combination with one of the following keys:
+
+A  Append a block with same local format  Q  Quit the editor or preview
+B  Turn bold text on or off               R  Retrieve a file
+C  Spell check the current word           S  Save a file
+D  Delete the current word                T  Look up current word in thesaurus
+D  Reset panel to higher level            U  Turn underscored text on or off
+E  Access Block Format Editor             V  Split the current block
+E  Toggle Page Display/Error Log          W  Switch windows
+G  Set up a text indent                   X  Cut text
+H  Set up a hanging indent                Y  Split the current section
+I  Turn italicized text on or off         Z  Zoom a graphic in preview
+K  Cut block(s)                           ^  Toggle between Edit Document
+L  Cut section(s)                              and Edit Section
+M  Display Virtual Memory Status panel    [  Move the current section left
+N  Turn normal text on or off             ]  Move the current section right
+O  Append a block with global format      \  Access a marker panel 
+CTRL PGUP/PGDN  To previous or next page  CTRL BACKSPACE  Delete previous word
+
+--------------------------------------------------------------------------------
+      Marker Accelerators           Keyboard Summary           Help Index

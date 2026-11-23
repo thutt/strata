@@ -1,0 +1,25 @@
+
+------------------------- Manuscript Local Format Reset ------------------------
+
+Manuscript Local Format Reset removes local format settings from a document.
+
+---Procedure----------------  +------- Manuscript Local Format Reset ---------+
+                              |                                               |
+ Enter the name of the file  | Original Document Name:                       |
+  containing the settings     |                                               |
+  to remove.                  |      New Document Name:                       |
+                              +-----------------------------------------------+
+ Enter the name of the file  | Text        Headline           Text           |
+  to create.                  |             Columns/Blocks     Columns/Blocks |
+                              | Sections                                      |
+ Move the cursor to the      |                                               |
+  settings to remove and      +- Press Ins to Remove Selected Local Settings -+
+  Space Bar to mark a selection.
+
+ Press Ins to proceed with the conversion or Esc to cancel the conversion.
+
+--------------------------------------------------------------------------------
+All of the local settings in the document that correspond to the settings you 
+select will be removed from the document.
+--------------------------------------------------------------------------------
+     File Converison Utilities          Keyboard Summary         Help Index

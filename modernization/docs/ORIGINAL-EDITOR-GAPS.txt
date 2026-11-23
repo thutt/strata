@@ -1,0 +1,491 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+EDITOR GAPS AGAINST THE ORIGINAL: WHAT THE ORIGINAL DOES
+=========================================================
+
+Written 2026-11-17.  The Editor commands and the Global Format fields that
+Strata shows and does not act on, studied in the original program (release
+2.1, run in DOSBox-X: the screens, the saved files and the printed output
+were looked at) and in the original manuals (documentation/original/
+manuals-1.0: the Reference is cited as "Reference p. x-y").
+
+How the evidence was made:
+  PROBED   a document was made with distinctive values, the original was
+           driven with xdotool, the file it saved was read byte by byte, or
+           the document was printed to a file (the Generic and the Apple
+           LaserWriter drivers, the parallel port sent to a file) and the
+           text, the fonts and the positions of the print were read.
+  HELP     the original's own on-line help screens (F1, Help Index), which
+           are the authoritative text of release 2.1.
+  MANUAL   the 1.0 manuals.  Release 2.1 added Math and Page Number Level,
+           which the 1.0 manuals do not know.
+  READ ONLY  not probed; said in the entry.
+
+Summary
+-------
+
+  Item                     Original does                  Recommendation
+  -----------------------  -----------------------------  ------------------
+  Math (Ctrl-F2)           a calculator on highlighted    implement; small
+                           numbers; result to clipboard
+  Compose (Alt-F1)         types special characters, tab  NOT printer
+                           fill, nonbreaking space,       characters: see the
+                           bullet; keyboard entry         entry; leave on the
+                                                          worklist as the
+                                                          owner ruled, but
+                                                          the premise is wrong
+  Border (Alt-F8)          border lines and shading of    implement; medium
+                           blocks, columns, tables        (panel, screen,
+                                                          print)
+  Page Number Level        page numbers restart at 1 at   implement; small
+                           each section down to a level
+  First Block Type         Headline / Joined (headline    implement; small
+                           on the line of the text)       (print and screen)
+  Print (Global Format)    Headlines and Text / Only      implement; small
+                           Headlines / Only Text
+  Ruler                    unit of the ruler: Relative    implement; small
+                           or 10, 12, 15 per inch
+  Winding Columns          snaking columns, 1 to 9        implement partly;
+                                                          medium
+  Indent to Next Level     cumulative indent of the next  implement; small
+                           level
+  Edit Window              two windows                    leave (no windows)
+  Repaginate, Clear-pages  show page breaks on screen     leave on worklist
+  Text indent (Ctrl-G)     see its entry                  see its entry
+
+The Printer effects were measured on the print of the Apple LaserWriter
+driver, a PostScript file, in units of 1/300 inch.  The text area of the
+test page is 6.5 inch wide (1950 units) and starts at x = 300.
+
+
+1. MATH (Ctrl-F2)
+-----------------
+
+Source: HELP (Help Index, More Help, Math).  The 1.0 manuals do not have it.
+The key labels of the original (Ctrl held): F1 Learn, F2 Math, F3 Lib Copy,
+F4 Lib Cut, F5 Lib Paste, F6 Case.
+
+The original's help text, in full:
+  "Use Math (Ctrl F2) to calculate a numeric expression in a document.
+   - The result of the calculation is stored on the clipboard so you can
+     Paste (F5) it into your document.  Remember to paste the result
+     before cutting or copying anything else to the clipboard.
+   - The numbers to calculate can be in one or more columns or blocks.  If
+     you highlight more than one column or block the result is calculated
+     from left to right and from top to bottom.
+   - A math expression can include numbers, operators, parentheses, and
+     special characters.  All other characters are ignored.  If an
+     operator is not specified, Manuscript adds the numbers.
+     Numbers can be up to 100 digits.
+     Operators, in order of precedence, are parentheses (), exponentiation
+     ^, negation -, multiplication and division * /, and addition and
+     subtraction + - .
+     Special characters can include a . (period) or , (comma) as a decimal
+     separator.  You must use the symbol selected as the decimal separator
+     in Setup, % to divide the preceding number by 100, e or E to define a
+     scientific notation exponent, and + or - to define a positive or
+     negative number."
+  The help page has the links Paste and Setup (the Decimal Separator field
+  of the original's Setup: ". (period)" or ", (comma)").
+
+Not probed: the key could not be driven.  In DOSBox-X the keys Ctrl-F2 and
+Ctrl-F6 had no effect on the original (Ctrl-F3, Library Copy, did: it asked
+"Select the text to copy to the library"), and Ctrl-F2 on a block without a
+highlight left the clipboard empty ("Cannot paste - clipboard is empty").
+So the way the area is chosen (the usual prompt Text, Column, Block, Section
+and the highlight keys of Reference p. 1-13) is by analogy with Copy, and is
+not seen.  What is certain is the text above.
+
+What is stored: nothing in the document.  The result is on the clipboard
+(the Strata clipboard of Copy and Cut).
+
+Recommendation: implement.  Size S (one day): a new function in the Editor
+that reads the highlighted text, evaluates it with the rules above and
+puts the result text on the clipboard; Ctrl-F2 asks for the area as Copy
+does (src/ui.c next to cmd_copy and the Ctrl-F6 Case command, the unit box
+of Copy), the message line says "Result: N" and Ctrl-F2 does not run the
+command of the plain key.  Open details that the task must decide and
+write down: the format of the result (as many decimals as the operands
+have, at most what a 100 digit number needs; use exact decimal arithmetic
+of 100 digits, not floating point), division by zero ("Cannot divide by
+zero" and nothing on the clipboard), the decimal separator setting (the
+Strata Setup has no field for it: use the period and accept the comma when
+the setting exists; add the field only if the owner wants it).  Files:
+src/ui.c, a new src/calc.c, src/calc.h, tests/calctest.c, the manual page
+of the key, the key table, the help topic, the leaflet row (the leaflet
+must stay three pages).
+
+
+2. COMPOSE (Alt-F1)
+-------------------
+
+Sources: PROBED, HELP, MANUAL (Reference p. 3-8, 3-9, Appendix B).
+
+THE OWNER'S ASSUMPTION IS NOT CONFIRMED.  The owner supposed that Compose is
+for special printer characters.  It is not.  Compose is a keyboard command:
+it types a character that is not on the keyboard.  The original's help:
+  "Use Compose (Alt F1) to display and print special characters, including
+   tab fill characters, foreign letters, and currency symbols.  For example
+   (pound), (c cedilla), (a acute), and (yen).
+   - Press Compose.  - Type a two-character compose sequence.
+   - Some monitors or printers cannot display or print some compose
+     characters.  In such cases, Manuscript displays or prints a best-guess
+     'fallback' character or characters in its place.
+   - See Appendix B in the Reference manual for a list of all compose
+     sequences.
+   - Special characters are also available using the Equation and Symbol
+     markers."
+The manual (Reference p. 3-8): "Use COMPOSE to create tab-fill characters,
+nonbreaking spaces, bullets for bulleted lists, and certain characters in
+the IBM extended character set (for example, international characters)."
+
+What the user sees: Alt-F1, then two keys; the character appears in the
+text (a tab fill appears as a tab arrow on the screen).  An unknown pair
+(Q Q) is ignored: nothing is typed.
+
+What is stored (PROBED: the bytes of the text of a block, docs/DOC-FORMAT.txt
+section 4):
+
+  Compose keys               stored bytes   result
+  -------------------------  -------------  ------------------------------
+  L =                        9C             pound sign (CP437 9C)
+  1 2                        AB             one half (CP437 AB)
+  1 4                        AC             one quarter (CP437 AC)
+  . .                        01 07          bullet (escape 01 and the byte)
+  Space Space                1E             nonbreaking space
+  Tab .                      10 2E 00       tab fill with periods
+  Tab -                      10 2D 00       tab fill with hyphens
+  Tab _                      10 5F 00       tab fill with underlines
+  D D                        02 A7          delta (escape 02 and A7: a
+                                            character of the Greek set;
+                                            inferred, not seen elsewhere)
+  Q Q                        nothing        refused
+
+The full list is Reference Appendix B, tables B-1 to B-4 (about a hundred
+sequences, two keys each, several ways to make the same character).  The
+text layer of the PDF is too damaged to copy the table: it has to be read
+from the page images (Reference pages B-1 to B-4).
+
+How it prints: an ordinary character as the printer font has it; the tab
+fill leaders become dotted, dashed or underlined leaders (Strata's Printer
+already prints tab fill, docs/PRINT-LATEX.txt); a character that the
+printer does not have is printed as a best guess.
+
+What Strata has now: nothing for Alt-F1 ("Alt-F1: not available").  A
+person can type a character that the terminal or the X11 keyboard gives
+(UTF-8 reaches the document if CP437 has the character, docs/UTF8.txt) and
+Ctrl-Shift-Space makes a nonbreaking space; there is no way to type a tab
+fill leader, a bullet or a delta.
+
+Recommendation: Compose is a small keyboard feature, not a printer feature,
+so the owner's rule "if it is for printer characters implement nothing"
+does not apply as written.  As the owner decided, NOTHING is implemented
+now and Compose stays on the worklist; the evidence is given here so that
+the owner can decide again: size S to M (a key, a two-key state, a table of
+about a hundred pairs to the stored bytes above, the Alt-F1 label, a help
+topic and a manual page; the table needs the page images of Appendix B).
+It is NOT in task 25.
+
+
+3. BORDER (Alt-F8)
+------------------
+
+Sources: PROBED, HELP (Border, Border Layout Panel), MANUAL (Reference
+p. 4-34 to 4-36, "Borders").
+
+Purpose: border lines, gutters and shading for blocks, columns and tables.
+
+What the user does (PROBED): in the Editor press Border; the prompt says
+"Use arrow keys to highlight column(s); then press Enter." and the strip
+says "Move highlight: Right,Left one column, Up,Down one block, Home,End
+begin or end of table, Change direction: Gray-+".  Border pressed again
+highlights all adjacent blocks with the same table layout.  Enter shows the
+Border Layout panel:
+
+    All:     None    Single    Double    Wide        Top Gutter:    0.000 in
+    Outside: (same)                                  Bottom Gutter: 0.000 in
+         (a small picture of the borders in the middle)
+                     Top:    (None, Single, Double, Wide)
+    Left:    (same)  Inside: (same; n/a for one column)  Right: (same)
+                     Bottom: (same)
+    Connect Borders? Yes                             Shading: 0 %
+    Press Ins to Use Changed Settings
+    Press Shift-Ins to Use All Settings
+
+Panel keys (PROBED): Down goes All, Outside, Top, Bottom; Right and Left go
+between the columns of the panel (Right from All is Top Gutter); Space on a
+list field opens its list (None, Single, Double, Wide; Down and Return
+choose); Space on a number field opens an edit box; a gutter takes at most
+three decimals ("Invalid number (no more than 3 decimal places allowed)").
+All sets all borders (the inside ones too when more than one column);
+Outside sets the four outer ones; after an individual side is changed the
+fields All and Outside show "n/a".  Ins uses the changed settings only;
+Shift-Ins uses every field.  The borders show on the screen at once: a
+single or double line frame around the block, drawn in the gutter.
+
+What is stored (PROBED, records of a column, before its T record):
+
+  CB<mask>,<flag>  mask: two bits per side, 0 none, 1 single, 2 double,
+                   3 wide; Top bits 0-1 (value 1), Bottom bits 2-3 (4),
+                   Left bits 4-5 (16), Right bits 6-7 (64).
+                   All Double on one block is CB170,1 (170 = 2 * 85);
+                   Top Single only is CB1,1; Bottom Single only CB4,1;
+                   Left Single only CB16,1.  The flag after the comma was 1
+                   in every probe; Connect Borders was Yes: it is probably
+                   Connect Borders (not probed with No).
+  CL1, CR1         written when the left (CL) or the right (CR) border is
+                   set (CL1 with Left Single; CL1 and CR1 with All
+                   Double); not written when only Top or Bottom is set.
+  BB<thousandths>  the Bottom Gutter in thousandths of an inch: a bottom
+                   gutter of 0.250 in is BB250 (PROBED, with All Single:
+                   CL1, CR1 and CB85,1; 85 = 1 + 4 + 16 + 64, all four
+                   sides single).  The top gutter is probably BT<n>
+                   (not probed: the first edit of the Top Gutter field did
+                   not take); the shading is not probed.
+
+  Note for the Printer: src/latex.c border_sides() reads the number after
+  the comma as the four sides (1 left, 2 top, 4 right, 8 bottom, "inferred"
+  in docs/DOC-FORMAT.txt).  The probe shows that is wrong: the sides are in
+  the first number as described here.
+
+How it prints (MANUAL, HELP): lines across the top, bottom, left and right
+of blocks and columns, and between the columns of a table; single, double
+or wide.  The weight of the lines is set in Global Options ("Line Weight
+(Borders)", dimmed in Strata).  Connect Borders Yes makes the block spacing
+of the highlighted blocks at most 1.00 so that the borders close up; No
+sets the block spacing to 1.5 (Reference p. 4-36).  Shading is a gray
+scale value in percent of the highlighted area.
+
+Not probed: the Top Gutter record, the shading (the manual gives their
+meaning only), Connect Borders No, the Wide line, borders of a table with
+several columns, and the print of a bordered block.
+
+What Strata has: the Printer prints borders of a document that has CB
+records ("cline" lines in tables), the Editor does not draw them (docs/
+NOT-IMPLEMENTED.txt, "Column and table borders (CB) are not drawn"); there
+is no Border command and no panel.
+
+Recommendation: implement in three steps (all in one task is too large):
+  step 1  the Border Layout panel and the records above (Alt-F8, the
+          highlight of columns and blocks by the keys of Copy with Up,
+          Down, Left, Right, Home, End, Gray+; the panel with Ins and
+          Shift-Ins; the records CB, CL, CR; undo); size M;
+  step 2  the screen: frames drawn around blocks (src/view.c, term_x11.c,
+          the cell array of view_line_cells); size M;
+  step 3  the print: rules, double and wide, gutters, shading as gray, the
+          correction of border_sides (src/latex.c); size M.
+The probes of the gutters, Connect Borders and Shading must be repeated
+before step 1 (the original's panel can be driven: see section 6).
+
+
+4. THE GLOBAL FORMAT FIELDS (Format panels, Global and Level)
+--------------------------------------------------------------
+
+The panel of the original (HELP, "Global Format - Structured"; PROBED):
+
+   SPACING
+        Line:  2.25   Indent per Level: 4    First Block Type: Joined
+    Headline:  1.75   Page Break Level: 3    Print: Only Headlines
+       Block:  1.25   Page Number Level: 2   Section Tag:  (level panels only)
+  Subsection:  1.35   Auto Numbering?  No    Ruler:  10/inch
+Peer Section:  2.50        to Level:     7   Winding Columns: 1
+
+The records are those of docs/GLOBAL-MENU.txt (FLG, FB, FP, FU, FWN, F<n>I).
+The probe documents were made with these records and printed with the
+original; the effect is measured on the print.
+
+4.1 Page Number Level (FLG)
+  PROBED.  The 1.0 manuals do not have the field.  Meaning: the page number
+  starts again at 1 on every section of level 1 down to the level named.
+  0 means the numbering runs from page to page through the whole document.
+  Evidence (a document of six level-1 sections and a level-2 section, each
+  on a page of its own, with a page number in the footer and the header):
+    Page Number Level 0: the pages are numbered 1, 2, 3, 4, 5, 6, 7.
+    Page Number Level 1: pages of the level-1 sections are numbered 1; the
+                         page of the level-2 section 6.1 is numbered 2 (it
+                         continues from section 6).
+    Page Number Level 2: every page is numbered 1.
+  The table of contents lists the same page numbers (1, 1, ..., 2 for
+  6.1 when the level is 1).
+  Strata: stored (FLG), not used.  The print gives pages 1, 2, 3...
+  Implementation (size S): the Printer knows where each section of level
+  <= N starts (the same sections that start pages when the Page Break Level
+  asks for them is not required: the numbering restarts at the section even
+  when it does not start a page); \setcounter{page}{1} at the start of such
+  a section, the page reference labels of the table of contents and of
+  cross references then print the number of the page inside the section;
+  src/latex.c.  The page number of a cross reference follows.  Decide and
+  write down: the numbering style of the page number marker per section
+  (docs/DOC-FORMAT.txt, Page Number marker, "running that starts again at
+  each section") is a separate field and stays.
+
+4.2 First Block Type (FB; level panels also F<n>B)
+  PROBED, MANUAL (Reference p. 4-39, "First Block Types").  Values:
+    Headline  the headline prints on a line of its own (the default).
+    Joined    the first text block prints on the same line as the headline
+              block.  Strata's code: FB2.
+    Text      (only on the Current Section Format panel) the headline is
+              treated as a text block: it is not numbered and uses the text
+              format.  In the file: the section format.
+  Print of Joined (PROBED): the headline and the first line of the text are
+  on one line: the headline "1 Alpha head" at x = 300 and the text on the
+  same baseline, starting after the headline with two spaces; the first
+  line of the text is shorter, the following lines start at the left
+  margin.  The table of contents is unchanged.  In the Editor the two blocks
+  stay on two lines ("Since the joined headline is a separate block,
+  Manuscript cannot display it joined with the text", p. 4-39).
+  Errors of the original: "Cannot join headline/text blocks - different
+  fonts"; "Cannot join headline/text blocks - unprinted" (when Print is Only
+  Headlines or Only Text); "Cannot join multicolumn headline/text blocks"
+  (Reference p. D-2).  In the probe with Print = Only Headlines the original
+  printed "Format Error: Cannot join; headline or text not printed".
+  Strata: stored, not used.  Implementation (size S to M): in the Printer
+  join the headline block and the first text block in one paragraph
+  (LaTeX: a run-in heading with \paragraph-like spacing or the headline as
+  bold text at the start of the paragraph, in the headline font), refuse
+  with the three messages above into the Error Log; src/latex.c, the Error
+  Log messages in the manual.
+
+4.3 Print (FP)
+  PROBED, MANUAL (Reference p. 4-7).  Values: Headlines and Text (the
+  default), Only Headlines (FP1), Only Text (FP2; probed: this is the
+  code), the code FP3 was not probed.  Meaning: the Printer prints the
+  headline blocks only (the outline of the document, with its section tags;
+  the table of contents is still made), or the text blocks only (no
+  headlines, no section tags, no table of contents).
+  Print of Only Headlines (PROBED): the three headlines 1, 1.1 and 2
+  with their tags, one under the other with the headline spacing; then the
+  table of contents.  Print of Only Text: the text blocks only, one after
+  the other with the block spacing.
+  Strata: stored, not used.  Implementation (size S): the Printer skips the
+  blocks of the other kind; the Editor is unchanged; src/latex.c
+  (src/strprint.c), the Print panel and Preview.  "Only Text is useful
+  when the headlines function as comments to the author."
+
+4.4 Ruler (FU)
+  PROBED, MANUAL (Reference p. 4-48, "Ruler Spacing").  Values: Relative
+  (no record), 10/inch (FU2), 12/inch (FU3), 15/inch (FU4) (FU3 and FU4
+  were probed: they behave as described; FU1 was not).  Meaning: the size of
+  a ruler unit in print.  It acts on column and gutter widths, tab stops,
+  the left and right block indents and the level indents.
+  Relative: a ruler unit is 1/80 of the width between the margins (the ruler
+  has 80 visible units): a left indent of 20 units is 20 * 24.4 = 488
+  units of 1/300 inch at the test page (x = 787 for a left margin of 300).
+  Absolute: a unit is 1/10, 1/12 or 1/15 inch: the same indent of 20 units
+  starts at x = 300 + 20 * 30 = 900 (10/inch), 300 + 20 * 25 = 800
+  (12/inch) and 300 + 20 * 20 = 700 (15/inch) (PROBED exactly).
+  The right indent (BR10) narrows the line by the same unit.  The
+  appearance of the document changes when the ruler setting changes
+  (Reference p. 4-48).
+  Strata: stored, not used; the Printer uses relative units.
+  Implementation (size S): where latex.c converts ruler units to lengths
+  (block indents BL and BR, tab stops FTT, column widths CW, level indents
+  FI and F<n>I), use the unit of the Ruler setting: 1/10, 1/12 or 1/15 inch
+  for the absolute settings, 1/80 of the text width for Relative;
+  the Editor display stays at 80 columns.  A tab stop or a column wider than
+  the text width in absolute units must be limited to the text width (the
+  original did the same; not probed).
+
+4.5 Winding Columns (FWN, BWN, F<n>WN; the Winding Column Layout panel)
+  PROBED, HELP ("Winding Column Layout"), MANUAL (Reference p. 4-31 for the
+  index).  Meaning: winding (snaking) columns: the text flows down to the
+  bottom of one column and winds to the top of the next column.
+  The Winding Column Layout panel (HELP): Number of Columns (1 to 9),
+  Gutter Size, Vertical Rules (the type of rule line between the columns)
+  and Spacing for Bottom Alignment (where space is inserted to balance the
+  columns at the bottom of a page).  Winding columns can be set for all
+  blocks (Global Format), for levels (Level Format panels), for individual
+  blocks (Current Block Format) and for the index (Index Style panel).
+  Print (PROBED, number only): the text is wrapped to the column width.
+  With Winding Columns 2 the lines of the test paragraphs are about half as
+  long as with 1 (about 40 characters against 95) and the words are
+  hyphenated at the end of a line ("min-utes"); with 3 about 27 characters.
+  The columns fill from the top: with a short document everything stays in
+  column 1; the flow into column 2 starts when column 1 reaches the bottom
+  of the page (not probed).  Headlines keep the full width in the probe.
+  The panel's other fields were not probed.
+  Strata: the number of columns, the gutter (FWG, F<n>WG, BWG) and the
+  vertical rules (FWR, F<n>WR, BWR) are set in the panel behind the field (the
+  Global and level panels and the Named Block Format) and printed.
+  Implementation (size M): in the Printer use the multicol package: a
+  section or block with FWN > 1 goes into a multicols environment with the
+  column separation of the gutter size and \columnseprule for the vertical
+  rules; implement the number, the gutter and the rules; leave "Spacing
+  for Bottom Alignment" out (multicols balances the last page by default)
+  and say so; src/latex.c, the Global and Block format panels
+  (src/globalmenu.c: the Winding Column Layout panel behind the field).
+  The Editor display stays one column (the original's display did, too).
+
+4.6 Indent to Next Level (F<n>I on a level panel)
+  PROBED, MANUAL (Reference p. 4-10).  Meaning: the number of ruler units
+  by which sections of the next level are indented from the sections of
+  this level.  Indent per Level (FI, global) is the same for every level.
+  The indents are cumulative.  Evidence (PROBED, relative ruler unit 24.4):
+    no record:                  every level at x = 300.
+    Indent per Level 9 (FI9):   level 2 at 519 (+219 = 9 units), level 3 at
+                                738 (+438).
+    Level 1 panel Indent to Next Level 5 (F1I5): level 2 at 421 (+121 = 5
+                                units), level 3 at 421 (not changed).
+    F1I5 and F2I3:              level 2 at 421, level 3 at 495 (+73 = 3
+                                units more).
+    F2I5 only:                  level 2 at 300, level 3 at 421.
+  So the indent of a level is the sum, over the levels above it, of that
+  level's Indent to Next Level, which is Indent per Level where it is not
+  set.  Headline and text of a section are indented together.
+  Strata: stored; Indent per Level acts on the screen only; Indent to Next
+  Level is not used.
+  Implementation (size S): in the layout and the Printer sum the level
+  indents with the rule above (src/layout.c, src/view.c for the screen,
+  src/latex.c for the print: the unit is the ruler unit of 4.4).
+
+4.7 Page Break Level, Auto Numbering and the other spacing fields work.
+
+
+5. OTHER COMMANDS THAT STRATA SHOWS AS NOT AVAILABLE
+----------------------------------------------------
+
+  Alt-F1 Compose, Ctrl-F2 Math, Alt-F8 Border: sections 1 to 3.
+  Edit, Window (Open/Close, Adjust, Zoom-up, Zoom-down, Switch):
+    dimmed.  READ ONLY: the original splits the screen in two windows on
+    the same or on two documents (the Reference section on the Window menu
+    says Zoom-up expands the current window to full screen size).  Strata
+    has no windows.  Recommendation: leave; a possible later feature.
+  Print, Repaginate and Clear-pages: dimmed.  READ ONLY.  They need the
+    page breaks that only the Printer knows.  Recommendation: leave on the
+    worklist; a repagination that runs the Printer and shows the page
+    breaks as markers is a possible later feature.
+  Ctrl-G text indent: done (it inserts the stored character 1A).
+  Ctrl-PgUp, Ctrl-PgDn, Ctrl-W, Ctrl-M: the keys of docs/NOT-IMPLEMENTED.txt
+    section 4; not studied here.
+  Ctrl-Hyphen (soft hyphen): DONE (task 35).  The character 1F as in the
+    original, a dim triangle on the screen, \- in the print; docs/DICTIONARIES.txt.
+
+
+6. NOTES ON DRIVING THE ORIGINAL (for the next probe)
+-----------------------------------------------------
+
+  - The kit of the owner's machine (dos/ and probe/ scripts) works in
+    DOSBox-X 2025.02.01 under Xvfb.  Give the window focus with a mouse
+    click inside it after any dialog; "Quit DOSBox-X warning" boxes steal
+    the keys until they are clicked away.
+  - The parallel port can be sent to a file with this line in the
+    DOSBox-X configuration:
+        [parallel]
+        parallel1=file file:PATH.prn timeout:3000
+    The Print Document panel of the original then writes the print to the
+    file (Press N at "Printer driver mismatch" to use the document's
+    printer, the Generic driver: plain text; Y or no question: the
+    Apple LaserWriter of the Setup: PostScript, in which every "(text)s"
+    after a "x y m" is a string at a position in units of 1/300 inch).
+  - A probe document can be made from the records of docs/DOC-FORMAT.txt
+    (tests/include.py has the writer); the original reads it at once.
+  - Ctrl-F2 and Ctrl-F6 did not reach the original (see section 1);
+    Ctrl-F3 did.  Try another keyboard layout or the DOSBox-X key mapper.
+  - In the Border Layout panel Space on a number field opens an edit box
+    whose text is not replaced by typing: clear it with BackSpace first.

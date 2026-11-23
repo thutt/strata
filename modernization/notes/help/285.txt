@@ -1,0 +1,25 @@
+
+--------------------------- Maintain Download Fonts ----------------------------
+
+Use the Maintain Download Fonts option on the Document Manager to manage 
+downloadable fonts for PostScript or HP LaserJet or compatible printers.  With 
+Maintain Download Fonts you can specify where fonts are stored on disk, 
+determine when fonts should be loaded, or delete unused fonts from disk.
+
+  +------------------------ Maintain Download Fonts ----------------------+
+  |                                                                       |
+  |                        Assign Font Directories                        |
+  |                        Specify Font Load Modes                        |
+  |                        Delete Unassigned Font Files                   |
+  |                        Load Pre-Load Fonts                            |
+  |                        Return to Document Manager                     |
+  |                                                                       |
+  +---------------------- Press Ins to Select Action ---------------------+
+
+
+A download font is only available in the Typeface List of a document if it 
+exists in the download font directory and you have specified a load mode other 
+than Unassigned.
+
+--------------------------------------------------------------------------------
+      Document Manager             Keyboard Summary            Help Index

@@ -1,0 +1,25 @@
+
+------------------------------------ Macros ------------------------------------
+
+Macros record a series of keystrokes that you can play back at any timer.
+Use the Menu (F10) Tools Macro commands to create or change individual macros, 
+or manage macro sets.
+
+     
+     Create a new macro or       Create a new macro       Retrieve an existing
+     edit an existing macro      by saving keystrokes     macro set from disk
+     by directly editing the     as they are typed.       into memory.
+     macro keystrokes.           (Ctrl F1)                       |
+            +-------+                 |                  +-------+
+                    |                 |                  |
+              +---------------------------------------------------+
+              |    Edit    Delete    Learn    Save    Retrieve    |
+              +---------------------------------------------------+
+                             |                  |
+                    +--------+                  +-------+  
+          Delete a macro from the             Save the current macro set
+          current macro set.                  to a file on disk.
+
+--------------------------------------------------------------------------------
+    Edit          Delete          Learn          Save          Retrieve
+    Macro Overview         Tools         Keyboard Summary         Help Index

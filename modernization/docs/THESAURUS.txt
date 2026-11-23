@@ -1,0 +1,386 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+THE THESAURUS
+=============
+
+Status: done.  F12, Tools, Thesaurus and Ctrl-T look the word of the cursor up
+in the MyThes data of the package mythes-en-us (an optional prerequisite, see
+README.txt).  The original's behaviour was probed in Manuscript 2.1 under
+DOSBox-X twice: a first probe for the design and a second one, listed below,
+for the keys, the word finder and the effects on the document.  What was seen
+is marked [V], what the help file says [H], what is a guess [?].  Few guesses
+are left: they are in section 9.
+
+1. The original
+---------------
+Tools, Thesaurus and Ctrl-T do the same.  The original needs no set-up under
+DOSBox: american.syn is in C:\MS and the lookup works at once.  The help
+file (topic "Thesaurus") says: if the word is in the thesaurus, synonyms are
+displayed; Enter replaces the word in the document, Ctrl-T looks up the
+highlighted synonym, Esc leaves without changing the document; if the word is
+not there a list of similarly spelled words is shown.
+
+The word.  [V] The word the cursor is in is looked up: with the cursor at the
+start of "section", in the middle ("sec|tion") and just after its last letter
+the lookup was "section"; with the cursor at the start of the next word it
+was that word.  The word is highlighted in the text while the panel is open.
+A cursor on a space or in a gap of spaces, on a marker, at the end of a line
+after a full stop or after trailing spaces looks BACK over what is not a
+letter, on the same line, to the word before it [V].  A cursor with no word
+before it on its line (an empty line, a line that starts with spaces and the
+cursor in them) gives the message "No word selected" [V]: a box titled
+"Thesaurus" with the text and "Press Any Key to Continue".  Letters, an
+apostrophe or a hyphen between letters make one word ("don't", "re-enter" were
+looked up whole) [V]; digits are not part of a word ("123": the word before
+was used) [V].  An attribute change ends a word: in "sec" (bold) "tion"
+(normal) the cursor in the first part looks up "sec" and in the second part
+"tion", and the highlight covers that part only [V].  A marker ends a word as
+well: before[M]happy[M]after has three words, and with the cursor on a marker
+the word before it is used [V].  A word of 80 letters that wrapped onto a
+second screen row, with the cursor at the start of that row, was highlighted
+only for the part on that row [V]; Strata always takes the whole word (up to
+63 letters).
+
+Length.  The help file has "Word is too long - maximum length is 16
+characters" [H].  It could not be provoked: words of 16, 17, 19 and 80 letters
+in the text and of 20 and 70 letters typed in the Look Up box were looked up
+without an error and gave the list of similar words [V].  Strata has no
+such error either (its limit is 63 letters: a longer word is cut off).
+
+The panel.  [V] It fills 12 rows of the 25 row screen, full width, and the
+text stays visible and is not scrolled.  If the cursor is on screen row 12 or
+above (row 0 is the status line) the panel is the bottom 12 rows (13 to 24, it
+hides the key line); if the cursor is on row 13 or below the panel is the TOP
+12 rows (0 to 11) [V].  Top border with the title "WORD FINDER from
+Microlytics, Inc." (the name of the licensed program).  Row 1: the word as it
+was typed and a colon ("sections:", "Quick:"), at column 2, and at the right
+MORE: with an arrow up, down or both when there is more to see.  Then 9 rows
+of senses, one block each:
+
+    noun - area, district, domain, environs, jurisdiction, locality,
+           neighborhood, parish, precinct, province, range, region, sphere,
+           vicinity, ward, zone;
+         - citation, clipping, excerpt, extract, mention, passage, portion,
+           quotation, quote, reference;
+     adj - bent, committed, dedicated, determined, fixed, intentional;
+
+A part of speech (noun, adj, verb, adv, prep; right aligned in columns 2 to 5)
+is written at the first of its senses only; every sense starts with "-" in
+column 7, the words begin in column 9 and are separated by ", ", a sense ends
+with ";" and the last one with ".", and lines wrap before column 78 with the
+words under the first.  The same word can be in several senses.  The first
+word is highlighted (reverse video).  The bottom border holds the hint
+"Enter:replace  Esc:exit  CTRL-T:look up", centred, and once a word has been
+looked up from the panel "Ctrl+PgUp:last word" as well [V].  Only synonyms are
+shown: no antonyms, generic or related terms.  A headword that has only
+such terms gives th_lookup the value 2 and the panel the title "The word has
+no synonyms -  Please choose another word" (the owner chose this on
+2026-11-19; before, it said "not found").
+
+Keys.  [V] Right and Left: next and previous word, over the ends of the rows
+(no wrap at the very first or last word).  Down and Up: a row down or up, to
+the word whose first column is nearest to the current word's.  Home and End:
+the first and last word of the row.  PgDn: the next 9 rows (no overlap; the
+highlight goes to the first word of the new top row; on the last page the
+rows left are shown with blank rows below); PgUp: the same back.  The MORE
+arrows follow the rows above and below the page.  Ctrl-Home highlights the
+heading word ("Quick:", Enter would then put the same word back), Ctrl-End the
+last word that is on the screen; Ctrl-PgDn does nothing [V].  Enter:
+replace.  Ctrl-T: look up the highlighted word; the word that was shown is
+kept in a history.  Ctrl-PgUp: back to the last word of the history (the
+highlight is on the first word again; the hint "Ctrl+PgUp:last word" stays as
+long as the history is not empty); without a history it does nothing.  Esc:
+leave the thesaurus altogether, also from a second lookup.  A letter typed
+opens a box "Look Up: h_" with the letter in it; the box is 3 rows high at
+panel row 4, from column 7 to column 72, its bottom border has the hint
+"Esc:exit  CTRL-T:look up", the panel stays as it was behind it.  Letters are
+added, Backspace takes one off, Enter or Ctrl-T looks the word up, Esc closes
+the box only and returns to the panel [V].  A word of 70 letters can be typed.
+
+Not found.  [V] The panel is titled "The word was not found -  Please choose
+another word": ten words of the dictionary in one column at column 21, in
+alphabetical order, with the nearest word before the one looked up
+highlighted and 5 words above it (4 below it): for "abcdefghijklmnopqrs" the
+list is abatement ... abduct, highlight abbreviated, for "sec" it is
+seasick ... seclusion, highlight seaworthy; at the start of the dictionary
+the list begins with the first word and has ten words, at the end it ends with
+the last word (for "zzzqx" only zoom and zygote, highlight zygote).  MORE:
+shows up and down arrows and the keys move through the whole dictionary: Up
+and Down one word (the list scrolls by a word at the edge), PgUp and PgDn the
+ten words of a page, with the highlight at the same place of the list.  Enter
+or Ctrl-T looks up the highlighted word, typing starts a new lookup, Esc
+leaves.  Hint: "Enter:look up  Esc:exit  CTRL-T:look up" (and the
+Ctrl+PgUp part when there is a history). 
+
+Inflections.  [V] "headlines" and "sections" are found (the entry of the
+singular is shown under the heading as typed); "ran" is not found; "running"
+is found with noun and adjective senses only.
+
+Replacing.  [V] Enter puts the highlighted word in place of the word in the
+text and the cursor goes after the new word (the position counter shows the
+column after the new word); the document is marked changed (the "*" before
+the file name).  The case of the old word is kept: Quick gives Center, QUICK
+gives CENTER, quick gives center; a synonym of two words ("next day") in
+place of Quick gives "Next day" (only the first letter).  The new word is not
+inflected: "sections" became "area".  The attributes of the word stay: a bold
+word replaced by another one is bold in the file (the attribute change codes
+stay where they were, the new letters are between them) [V].  Esc changes
+nothing: no "*", the cursor is where it was and the highlight is gone [V].
+There is no undo in the original (and none in Strata) [?]: the way back is
+another replacement.  After the replacement the next Ctrl-T looks up the
+cursor's word again, which is the new word.
+
+
+2. The MyThes data
+------------------
+Two ASCII files, /usr/share/mythes/th_en_US_v2.idx (3.0 MB) and
+th_en_US_v2.dat (18.5 MB).  Both start with a line naming the character
+set, "UTF-8".  The data seen on this machine (Debian 13, package
+1:25.2.3-1) contains no byte above 127, but a reader has to cope with UTF-8.
+
+th_en_US_v2.idx
+    line 1  UTF-8
+    line 2  the number of entries: 145866
+    then    one line per entry: headword | decimal byte offset into the dat
+    The headwords are in plain byte order (checked: strictly increasing, no
+    duplicates), all lower case, 63822 of them have a space, the longest
+    has 71 characters.  Examples: success|16063530, section|14622685.
+
+th_en_US_v2.dat
+    line 1  UTF-8
+    entry   headword | n        (n senses follow)
+            (pos)|word|word|...  one line per sense
+    A sense line starts with (noun), (verb), (adj) or (adv).  The words are
+    synonyms of the headword, and a word followed by a space and one of
+    these in parentheses is another kind of relation: "(generic term)"
+    (358978 times in the file), "(similar term)" (53027), "(antonym)"
+    (13060) and "(related term)" (10672).  Lines are up to 8.5 KB.
+    section|14
+    (noun)|subdivision|writing (generic term)|written material (generic
+    term)|...  and set|45 has (adj)|fit|primed|ready (similar term).
+
+Look-up.  The offset in the idx line is where the entry starts in the dat,
+so a look-up is: binary search of the idx for the headword, then one read at
+the offset (the headword line, then n sense lines).  The dat must not be
+read as a whole.  The words are lower case, so a word typed in any case is
+lower cased first.  There is no stemming in the files (sections, sets, ran
+are not headwords); libmythes asks a spell checker's morphology for it.
+Strata does not link libmythes (C++); it needs a small stemmer of its own
+(section 4).  The character set of the editor is CP437; the words with
+letters above 127 are not found in this data, and a UTF-8 word read from
+a newer file is converted to CP437 with the table in term.c, a word with a
+letter that has no CP437 form is dropped.
+
+3. What is shown
+----------------
+The original shows synonyms only.  From a sense line Strata shows the words
+without a suffix, then those marked "(similar term)" (MyThes puts the
+members of an adjective cluster there and they are what a writer expects
+to see); "(antonym)", "(related term)" and "(generic term)" are not shown,
+and a sense that has nothing to show is left out.  A word that has no sense
+left is treated as not found [?].  The parts of speech are written noun,
+verb, adj and adv, in the order of the file.  A word is shown once in a
+sense but may be in several.  MyThes has far more words than american.syn
+(327 KB): "unnumbered" is not in the original and is in MyThes, so the
+results differ from the original's.
+
+4. The modules src/thesaurus.c and src/thesmenu.c
+-------------------------------------------------
+src/thesaurus.[ch] is the data layer; it knows nothing of the editor or the
+screen.
+
+    typedef struct {
+        char pos[8];        /* "noun", "verb", "adj" or "adv" */
+        char **words;       /* CP437, no suffixes, in file order */
+        int nwords;
+    } ThSense;
+
+    typedef struct {
+        char head[TH_HEAD]; /* the entry that was found, lower case */
+        ThSense *senses;
+        int nsenses;
+    } ThEntry;
+
+    void th_use(const char *path);   /* for the tests; NULL: the usual search */
+    int  th_available(void);
+    const char *th_path(void);       /* the .dat file in use */
+    int  th_lookup(const char *word, ThEntry *out);
+        /* 1 found (under its stem if needed), 0 not found, -1 no data. */
+    void th_free(ThEntry *e);
+    int  th_neighbours(const char *word, int step, int count, int mark_in,
+                       char names[][TH_HEAD], int *mark);
+    int  th_stem(const char *word, int try, char out[TH_HEAD]);
+    void th_match_case(const char *orig, const char *repl, char *out,
+                       int cap);
+
+Files.  STRATA_THESAURUS names the data: a directory, the .dat file, or the
+path without .idx and .dat; a directory is searched for th_en_US_v2,
+th_en_US_new, th_en_US and th_test and then for any other .dat that has an
+.idx.  When the variable is set, nothing else is tried: an empty or wrong
+value means "not available", which the tests use.  When it is not set the
+directory /usr/share/mythes is searched.  Both files are opened read only and
+mapped (PROT_READ, MAP_PRIVATE): the system loads only the pages that are
+touched, so memory stays small and a lookup costs a few page reads.  The
+index is searched by bisecting on byte positions: go to the middle, back to
+the start of that line, compare the headword (up to the "|") with the key on
+unsigned bytes, and so on.  Nothing is parsed up front, so the first lookup
+costs microseconds and the editor never waits.  A line of the index or the
+data that does not have the expected shape, an offset that is past the end of
+the data or does not hold the headword, or fewer sense lines than the count
+give "not found" instead of a crash.  The reader checks the character set of
+the first line: with UTF-8 the words of the data are converted to CP437 (a
+word that has a letter that CP437 does not have is dropped) and the key of a
+lookup is made in UTF-8.
+
+Stemming.  The candidates are tried in this order and the first one that is a
+headword with something to show wins: the word; with "'s" taken off; "ies" and
+"ied" to "y"; "es" off; "s" off (not "ss"); "ed" off, and "ed" to "e"; "ing"
+off, and "ing" to "e"; "er", "est" and "ly" off; each of the "ed", "ing",
+"er" and "est" results also with a doubled last consonant undone (running to
+run).  The original found sections, headlines and not ran, so irregular forms
+are not handled.  The heading shows the word as typed.
+
+The list of similar words.  th_neighbours finds the last headword that is not
+after the word (the word itself if it is a headword), moves it by step
+headwords (a page or a single word; clamped at both ends), and returns count
+names that begin mark_in headwords before it, or at the first headword.  The
+index is in byte order, which is what the original's list is in.  There is no
+edit distance: the original's "similarly spelled" words are the neighbours in
+the alphabetical order, and that is what the probes showed.  The cost is one
+bisection and a few line steps.
+
+src/thesmenu.[ch] is the panel; the only entry is thesmenu_lookup(Editor *e,
+int cursor_row).
+
+5. The panel
+------------
+The panels of widgets.c (popup_form, popup_menu, popup_grid) are for forms and
+lists and do not fit: this one is drawn like the F12 menu of menu.c, with
+term_puts and term_box (box() of widgets.c) on 12 rows, over the editor that
+the callback w_redraw (the same one the popups use) paints.  The panel is the
+bottom 12 rows when the cursor is on screen row rows-13 or above, else the top
+12 rows; the text is not scrolled (section 1).  On a screen of fewer than 25
+rows the panel has rows/2 rows.  The word is highlighted in the text with the
+selection of the editor (SEL_TEXT from the start to the end of the word, the
+cursor at the end) while the panel is open; the selection is cancelled when it
+closes and, unless a word was put in, the cursor is put back.
+
+State: the word that was looked up and its ThEntry, a table of the words
+(row, first column, end column, the mark after it, the text) made when the
+panel is laid out, the row where each sense starts, the highlighted word, the
+first row shown and a history of looked up words (at most 20).  Layout as in
+section 1.  The not-found panel has its own list (the names that
+th_neighbours returns) and the keys of section 1.  Typing a letter, in either
+panel, opens the "Look Up:" box.  The title is "Thesaurus", not "WORD FINDER
+from Microlytics, Inc.", as the data is not Microlytics'; the title of the
+not-found panel is the original's.  Keys that the panel does not know are
+ignored.  Ctrl-PgUp needs a terminal that sends it (xterm does, ESC [ 5 ; 5 ~).
+
+6. The word under the cursor, and the replacement
+-------------------------------------------------
+ed_word_at(e, &from, &to, buf, cap) in editor.c.  Text is a vector of tokens
+(msdoc.h): a letter is TK_CHAR with the CP437 code in a.  A word is a run of
+letters (A-Z, a-z and the CP437 letters 80 to A5) with an apostrophe or a
+hyphen allowed between two letters.  Attribute tokens, tabs, markers and the
+end of line end it, so a word is never split over one.  The cursor (Editor
+cur: item, col, tok) is in the column text ed_text(e).  The word is the run
+that holds token cur.tok; if that is not a letter, the run before it, found
+by looking back over the tokens that are not letters up to the end of the
+previous line (the word of the line only); if there is none the function
+returns 0 and the caller says "No word selected".  A word over 63 letters
+(THES_MAXWORD) is cut off.
+
+ed_replace_range(e, from, to, text, n) in editor.c deletes the tokens
+from..to-1, inserts one TK_CHAR for each byte, sets the cursor to from+n and
+calls touch(), so that the block and the document are marked changed.  No
+attribute token is inserted or removed: the attribute in force at the old word
+applies to the new characters because they take the old place in the token
+stream.  th_match_case makes the case: all capitals with two letters or more
+make every letter of the replacement a capital; a capital first letter makes
+the first letter a capital; otherwise it is as the data has it.  A synonym of
+several words is inserted with ordinary spaces.  No inflection is added.
+
+7. Where it is hooked in
+------------------------
+src/ui.c.  Case 20 of handle_key (Ctrl-T) and the entry Tools, Thesaurus (path
+TOP_TOOLS, TOOLS_THESAURUS) call do_thesaurus, which gives thesmenu_lookup the
+screen row of the cursor.  The entry is live whether or not the data is
+there: without it a popup says "The thesaurus is not installed: add the
+package mythes-en-us" and the editor goes on as before (the design had a
+dimmed entry; a popup says what to do, which is better).  Also: Makefile
+(thesaurus.o in EDOBJ, thesmenu.o in UIOBJ, the headers in the dependency
+list), editor.c and editor.h (ed_word_at, ed_replace_range), docs, README.txt,
+tests.  The prerequisite is listed in README.txt.
+
+8. Tests
+--------
+The tests do not need the package.  tests/mkthesdata.py writes the small
+dictionary tests/data/th_test.idx and th_test.dat in MyThes format (30
+headwords, offsets computed): quick (a noun, an adjective with a similar term,
+an antonym, a generic term and a related term, an adverb, a sense with nothing
+to show), section (three senses, a synonym of several words), happy (an
+antonym), headline, run, set, a headword of several words, and words around
+"abcd" and at the end of the alphabet for the not-found list.  The README in
+tests/data says more.
+
+ - tests/edtest.c (make test): th_lookup (the senses, the dropped relations,
+   the order, stems: sections, HEADLINES, running; ran not found), th_stem,
+   th_neighbours (the list, the ends, steps), th_match_case, damaged data (a
+   wrong head, an offset past the end, an offset into a line, fewer lines than
+   the count, an empty dictionary, an empty path, a wrong path, the three ways
+   of naming the data), ed_word_at (start, middle and end of a word, the next
+   word, apostrophe, hyphen, digits, the end of a line, a long word, empty
+   lines, an attribute, a marker) and ed_replace_range (attributes kept,
+   cursor, modified flag, text).
+ - tests/smoke.py (make smoke): the panel on a pty with STRATA_THESAURUS set
+   to tests/data: Ctrl-T and Tools, Thesaurus, the layout, the highlight, the
+   keys (Right, Left, Up, Down, Home, End), Ctrl-T on a synonym, Ctrl-PgUp, Esc,
+   Enter (the file saved: Center, CENTER, center, "Next day"), Esc leaves
+   everything as it was, the not-found list (highlight, Enter, Up, Down, PgUp,
+   PgDn), the Look Up box (letters, Backspace, Enter, Ctrl-T, Esc), "No word
+   selected", the panel above or below the cursor, no data (a popup, and the
+   editor works) and one check with the real data of mythes-en-us (the
+   directory in STRATA_TEST_MYTHES, else /usr/share/mythes; skipped with a
+   message when it is not there).
+
+9. Open questions and risks
+---------------------------
+ - Licence of the data.  The package copyright file (Debian) names the
+   LibreOffice dictionaries project and, for dictionaries/en/*, a permissive
+   notice by Kevin Atkinson; no line names the thesaurus data itself, which is
+   derived from WordNet.  Strata only reads the files that the user installed
+   and does not copy any of them (the test dictionary is written by us), but
+   the licence should be read before the files are ever distributed with
+   Strata.
+ - Differences from the original: a far larger vocabulary, different senses and
+   word lists (MyThes puts the members of an adjective cluster in "similar
+   terms", which are shown after the synonyms), the nearest words of the not
+   found list include phrases (63822 of the headwords have a space), stems by
+   our own rules, no Microlytics title, no "too long" error.
+ - Not tried in the original: the Home and End keys of the Look Up box; what
+   Enter does in the not-found panel on a phrase (Strata looks it up); a word
+   with letters above 127; an Alt-key in the panel; the panel on a screen of
+   another size (Strata uses rows/2 rows under 25 rows).
+ - The data may change with the package: the idx and dat of other releases may
+   have another name (th_en_US_new) or contain UTF-8; the reader tolerates both
+   and checks the first line of each file.
+ - mmap of an 18 MB file is cheap, but a file that is replaced while Strata
+   runs gives wrong text: the reader checks offsets against the size it saw and
+   gives "not found" for anything that does not fit.
+ - A sense list of 45 senses (set) has hundreds of words; the table is built
+   for the whole entry once, which is small, and only the rows on the screen
+   are drawn.  At most 64 senses of an entry are kept.

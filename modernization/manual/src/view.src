@@ -1,0 +1,115 @@
+# Chapter 1: A View of Strata.  The chapter is kept in four sources that
+# this file reads: the elements of a document and the formats (view1), the
+# screen and the panels (view2), the keys and the menus (view3) and the
+# tools (view4).
+.doc A View of Strata
+.chapter 1
+.h1 A View of Strata [view]
+.ix Strata, overview
+.ix Editor
+.ix Document Manager
+.ix Conventions of this manual
+.ix Terminal version
+.ix X11 version
+Strata is a system for writing and printing technical documents: letters,
+reports, proposals and manuals.  It has four programs: the Editor, the
+Document Manager, the Printer and the Viewer.  A document is built from four
+elements: text, blocks, columns and sections.
+
+This chapter defines the elements, describes the screen of the Editor and the
+ways to give it commands, and describes each program.  The other chapters use
+the terms and the keys that this chapter defines.  Each key is listed twice,
+by what it does and by the layer it belongs to (function key, menu,
+accelerator).
+
+.table 26 34
+Topic | Section
+The elements of a document | {x:view-elements}
+Structured and unstructured documents | {x:view-modes}
+Guidelines for large documents | {x:view-guidelines}
+Global and local formats | {x:view-formatting}
+The screen of the Editor | {x:view-screen}
+Panels, menus and prompts | {x:view-panels}
+The keys of the keyboard | {x:view-keys}
+The function keys | {x:view-fkeys}
+The {k:F12} menu | {x:view-menu}
+The accelerators | {x:view-accel}
+Markers, the commands that are put in the text | {x:view-markers}
+The programs and the Help | {x:view-tools}
+.end
+
+.h2 How this manual is written [view-conventions]
+.ix Keycap, notation of keys
+.ix Typographical conventions
+.ix Terminal and X11, differences
+.ix Behavior of Strata
+.ix Note and Caution paragraphs
+.ix Menu path, notation
+.ix Program font, notation
+.ix Messages, notation of
+.ix Section sign, cross reference
+.ix Appendix, cross reference
+Keys are shown as keycaps: {k:Ctrl-S} means that you hold the {k:Ctrl} key
+and press {k:S}; {k:Alt-F12} means {k:Alt} and the function key {k:F12};
+{k:Shift-Up} means {k:Shift} and the up arrow.  The keys of the numeric
+keypad are written {k:Keypad +}, {k:Keypad -} and {k:Keypad *}.  The key
+that ends a line is {k:Enter}; the key that accepts a panel is {k:Ins}
+(also called {k:Insert}).  A key that is written with a capital letter
+after {k:Ctrl-} or {k:Alt-} is the same key whether or not the Shift key
+is down; the Editor treats {k:Ctrl-s} and {k:Ctrl-S} as the same key.
+
+A command that is on the {k:F12} menu is written as a path: File, Save means
+the command Save of the menu File.  In the menus and the panels the words
+that are on the screen are written exactly as they are on the screen,
+with their capital letters.  The name of a field or of a panel is in bold
+where its description begins.
+
+File names, directories, commands of the system, settings and the values
+that a setting takes are in the program font, as in {c:config} and
+{c:print_to}.  A message of a program is in double quotes, exactly as it is
+shown; an italic word inside it stands for text that varies, as in "Delete
+{i:name}?".  A measure is a number, a space and the unit (7 mm, 14 pt), and
+a number has no thousands separator (65000).
+
+The names LaTeX and TeX are printed with their logos, as the name Strata is,
+in the text, the headlines, the contents, the tables and the captions.  The
+name in a message in double quotes, in the program font and in an entry of
+the index is plain text, because it is the text of a program or of a list.
+
+A reference to a chapter or a section is the section sign and the number,
+with the title in parentheses, as in {x:file}.  A reference to a number
+alone, in a place where a title would nest inside parentheses, has the sign
+and the number only, as in {n:file}.  A reference to an appendix or to a
+section of one has the word Appendix in place of the sign: {x:appcfg}.
+Two or more appendices in a row have the plural word once, as in {n:appcmd}
+and {n:appx11}, and the sections of one appendix have the singular word once,
+as in {n:appcfg-format} and {n:appcfg-keys}.
+
+The description of a marker has the same parts every time: a table of the
+panel, the sections On the screen and When printed, and the section Edges for
+what happens at a limit or in an odd place.  The description of a command of
+the File menu has the section for its panel, the section for its edges and, as
+the last section, the section See, which lists the other places that bear on
+the command.  The index lists a second name of a thing with the words See and
+the name that the manual uses.
+
+Strata comes in two versions of the Editor: a terminal version that
+runs in a text terminal, and an X11 version that opens a window.  Where
+the two differ, the text says so.  {n:appterm} and {n:appx11} describe the
+terminal version and the X11 version in that order; a short table of the
+differences is in {x:view-screen-kinds}.
+
+Three kinds of paragraph are set apart.  A {b:Note} adds a fact to the text
+above it.  A {b:Caution} warns of a loss of work or of a surprise.  A
+paragraph that begins {b:Behavior of Strata} describes a detail of the
+program that the rest of the text does not make obvious.
+
+.note Strata is one program for two displays.  A screen in this manual is
+  drawn from the X11 version unless the text says that it is the terminal.
+  The terminal shows the same screen with the characters of your terminal;
+  the colors are your terminal's own.
+
+.include view1.src
+.include view2.src
+.include view3.src
+.include view4.src

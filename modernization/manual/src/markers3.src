@@ -1,0 +1,260 @@
+# Chapter 5, part 3: the markers from Filedate to Keycap, without those that
+# are printed as a label (they are in markers5).
+
+.h2 Filedate [marker-filedate]
+.ix Filedate marker
+.ix Marker, Filedate
+.ix Date of the file
+The Filedate marker prints the date on which the document was last saved, that
+is, the modification date of its file on disk.  Use it for "last changed on".
+.table 12 48
+Item | Value
+Panel | Format.
+Global setting | Date Format on the Marker Format panel of Global, Marker.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Format | The date words of the Date marker ({n:marker-date}) | Month D, Year (or
+  |  | the Date Format of the document) | How the date is written.
+.end
+.h3 On the screen
+The label is the word FILEDATE in Short and Long and FDATE in Name; the date of
+the file is made when the document is printed.
+.h3 When printed
+The date and nothing else, as text.  The date is that of the file as it is on
+disk when the Printer works: the changes that have not been saved are not in
+it.
+.h3 Edges
+- A document that has no file (a new document, or one that was never saved)
+  has no date of a file, and the date of the day is printed.
+- A print of a part of the document (a block, a range of sections) has the
+  date of the same file.
+
+.h2 Filename [marker-filename]
+.ix Filename marker
+.ix Marker, Filename
+The Filename marker prints the name of the document file, without its
+directory.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+.end
+.h3 On the screen
+Short and Long: the name, in capital letters, in brackets, such as
+[PROPOSAL.DOC] (a document that has no name yet shows [FILENAME]).  Name:
+[FNAME].
+.h3 When printed
+The name of the file, in capital letters, with the extension, for example
+PROPOSAL.DOC.  A document with no name prints FILENAME.  The Printer prints the
+name according to the display mode of the marker
+({n:markers-print-modes}).  The name is that of your document, also when only
+a part of it is printed (a block, a range of sections) and in Preview.
+.h3 Edges
+The capital letters are made by the program whatever the case of the file name
+on disk.  Use the Pathname marker ({n:marker-pathname}) when the directory is
+needed too.
+
+.h2 Filetime [marker-filetime]
+.ix Filetime marker
+.ix Marker, Filetime
+The Filetime marker prints the time of day at which the document was last
+saved, the modification time of its file.
+.table 12 48
+Item | Value
+Panel | Format.
+Global setting | Time Format on the Marker Format panel of Global, Marker.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Format | The time words of the Time marker ({n:marker-time}) | H:MM am/pm (or
+  |  | the Time Format of the document) | How the time is written.
+.end
+.h3 On the screen
+FILETIME in Short and Long, FTIME in Name.
+.h3 When printed
+The time of the file as text.
+.h3 Edges
+- As with the Filedate marker ({n:marker-filedate}), a document without a file
+  prints the time now.
+
+.h2 Font [marker-font]
+.ix Font marker
+.ix Marker, Font
+.ix Change of typeface
+.ix Typeface list
+A Font marker changes the family of type of the text that follows it, to the
+end of the block.  Put it before the words that are to be in another typeface,
+and put a second Font marker, with the choice [Text], to go back.
+.table 12 48
+Item | Value
+Panel | Font.
+Global setting | The Typeface panel of Global names the twenty fonts
+ ({n:format-marker}).
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Font | [Text: name], Headline: name, Text: name, Header/Footer: name,
+  | Font 4: name to Font 20: name | [Text] | The font of the text after
+ the marker.
+.end
+.pic pictures/markers-font.png 5.4 The list of the Font marker: the font of the block first, then the fonts 1 to 20.
+Each entry shows the role or number of the font and the name that the Typeface
+panel gives it, for example Font 7: Palatino; a font that has no name shows
+"not set".  The first entry, in brackets, is the font that the block has; the
+other entries are the fonts 1 to 20.  {k:Keypad +}, {k:Alt-+} and {k:F2} show
+the list.
+.h3 On the screen
+The default mode is Short, which shows [FONT].  In the Long mode the label is
+the word Font; in Name mode it is FONT; Diamond shows a diamond.  The screen has one typeface, so the text is not drawn
+differently.
+.h3 When printed
+The Printer uses the name of the font only to choose one of three families of
+type: the typewriter family if the name holds one of the words program, code,
+courier, mono, typewriter, fixed, listing or source; the sans serif family if
+it holds head, title, sans, helv, arial or gothic (but Header/Footer is not a
+headline name); and the roman family for any other name.  The family stays in
+force to the end of the block.  The size, the style and the real typeface of
+the name are not used.  A Font marker with the choice [Text] returns to the
+family of the block.  A font that has no name is the roman family.
+The sample {c:fonts-sample.doc} in the directory
+{c:share/strata/samples/fonts} shows the fonts of the Typeface list, the
+numbers 1 to 20, one section for each font.  The headline of a section reads
+Font 4: Times: the Section Tag of the first level makes the number, which is
+the number of the font ({n:format-set-tags}).  A font that has nothing
+configured, the number 20, has the line nothing configured. and no sizes;
+each of the other fonts is shown at five sizes.  Lato, the number 19, is
+printed in its own typeface only after it is installed ({n:str-fonts-install});
+until then the Printer sets its sizes in the font of the text.  The sample
+sets the font and the size with a LaTeX marker, because a Font marker cannot
+set a size.
+.h3 Edges
+The marker applies to the end of the block, not to the end of the line.
+
+.h2 Keep [marker-keep]
+.ix Keep marker
+.ix Marker, Keep
+.ix Keep blocks on one page
+.ix Start (Fixed), Start (Floating), End
+A Keep marker keeps blocks together on a page: the blocks from a Start marker to
+the End marker are printed on one page, so that a table, a program listing or a
+figure and its caption are not split.  A Keep marker is never printed; it only
+changes where the pages break.
+.table 12 48
+Item | Value
+Panel | Keep.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Keep | Start (Fixed), Start (Floating), End | Start (Fixed) | What the marker
+ is.
+.end
+.table 13 47
+Choice | What it does
+Start (Fixed) | Begins a region.  If the region does not fit on the rest of the
+ page, it moves to the next page whole, and the rest of this page stays empty;
+ the text that follows the region stays after it.
+Start (Floating) | Begins a region.  If the region does not fit, it moves to
+ the next page and the blocks that follow the End fill the rest of this page,
+ in front of it.
+End | Ends the region that the last Start began.
+.end
+.h3 How the regions are made
+The unit of a region is the whole block, or the whole table when a marker is in
+one of its rows.  The rules are these.
+- A Start inside a region is ignored: the first End closes the region.  Pairs
+  do not nest.
+- An End with no Start before it is ignored.
+- A Start with no End keeps the text from the Start to the end of the document.
+- A region is broken at the start of a section: the part of a region that
+  lies in each section is kept on its own, and a headline stays with the first
+  kept block after it.
+- A block that holds Keep markers and nothing else takes no height.
+- A region that is longer than a page cannot be kept: it starts at the top of
+  a new page and goes on over the next ones as usual.
+- A region that holds a Page Break, a Column Break or an Orientation marker is
+  not kept, and neither is a region that begins in the text of the title page of
+  a structured document (the text before the first section).  The Keep markers
+  are dropped and the text is set as if they were not there.
+- A footnote in a kept region is printed at the foot of the page where the
+  region is placed.
+.h3 On the screen
+The default is Long: Start Keep (Fixed), Start Keep (Floating) or End Keep in
+brackets.  Short is the same.  Name: [KEEP].
+.h3 When printed
+Nothing is printed for the marker, in a Final print, in a Draft print and in a
+Preview.  The blocks of the region are put on one page: a Fixed region that
+does not fit in the rest of the page starts on the next page, and a Floating
+region that does not fit moves to the next page while the text that follows
+fills the rest of this one.  A Floating region that is taller than nine tenths
+of the page is placed like a Fixed one.
+.h3 Edges
+- The marker is better placed in a block of its own, before the first block and
+  after the last block of the region.  A Start in the middle of a block
+  keeps that whole block.
+- A table kept in a region is set row by row without a break inside a row; the
+  rows are the unit.
+- The Keep marker is a different feature from the Keep Block on One Page
+  field of the local formats, which is in {n:format}.
+
+.h2 Keycap [marker-keycap]
+.ix Keycap marker
+.ix Marker, Keycap
+.ix Key legends
+.ix Keycaps
+A Keycap marker draws a key, a small rounded box with a legend in it, in the
+line of text.  The manual itself uses it for every key name.
+.table 12 48
+Item | Value
+Panel | Legend, Foreground, Background, Scale, Font.
+Global setting | Keycap Format of Global, Marker, which gives the values that a
+ marker without a value of its own takes ({n:format-marker-ring}).
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Legend | Text, such as Enter, {k:F12} or {k:Ctrl-S} | None (required) | The text in the
+ key.
+Foreground | 0.0 to 100.0 | [0.0] (the Keycap Format) | The shade of the legend
+ and of the line of the key; 0.0 is black.
+Background | 0.0 to 100.0 | [100.0] | The shade of the fill of the key; 100.0 is
+ white.
+Scale | 0.001 to 10 | [1.000] | The size of the whole key, as a multiple
+ of the size of the text around it.
+Font | [Text: name], then the twenty fonts | [Text] | The font of the legend;
+ only the family is used.
+.end
+.pic pictures/markers-keycap.png 5.4 The panel of the Keycap marker, with the legend Ctrl-S.
+The defaults are shown in brackets: the value of the Keycap Format of the
+document.  A value that is typed replaces the bracket and stays in the
+marker, also when it equals the global one.  A field that is left at the
+bracket follows the Keycap Format.
+.h3 On the screen
+The default mode is Inline.  In the X11 version a key is drawn as a picture of
+the rounded box, in the colors of the editor (a Foreground of 0.0 is the color
+of the text and a Background of 100.0 the color of the window).  In the
+terminal version, and while the picture is not ready, the key is the legend in
+reverse video with a space on each side.  When the picture cannot be made
+(LaTeX is not installed, LaTeX finds a mistake, or the job takes more than five
+seconds) the key is shown as [Key: legend], its Short form, never as an
+empty box.  The cursor on it brings the message "Keycap drawn as Short: ..."
+with the cause, and the log of the run ({n:appcfg-log}) has one entry with the
+block and the line.  The other modes show [Key: legend] (Short and Long), [KEY]
+(Name), a diamond or nothing.
+.h3 When printed
+A key is printed as a box with rounded corners and a thin line, as high as
+the line of text and wide enough for the legend, with the legend in the family
+of the font (roman if the font has no name that says otherwise).  The
+Foreground sets the shade of the legend and of the line, the Background the
+fill, and the Scale the size.  The shades are between 0.0 and 100.0 and the
+scale between 0.001 and 10: a value out of range is rejected with a message
+({n:markers-messages}).
+.h3 Edges
+- The legend is plain text; it is printed as it is typed.
+- The size of the font is ignored: the size of the key comes from the scale and
+  the text around it.
+- A key is a word: it is in the line and is moved with it.
+- An empty Legend gives No string specified.

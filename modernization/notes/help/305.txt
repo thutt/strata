@@ -1,0 +1,25 @@
+
+---------------------------------- Marker Format -------------------------------
+
+Use the Marker Format panel (F10 Global Marker) to define the global formats 
+for certain types of markers.
+
+                                   +-------------- Marker Format ----------+
+---Procedure---------------------- |   Marker Display Modes:               |
+                                   |   Display Hidden Markers?             |
+ Move the cursor to the           +---------------------------------------+
+  marker format to change.         |   Note Format:                        |
+                                   |   Primary Note Type:                  |
+ Press Space Bar to display       |   Cross-reference Format:             |
+  the list of options, edit        |   Counter Format:                     |
+  box, or format panel(s).         |   Keycap Format:                      |
+                                   |   Screen Capture Format:              |
+ Specify the format you want      |   Date Format:                        |
+  and press Ins.                   |   Time Format:                        |
+                                   |                                       |
+                                   +- Press Ins to Use Displayed Settings -+
+--------------------------------------------------------------------------------
+
+# Press Ctrl D on a custom marker format panel to return it to standard format.
+--------------------------------------------------------------------------------
+         Global                Keyboard Summary               Help Index

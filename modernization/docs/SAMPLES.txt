@@ -1,0 +1,171 @@
+SAMPLE DOCUMENTS OF THE TESTS
+=============================
+
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.  Copyright (c) 2026 Logic Magicians Software.
+
+The tests, the manual tools and the scripts used to take their input
+documents from the 55 sample files of the original product (the directory
+lotus-manuscript/sample at the top of the repository).  They now use
+documents that were made for Strata: the directory tests/samples, which
+the program tests/mksamples.py writes.  Every word of the text of the new
+documents was written for them: a community orchard on a hill, its plan,
+its brief, its yearly report, a utility that prints tide tables, and the
+letters and memos of the club.  The new documents have the features that
+the tests need; the layout of each one is a design of its own.
+
+The originals are still in the repository.  They are not used any more.
+To remove them for a release:
+
+    git rm -r lotus-manuscript/sample
+
+and run "strata-build test" and "strata-build smoke": nothing changes.  The
+test tests/samplesguard.py (part of "strata-build test") fails when a file
+under tests/, manual/ or scripts/ names an original file or the directory,
+and runs the unit tools with the original directory hidden (a private view
+made with bwrap), so that the guard also proves that the originals are not
+read.
+
+The variable DOCSRC names the directory of the sample documents; it
+defaults to tests/samples (Makefile, tests).  Set it to another directory
+to run the tests on other documents.  The documents of the other set,
+sample.docs (twain.doc and others, not in the repository), are used only
+where a test finds them and skips the check otherwise.
+
+
+The new documents
+-----------------
+
+  plan-title-table.doc     (replaces the original cns10pp.doc)
+    A structured document of three sections.  A title section with a
+    headline, a bordered block of two centred lines (CB255), four blocks
+    of the named tab format "tab list" with tab markers (the tab stops 24
+    and 49), a team list with a bold label and tabs, and, below it, a
+    section "Neighbours" with a text block (BC1) and a table of four rows
+    of two columns with borders, then the sections "Planting" and "Costs
+    and Grants".  25 items.
+
+  brief-long.doc           (replaces cns5drft.doc)
+    A structured brief of three levels: "Aims and Approach" with the
+    subsection "Land and Layout" that has four subsections, and "Work
+    Plan" with three stages that have bulleted lists (blocks with BFI2,
+    BFT3,6, BL5 and BSB150 and the bullet marker), then three sections
+    of text.  About six kilobytes, 73 items, a few printed pages.
+
+  brief-parts.doc          (replaces cns7prop.doc)
+    The brief with a title page of three blocks (BT, BB and BSB records)
+    and the section tag format of level one, "Part I." (record F1G).
+
+  manual-numbered.doc      (replaces scr.doc)
+    A manual of a utility, with the automatic numbers on: "1 The Tide
+    Table Utility", "1.1 Command Line Options" and the options "1.1.1
+    Help" to "1.1.6 Mode=nn", then "1.2 Files" with two subsections.
+
+  report-plain.doc         (replaces music.doc)
+    A report with no automatic numbers (FLA0), a table of four rows of
+    three columns with borders and a bulleted list.
+
+  memo-date-table.doc      (replaces sample2.doc)
+    An unstructured memo: a centred bold title, tab lines for To, From,
+    Date (with a date marker) and Subject, text and a table with borders.
+
+  letter-tabs.doc          (replaces sample1.doc)
+    An unstructured letter with a date marker, an address, a list with a
+    tab list (BFT9,39) and a bulleted line.
+
+  article-footer.doc       (replaces sample3.doc)
+    A short structured article with the page number marker in the footer
+    (record PFB), a title section with two lines and three sections.
+
+  reference-long.doc       (replaces pdupdate.doc)
+    A structured reference of about 40 kilobytes and 488 items: five
+    parts with four or five entries each; used as a long seed of the fuzz
+    test.
+
+  names.mac                (replaces guide.mac)
+    A macro set: Alt-N types the club name, Alt-Y a closing line.
+
+  boiler.lib               (replaces guide.lib)
+    A library of three entries: Notice, Numbered List and Picking Table.
+
+  orchard.set              (replaces proposal.set)
+    A template with a description, typeface records (DF1, DF4, DF5) and a
+    title block.
+
+Every document loads and is written back byte for byte (roundtrip), and
+the tab markers of every document hold the number of fill characters that
+the Editor computes (tabcheck: no mismatch; the old limit of eleven known
+mismatches of scr.doc is gone).
+
+
+Where each original file was used
+---------------------------------
+
+  cns10pp.doc    smoke.py (about thirty places: the first screen, the tab
+                 alignment, the outline keys, Case, Math, print, preview,
+                 export, compare, backups, the library, the Setup and the
+                 other panels), xsmoke.py, preview.py, printpdf.py,
+                 termstate.py, nbsp.py, utf8s0.py, latexmarker.py,
+                 xlatex.py, fuzz.py, edtest.c (attributes, deleting a
+                 whole section, retrieve).  Features: a title page with a
+                 bold headline and a bordered block, a named tab format
+                 with tab markers, a table, a three-level outline.
+  cns5drft.doc   smoke.py (print Draft, double spaced), printpdf.py (the
+                 command line, --double-spaced), edtest.c (the main block:
+                 navigation, typing, sections, search, replace, cut and
+                 paste of a section, the no-break space), fuzz.py.
+                 Features: a long structured text of three levels with
+                 bulleted lists.
+  cns7prop.doc   smoke.py (the section tag format "Part I.").
+  scr.doc        smoke.py (the numbered section tags), tabcheck.c (known
+                 mismatches), fuzz.py.
+  music.doc      smoke.py (a document with FLA0), fuzz.py.
+  guide.lib      smoke.py (retrieve and paste a library entry, the initial
+                 library).
+  guide.mac      smoke.py (retrieve and run a macro set, the initial macro
+                 set), backuptest.c (a file name in a settings test).
+  proposal.set   smoke.py (Save and Retrieve of global settings),
+                 edtest.c (the Retrieve commands).
+  sample1.doc, sample2.doc, sample3.doc, pdupdate.doc
+                 fuzz.py (seeds).
+  memo.set       named as an example in two pages of the manual (file1.src
+                 and file3.src); the manual does not use the file.
+  The whole directory: the Makefile ran roundtrip, tabcheck, loadtest and
+                 edtest on it and passed it to tmpclean.py and the test
+                 secnum.py; printtest.sh printed every document.
+  The other 31 files (pictures, graphs, spreadsheets, fonts and so on, the
+                 other documents of the set) were not used by name.
+
+
+The sample business letters
+---------------------------
+
+  samples/letters/         (16 files: 8 letters, each on US Letter paper,
+                           NAME-us.doc, and on A4 paper, NAME-a4.doc)
+    Finished business letters that use the letter style of the templates
+    letter-us and letter-a4: the named formats Sender, Date, Recipient,
+    Salutation, Body, Closing, Signature, Enclosure, Copy and Postscript,
+    with the records that the templates give them.  A letter adds only the
+    named formats Subject, Table head and Table row.  No block of a letter
+    has a format that is set by hand.  The program tests/mkletters.py writes
+    them:
+
+        python3 -I -B tests/mkletters.py samples/letters
+
+    The letters are enquiry, quotation (with a table that has the borders of
+    the manual tables), complaint-reply, complaint-to-utility (a customer's
+    complaint to the made-up company Pathetic Gas & Deceptive: the name has
+    an ampersand that is printed as it is), order-confirmation, enclosures
+    (three encl lines and two cc lines), two-pages (the head of the second
+    page names the recipient, the date and the page) and sans-serif (font 2
+    is named Text (sans) and is the text font, record FTF2).  The dates are
+    text, so the files are the same bytes on every run.  The A4 letters keep
+    the sender at three lines and the recipient at four, so that the
+    recipient is in the window of a DL window envelope (docs/ENVELOPES.txt).
+
+    The folder is installed by scripts/strata-install in
+    share/strata/samples/letters.  tests/letters.py (part of the smoke)
+    checks the letters; tests/installtest.py checks the install.  Chapter 2
+    of the Reference Manual, New, has the section "Sample letters".

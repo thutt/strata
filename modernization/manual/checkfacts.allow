@@ -1,0 +1,5 @@
+# The things that checkfacts.py does not ask the manual for.  A line is a
+# check (F1 to F4), a bar, the text and a bar and the reason.
+F1 | word, as hy-phen-a-tion | The prompt of a field of a box, not a message.
+F1 | hyphenation.txt | The default name of a file in the box Export Words.
+F1 | preview needs the viewer <viewer>: it was not found next to <editor> or in the system directories. strata_dviview names it | The release edition does not name the program or its variable (checknames.py), so the manual gives the first part of the message.

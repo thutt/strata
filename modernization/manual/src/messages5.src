@@ -1,0 +1,226 @@
+# Chapter 11, last part: the exit status of the programs and the messages of
+# their command lines, for developers.  Strata is started with the Document
+# Manager; the command lines of the other programs are not a supported way to
+# start it, so the release edition leaves this part out.  It is the last
+# section of the chapter, so that the numbers of the others do not change.
+.if .STRATA_BUILD_TYPE # release
+.h2 Command lines: exit status and messages [msg-cmdline]
+.ix Messages, command line
+.ix Exit status
+For the people who write scripts, test the programs or work on them.  Start
+Strata with the Document Manager.
+
+.h3 Exit status [msg-exit]
+.ix Exit status
+.ix Exit codes
+.ix Status of a program
+Every program ends with a status, a number that the shell receives ({c:$?} in a
+shell).  0 means that all went well.  The tables give the status
+of each program and mode; the tables of {x:appcmd-dev} and of the chapters of the
+programs say the same with the options.  A status of
+128 plus N means that the program was ended by the signal N.
+.h4 The Editor [msg-exit-editor]
+.ix Exit status, Editor
+.ix Exit status, print mode
+.table 18 7 35
+Mode | Status | Meaning
+Edit (a file, or none) | 0 | Quit from the menu, or the usage text was
+ | | written.
+Edit | 1 | There is no terminal or display ({n:msg-start}), or the document of
+ | | the command line exists and cannot be read.
+Plain text (the option that writes a text file) | 0 | The text was written.
+Plain text | 1 | The document cannot be read, or the text file cannot be
+ | | written.
+Preview mode | 0 | The Viewer was closed (Preview done), or cancelled.
+Preview mode | 1 | The document cannot be read, no terminal, or any other
+ | | result ({n:msg-job-preview}); the text is in a box titled Preview
+ | | Document.
+Spell mode | 0 | The check ended (and the document was saved or left).
+Spell mode | 1 | The document cannot be read, or no terminal.
+Spell mode | 2 | No document given.
+Print mode | 0 | The PDF is made and, when a queue was named, lp took it.
+Print mode | 1 | Nothing was made: the document cannot be read, the Printer or
+ | | pdflatex is missing, LaTeX failed, the PDF cannot be written.
+Print mode | 2 | A value or an option is refused, or no document is given
+ | | ({n:msg-job-check}).
+Print mode | 3 | The PDF is made and was not sent: lp is missing, failed, did
+ | | not answer, or the page range does not fit.
+Print mode | 4 | Stopped by a signal.
+.end
+The print and preview modes are described in {x:print-cli}.
+.h4 The Document Manager, the Printer and the Viewer [msg-exit-others]
+.ix Exit status, Document Manager
+.ix Exit status, Printer
+.ix Exit status, Viewer
+.table 18 7 35
+Program | Status | Meaning
+Document Manager | 0 | Quit from the menu, or the usage text.
+Document Manager | 1 | There is no terminal or display.
+Document Manager | 2 | A word of the command line begins with an at sign.
+Printer | 0 | The file was written (or the TeX source, with its option).
+Printer | 1 | The document cannot be read, the working directory cannot be
+ | | made, the engine did not run or failed, the output cannot be written.
+Printer | 2 | The command line is wrong (the usage line is written).
+Printer | 3 | A DVI file was asked for: LaTeX failed but made a DVI file, which
+ | | was written.
+Viewer | 0 | The window was closed.
+Viewer | 1 | The file cannot be read or is not a DVI file, or the window
+ | | cannot be opened.
+Viewer | 2 | The command line is wrong.
+Viewer | 128+N | Stopped by the signal N; its working files are removed
+ | | first.
+.end
+The Document Manager shows what the Editor ended with.  When the Editor cannot
+be run at all the status is 127, and the Document Manager shows {c:Cannot run
+the editor: PATH}.  Other statuses are shown by the boxes of
+{x:msg-docmgr-boxes}.
+
+.h3 On the error output [msg-errlog-lines]
+.ix Faults, error output
+.table 29 31
+Text | Meaning
+{c:<Printer>: error: PLACE: MESSAGE [NAME] "TEXT"} | A fault of the kind
+ | error, written by the Printer for each fault. {c:warning} in place of
+ | {c:error} for a warning.  The part in quotation marks is the text that is
+ | wrong, when there is one.
+{c:FILE: the document has errors or warnings:} | The print mode (and the
+ | preview mode), after the PDF was made: the faults follow, one line for
+ | each, {c: N. error: ...}.
+{c:N errors, N warnings} | The last line of the list.
+ | {c: (more were found than are listed)} follows when more than 200 were found.  With errors the
+ | line begins {c:PRINT FAILED: }; the Printer writes the same line.
+{c:PRINT FAILED: the output was made, but it is inaccurate.} | The print mode
+ | (and {c:PRINT FAILED: the preview is inaccurate.} in the preview mode),
+ | the line after the one above, when the document has errors
+ | ({n:print-failed}).
+{c:PRINT FAILED: Wrote FILE (N pages).  E errors and W warnings.} | The line
+ | of the print mode, and of a print of the Editor, when the PDF was made
+ | and the document has errors.  {c:The pages carry the banner and the marks.}
+.end
+.table 14 46
+Status | Meaning
+Printer 4 | The file is made, and there are faults; with errors the print
+ | FAILED. (0 means made and none; 1 and 3 keep their meaning.)
+Print mode 5 | The PDF is made (and sent, when a queue was named) and there
+ | are faults; with errors the print FAILED.
+Preview mode 5 | The preview was shown, and there are faults; with errors the
+ | preview FAILED.
+.end
+
+.h3 The Viewer [msg-viewer]
+.ix Messages, Viewer
+.ix Viewer, messages
+.ix DVI, damaged file
+The Viewer writes its messages on the error output, each with the prefix
+{c:<Viewer>: }.  They are seen when the Viewer is started from a shell; the
+Editor does not show them.  The status is in {x:appcmd-dviview-exit}.
+.table 32 28
+Message | Meaning and what to do
+<Viewer>: a 32 bits per pixel display is needed | The display cannot give a
+ | pixel of 32 bits.  Status 1.
+<Viewer>: cannot open the X display | There is no display, or it is refused.
+ | Status 1.
+<Viewer>: cannot read PATH | The file cannot be opened.  Status 1.
+<Viewer>: font NAME not found, drawing boxes | A font of the page has no file,
+ | and no bitmap of it could be made.  Its letters are drawn as empty boxes.  A
+ | notice, once for each font.  When the programs that make bitmap fonts
+ | ({c:mktexpk} and {c:mf}) are not installed the notice shows to install the TeX
+ | package that makes bitmap fonts.
+<Viewer>: no font for the status bar | The font of the bar at the foot (the
+ | font called fixed) cannot be loaded, so the window is not opened.  Status 1.
+<Viewer>: no TFM file for font NAME | The size file of a font is not found by
+ | the font finder, so the widths of its letters are not known. A notice, once
+ | for each font.
+<Viewer>: out of memory | The Viewer ran out of memory.  Status 1.
+<Viewer>: page N, M items, zoom Z%: T ms | A line of time, only with the
+ | environment variable {c:DVIVIEW_TIMING} ({n:appcmd-env}).
+<Viewer>: PATH has a damaged postamble | The end of the DVI file is not right.
+ | Status 1.
+<Viewer>: PATH is not a DVI file (version 2) | The file is not a DVI file.
+ | Status 1.
+<Viewer>: PATH: page chain is damaged | The pages of the DVI file are not
+ | linked.  Status 1.
+<Viewer>: pdftex.map not found | The font finder does not find the map of the
+ | fonts of LaTeX, so the outline files of some fonts may not be found; see
+ | the notice for a font that is not found. A notice.
+<Viewer>: picture cannot be decoded: NAME | A picture of the page cannot be
+ | read as an image. A notice, once.
+<Viewer>: picture file not found: NAME | The file of a picture is not found. A
+ | notice, once.
+<Viewer>: special 'KIND' is not supported, ignored | The DVI file has an
+ | instruction (a special) that the Viewer does not support. A notice, once.
+<Viewer>: unsupported pixel format | The display does not have the usual
+ | color masks.  Status 1.
+usage: <Viewer> FILE.dvi [-p PAGE] [-d DPI] [--report FILE] [--var NAME
+ VALUE] | The command line is wrong.
+ | Status 2.
+.end
+The bar at the foot of the window shows the texts
+ {c:Page N of M   Zoom Z%   F1 or ? shows
+keys} and, while a page number is typed, {c:Go to page (1-M): N_   Enter goes,
+ Esc cancels};
+they are not errors ({n:appcmd-dviview-keys}).
+
+.h3 The spell mode of the Editor [msg-spell-mode]
+.ix Spell mode, messages
+The Editor can check a file with no editing screen.  Its messages are on the
+error output:
+.table 33 27
+Message | Meaning
+<Editor> --spell needs a document | No file name was given.  Status 2.
+<Editor> --spell needs an interactive terminal | There is no terminal or
+ | display.  Status 1.
+FILE: REASON | The document could not be read ({n:msg-ed-file}).  Status 1.
+Save corrected document? | A question: after a check that changed the text.
+ | Yes saves it.
+.end
+When the save fails, a box titled Save shows the reason ({n:msg-ed-file}).
+
+.h3 What the programs write at start, for developers [msg-start-dev]
+.ix Messages, usage
+.ix Usage text
+.table 33 27
+Message | Meaning and what to do
+<Editor>: --sides is one or two | The value of the option for the sides is
+ | another word.  Status 2.
+<Editor>: --sort is yes or no | The value of the option for the sort is
+ | another word.  Status 2.
+<Editor>: TEXT | The print mode refused a value: TEXT is one of the messages
+ | of {x:msg-job-check}.  Status 2.
+Preview needs an interactive terminal (or an X display with the x11 build)
+ | The preview mode was started with no terminal and no display.
+There is nothing to print | The print mode found no text to print in the
+ | document.  Status 1.
+usage: <Editor> [options] [file.doc] | The first line of the text that the
+ | option for the usage writes on the standard output, followed by one line
+ | for each option ({n:appcmd-stred-exit}).  Status 0.
+{c:usage: <Editor> --print FILE.doc [--printer QUEUE] [--copies N]}
+ {c:[--sides one|two] [--sort yes|no] [-o OUT.pdf] [--from SECTION]}
+ {c:[--to SECTION] [--from-page N] [--to-page N] [--no-title]}
+ {c:[--double-spaced] [--black-and-white] [--recover] [--index]}
+ {c:[--list-figures] [--list-pictures] [--list-tables] [--no-index]}
+ {c:[--no-list-figures] [--no-list-pictures] [--no-list-tables]}
+ {c:[--contents LEVEL] [--draft] [--no-error-log] [--no-banner]}
+ {c:[--errors FILE] [-v]}
+ | The print mode got no document or a word that is not an option.  Status 2
+ | ({n:print-cli}).
+.end
+The status of the out-of-memory messages: {c:latex} 2, the others 1.
+
+.h3 The usage line of the Printer [msg-printer-usage]
+.table 32 28
+Message | Meaning and what to do
+{c:usage: <Printer> FILE.DOC [-o OUT] [--dvi | --pdf-via-dvi]}
+ {c:[--tex-only | --export-latex FILE.tex] [--pictures copy | keep]}
+ {c:[--position-comments] [--check-latex] [--source-name NAME]}
+ {c:[--source-path PATH] [--keep] [--draft] [--double-spaced]}
+ {c:[--black-and-white] [--recover] [--contents LEVEL]}
+ {c:[--index | --no-index] [--list-figures | --no-list-figures]}
+ {c:[--list-pictures | --no-list-pictures]}
+ {c:[--list-tables | --no-list-tables] [--long-list] [--progress]}
+ {c:[--docdir DIR] [--workingdir DIR] [--no-error-log] [--no-banner]}
+ {c:[--errors FILE] [--latex-markers | --no-latex-markers]} | The command line is wrong (no document, an unknown option, or two
+ | forms of output together).  Status 2. The options are in
+ | {x:appcmd-strprint-exit}.
+.end
+.endif

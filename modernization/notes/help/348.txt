@@ -1,0 +1,25 @@
+---------------------------- Assign Font Directories ---------------------------
+
+    +----------------------- Directory and Defaults ------------------------+
+    |                                                                       |
+    |                     Printer Type:                                     |
+    |          Download Font Directory:                                     |
+    |                Default Load Mode:                                     |
+    | Download Font Specification File:                                     |
+    |                                                                       |
+    +----------------- Press Ins to Use Displayed Settings -----------------+
+# Select the type of printer for which you are downloading fonts.
+
+# Name the directory in which you have stored the download font files.  Press 
+  Gray + at the Download Font Directory prompt to display a list of current 
+  subdirectories.  If none is specified, Manuscript assumes a default directory:
+  C:\FONTS for HP LaserJet fonts and C:\PSFONT for PostScript fonts.
+
+# Select the default load mode for all fonts.  You can assign a default load 
+  mode for new fonts by pressing Ctrl D on the Specify Font Load Modes panel.
+
+# Name the Font Specification File that will be generated when you choose your
+  font load modes.  To include these fonts in the Typeface List, you also must
+  enter this name during Setup when designating your printer.
+--------------------------------------------------------------------------------
+Maintain Download Fonts     Font Load Modes     Keyboard Summary     Help Index

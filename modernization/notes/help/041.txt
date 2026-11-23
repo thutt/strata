@@ -1,0 +1,25 @@
+
+---------------------------------- Format Block --------------------------------
+Format (F6) Block assigns settings to the highlighted blocks.  Use Menu (F10)
+Global Format to assign settings to all blocks in a document.
+
+         +------------------ Current Block Format ---------------------+
+         |                                                             |
+         | Named Block Format:                                         |
+         |-------------------------------------------------------------|
+         | Ruler                                        Pos: 1         |
+         | ----------------------------------------------------------- |
+         | Attributes:         Justification:         Indent:          |
+         | Font:                                                       |
+         |-------------------------------------------------------------|
+         | SPACING                                                     |
+         |   Line:                      Block Indent (Left):           |
+         |  Block:                      Block Indent (Right):          |
+         |  Ruler:                                                     |
+         | Vertical Centering:          Winding Columns:               |
+         | Keep Block on One Page?                                     |
+         |                                                             |
+         +------------ Press Ins to Use Displayed Settings ------------+
+--------------------------------------------------------------------------------
+ Format    Highlighting   Global Format-Structured   Global Format-Unstructured
+           Block Format Editor       Keyboard Summary       Help Index

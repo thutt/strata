@@ -1,0 +1,111 @@
+# Chapter 5, part 7: the Print Error marker, which only the Editor makes.
+# Chapter 6 holds the Error Log and the way the markers are made
+# (print-errors); chapter 3 holds Find Next Error (edit-c-find-error).
+
+.h2 Print Error [markers-errors]
+.ix Print Error marker
+.ix Marker, Print Error
+.ix PRINT ERROR
+.ix Errors in the text
+A Print Error marker is a note that the Editor leaves in the text at the
+place where Print or Preview found something wrong: in front of an equation
+that is not TeX math, in front of a picture whose file is not there, in front
+of a character that no font has.  It carries the message of the Printer and
+its code, so that the error and its place stay in the document until they are
+fixed and nothing has to be written down.  {b:Only the Editor makes it.}
+No panel, key, command, macro or library entry inserts one, and it is not in
+the Marker Commands list.  The user may only find it
+({n:edit-c-find-error}), read it and delete it.
+.table 12 48
+Item | Value
+Panel | None: a read-only box with the text (below).
+Made by | A Print (Draft or Final) or a Preview of the Editor, after the
+ Printer has typeset the part ({n:print-errmarks}).
+Not made by | The print and preview modes of the Editor: they have no
+ document open and show the faults as text.
+Global setting | None.  It is not changed by Global, Marker.
+.end
+.h3 What the marker holds
+The marker holds three plain texts.  They are not fields of a panel: the
+Editor writes them and they cannot be changed.
+.table 7 34 16
+Part | Holds | Example
+Message | The message, in plain English.  When the place was only guessed, it
+ | ends with "(The exact place was not found; this is the nearest.)". | Picture
+ | file not found: {c:pics/missing.png} (looked in /work/memo).
+Code | The kind of the error, as in {x:print-errkinds}. | picture-missing
+Run | The run that found it: P for a Print, V for a Preview.  A new run
+ | replaces only the markers of its own kind. | P
+.end
+
+.h3 On the screen
+In every display mode, the label is
+.code
+[PRINT ERROR: MESSAGE [code]]
+.end
+for example "[PRINT ERROR: Picture file not found: {c:pics/missing.png}
+(looked in /work/memo). [picture-missing]]".  It is drawn in the color of
+the markers, in bold and underlined, so that it cannot be taken for text.
+The Hidden mode of Global, Marker does not hide it, and the Display Hidden
+Markers setting does not change it.  A label is as wide as its text: a long one
+continues on the next row, and the last row is cut at the right edge of the
+window.  The whole
+text is in the message line when {k:Ctrl-F8} lands on the marker (the
+message line is cut at the width of the window too) and in the box of
+{k:Alt-F12}, which wraps it.  The marker is one item of the text, as
+other markers are: the cursor stops on it.
+.pic pictures/markers-errors.png 5 The text of the test document after Print: Print Error markers in bold and underlined, the cursor on the second.
+
+.h3 The read-only box
+{k:Alt-F12} or {k:Ctrl-F12} with the cursor on the marker, which is what
+opens the panel of any other marker, opens a box titled
+"Print Error (read only; Del removes it)" that holds the message with the
+code in brackets, and "Press any key".  Any key closes it.  Nothing in it can
+be changed, and the marker is not changed.  On any other place the keys open
+the Marker Commands list, which does not list the Print Error.
+.pic pictures/markers-errors-box.png 5 The read-only box of a Print Error marker, opened with Alt-F12.
+
+.h3 When printed
+Never.  A document with Print Error markers gives the same pages as one
+without them; the
+text export, Screen Image and the printout of the text leave it out as well.
+A Print Error marker does not take a place on the page, does not break a
+line and does not change the page count.  What is printed is the Error Log
+({n:print-errlog}) and, when the print failed, the banner and the small labels
+E1, W2 ... that the Printer puts at the same places in the pages
+({n:print-failed}).  A label has the number of the entry of the Error Log.
+
+.h3 Delete, copy, cut and paste
+.table 20 40
+Action | What happens
+{k:Del} on the marker | Removes it, like one character.
+{k:Backspace} just after it | Removes it.
+Remove Error (Print menu) | Removes the marker under the cursor, or shows "The
+ cursor is not on a Print Error".
+Remove Print Errors (Print menu) | Removes every Print Error marker of the
+ document and shows how many.
+Copy, Cut | The marker is not put on the clipboard.  Cut takes it out of the
+ text with the rest of the cut text, but it is not in what is pasted.  A block
+ that is copied has none in it.
+Paste | A Print Error marker that is in the clipboard is dropped.
+Print, Preview again | Takes out the old markers of its own kind in the part
+ that was printed, and puts the new ones in ({n:print-errmarks}).
+.end
+
+.h3 Saving and loading
+Save writes the markers into the document with the rest of the text, and they
+load again with their text.  The Editor marks the document as changed when
+markers are put in (the star before the name in the status line).  A print
+never writes the document: the file on disk is as it was until Save.  Remove
+Print Errors before saving if the markers are not wanted in the file.
+
+.h3 Edges
+- A document with Print Error markers prints as one without: the markers never
+  change the pages, and the Error Log never lists the markers themselves.
+  The labels of a failed print are made again by each print, from what that
+  print found.
+- A marker that stands where the document was changed after the run still
+  shows its text of the time of the run.  Print again to renew them.
+- A Preview of a block or of a section marks only the blocks of that part.
+- Several faults at one place are in the order in which the Printer found
+  them.

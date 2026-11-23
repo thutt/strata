@@ -1,0 +1,152 @@
+; The messages on the message line.  F1 shows the topic of the message that
+; was on the line when the key was pressed.
+= Messages
+The message line, at the bottom of the screen, tells you what a command did or
+why it did not.  A message stays until the next key.  Press {F1} while a message
+is shown to read about it.  The messages fall into these groups:
+
+- [[Highlighting Messages]]
+- [[Search Messages]]
+- [[Structure Messages]]
+- [[Sort Messages]]
+- [[File Messages]]
+- [[Print Messages]] and [[Preview Messages]]
+- [[Macro Messages]] and [[Library Messages]]
+- [[Key Messages]]
+- [[Hanging Indent Messages]]
+- [[Failure Messages]]
+
+A box with a message in it closes when you press a key.  Press {F1} in the box
+for help about it.
+
+= Highlighting Messages
+? Highlighting:
+? Highlight the area
+? Highlight
+? Use arrow keys to highlight
+? Block selection
+? Section selection
+? Text
+? Cancelled
+Copy, Cut, Delete and Move ask you to highlight what they work on.  While the
+text is highlighted only the cursor keys, {Enter} and {Esc} work.  Move the
+cursor to cover what you want and press {Enter}, or press {Esc} to give up.
+
+A block selection must stay in one section, and a section selection must be of
+whole sections.  See [[Units of Text]], [[Copy Cut and Paste]].
+
+= Search Messages
+? Found
+? Not found:
+? Nothing to search for
+Found: the text was found and the cursor is on it.  Not found: the text is not
+in the document, in the direction that you asked for.  Nothing to search for:
+you pressed {Ctrl-F9} before any search; use {F9} first.  See [[Search]].
+
+= Structure Messages
+? Only a structured document
+? Sections exist only
+? Collapse/expand works
+? No section
+? No previous
+? Cannot join a section
+? Cannot take the whole document
+? Cannot delete the only
+? The section cannot move left
+? A document with several sections
+? The section has no subsections
+Only a structured document has sections, and the commands for sections need
+one: Contract and Expand, Go To Section, Join Section, and printing a range of
+sections.  Choose Structured on the Edit menu to make the document structured.
+
+The message that you cannot delete the only block or section says that
+something must stay: a section needs a block, and a document needs a section.
+See [[Structured and Unstructured]], [[Contract and Expand]], [[Menu:Edit]].
+
+= Sort Messages
+? Nothing to sort
+? Autosort sorts blocks
+? Sorted
+Autosort needs blocks that you highlighted, or a section that has subsections.
+After the sort the message line shows how many blocks or sections were sorted.
+See [[Autosort]].
+
+= File Messages
+? Saved
+? Retrieved
+? Imported
+? Exported
+? New document
+? Deleted
+Saved, Retrieved, Imported, Exported and Deleted tell you that the command is
+done, with the name of the file.  An import may say how many characters were not
+kept, because the document cannot hold them.  See [[Menu:File]].
+
+= Print Messages
+? Print:
+? Print cancelled
+? Print Error removed
+? N print error
+? No print errors
+? A Print Error cannot be made
+? The cursor is not on a Print Error
+? There is no current section
+? The cursor is not in a block
+? PRINT FAILED
+After a print the message line shows how many print errors were found and that
+{Ctrl-F8} finds them.  There is no current section when the cursor is not in a
+section, and the cursor is not in a block when it is, for example, on a rule
+between blocks.  See [[Print Errors]], [[Print]].
+
+= Preview Messages
+? Preview
+? LaTeX failed
+Preview done: the pages were shown.  Preview failed or cannot start: the
+message shows why, such as a missing program or no display.  The Viewer needs an
+X display.  See [[Preview]].
+
+= Macro Messages
+? Defining Alt-
+? Macro Alt-
+? Retrieved
+While you record a macro the message line shows which key it is and that
+{Ctrl-F1} ends it.  See [[Learn a Macro]].
+
+= Library Messages
+? Library entry
+? N library entr
+? Not included in the library
+? No library
+The message line shows how many entries the library has, or that an entry was
+made.  See [[Library]].
+
+= Key Messages
+? Alt-F
+? Ctrl-F
+? Zoom: graphics preview
+? Marker type
+Some keys on the key strip have no command in this version, and the message
+line says that the key is not available.  See [[Function Keys]].
+
+= Hanging Indent Messages
+? Hanging indent set
+? Type the hanging characters first
+Type the characters that are to hang, such as a bullet and a space, and then
+press {Ctrl-H}.  The message line shows where the hanging indent was set.  See
+[[Block Format Editor]].
+
+= Failure Messages
+~ Save failed
+~ Retrieve failed
+~ Export failed
+~ Import failed
+~ Cannot retrieve
+~ Cannot open
+A box with a title such as Save failed, Retrieve failed, Import failed, Export
+failed, Cannot retrieve or Cannot open tells you that a file command could not
+be done, and says why in its second line: the file is not there, it is not a
+document, the directory cannot be written, or the disk could not be read.
+
+Nothing is changed in your document when a command fails.  Check the name and
+the Working Directory in the panel, and try again.  See [[Menu:File]],
+[[Checklists]].

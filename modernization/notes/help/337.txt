@@ -1,0 +1,25 @@
+
+---------------------------------- Library Entry -------------------------------
+
+Use Library Edit to directly edit a new or existing library entry.
+          
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Tools       +----------- Library Entry ---------+
+  Library Edit.                           |                                   |
+                                          |  Entry Name:                      |
+ Enter the name of the entry             |  Description:                     |
+  to create or edit at the Entry Name     |  Contents: ...                    |
+  prompt. Press Gray + to list existing   |  Include in Library?              |
+  library entries.                        |                                   |
+                                          +-- Press Ins to Return to Editor --+
+ Enter or edit the library entry
+  description if desired.
+                
+ Press Space Bar at the Contents prompt to access the Contents Edit panel.
+
+ Set Include in Library to Yes if you want the entry to be saved as part of 
+  the current library in memory.
+--------------------------------------------------------------------------------
+      Library Overview             Library Menu             Contents Edit
+                Keyboard Summary                     Help Index

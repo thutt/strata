@@ -1,0 +1,25 @@
+
+---------------------------- Create/Edit Command File --------------------------
+
+A batch print command file can contain from 1 to 18 documents with the same
+or different print settings.
+
+# To edit an existing command file, press Gray + at the Retrieve Command File 
+  prompt to display a list of existing command files in the current directory
+  or enter the path and file name of the command file.  You do not need to 
+  specify a file extension; Manuscript assumes .CMF.
+
+# To Save a modified command file to a new file name or to create a new command
+  file, enter the new file name at the Save as prompt.
+
+# Press Del on a specific document name to delete the document from the 
+  command file.
+
+# Standard Print Settings are those set by Manuscript. Custom Print Settings
+  are the final print settings last defined in final print, preview, or batch
+  print.  Press Space Bar at the Print Settings prompt to view or change the 
+  print settings for a particular document.  To reset custom print settings to 
+  standard, press Space Bar at the Print Settings prompt and then press Ctrl D.
+
+--------------------------------------------------------------------------------
+      Batch Print Utility           Keyboard Summary           Help Index

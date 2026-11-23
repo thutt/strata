@@ -1,0 +1,1356 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+THE MARKERS THAT ARE NOT CARRIED OUT
+====================================
+
+Status: a report. It says what the Marker Commands of the original (Alt-F10) do
+that Strata does not yet do, and where each fact comes from. Nothing in it is
+implemented.
+
+0. What the documents are, and a surprise
+=========================================
+
+The decompiled Reference manual in documentation/decompiled/ is the manual of
+Manuscript RELEASE 1 (copyright 1986; the preface calls itself the first
+edition; it documents backslash commands, not markers). In Release 1 there are
+no Marker Commands. What the manual calls "backslash commands" (chapter 5:
+\date\, \line\, \include\, \merge\, \pagebreak\, \picture\, \whitespace\,
+\figure\, \table\, \font\, \page\, \section\, \equation\, \comment\ and so on)
+are typed into the text and executed at final print. Only three things have
+markers in that manual: notes, index entries and cross-references (chapter 3,
+"Marker", with the marker character that the Status line names).
+
+Release 2 (the one that runs in DOSBox-X, 2.1) turned the backslash commands
+into the 39 markers of Alt-F10 and added new ones (the help's error "Invalid
+marker <description>" says that a Release 1 document that is upgraded may
+contain a \section\ command that is not valid in the document body). The Release
+2 help file (the topics in the scratchpad directory hlpout/, decoded with
+tools/hlp.py) describes every marker briefly, and its error messages mention
+them. The Release 2 Reference manual is not among the documents: the help refers
+to its chapters 4, 8, 10 and 12 (If/Else/Endif and valid marker places in
+chapter 8, equations in chapter 10, printer symbol codes in chapter 12).
+
+So, for this report, "documented" means that the decompiled manual describes the
+function (as a backslash command or as one of the three markers) and
+"undocumented" means that only the Release 2 help, the samples, DOC-FORMAT.txt
+and the original itself say anything. The help gives a short description for
+every one of them; where it is the only source it is cited as "help topic N".
+
+1. Summary
+==========
+
+  Marker             In the manual (R1)            Strata now        Priority
+  ------------------ ----------------------------- ----------------- --------
+  Page Break         yes: \pagebreak\ etc.         label only        high
+  Column Break       no                            label only        low
+  Keep               yes: kept on one page         never printed     done
+  Whitespace         yes: \whitespace\             label only        medium
+  Line               yes: \line\                   label only        medium
+  Font               yes: \font\                   label only        medium
+  Orientation        no                            label only        low
+  Markup             no                            hidden label      none
+  Escape Codes       no                            label only        none
+  If / Else / Endif  no (merge only, help)         label only        medium
+  Include            yes: \include\                done (part text)  high
+  Merge              yes: \merge\ + ch. 7          label only        medium
+  Counter            no                            label [C1]        high
+  Cross-reference    yes: ch. 3 Marker             label [XREF n]    high
+  Index              yes: ch. 3, ch. 4             label only        medium
+  Figure             yes: \figure\                 label only        medium
+  Table              yes: \table\                  label only        medium
+  Note               yes: ch. 3, ch. 4             label only        high
+  Comment            yes: \comment\                glyph only        low
+  Picture            yes: \picture\, app. E        label only        medium
+  Keycap             no                            label only        low
+  Worksheet          removed                       -                 -
+  Page Number        yes: \page\                   label only        headers
+  Section            yes: \section\                label only        headers
+  Equation           yes: ch. 8                    X11 pictures      print too
+
+Strata already evaluates Date, Time, Filedate, Filetime, Filename, Pathname,
+Revision, Author, Description and Printer, and draws all markers in the display
+modes of Global, Marker. "Label only" means that the marker is stored, edited on
+its panel and drawn as [LABEL], and that Print writes the label (or nothing)
+into the text file. Printing to LaTeX (PRINT-LATEX.txt) is the natural place to
+do most of what is below; a few markers also matter on the screen.
+
+PART A.  DOCUMENTED MARKERS
+===========================
+
+General rules from chapter 5 that hold for every marker that began as a
+backslash command: a command is executed during final print, not while editing;
+\even\, \odd\, \pagebreak\ and \whitespace\ cannot be used in a multicolumn
+block (Release 2 says "Orientation ... must be in its own block" and "Column
+Break ... in its own block", and the marker menu dims markers that are not valid
+in the place of the cursor: "Invalid marker selection"); units of length are
+those of the Options panel and a value can end in in, cm, mm or pt, with up to
+three decimal places; the case of a substituted string follows the keyword
+(\filename\ proposal, \Filename\ Proposal, \FILENAME\ PROPOSAL). Release 2 has
+no case rule for markers that is known.
+
+Page Break (marker 23; Release 1: \pagebreak\, \even\, \odd\)
+-------------------------------------------------------------
+
+Source: ch05.tex "\even\", "\odd\", "\pagebreak\" (pages 185, 190, 191);
+ch04.tex "Page Breaks" (page 155); help topics 159 and 230.
+
+Panel and stored fields: field 1: 0 page (no record), 1 odd page, 2 even page
+(DOC-FORMAT.txt). The Release 2 panel offers next page, next odd page and next
+even page.
+
+How it works: Ends the page and starts the text after the marker on the next
+page, or on the next odd or even page (a blank page is inserted when needed; the
+Print Document option "Blank Page Contents" says whether it holds the headers
+and footers). A manual break overrides the automatic ones. Release 1 also had
+\pagebreak off\ and \pagebreak on\ around text that must not be broken; Release
+2 has the Keep marker for that (inference: it replaced them). The same breaks
+can be made without a marker: the Page Break Level on the Global Format panel
+(every section up to that level starts a page) and the "Keep Section/Block on
+One Page" prompts of the local format panels. In Release 1 the commands also
+work in the Section Tag prompt of a level, where they start every section of
+that level on a new, odd or even page. The automatic breaks (chapter 4, "Page
+Breaks"): between sections first, then between blocks; never inside a picture or
+a table; at least two lines left at the bottom (orphans) and three at the top
+(widows).
+
+Strata now: a label ([PB], [PB Odd Page]); Print writes nothing for it. The
+Global Format panels store the Page Break Level (FLP) and widow records but
+nothing uses them.
+
+To implement: in the LaTeX path \newpage, \cleardoublepage (odd) and the even
+equivalent; the Page Break Level becomes \clearpage before sections up to that
+level. On the screen, Repaginate would draw the page lines.
+
+Whitespace (marker 31; Release 1: \whitespace\)
+-----------------------------------------------
+
+Source: ch05.tex "\whitespace\" (page 196); help topic 230.
+
+Panel and stored fields: field 1: size in thousandths of a length (the original
+means inches); field 2: the treatment.  The size is a vertical length (the
+project owner).  Strata adds a field "U", the unit of the size, which the
+original does not have: no record means inches, then 1 cm, 2 mm, 3 pt, 4 bp,
+5 pc, 6 dd, 7 cc, 8 sp, 9 em and 10 ex (the units of TeX), so that 1.500 with
+the unit 1 is 1.5 cm; the label shows WS 1.5 cm.
+
+The Treatment panel field (found in the original 2.1, 2026-11-12).  Its label
+is "Treatment at End of Page" and its list has three entries, in this order,
+none of them in brackets: Crop at End of Page, Place All on Next Page, Float to
+Next Page.  The panel opens with Place All on Next Page selected (the check
+mark), so that is the default.  What the original wrote for four markers
+(sizes 2, 3, 4 and 5 inches):
+
+  Crop chosen            1 2000 and 2 0     treatment 0
+  nothing touched        1 3000 only        Place All, no record
+  Float chosen           1 4000 and 2 2     treatment 2
+  Place All chosen       1 5000 only        no record (it is the default)
+
+So field 2 is 0 Crop, 1 Place All (never written) and 2 Float.  The value 1 is
+the default, so it is the middle entry that has no record.  Strata's MField has
+for this a stored default (the field dflt of a choice: "1"); the list is in the
+order of the original, from base 0.  The short label of the original is
+[WS ] with the size; Strata shows [WS 3 in] (the unit is Strata's own).  The
+Long label shows the treatment: [WHITESPACE 3 in, Place All on Next Page].
+
+What each treatment does at Preview (original 2.1, Apple LaserWriter, letter
+page, default format: the page holds 54 lines of text, 6 to the inch).  Test
+document: block 1 is 40 lines (L01 to L40), block 2 holds only a Whitespace
+marker of 3 inches (18 lines), block 3 is 30 lines (A01 to A30).  After L40 the
+page has 14 lines (2.33 inches) left, so the space does not fit.
+
+  Crop at End of Page     Page 1: L01 to L40 and nothing more.  Page 2 starts
+                          with A01 at the top, with no blank space: the space
+                          is cut off at the end of page 1 and the rest of
+                          it is not carried over.  (2 pages.)
+  Place All on Next Page  Page 1: L01 to L40 and nothing more.  Page 2 begins
+                          with the whole 3 inches of space (18 blank lines)
+                          and then A01 to A30.
+  Float to Next Page      Page 1: L01 to L40, then A01 to A14, which fill the
+                          rest of the page.  Page 2 begins with the whole 3
+                          inches of space and then A15 to A30.  The text
+                          after the marker moved forward in front of the space.
+
+Not tried: a space that fits (nothing is different then, presumably), a space
+taller than a page, and a Whitespace marker inside a block of text (the test
+markers were blocks of their own).
+
+How it works: Leaves an amount of blank space before the next block at final
+print.  Release 1 had one argument, blank=yes (default: if the space does not
+fit, start a new page and leave the whole space at its top; at most one blank
+page is inserted) or blank=no (the space ends at the bottom of the page: it is
+cut off).  The three Release 2 treatments are exactly the above: Crop is the old
+blank=no, Place All is blank=yes and the default, and Float is Place All with
+text after the marker moving forward into the page before the space.  Use: room
+for artwork.
+
+Strata now: a label ([WS 3 in], with the unit); the panel has the size, the
+unit and the treatment; the size is shown, nothing is left blank on the screen.
+The print follows the three treatments as described above (tests/printfix.py).
+A space that fits is left in full.  A space taller than the text area is cut to
+the text area, so it is a whole page, and the text after it follows on the next
+page.  The Preview shows the pages of the print, so it shows the same.
+
+To implement: LaTeX: Crop: \vspace with the stretch cut at the page end (\vspace
+without a star, which TeX drops at a page break); Place All: a block of that
+height that is not split (\parbox or needspace), written as \vspace*; Float: a
+float or the next block moved before the space.
+
+Line (marker 18; Release 1: \line\)
+-----------------------------------
+
+Source: ch05.tex "\line\" (page 189); help topic 272.
+
+Panel and stored fields: fields: 1 string, 2 length, 3 weight, 4 center (DOC-
+FORMAT.txt); a length is in thousandths of an inch and no length means to the
+right margin (the label says RM).
+
+How it works: Prints a horizontal line from the marker to the right margin or
+for the length given. The line is a graphics line of the given weight (width)
+or, when a string is given, that string repeated (compose characters are allowed
+in Release 2). Center is a number from 0 to 100: 0 puts the line at the top of
+the character height, 100 at the bottom, 50 (the default) in the middle. A
+weight larger than the character height is cut to the height. The defaults for
+weight and for the line character are those of single-line borders (Global
+Options: Line Weight).
+
+Strata now: a label ([LN Length:2 in]); Print writes nothing.
+
+To implement: LaTeX: \rule[...]{length}{weight} or \leaders\hrule with \hfill
+for "to the right margin"; a string is \leaders\hbox{string}. Keep Weight and
+Center as \raisebox.
+
+Font (marker 15; Release 1: \font\)
+-----------------------------------
+
+Source: ch05.tex "\font\" (page 187); help topic 230.
+
+Panel and stored fields: field 1: font number (1 to 20 of the Typeface List); no
+field means "restore the default font".  Probed in the original: the panel has
+one field, Font, a list with [Text] first (in brackets: the font that the block
+has, no record) and then Headline, Text, Header/Footer and Font 4 to Font 20;
+Font 7 is stored as field 1 with the value 7 (17), and [Text] as a marker with
+no record at all.  Strata shows the same list with the name of each font of the
+TeX Font Association (docs/FONTS.txt), such as "Font 7: Palatino", and the
+keypad plus (Alt-+, F2) shows the list to pick from; the Keycap marker's Font
+field does the same.
+
+How it works: Changes the font of the text from the marker to the end of the
+block or column; the font is restored at the end of the block or column. A
+second Font marker without a number restores the font of the block. The line
+spacing follows the largest font on the line (Global Format spacing).
+
+Strata now: shown in its Short form [FONT] (a diamond when its display mode
+is Diamond); the font is kept as a number but text is not drawn
+differently (the screen has one font).
+
+To implement: LaTeX: a font switch from the table that maps the 20 typefaces
+(PRINT-LATEX.txt, section 6). On the screen nothing to do.
+
+Include (marker 16; Release 1: \include\)
+-----------------------------------------
+
+Source: ch05.tex "\include\" (page 188); help topics 104, 106 (errors).
+
+Panel and stored fields: field 1: the document name.
+
+How it works: During final print and preview the named document is read in at
+the place of the marker, in a structured document only. The marker is placed in
+a section of its own; a master document made of one section per chapter, each
+with an Include marker, prints a book from separate files. The path is the
+directory of the document being printed first and the working directory next.
+Includes are expanded only when printing or previewing, so Repaginate refuses
+("Cannot paginate document with Include markers"), page breaks cannot be saved
+for such a document ("Cannot Save Pagebreaks for documents with Include
+markers"), and "Invalid Include request" is given when the marker is in an
+unstructured document or the other file cannot be read in (a structured file in
+an unstructured document).
+
+Strata now: done (PRINT-LATEX.txt, section 25).  The field is called File Name.
+The marker is for several authors who each write a part in a file of their
+own; the Printer puts the text of the part at the marker in Final, Draft,
+Preview and in part prints, in structured and unstructured documents alike.
+The messages are "Invalid Include request" with a reason, in the Error Log and
+as a notice in the print.  Repaginate and Save Pagebreaks of the original do
+not exist in Strata, so their refusals are not needed.
+
+Merge (marker 19; Release 1: \merge\) and Print Merge
+-----------------------------------------------------
+
+Source: ch05.tex "\merge\" (page 190); ch07.tex "Print Merge" (pages 236-240);
+help topics 229, 106 and the errors "Merge variable name does not exist..." and
+"Merge data field too long; must be 240 characters or less".
+
+Panel and stored fields: field 1: variable name; field 2: delete blank lines
+(Yes when no record).
+
+How it works: Print Merge prints one copy of a text document for every set of
+data in a merge document. The merge document is an ordinary document whose first
+block holds the variable names, one per column, and whose other blocks hold one
+record each (the same layout the 1-2-3 importer makes in column format). The
+text document has Merge markers, one per place where a variable prints. The
+merge document name is typed on the Print Document panel (Merge Document Name);
+Copies is the number of copies of each letter. Release 2 adds If, Else and Endif
+(below) and the "delete blank lines" choice: a line that holds only an empty
+variable is left out. A field longer than 240 characters is cut.
+
+Strata now: a label ([MERGE "name", Delete:Yes]); the Print panel has no merge
+document name and nothing merges.
+
+To implement: in Print Document add the field, load the data document, and print
+the text once per record with the markers replaced (text first; for LaTeX the
+same loop). Needs If, Else, Endif to be useful.
+
+Counter (marker 17)
+-------------------
+
+Source: not in the manual; help topics 321, 325, 369, 301, 106 ("Counter tag
+more than 90 characters").
+
+Panel and stored fields: field 1: counter 1 to 9 (1 when left out;
+Strata allows 1 to 99); field 2:
+start value. The tags are in the header: OT<n>N<description> and OT<n>T<tag>,
+e.g. OT3NFigure and OT3T\1\. (sample files 940417a.doc, music.doc). In the
+samples field 2 is "1" in almost every counter that has one ("21").
+
+Meaning (the project owner): the counter number says WHICH counter is used.
+When the marker has a Set Value (field 2), that counter is set to the value and
+the value is used (printed).  The next use of that counter without a Set Value
+adds one to the counter before it is printed.  (Strata does this in
+markereval.c: the first use of a counter without a value gives 1.)
+
+Number styles (marker_number_text): arabic, lower and upper case roman and
+upper and lower case letters.  A roman numeral shows 1 to 3999 and the
+letters 1 and more; a number that the style cannot show (0, or above 3999
+in roman) is written in arabic digits.  The tags of the sections, the page
+numbers and the numbers of the lines follow the same rule.
+
+How it works: An automatically numbered item: each Counter marker with the same
+counter number prints the next number, in the style of the counter's tag. Nine
+counters are defined on the Counter Format panel (Global, Marker, Counter
+Format): C1 is Numeric with the tag \1\. and C2 is Alphabetic with \A\. at the
+start; the tag is text plus a style command (\1\ arabic, \a\ or \A\ letters, \i\
+or \I\ roman numerals) and has at most 90 characters, so that "Table \I\" gives
+Table I, Table II, and "\1\)" gives 1), 2). The Starting Value 1 on a marker
+starts the counting again from 1. C1 followed by C2 gives "1." and "A.": the
+counters count independently. The bottom of the Counter panel shows the tag and
+description for information. It is evaluated during preview and final print, not
+while editing.
+
+Strata now: the label [C1]; the tag records are kept (Strata does not read
+them); Counter Format shows "Standard".
+
+To implement: one pass over the document in order, counting per counter number
+and starting again at the Starting Value; format with the tag (the numbering
+code of section tags in layout.c can be reused). The result could also be shown
+on the screen like the section tags, since it does not depend on pages. Add the
+Counter Format panel: nine rows with description and tag.
+
+Cross-reference (marker 2)
+--------------------------
+
+Source: ch03.tex "Marker", "Creating Cross-References" (page 80); help topic 60;
+DOC-FORMAT.txt.
+
+Panel and stored fields: fields: XN section number as text (3.1); XT what
+prints: 1 Tag (no record when default), 2 Headline, 3 Both. The global default
+is the header record OC (Global, Marker, Cross-reference Format).
+
+How it works: Prints, at the marker, the section tag, the headline, or both of
+another section of a structured document. The number typed is always the decimal
+section number as the Status line shows it (1.2.1), whatever the section tag
+looks like; the panel shows the real tag and headline of that section and
+refuses a number that is not a section ("Cannot find section number"). The text
+before the marker (see, refer to) is ordinary text. Because the number is looked
+up when printing, reorganizing the document keeps the reference right. It cannot
+be used when the section tags are not displayed (the Release 1 note), because
+then there is nothing to print.
+
+Strata now: the panel is complete; in the Long mode and in a printout the
+marker shows the tag, the headline or both; it follows its section: a section
+that is added, deleted, moved or sorted gets its identity (kept in memory with
+the headline block, and copied with it), so the reference is not by number
+alone.  After each edit the number in the marker (XN) is made equal to the
+number of its section, so the saved file is right for the original too, and the
+document counts as changed when a number moved.  A reference whose section is
+gone shows [no section] and keeps its last number.  In an unstructured
+document the command is shown as (Cross-reference) in the Marker Commands and
+refuses with "Invalid marker selection (Not available in an unstructured
+document)".  Decision of the project owner: it stays unsupported there.  A
+page-number-only reference to a block was considered and rejected, because a
+block cannot be named without another marker or a new kind of user interface.
+
+To implement: resolve XN with doc_find_section and the same tag text that
+layout.c makes for headlines; print it (and the headline) in place; on the
+screen the label could show the resolved tag. Easy and useful in the text
+printout too.
+
+Index (marker 3)
+----------------
+
+Source: ch03.tex "Creating Index Entries" (page 78); ch04.tex "Custom Layout:
+Index" and "Table of Contents and Index Page Layout Panels" (pages 136, 141);
+help topics 59, 78, 211.
+
+Panel and stored fields: fields: 2 main heading, 3 subheading, 4 reference text,
+1 page number attributes.
+
+How it works: Marks an index entry at the place of the marker; the index is made
+at print time. All entries are grouped by main heading and subheading and put in
+alphabetical order; the page number is that of the marker's page, and more than
+two equal entries on consecutive pages print as a range. A subject with several
+headings needs one marker per heading. Reference text replaces the page number
+(See Map). The look of the index comes from the Index Page Layout panel (Index
+Style: Standard or Custom: title, fonts and attributes of the headings, indent
+to subheading, separator text (a comma), and 1 to 9 winding columns). The marker
+moves with the text it marks.
+
+Strata now: its Short form [INDEX heading] on the screen (a diamond when its
+display mode is Diamond); with the Print field Index? at Yes the
+print ends with the index (main headings alphabetical, case ignored, subheadings
+under them, the pages, runs of three or more joined, the Reference Text instead
+of pages); the marker prints nothing then.  Not used: the page number
+attributes (field 1), the Index Page Layout (columns, styles).
+
+Figure (marker 11) and Table (marker 29); Release 1: \figure\, \table\
+----------------------------------------------------------------------
+
+Source: ch05.tex "\figure\" (page 185), "\table\" (page 195); ch04.tex "Custom
+Layouts: Tables of Contents, Figures, and Tables" (page 138); help topic 276.
+
+Panel and stored fields: field 1 of each: the name that goes into the table.
+Pictures and equations also have a Name field (picture field 6) that does the
+same.
+
+How it works: Names a figure (or table) and records the page it is on for the
+Table of Figures (Table of Tables). Put the marker immediately before or after
+the figure, or in the first block of the table. The tables are printed after the
+table of contents, in the order contents, figures, tables, on pages numbered
+with roman numerals (\Page\ upper case, \page\ lower case in their headers).
+Their look is set on the Style panels of the Table of Contents Page Layout panel
+(title, title font and attributes, a fill character between name and page
+number, attribute and font, and for figures and tables "Start on New Page"). The
+print panel can leave the tables out.
+
+Strata now: its Short form on the screen, [FIG "label"] and [TABLE "name"]
+(a diamond in the Diamond mode); with the Print fields List of
+Figures? and List of Tables? at Yes the print has the lists after the table of
+contents (the name, a row of dots, the page); the marker prints nothing then. A
+Picture's Name counts as a figure. The header records OT7N and OT7T seen in
+samples are counter definitions, not these tables.
+
+Note (marker 1; panel Note Edit)
+--------------------------------
+
+Source: ch03.tex "Marker", "Creating Notes" (page 77); ch04.tex "Global Note
+Format Panel" (pages 120-124); help topics 58, 81, 171, 180-183, 305.
+
+Panel and stored fields: nested text of the note, field 1: type (footnote when
+no record; the header record NT gives the document default, 2 for levelnotes).
+Global formats: Footnote, Levelnote and Endnote Format panels (Global, Marker,
+Note Format).
+
+How it works: Three kinds. A footnote prints at the bottom of the page of the
+marker, a levelnote at the end of the section at the given Note Level (the next
+section starts on a new page), an endnote on the last page of the document,
+titled by the Note Page Title. Each kind has a reference tag (in the text) and a
+note tag (before the note) made of text and \1\, \a\ \A\, \i\ \I\ (any other
+character repeats once for the first note, twice for the second, and so on),
+with attributes (usually superscript, sometimes bold); spacing for lines, blocks
+and notes; a Separator Bar (the length of the line between text and the first
+note); Renumber (number sequentially, or again on each page or level); Position
+of Notes (Bottom of Page, or After Text); and for endnotes a title font and
+attributes. The note is a small document of its own (blocks, columns and local
+formats allowed) and may be as long as wanted, though a long footnote may take a
+whole page. A footnote's page is that of the marker.
+
+Strata now: edited in the Note panel (a mini editor, with the Note Type);
+drawn in its Short form [NOTE] (a diamond in the Diamond mode); numbered per
+kind, with the three Note Format panels and
+the text printout (NOTE-FORMAT.txt).  The printing of notes by LaTeX is still
+to do.
+
+To implement: LaTeX: \footnote (levelnotes and endnotes with endnotes/ a closing
+list); in the text printout number the notes and print them after the paragraph
+(footnotes), after the section (levelnotes) or at the end (endnotes). Add the
+Note Format panels (fields documented above).
+
+Comment (marker 6; Release 1: \comment\)
+----------------------------------------
+
+Source: ch05.tex "\comment\" (page 182); help topics 276 and the Optional
+Settings of the Print Document panel (ch06.tex, page 213).
+
+Panel and stored fields: nested text; Strata: field 1 is the name of the
+commenter (not initials) and field 2 the time it was made.
+
+How it works: Text that is shown on the screen but is not printed, for notes to
+oneself or others. It prints only when the Optional Settings of the Print
+Document panel ask for comments. All text, column and block formats can be used
+in a comment.
+
+Strata now: edited in a mini editor, drawn in its Short form [COM "text"]
+(a diamond in the Diamond mode), never printed.
+
+To implement: nothing for the normal print; with the option, print the text in a
+marked style.
+
+Picture (marker 25; Release 1: \picture\)
+-----------------------------------------
+
+Source: ch05.tex "\picture\" (page 192); appE.tex "Graphics Files Support"
+(pages 339-345); ch06.tex "Graphics Zoom"; help topics 274, 265, 104; errors
+"Picture error (picture/equation occurs after line wraps)", "Picture height
+exceeds page length", "Picture is too large; will be automatically scaled",
+"Picture is too small", "Invalid graphics image size", "Too many graphics images
+on a single line".
+
+Panel and stored fields: fields: 1 file name; 2 width; 3 height; 4 scale; 5
+position (1 floating, 2 in text; fixed has no record); 6 name for the Table of
+Figures; Print/Preview is an action.
+
+How it works: Prints a graphics file at the place of the marker. Types of file
+(by extension): .PIC (1-2-3 and Symphony vectors and text), .BIT and .RLE
+(bitmaps from a digitizer, made by the conversion utilities), .GMF (metafiles of
+Freelance Plus: all typefaces become one), .PS (PostScript: "a special header
+followed by standard PostScript text", for PostScript printers only) and .PDL
+(made by Manuscript for equations). Width and Height are in the units of the
+Options panel (or with in, cm, mm, pt); rm as width means to the right margin;
+if only one is given the other follows the picture's shape; if none is given the
+picture has its own size; Scale (0 to 10) applies only when neither is given.
+Position Fixed keeps the picture where it is; Floating lets the text after it
+move forward if the picture moves to the next page; In Text makes it a word that
+can be mixed with text (and then Width, Height and Scale are not allowed). A
+picture does not break across pages; once it starts printing, no other text
+prints in its column until it ends. There can be only one picture on a line
+unless it is in text. Color of a .PIC becomes hatching or gray.
+
+The fields of the Picture marker (confirmed by the project owner):
+  File Name     The image file.  In Strata it must be PNG, JPEG, PDF or EPS,
+                because LaTeX has to read it.  A name that is not a full path
+                is looked for in the directory that the editor was started
+                in, then next to the document, then in the working directory.
+  Position      Fixed keeps the picture where it is.  Floating lets the text
+                that follows move forward if the picture moves to the next
+                page.  In Text makes it a word that is mixed with the text of
+                its line (no record is Fixed, 1 is Floating, 2 is In Text).
+                Strata allows a Width, Height and Scale with In Text too; a
+                user who does not like the result changes the scale or the
+                size of the box.
+  Width, Height The size of the box that the picture is fitted into, in the
+                unit of the field Unit.  If only one is given the other
+                follows the shape of the picture; with neither the picture
+                has its own size.
+  Unit          Strata only (the original uses the units of its Options
+                panel): the unit of Width and Height, written like the field
+                of Whitespace: none is inches, then 1 cm, 2 mm, 3 pt, 4 bp,
+                5 pc, 6 dd, 7 cc, 8 sp, 9 em, 10 ex.
+  Scale         0.001 to 10; used when neither Width nor Height is given.
+  Name (for Table of Figures)
+                The caption that goes into the list of figures.
+
+Decision of the project owner: a picture must be a file that LaTeX can use
+(PNG, JPEG, PDF or EPS), and it is handled exactly like an equation: LaTeX is
+started in the background when the picture is to be shown, and the result is
+displayed.  The old formats of the original (.PIC, .BIT, .GMF and so on) are
+not read.
+
+Strata now: in the X11 version the picture is made by pdflatex (the file is
+linked into a private directory, the page is cut to the picture by the
+standalone class, width, height or scale of the marker are used) and pdftoppm
+(the page is made a PNG at the resolution of the screen) and drawn like an
+equation, in rows of its own when it is alone on a line and in the line when
+there is other text.  The images are kept in the cache directory as equations
+are.  While the picture is not ready, and in the terminal version, and for a
+file that LaTeX cannot read, the label [PIC file] is shown (the message of the
+failure is shown like that of an equation).  The display mode Inline
+(Global, Marker, Marker Display Modes; the default) shows the image, every
+other mode the marker or nothing; the mode is stored as OM25,<mode> and
+changing it marks the document as modified.  The sizes are in inches; the
+Options units are not used yet.  Print writes nothing yet.
+
+To implement: in LaTeX (printing): \includegraphics with the same options.
+
+Page Number (marker 22; Release 1: \page\) and Section (marker 28; \section\)
+-----------------------------------------------------------------------------
+
+Source: ch05.tex "\page\" (page 191) and "\section\" (page 194); help topics
+321, 117 ("No section <description> available to use in Section marker").
+
+Panel and stored fields: Page Number: no field. Section: no field is stored in
+the samples (the panel of Release 2 has level and type; the field numbers are
+not known).
+
+How it works: Valid only in headers and footers (and, for Section, in the page
+layout text). Page Number prints the page number in the style of the Page Number
+Tag of the page layout (\1\, \i\ \I\, \a\ \A\); in the tables pages the numbers
+are always roman (upper case if the command is upper case). Section prints the
+headline (the first 80 characters), the tag or the number of a section of the
+given level: the first section of that level on the page, else the previous one,
+else the level 1 section; with no level, any section. Several Section markers
+can be combined (number then headline).
+
+Strata now: DONE.  The Page Number marker is the page number in the style of
+the Page Number Tag; the Section marker prints the number and the headline
+(80 characters at most, markers left out) of the first section on the page, or
+of the one before.  The marker has a field of Strata's own (task 29), record S:
+absent (or 1) = Number and Title, 2 = Number Only, 3 = Title Only, the panel
+field Show.  The three forms are typed in the Header and Footer of the Page
+panels as \section\, \sectionnumber\ and \sectiontitle\ (PRINT-LATEX.txt),
+because the panel of the marker cannot be reached for a header (the editor
+cannot edit a header as blocks); it opens on a Section marker that a body
+has.  The number is the tag as printed at the headline; with no tag the
+title.  The level and type of the original's Section marker are not used;
+whether the original reads a marker with a record it does not know is NOT
+verified: its program is not available here, and DOC-FORMAT.txt only says what
+Strata keeps (it keeps unknown records), not what the original does.  The
+study of the original found no field of its own that carries this choice, so
+none was used instead of the new one.
+
+Equation (marker 9; Release 1: \equation\; chapter 8)
+-----------------------------------------------------
+
+Source: ch08.tex; help topics 275, 117, EQUATIONS.txt, KEYSTROKES.txt.
+
+Panel and stored fields: nested text; fields: 1 file name (instead of text), 2
+width, 3 height, 4 scale, 5 position, 6 name.
+
+How it works: Prints a formula typeset from English keywords (the Release 1
+chapter). The Strata design replaces the language by TeX math (EQUATIONS.txt)
+and does the display in X11. Missing: print (the equation in the .tex file), the
+file name form, size and scale fields, and the figure name.
+
+Strata now: pictures in X11 (displayed and inline), the label elsewhere; the
+panel is a text editor without the other fields.
+
+To implement: see EQUATIONS.txt; add the Equation panel fields (position, width,
+height, scale, name, print/preview).
+
+Display modes of the markers (probed in the original)
+------------------------------------------------------
+
+A document with 30 markers of different types was loaded with every type set
+to one mode (the records OM<type>,<mode>: 0 Diamond, 1 Name, 2 Short, 3 Long,
+4 Hidden) and the screen was read.  What the modes do:
+
+  Diamond  every marker is one diamond character, whatever its type (also
+           the ones that are written out in their default mode, such as
+           Date and Counter).
+  Name     the bare short code of the type in brackets, with no data and no
+           value: [NOTE] [KEY] [DATE] [C] [INDEX] [FIG] [EQN] [LN] [PB]
+           [WS] [INC] [PIC] [COM] [AUTHOR] [FNAME] [TIME] [PATH] [KEEP]
+           [ORIENTATION] [CB] [FONT] [MERGE] [IF] [ELSE] [ENDIF]
+           [TABLE] [PRINTER] [REV] [DESC].  A date shows [DATE], not the
+           date; a counter [C], not its number.
+  Short    the short code and the data of the marker: [NOTE] (the text of a
+           note is not shown), [Key: PrtScr], [November 12, 2026] (the
+           value itself), [C1], [INDEX heading], [FIG "Fig one"], [EQN
+           "x^2"], [LN Length:RM], [PB], [WS ], [INC "other.doc"], [PIC
+           SAMPLE.EPS], [COM "a comment"], [AUTHOR], the file name and the
+           path, [Start Keep (Fixed)].
+  Long     the whole word and all the data: [NOTE "a footnote"], [Key:
+           PrtScr], the date, [COUNTER1], [INDEX heading], [FIGURE "Fig
+           one"], [EQUATION "x^2"], [LINE Length:RM], [PAGE BREAK],
+           [WHITESPACE , Place All on Next Page], [INCLUDE "other.doc"],
+           [PICTURE sample.eps], [COMMENT Initials:Tom, "a comment"].
+
+So Name differs from Short and Long in that it never shows data: it only
+says what kind of marker it is.  Short is the code with the data, Long spells
+the type out and adds the fields (a note shows its text, a whitespace marker
+its treatment).  Values (Date, Time, File name, Path name and so on) show
+themselves in Short and Long and only their code in Name.  The original draws
+all of these in brackets in the color of markers.  Strata follows the same
+text (marker.c, mode_label); the Strata comment shows a name and not
+initials, so its Long form differs by that.
+
+PART B.  MARKERS THE MANUAL DOES NOT DESCRIBE
+=============================================
+
+For each of these the decompiled Release 1 manual says nothing, or only
+something about a related feature, which is told first. What is known comes from
+the Release 2 help (topic numbers as above), from the samples (the marker bytes:
+0x13, the number, "(", the field records, 0x13 and ")") and from the panels of
+the original. Sentences marked "Inference" are guesses.
+
+Column Break (marker 39)
+------------------------
+
+The manual: nothing. Chapter 4 describes winding columns only as a setting
+(Winding Columns, spacing for bottom alignment); the Release 1 manual has no
+manual column break.
+
+Known: help topic 230: "Inserts a manual column break into a winding-column
+portion of text. Place the marker in its own block." Two samples (markers.doc).
+Display mode default Short ([CB]) and Long [COLUMN BREAK]. No fields.
+
+Panel and fields: none.
+
+Probed in the original 2.1 (Preview, 2026-11-12).  Test documents: blocks with
+the block format Winding Columns 2 (record BWN2 in each block; the original's
+own Block Format panel showed "Winding Columns: 2 (Block)" for it), a page of
+54 lines.  Text lines were C01 to C20, then a block with only the Column Break
+marker, then D01 to D10.
+  - No marker (C and D blocks, 30 lines): all 30 lines are in column 1; it
+    does not balance into two columns.  Winding columns fill a column to the
+    bottom of the page first.
+  - With the marker: C01 to C20 in column 1, D01 to D10 at the top of column 2.
+    The text after the marker starts in the next column.  (Confirmed.)
+  - In the last column (C block, marker, D block, marker, E block, with two
+    columns): E01 to E10 were on page 2, in column 1 at the top.  So a Column
+    Break in the last column acts as a page break: the text goes to the first
+    column of the next page.
+  - With one column (no Winding Columns, the marker between C01 to C10 and D01
+    to D10): D01 to D10 were at the top of page 2.  The marker is valid there
+    and acts as a page break.  No error was shown.
+
+The earlier assumption (the text after the marker starts in the next column,
+or on the next page after the last column) was right.  The last column and the
+one column cases are settled: the next column, else the next page.  The marker
+was always in a block of its own in these tests; a marker in the middle of a
+line of text was not tried.
+
+Strata now: a label ([CB], [COLUMN BREAK]); nothing breaks because Strata has
+no winding columns on the screen or in Print yet (only the number of columns of
+the Global Format is stored).
+
+To implement: LaTeX multicol: \columnbreak (the last column: \newpage, as the
+original does).
+
+Keep (marker 4)
+---------------
+
+The manual: nothing about a marker. The Release 1 manual has the "Allow Page
+Break in Block?/Section?" prompts and the \pagebreak off\ and \pagebreak on\
+commands for the same purpose. The 2.1 help (topic 159) names the Keep marker as
+one way to control page breaks.
+
+Known: help topic 231: "Marks the beginning or end of one or more blocks to keep
+together on a page, for example a table. Use Start (Fixed) to maintain the
+relative position of the Keep blocks within surrounding blocks. Use Start
+(Floating) to allow blocks following the Keep blocks to move forward if the Keep
+text must begin on the following page." Field 1: 0 start fixed (no record), 1
+start floating, 2 end (DOC-FORMAT.txt). 150 uses in the sample documents
+(940408a.doc, 940417a.doc and others). Labels: [Start Keep (Fixed)], [Start Keep
+(Floating)], [End Keep].
+
+Panel and fields: one field, "Keep:", a check list with the three entries Start
+(Fixed), Start (Floating) and End (found in the original 2.1).  Start (Fixed) is
+checked when the panel opens.  Stored as field 1: nothing for Start (Fixed), 1
+for Start (Floating), 2 for End (confirmed: the original wrote the record
+"11" for a floating start and "12" for an end, and an empty marker for the
+fixed start).  The labels in the original are [Start Keep (Fixed)], [Start Keep
+(Floating)] and [End Keep], as in Strata.  Strata's panel (one choice, label
+Keep) and its labels match; nothing had to be changed.
+
+What it does (original 2.1, Preview, letter page, 54 lines to a page).  Test
+document: block 1 is 40 lines (L01 to L40).  Then the Keep start marker in a
+block of its own, then four blocks of 5 lines each (KA01 to KD05, 20 lines in
+all, which would cross the page break), then the End marker in a block of its
+own, then one block of 30 lines (M01 to M30).  Without any marker, as a
+control, page 1 held L01 to L40, KA and KB (50 lines), and page 2 began with
+the block KC (the block that did not fit was moved as a whole).
+  Start (Fixed)    Page 1: L01 to L40 only; 14 lines are left empty.  Page 2:
+                   KA01 to KD05 (the whole region), then M01 to M30 follow
+                   it.  The region is moved as a whole to the next page when
+                   it does not fit; the text after the End marker stays after
+                   it.
+  Start (Floating) Page 1: L01 to L40, then M01 to M14, which fill the rest of
+                   the page.  Page 2: KA01 to KD05, then M15 to M30.  The
+                   region is moved to the next page as a whole, and the blocks
+                   after the End marker move forward in front of it to fill
+                   page 1.
+  Region longer than a page (four blocks of 20 lines, Start (Fixed), the
+                   same 40 lines before it): page 1 held L01 to L40 only; page
+                   2 began with KA01 and was filled down to KC14, and page 3
+                   began with KC15.  A region that cannot fit on one page
+                   starts on a new page and then breaks as usual.
+
+More probes of the original 2.1 (Preview, letter page, 54 lines to a page;
+each test had a control with the same blocks and no marker, and the lines of
+the text were labels such as KA03).  Print was probed too: the PostScript that
+Print Document wrote (the Apple LaserWriter driver; DOSBox-X wrote the port
+to a file) holds no text of a Keep marker, in Final and in Quick Print, and
+puts the lines in the same pages as Preview does (the Fixed pair of the first
+test was on page 2, and with a Floating Start the blocks after the End were
+in page 1, in front of the region).
+
+  Fixed and Floating  Repeated: the same result as above.  A Floating region
+                   that does not fit stays out of page 1 and the blocks after
+                   it fill that page; Fixed leaves the page empty.
+  Start without End   (10 lines, the Start, four blocks of 5 lines, then 60
+                   more lines): page 1 held the first 10 lines only and page
+                   2 began with the first block after the Start.  The region
+                   keeps from its Start on until it is more than 44 lines
+                   (not tried: whether it ends at the end of a section or
+                   at the end of the document; the second is the natural
+                   reading and what Strata does).
+  End without Start   No effect: the same pages as the control.
+  Nested pairs        Flat.  Start, Start, End, End: the first End closes the
+                   region, the second Start is ignored and the second End is
+                   an End without a Start.  Proof: with 33 lines before, the
+                   blocks A (5 lines, Start), B (5, Start), C (5, End) and D
+                   (10, End) gave page 1: the 33 lines, A, B, C; page 2: D;
+                   the control was the same; a region that went to the
+                   second End (25 lines) would have moved to page 2.  With 40
+                   lines before and A of 10 lines, A moved to page 2 (region
+                   A..C does not fit), so it is not "the last Start wins".
+                   The same with markers in blocks of their own did not
+                   agree in one test (KP6B) that fitted by a few lines only;
+                   the repeat with room (KN3) did.
+  Markers in blocks   The region is made of whole blocks.  A Start in the
+                   middle of block 2 and an End in the middle of block 3
+                   (40 lines before): block 2 moved to page 2 with block 3,
+                   although its lines before the Start would have fitted;
+                   the control left block 2 in page 1.  A block that holds
+                   only Keep markers takes no height, even in the middle of
+                   a page (six such blocks changed nothing).
+  Table columns    A Start in column 1 of row 1 and an End in column 2 of
+                   row 2 (rows of 6 lines, 42 lines before): page 1 held the
+                   42 lines only and page 2 both rows; the control put row 1
+                   in page 1 and broke row 2 (3 lines and 3 lines).  A pair
+                   across the columns of several blocks keeps those blocks.
+  Sections         (38 lines, then a section of 5 lines, then a second
+                   section with a headline and 8 lines) A Start in the first
+                   section and an End in the second: page 1 kept the 38
+                   lines and the 5 lines; page 2 began with the headline and
+                   held all 8 lines.  The control put the headline and 5
+                   lines of the second section in page 1.  A pair around the
+                   8 lines alone gave the same pages as the pair across the
+                   section, and a pair around the 5 lines alone changed
+                   nothing.  So a section boundary is a place where the
+                   region may be broken: it is kept in one part for each
+                   section, and a headline goes with the kept block that
+                   follows it (not tried: other levels, a group of
+                   subsections).
+
+Not verified (not probed in the original): where a Start without an End
+stops (end of section or end of document); a region of several sections that
+has groups of subsections; Keep in a headline block; the effect on the pages
+of the Table of Contents and the Index and on Repaginate; the unmatched and
+nested cases in Print (only the Fixed and the Floating pair were compared
+there; Print and Preview gave the same pages); the interaction with the
+format field "Keep Block on One Page?" (a different feature, not changed).
+
+Strata now: a Keep marker is never printed.  The Printer (strprint, which is
+what Preview runs) sets the blocks of a region in a box and the typesetter
+places the box; the text files that Print Draft and Final write leave the
+label out too, and a block that holds Keep markers only is not written at all
+(it takes no height in the original).  The Editor still shows the label on the
+screen.  See PRINT-LATEX.txt, "Keep markers".
+
+  - Start (Fixed): the box is placed after \Needspace*{its height}, which
+    makes a page break when the box does not fit in the rest of the page, so
+    the region is on one page and the page may end short.
+  - Start (Floating): a float [!ht]: the box is put here when it fits and
+    otherwise at the top of the next page, while the text after the End goes
+    on in this one, as in the original.
+  - Longer than a page (taller than the text area, or for a float taller than
+    nine tenths of it): the box is opened again with \unvbox after a page
+    break, so the region starts a new page and then breaks as usual, as the
+    original does; nothing is lost and the typesetter has no endless run.
+  - A Start in a region is ignored, an End without a region is ignored, the
+    first End closes, a Start without an End keeps to the end of the
+    document, and a section start ends a part and begins another.
+  - Not kept (the markers are still not printed): a part that holds a Page
+    Break, Column Break or Orientation marker (the page changes inside the
+    box) and a part that begins in the text of the title page.
+
+The ch09 converter text mentions "Begin Keep (BK) and End Keep (EK)" codes of
+DCA files being turned into Keep markers (not done).
+
+Orientation (marker 36)
+-----------------------
+
+The manual: nothing; the manual has no landscape page. Only the Print Document
+and printer sections mention paper handling.
+
+Known: help topic 231: "Inserts a page break and prints subsequent text in
+either portrait or landscape mode. An Orientation marker must be in its own
+block. Use a second Orientation marker to change to the original orientation. A
+separate typeface list is available for each orientation if the Setup printer
+supports mixed orientations." Error: "Orientation marker must be in its own
+block" (the block must have a single column). Field 1: orientation (Portrait
+when no record); samples use "2" (envelope.set). Printers that cannot do it:
+"Printer cannot print <description>" (portrait and landscape on a single page).
+
+Panel and fields (probed in the original): one field, Orientation, with the
+choices [Portrait] (the first, in brackets, is the orientation of the document;
+it has no record), Portrait (field 1 is 1) and Landscape (field 1 is 2).  With
+a printer that cannot print landscape only [Portrait] is offered.
+
+Meaning (the project owner): portrait is normal printing on the page and
+landscape is the page rotated 90 degrees.  The marker applies to the text that
+follows it, up to the next Orientation marker.  The second typeface list of the
+other orientation, and whether the margins swap, are not known.
+
+Strata: the panel offers the three choices and stores them as above.  In LaTeX
+(tested with pdflatex and xelatex; the page sizes were read with pdfinfo):
+\usepackage{pdflscape} and \clearpage\begin{landscape} ... \end{landscape}
+\clearpage gives pages with /Rotate 90, while \newgeometry{landscape} alone
+does not change the page.  In the route latex then dvipdfmx the package
+\usepackage[dvipdfmx]{lscape} rotates the text, and
+\special{pdf: put @thispage <</Rotate 90>>} at the start of the page also sets
+/Rotate 90.
+
+Keycap (marker 37)
+------------------
+
+The manual: nothing; "Compose Characters" is documented for typing legends.
+
+Known: help topic 272: "Inserts a graphic representation of a key. Use Legend to
+enter the text to appear in the keycap. To use a graphic character as the
+Legend, press Alt = and then the key containing the image to use (for example,
+the Down key). Specify a value between 0 (black) and 100 (white) for Foreground
+or Background gray shade. Specify a scaling value between 0.001 and 10 to adjust
+the size of the keycap relative to surrounding text. Use Font to specify the
+font for the legend (the size of the font is ignored). You can also globally
+define Scale, Foreground, Background, and Font on the Marker Format panel."
+Fields: 1 legend, 2 foreground and 3 background in tenths (0.0 and 100.0 when
+left out), 4 scale in thousandths (DOC-FORMAT.txt) and, probed in the
+original, 5 the font as its number (1 Headline, 2 Text, which is the default and
+has no record, 3 Header/Footer, 4 to 20 the fonts 4 to 20 of the Typeface
+settings; Font 5 is stored as 55).  20 uses (00readme.doc, 940512a.doc,
+940518a.doc).  Label [Key: ENTER].
+
+Panel and fields: Legend, Foreground, Background, Scale, Font. The Keycap Format
+panel (Global, Marker) is a sub-panel with the global values (Foreground 0.0,
+Background 100.0, Scale 1.000, Font).
+
+The fields of the Keycap marker (confirmed by the project owner):
+  Legend      The text shown in the key, such as PrtScr or F12.
+  Foreground  The shade of the legend and of the line of the key, 0.0 black to
+              100.0 white; the default is 0.0.
+  Background  The shade of the fill of the key on the same scale; the default
+              is 100.0.  In the picture of the X11 version 0.0 means the color
+              of the text of the editor and 100.0 the color of its window, the
+              values between mix the two.
+  Scale       0.001 to 10, relative to the surrounding text; the default is
+              1.000.
+  Font        The font of the legend, as the number of a font of the font list
+              (see FONTS.txt); the default is the Text font.  The size of the
+              font is ignored: the size of the key comes from the scale and the
+              text around it.
+  The global defaults of these four settings are on the Keycap Format panel
+  (Global, Marker, "Keycap Format: Standard" in the original; in Strata the
+  Marker Format panel has an information row "Keycap Format" and the panel is
+  one of the PgUp and PgDn ring, see GLOBAL-MENU.txt).  Probed in the
+  original: the panel has Foreground, Background, Scale and Font (no Legend),
+  and the header records are OKF<tenths> for the foreground, OKB<tenths> for
+  the background, OKS<thousandths> for the scale and OKT<font number> for the
+  font (OKF200, OKB800, OKS1500 and OKT7 for 20.0, 80.0, 1.500 and Font 7),
+  written after YIWN2 and left out when a value has its default (0.0, 100.0,
+  1.000 and Text).  The place of the OK records among OC, OH, OM and OT is not
+  known: Strata writes them after OT (doc_opt_set, late_order in msdoc.c).
+
+  How it works in Strata.  A keycap marker that has no value of its own takes
+  the global one, everywhere the marker is shown or used:
+    - The marker panel shows the global value in brackets, as [0.0], [100.0],
+      [1.000] and, for the font, the name from the font list as [Text (Latin
+      Modern Roman)] (the choice list of the panel adds its own brackets
+      around the entry that is chosen).  A value that is typed replaces the
+      bracket and is stored in the marker (fields 2, 3, 4 and 5), also when it
+      is the same as the default, so that it stays when the global value
+      changes later.  A field left at the bracket has no record.
+    - The picture that LaTeX makes (keycap_spec in ui.c, keycap_main in
+      eqrender.c) is asked for with "legend|fg|bg|scale|font", where each
+      value is the one of the marker or else the global one (keycap_values in
+      marker.c).  The job loads the package of the font number from the
+      font list (FONTS.txt) and sets the legend in the family of that entry.
+      A package that fonts_installed does not find, or whose name or options
+      fonts_word_ok refuses, is left out and the legend is in the roman face.
+    - The box of cells on the screen (the cells with DA_KEY) is made from the
+      legend only; it has no colors, scale or font on the screen.  Foreground,
+      Background, Scale and Font have effect on the picture only.
+  The Font list of both panels shows "Headline", "Text", "Header/Footer" and
+  "Font 4" to "Font 20", each with the Name of its entry in the font list in
+  parentheses (fonts_labels in fonts.c).
+
+Probed in the original (its graphic Preview, with the IBM Color Graphics
+display driver, the Apple LaserWriter printer and GDSTROKE.DAT in the program
+directory; the Generic printer gives the Format Error "Printer cannot print
+bitmapped graphics" and no keycap): a keycap is the legend in the text font
+(an upright roman face, thin strokes) inside a box with rounded corners and a
+thin line.  Measured in a high zoom for the legend PrtScr: the box is 2.07
+times as wide as it is high; the capital letters are 51 percent of the height
+of the box; the free space to the left and right of the legend is 23 percent
+of the height of the box each (so a box is about 0.45 of its height wider than
+its legend); the round part of each corner is 15 percent of the height.  The
+fill is the Background (100.0, white) and the legend and the line are the
+Foreground (0.0, black) at the default settings.  A keycap behaves like a word:
+it sits in the line of text, a little higher than the line.
+
+Strata now: in the X11 version, with pdflatex and pdftoppm, a keycap is a
+picture made by LaTeX (as an equation is) and drawn in the line of text like
+an inline equation: the legend in the roman face inside the box measured above
+(1.33 em high, a third of an em below the baseline, 0.31 em at each side,
+round corners of 0.2 em, a line of 0.4 pt), in the colors of the editor
+(Foreground 0.0 is the color of the text and Background 100.0 that of the
+window, other values mix them) and the scale.  The display mode Inline (Global,
+Marker, Marker Display Modes; the default) shows the picture; Short, Long,
+Hidden, Diamond and Name show the marker or nothing.  Without a picture
+(LaTeX is not there, or the picture is not made yet) Inline shows the legend
+inside a box of rounded corners made of the cells of the text on the screen of
+the X11 version (the terminal version shows the legend in reverse video, one
+space on each side), and a text printout has [legend].  The modes Short, Long
+and Name show [Key: legend] and KEY.  The Foreground, Background, Scale and
+Font of the marker, or else of the Keycap Format, are used by the picture.
+
+To implement: in LaTeX a box of the proportions above (for example a
+\fboxrule of 0.4pt with the rounded corners of tikz or tcolorbox, the height
+of the line, the legend in the roman font, padding of 0.23 of the box height
+on each side), filled with the Background gray and with the Foreground for the
+legend and the line; Scale changes the whole box.  The font of the legend is
+field 5 of the marker; which font a keycap uses when it has none is the Font of
+the Keycap Format, the Text font at first.
+
+Markup (marker 20)
+------------------
+
+Removed with Escape Codes and Symbol: they are for a specific printer (see
+REMOVAL.txt).  A document that has one keeps it unchanged.
+
+Escape Codes (marker 21)
+------------------------
+
+Removed (see Markup above).  It passed hexadecimal digits to the printer, which
+means nothing for a CUPS printer and for LaTeX.
+
+If, Else and Endif (markers 33, 34, 35)
+---------------------------------------
+
+The manual: chapter 5, "Conditional text: If, Else and Endif" (label
+marker-if) and its parts, the variables (str-variables in chapter 7) and the
+comparison table.  Done: the markers choose text in Print, Preview and Export
+as LaTeX (src/cond.c, docs/PRINT-LATEX.txt section 19); the screen shows
+everything, with the markers visible as before.
+
+Known from the older help (topic 229): the If expression compares a variable to
+a numeric or string value; Else marks the alternative text; Endif ends the
+condition; nesting to ten.  The decisions of the owner that replace the older
+rules, in order:
+
+  - The operators are = # < > <= >=.  "#" is not equal; "<>" is a bad operator.
+  - The variables are given by str (the Edit selection) and passed to the
+    programs; a name starts with a letter and holds letters, digits, hyphen and
+    underscore; a value is printable 7-bit ASCII without quotation marks, at
+    most 255 characters (also the name and the literal); an empty value is
+    undefined; a variable that is not set is the string "undefined".
+  - Special variables begin with a period: .STRATA_<name>; the first is
+    .STRATA_BUILD_TYPE (debug, release or asan).  They cannot be given.
+  - The comparison is numeric (unsigned 32 bit) only when both sides are all
+    digits and fit; otherwise both sides are text, compared in the order of
+    the ASCII codes.  There is no mixed case and no comparison ever fails a
+    print.
+  - Errors (a bad expression, an Else or an Endif without an If, an If without
+    its Endif, more than ten levels) are errors of the document with a position
+    and a Print Error marker; the branch of a bad expression is false.
+  - A Merge variable would override a variable for each record, but Merge
+    only prints its label in Strata: there is nothing to override.
+
+Panel and fields: If has one text field, the expression, such as NAME = Smith.
+Else and Endif have no fields.
+
+Screen (marker 38)
+------------------
+
+Removed (see REMOVAL.txt).  It inserted a screen captured by the Screen
+Capture utility of MS-DOS (fields: 1 file name of a .SCT file, 2 width, 3
+height, 4 scale; the Screen Capture Format panel of Global, Marker held the
+shades and Show Cursor).  Strata does not offer it on the Marker Commands
+menu and has no panel for it.  A document that has one keeps it unchanged.  An
+image of a screen can be made with any tool and included with a Picture
+marker.
+
+Worksheet (marker 10)
+---------------------
+
+Removed.  The marker imported a Lotus 1-2-3 worksheet (fields: 1 file name,
+4 when to import).  Strata does not offer it on the Marker Commands menu, has
+no panel for it and does not import worksheets.  A document that has one keeps
+it unchanged.
+
+A note on Keycap and Worksheet in other files
+=============================================
+
+A fifth source is the on-screen help of the original at F1 on a marker panel;
+its topics are the ones quoted. The sample documents sample.docs/00readme.doc
+(Keycap, Counter) and sample.docs/940*.doc (Keep, Counter, Cross-
+reference, Equation) are the largest real uses; they show how these markers
+combine (for example Counters in lists of the kind "1.", "2." with hanging
+indents, Keep markers around code listings, Cross-reference markers instead of
+section numbers in the text).
+
+SUGGESTED ORDER OF IMPLEMENTATION
+=================================
+
+  - Cross-reference and Counter: both can be resolved on the screen and in the
+    text printout without pages, and the samples use them heavily (652 Cross-
+    reference markers and 172 Counters in the sample documents). Counter needs
+    the Counter Format panel (OT<n>N and OT<n>T records).
+
+  - Include and Merge with If, Else and Endif: small, self-contained, testable
+    with plain text printouts; the error messages are known.
+
+  - Page Break, Keep, Whitespace, Font, Line, Column Break, Orientation, Page
+    Number and Section: they only matter once there are pages; do them with the
+    LaTeX print (PRINT-LATEX.txt) and with editable headers and footers. Page
+    Break and Keep also give Repaginate its meaning.
+
+  - Note (footnotes, levelnotes and endnotes) with the Note Format panels, then
+    Index, Figure and Table with the tables of contents. With LaTeX most of
+    these come for free; with the text printout they need an order of print.
+
+  - Picture and Keycap: Keycap is small and drawn (a rounded box);
+    Picture needs readers for .PIC, .GMF, .PS (begin with
+    PostScript and a framed box); do them last.
+
+  - Markup and Escape Codes: keep them in the file; do nothing else. Comment:
+    print only on request. Equation: add printing (EQUATIONS.txt).
+
+QUESTIONS TO SETTLE IN THE ORIGINAL (collected)
+===============================================
+
+  - Whitespace: the codes of field 2 for the three treatments.
+
+  - Orientation: the field value for Portrait and for Landscape; the second
+    typeface list.
+
+
+
+  - Counter: how a Starting Value other than 1 is stored (field 2 holds the
+    number); what happens above Z or XXX in the styles.
+
+  - If: what is printed with no merge document; the quoting of strings.
+
+  - Keep: see "Not verified" in the Keep section (where a Start without an
+    End stops; subsections; Print of the unpaired and nested cases).
+
+  - Section: the field numbers of Level and Type.
+
+
+PARTITION OF THE MARKERS (after the decisions of the project owner)
+===================================================================
+
+Decisions
+---------
+  - Nothing specific to a printer is supported: the Escape Codes and Markup
+    markers, printer symbol tables and drivers are the lowest priority and
+    candidates for removal.
+  - Spreadsheet linking and interoperability with other programs is out:
+    the Worksheet marker and Tools, Worksheet are removed (REMOVAL.txt).
+  - Appendix E is about EPS files; ".PS" in the decompiled text is an OCR
+    error.
+  - Keycap takes a string (F1, A, Ins, PrtScr) and draws it as a rounded
+    keycap-like box around the string.
+  - Batch printing was for mail-merge and large jobs.  Maintain Download
+    Fonts: the help says PostScript or HP LaserJet (soft fonts); it needs no
+    replacement with LaTeX.
+
+Set 1: for printing (the work is done when the page is made: LaTeX)
+-------------------------------------------------------------------
+  Page Break, Column Break, Keep, Whitespace, Line, Orientation, Font,
+  Page Number and Section (header and footer), Include, Merge, If, Else,
+  Endif, Figure and Table (the lists), Index (the index), Picture (EPS and
+  the other image files), Keycap (the box), Equation (the .tex
+  text), Date, Time and the other values (already done on screen), Printer.
+
+Set 2: for editing (the editor itself has to do something)
+----------------------------------------------------------
+  Note, Comment, Counter and Cross-reference are done (see NOTE-FORMAT.txt),
+  the headers and footers (a Page Number or Section marker has no place until
+  they can be edited), Keycap and Picture on screen (X11, as for equations),
+  the display modes (done).
+
+Set 3: unknown (needs the original to be looked at or a decision)
+-----------------------------------------------------------------
+  Keep (what the field values do), Whitespace (the treatment field),
+  Orientation (the values), Counter (when a number is taken and what the
+  start value does), If, Else, Endif (the expression language: chapter 8 of
+  the Release 2 Reference, which is not available), Column Break (assumed),
+  Screen (the screen capture format), Keycap (the Font field), Merge (the
+  delete blank lines field and the data file), Markup and Escape Codes (a
+  printer matter: lowest priority); the Worksheet marker is removed.
+
+
+Print Error (marker 40): made by the Editor, never by the user
+==============================================================
+
+The Editor puts a PRINT ERROR marker in the document after a Preview or a
+Print, at each place where the Printer found something wrong (PRINT-LATEX.txt,
+section 17).  It is the owner's design: the error and its place stay in the
+document until they are fixed, so that nothing has to be written down.
+
+Type number.  40.  The original's Marker Commands menu has 39 markers
+(types 1 to 39, with 10, 20, 21 and 38 known from files but not on the
+menu); Strata's table has the same range.  40 is free in both.  Files are
+not bound to the original's compatibility; the original would see an unknown
+marker type 40 (not tried).
+
+Records (src/marker.c, f_perr; plain text records like the others):
+  1  the message, in plain English (when the place was only guessed it ends
+     with "(The exact place was not found; this is the nearest.)")
+  2  the code of the error, such as equation-invalid
+  3  the run that found it: P for Print, V for Preview
+The marker has no nested text.  A file with such a marker loads and saves
+without loss, and the text of the error survives a save
+(tests/perrtest.c, test_save_load).
+
+On the screen it is drawn as "[PRINT ERROR: MESSAGE [code]]" in the marker
+colour, bold and underlined (the cells DA_MARKER | DA_BOLD | DA_UNDER, no
+new attribute bit), in every display mode (the Hidden mode of Global, Marker
+does not hide it).  Alt-F12 or Ctrl-F12 on it shows the text in a read-only box (Esc
+closes it); nothing can be changed.
+
+Where it goes.  In front of the thing that is wrong, as exactly as the
+position allows: the start of the line of the block for an error of the
+block; in front of the marker (equation, picture, keycap, Keep ...) that is
+at fault, found by its type and the characters of its text (the line is
+used first, so that two equal equations in a block are told apart); in front
+of the character for a character that no font has (the offset of the token
+in the line).  A position that cannot be found (the document was changed
+after the run, the error of LaTeX has no place) goes to the nearest place:
+the block, else the start of the section, else the start of the part that
+was printed, and its message says so.  Several errors at one place stay in
+the order in which they were found.
+
+The user cannot make one.
+  - It is not in the Marker Commands list or grid (the table of
+    marker_menu), not in the F12 menus, and no key makes one:
+    ed_insert_marker refuses type 40 ("A Print Error cannot be made by
+    hand"); perr_apply (src/perr.c) is the only code that inserts it.
+  - Typing, Compose, Insert, a macro or the library make only characters
+    and the markers of the table.
+  - Copy, Cut and Move do not put it on the clipboard; Paste drops one that
+    is there; a block copy has none in it (perr_strip_block).  Cut removes it
+    from the text like any token.
+  - Its text cannot be edited.  The user can delete it: Del or Backspace
+    remove it like a one character token, "Remove Error" (Print menu) and
+    "Remove Print Errors" (the same menu, all of them) remove the one under
+    the cursor and all.
+
+Find Next Error.  A search method of the Search machinery (src/ui.c):
+  - The Search panel (F9) has the fields "Search for", "Find" (Text or Print
+    Error) and "Direction" (Forward or Backward).  With Find = Print Error
+    the text is not needed.  The method and the direction are kept.
+  - Ctrl-F9 (Search again) repeats the search with the method and the
+    direction that were chosen; with Print Error it finds the next (or
+    previous) one.
+  - Ctrl-F8 is Find Next Error and Ctrl-F7 Find Previous Error; both choose
+    the method Print Error, so that Ctrl-F9 goes on.  The Print menu (F12)
+    has Next Error and Previous Error as well.
+  - The cursor goes to the first marker after the cursor (before it for the
+    previous one); the marker under the cursor is not found again.  At the
+    end the search wraps and the message line says "Wrapped to the start."
+    ("Wrapped to the end." backward); with none it says "No print errors"
+    and the cursor stays.  When the cursor lands, the message line shows
+    "Print error 3 of 4: MESSAGE [code]".
+  - Keys checked: original/Reference.txt names no Ctrl-F7, Ctrl-F8 or Ctrl-F9
+    (KEYSTROKES.txt lists the Ctrl-F keys that the original's help
+    has: Ctrl-F1, Ctrl-F3 to Ctrl-F5); in Strata they were only other
+    names of F7, F8 and F9 (manual/KEYS.txt) and are no longer.
+
+Not printed or typeset.  strprint takes the Print Error markers out of the
+document it loads and latex.c leaves type 40 out (a document with markers
+gives the same LaTeX as one without: tests/perrtest.c, test_not_printed);
+the text export, Screen Image and the printout of text leave them out too
+(marker_hide_perr, MR_TEXT with no text in a print).  The offset p of an
+error does not count them, so that the places are the same with and without.
+
+Runs.  A new Preview or Print first removes the old Print Error markers of
+the same kind of run (P or V) in the blocks that were printed (the whole
+document, or the part of Preview of a block or of sections), then inserts
+the new ones, so they do not pile up; a run that finds nothing removes them
+too, and the message line says "no print errors".  The markers of the other
+kind of run and those outside the part stay.  A run that did not get as far
+as the document (the Printer could not start, the file was not complete)
+changes nothing.  The positions of the file are those of the part that was
+printed: perr_apply maps the items of the part to the document by the
+blocks (diag_remap), so Preview of a block and of a range of sections mark
+the right places.
+
+Undo and Save.  The Editor has no undo.  The insertion marks the document as
+changed and Save writes the markers into the file with the rest (they load
+again; the owner can remove them first with Remove Print Errors).  Nothing
+else is done at Save.
+
+The Document Manager.  "stred --preview" and "stred --print" have no
+document to mark; they write the errors as text at the end of the run and
+use the exit status 5 (PRINT-MENU.txt).
+
+
+LaTeX (marker 41)
+-----------------
+
+The marker holds raw LaTeX that the Printer writes as it is.  It is made by
+the Alt-F12 menu (entry LaTeX, between Keycap and Line) and edited like a
+Note or an Equation: the text is the nested blocks of the marker (S and T
+records), edited in the editor of its own (the status line says LATEX EDIT),
+so that line ends, tabs and spaces are kept.  There are no fields.  The type
+41 is the next free number after the Print Error marker (40); the payload is
+the nested text only, so a program that does not know the type reads it like
+a Note without fields and writes it back unchanged.
+
+marker_latex_text (marker.c) gives the text: every T record of the nested
+blocks, a line feed for 1D, a tab for 10 f n, the byte FF for the nonbreaking
+space 1E, the attribute changes 12 m f left out, and the other bytes as they
+are.  The writer (latex.c, emit_latex_marker) puts the text on lines of its
+own: "%\n", the bytes (a byte above 7F as UTF-8 by the table of the code
+page), "%\n{}".  The comment signs keep the end of the last line from making
+a space, and the empty group keeps the space that follows the marker.  The
+position comments of the lines (%@P) are written before the line of the
+document that holds the marker, so an error that LaTeX finds in the text is
+found at that line: the Printer's general handling of "! ..." errors
+(strprint.c) gives the diagnostic tex-error with the block and the line.
+
+Display.  The label is "LaTeX instructions" (Long, Short), "LaTeX" (Name) and
+the diamond glyph; the default mode is Long, drawn in brackets.  In the X11
+version the cells of the letters a and e of the word LaTeX in a label of this
+marker are drawn as the logo: view.c (logo_letter) puts the codes TERM_LOGO_A
+and TERM_LOGO_E (term.h), and term_x11.c draws the first as a capital A in a
+smaller font (seven tenths) raised by a quarter of the ascent, and the second
+as a capital E lowered by a fifth of the cell height (the Xft path; with a
+bitmap font the same letters are moved by pixels).  The dump of the screen
+(STRATA_X11_DUMP) writes them back as a and e and has a line "grid" with the
+columns, rows and the size of a cell in pixels, for tests/xlogo.py.
+
+Security.  Both engines run with -no-shell-escape (strprint.c) and
+openout_any=p (the default of TeX Live): the text cannot run a program or
+write outside the directory of the print (tests/latexmarker.py proves both).
+The setting latex_markers=no (config.c, read by the Printer) and the Printer
+options --latex-markers and --no-latex-markers (the option wins) make the
+writer print the words LaTeX instructions instead of the text, with the
+warning latex-marker-off for each marker.
+
+Not done.  A preamble material kind of marker (for \usepackage): the text
+goes into the body only, and LaTeX refuses the commands of the preamble there.
+A line number inside the marker is not given to the Error Log (the line of
+the document is).  Tests: tests/lxtest.c (test_latex_marker), tests/edtest.c
+(the table and marker_latex_text), tests/latexmarker.py (menu, saving, round
+trip, print, errors, the setting, the security tests, Ctrl-F8), tests/xlogo.py
+(the logo in X11 at three sizes, with the cursor, and in a wrapped label).
+
+
+DEFAULT DISPLAY MODES (changed 2026-11-19, on the owner's word)
+---------------------------------------------------------------
+The default display mode of Comment, Figure, Font, Index, Note and Table was
+Diamond; it is now Short, because a bare diamond tells the reader nothing.
+The Short forms are [COM "text"], [FIG "label"], [FONT], [INDEX heading],
+[NOTE] and [TABLE "name"].  A document keeps the mode it saved: the file
+holds a record OM<type>,<mode> only for a mode that is not the default, so
+a document written before this change, which has no OM record for these six
+types, is now shown in the Short form, and a Diamond chosen on purpose is
+saved as OM<type>,0 from now on.  A print is not changed by the display
+mode of these six markers unless the document has a mode saved for the type:
+the print of a document is the same bytes as before the change.

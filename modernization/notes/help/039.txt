@@ -1,0 +1,25 @@
+
+---------------------------------- Format Column -------------------------------
+
+Format (F6) Column assigns settings to the highlighted columns.  Column settings
+take precedence over block settings.
+
+     +------------------------ Current Column Format ----------------------+
+     | Ruler                                                   Pos: 1      |
+     | ------------------------------------------------------------------- |
+     |                                                                     |
+     | Attributes:             Justification:             Indent:          |
+     | Font:                                                               |
+     |---------------------------------------------------------------------|
+     | Vertical Centering:                                                 |
+     |                                                                     |
+     +---------------- Press Ins to Use Displayed Settings ----------------+
+
+--Procedure---------------------------------------------------------------------
+
+ Press Format and select Column.
+ Highlight the columns to format.
+ Press Enter to display the Current Column Format panel.
+ Change the settings as needed and press Ins.             
+--------------------------------------------------------------------------------
+       Highlighting       Format       Keyboard Summary       Help Index

@@ -1,0 +1,496 @@
+THE AUDIT OF THE PICTURES OF THE REFERENCE MANUAL
+
+Worklist item: "Pictures of the reference manual must not be copies".
+Made on 2026-11-16 by reading only.  No picture, program, manual source or
+original file was changed.  The script that repeats the text part of the
+audit is manual/checkpicscopies.py.
+
+
+1. THE RESULT IN SHORT
+
+  - No picture is a copy of a figure of the original manuals, and none can
+    be: all 158 pictures are made by Strata, and 156 of them are coloured
+    screens of a kind that a scan of a 1990s manual cannot hold (section 3.1).
+  - No picture shows text, a document, a name or a file name of the
+    original product.  The documents that the pictures show were written for
+    Strata, and they share with the original manuals and the 55 original
+    sample documents only five short runs of ordinary English words
+    (section 3.2).  The original's sample people and places (Centennial
+    Park, Central City, CNS, CNSDRAFT.DOC, CNSMEMO.DOC) are in none of our
+    sources.
+  - The screens look like the original's in layout and in the labels of
+    menus and panels, because Strata is a reimplementation and the owner
+    chose that.  In the three pairs that were put side by side the entries,
+    the text and the values differ (section 3.3).
+  - One similarity is in the STRUCTURE of the text, not in a picture: the
+    order of the headings of chapter 1 (Text, Block, Column, Section,
+    Unstructured and Structured Documents) and of chapter 2 (Templates,
+    Creating Templates, Using Templates) is the order of the original's
+    table of contents (section 3.4).
+  - NOT proved by this audit: that the cursor place, the highlight and the
+    values typed into panels differ in every one of the pictures; that the
+    order of the figures of a subject differs from the original's in every
+    chapter.  The original has no list of figures and no captions (it is a
+    scan), so these were checked by looking at three pairs, not for all.
+  - Per picture: clean 149, generic words
+    4, heading order 2, printed pages 3 (section 5).
+
+
+2. WHAT WAS DONE
+
+  The original material: Reference.pdf (418 pages), Getting productive.pdf
+  (196), Getting started.pdf (19) and Quick reference.pdf (13), read from
+  documentation/original/manuals-1.0 (they are scans of pages of about 2100
+  by 2980 pixels with a text layer made by character recognition, which is
+  noisy: it reads "developrnen1" for "development"), and the 55 files of the
+  original product's sample folder, which are tracked in this repository as
+  lotus-manuscript/sample.
+
+  1. The files.  The figures are inside the page scans, not separate files
+     (pdfimages lists one image of a page each, plus 168 images of 1 by 1
+     pixel), so a comparison of picture files with figure files cannot be
+     made, and a search for a picture inside a scan was not made (too
+     slow without an image library).  In its place: how each picture is
+     made; whether a picture could be a scan; the sizes and colours.
+  2. The text.  The words of the sample documents of the manual (their
+     sources manual/samples/src/*.src and the built documents chars.doc,
+     spelldemo.doc, markers-all.doc, latexdemo.doc and
+     tests/data/print_errors.doc), the typed values of every scene, and the
+     names of the original's sample documents were compared with the words
+     of the original manuals and of the original sample documents: runs of
+     5 words, and of 4 words, with the format records of the document files
+     left out.
+  3. The sequence.  The headings of each chapter of the manual in the order
+     of manual/src/master.txt were compared with the 206 entries of the
+     original's table of contents: the longest run of headings in the same
+     order, and the length of the longest common subsequence.  The figures
+     under the matching headings are named.
+  4. The sample documents.  Where each one comes from (git history, the
+     contents), and whether the folders of the original's samples and the
+     owner's own sample.docs are used by a picture.
+  5. Looking.  The Document Manager (original page 22), the Append command
+     (page 69) and the Section figure (page 19) were put next to the
+     pictures view-docmgr, edit-a-append and view-structured.
+
+
+3. THE RESULTS
+
+3.1 The files
+
+  - Every picture but three is made by a scene of manual/shots.py or of
+    manual/scenes/*.py: 155 scenes, 155 pictures.  The other three are
+    pages that the Printer prints from Strata documents: print-errlog
+    (manual/scenes/errlog-pdf.sh), print-failed-page (failed-pdf.sh) and
+    appchar-print (the page printed from chars.doc; no script in the tree
+    makes it: it was added with the chapter, commit e66d1054, and a script
+    like the other two should make it).
+  - The picture check of the last retake (155 compared, 155 the same, 0
+    flagged, 2026-11-16) shows that the scenes remake the pictures.  This
+    audit did not run it again.
+  - Of the 158 pictures 156 are coloured (blue and yellow screens, grey
+    bars, a coloured logo); the only grey ones are appchar-print (a printed
+    page) and str-variables-panel (a small panel).  The scans of the original
+    are black on white, so a picture that is a crop of a scan would be
+    grey with halftone noise.  141 of the pictures are exactly 800 pixels
+    wide (the width of the window of the program), the others 640 to 850:
+    the sizes of windows and of printed pages, not the sizes of scanned
+    figures.
+  - The Tutorial uses 13 of the pictures and Getting Started 4; the cheat
+    sheets none.  No page uses a picture that is not in doc/pictures, and no
+    picture of the folder is unused.
+
+3.2 The text
+
+  Runs of 5 words found in both a sample document of the manual and the
+  original material (all five are ordinary English, in no case a sentence of
+  the original reused):
+    report.src    "three parts and each part"        Getting productive
+    showcase.src  "at the foot of the"               Getting productive
+    showcase.src  "is printed at the foot"           Getting productive
+    showcase.src  "printed at the foot of"           Getting productive
+    showcase.src  "a reference to another section"   Reference
+  (our text: "divided into three parts, and each part into short sections";
+  "a footnote ... is printed at the foot of the page"; "a reference to
+  another section".  The original: "a chapter might have three parts and
+  each part might be made up of several sections"; "the footnote is printed
+  at the foot of the appropriate page"; "Use Cross-Reference to enter a
+  reference to another section of a structured document".  They describe
+  the same features of the product in the words that anyone would use.)
+  With runs of 4 words seven more such phrases are found ("a line of
+  text", "on a new page", "a b c d" as the letters of a formula and the
+  like).  The built documents
+  chars.doc, spelldemo.doc, latexdemo.doc, print_errors.doc, eqbad.doc,
+  eqdemo.doc and eqgallery.doc, memo.src and the equation sources share no
+  run of 5 words.  The headlines of the samples (Quarterly report, Results,
+  Sales, By region, By product, Costs, People, Plan, Goals, Schedule, Risks,
+  Appendix; Memo, What changes, What to do, Questions) are not in the
+  original's text as a sequence; "What to do" and "The last page" are
+  common phrases.
+  The names of the original's samples (Centennial, Central City, Woodward,
+  Bonner, Simons, CNS) are in none of our sources, scenes, tests/data
+  documents or pictures' sources.
+  The values that the scenes type: only "First block", "Second block"
+  (edit-a-blocks) and "letter" (file-new-type) are words of the original
+  text, and they are ordinary words.  The file name memo.doc (the main
+  sample) is not a file name of the original's figures: the original uses
+  CNSMEMO.DOC and CNSDRAFT.DOC; "memo.doc" occurs only inside them.
+
+3.3 Looking at three pairs
+
+  - Document Manager.  Original page 22: a menu of ten entries (Edit
+    Document, Print Document, Preview Document, Check Document Spelling,
+    Maintain Spelling Dictionary, Compare Document Versions, Import from
+    1-2-3/Symphony File, File Conversion Utilities, Setup, Exit).  Ours
+    (view-docmgr): five entries (Edit / Preview / Print Document, Maintain
+    Dictionaries, Compare Document Versions, Setup, Quit) on a blue screen.
+    Same subject; the entries and the text differ.
+  - Append.  Original page 69: two strips of the screen with the document
+    CNSDRAFT.DOC and its "Pedestrian and Traffic Surveys" headline.  Ours
+    (edit-a-append): the Append menu open over the quarterly report sample.
+    Same command; a different document, a different view.
+  - Section.  Original page 19: the screen of CNSDRAFT.DOC with callouts
+    (Section, Section indicator, Headline block, Text block).  Ours
+    (view-structured): the outline of the quarterly report sample, without
+    callouts.  Same subject; different content.
+  In all three the layout of the screen (status line at the top, the menu
+  box, the headline marks) is the original's: the owner's decision.
+
+3.4 The sequence
+
+  Longest run of consecutive headings of a chapter that equal headings of
+  the original's table of contents in the same order, and the length of the
+  longest common subsequence (LCS), over all 206 entries of the table:
+
+    chapter           headings   longest run   LCS
+    1  view               61         5          10
+    2  file               93         3          10
+    3  edit              108         2           9
+    4  format             63         2           6
+    5  markers           175         1          14
+    6  print              66         1           1
+    7  str                78         1           2
+    8  spell              27         1           2
+    9  equations          57         1           1
+    10 convert            24         1           1
+    11 messages           50         1           1
+
+  Only chapter 1 has four or more consecutive headings in the original's
+  order: Text, Block, Column, Section, Unstructured and Structured Documents
+  (the order of the concepts).  Chapter 2 has three: Templates, Creating
+  Templates, Using Templates (the three headings of the original are the
+  same words).  The pictures under these headings are view-structured (under
+  Section) and file-new (under Templates).  The Edit chapter lists its
+  commands in alphabetical order as the original does (Append, Contract and
+  Expand, Copy ...), which a command reference does naturally; its longest
+  equal run is 2 because the original's list is mixed with concepts.
+
+3.5 The sample documents
+
+  Written for Strata (the git history shows each was added by this project,
+  between 2026-11-13 and 2026-11-15; no run of words, name or format settings of
+  an original document is in them):
+    manual/samples/src/memo.src, report.src, showcase.src, eqdemo.src,
+    eqbad.src, eqgallery.src (made into documents by manual/build.sh);
+    manual/samples/chars.doc, spelldemo.doc, markers-all.doc, latexdemo.doc
+    (committed documents); tests/data/print_errors.doc (the Error Log test
+    document).
+  Material of the original product: the 55 files of lotus-manuscript/sample
+  (cns2memo.doc, cns5drft.doc, cns10pp.doc, sample1.doc ... and the
+  .set, .mac, .lib, .gmf, .pic, .wk1 files) are tracked in this repository.
+  No scene, no sample and no picture of the manual uses them.  The tests use
+  them (the variable DOCSRC of the Makefile: the round trip and the print
+  tests of tests/*.py): an open question for the owner (section 7).
+  The owner's own sample.docs (940408a.doc ... twain.doc) are not tracked
+  and are used by no picture; tests/edtest.c and tests/preview.py use
+  twain.doc as a long document for timing.
+
+
+4. WHAT WAS NOT DONE
+
+  The figures of the original were not listed or counted: the pages have no
+  captions, and a rough detector of the shaded screen strips found 8 strips
+  on a page that has 2, so its count (571 over 418 pages) was not used.  A
+  picture was not searched for inside a scan.  The cursor place, the
+  highlight and the values typed into panels were not compared for each of
+  the pictures, only for the three pairs above.  The provenance table that
+  the worklist item asks for (manual/pictures.txt: for each picture the
+  scene, the command, the document, the program and its build) was not
+  written; the table in section 5 gives the scene document and a verdict.
+  The pictures were not remade for this audit.
+
+
+5. THE TABLE OF THE PICTURES
+
+  The verdicts: clean (made by a scene of Strata from an own sample; no text
+  or value in common with the original); generic (a typed value that is an
+  ordinary word that the original also contains); order (the
+  picture is under a heading whose order is the original's: section 3.4);
+  page (a page that the Printer prints).  No picture has a file match.
+  The second column is the sample document that the scene opens, or the
+  program: docmgr is the Document Manager, viewer the Viewer, new files are
+  made by the scene.
+
+  picture                      document       verdict
+  appchar-print                printer        page: printed page of chars.doc
+  appchar-screen               chars.doc      clean
+  dviview-page                 showcase.doc   clean
+  edit-a-append                report.doc     clean
+  edit-a-blocks                new2.doc       generic: First block, Second block
+  edit-a-copy-menu             report.doc     clean
+  edit-a-flat                  new1.doc       clean
+  edit-a-fold-1                report.doc     clean
+  edit-a-fold-minus            report.doc     clean
+  edit-a-goto-done             report.doc     clean
+  edit-a-goto-menu             report.doc     clean
+  edit-a-goto-panel            report.doc     clean
+  edit-a-highlight             report.doc     clean
+  edit-a-highlight-block       report.doc     clean
+  edit-a-join-menu             report.doc     clean
+  edit-a-menubar               report.doc     clean
+  edit-a-menubar-tools         report.doc     clean
+  edit-a-screen                report.doc     clean
+  edit-a-title                 report.doc     clean
+  edit-b-count                 report.doc     clean
+  edit-b-marker-date           report.doc     clean
+  edit-b-marker-grid           report.doc     clean
+  edit-b-move-section          report.doc     clean
+  edit-b-options               report.doc     clean
+  edit-b-outline-2             report.doc     clean
+  edit-b-overtype              report.doc     clean
+  edit-b-quit                  report.doc     clean
+  edit-b-replace               report.doc     clean
+  edit-b-section-edit          report.doc     clean
+  edit-b-sort-after            report.doc     clean
+  edit-b-sort-before           report.doc     clean
+  edit-b-split                 report.doc     clean
+  edit-b-split-section         report.doc     clean
+  edit-b-undo                  report.doc     clean
+  edit-c-search-panel          print_errors.doc clean
+  equations-bad                eqbad.doc      clean
+  equations-cursor             eqdemo.doc     clean
+  equations-edit               eqdemo.doc     clean
+  equations-grid               eqdemo.doc     clean
+  equations-modes              eqdemo.doc     clean
+  equations-screen             eqdemo.doc     clean
+  equations-view               eqdemo.doc     clean
+  file-checklist-dirs          memo.doc       clean
+  file-checklist-files         memo.doc       clean
+  file-delete                  memo.doc       clean
+  file-delete-confirm          memo.doc       clean
+  file-export                  memo.doc       clean
+  file-export-charset          memo.doc       clean
+  file-import                  memo.doc       clean
+  file-new                     memo.doc       order (ch 2: Templates)
+  file-new-type                memo.doc       generic: letter
+  file-overwrite               memo.doc       clean
+  file-retrieve                memo.doc       clean
+  file-retrieve-failed         memo.doc       clean
+  file-retrieve-options        memo.doc       clean
+  file-save                    memo.doc       clean
+  file-save-options            memo.doc       clean
+  format-counters              memo.doc       clean
+  format-expanded-status       memo.doc       clean
+  format-footnote              memo.doc       clean
+  format-global-format         memo.doc       clean
+  format-global-linenum        memo.doc       clean
+  format-global-menu           memo.doc       clean
+  format-global-spacing        memo.doc       clean
+  format-keycap                memo.doc       clean
+  format-level1                memo.doc       clean
+  format-level1-spacing        memo.doc       clean
+  format-marker                memo.doc       clean
+  format-marker-modes          memo.doc       clean
+  format-named                 memo.doc       clean
+  format-options               memo.doc       clean
+  format-page-global           memo.doc       clean
+  format-page-title            memo.doc       clean
+  format-typeface              memo.doc       clean
+  markers-all-default          markers-all.doc clean
+  markers-all-long             markers-all.doc clean
+  markers-all-name             markers-all.doc clean
+  markers-comment              showcase.doc   clean
+  markers-counter              showcase.doc   clean
+  markers-date                 showcase.doc   clean
+  markers-errors               print_errors.doc clean
+  markers-errors-box           print_errors.doc clean
+  markers-font                 showcase.doc   clean
+  markers-index                showcase.doc   clean
+  markers-keycap               showcase.doc   clean
+  markers-latex-edit           showcase.doc   clean
+  markers-latex-label          latexdemo.doc  clean
+  markers-line                 showcase.doc   clean
+  markers-menu                 showcase.doc   clean
+  markers-modes-panel          showcase.doc   clean
+  markers-note-edit            showcase.doc   clean
+  markers-note-type            showcase.doc   clean
+  markers-picture              showcase.doc   clean
+  markers-whitespace           showcase.doc   clean
+  markers-xref                 showcase.doc   clean
+  print-draft-panel            report.doc     clean
+  print-errlog                 printer        page: printed page, test document
+  print-failed-message         print_errors.doc clean
+  print-failed-page            printer        page: printed page, test document
+  print-final-panel            report.doc     clean
+  print-menu                   report.doc     clean
+  print-preview-doc-panel      report.doc     clean
+  print-preview-menu           report.doc     clean
+  print-viewer-failed          print_errors.doc clean
+  print-viewer-first           showcase.doc   clean
+  spell-ctrl-c                 spelldemo.doc  clean
+  spell-ctrl-t                 spelldemo.doc  clean
+  spell-str-setup              docmgr         clean
+  spell-thesaurus-menu         memo.doc       clean
+  spell-tools-menu             memo.doc       clean
+  str-colors-palette           docmgr         clean
+  str-colors-panel             docmgr         clean
+  str-compare-panel            docmgr         clean
+  str-compare-report           docmgr         clean
+  str-edit-panel               docmgr         clean
+  str-font-panel               docmgr         clean
+  str-fonts                    docmgr         clean
+  str-fonts-list               docmgr         clean
+  str-main                     docmgr         clean
+  str-menu                     docmgr         clean
+  str-newfile-panel            docmgr         generic: letter
+  str-newfile-type             docmgr         generic: letter
+  str-setup                    docmgr         clean
+  str-setup-browse             docmgr         clean
+  str-setup-error              docmgr         clean
+  str-setup-panel              docmgr         clean
+  str-setup-scrolled           docmgr         clean
+  str-variables-panel          docmgr         clean
+  stred-draft-panel            showcase.doc   clean
+  stred-file-menu              memo.doc       clean
+  stred-format-panel           memo.doc       clean
+  stred-global-format          memo.doc       clean
+  stred-marker-menu            showcase.doc   clean
+  stred-memo                   memo.doc       clean
+  stred-menu                   memo.doc       clean
+  stred-outline                report.doc     clean
+  stred-outline-open           report.doc     clean
+  stred-preview-panel          showcase.doc   clean
+  stred-preview-wait           manual.doc     clean
+  stred-save-panel             memo.doc       clean
+  stred-showcase               showcase.doc   clean
+  view-altmenu                 report.doc     clean
+  view-docmgr                  stred          clean
+  view-dviview                 showcase.doc   clean
+  view-expanded                report.doc     clean
+  view-help                    report.doc     clean
+  view-highlight               report.doc     clean
+  view-keycap                  showcase.doc   clean
+  view-marker-grid             showcase.doc   clean
+  view-menu-global             report.doc     clean
+  view-menu-top                report.doc     clean
+  view-outline                 report.doc     clean
+  view-pick                    report.doc     clean
+  view-save-quit               flat.doc       clean
+  view-section-edit            report.doc     clean
+  view-str                     docmgr         clean
+  view-structured              report.doc     order (ch 1: Section)
+  view-unit                    report.doc     clean
+
+6. RECOMMENDATIONS
+
+  1. No picture must be retaken because of this audit.  No picture copies a
+     figure, and none shows text, a name or a document of the original.
+  2. The four pictures with generic words typed (edit-a-blocks: "First
+     block" and "Second block"; file-new-type, str-newfile-panel and
+     str-newfile-type: "letter") may be retaken with other words if the
+     owner wants no word at all in common; the words are ordinary and the
+     value of the change is small.
+  3. The headings of chapter 1 (Text, Block, Column, Section, Unstructured
+     and Structured Documents) and of chapter 2 (Templates, Creating
+     Templates, Using Templates) follow the original's order.  If the owner
+     wants more distance, change the order or the titles in the sources
+     view*.src and file*.src; the pictures view-structured and file-new
+     stay valid.  This is the only sequence similarity that was found.
+  4. Make a script for appchar-print, like errlog-pdf.sh, so that every
+     picture of the manual has a recipe.
+  5. Write the provenance table manual/pictures.txt that the worklist item
+     asks for: the scene and the document of each picture are in section 5;
+     the program and the build come from manual/shots.py.
+  6. Ask the owner to look at the panel pictures once (str-*, format-* and
+     file-* pictures that show typed values), because a machine comparison
+     of panel values was not made.
+  7. Run manual/checkpicscopies.py again when a sample document is added or
+     changed: python3 -I manual/checkpicscopies.py FOLDER, where FOLDER holds
+     the text of the original manuals (*.txt made by pdftotext -layout) and
+     the original sample documents in a folder named sample.  It exits with
+     1 when it finds a run; the five phrases of section 3.2 are known and
+     are ordinary English.
+
+
+7. QUESTIONS FOR THE OWNER
+
+  - The original product's own sample documents (55 files in
+    lotus-manuscript/sample: cns2memo.doc, cns5drft.doc, sample1.doc ...)
+    are tracked in this repository and the tests use them.  No picture uses
+    them.  Before anything is shipped, should the tests use only documents
+    written for Strata?  (Decided here: no change.)
+  - Should the order of the headings of chapters 1 and 2 be changed
+    (recommendation 3)?  (Decided here: no change.)
+
+
+8. HOW SURE EACH VERDICT IS
+
+  - No file copy: certain.  Five facts agree: every picture is made by a
+    scene or by the Printer; the scenes remake them identically; 156 of 158
+    are coloured and the original's scans are not; the sizes are those of
+    windows; the original has no separate figure files.
+  - No copied text, document or name: high.  The original sample documents
+    were read exactly (strings of the files); the original manuals were read
+    through a character recognition layer that misreads some words, so a
+    sentence of the original that was misread could have been missed.  The
+    distinctive names were looked for as well as runs of words, and none was
+    found, which makes a copy that the runs missed very unlikely.
+  - Panel values, cursor places and highlights: low to medium.  Checked by
+    eye in three pairs, and by the typed values of the scenes (none of them
+    is a distinctive value of the original).  The defaults of the panels are
+    the product's own defaults and equal the original's where the product is
+    the same.
+  - The sequence of the figures: medium.  Compared by headings only; the
+    figures of the original could not be listed.
+
+
+
+9. FOLLOW-UP (2026-11-17)
+
+  What the recommendations of section 6 became:
+
+  - Recommendation 2 (the generic words).  The scenes that typed ordinary
+    words now type other words that neither the original manuals nor the
+    original sample documents hold: edit-a-blocks types "Tides rise at dusk",
+    "Gulls follow the boats" and "beyond the pier" (the picture was taken
+    again); file-new-type, str-newfile-type and str-newfile-panel type the
+    name "harbor" instead of "letter".  The typed name is not visible in
+    those three pictures (the New File question and panel show no name), so
+    the pictures did not change.
+  - Recommendation 3 (the order of the headings).  Done: the titles of
+    chapter 1 are "What text is", "What a block is", "What a column is",
+    "What a section is" and "Documents with sections and documents without";
+    in chapter 2 the subsections of Templates are "Making a template file"
+    and "Starting a document from a template".  The labels did not change, so
+    the cross-references follow.  The longest run of headings in the order of
+    the original is now 1 in both chapters.
+  - Recommendation 4 (appchar-print).  manual/scenes/appchar-pdf.sh prints
+    chars.doc and cuts the first page at 90 dots to the inch; the picture
+    that it makes differs from the picture of the manual by 8 pixels of shape.
+  - Recommendation 5 (the provenance table).  manual/pictures.txt has one
+    line for every picture (165) with the scene or script, the program, the
+    document, the date of the last retake and how to make it again;
+    build.sh check-pictable (part of build.sh check) fails when a picture and
+    a line do not belong together.
+  - Also: the five pictures of Setup (str-setup, spell-str-setup,
+    str-setup-panel, str-setup-browse, str-setup-scrolled) no longer show the
+    build folder and the folder of the samples of the machine.  They are made
+    through scenes/neutral-str.sh, which shows neutral paths:
+    /home/writer/documents, /usr/local/strata/stred and
+    /usr/local/strata/strata.hlp (bwrap makes a private view of the file
+    system; nothing on the machine is changed).  The masks of checkpics.allow
+    that left the build folder out are gone.
+  - Not done: the pictures that show the folder of the samples in other
+    panels (the Edit panel and the file panels show /tmp/strata-docs, and
+    print-failed-message shows the folder of the document in its message).
+    They show a temporary folder, not a private one; use scenes/neutral-str.sh
+    as the model if the owner wants them neutral too.

@@ -1,0 +1,518 @@
+LEDGER OF THE READING OF CHAPTERS 9, 10 AND 11 (EQUATIONS, CONVERSION,
+MESSAGES) OF THE REFERENCE MANUAL
+
+This ledger follows docs/MANUAL-CHECK-LEDGER-README.txt, which says what
+a ledger line is and what the notation of the state means.
+
+Date: 21 November 2026.  Every section of the three chapters was read in
+the source, and each statement of fact was compared
+with the program (the source of src, or the program run from the debug
+build).  Sections: 138.  Sections read: 138.  Sections changed: 38.
+
+How the facts were checked, for the whole of a chapter:
+  Chapter 9: the limits and refusals against eqrender.c, latex.c and png.h;
+  the 22 commands of the screen list and the 13 environments against the
+  lists of the program; every equation of the manual (571) against the list
+  of refused commands and environments.
+  Chapter 10: the messages against filemenu.c, readfile.c, msdoc.c and
+  main.c; the command line text mode by running stred --text.
+  Chapter 11: every message of every table against the strings of src (849
+  rows; the rest of the false hits are placeholders); the exit statuses and
+  the usage lines by running stred, strprint and dviview; the order of the
+  rows of every table (12 tables were not sorted and are now).
+
+Chapter 9, the tables of the commands (543 entries in 14 tables and the 14
+worked examples): one test document for the Source column and one for the
+Result column of every table was made by script, one equation to a
+paragraph, and printed with strprint (no printer): all 30 documents print
+with no error and no warning, and for every table and for the examples the
+pages of the two documents are equal pixel for pixel, so that the Result
+column is what the Source column prints.  The Source and the Result text of
+every row are also equal as text (after the display style that some tables
+put in front).
+
+The pages of the final build that were read at 110 dpi (single edition):
+the limits and the tables of the printed checks (9.21, 9.22), delimiters
+and accents (9.15, 9.16), matrices (9.19), the messages of the Editor (11.2),
+the reasons of refused values (11.5.3), the Document Manager footer and
+boxes (11.9), the Setup refusals (11.9.3), the check screen (11.10.2), the
+Conversion guide and messages (10.1, 10.10).  All the tables of the
+Messages chapter were sized to the page.
+
+The columns: number, headline, read, what changed, how the facts were
+checked.
+
+9  Equations: read; changed: the paragraph on pictures no longer says that a
+    document shows only a few; it names the session limit; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.1  What an equation is: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.2  Inserting and editing an equation: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.2.1  Insert: read; no change; facts: limits and refusals against eqrender.c,
+    latex.c, png.h; every {eq:} of the chapter against the list of refused
+    commands and environments (eqcheck: 571 equations, none refused).
+9.2.2  The editor of the equation: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.2.3  Edit an equation that is in the text: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.2.4  Other things done to an equation: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.3  Inline and displayed equations: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.4  Equations on the screen: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.4.1  How the picture is made: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.4.2  The cache: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.4.3  What is shown meanwhile: read; changed: Keycap, Picture and LaTeX marker
+    are drawn in the Short form like an equation; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.4.4  The cursor, movement and wrapping: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.4.5  Viewing an equation: Ctrl-W: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.4.6  Marker display modes: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.5  Printing equations: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.5.1  What is refused when printing: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.5.2  Differences between the screen and the printed page: read; no change;
+    facts: limits and refusals against eqrender.c, latex.c, png.h; every {eq:}
+    of the chapter against the list of refused commands and environments
+    (eqcheck: 571 equations, none refused).
+9.6  The text of an equation: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.7  Greek letters: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.7.1  Lower case Greek letters: read; no change; typeset with strprint (no
+    error, no warning): 31 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source.
+9.7.2  Upper case Greek letters: read; no change; typeset with strprint (no
+    error, no warning): 22 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source.
+9.8  Binary operators: read; no change; typeset with strprint (no error, no
+    warning): 53 entries; the Source column and the Result column print the same
+    page (all pixels equal); the Meaning column read in the source.
+9.9  Relations: read; no change; typeset with strprint (no error, no warning):
+    71 entries; the Source column and the Result column print the same page (all
+    pixels equal); the Meaning column read in the source.
+9.10  Arrows: read; no change; typeset with strprint (no error, no warning): 54
+    entries; the Source column and the Result column print the same page (all
+    pixels equal); the Meaning column read in the source.
+9.11  Other symbols: read; no change; typeset with strprint (no error, no
+    warning): 66 entries; the Source column and the Result column print the same
+    page (all pixels equal); the Meaning column read in the source; the printed
+    page of the last rows was read.
+9.12  Superscripts and subscripts: read; no change; typeset with strprint (no
+    error, no warning): 23 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source.
+9.13  Fractions, binomials and roots: read; no change; typeset with strprint (no
+    error, no warning): 22 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source.
+9.14  Large operators and functions: read; no change; typeset with strprint (no
+    error, no warning): 61 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source.
+9.15  Delimiters and their sizes: read; no change; typeset with strprint (no
+    error, no warning): 28 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source; the printed page was read.
+9.16  Accents, lines and braces: read; no change; typeset with strprint (no
+    error, no warning): 31 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source; on the printed page the top of \widehat and \widetilde touches the
+    line above their cell.
+9.17  Text and fonts: read; no change; typeset with strprint (no error, no
+    warning): 31 entries; the Source column and the Result column print the same
+    page (all pixels equal); the Meaning column read in the source.
+9.18  Spacing: read; no change; typeset with strprint (no error, no warning): 28
+    entries; the Source column and the Result column print the same page (all
+    pixels equal); the Meaning column read in the source; the printed page of
+    the last rows was read.
+9.19  Matrices, arrays and alignment: read; no change; typeset with strprint (no
+    error, no warning): 22 entries; the Source column and the Result column
+    print the same page (all pixels equal); the Meaning column read in the
+    source; the printed page of the matrix rows was read.
+9.20  Errors, refusals and limits: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.20.1  Messages: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.20.2  What the Printer does with a failure: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.21  The commands that are refused: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.21.1  The short list of the screen: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.21.2  The long list of the Printer: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.21.3  Characters and environments: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.22  Limits: read; changed: 4096 pictures in a session (EQ_MAX of eqrender.c,
+    not 128); the row of eight pictures to a line is removed, the Editor has no
+    such limit; facts: limits and refusals against eqrender.c, latex.c, png.h;
+    every {eq:} of the chapter against the list of refused commands and
+    environments (eqcheck: 571 equations, none refused).
+9.23  Documents that have equations that are not TeX math: read; no change;
+    facts: limits and refusals against eqrender.c, latex.c, png.h; every {eq:}
+    of the chapter against the list of refused commands and environments
+    (eqcheck: 571 equations, none refused).
+9.24  Worked examples: read; no change; typeset with strprint (no error, no
+    warning): 14 entries; the Source column and the Result column print the same
+    page (all pixels equal); the Meaning column read in the source.
+9.24.1  The quadratic formula: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.2  A sum with limits: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.24.3  An integral: read; no change; facts: limits and refusals against
+    eqrender.c, latex.c, png.h; every {eq:} of the chapter against the list of
+    refused commands and environments (eqcheck: 571 equations, none refused).
+9.24.4  The definition of a derivative: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.24.5  The binomial theorem: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.6  A product of matrices: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.7  A function defined in cases: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.8  A derivation in several lines: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.24.9  A continued fraction: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.10  An inequality with large brackets: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.24.11  A law of physics with vectors: read; no change; facts: limits and
+    refusals against eqrender.c, latex.c, png.h; every {eq:} of the chapter
+    against the list of refused commands and environments (eqcheck: 571
+    equations, none refused).
+9.24.12  A chemical equation: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.13  A Fourier transform: read; no change; facts: limits and refusals
+    against eqrender.c, latex.c, png.h; every {eq:} of the chapter against the
+    list of refused commands and environments (eqcheck: 571 equations, none
+    refused).
+9.24.14  A norm: read; no change; facts: limits and refusals against eqrender.c,
+    latex.c, png.h; every {eq:} of the chapter against the list of refused
+    commands and environments (eqcheck: 571 equations, none refused).
+10  Conversion: read; no change; facts: messages against filemenu.c, readfile.c,
+    msdoc.c, main.c; the screen image limits against file3.src.
+10.1  What do I do for ... : read; no change; facts: messages against
+    filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits against
+    file3.src.
+10.2  The ways in and out: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.2.1  What stays when a document goes out as text: read; no change; facts:
+    messages against filemenu.c, readfile.c, msdoc.c, main.c; the screen image
+    limits against file3.src.
+10.3  Importing text: read; changed: the sentence that the statements were tried
+    is removed; facts: messages against filemenu.c, readfile.c, msdoc.c, main.c;
+    the screen image limits against file3.src.
+10.3.1  What each character becomes: read; no change; facts: messages against
+    filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits against
+    file3.src.
+10.3.2  What the two values of Options do to one file: read; no change; facts:
+    messages against filemenu.c, readfile.c, msdoc.c, main.c; the screen image
+    limits against file3.src.
+10.3.3  A file in UTF-8: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.3.4  Recipe: a table from a spreadsheet: read; changed: the narrative of a
+    test is replaced by a reference to the example; facts: messages against
+    filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits against
+    file3.src.
+10.3.5  Recipe: a letter or an article: read; no change; facts: messages against
+    filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits against
+    file3.src.
+10.3.6  Recipe: an outline: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.4  Exporting text: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.4.1  Choosing a way: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.4.2  The text mode of the Editor: read; no change; facts: messages against
+    filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits against
+    file3.src.
+10.5  The Printer as a way out: read; changed: the narrative of a one page PDF
+    is removed; facts: messages against filemenu.c, readfile.c, msdoc.c, main.c;
+    the screen image limits against file3.src.
+10.6  Pictures: read; no change; facts: messages against filemenu.c, readfile.c,
+    msdoc.c, main.c; the screen image limits against file3.src.
+10.7  Equations: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.8  Old documents: read; no change; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.9  Word lists and dictionaries: read; no change; facts: messages against
+    filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits against
+    file3.src.
+10.10  Messages of the conversions: read; changed: the reasons of the file
+    reader (cannot open file, this is a directory, not a file, read error) and
+    the titles Retrieve failed; facts: messages against filemenu.c, readfile.c,
+    msdoc.c, main.c; the screen image limits against file3.src.
+10.11  Examples: read; changed: the claim that the examples were tried is
+    replaced by what each example gives; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.11.1  A table of three rows, in and out: read; no change; facts: messages
+    against filemenu.c, readfile.c, msdoc.c, main.c; the screen image limits
+    against file3.src.
+10.11.2  A text with accents from a modern system: read; no change; facts:
+    messages against filemenu.c, readfile.c, msdoc.c, main.c; the screen image
+    limits against file3.src.
+10.11.3  A report to a plain text file: read; rewritten as steps; the figures of
+    an unnamed sample are removed; facts: messages against filemenu.c,
+    readfile.c, msdoc.c, main.c; the screen image limits against file3.src.
+10.11.4  A document to a PDF without sending it: read; changed: the narrative of
+    a one page PDF is removed; facts: messages against filemenu.c, readfile.c,
+    msdoc.c, main.c; the screen image limits against file3.src.
+11  Messages: read; no change; facts: every message of the tables against the
+    strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.1  How to read this chapter: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.2  Where messages appear: read; no change; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.3  The sections of this chapter: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.4  The Editor: the message line: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.4.1  Refusals and information: read; changed: sorted by text; the lines
+    Equation, Keycap, LaTeX marker and Picture drawn as Short added (ui.c
+    latex_note); facts: every message of the tables against the strings of src
+    (msgcheck: 849 rows); exit statuses and usage lines by running stred,
+    strprint and dviview.
+11.4.2  After a command has done its work: read; changed: sorted by text; the
+    message of the terminal without UTF-8 is written as the program writes it,
+    with one space; facts: every message of the tables against the strings of
+    src (msgcheck: 849 rows); exit statuses and usage lines by running stred,
+    strprint and dviview.
+11.5  The Editor: boxes: read; no change; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.5.1  File: Save, Retrieve, New, Delete, Import, Export: read; changed:
+    sorted; the reasons of the file reader (readfile.c) and the damaged document
+    message replace the old wording; facts: every message of the tables against
+    the strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.5.2  The panels: refused values: read; sorted by text; facts: every message
+    of the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.5.3  Further reasons for a refused value: read; new: 33 reasons of refused
+    values that were missing (backups, descriptions, header and footer,
+    hyphenation dictionaries, the PDF directory and viewer, Search for
+    printers); facts: every message of the tables against the strings of src
+    (msgcheck: 849 rows); exit statuses and usage lines by running stred,
+    strprint and dviview.
+11.5.4  Global: Format, Page, Options, Named: read; sorted by text; facts: every
+    message of the tables against the strings of src (msgcheck: 849 rows); exit
+    statuses and usage lines by running stred, strprint and dviview.
+11.5.5  Marker and the commands that make markers: read; no change; facts: every
+    message of the tables against the strings of src (msgcheck: 849 rows); exit
+    statuses and usage lines by running stred, strprint and dviview.
+11.5.6  Tools: Macros and Library: read; changed: the reasons of the macro file
+    are those of the file reader; sorted; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.5.7  Print and Preview: read; no change; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.5.8  The equation viewer and the title page: read; no change; facts: every
+    message of the tables against the strings of src (msgcheck: 849 rows); exit
+    statuses and usage lines by running stred, strprint and dviview.
+11.5.9  The start of the Editor: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.5.10  Word count and help: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.6  The Editor: questions: read; changed: sorted; the question File does not
+    exist is written with one space as in ui.c; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.7  Print and preview jobs: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.7.1  Values that are refused: read; sorted by text; facts: every message of
+    the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.7.2  The run and its end: read; sorted by text; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.7.3  The texts of the progress box: read; no change; facts: every message of
+    the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.7.4  Preview: read; sorted by text; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.8  The Printer: read; changed: the missing character warning is the text of
+    latex.c (No font has the character U+XXXX), with its name char-missing; the
+    document reader reason is the damaged document message; facts: every message
+    of the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.9  The Document Manager: read; no change; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.9.1  The footer: read; no change; facts: every message of the tables against
+    the strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.9.2  Boxes: read; changed: the five Setup rows of a box that the program no
+    longer shows are removed; facts: every message of the tables against the
+    strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.9.3  The refusals of Setup: read; new: the eleven reasons that the Setup
+    panel gives on its foot line (str.c setup_check); facts: every message of
+    the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.9.4  Questions and the error output: read; no change; facts: every message of
+    the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.10  Spell check and thesaurus: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.10.1  Boxes: read; sorted by text; facts: every message of the tables against
+    the strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.10.2  On the check screen and in the word panel: read; sorted by text; facts:
+    every message of the tables against the strings of src (msgcheck: 849 rows);
+    exit statuses and usage lines by running stred, strprint and dviview.
+11.10.3  Thesaurus: read; sorted by text; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.11  Equations: read; sorted by text; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.12  What the programs write at start: read; changed: the damaged document
+    message replaces the unterminated text record; sorted; facts: every message
+    of the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.12.1  Settings and the files of the user: read; no change; facts: every
+    message of the tables against the strings of src (msgcheck: 849 rows); exit
+    statuses and usage lines by running stred, strprint and dviview.
+11.13  Messages of the programs that Strata runs: read; no change; facts: every
+    message of the tables against the strings of src (msgcheck: 849 rows); exit
+    statuses and usage lines by running stred, strprint and dviview.
+11.13.1  LaTeX: read; sorted by text; facts: every message of the tables against
+    the strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.13.2  The print command: read; sorted by text; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.13.3  The installation of fonts: read; sorted by text; facts: every message
+    of the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.14  Messages that read oddly: read; sorted by text; facts: every message of
+    the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.15  Messages of the Error Log: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.15.1  The faults: read; sorted by text; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.15.2  The place of a fault: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.15.3  On the message line: read; sorted by text; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.16  Command lines: exit status and messages: read; no change; facts: every
+    message of the tables against the strings of src (msgcheck: 849 rows); exit
+    statuses and usage lines by running stred, strprint and dviview.
+11.16.1  Exit status: read; no change; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.16.1.1  The Editor: read; no change; facts: every message of the tables
+    against the strings of src (msgcheck: 849 rows); exit statuses and usage
+    lines by running stred, strprint and dviview.
+11.16.1.2  The Document Manager, the Printer and the Viewer: read; no change;
+    facts: every message of the tables against the strings of src (msgcheck: 849
+    rows); exit statuses and usage lines by running stred, strprint and dviview.
+11.16.2  On the error output: read; no change; facts: every message of the
+    tables against the strings of src (msgcheck: 849 rows); exit statuses and
+    usage lines by running stred, strprint and dviview.
+11.16.3  The Viewer: read; changed: the usage line is the text of dviview
+    (--report, --var); facts: every message of the tables against the strings of
+    src (msgcheck: 849 rows); exit statuses and usage lines by running stred,
+    strprint and dviview.
+11.16.4  The spell mode of the Editor: read; no change; facts: every message of
+    the tables against the strings of src (msgcheck: 849 rows); exit statuses
+    and usage lines by running stred, strprint and dviview.
+11.16.5  What the programs write at start, for developers: read; changed: the
+    usage line of the print mode is the program text; the message There is
+    nothing to print is added; facts: every message of the tables against the
+    strings of src (msgcheck: 849 rows); exit statuses and usage lines by
+    running stred, strprint and dviview.
+11.16.6  The usage line of the Printer: read; changed: the usage line is the
+    text of strprint; facts: every message of the tables against the strings of
+    src (msgcheck: 849 rows); exit statuses and usage lines by running stred,
+    strprint and dviview.

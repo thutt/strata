@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Invalid shape definition (<description>) -- 
+
+A shape used in a .DXF file is incorrectly defined. Redefine the shape and retry
+the operation. See the AutoCAD documentation for more information on shapes.
+
+-- Join blocks? -- 
+
+You have pressed Del at the end of a block.  Press Y to join the current block
+with the following block or N to cancel.
+
+-- Left and right margins overlap -- 
+
+The left and right margins overlap.  Change the margin settings on the Page 
+Layout panels and reprint the document.
+
+-- Left margin is smaller than minimum required by printer --
+
+The printer requires a larger left margin than is specified on the Page Layout
+panels. Edit the margin selections and reprint the document.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

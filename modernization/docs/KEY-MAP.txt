@@ -1,0 +1,694 @@
+KEY MAP OF THE PROGRAMS, AND THE F12 MENU ROUTES
+===============================================
+
+Made by tests/keymap.py from the source (src/ui.c, src/term.c, src/term_x11.c,
+src/menu.c, src/widgets.c, src/str.c, src/macro.c, tools/dviview) and from the
+menu tree that the Editor prints with --dump-menus.  It is a study: nothing in
+the programs was changed.  Where a key is lost in a terminal or a desktop, the
+study of docs/KEYS-ENVIRONMENTS.txt and docs/TERMINALS.txt is the source.
+
+Mode: B both kinds of document, S structured only.  Bytes: what a terminal
+sends (ESC is the byte 1B).  A key written with a comma has the same bytes as
+the one before it, or is one more way to type the same command.
+
+Contents
+  PART 1  THE EDITOR
+    1.1 Function keys    1.2 Cursor keys    1.3 Control keys
+    1.4 Alt keys    1.5 Other keys    1.6 The keys by command group
+    1.7 Free keys    1.8 Keys with problems
+    1.9 The soft hyphen and the collapse of a section
+  PART 2  THE DOCUMENT MANAGER
+  PART 3  PANELS, FORMS, LISTS, THE PREVIEW AND THE VIEWER
+  PART 4  THE F12 MENU AND THE MENU ROUTES
+
+PART 1.  THE EDITOR
+===================
+
+1.1  Function keys (the table fkeys[] of src/ui.c)
+----------------------------------------------------
+  F10 and F11 have no command; a macro can record them.  F12 is the menu and
+  is reserved.  Shift with a function key does nothing alone (the key strip
+  shows empty labels); with Ctrl or Alt the Ctrl or Alt command is taken.
+  Alt-F1, Alt-F10 and Alt-F11 say "not available".  The reader also takes
+  ESC[P to ESC[S, ESC[1;mP to S, ESC O m P to S (Konsole), ESC[[A to E (the
+  Linux console) and the rxvt codes ESC[11~ to ESC[24~.
+
+  Key                  Command                           M   Bytes (xterm form)
+  -------------------- --------------------------------- -   -------------------
+  F1                   Help (the screen or the field)    B   ESC O P
+  F2                   Split column, block or section    B   ESC O Q
+  F3                   Copy text/column/block/section    B   ESC O R
+  F4                   Cut text/column/block/section     B   ESC O S
+  F5                   Paste                             B   ESC[15~
+  F6                   Block or column format            B   ESC[17~
+  F7                   Move text/column/block/section    B   ESC[18~
+  F8                   Add or split a column             B   ESC[19~
+  F9                   Search panel                      B   ESC[20~
+  F12                  The F12 menu bar                  B   ESC[24~
+  Ctrl-F1              Record a macro (ends it too)      B   ESC[1;5P
+  Ctrl-F2              Calculate in a column or table    B   ESC[1;5Q
+  Ctrl-F3              Copy to the library               B   ESC[1;5R
+  Ctrl-F4              Cut to the library                B   ESC[1;5S
+  Ctrl-F5              Paste from the library            B   ESC[15;5~
+  Ctrl-F6              Change case of highlighted text   B   ESC[17;5~
+  Ctrl-F7              Previous print error              B   ESC[18;5~
+  Ctrl-F8              Next print error                  B   ESC[19;5~
+  Ctrl-F9              Search again                      B   ESC[20;5~
+  Ctrl-F10             Undo                              B   ESC[21;5~
+  Ctrl-F11             Redo                              B   ESC[23;5~
+  Ctrl-F12             Marker menu / edit marker here    B   ESC[24;5~
+  Alt-F2               Append column/block/section       B   ESC[1;3Q
+  Alt-F3               Join columns/blocks/sections      B   ESC[1;3R
+  Alt-F4               Delete highlighted area           B   ESC[1;3S
+  Alt-F5               Overtype on and off               B   ESC[15;3~
+  Alt-F6               Attribute menu                    B   ESC[17;3~
+  Alt-F7               Go to a section or a page         B   ESC[18;3~
+  Alt-F8               Border panel                      B   ESC[19;3~
+  Alt-F9               Replace panel                     B   ESC[20;3~
+  Alt-F12              Marker menu / edit marker here    B   ESC[24;3~
+
+1.2  Cursor keys (the movement switch of src/ui.c)
+----------------------------------------------------
+
+  Key                  Movement                          M   Bytes (xterm form)
+  -------------------- --------------------------------- -   -------------------
+  Left                 Character left                    B   ESC[D
+  Shift-Left           Column left                       B   ESC[1;2D
+  Ctrl-Left            Word left                         B   ESC[1;5D
+  Right                Character right                   B   ESC[C
+  Shift-Right          Column right                      B   ESC[1;2C
+  Ctrl-Right           Word right                        B   ESC[1;5C
+  Up                   Line up                           B   ESC[A
+  Shift-Up             Section's headline                S   ESC[1;2A
+  Down                 Line down                         B   ESC[B
+  Shift-Down           Next section's headline           S   ESC[1;2B
+  Home                 Start of the line                 B   ESC[H
+  Shift-Home           Start of the document             B   ESC[1;2H
+  Ctrl-Home            Start of the block or column      B   ESC[1;5H
+  End                  End of the line                   B   ESC[F
+  Shift-End            End of the document               B   ESC[1;2F
+  Ctrl-End             End of the block or column        B   ESC[1;5F
+  PgUp                 About half a screen up            B   ESC[5~
+  Shift-PgUp           Previous section, same level      S   ESC[5;2~
+  PgDn                 About half a screen down          B   ESC[6~
+  Shift-PgDn           Next section, same level          S   ESC[6;2~
+
+1.3  Control keys (the switch of control codes)
+----------------------------------------------------
+
+  Key                  Command                           M   Byte
+  -------------------- --------------------------------- -   -------------------
+  Ctrl-A               Append block, same local format   B   01
+  Ctrl-B               Bold on and off                   B   02
+  Ctrl-C               Spell check the current word      B   03
+  Ctrl-D               Delete the next word              B   04
+  Ctrl-E               Block or column format            B   05
+  Ctrl-F               The Ctrl-F list of commands       B   06
+  Ctrl-G               Text indent                       B   07
+  Ctrl-H               Hanging indent                    B   08
+  Ctrl-I, Tab          Insert a tab                      B   09
+  Ctrl-J               End of line (as Enter)            B   0A
+  Ctrl-K               Cut block                         B   0B
+  Ctrl-L               Cut section                       S   0C
+  Enter, Ctrl-M        End of line; accept a highlight   B   0D
+  Ctrl-N               Normal text (attributes off)      B   0E
+  Ctrl-O               Append block, global format       B   0F
+  Ctrl-P               Print, Final                      B   10
+  Ctrl-Q               Quit the Editor                   B   11
+  Ctrl-R               Retrieve                          B   12
+  Ctrl-S               Save                              B   13
+  Ctrl-T               Thesaurus, current word           B   14
+  Ctrl-U               Underscore on and off             B   15
+  Ctrl-V               Split the block                   B   16
+  Ctrl-W               Equation view (EQUATION EDIT)     B   17
+  Ctrl-X               Cut text (highlight first)        B   18
+  Ctrl-Y               Split the section                 S   19
+  Ctrl-Z               Undo (an extra key)               B   1A
+  Ctrl-^               Edit Section / Edit Document      S   1E
+  Ctrl-/, Ctrl-_       Undo (also Ctrl-Hyphen)           B   1F
+
+1.4  Alt keys (the Alt switch, and the macros)
+----------------------------------------------------
+
+  An Alt-letter that a macro is recorded on runs the macro and comes first: a
+  macro on Alt-I or Alt-O hides the command.  Alt-1 to Alt-9 and Alt-0 work in
+  a structured document.
+
+  Key                  Command                           M   Bytes
+  -------------------- --------------------------------- -   -------------------
+  Alt-*                Outline the section's text        S   ESC *
+  Alt-+, Alt-=         Expand the section                S   ESC +
+  Alt--                Collapse the section              S   ESC -
+  Alt-/                Redo                              B   ESC /
+  Alt-[, Alt-<, Alt-,  Promote the section               S   ESC [
+  Alt-], Alt->, Alt-.  Demote the section                S   ESC ]
+  Alt-_                Soft hyphen                       B   ESC _
+  Alt-I                Italics on and off                B   ESC i
+  Alt-O                Overtype on and off               B   ESC o
+  Alt-1 .. Alt-9       Show headlines to that level      S   ESC 1 .. ESC 9
+  Alt-0                Outline the whole document        S   ESC 0
+  Alt-Backspace        Delete the previous word          B   ESC 7F
+  Alt-letter           Run the macro of that key         B   ESC letter
+
+1.5  Other keys
+----------------------------------------------------
+
+  Key                  Command                           M   Bytes
+  -------------------- --------------------------------- -   -------------------
+  Ins                  Append a section, same level      B   ESC[2~
+  Shift-Ins            Append a subsection               B   ESC[2;2~
+  Del                  Delete the character              B   ESC[3~
+  Backspace            Delete the character before       B   7F (some send 08)
+  Esc                  Cancel a highlight                B   1B alone
+  Ctrl-Shift-Space     No-break space                    B   ESC[32;6u or 00
+  Keypad + - *         As Alt-+, Alt--, Alt-* (X11)      S   X11 only
+
+  While a highlight is on: Enter accepts it, Esc cancels it, the cursor keys
+  move the end of it, F1 is Help, and nothing else acts.  In Autosort Home and
+  End go to the edges of the section and + and - choose the direction.
+  Ctrl-F1 ends a recording (Learn).  In X11 the keypad + - * are Alt-+, Alt--
+  and Alt-*; in a terminal they arrive as the plain characters.
+
+1.6  The keys by command group
+----------------------------------------------------
+
+  Blocks, columns and sections
+    F2                 Split column, block or section    B   ESC O Q
+    F8                 Add or split a column             B   ESC[19~
+    Alt-F2             Append column/block/section       B   ESC[1;3Q
+    Alt-F3             Join columns/blocks/sections      B   ESC[1;3R
+    Ctrl-A             Append block, same local format   B   01
+    Ctrl-O             Append block, global format       B   0F
+    Ctrl-V             Split the block                   B   16
+    Ctrl-Y             Split the section                 S   19
+    Alt-[, Alt-<, Alt-, Promote the section               S   ESC [
+    Alt-], Alt->, Alt-. Demote the section                S   ESC ]
+    Ins                Append a section, same level      B   ESC[2~
+    Shift-Ins          Append a subsection               B   ESC[2;2~
+
+  Editing
+    Ctrl-F2            Calculate in a column or table    B   ESC[1;5Q
+    Ctrl-F10           Undo                              B   ESC[21;5~
+    Ctrl-F11           Redo                              B   ESC[23;5~
+    Alt-F5             Overtype on and off               B   ESC[15;3~
+    Ctrl-D             Delete the next word              B   04
+    Ctrl-I, Tab        Insert a tab                      B   09
+    Ctrl-J             End of line (as Enter)            B   0A
+    Enter, Ctrl-M      End of line; accept a highlight   B   0D
+    Ctrl-Z             Undo (an extra key)               B   1A
+    Ctrl-/, Ctrl-_     Undo (also Ctrl-Hyphen)           B   1F
+    Alt-/              Redo                              B   ESC /
+    Alt-_              Soft hyphen                       B   ESC _
+    Alt-O              Overtype on and off               B   ESC o
+    Alt-Backspace      Delete the previous word          B   ESC 7F
+    Del                Delete the character              B   ESC[3~
+    Backspace          Delete the character before       B   7F (some send 08)
+    Ctrl-Shift-Space   No-break space                    B   ESC[32;6u or 00
+
+  Format and attributes
+    F6                 Block or column format            B   ESC[17~
+    Ctrl-F6            Change case of highlighted text   B   ESC[17;5~
+    Alt-F6             Attribute menu                    B   ESC[17;3~
+    Alt-F8             Border panel                      B   ESC[19;3~
+    Ctrl-B             Bold on and off                   B   02
+    Ctrl-E             Block or column format            B   05
+    Ctrl-G             Text indent                       B   07
+    Ctrl-H             Hanging indent                    B   08
+    Ctrl-N             Normal text (attributes off)      B   0E
+    Ctrl-U             Underscore on and off             B   15
+    Alt-I              Italics on and off                B   ESC i
+
+  Highlight, copy, cut and paste
+    F3                 Copy text/column/block/section    B   ESC O R
+    F4                 Cut text/column/block/section     B   ESC O S
+    F5                 Paste                             B   ESC[15~
+    F7                 Move text/column/block/section    B   ESC[18~
+    Ctrl-F3            Copy to the library               B   ESC[1;5R
+    Ctrl-F4            Cut to the library                B   ESC[1;5S
+    Ctrl-F5            Paste from the library            B   ESC[15;5~
+    Alt-F4             Delete highlighted area           B   ESC[1;3S
+    Ctrl-K             Cut block                         B   0B
+    Ctrl-L             Cut section                       S   0C
+    Ctrl-X             Cut text (highlight first)        B   18
+    Esc                Cancel a highlight                B   1B alone
+
+  Markers
+    Ctrl-F12           Marker menu / edit marker here    B   ESC[24;5~
+    Alt-F12            Marker menu / edit marker here    B   ESC[24;3~
+
+  Menus, help and files
+    F1                 Help (the screen or the field)    B   ESC O P
+    F12                The F12 menu bar                  B   ESC[24~
+    Ctrl-F             The Ctrl-F list of commands       B   06
+    Ctrl-P             Print, Final                      B   10
+    Ctrl-Q             Quit the Editor                   B   11
+    Ctrl-R             Retrieve                          B   12
+    Ctrl-S             Save                              B   13
+
+  Movement
+    Alt-F7             Go to a section or a page         B   ESC[18;3~
+    Alt-*              Outline the section's text        S   ESC *
+    Alt-+, Alt-=       Expand the section                S   ESC +
+    Alt--              Collapse the section              S   ESC -
+    Alt-1 .. Alt-9     Show headlines to that level      S   ESC 1 .. ESC 9
+    Alt-0              Outline the whole document        S   ESC 0
+    Ctrl-Left          Word left                         B   ESC[1;5D
+    Shift-Left         Column left                       B   ESC[1;2D
+    Left               Character left                    B   ESC[D
+    Ctrl-Right         Word right                        B   ESC[1;5C
+    Shift-Right        Column right                      B   ESC[1;2C
+    Right              Character right                   B   ESC[C
+    Shift-Up           Section's headline                S   ESC[1;2A
+    Up                 Line up                           B   ESC[A
+    Shift-Down         Next section's headline           S   ESC[1;2B
+    Down               Line down                         B   ESC[B
+    Shift-Home         Start of the document             B   ESC[1;2H
+    Ctrl-Home          Start of the block or column      B   ESC[1;5H
+    Home               Start of the line                 B   ESC[H
+    Shift-End          End of the document               B   ESC[1;2F
+    Ctrl-End           End of the block or column        B   ESC[1;5F
+    End                End of the line                   B   ESC[F
+    Shift-PgUp         Previous section, same level      S   ESC[5;2~
+    PgUp               About half a screen up            B   ESC[5~
+    Shift-PgDn         Next section, same level          S   ESC[6;2~
+    PgDn               About half a screen down          B   ESC[6~
+    Keypad + - *       As Alt-+, Alt--, Alt-* (X11)      S   X11 only
+
+  Search and replace
+    F9                 Search panel                      B   ESC[20~
+    Ctrl-F7            Previous print error              B   ESC[18;5~
+    Ctrl-F8            Next print error                  B   ESC[19;5~
+    Ctrl-F9            Search again                      B   ESC[20;5~
+    Alt-F9             Replace panel                     B   ESC[20;3~
+
+  Tools
+    Ctrl-F1            Record a macro (ends it too)      B   ESC[1;5P
+    Ctrl-C             Spell check the current word      B   03
+    Ctrl-T             Thesaurus, current word           B   14
+    Ctrl-W             Equation view (EQUATION EDIT)     B   17
+    Ctrl-^             Edit Section / Edit Document      S   1E
+
+1.7  Free keys
+----------------------------------------------------
+
+  Keys that no command uses and that a terminal sends unchanged (a desktop may
+  still keep some of them).
+
+  Control: no letter is free; Ctrl-A to Ctrl-Z are all used, and Ctrl-I,
+  Ctrl-J, Ctrl-M and Ctrl-H are the bytes of Tab, Enter and Backspace.  Free
+  bytes: 1C (Ctrl-\), 1D (Ctrl-]).  In a terminal Ctrl-\ (1C) and Ctrl-] (1D)
+  arrive unchanged; with a German or French layout Ctrl-] needs the AltGr key.
+
+  Alt, letters: Alt-I and Alt-O are commands; every other letter, A to Z (24
+  keys), is free and is the key of a macro (Macro Key: Alt-).  A terminal
+  sends Alt-Shift-letter as ESC and the capital, which the macro list takes as
+  the same key.
+
+  Alt, punctuation that no command uses: ! " # $ % & ' ( ) : ; ? @ \ ^ ` { | }
+  ~.  Alt-] and Alt-\ arrive plain.  Alt-[ (a command) and Alt-Shift-O cannot
+  work in a terminal (section 1.8).
+
+  Function keys: F10, F11 (no command; a macro records them), Alt-F1, Alt-F10,
+  Alt-F11 (say "not available"); Shift-F1 to Shift-F11 (nothing); Ctrl-Alt
+  with anything (read as Ctrl-Alt and ignored).
+
+1.8  Keys with problems
+----------------------------------------------------
+
+  Inside the product
+  - Ctrl-/, Ctrl-_ and Ctrl-Hyphen are all the byte 1F: Undo.  The soft hyphen
+    was on Ctrl-Hyphen and moved to Alt-_.
+  - Ctrl-I is Tab, Ctrl-J and Ctrl-M are Enter, Ctrl-[ is Esc (byte 1B): the
+    same bytes as those keys.
+  - Ctrl-H is Hanging indent, and Backspace is the byte 7F.  A terminal that
+    sends 08 for Backspace (an xterm with backarrowKey off, a Windows console)
+    makes Backspace run Hanging indent.
+  - Undo has three keys (Ctrl-/, Ctrl-Z, Ctrl-F10) and Redo two (Alt-/,
+    Ctrl-F11).
+  - Ctrl-Space is the byte 00, which is read as the no-break space: a terminal
+    cannot tell Ctrl-Shift-Space from it.
+  - Ctrl-Shift with a letter is the byte of Ctrl with the letter: a terminal
+    cannot send it, and the Editor has no command on it.  Ctrl-Alt-letter
+    arrives as a Ctrl-Alt key and is ignored.
+  - Alt-[ (promote the section) is ESC [, the start of every control sequence:
+    the reader waits for the rest, times out and returns Esc.  Alt-< and Alt-,
+    do the same command and work.  Alt-Shift-O is ESC O, which the reader
+    takes for the start of F1 to F4 and drops.
+  - An Alt-letter is ESC and the letter, within 40 ms: over a slow ssh link it
+    may arrive as Esc and a letter.
+
+  Terminals and desktops (docs/KEYS-ENVIRONMENTS.txt)
+  - xterm sends Alt with a character as a character with the eighth bit set
+    unless XTerm*metaSendsEscape is true: every Alt key then types a
+    character.
+  - Shift-Ins (Append a subsection) is the terminals' paste (xterm,
+    xfce4-terminal); Shift-PgUp and Shift-PgDn are scrollback; xfce4-terminal
+    also keeps Shift-Up, Shift-Down, Shift-Home and Shift-End.
+  - F1 (Help) is the help of xfce4-terminal; F10 and F11 (menu, full screen)
+    are taken by xfce4-terminal, GNOME Terminal and Konsole in part, and the
+    two keys have no command.
+  - Alt-F4 (Delete) closes the window in almost every window manager; GNOME
+    takes Alt-F1, F2, F4, F5, F6, F7, F8 and F10; Xfce takes Alt-F4, F6 to F11
+    and all of Ctrl-F1 to Ctrl-F12; KDE takes Alt-F2, F3, F4 and Ctrl-F1 to
+    Ctrl-F4.  So Border (Alt-F8), Go To (Alt-F7), Math (Ctrl-F2), Case
+    (Ctrl-F6) and the library keys are lost in some desktops; the Ctrl-F list
+    reaches them.
+  - tmux keeps Ctrl-B (Bold) as its prefix.
+  - Konsole sends Shift-, Ctrl- and Alt-F1 to F4 as ESC O m P; the reader
+    reads them since the last change.
+  - Consoles without Ctrl-F and Alt-F keys (linux, screen, rxvt, vt100): those
+    commands need the Ctrl-F list.
+
+1.9  The soft hyphen and the collapse of a section
+----------------------------------------------------
+
+  Today: the soft hyphen is Alt-_ (ESC _; Alt-Shift-minus on a US layout).  A
+  section collapses with Alt-- (ESC -; the keypad minus in X11), expands with
+  Alt-+ or Alt-= or the keypad +, and the outline of its text is Alt-*.  Alt-
+  minus was the soft hyphen key for a short time and was given up because it
+  collapses a section.
+
+  Four ways to choose.  None is chosen; the owner chooses after reading the
+  whole map.
+
+  A.  No change.  Soft hyphen Alt-_, collapse Alt--.
+     Nothing moves.  The soft hyphen needs Shift on every layout, and on a
+     layout where _ is not Shift-minus (French) the key is not Alt-Shift-
+     minus.
+
+  B.  Swap them.  Soft hyphen Alt--, collapse Alt-_.
+     The soft hyphen is the plain hyphen key with Alt, as the old program had
+     it on Ctrl-Hyphen.  Collapse takes the shifted key; the keypad minus must
+     be mapped to Alt-_ in X11 or it would insert a soft hyphen; the manual
+     and the cheat sheet change in four places.
+
+  C.  Soft hyphen on Ctrl-] (the byte 1D, free).
+     No Shift and no Alt: it arrives unchanged in every terminal and in X11.
+     With a German or French layout Ctrl-] needs AltGr.  Alt-_ and Alt-- stay
+     as they are.  A new byte for the macro recorder.
+
+  D.  Soft hyphen only in the Ctrl-F list, and a key later.
+     Nothing collides; a soft hyphen takes three keystrokes (Ctrl-F, a choice,
+     Enter) and a macro can take any Alt-letter for it.  The key can be chosen
+     after the whole map is read.
+
+PART 2.  THE DOCUMENT MANAGER
+=============================
+
+  The Document Manager (src/str.c) shows menus and forms; it has no document
+  keys.  The keys of its menu and form widgets are those of PART 3, with these
+  differences:
+
+  Up, Down, Home, End    move the highlight of the menu; the first letter of an
+                         entry jumps to it
+  Enter, Ins             choose the entry of the menu
+  Esc                    leave a menu that allows it
+  F1                     Help for the entry or the field
+  Tab, Down, Enter       next field; Enter on the last field accepts the form
+  Shift-Tab, Up          previous field (the value is checked first)
+  PgUp, PgDn             next, previous page of a form with pages (Setup)
+  Ins                    accept the form
+  Esc                    cancel the form
+  Left, Right            in a choice: the previous, next choice (no wrap); in a
+                         text field: the cursor
+  Space                  in a choice: the next choice (wraps)
+  F2, +, Alt-+           in a choice or a name field: the list
+  Home, End              in a text field: the start, the end
+  Backspace, Del         in a text field: delete; Del in a Setup field puts the
+                         default back
+  Tab (two part field)   to the second part of the field
+
+  In the Setup form (the Screen Colors page) Space, Left, Right and F2 choose
+  a colour, Tab switches foreground and background, Del and R put a colour
+  back.
+
+PART 3.  PANELS, FORMS, LISTS, THE PREVIEW AND THE VIEWER
+=========================================================
+
+  The keys of the widgets (src/widgets.c, src/menu.c) are the same wherever a
+  panel is used, in the Editor and in the Document Manager.
+
+The F12 menu bar (src/menu.c)
+  F12, Esc (top level)           close the menu
+  Esc                            one level back
+  Left, Right                    the previous, next entry (wraps)
+  Home, End                      the first, the last entry
+  Enter, Ins, Down               open the entry or run the command
+  a letter                       the entry that starts with it, and run it
+  F1                             Help on the highlighted entry
+
+A popup menu or a list
+  Up, Down, Home, End            move the highlight
+  PgUp, PgDn                     one screenful
+  Enter                          choose
+  Esc                            cancel
+  a letter                       the next entry that starts with it
+  F1                             Help
+
+A name line (popup input)
+  Enter                          accept
+  Esc                            cancel
+  Left, Right, Home, End         move the cursor
+  Backspace, Del                 delete (the first key replaces all)
+  F1                             Help
+
+A form of the Editor (popup form)
+  Ins                            accept (the check of the panel runs first)
+  Esc                            cancel
+  Up, Shift-Tab                  previous field
+  Down, Tab, Enter               next field (no wrap)
+  PgUp, PgDn                     next, previous panel of a group
+  Left, Right                    choice: previous, next; text: the cursor
+  Space                          choice: next, wraps
+  F2, +, Alt-+                   choice: the list; name: the picker
+  Home, End                      start, end of a text field
+  Backspace, Del                 delete in a text field
+  F1                             Help for the field
+
+A grid of names (popup grid)
+  Enter, Ins                     choose
+  Esc                            cancel
+  Up, Down                       move, wrapping
+  Left, Right                    column left, right
+  Home, End                      first, last
+  a letter                       the next entry that starts with it
+
+A question
+  Y                              yes
+  N, Esc                         no
+
+A text to read (pager)
+  Esc, Enter, q, Ctrl-Q          close
+  Up, Down                       one line
+  PgUp, PgDn, Space              one screenful
+  Home, End                      start, end
+
+The help screens
+  Esc, F1, q                     close
+  Up, Down, PgUp, PgDn, Space    scroll
+  Home, End                      top, bottom
+  Tab, Right                     the next link
+  Shift-Tab, Left                the previous link
+  Enter                          follow the link
+  Backspace, Ctrl-H              back (closes at the first topic)
+  Z                              zoom
+  I                              the index
+
+The spell panel and the thesaurus (Ctrl-C, Ctrl-T)
+  Left, Right                    previous, next suggestion or word
+  Home, End                      first, last
+  Enter, Ins                     accept the suggestion
+  Y, N, Esc                      answer the question, cancel
+  Up, Down                       thesaurus: the row above, below
+  PgUp, PgDn                     thesaurus: a page of rows
+  Ctrl-Home, Ctrl-End            thesaurus: the heading word, the last
+  Ctrl-T                         thesaurus: look up the highlighted word
+  Ctrl-PgUp                      thesaurus: back to the last word
+
+The Preview and Print wait panels
+  Esc                            stop LaTeX, delete the files, leave
+
+The Viewer (X11 only, tools/dviview)
+  Q, Esc                         quit
+  PgDn, Space, N                 next page
+  PgUp, P                        previous page
+  Home, End                      first, last page
+  G, digits, Enter               go to a page
+  Up, Down, Left, Right          scroll
+  +, =, keypad +                 zoom in
+  -, keypad -                    zoom out
+  0, keypad 0, keypad *          zoom 100 percent
+  F1, ?                          show the legend
+
+
+PART 4.  THE F12 MENU AND THE MENU ROUTES
+=========================================
+
+The menu as the program has it (the bar; Edit varies with the document):
+
+  File
+    Save   [Ctrl-S]
+    Retrieve   [Ctrl-R]
+    New
+    Delete
+    Import
+    Export
+  Global
+    Format
+    Page
+    Typeface
+    Marker
+    Options
+    Named
+      Edit
+      Delete
+  Edit
+    Title
+    Structured
+    Window
+    Unstructured
+    Section   [Ctrl-^]
+    Document   [Ctrl-^]
+  Print
+    Draft
+    Final   [Ctrl-P]
+    Preview
+      Document
+      Block
+      Section
+    Next Error   [Ctrl-F8]
+    Previous Error   [Ctrl-F7]
+    Remove Error
+    Remove Print Errors
+  Tools
+    Macros
+      Edit
+      Delete
+      Learn   [Ctrl-F1]
+      Save
+      Retrieve
+    Library
+      Edit
+      Delete
+      Save
+      Retrieve
+    Spell
+      Document
+      Block
+      Section
+      Word   [Ctrl-C]
+    Thesaurus   [Ctrl-T]
+    Autosort
+      Section
+      Table
+    Count
+    Undo   [Ctrl-F10]
+    Redo   [Ctrl-F11]
+  Quit   [Ctrl-Q]
+
+Commands that have a key and an entry:
+
+  Learn          Ctrl-F1    Tools, Macros, Learn
+  Next Error     Ctrl-F8    Print, Next Error
+  Prev Error     Ctrl-F7    Print, Previous Error
+  Redo           Ctrl-F11   Tools, Redo
+  Undo           Ctrl-F10   Tools, Undo
+
+  Menu entries that have no key of their own: File New, File Delete, File
+  Import, File Export, Global Format, Global Page, Global Typeface, Global
+  Marker, Global Options, Global Named Edit, Global Named Delete, Edit Title,
+  Edit Structured, Edit Window, Edit Unstructured, Print Draft, Print Preview
+  Document, Print Preview Block, Print Preview Section, Print Remove Error,
+  Print Remove Print Errors, Tools Macros Edit, Tools Macros Delete, Tools
+  Macros Save, Tools Macros Retrieve, Tools Library Edit, Tools Library
+  Delete, Tools Library Save, Tools Library Retrieve, Tools Spell Document,
+  Tools Spell Block, Tools Spell Section, Tools Autosort Section, Tools
+  Autosort Table, Tools Count.
+
+  The original: the repository documents say that its menus hold only these
+  entries.  docs/EDIT-MENU.txt: the Edit menu has Title, Structured or
+  Unstructured, Section or Document, and Window, and the commands of the
+  function keys are "not on it in the original" (the collapse, expand, promote
+  and demote commands stay on their keys).  docs/TOOLS-MENU.txt: Tools has
+  Macros, Library, Spell, Thesaurus, Autosort and Count.  docs/KEYSTROKES.txt
+  marks Undo and Redo (Tools) as not in the original.  So none of the commands
+  below has a menu entry in the original: its function key is its only way.
+
+Commands with a function key and NO menu entry (24):
+
+  Command          Key        Proposed menu route
+  ---------------- ---------- ------------------------------
+  Help             F1         the bar, Help
+  Split            F2         Edit, Split
+  Copy             F3         Edit, Copy
+  Cut              F4         Edit, Cut
+  Paste            F5         Edit, Paste
+  Format           F6         Edit, Format
+  Move             F7         Edit, Move
+  Table            F8         Edit, Table
+  Search           F9         Tools, Search
+  Math             Ctrl-F2    Tools, Math
+  Lib Copy         Ctrl-F3    Tools, Library, Copy
+  Lib Cut          Ctrl-F4    Tools, Library, Cut
+  Lib Paste        Ctrl-F5    Tools, Library, Paste
+  Case             Ctrl-F6    Tools, Case
+  Search Again     Ctrl-F9    Tools, Search Again
+  Marker           Ctrl-F12   Edit, Marker
+  Append           Alt-F2     Edit, Append
+  Join             Alt-F3     Edit, Join
+  Delete           Alt-F4     Edit, Delete
+  Overtype         Alt-F5     Edit, Overtype
+  Set Attribute    Alt-F6     Edit, Set Attribute
+  Go To            Alt-F7     Edit, Go To
+  Border           Alt-F8     Tools, Border
+  Replace          Alt-F9     Tools, Replace
+
+The proposals, with the reason:
+
+  Help (F1): the bar, between Tools and Quit, Help.  F1 is taken by
+  xfce4-terminal; a bar entry is where a user looks for Help (letter H is free
+  in the bar).
+
+  Search (F9): Tools, before Border, Search.  There is no Search menu; the
+  Edit menu is for the kind of document, so Tools holds the three search
+  commands.
+
+  Math (Ctrl-F2): Tools, before Autosort, Math.  Next to Autosort, which also
+  works on a column or table.
+
+  Lib Copy (Ctrl-F3): Tools, Library, first entry, Copy.  The library chapter
+  keeps the three commands together; Library now has Edit, Delete, Save and
+  Retrieve.
+
+  Lib Cut (Ctrl-F4): Tools, Library, second entry, Cut.  As Lib Copy.
+
+  Lib Paste (Ctrl-F5): Tools, Library, third entry, Paste.  As Lib Copy.
+
+  Case (Ctrl-F6): Tools, before Autosort, Case.  As Border: a command on
+  highlighted text.
+
+  Search Again (Ctrl-F9): Tools, after Replace, Search Again.  As Search.
+
+  Marker (Ctrl-F12): Edit, last entry, Marker.  Global, Marker is the marker
+  SETTINGS, so inserting a marker needs a different label.
+
+  Border (Alt-F8): Tools, before Autosort, Border.  Chapter 3 of the manual
+  puts Border, Case and Math side by side, ahead of Tools: Macros and Library.
+
+  Replace (Alt-F9): Tools, after Search, Replace.  As Search.
+
+  The editing commands (Split, Copy, Cut, Paste, Move, Format, Table, Append,
+  Join, Delete, Overtype, Set Attribute, Go To and Marker): fourteen entries
+  would double the Edit menu, which the original keeps to three.  Two ways,
+  and the owner chooses.  Way 1: new entries on the Edit menu with those
+  names, each running the command as its key does.  Way 2: ONE new entry,
+  "Commands", on the Tools menu (or on the bar), that opens the same list as
+  Ctrl-F with every command that has a function key and its key (W29.1 made
+  that list).  Way 2 also covers Border, Case, Math, the library commands, the
+  search commands and Help, so the proposals above are the alternative to it
+  for those commands.
+
+  Letters of the bar entries: with Case, Math and Count, Macros and Math,
+  Spell and Search all in Tools, a letter jumps to the first entry that starts
+  with it, so a new entry changes which entry a letter reaches; the manual and
+  the cheat sheet name the letters.

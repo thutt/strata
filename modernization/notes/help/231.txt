@@ -1,0 +1,25 @@
+
+------------------------------------ Markers -----------------------------------
+The following markers control various aspects of the printed page format.
+
+Orientation:  Inserts a page break and prints subsequent text in either portrait
+              or landscape mode. An Orientation marker must be in its own block.
+              Use a second Orientation marker to change to the original 
+              orientation.  A separate typeface list is available for each 
+              orientation if the Setup printer supports mixed orientations.
+
+Keep:         Marks the beginning or end of one or more blocks to keep together
+              on a page, for example a table.  Use Start (Fixed) to maintain the
+              relative position of the Keep blocks within surrounding blocks.
+              Use Start (Floating) to allow blocks following the Keep blocks to 
+              move forward if the Keep text must begin on the following page.
+
+Escape Codes: Inserts a hexidecimal code that is passed directly to the printer
+              as a formatting instruction outside of Manuscript; for example,
+              to change the ribbon position in order to use a second color.  An
+              escape code must have an even number of characters.
+
+Markup:       Inserts third-party developer code, which aids file conversions 
+              between Manuscript files and other file formats.
+--------------------------------------------------------------------------------
+    Markers     Typeface List     Setup     Keyboard Summary     Help Index

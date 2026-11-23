@@ -1,0 +1,25 @@
+
+----------------------------------- Split --------------------------------------
+Split (F2) splits the current column, block, or section at the cursor position.
+Any text after the cursor is included in the new column, block, or section.
+
+Split the current column    Split the current block    Split the current section
+at the cursor position.     at the cursor. (Ctrl V)    at the cursor. (Ctrl Y)
+         +---------------+              |                +--------+
+               +--------------------------------------------------+
+               |      Column          Block          Section      |
+               +--------------------------------------------------+
+
+Procedure---------------------------------------------------------------------
+
+ Position the cursor where you want to split the current column, block, or
+  section and press Split.
+ Select Column, Block, or Section and press Enter.
+--------------------------------------------------------------------------------
+# The new column, block, or section has the same formats as the original.
+# Use Append (Alt F2) to add a column, block, or section after the current one;
+  to add a block with the global block format; or to add a subsection.
+# You cannot split a column that contains wrapped text.  In these cases use 
+  Append or Table instead of Split to add a column.
+--------------------------------------------------------------------------------
+  Append    Join    Table    Accelerators    Keyboard Summary    Help Index

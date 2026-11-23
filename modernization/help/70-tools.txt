@@ -1,0 +1,169 @@
+; The Tools menu: macros, library, spell check, thesaurus, autosort, count.
+= Tools Menu
+~ Menu:Tools
+The Tools menu holds Macros, Library, Spell, Thesaurus, Autosort and Count.
+
+- [[Macros]] record keystrokes that run again on {Alt} and a key.
+- [[Library]] keeps named pieces of text that you can paste into any document.
+- [[Spell Check]] checks the spelling; [[Thesaurus]] finds other words.
+- [[Autosort]] sorts blocks or sections; [[Word Count]] counts the words.
+
+= Macros
+~ Menu:Tools:Macros
+A macro is a series of recorded keys that runs again when you press {Alt} and
+its
+key, a letter or a digit.  Macros live as long as the Editor runs; save them in
+a file to keep them.
+
+[[Learn a Macro]] records one, [[Edit a Macro]] shows and changes the keys,
+[[Delete a Macro]] removes one, and [[Save Macros]] and [[Retrieve Macros]]
+use a file.  A macro on a key that is also a command, such as {Alt-I}, runs
+instead of the command while the macro exists.
+
+= Learn a Macro
+~ Menu:Tools:Macros:Learn
+~ Define Macro
+~ Define Macro:Macro Key: Alt-
+~ Learn
+{Ctrl-F1} (or Tools, Macros, Learn) starts a recording.  The panel Define Macro
+prompts for the Macro Key (one letter or digit), a Description, and Include in
+Macro Set?, which says whether Save writes the macro to a file.
+
+Press {Ins}; the message line shows that you are defining the macro and that
+{Ctrl-F1} ends it.  Every key that you press is kept, in menus and panels too,
+and it also does what it always does.  {F12} is never kept, so a macro cannot
+open the menu bar.  {Ctrl-F1} ends the recording and is not part of the macro.
+
+= Edit a Macro
+~ Menu:Tools:Macros:Edit
+~ Macro Edit
+Look at a macro and change it.  First give the Macro Key, then the panel shows
+the Description, the Keystrokes and Include in Macro Set?.  The keystrokes are
+one line of text: a character is itself, and any other key is its name in angle
+brackets, such as <Enter>, <Tab>, <Esc>, <Up> or <Ctrl-B>.  A line that cannot
+be
+read is refused, with a message that explains the angle brackets.
+
+= Delete a Macro
+~ Menu:Tools:Macros:Delete
+~ Delete Macro
+Give the Macro Key of the macro to delete, and answer the question.
+
+= Save Macros
+~ Menu:Tools:Macros:Save
+~ Save Macro Set
+~ Save Macro Set:File Name
+Writes the macros that are marked Include in Macro Set? to a macro file.  The
+panel prompts for the Working Directory, the File Name (.mac is added to a name
+with no period), a Description, the Author and the Revision.  If the file
+exists you are asked whether to overwrite it.  See [[Checklists]].
+
+= Retrieve Macros
+~ Menu:Tools:Macros:Retrieve
+~ Retrieve Macro Set
+Reads a macro file.  The panel prompts for the Working Directory, the File Name
+and the Options: Overwrite Current Macros deletes the macros in memory first,
+and Merge with Current Macros adds the macros of the file to the others.  The
+macro set named in the Setup field Initial Macro Set is read in this way, with
+Overwrite, when the Editor starts.
+
+= Library
+~ Menu:Tools:Library
+~ Libraries
+The library holds named pieces of text, blocks and sections, that you can paste
+into any document.  It lives as long as the Editor runs.
+
+- {Ctrl-F3} copies to the library, {Ctrl-F4} cuts to it, and {Ctrl-F5} pastes
+  from
+  it.  See [[Copy to Library and Paste from Library]].
+- [[Edit a Library Entry]] looks at an entry or makes one, [[Delete a Library
+  Entry]] removes one, and [[Save the Library]] and [[Retrieve a Library]] use a
+  file.
+
+= Copy to Library and Paste from Library
+~ Copy to Library
+~ Paste from Library
+After {Ctrl-F3} or {Ctrl-F4}, choose a unit of text and highlight it as for Copy
+and Cut.  A panel prompts for the Entry Name and a Description.  {Ctrl-F5}
+prompts for the name of the entry to paste: {F2} lists the entries.  See [[Units
+of Text]].
+
+= Edit a Library Entry
+~ Menu:Tools:Library:Edit
+~ Library Entry
+Give an Entry Name; {F2} lists the names that exist.  The panel shows the
+Description, the Contents and Include in Library?.  An entry that exists
+starts with Yes; accepting a name with No removes the entry.  After the panel
+you are asked whether to edit the contents.
+
+= Delete a Library Entry
+~ Menu:Tools:Library:Delete
+~ Delete from Library
+Give the Entry Name and answer the question.
+
+= Save the Library
+~ Menu:Tools:Library:Save
+~ Save Library
+Writes the library to a library file.  The panel prompts for the Working
+Directory, the File Name (.lib is added to a name with no period), a
+Description, the Author and the Revision.
+
+= Retrieve a Library
+~ Menu:Tools:Library:Retrieve
+~ Retrieve Library
+Reads a library file.  The Options field: Overwrite Current Library Entries or
+Merge with Current Library Entries.  The library named in the Setup field
+Initial Library is read in this way, with Overwrite, when the Editor starts.
+
+= Spell Check
+~ Menu:Tools:Spell
+~ Menu:Tools:Spell:Document
+~ Menu:Tools:Spell:Block
+~ Menu:Tools:Spell:Section
+~ Check Document Spelling
+~ Spell
+Tools, Spell checks the document, the block or the section that holds the
+cursor.  The panel for the document shows the Document Name, the Custom
+Spelling Dictionary and the Dictionary Language, and lets you change Auto
+Correct?: with Yes, a correction that you made once is made again when the
+same word comes later.  When a word is not known, the screen shows it
+highlighted in its line and offers these commands, chosen by the first letter
+or with {Left}, {Right} and {Enter}:
+
+- Accept: keep the word for the rest of this check.
+- Define: put the word in your personal dictionary.
+- Ignore: leave this one and go on.
+- Edit: type the word again.
+- Guess: list similar words; choose one with {Left} and {Right} and {Enter}.
+- Line: edit the whole line.
+- Quit: end the check.
+
+See [[Spell Word]].
+
+= Spell Word
+~ Menu:Tools:Spell:Word
+~ Spell Check:Line
+{Ctrl-C} checks the word at the cursor.  The box shows Spelled correctly, or Not
+found in dictionary, and when there are suggestions it shows them in a row:
+choose one with {Left} and {Right} and press {Enter} to replace the word, or
+{Esc} to cancel.
+
+= Thesaurus
+~ Menu:Tools:Thesaurus
+{Ctrl-T} shows words with a similar meaning for the word at the cursor, in a
+panel at the top or the bottom of the screen.
+
+- {Left}, {Right}, {Up} and {Down} choose a word; {PgUp} and {PgDn} scroll.
+- {Enter} replaces the word in the text with the one that is highlighted.
+- {Ctrl-T} looks up the highlighted word, and {Ctrl-PgUp} goes back to the last
+  word.
+- Type a letter to open the Look Up box and type another word.
+- {Esc} leaves the thesaurus with the text unchanged.
+
+= Autosort
+~ Menu:Tools:Autosort
+~ Menu:Tools:Autosort:Section
+~ Menu:Tools:Autosort:Table
+Autosort puts things in order.  Section sorts the subsections of the current
+section.  Table sorts the blocks that you highlight; press {+} or {-} while the
+blocks are highlighted to choose ascending or descending order.

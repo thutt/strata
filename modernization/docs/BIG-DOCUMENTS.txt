@@ -1,0 +1,176 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+BIG DOCUMENTS
+=============
+
+What Strata does with a document of 750 pages and with one of 4000 pages,
+measured.  Only what was measured is stated here; nothing is said about any
+other program, because no other program was measured.
+
+1. The documents
+----------------
+  manual    The Reference Manual as one document (manual/build.sh single):
+            2,212,980 bytes, 17,945 items, 1,295 headlines, 3,712 index
+            entries, 135 pictures, 753 pages in the PDF (753 in the DVI),
+            47,290 lines of 80 columns on the screen of the Editor.
+  big1219   A synthetic manual (tests/mkbig.py, 45 chapters): 3,899,341
+            bytes, 25,589 items, 1,219 pages, 76,587 screen lines, the
+            contents and the index with page numbers, tables, footnotes,
+            cross-references.
+  big4062   The same with 150 chapters: 13,041,779 bytes, 85,229 items,
+            4,062 pages, 255,342 screen lines.
+
+The machine: Intel Core i7-6700HQ (8 threads), 15 GB, Linux, pdfTeX 1.40.29
+(TeX Live 2026).  The programs are the release build.  Times are wall clock.
+
+2. The Editor
+-------------
+tests/bigtest.c runs the commands without a terminal (the time of the
+command and the layout that the next screen needs); tests/bigtui.py runs the
+Editor in a pseudo-terminal and times every key until the screen is quiet.
+
+                                         manual      big1219    big4062
+  load the file                          33 ms       45 ms      151 ms
+  first layout                           78 ms       92 ms      303 ms
+  memory after the layout (peak)         28 MB       38 MB      123 MB
+  Page Down through the whole document   19 ms       36 ms      -
+  Search from the start to the end       80 ms       97 ms      330 ms
+  Search for a word that is not there    8 ms        15 ms      49 ms
+  Replace all (22,131 / 12,555 / 41,679) 8 ms        15 ms      50 ms
+    and the layout after it              80 ms       85 ms      330 ms
+  Go To the last section                 0 ms        0 ms       1 ms
+  outline: collapse all / level 1 / 3    11/6/7 ms   14/9/11    52/36/41
+  outline: expand a section              8 ms        12 ms      41 ms
+  Autosort of a chapter's sections       8 ms        11 ms      39 ms
+  type a character (with the layout)     6.6 ms      9.5 ms     36 ms
+  delete a character                     6.5 ms      9.5 ms     37 ms
+  split a block / join two blocks        79/146 ms   89/172     306/580
+  Save                                   66 ms       81 ms      444 ms
+  reload                                 19 ms       32 ms      106 ms
+  second Save                            13 ms       24 ms      81 ms
+  peak memory of the whole run           35 MB       52 MB      168 MB
+
+In the terminal (manual): the first screen after 116 ms; Page Down 4 ms on
+the average and 5 ms at the worst of 30; Ctrl-End and Ctrl-Home 2 ms; Search
+from the start to the end 99 ms and again 1 ms; a Search that finds nothing
+33 ms; Go To section 5 ms; outline levels 27 to 51 ms; a typed character
+33 ms; Enter and Backspace 32 ms; resident memory 30 MB at the start and 34
+MB at the end.  The same run on big1219: first screen 148 ms, Page Down 4 ms,
+Search 121 ms, typing 45 ms, resident memory 40 MB and then 46 MB.
+
+The bytes: the document is read and written again with no change of a byte
+(tests/roundtrip.c on every document), and a second Save of a document that
+was saved and loaded again gives the same bytes as the first Save.
+
+Undo (src/undo.c, measured by "undotest --measure FILE" on the manual, 14,786
+items, with 100 levels).  The Editor keeps a copy of the document (10.9 MB
+in memory) and compares it with the document after each key that changed
+it; with Undo Levels 0 nothing is kept.  A typed character costs 0.12 ms
+more (debug build; 0.13 ms in a release build), against about 33 ms for the
+typing itself.  Replace All of the word "the", which changes nearly every
+block: 44.5 ms (release 29.5 ms), the history 10.6 MB, Undo 95 ms (62 ms),
+Redo 118 ms (71 ms).  Replace All of a word that occurs 20 times: 20.6 ms
+(8.1 ms), the history 145 KB, because an operation keeps one patch for
+each stretch that changed.  The history is limited to 64 MB; when that is
+exceeded the oldest operations are dropped.
+
+What was slow and was fixed.  Before the fix, one typed character in the
+manual took 69 ms, an outline command 65 to 69 ms, the first layout 148 ms
+and Go To section 14 ms (390 ms on big4062).  The cause was the work that
+follows every change in a document with cross-references (src/markereval.c,
+xref_update): for each of the 6,000 cross-references it searched the table of
+links and the table of sections from the start.  The table is now asked in the
+order of the document and the sections are found by a hash of their numbers
+and by the identity of the section, so the work is linear in the size of the
+document.  Go To section (and the section range of Print) made the number of
+every section from the start of the document; sect_find in src/editor.c
+counts once.
+
+3. The Printer
+--------------
+                                         manual      big1219    big4062
+  the whole PDF                          44.4 s      29.7 s     98.9 s
+  LaTeX passes                           2           2          2
+  the largest process (pdfTeX)           36 MB       36 MB      114 MB
+  the DVI file                           49.0 s      28.1 s     -
+  the .tex file only (no LaTeX run)      0.1 s       -          -
+  pages of the PDF                       753         1,219      4,062
+  a range of sections                    4.8 s       0.9 s      -
+                                         (3 to 4,    (5 to 6,
+                                         94 pages)   46 pages)
+
+The first pass writes the page numbers of every headline (the .aux file) and
+the second pass puts them into the contents, the index and the list of
+figures.  A third pass was not needed in any of the three documents (the
+Printer allows up to three and runs the next one only when TeX says that a
+label has moved).  manual/checkpdf.py reads every PDF with pdftotext and
+checks that each row of the contents and of the index gives the page on which
+the headline is printed (1,165 and 4,713 rows for the manual; 2,745 and 3,645
+for big1219; 9,150 and 12,150 for big4062), that no reference is left as
+"??", that no page is blank and that no program is named.
+
+The Document Manager: Print Document of the whole manual took 45.7 s (753
+pages).  The Editor's Preview of the whole manual had the Viewer open after
+53.7 s, with a gauge on the screen during that time; Preview of sections 5
+to 6 after 12.4 s.
+
+4. The Viewer
+-------------
+The DVI file of the manual (753 pages, 5.9 MB): the window is open after
+0.32 s, the slowest page took 55 ms to draw, End goes to page 753, g and
+500 to page 500, Home to page 1.  The resident memory was 16.5 MB.  The DVI
+of big1219 (1,218 pages): the window after 0.32 s, the slowest page 51 ms.
+
+5. Limits that a big document could reach
+------------------------------------------
+No limit was reached by documents of 4,062 pages.  What was looked at:
+  - Items, blocks, columns, headlines, cross-references, index entries,
+    lines of the view (the table of lines doubles when it is full), the
+    table of the links of the cross-references and the labels of the Printer
+    (one for every headline, named from its item number): counts of the size
+    of an int; no fixed table.  The original's limit on the size of a
+    document is not known to this project.
+  - 16-bit values: the layout keeps the distance of a cell from the start of
+    its row in 16 bits only when it fits (distances of 65534 and less) and
+    uses 32 bits otherwise (src/layout.c, the rows of the format "wide").
+    The file format has no 16-bit field: numbers are text.
+  - Sections: 16 levels of nesting in the number of a section (the numbers
+    the Editor shows); the document of the manual uses 4.  A cross-reference
+    holds the number of its section in 31 characters.
+  - Counters: 99 (the original has 9).  A page number: the print job allows
+    pages up to 99,999.
+  - The Printer: a retry table of 2,000 pieces and 400 attempts, used only
+    when a document has errors that TeX refuses; the list of the diagnostics
+    keeps 200; the list of TeX errors 100.  A document that is correct does
+    not use them.  TeX itself printed 4,062 pages in 114 MB with no
+    "capacity exceeded".
+  - The Editor's Library of 200 entries and macros of 64 are not a size of
+    the document.
+Nothing had to be changed for a limit; the changes were for time (section 2).
+
+6. How to repeat it
+-------------------
+  make test      builds and runs the unit tests, and the Editor part of
+                 the tests on a document of 1,219 pages (about 20 seconds):
+                 tests/mkbig.py makes it, tests/bigtest.c and
+                 tests/bigtui.py run the commands.
+  make big       as above, then the Printer, the PDF checks, a part of the
+                 document, the DVI file and the Viewer on a display of its
+                 own (about three minutes).
+  make memprof FILE=manual/doc/strata-reference-manual.doc
+                 the memory of loading and laying out, structure by
+                 structure.
+  python3 -I manual/checkpdf.py PDF META [PAGES]
+                 the check of the PDF against the list of headlines.

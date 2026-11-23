@@ -1,0 +1,188 @@
+# Chapter 6, last part: the command lines of the Printer and the print and
+# preview modes of the Editor, for developers.  Strata is started with the
+# Document Manager; these are not a supported way to start it, so the
+# release edition leaves them out (the last sections of the chapter, so that
+# the numbers of the others do not change).
+.if .STRATA_BUILD_TYPE # release
+.h2 Command lines of the Printer and the Editor [print-cmdline]
+.ix Command line, printing
+.ix Printing from a script
+.ix Printer, command line
+.ix --no-error-log
+.ix --no-banner
+A script can make a PDF without the screen of the Editor by starting the
+Printer, or the Editor in its print mode or its preview mode.  This section
+is for the people who write such scripts, test the programs or work on them.
+Start Strata itself with the Document Manager.  {x:appcmd-dev} lists every
+option of every program.
+.h3 The Printer [print-cmdline-printer]
+.h4 What the Printer makes
+.table 14 10 26
+Result | Option | What it is
+A PDF file | (none) | The default.  The pages are those of Final.
+DVI file for Preview | {c:--dvi} | The pages that Preview shows.
+The LaTeX source | {c:--tex-only} | Only the {c:.tex} file is written.  You can edit
+ it and run LaTeX yourself.
+.end
+
+
+.h4 The options of the Printer
+.ix -o, option
+.ix --dvi
+.ix --tex-only
+.ix --draft
+.ix --double-spaced
+.ix --no-error-log
+.ix --no-banner
+Exactly one document name is wanted: the first word that does not begin with
+a minus.  A second such word, an option that is not valid and an
+option that needs a value and has none make the Printer write a usage line on
+the standard error and end with status 2.  The table holds the options that a
+script needs; the Printer has more, for the Editor to use, and
+{x:appcmd-strprint-opt} lists all of them.
+.table 13 47
+Option | Meaning
+FILE.DOC | The document to typeset.  The name is used as given.
+{c:-o OUT} | The output file.  The default is the name of the document with its
+ extension replaced by {c:.pdf} (or {c:.dvi}), in the current directory, not in the
+ directory of the document.  With {c:--tex-only} a trailing {c:.pdf} or {c:.dvi} of OUT is
+ replaced by {c:.tex}, or {c:.tex} is added.
+{c:--dvi} | Make a DVI file instead of a PDF.  The pictures of the document are
+ copied next to it; a file of that name that exists with other contents is not
+ replaced and a message reports this.
+{c:--tex-only} | Write the LaTeX source and stop.  Status 0 when it was written.
+{c:--draft} | Draft print: the comments of the document are printed, the line
+ spacing is single and the space between blocks is that of one line.  The
+ pictures are printed as in Final.
+{c:--double-spaced} | Double the line spacing of every block.
+{c:--no-error-log} | Do not end the file with the Error Log.  The faults are
+ still written on the standard error, and the status is still 4
+ ({n:print-errlog}).
+{c:--no-banner} | Do not put the banner of a failed print on the pages.  The
+ marks of the faults stay ({n:print-failed}).  {c:--banner} puts it back (it is
+ the default).
+.end
+
+
+.h4 Exit status of the Printer
+.ix Exit status, Printer
+When the Printer makes a file, characters that no font has are printed as
+[U+XXXX] and named once each on the standard error.  A piece that LaTeX does
+not accept (an equation, a picture) is printed in the long form of its marker,
+so that a document always gives a file; the pieces are reported as errors
+({n:print-errors}).  The exit status says how the run ended.
+.table 8 52
+Status | Meaning
+0 | The file was written (or, with {c:--tex-only}, the {c:.tex} file).
+1 | The document cannot be read, the typesetting failed or did not run, or the
+ output cannot be written.  The message names the first TeX error, or shows
+ that the typesetting did not run.
+2 | A mistake in the command line (the usage line is shown).
+4 | The file was made, and the document has errors or warnings
+ ({n:print-errors}).  With errors the print has failed ({n:print-failed}):
+ every page has the banner (unless {c:--no-banner} was given) and the marks,
+ and the standard error shows "PRINT FAILED".  The file has the Error Log
+ unless {c:--no-error-log} was given.  With warnings only the file is as good
+ as one with status 0.  One line for each fault is written on the standard
+ error, and a count.
+.end
+
+
+.h3 The print and preview modes of the Editor [print-cli]
+.ix Editor, print mode
+.ix --print
+.ix --preview
+.ix Print from a script
+.ix Exit status, print mode
+The Editor can print and preview without showing its editing screen.  A script
+can use these two modes.  They are selected by an option of the
+Editor, followed by the name of the document and the other options below.
+
+.h4 The print mode
+The option {c:--print} selects it.  It makes the PDF and sends it, as the
+Print panel does, without opening the editor.  It is Final unless
+{c:--draft} is given.
+.table 15 45
+Option | Meaning
+{c:--print} | Selects the print mode.  The first word without a minus is the
+ document.
+{c:--printer QUEUE} | The queue to send the PDF to.  Without this option the PDF is
+ made and not sent (the Printer of Setup is the default of the panels only).
+{c:--copies N} | 1 to 99.  Default 1.
+{c:--sides WORD} | The word one asks for one-sided, the word two for two-sided on
+ the long edge.  Any other word is refused: "--sides is one or two".
+{c:--sort WORD} | The word yes asks to collate, the word no not to.  Any other
+ word is refused: "--sort is yes or no".
+{c:-o OUT.pdf} | The PDF.  The default is the document's path with its extension
+ replaced by {c:.pdf} ({c:-draft.pdf} with {c:--draft}).
+{c:--from SECTION} | The first section to print.
+{c:--to SECTION} | The last section to print.
+{c:--from-page N} | The first page for {c:lp}.
+{c:--to-page N} | The last page for {c:lp}.
+{c:--no-title} | Leave out the title page.
+{c:--double-spaced} | Double the line spacing.
+{c:--black-and-white} | Print every color as a grey (Print in Black and White?).
+{c:--recover} | Print the part of a damaged document that can be read; the error
+ output says what was left out.  Without it a damaged file is refused.
+{c:--index}, {c:--no-index} | Make the index at the end, or leave it out; the
+ document says when neither is given (Index?).
+{c:--list-figures}, {c:--no-list-figures} | Make the list of figures, or not
+ (List of Figures?).
+{c:--list-pictures}, {c:--no-list-pictures} | The same for the list of pictures.
+{c:--list-tables}, {c:--no-list-tables} | The same for the list of tables.
+{c:--contents LEVEL} | Put a table of contents first, listing the headlines of
+ the levels 1 to LEVEL (1 to 99); 0 leaves it out.  The document says when the
+ option is not given.
+{c:--draft} | Make a Draft.
+{c:--no-error-log} | Do not end the PDF with the Error Log (Error Log?  No).
+{c:--no-banner} | Do not put the banner on the pages of a failed print.  The
+ marks stay ({n:print-failed}).
+{c:--error-log}, {c:--banner} | Put the Error Log and the banner back.  They are
+ the default; the options undo {c:--no-error-log} and {c:--no-banner}.
+{c:--errors FILE} | Write the faults of the document to FILE, in the form that
+ the Editor reads, with the exit status of the run.  If FILE cannot be
+ written the Editor reports this on the standard error.
+{c:--var NAME VALUE}, {c:--special NAME VALUE} | Give a variable of the conditional
+ text, or a special variable, to the print ({n:str-variables}).  A refused
+ name or value ends the run before it starts, with status 2.
+{c:-v}, {c:--verbose} | Tell the progress on the standard error: "Page 1 of about 2",
+ "Sending to the printer".
+.end
+The same refusals as in the panel apply to the values ({n:print-messages}); a refusal ends the run before anything is started.  The
+Editor prints one line, and the exit status says what happened, so that a
+shell script can use it.
+.table 8 52
+Status | Meaning
+0 | The PDF is made, and sent if {c:--printer} was given.  The line is written on
+ the standard output: "Wrote FILE.pdf (12 pages)" or "Wrote FILE.pdf (12
+ pages) and sent it to QUEUE (request id is ...)".
+1 | Nothing was made: the Printer or {c:pdflatex} is missing, LaTeX failed, the
+ document cannot be read.  The text is on the standard error.
+2 | A wrong option or value (the same refusals as the panel).  Nothing was
+ started.
+3 | The PDF is made but not sent: {c:lp} is missing, {c:lp} failed, or the page range
+ does not fit the PDF.  The PDF is kept; the text is on the standard error.
+4 | Stopped.  (A signal ends the program as the signal would.)
+5 | The PDF is made (and sent, if {c:--printer} was given), but the document has
+ errors or warnings.  The line "Wrote ..." is written as for status 0 (with
+ errors it begins "PRINT FAILED: ", and the pages have the banner and the
+ marks, {n:print-failed}), and the faults follow on the standard error under
+ "FILE: the document has errors or warnings:" (and the line "PRINT FAILED:
+ the output was made, but it is inaccurate." after it, when there are
+ errors), one numbered line for each with its place, and a count that
+ begins "PRINT FAILED: " when there are errors.  A document with no faults keeps status 0.
+.end
+The print mode does what {x:print-final} and {x:print-sending} describe.
+
+.h4 The preview mode
+The option {c:--preview} followed by a document name opens no editing screen:
+it previews the whole document, with the title page, as Preview, Document
+does, and returns when the Viewer is closed.  The option {c:--no-error-log}
+leaves the Error Log out of the pages, and {c:--no-banner} the banner of a
+failed print ({n:print-failed}).  When the document has errors or
+warnings the status is 5, and the faults are written on the standard error
+when the terminal is given back ({n:print-errtext}).  It needs an interactive
+terminal or the X11 version.  Any result other than "Preview done" and
+"Preview cancelled" is shown in a box titled "Preview Document" and the
+status is 1; a document that cannot be read gives status 1.
+.endif

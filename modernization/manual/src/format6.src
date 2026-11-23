@@ -1,0 +1,372 @@
+# Chapter 4, sixth part: Global, Marker.  Part of the chapter source.
+
+.h2 Marker [format-marker]
+.ix Global Marker
+.ix Marker settings
+.ix Marker Format
+.ix Marker panels, ring of
+.ix Marker formats
+Global, Marker holds the settings that the markers of a document take when
+the marker has none of its own: how a marker is shown on the screen, the
+date and the time format, the numbering of counters, the look of notes, the
+keycaps and how cross-references print.  It is a ring of nineteen panels,
+with the Marker Format panel first.  This section describes each panel with
+every field.  The markers themselves, with the panel that each has, are in
+{n:markers}.
+
+.h3 How to reach the command [format-marker-reach]
+Press {k:F12}, choose Global and then Marker (the fourth entry; the hint
+line reads "Marker settings"), as described in {x:format-global-menu}.
+The first panel is Marker Format.
+.pic pictures/format-marker.png 5 Marker Format.
+
+.h3 The ring of panels [format-marker-ring]
+.ix Marker ring
+.ix PgUp, PgDn in Marker
+.ix Counter Format panels
+.ix Note Format panels
+.ix Keycap Format panel
+.ix Marker Display Modes panels
+Marker Format is the first panel and the others are reached with {k:PgUp}
+(next) and {k:PgDn} (previous); the ring wraps at both ends, {k:Ins} accepts
+the settings of all nineteen panels and {k:Esc} none of them.  Going on with
+{k:PgUp} from Marker Format the order is this, and {k:PgDn} goes backward.
+.table 5 31 21
+Step | Panel | Section
+1 | Marker Format | {x:format-marker-format}
+2 | Marker Display Modes (1 of 3) | {x:format-marker-modes}
+3 | Marker Display Modes (2 of 3) | {x:format-marker-modes}
+4 | Marker Display Modes (3 of 3) | {x:format-marker-modes}
+5 | Keycap Format | {x:format-marker-keycap}
+6 | Endnote Format | {x:format-marker-notes}
+7 | Levelnote Format | {x:format-marker-notes}
+8 | Footnote Format | {x:format-marker-notes}
+9 to 19 | Counter Format (11 of 11) to (1 of 11) | {x:format-marker-counters}
+.end
+After Counter Format (1 of 11) {k:PgUp} returns to Marker Format.  The
+information fields of the Marker Format panel say where the others are: from
+Marker Format, {k:PgDn} shows Counter Format (1 of 11) first and {k:PgUp}
+shows Marker Display Modes (1 of 3) first.
+
+.h3 Marker Format [format-marker-format]
+.ix Display Hidden Markers
+.ix Primary Note Type
+.ix Date Format
+.ix Time Format
+The first panel has the rows below; the ones that are information (a plain
+text without dots or brackets) are skipped by the cursor.
+.table 21 16 20
+Field | Values | Default
+Display Hidden Markers? | No, Yes | No
+Marker Display Modes | information | Custom
+Note Format | information |
+Primary Note Type | Footnotes, Levelnotes, Endnotes | Footnotes
+Cross-reference Format | Tag, Headline, Both | Tag
+Counter Format | information |
+Keycap Format | information |
+Date Format | text | Month D, Year
+Time Format | text | H:MM am/pm
+.end
+{b:Display Hidden Markers?}  With Yes the markers whose display mode is
+Hidden are drawn on the screen in the Short form, so that they can be found
+and edited; with No they are not drawn.  It is a setting of the screen: a
+Hidden marker is never printed by the rules of {x:format-marker-modes}.
+
+{b:Primary Note Type.}  The kind of note that a new Note marker is until its
+own Type field says otherwise: Footnotes, Levelnotes or Endnotes.  The
+Type list of the Note panel has an entry in brackets as its
+first choice, and a note that has that entry takes the primary type ({n:markers},
+Note).
+
+{b:Cross-reference Format.}  Tag, Headline or Both.  The choice is kept in the
+document.  A Cross-reference marker whose Style is [Tag] prints what this field
+says; a marker with another Style prints what its own Style says
+({n:marker-cross-reference}).
+
+{b:Marker Display Modes, Note Format, Counter Format, Keycap Format.}  Four
+information rows that tell which panel to go to with {k:PgUp} or {k:PgDn}.
+Marker Display Modes reads "Custom (PgUp shows the modes)", Note Format "PgDn
+after the counters", Counter Format "PgDn shows the counters" and Keycap Format
+"PgDn after the Note formats".
+
+{b:Date Format and Time Format.}  The text that a Date, Time, Filedate or
+Filetime marker uses when its own Format field is empty
+({n:format-marker-datetime}).
+
+.h3 Date and time formats [format-marker-datetime]
+.ix Date format words
+.ix Time format words
+.ix Month, Mon, Year, YYYY
+.ix am/pm, time format
+.ix Format of a date
+.ix Format of a time
+A date format and a time format are made of words, which are replaced by a part
+of the date or the time, and of any other characters, which are kept.  The
+words are not case sensitive: Month, month and MONTH are the same
+word.  The words of a date, with the date 3 March 2027 as the example:
+.table 9 38 10
+Word | Meaning | Example
+Month | Name of the month | March
+Mon | The first three letters | Mar
+Year | Four digits of the year | 2027
+YYYY | Four digits of the year | 2027
+YY | Last two digits | 27
+MM | Number of the month, two digits | 03
+M | Number of the month | 3
+DD | Day of the month, two digits | 03
+D | Day of the month | 3
+.end
+The words of a time, with the time 3:07:05 in the afternoon:
+.table 9 38 10
+Word | Meaning | Example
+HH | Hour on a twelve hour clock, two digits | 03
+H | Hour on a twelve hour clock | 3
+MM | Minutes, two digits | 07
+SS | Seconds, two digits | 05
+am/pm | am before noon, pm after | pm
+.end
+Longer words are tried before shorter ones, so that Month is not read as Mon
+and then th.  A format that has no
+am/pm shows the hour from 1 to 12.  The default date format Month D, Year
+gives March 3, 2027 and the default time format H:MM am/pm gives 3:07 pm.
+
+.caution A letter that makes a word is replaced wherever it stands, also inside
+  a word of your own.  The format "Today is Month D" prints "To3ay is March
+  3": the d of Today is read as the day of the month.  Keep the fixed text of
+  a format to characters that are not letters of a word (a slash, a colon, a
+  hyphen, a comma), or leave the letters m, d, y, h and s out of it.
+
+.h3 Marker Display Modes [format-marker-modes]
+.ix Display modes
+.ix Marker display modes
+.ix Global display mode
+.ix Diamond, display mode
+.ix Name, display mode
+.ix Short, display mode
+.ix Long, display mode
+.ix Hidden, display mode
+.ix Inline, display mode
+.pic pictures/format-marker-modes.png 5 Marker Display Modes (1 of 3).
+Every kind of marker has a display mode that says how the markers of that kind
+are drawn on the screen.  The 35 kinds are shown on three panels titled Marker
+Display Modes (1 of 3), (2 of 3) and (3 of 3).  Each row is a choice field
+with the name of the marker at its left.  Panel 1 has one more row at the
+top, Global display mode.  The modes are these.
+.table 10 50
+Mode | What is drawn
+Diamond | A diamond, the same for every marker of the kind.
+Name | A short name in square brackets, such as [CB] or [PAGE].
+Short | A short form in square brackets, such as [C1] or [Key: ENTER].
+Long | The long form, such as [COUNTER1, list of books] or [COLUMN BREAK].
+Hidden | Nothing (but see Display Hidden Markers).
+Inline | The thing itself: the picture of an equation, a picture, a keycap or the
+ typeset text of a LaTeX marker.
+.end
+Inline is offered only for the four kinds that are drawn as images, Equation,
+Keycap, LaTeX and Picture; it is their default.  In the X11 version it shows
+the image (an equation needs {c:latex} and {c:dvipng}; a keycap, a picture and
+a LaTeX marker need {c:pdflatex} and {c:pdftoppm}).  Where the image cannot be
+made (a program is missing, LaTeX finds a mistake, a file does not read, or the
+job takes more than five seconds) the marker is shown in its Short form, never
+as an empty box ({n:marker-latex-picture}).  The terminal version draws no
+images: Inline shows the Short form there, and a keycap shows its legend in
+reverse video.  The other modes for these four show the marker's label and
+never the image.  A Counter and a Cross-reference show their text in the Long
+mode, which is their default, and a Note shows its label in every mode but
+Diamond.  A Note, Comment, Figure, Font, Index and Table marker is drawn in the
+Short mode until the document says otherwise.
+
+{b:Global display mode.}  The choices are n/a (the default), Diamond, Name,
+Short, Long and Hidden.  When {k:Ins} is pressed with any choice but n/a the
+rows of all kinds are set to that mode, whatever they show; n/a leaves them as
+they are.  The field is always n/a when the panel is opened.
+
+{b:Table of the markers.}  The table has the kind, its default mode, the
+label that the Name mode shows, and the panel (1 to 3) on which the kind is.
+.table 18 10 14 6
+Marker | Default | Name label | Panel
+Author | Long | AUTHOR | 1
+Column Break | Short | CB | 1
+Comment | Short | COM | 1
+Counter | Long | C | 1
+Cross-reference | Long | XREF | 1
+Date | Long | DATE | 1
+Description | Long | DESC | 1
+Else | Name | ELSE | 1
+Endif | Name | ENDIF | 1
+Equation | Inline | EQN | 1
+Figure | Short | FIG | 1
+Filedate | Long | FDATE | 1
+Filename | Long | FNAME | 2
+Filetime | Long | FTIME | 2
+Font | Short | FONT | 2
+If | Long | IF | 2
+Include | Long | INCLUDE | 2
+Index | Short | INDEX | 2
+Keep | Long | KEEP | 2
+Keycap | Inline | KEY | 2
+LaTeX | Inline | LaTeX | 2
+Line | Short | LN | 2
+Merge | Long | MERGE | 2
+Note | Short | NOTE | 2
+Orientation | Short | ORIENTATION | 3
+Page Break | Short | PB | 3
+Page Number | Name | PAGE | 3
+Pathname | Long | PATH | 3
+Picture | Inline | PIC | 3
+Printer | Long | PRINTER | 3
+Revision | Long | REV | 3
+Section | Name | SECTION | 3
+Table | Short | TABLE | 3
+Time | Long | TIME | 3
+Whitespace | Short | WS | 3
+.end
+The Short and Long forms of each kind are shown in {n:markers} under the
+marker.  A mode that is not the default is a change of the document, like any
+other setting of this ring.
+
+.behavior The modes are for the screen.  What a marker does on a printed
+  page does not depend on its mode: a Hidden marker is not printed less than a
+  Long one.  A Counter and a Cross-reference print their text, a Note prints
+  its mark, a Keep marker is not printed and keeps its blocks on one page, a
+  Comment is printed in a draft print only, and so on, as {n:markers} says for
+  each marker.
+
+.h3 Counter Format [format-marker-counters]
+.ix Counter Format
+.ix Counter tags
+.ix Counter description
+.ix Numbering with counters
+.ix \1\ tag
+.pic pictures/format-counters.png 5 Counter Format (1 of 11).
+A Counter marker ({n:markers}) numbers the items of a list, a figure, an exercise;
+there are 99 counters, and the Counter Format panels define them.  Eleven
+panels, titled Counter Format (1 of 11) to (11 of 11), have nine counters each:
+C1 to C9, C10 to C18, and so on to C91 to C99.  Each counter has two text
+fields.
+.table 20 14 12
+Field | Values | Default
+C<n> Description | text | see below
+C<n> Tag | text | \1\.
+.end
+{b:Description.}  A comment for the reader, never printed.  C1 is described
+Numeric and C2 Alphabetic, and the others have no description.  It shows in
+the label of a Counter marker in the Long form, as in [COUNTER1, list of books].
+
+{b:Tag.}  The text that a counter prints, with the number in it written as
+a code: a backslash, a letter and a backslash.  The first such group in the
+tag is the number, and the letter says its style; the rest of the tag is
+printed as it is.
+.table 9 51
+Tag | The number is written as
+\1\ | Arabic numerals: 1, 2, 3.
+\i\ | Lower case roman numerals: i, ii, iii.
+\I\ | Upper case roman numerals: I, II, III.
+\a\ | Lower case letters: a, b, c, and aa, ab after z.
+\A\ | Upper case letters: A, B, C, and AA, AB after Z.
+.end
+The default tag of C1 is \1\. and that of C2 is \A\., which give 1. 2. 3.
+and A. B. C.  The tag \1\) gives 1) and the tag Step \1\: gives Step 1:.
+A tag with no group has the number put at its start.  A roman numeral is made
+only for the numbers 1 to 3999; a number that a style cannot show is shown in
+arabic.  Letters go on after Z with AA, AB and so on, however large the number
+is.  A counter counts up to the largest number that it can hold, 4294967295
+({n:markers}, the Counter marker).
+
+{b:What a counter counts.}  The counters are numbered in the order of the
+text.  The first Counter marker of a counter prints its Set Value field if it
+has one and 1 if not; each later marker prints one more than the one before,
+or its own Set Value.  The Number Style field of a marker ({n:markers}) changes
+the style of that marker and of the later ones of the same counter, whatever
+the tag says.  On the screen the number is drawn in the Long mode, and a
+printed page always has it.
+
+.h3 Note formats [format-marker-notes]
+.ix Note Format
+.ix Footnote Format
+.ix Levelnote Format
+.ix Endnote Format
+.ix Reference Tag
+.ix Note Tag
+.ix Separator Bar
+.ix Renumber
+.ix Note Level
+.ix Note Page Title
+.ix Footnotes, endnotes, levelnotes
+.pic pictures/format-footnote.png 5 Footnote Format.
+There are three kinds of note and a panel for each, titled Footnote Format,
+Levelnote Format and Endnote Format.  A footnote is printed at the foot of the
+page that has its mark, a levelnote at the end of the section of the level
+that is set on the panel (the level of its section if that is higher up), and
+an endnote on a page of its own at the end of the document under a title.
+.table 20 16 10 11
+Field | Values | Default | Panel
+Reference Tag | text | see below | all three
+Reference Tag Attributes | a list | see below | all three
+Note Tag | text | see below | all three
+Note Tag Attributes | a list | see below | all three
+Separator Bar (inches) | length | 2.000 | levelnote
+Renumber? | No, Yes | No | levelnote
+Note Level | 1 to 9 | 1 | levelnote
+Note Page Title | text | Endnotes | endnote
+.end
+{b:The tags.}  The Reference Tag is the mark that stands in the text where the
+note is, and the Note Tag is the label before the note itself.  Both are
+written with the codes of {x:format-marker-counters} (\1\, \i\, \I\, \a\,
+\A\), and any other character is printed as many times as the number of the
+note: once on the first, twice on the second, and so on.  The defaults are:
+.table 12 15 15 15
+Kind | Reference Tag | Note Tag | Attributes
+Footnote | \1\ | \1\ | Superscript; Bold
+Levelnote | \a\ | \a\) | Superscript; Bold
+Endnote | [\1\] | \1\. | Normal; Normal
+.end
+The two attribute lists have the choices Normal, Bold, Italics, Bold Italics,
+Superscript, Bold Superscript, Italics Superscript and Bold Italics
+Superscript.  A ninth entry, Other, is shown when a document holds an
+attribute that is not one of these; leaving it alone keeps it.  Bold, italics
+and superscript are the only attributes of a tag that print.  The panels
+refuse nothing: a tag that is emptied, or a number that is not a number (for
+the separator bar or the level, a number outside 1 to 9), keeps its old value,
+and no message is shown.
+
+{b:Separator Bar, Renumber, Note Level, Note Page Title.}  The Separator Bar
+is the length of the rule that separates the notes of a level from the text.
+Renumber? makes the levelnotes number again from 1 at each level in text that
+is exported ({n:convert}).  Note Level is the level of section at whose end
+the levelnotes are printed, and Note Page Title is the title of the page of
+endnotes.  A footnote is on the page of its mark, under a short rule, and the
+notes are numbered through the document or the level.
+
+.h3 Keycap Format [format-marker-keycap]
+.ix Keycap Format
+.ix Keycap, default settings
+.pic pictures/format-keycap.png 5 Keycap Format.
+A Keycap marker draws its legend in a box, like the top of a key.  The Keycap
+Format panel holds the settings that a keycap takes when its own field is left
+at its bracket ({n:markers}, Keycap).
+.table 16 28 13
+Field | Values | Default
+Foreground | 0.0 to 100.0 | 0.0
+Background | 0.0 to 100.0 | 100.0
+Scale | 0.100 to 10.000 | 1.000
+Font | a font of the list | Text
+.end
+Foreground and Background are the grey of the legend and of the box, from 0.0
+(black) to 100.0 (white), in tenths; Scale is the size of the keycap in
+relation to the text around it.  Font is a choice of the twenty fonts, shown by
+the role or the number and the name of the font in the list of the Document
+Manager's TeX Font Association ({n:str}), such as "Text (Latin Modern
+Roman)" or "Font 4 (Times)"; Text is the font number 2.
+
+A value outside the range, or one that is not a number, is refused with a
+message ({n:format-messages}): the panel stays open and the box shows
+which values are right.  The panel of a Keycap marker rejects its own values
+in the same way ({n:markers-messages}).
+
+The Keycap Format is used by the picture that the graphical version draws for
+a keycap on the screen and by the page that is printed: a keycap is drawn with
+the values that the marker itself holds (its own Foreground, Background, Scale
+and Font), and where it holds none, with the values of the Keycap Format.  A
+document that has no Keycap Format draws black on white, scale 1.000 and the
+Text font.

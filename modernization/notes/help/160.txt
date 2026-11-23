@@ -1,0 +1,25 @@
+
+------------------------------- First Block Type -------------------------------
+
+For structured documents, the First Block Type prompt specifies how a section's
+headline block prints.  You can set the first block type on the Global Format, 
+Level 1-9 Format, and Current Section Format panels.
+
+Headline: Prints the headline block on a separate line. 
+
+
+Joined:   Prints the first text block on the same line as the headline block.
+
+
+Text:     Treats the headline as a text block. Use this setting when you don't
+          want the first block considered as part of the section numbering 
+          sequence and when the block should use the same attributes and other
+          settings as text blocks, such as in a preface or a memo heading.
+
+--------------------------------------------------------------------------------
+
+# The Headline and Joined options use the format settings you selected for
+  headline blocks at that level.
+
+--------------------------------------------------------------------------------
+   Global Format    Current Section Format    Keyboard Summary     Help Index

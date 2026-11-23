@@ -1,0 +1,91 @@
+.chapter 3
+.h1 Printing with LaTeX [latex]
+Strata writes a LaTeX file and a TeX engine makes the pages.  It has no
+formatter and no printer drivers; the old program had both.
+.h2 Decision [latex-reasons]
+The design note of the Printer gives the reason.  The operating system reaches
+printers through CUPS, so only the layout remains for the program.  A TeX
+engine provides line breaking, pagination, fonts, footnotes, tables and
+running heads.  Strata gets real pages, a real preview and a page count.  The
+notes record why the engine changed:
+- 10 November: the first design chose XeLaTeX, which reads UTF-8 and uses
+  system fonts.  The machine of the author had pdfTeX only.
+- 12 November: the Printer was written for pdfTeX with eight-bit fonts (T1
+  encoding, Latin Modern), so the preamble needs no system font.  A character
+  that no font has prints as {c:[U+XXXX]} and goes to the Error Log.
+- The Preview needs a DVI file, which LaTeX writes and XeLaTeX does not.  One
+  source therefore works with three routes: pdfTeX for the PDF, LaTeX for the
+  DVI of the Viewer, and LaTeX with a converter for a PDF made from the DVI.
+.h2 Printer [latex-how]
+The Printer is a program of its own.  It loads a document, writes a LaTeX file
+in a private temporary folder and runs pdfLaTeX there; for the other routes it
+runs LaTeX, and dvipdfmx for a PDF made from the DVI.
+.code
+strprint FILE.DOC [-o OUT] [--dvi | --pdf-via-dvi]
+                  [--contents LEVEL] [--index] [--list-figures]
+                  [--list-tables] [--draft] [--double-spaced]
+.end
+The engine starts without shell escape, and the Printer escapes the text, so a
+hostile document cannot make TeX run a command.  Only the user who started the
+print can use the folder, and the Printer removes it at the end.  The exit
+status is 0 only when the PDF exists; on failure the Printer prints the first
+error line of the TeX log.
+One macro sets every level of headline; LaTeX sections and counters are not
+used.  The tag of a headline is the text that the Editor shows, so the printed
+number cannot differ from the number on the screen.
+The S of the logo was first a Metafont font.  A bitmap font needs a TeX
+installation that can make it, travels with each document and needs code in
+the Viewer; the first Preview showed empty boxes because the font files had
+been removed.  A route through dvips could not print a normal S either.  On 15
+November the project maintainer decided to draw the S with TikZ as a vector.
+It is sharp at every size and needs no files and no Viewer code.
+.h2 Passes [latex-settle]
+A contents list, an index, a list of figures and a cross reference to a page
+need the page numbers of the previous run.  The Printer runs the engine twice
+when the document asks for such a part, and a third time only when the log of
+the second run says that a label has moved.  Three is the limit, and a failed
+pass is not repeated.
+.if .STRATA_BUILD_TYPE # release
+.h3 Measurement [latex-passes]
+The measurement of 18 November made structured documents of five sizes, from
+10 to @pass_pages_last@ pages, with every feature that makes TeX run again:
+contents of every level, index, lists of figures and tables, cross references
+to sections and pages, a Section marker in the header, a footnote in every 25th
+block and a long table.  {Tab:passes} gives the result.  Two passes settle
+documents up to @max_pass_two@ pages; the largest size needs three.  A cross
+reference without a target prints as two question marks.  The check of the
+project reads each PDF as text and found none in any size, and no placeholder
+of a missing section.  Every row of the contents and the index gives the page
+of its headline.  The same check runs on the reference manual.
+.tabcap passes Prints that need several passes
+.table 8 9 11 18
+Pages | Passes | Seconds | Peak memory (MB)
+.datarows passes
+.end
+.pic pictures/story-print-time.png 4 Time of a print, by pages. [printtime]
+.h2 Borders in print [latex-borders]
+A LaTeX table draws vertical rules only between rows, so the first writer
+printed double borders with gaps: the outer line floated above the corner and
+the vertical lines broke between rows.  The test came first.  It reads a
+printed page at 300 or 400 dpi and requires: unbroken
+vertical lines from the first horizontal line to the last, also for the inner
+line of a double line; a line between two columns through every line between
+rows; horizontal lines from edge to edge.  The old writer failed eight checks.
+The fix of 19 November:
+1. Each cell draws the vertical lines of its own edges after its text, in its
+padding, with a width of zero.  The table no longer uses LaTeX rules.
+2. Each line between two rows is a row of its own, as high as the line, made
+of one box per column and the vertical lines through it.
+3. A line between two columns is drawn once, at the right edge of the left
+column; the stronger kind wins on disagreement.
+.endif
+.h2 Hyphenation and templates [latex-templates]
+A soft hyphen marks a place where a word may break; the Printer writes it as
+{c:\-}.  The Maintain Dictionaries entry of the Document Manager keeps a
+personal list of words with break places.  The Printer writes the list into
+the preamble as {c:\hyphenation}.  The old program kept such lists in files of
+its own; Strata reads them ({x:probing}).
+A template gives a new document its named formats, page layout, header and
+footer.  The New command lists the templates with a description of each.  The
+shipped set has letters for US Letter and A4 and envelopes.  The A4 letter
+puts the address where the window of a window envelope shows it.

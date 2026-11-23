@@ -1,0 +1,25 @@
+--------------------------- Print/Preview/Compare Document ---------------------
+Graphics Print/Preview   Select one or more of the options you want to print.
+               Options:  If none of the options are selected, nothing prints.
+                          
+# Print Text prints the text of the document, any Picture or Equation markers
+  that have Position set to In Text, and any Line or Keycap markers. If you 
+  select only this option, the document will be printed with white space where 
+  borders, pictures, screens, and equations should be.
+
+# Print Borders prints the borders on blocks and columns. If you do not select
+  this option, space is left where the borders would be.
+
+# Print Pictures prints all Picture markers other than those that have Position
+  set to In Text, and all Screen markers. If you select only this option, all 
+  text is removed from the document and only pictures and screens are printed.
+  If you do not select Print Pictures, space is left where the pictures or
+  screens would print.
+
+# Print Equations prints all Equation markers other than those that have 
+  Position set to In Text. If you select only this option, all text is removed 
+  from the document and only equations are printed. If you do not select Print 
+  Equations, space is left where the equations would print.
+--------------------------------------------------------------------------------
+      Print Document           Preview Document           Compare Documents
+                 Keyboard Summary                     Help Index

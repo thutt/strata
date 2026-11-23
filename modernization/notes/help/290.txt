@@ -1,0 +1,25 @@
+
+-------------------------------- MacPaint File Import --------------------------
+
+MacPaint File Import converts files created in MacPaint to Manuscript graphics 
+image files.
+
+  +----------------------------- MacPaint File Import --------------------+
+  |                                                                       |
+  |             Working Directory:                                        |
+  |                                                                       |
+  |            MacPaint File Name:                                        |
+  |                                                                       |
+  |           Bit Image File Name:                                        |
+  |                                                                       |
+  +------------------------- Press Ins to Import File --------------------+
+
+# Enter the name of the MacPaint file to convert, including the full path name
+  if the file is not in the current working directory.
+
+# Enter a name for the converted bit mapped file, including a file name 
+  extension of either .BIT or .RLE.
+
+# Use the Picture marker to include the converted image file in a document.
+--------------------------------------------------------------------------------
+File Conversion Utilities     Picture Marker     Keyboard Summary     Help Index

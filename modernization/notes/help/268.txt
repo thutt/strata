@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- Window must be SHEET or FORM type in Worksheet marker --
+
+The window you specified in a Worksheet marker is not a SHEET or FORM window, 
+so no data can be imported. Reenter the window name or leave the name blank and
+Manuscript will use the first sheet or form window in the worksheet.
+
+
+-- Window not found in worksheet (window: <name>) --
+
+The window name specified is not in the worksheet.
+
+
+-- Word is too long - maximum length is <value> characters -- 
+
+The word you are trying to look up in the thesaurus is longer than 16 characters
+or the word you are trying to spell check is longer than 65 characters.  Edit
+the word and retry the operation.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

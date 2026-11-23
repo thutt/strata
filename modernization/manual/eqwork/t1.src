@@ -1,0 +1,16 @@
+.doc t1
+.h1 T1
+
+A {eq:\$ \% \# \& \_ \{{ \}}} here.
+
+{eq:a sub 1 over b super 2}
+
+{eq:x=1}.
+
+{eq:x=1} {eq:y=2}
+
+.table 30 30
+Source | Result
+{c:x^2} | {eq:x^2}
+{c:y} | y {eq:\frac{{a}}{{b}}}
+.end

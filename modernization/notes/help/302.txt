@@ -1,0 +1,25 @@
+
+------------------------------------- Tools ------------------------------------
+
+
+Use the Menu (F10) Tools commands to perform document management functions other
+than editing, formatting, and printing.
+
+
+Manage individual     Spell check all     Sort sections or     Count the number
+macros or macro       or part of a        blocks in alpha-     of words in the
+set files.            document.           numeric order.       document.
+     +---+                 |                    +---+                 |
+  +-------------------------------------------------------------------------+
+  |   Macros   Library   Spell   Thesaurus   Autosort   Worksheet   Count   |
+  +-------------------------------------------------------------------------+
+         +--------+                  |                     +---+  
+Manage individual library     Look up a word in           Import data for all
+entries or library            the thesaurus.              Worksheet markers set
+files.                                                    to On Command. 
+
+
+
+--------------------------------------------------------------------------------
+Macros     Library     Spell     Thesaurus     Autosort     Worksheet     Count
+           Menu              Keyboard Summary               Help Index

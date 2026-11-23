@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Out of system memory --
+
+There is not enough memory available to perform the requested task. Manuscript 
+requires a minimum of 512K of memory. Try removing any memory-resident 
+software and retry the operation.
+
+
+-- Out of virtual memory --
+
+The task being performed needs more virtual memory than is currently allocated.
+Save the file and refer to Appendix C of the Reference manual for information
+on changing the virtual memory configuration.
+
+
+-- Overwrite existing <description>? -- 
+
+The item you are trying to create already exists. Press Y to replace the current
+item or N to return to the previous panel.
+
+--------------------------------------------------------------------------------
+   More Error Messages        Error Index        Out of Virtual Memory Error
+                 Keyboard Summary                  Help Index

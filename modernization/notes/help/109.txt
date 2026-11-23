@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Document printer not recognized -- 
+
+The printer specified for the document is not supported by your current release
+of Manuscript.  The document was created or edited in a more recent release 
+with expanded printer support.
+
+-- Document upgrade required (<filename>) -- 
+
+The document being printed or a document used by the document being printed
+(such as an Include file) must be upgraded to Release 2 for printing to
+continue.  The document upgrade is only for the current printing session and
+will not affect the disk version of the file.
+
+-- Documents cannot be compared; less than 50% of words match --
+
+Less than 50% of the text of the two files matches, so the files cannot be
+compared. Split the input files into smaller files and compare the corresponding
+smaller pieces of the two files.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

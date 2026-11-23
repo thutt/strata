@@ -1,0 +1,53 @@
+# Chapter 5 of the Reference Manual: Markers.  The chapter is kept in several
+# files that this one includes: what a marker is, the table of all the
+# markers, panels, screen and print (markers1); the markers from Author to
+# Equation (markers2); Filedate to Keycap (markers3); LaTeX to Printer
+# (markers4); Revision to Whitespace and the markers printed as a Box
+# (markers5); the messages (markers6); the Print Error marker (markers7).
+.doc Strata Reference: Markers
+.chapter 5
+.h1 Markers [markers]
+.ix Markers
+.ix Marker table
+.ix Alt-F12
+A marker is an item that is put into the text in place of a letter: a date
+that is filled in when the document is printed, a footnote, a page break, a
+picture, a counter that numbers the items of a list.  A marker has a panel of
+its own.  {k:Alt-F12} or {k:Ctrl-F12} puts a marker in, the same key with the
+cursor on a marker changes it, and {k:Del} takes it out like a letter
+({n:edit-b-marker}).  The Marker settings of the Global menu set how a marker
+looks on the screen ({n:format-marker}).  This chapter says what each marker
+is, what each field of its panel means and what the marker does on the screen
+and on paper.
+.table 20 40
+Section | What it covers
+{x:markers-what} | What a marker is and where it can stand.
+{x:markers-table} | All the markers in one table, with the default display and
+ the print.
+{x:markers-panels} | The panels and the kinds of field.
+{x:markers-screen} | The display modes and the label of each marker in each
+ mode.
+{x:markers-printed} | Which markers are typeset, which print a text, which are
+ printed as a boxed label and which are not printed.
+{x:markers-messages} | The messages of the marker commands and panels.
+{x:markers-errors} | The Print Error marker, which only the Editor makes.
+.end
+The entries follow the order of the table Marker Commands, which is
+alphabetical.  The markers that are printed as a Box have one entry together
+({n:markers-labels}); the entries of Include and of the conditional markers
+come last.  Every entry has the same parts:
+- a first paragraph that says what the marker is for;
+- a table of the panel with every field, the values that it accepts, its
+  default and what it does;
+- the look of the marker on the screen;
+- what the Printer does with it;
+- the edges: an empty field, a file that is not there, a marker where it does
+  not belong;
+- the messages that can be shown, and the other places of the manual to read.
+.include markers1.src
+.include markers2.src
+.include markers3.src
+.include markers4.src
+.include markers5.src
+.include markers6.src
+.include markers7.src

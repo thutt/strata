@@ -1,0 +1,487 @@
+TERMINALS: WHICH TERMINALS WORK FOR THE TERMINAL VERSION
+=========================================================
+
+Status: study with measurements (task 31).  No program change was made.
+The owner saw: in a 7-bit xterm the screen looked horrible; in an 8-bit xterm
+there were odd characters; "xterm +lc -u8" was nearly sufficient; bars and
+triangles showed as boxes (tofu).  This file says why, which terminals and
+fonts work, and gives a draft of the prerequisite text for the manual.
+
+Contents
+  1. What the program sends and needs
+  2. How it was probed (and what could not be)
+  3. Results: the table
+  4. Findings, terminal by terminal
+  5. What is needed (the short list)
+  6. What the program would need (worklist items, not done)
+  7. DRAFT text for the prerequisites chapter of the manual
+  8. Corrections the manual needs
+  9. How to repeat the probes
+
+
+1. WHAT THE PROGRAM SENDS AND NEEDS
+-----------------------------------
+  Output.  Every cell is written as UTF-8, always (src/term.c, utf8()).  The
+  program never calls setlocale and never reads LANG, LC_ALL or LC_CTYPE; the
+  locale of the shell does not change what it writes.  Besides ASCII it
+  writes the 160 code points of cp437_uni (src/layout.c) and nothing else:
+    - box drawing: U+2500-U+256C (the section bar, menu and panel borders,
+      table borders), 40 code points;
+    - blocks and shades: U+2580-U+2593 (the shade fills, bars of the scroll
+      marks and the cursor block);
+    - the end of block mark U+25C4 (left triangle), U+25BA, U+25B2, U+25BC,
+      the arrows U+2190-U+2195, U+21A8, the faces U+263A, U+263B, the card
+      suits, U+266A, U+266B, U+263C, U+25CB, U+25D8, U+25D9, U+2642, U+2640;
+    - Latin letters with accents, Greek letters, math signs (the rest of the
+      CP437 table: U+00A1-U+00FF, U+0393-U+03C6, U+2219-U+2265, ...).
+  The list is made by tests/fontcover.py from the table itself.
+  Control sequences.  "ESC [ 0 m" with ;1 ;3 ;4 ;7 and colours (30-37, 38;5;n,
+  38;2;r;g;b and the same for 48), cursor addressing "ESC [ r ; c H", clear
+  "ESC [ 2 J", the alternate screen "ESC [ ? 1049 h/l", the cursor "ESC [ ?
+  25 h/l" and the cursor colour.  It reads no terminfo and sends no query: it
+  never asks the terminal anything.  It reads TERM and COLORTERM and
+  STRATA_COLORS only to decide the colour depth (src/color.c, color_depth_of):
+    - STRATA_COLORS none/16/256/truecolor wins; then COLORTERM containing
+      truecolor or 24bit gives 24 bit;
+    - TERM empty, dumb, unknown or starting with "vt": no colours (reverse
+      video, bold, dim, underline, cyan for markers);
+    - TERM with "truecolor" or "-direct": 24 bit; with "256color": 256;
+    - any other TERM (xterm, linux, screen, rxvt, st): the 16 VGA colours.
+  Input.  Raw mode.  It reads UTF-8, "ESC [" and "ESC O" sequences, and "ESC"
+  plus a character for Alt (waits 40 ms after ESC, 50 ms for the rest of a
+  sequence).  It enables no mouse mode, no bracketed paste and no
+  modifyOtherKeys; it takes what the terminal sends by default.  Known: ESC [
+  A-D H F, ESC O A-D H F P Q R S, ESC [ n ~ for n = 1 2 3 4 5 6 7 8 11-15
+  17-21 23 24, ESC [ 1 ; m A... with the modifier m (Shift 2, Alt 3, Ctrl 5),
+  ESC [ Z, ESC [ [ A-E (Linux console F1-F5), and Ctrl-Shift-Space as ESC [
+  32 ; 6 u or ESC [ 27 ; 6 ; 32 ~.  Everything else is dropped without a
+  message.
+  Size.  From TIOCGWINSZ; 80x25 when it cannot be read.  The Editor needs at
+  least 20 rows, the text is laid out in 40 to 80 columns.
+
+
+2. HOW IT WAS PROBED (AND WHAT COULD NOT BE)
+--------------------------------------------
+  Machine: claude-alien, Ubuntu, kernel 7.0.0-43, Xvfb on a private display
+  (1400x900), no window manager.  Terminals that are not installed were got
+  with "apt-get download" and "dpkg -x" into a private root in the scratchpad
+  (no apt install, no sudo).  Start: the debug build of the Editor (the
+  program of branch alien-30) on manual/samples/chars.doc (every CP437
+  character in a grid of 16 rows) and on manual/samples/showcase.doc (a
+  structured document with tables, a Marker Commands box, an equation
+  marker, keycap marks); the window was photographed with ImageMagick import
+  and READ.  A combination passes when every shape is right: no tofu box, no
+  question mark, no shifted column, no stray byte.
+  Three scripts (tests/): termprobe.py (modes shot, keys, width), fontcover.py
+  (which font has which code point).  Width: after each of the 160
+  characters the cursor position is asked for (ESC [ 6 n) and must have moved
+  by one cell.  Keys: every key the Editor uses (93 keys: F1-F12 with Shift,
+  Ctrl and Alt, the cursor block with Shift and Ctrl, Ins, Del, Tab,
+  Shift-Tab, Esc, Ctrl-Space, Ctrl-Shift-Space, six Ctrl letters, four Alt
+  keys) was sent with XTEST (key codes) and the bytes read in the terminal
+  were decoded with the rules of src/term.c copied to Python.
+  Versions: xterm 407, uxterm 407, urxvt (rxvt-unicode) 9.31, xfce4-terminal
+  1.1.5, lxterminal 0.4.1, gnome-terminal 3.58.0 (VTE 0.84), mlterm 3.9.4,
+  st 0.9.3, kitty 0.45.0, alacritty 0.16.1, tmux 3.6a, screen 4.9.1.
+  NOT PROBED (and why):
+    - The Linux virtual console: no console here (section 4 says what it
+      needs, from reading, not from a test).
+    - ssh to this machine: the machine has an sshd, but a login as the user
+      needs a key in the real home or a private sshd; the sandbox refused the
+      private sshd, so no login was made.  Only the configuration was read
+      (section 4).
+    - konsole: the package extracts, but it needs Qt 6 and 20 KDE libraries
+      that are not on the machine; not pursued.
+    - foot: needs Wayland (as the task says).  Other terminals not tried:
+      terminator, tilix, wezterm, ghostty, Terminal.app, iTerm2, Windows
+      Terminal, PuTTY, tmux inside them (the user's real terminals).
+    - xfce4-terminal key input: all keys were lost by the test (focus could
+      not be given to it under no window manager); the glyphs and widths were
+      probed.  It is built on the same widget (VTE) as lxterminal and
+      gnome-terminal, whose key results are given.
+    - gnome-terminal with LANG=C: it made no window (not investigated).
+    - Printing, Preview and the X11 version are outside this study.
+    - Key results of mlterm are not reliable: 23 keys came back as nothing,
+      among them Down, which no terminal reserves; the test is the suspect.
+    - The test sends keys with XTEST; keys that a desktop or a window manager
+      keeps (Alt-F1, Ctrl-Alt-letters, the super key) were not tested.
+
+
+3. RESULTS: THE TABLE
+---------------------
+  Glyphs/width: shapes drawn right and one cell each ("ok"), or what is wrong.
+  Keys: keys of the Editor that did not arrive correctly (of 93).
+  Locale UTF8 = LANG=en_US.UTF-8; C = LANG=C.
+
+  Terminal, setting           Loc  Glyphs        Keys wrong     Verdict
+  --------------------------  ---  ------------  -------------  -------
+  xterm, default font         U    TOFU (about   Alt (8-bit)    FAILS
+   (the font "fixed")              100 shapes)
+  xterm -u8, +lc -u8, uxterm  U    TOFU          Alt            FAILS
+   with the default font
+  xterm 7-bit (LANG=C, no     C    garbage and   -              FAILS
+   -u8) or +u8                     stray replies
+  xterm -u8 (no +lc)          C    garbage       -              FAILS
+  xterm -fa "DejaVu Sans      U    ok            Alt (8-bit)    needs Alt
+   Mono"                                                         setting
+  xterm +lc -u8 -fa "DejaVu   C/U  ok            Alt (8-bit)    needs Alt
+   Sans Mono"                                                    setting
+  same, + metaSendsEscape     C/U  ok            4 (reserved)   WORKS
+  xterm, Liberation Mono      U    ok            as above       WORKS
+  xterm, -fn fixed or 10x20   U    TOFU          -              FAILS
+  urxvt 9.31, default font    U    ok            54 (rxvt       PARTLY
+                                                 codes)
+  urxvt                       C    garbage       -              FAILS
+  st 0.9.3                    both ok (capital   8 (Delete is   PARTLY
+                                   accents       read as F1!)
+                                   clipped)
+  lxterminal 0.4.1 (VTE)      U    ok            6 (reserved)   WORKS
+  lxterminal, xfce4-terminal  C    <0xNN> codes  -              FAILS
+  xfce4-terminal 1.1.5        U    ok            not probed     WORKS
+                                                                 (glyphs)
+  gnome-terminal 3.58         U    ok            9 (F10, F11    WORKS
+                                                 reserved)
+  mlterm 3.9.4                U/C  ok (colours   23 (doubtful)  UNSURE
+                                   differ in C)
+  kitty 0.45.0                both ok            2 (reserved)   WORKS
+  alacritty 0.16.1            both ok            5 (reserved);  WORKS
+                                                 vi mode trap
+  tmux 3.6a in xterm          U    ok            6 (Ctrl-B      WORKS
+                                                 prefix)
+  tmux, no -u                 C    every non-    -              FAILS
+                                   ASCII is _
+  tmux -u                     C    ok            as above       WORKS
+  screen 4.9.1 in xterm       U    ok            6 (Ctrl-A      WORKS
+                                                 prefix)
+  screen -U                   C    ok            as above       WORKS
+  screen, no -U               C    garbage       -              FAILS
+  Linux console               -    not probed    not probed     see 4
+  ssh                         -    not probed    -              see 4
+
+  Cell width: all 160 characters take one cell in every terminal in which
+  the width probe ran (xterm with DejaVu and with fixed, urxvt, xfce4,
+  lxterminal, mlterm, st, kitty, alacritty, gnome-terminal, tmux): no
+  shifted columns anywhere.  A box of tofu still takes one cell, so the
+  layout of a failing terminal is right; only the shapes are wrong.
+  TERM: xterm, xterm-256color, linux, screen, tmux-256color and vt100 were
+  all tried in xterm +lc -u8 with DejaVu: the screens are the same, except
+  for colour: xterm, linux and screen give the 16 colours; tmux-256color the
+  256 colour palette (a grey box in place of the 16 colour one); vt100 no
+  colours (black and white with reverse video), see the pictures.  The
+  program does not use TERM for anything else.
+
+
+4. FINDINGS, TERMINAL BY TERMINAL
+---------------------------------
+  4.1 xterm (the case of the owner)
+    - The default xterm of Debian and Ubuntu has no faceName: it draws with
+      the bitmap font "fixed" (and uxterm with a "-misc-fixed ... iso10646"
+      font).  Those fonts have the accented letters and some lines but lack
+      most of the box drawing, shade, block, triangle and face shapes: the
+      screen shows boxes with the hex digits in them.  The same holds for
+      -fn 10x20.  This is what the owner saw as "tofu" with +lc -u8: the UTF-8
+      mode was right, the font was not.
+    - UTF-8 mode.  xterm chooses it from ITS OWN locale at start.  In a
+      locale that is not UTF-8 (LANG=C, or an ISO 8859 locale) it treats the
+      UTF-8 the program writes as Latin-1: "a-circumflex" and a stray
+      character for each
+      shape (the "weird characters").  "-u8" alone does not help in LANG=C
+      (the locale wins); "+lc -u8" does (verified: LANG=C with +lc -u8 and
+      DejaVu is a pass).  In a UTF-8 locale it works with no option, but "+u8"
+      switches it off.  The resources are: XTerm*locale: false and
+      XTerm*utf8: 2 (verified with LANG=C), the font XTerm*faceName: DejaVu
+      Sans Mono and XTerm*faceSize: 11 (verified), XTerm*metaSendsEscape: true
+      (verified).
+    - DANGER of a non-UTF-8 xterm (the "horrible" 7-bit screen).  The UTF-8
+      bytes of some shapes are control functions of an 8-bit terminal (the C1
+      codes 0x80-0x9F): the square root sign (E2 88 9A) and the corner U+255A
+      (E2 95 9A) contain 0x9A, which in an 8-bit terminal asks it to identify
+      itself, and (very probably because of it) xterm answered ESC [ ?
+      64;1;2;6;9;15;17;18;21;22;28 c on its input.  The
+      Editor reads the answer as typed keys: the text "64;1;2;6;9;15;17;18;21;
+      22;28c" was TYPED INTO THE DOCUMENT (the title showed the modified mark
+      *) in the test.  By the table of C1 codes U+255B contains 0x9B (CSI) and
+      "sharp s" (C3 9F) contains 0x9F (APC), the start of a string that swallows
+      what follows, as do U+0398 (CE 98, SOS) and the arrow U+2190 (DCS);
+      21 of the 160 code points contain such a byte (not tested one by
+      one).  So a non-UTF-8 terminal does not only look bad:
+      it can change the document.  This is the strongest reason for a start
+      check (section 6).
+    - Alt.  By default xterm sets the eighth bit for Alt: Alt-F arrives as the
+      two bytes C3 A6, a letter, and the command is lost.  With
+      metaSendsEscape: true it arrives as ESC f.  All Alt keys of the Editor
+      need this; the manual already says it ({c:metaSendsEscape}).
+    - Reserved by xterm: Shift-PgUp, Shift-PgDn (scrollback), Shift-Ins
+      (paste); Ctrl-Shift-Space sends a plain NUL (no-break space cannot be
+      typed: the manual has an alternate).
+    - Alt-F1 and the like, Ctrl-F1... arrive correctly once the test sent
+      the real key codes (xdotool pressed Alt for them: a test fault found and
+      removed, see section 9).
+  4.2 rxvt-unicode (urxvt 9.31)
+    - Glyphs are right in a UTF-8 locale with the default font (it falls back
+      to DejaVu).  In LANG=C it is a non-UTF-8 terminal: garbage as in xterm.
+    - Keys: it sends the rxvt codes: Shift-F1..F10 as ESC [ 23~ .. 34~
+      (which the Editor reads as F11, F12 and unknown keys), Ctrl-F as ESC [
+      11^, Alt-F as ESC ESC [ 11~, Shift/Ctrl cursor keys as ESC [ a..d and
+      ESC O a..d, Shift/Ctrl Home/End as ESC [ 7$ and 7^.  54 of 93 keys are
+      lost or wrong.  The plain keys (F1-F12, cursor keys, Home, End, PgUp,
+      PgDn, Ins, Del, Alt letters) are right.  Everything that has Shift or
+      Ctrl does not work.  Usable for text, not for the whole key set.
+  4.3 st 0.9.3
+    - Glyphs right in any locale (it is always UTF-8); the capital letters
+      with an accent (E, O, U, A with an accent) lose the accent in its
+      default font (it is
+      clipped by the cell height).  Cosmetic.
+    - Keys: DELETE arrives as ESC [ P, which the Editor reads as F1 (Help):
+      pressing Delete opens Help.  Insert arrives as ESC [ 4 h and is not
+      read.  Shift/Ctrl Home and End send other codes (ESC [ 2 J ...).  A
+      known st trait (its own terminfo gives ESC [ P for the Delete key); the
+      cure is in the config.h of st.  The Editor cannot tell this Delete from
+      F1 (xterm-like terminals send F1 as ESC O P, but ESC [ P is what this
+      parser accepts as F1).  st is listed as usable only after that change.
+  4.4 VTE terminals: gnome-terminal 3.58 (VTE 0.84), xfce4-terminal 1.1.5,
+      lxterminal 0.4.1
+    - UTF-8 locale: all shapes right (DejaVu Sans Mono through fontconfig,
+      with fallback for missing shapes).  LANG=C: VTE shows each byte of a
+      shape as <0xNN> boxes (xfce4-terminal and lxterminal tested); the
+      screen is unusable.  gnome-terminal did not start in LANG=C.
+    - Keys right, except those the terminal keeps: Shift-Home, Shift-End,
+      Shift-PgUp, Shift-PgDn, Shift-Ins (gnome-terminal and lxterminal), F10
+      and Shift-F10 (menu), F11 (full screen) in gnome-terminal.  Alt sends
+      ESC.  Ctrl-Shift-Space sends a plain NUL.
+  4.5 kitty 0.45.0 and alacritty 0.16.1
+    - Both are always UTF-8 and every shape was right in both locales.
+      Nothing to set.
+    - kitty sends the keys right; only Shift-Ins (paste) and Ctrl-Shift-Space
+      (NUL) are lost.  kitty sets COLORTERM=truecolor, so the program uses 24
+      bit colour; TERM is xterm-kitty, which a remote machine may not know:
+      the Editor does not care (it reads no terminfo), but other programs do.
+    - alacritty: Ctrl-Shift-Space toggles its vi mode, which then swallows
+      keys; Shift-Home/End/PgUp/PgDn/Ins are its own.  Its warning box about
+      a socket path longer than 107 characters appeared in the test (a long
+      TMPDIR); that is alacritty's own message, not the Editor's.
+  4.6 mlterm 3.9.4
+    - The shapes are right and the cells one wide.  In LANG=C the colours
+      differ (black on white).  Many keys came back as nothing in the test
+      (Shift/Ctrl-F1..F6, Shift/Ctrl cursor keys, Alt letters); the test may
+      be at fault.  Not recommended without more testing.
+  4.7 tmux 3.6a and screen 4.9.1 (inside a good terminal)
+    - tmux: in a UTF-8 locale all right.  In LANG=C without -u, tmux does NOT
+      pass UTF-8: each non-ASCII character is replaced by an underscore (the
+      screen was all underscores).  "tmux -u" (or a UTF-8 locale) fixes it.
+      The statement in the manual that every multiplexer passes what the
+      program writes is not true for these cases.
+    - screen: in a UTF-8 locale all right; with LANG=C it needs -U; without it
+      the screen is garbage.
+    - Both take a prefix key: Ctrl-B (tmux) and Ctrl-A (screen) were
+      swallowed, with the key after it.  tmux keeps one row for its status
+      line: the Editor then has one row less (29 of 30).  TERM inside is
+      screen or tmux-256color: 16 or 256 colours.  Alt, F keys, cursor keys
+      with Shift and Ctrl all arrived right (tmux 3.6 with xterm keys).
+  4.8 The Linux console (NOT probed; from the kernel and the documents)
+    - The kernel console is UTF-8 only when it is switched on (kbd_mode -u,
+      or "unicode" in the console setup; the Ubuntu default is UTF-8).  It
+      has one font of 256 or 512 glyphs, loaded with setfont; the glyph for
+      each character is found through the font's Unicode map.  The built-in
+      kernel font is a CP437-like VGA font with the box drawing, shades,
+      blocks, triangles, arrows, suits and Greek letters: the shapes of the
+      Editor are exactly its shapes.  Fonts that people load (Terminus, the
+      Lat2 and Lat15 fonts, the "Uni" fonts) may lack part of the 160 code
+      points; a missing one is a box or a blank.  Check with setfont -v and
+      the font's unimap, or just look at manual/samples/chars.doc.
+    - TERM=linux: 16 colours (the program uses its 16 colour path).  Bright
+      background colours need the console's blink setting.  Keys: the console
+      sends ESC [ [ A..E for F1-F5 (the program reads them), no codes for
+      Shift or Ctrl with cursor keys, and keeps Alt-F1..F6 and Shift-PgUp.
+      The manual has this already (appendix D, The Linux console).
+  4.9 ssh (NOT probed; the configuration of this machine was read)
+    - The terminal that matters is the one on the user's machine; ssh adds
+      nothing to the stream.  It passes TERM of the client (always) and, with
+      the usual configuration (Ubuntu: SendEnv LANG LC_* COLORTERM NO_COLOR in
+      ssh_config, AcceptEnv LANG LC_* COLORTERM NO_COLOR in sshd_config), the
+      locale and COLORTERM.  The program does not read the locale, so a
+      server with the locale C works if the user's TERMINAL is in UTF-8.
+    - A client whose own terminal is not UTF-8 (PuTTY with its default
+      character set, an old xterm) shows what section 4.1 shows.
+
+
+5. WHAT IS NEEDED (THE SHORT LIST)
+----------------------------------
+  UTF-8 terminal.  The terminal must DECODE UTF-8.  For most terminals that is
+    the default or follows the locale (xterm, urxvt, VTE terminals, tmux,
+    screen); kitty, alacritty and st are always UTF-8.  The LOCALE of the
+    program does not matter, but the locale of the terminal may.  Not
+    UTF-8: the screen is garbage and the document can be changed (4.1).
+  A font with the shapes.  Every one of the 160 code points.  Checked (tests/
+    fontcover.py): no code point missing in DejaVu Sans Mono, Liberation Mono,
+    Cousine, FreeMono, Go Mono and Nimbus Mono PS.  Missing: Ubuntu Mono 41
+    (arrows, suits, blocks, faces), Noto Mono 83 (all box drawing), Courier 26
+    (blocks, shades, faces), PT Mono 14 (Greek).  Terminals that fall back to
+    another font when one lacks a shape (the VTE ones, kitty, Xft in xterm)
+    still show them; xterm with a bitmap font does not.  The default
+    bitmap font of xterm lacks most of them.
+  Alt as ESC.  "Alt sends Esc" (xterm: metaSendsEscape).  Most terminals do.
+  Keys.  F1-F12, Home, End, PgUp, PgDn, Ins, Del, cursor keys with Shift and
+    Ctrl as xterm sends them (ESC [ 1 ; 2 A and so on).  The keys that
+    terminals keep (Shift-Ins, Shift-PgUp, Shift-PgDn, F10, F11 in
+    gnome-terminal) have alternates in the manual.  Terminals with the rxvt
+    key codes (urxvt) lose the keys with Shift and Ctrl.
+  Size.  At least 80 columns by 25 rows (usable down to 40 columns by 20
+    rows).  The program fills the terminal as it finds it.
+  Colours.  16 colours are enough; none works too (reverse video).  256 and
+    24 bit are used when TERM or COLORTERM say so.
+
+
+6. WHAT THE PROGRAM WOULD NEED (WORKLIST ITEMS, NOT DONE)
+---------------------------------------------------------
+  STATUS (task 33, branch alien-33): W1, W2 and W3 are done: the start check
+  (probe_cell and choose_charset in src/term.c), the ASCII fallback (the table
+  cp437_ascii), STRATA_ASCII, the setting terminal_charset and the Setup field
+  Terminal Characters; the answers of a terminal (device attributes, cursor
+  report) are no longer typed as keys.  The check is a little different from
+  W1/W3: it asks after U+2502, whose bytes (E2 94 82) contain no C1 control
+  function, so the question itself cannot make a terminal in 8-bit mode
+  answer; and the program that chose UTF-8 on a terminal that was NOT shown to
+  read it (STRATA_ASCII=0, the setting utf8) still writes shapes with 0x9A
+  and so on, because the user forced it; the reply is dropped then.  W4 to W7
+  are still open.  Text below is the list as it was made in task 31.
+  W1. A start check that finds a terminal that is not in UTF-8 mode, before
+      the screen is drawn, and refuses or switches to W2.  The Editor never
+      queries the terminal today.  A cheap, safe test: write a known
+      multi-byte character (U+2502), then ask the cursor position with ESC [
+      6 n and read the answer; one cell moved means UTF-8, three means a byte
+      terminal (the answer must be read and dropped before the keys are).
+      The same query should be used before any shape that contains a C1 byte
+      is written (see W3).  Cost: one round trip at start (about 50 ms over
+      a slow line; a timeout means "no answer": go on as now).
+  W2. An ASCII fallback: a drawing mode with only ASCII (+ - | for lines and
+      corners, # = : for shades and blocks, < > ^ v for the triangles and
+      arrows, plain letters for the accented ones where Latin-1 exists, "?"
+      for the rest).  Selected by the start check, by a command line option
+      and by STRATA_ASCII, so that a terminal without the shapes (a console
+      with a bad font, the xterm with the bitmap font) is usable.  Needs a
+      table cp437 -> ASCII and a different path in term.c's utf8() only; the
+      document is not changed.
+  W3. Never write a character whose UTF-8 form contains 0x80-0x9F in a
+      terminal that was not shown to be UTF-8 (no DECID/CSI/OSC/APC from our
+      own output); with W1 this cannot happen on a confirmed terminal.
+  W4. Key reading: ESC [ P (st's Delete) cannot be told from F1 without a
+      number; document it (the keys of those terminals: use the alternates).
+      The rxvt codes (ESC [ 23 ~ for Shift-F1, ESC [ 11 ^ for Ctrl-F1, ESC [
+      a for Shift-Up, ESC O a for Ctrl-Up, ESC [ 7 $/^ for Shift/Ctrl-Home)
+      could be added to term_getkey_raw; Alt-F as ESC ESC [ n ~.  That would
+      make urxvt a full terminal.  Not done.
+  W5. A message when the terminal is smaller than 80x25 or has fewer than
+      20 rows (today: drawn and cut off, no message).
+  W6. An option to turn on "meta sends escape" is not possible (the
+      terminal's own setting); document the xterm resource instead.
+  W7. In the Setup panel (or the start message) say which colour depth was
+      chosen and from what (TERM, COLORTERM or STRATA_COLORS).
+
+
+7. DRAFT TEXT FOR THE PREREQUISITES CHAPTER OF THE MANUAL
+---------------------------------------------------------
+  (Plain text for the manual's source; "the Editor" for the program; shell
+  variables with braces.  Put under the prerequisites of the terminal
+  version; the box of commands is a block of its own.)
+
+  What your terminal must do
+
+  The terminal version of the Editor draws its screen with the box drawing,
+  shade, block, arrow and triangle characters of the Unicode standard.  For
+  that, your terminal needs three things:
+
+  1. UTF-8.  The terminal must read the screen as UTF-8.  Most terminals do
+     when your locale is a UTF-8 locale (for example en_US.UTF-8).  The Editor
+     itself does not look at your locale.  A terminal that reads Latin-1
+     shows garbage, and worse: some of the characters that the Editor draws
+     contain bytes that such a terminal takes for control codes, and its
+     answer can be typed into your document.  If the screen shows letters
+     such as "a-circumflex" and "A-tilde" where lines and boxes should
+     be, leave the Editor
+     (Ctrl-Q) and correct this first.
+
+  2. A font that has the shapes.  Use a fixed-width font that has the box
+     drawing, block and arrow characters, for example DejaVu Sans Mono,
+     Liberation Mono, Cousine or FreeMono.  Squares with numbers in them, or
+     empty squares, instead of lines, bars and triangles mean that the font
+     lacks them.  The usual terminal fonts of a desktop have them.  The font
+     that the terminal xterm uses when you give no font ("fixed") does not.
+
+  3. Alt as Esc.  The terminal must send Esc when you press Alt with a key.
+
+  Programs known to work, with the settings that they need:
+
+      xterm +lc -u8 -fa "DejaVu Sans Mono" -fs 11 \
+          -xrm 'XTerm*metaSendsEscape: true'
+
+  The same settings for the file .Xresources, so that every xterm has them:
+
+      XTerm*locale: false
+      XTerm*utf8: 2
+      XTerm*faceName: DejaVu Sans Mono
+      XTerm*faceSize: 11
+      XTerm*metaSendsEscape: true
+
+  The terminals of the Gnome, Xfce and LXDE desktops, kitty and alacritty
+  need no setting when your locale is UTF-8 (kitty and alacritty also when it
+  is not).  A multiplexer must be started in UTF-8 mode:
+
+      tmux -u
+      screen -U
+
+  Terminals with problems: the keys of the terminals of the rxvt family
+  (urxvt) that carry Shift or Ctrl are not understood; use the alternates of
+  appendix D ({x:appterm-reach}).  In the terminal st, the Delete key is read
+  as F1 (Help); use the alternate of appendix D for Delete.  [CHECK: name the
+  alternate key of Delete after reading {x:appterm-reach}.]
+
+  Size: 80 columns by 25 rows, or more; the Editor is usable down to 40 by 20.
+  Colours: 16 colours are enough; the Editor also uses 256 and 24 bit colours
+  when ${TERM} (a name with 256color) or ${COLORTERM} (truecolor) says so, and
+  works on a terminal with no colours; set ${STRATA_COLORS} to none, 16, 256
+  or truecolor when the choice is wrong.
+
+  Keys that your terminal may keep: Shift-Ins, Shift-PgUp and Shift-PgDn
+  (xterm, VTE terminals), F10 and F11 (gnome-terminal), Ctrl-B (tmux) and
+  Ctrl-A (screen).  Appendix D has the alternates.
+
+
+8. CORRECTIONS THE MANUAL NEEDS (manual/src/appterm.src)
+---------------------------------------------------------
+  - "does not read the environment variable TERM": it does, for the colour
+    depth (color_depth_of); a wrong TERM changes the colours (vt* gives no
+    colours, 256color gives 256).
+  - "The fonts that terminals use by default have them": not xterm's.
+  - "The terminal must be in UTF-8 mode ... rubbish ... can swallow the next
+    keys": add that the answer of the terminal can be typed into the document
+    (4.1) and give the xterm settings (+lc -u8, the font).
+  - "every multiplexer passes what the program writes": not tmux without -u
+    or screen without -U in a locale that is not UTF-8.
+  - the list of the keys of the xterm family: the rxvt family is not read;
+    st sends Delete as ESC [ P, which is read as F1.
+  - the Linux console: Alt-F1 to F6 note is right.  Nothing to change.
+
+
+9. HOW TO REPEAT THE PROBES
+---------------------------
+  Needs Xvfb, xdotool, ImageMagick, tmux, screen; the terminals to test (or
+  a private root made with apt-get download and dpkg -x).  Put the work
+  folders, HOME and the XDG_ folders inside one scratch folder, and set
+  DBUS_SESSION_BUS_ADDRESS to an absent bus and NO_AT_BRIDGE=1: GTK
+  terminals otherwise start services on the session bus of the user.
+    Xvfb :87 -screen 0 1400x900x24 &
+    DISPLAY=:87
+    python3 -I -B tests/termprobe.py shot --out DIR --label L --stred
+        PATH/stred --doc manual/samples/chars.doc --term xterm-256color
+        --lang C -- xterm -geometry 100x30+0+0 +lc -u8 -e {INNER}
+    python3 -I -B tests/termprobe.py keys --out DIR --label K --term native
+        -- xterm -geometry 100x30+0+0 -e {INNER}
+    python3 -I -B tests/termprobe.py width --out DIR --label W --term
+        native -- xterm -geometry 100x30+0+0 -e {INNER}
+    python3 -I -B tests/fontcover.py -v "Ubuntu Mono"
+  tmux needs a short socket path (tmux -S with a relative name after a cd; a
+  path of more than 107 characters is refused by the system).  A fault of the
+  first key runs: xdotool presses Alt before an F key in the keymap of Xvfb,
+  so the first results showed every F key with Alt; the tool sends XTEST key
+  codes now.  The scripts are studies, not part of the smoke test.

@@ -1,0 +1,631 @@
+# Appendix B, part 1: the directory, the files, the format and the keys.
+.h2 The settings directory [appcfg-dir]
+.ix Settings directory
+.ix .strata, directory
+.ix STRATA_HOME
+.ix Home directory
+.ix Directory of the user
+.ix Permissions of the settings
+The settings are kept in one directory.  Its place is chosen in this order.
+.table 6 54
+Step | Rule
+1 | If the environment variable {c:STRATA_HOME} is set and is not empty, the
+ | directory is exactly that value.  No {c:.strata} is added to it.
+2 | Otherwise the directory {c:.strata} in the home directory of the user
+ | (the value of {c:HOME}, or the home directory that the system has for
+ | the user when {c:HOME} is not set).
+3 | If there is no home directory at all, there is no settings directory:
+ | the settings are the defaults, and nothing can be saved.  A save then
+ | fails with the message "There is no home directory".
+.end
+The Document Manager and the Editor use the same directory, for {c:config}
+and for the font list.  The Printer and the Viewer read no settings.
+.note {c:STRATA_HOME} is meant for people who keep several independent sets
+  of settings, and for trying settings without touching your own.  When it
+  is set, the older file described in {x:appcfg-legacy} is not read.
+.h3 What is checked about the directory [appcfg-dir-checks]
+.ix Directory checks
+.ix Ownership of the settings
+.ix Link as settings directory
+The settings directory is private: when it is made, only you can use it.  A
+directory that is a link, that is not a directory, or that belongs to another
+user is not used.  Reading it gives the defaults, and a save fails with the
+message "NAME is not a directory of yours".  The effect is that the settings
+of one user can never be read from, or written to, a directory that another
+user controls.  A directory that is a link to your own real directory is
+refused too; make {c:STRATA_HOME} name the real directory instead.
+.if .STRATA_BUILD_TYPE # release
+For developers: before any file in the directory is read or written the
+program makes these checks, in this order.
+.table 22 38
+Test | Result
+The name does not exist | Not an error when reading: the defaults are
+ | used (see {n:appcfg-legacy}).  When saving, the directory is made and
+ | closed to everybody but its owner (mode 0700).
+The name is a link, or a file that | The directory cannot be used.  Reading
+ is not a directory | gives the defaults; saving fails with "NAME is not a
+ | directory of yours".  A link is not followed.
+The directory belongs to another | The same as the line above.
+ user |
+The directory has a mode other | The mode is changed to 0700 and the program
+ than 0700 | goes on, with no message.  If the change fails the
+ | directory cannot be used.
+.end
+.endif
+.h3 What is checked about a file [appcfg-file-checks]
+.ix File checks, settings
+A settings file that cannot be opened, that belongs to another user or that is
+not an ordinary file is not read: the defaults are used instead.
+.if .STRATA_BUILD_TYPE # release
+For developers: each file in the directory is checked once more when it is
+opened.
+.table 24 36
+Test | Result
+The file cannot be opened | For {c:config}: the defaults are used (after
+ | the search for the older file, see {n:appcfg-legacy}).  For {c:fonts}:
+ | the default list.
+The file belongs to another user | Not read.  The defaults are used.  The
+ | older file is not read either.
+The file is not an ordinary file | Not read ({c:fonts} only).
+The mode is not 0600 | The mode is set to 0600 and the file is read.
+.end
+.endif
+.caution No message states that a settings file was refused.  If your
+  settings are ignored, look at the owner and
+  the mode of the directory and of the files with {c:ls -ld} on the
+  directory and on the files in it; both must belong to you.  A file made by
+  {c:root} (for example by running the Document Manager with {c:sudo}) in
+  your directory makes the settings ignored until it is removed or given
+  back with {c:chown}.
+.h2 The files in the directory [appcfg-files]
+.ix Files of the settings directory
+.ix config, file
+.ix fonts, file
+.table 12 8 39
+File | Written by | Content
+config | Document Manager, Editor | The settings of the user, one line to a key
+ | | (see {n:appcfg-format}).
+fonts | Document Manager | The list of fonts for printing (see
+ | | {n:appcfg-fonts}).
+dictionary | Document Manager, Editor | The personal word list of the spell
+ | | check, one word to a line ({n:spell}).  It is not a setting.
+log | Document Manager | A directory that holds the log of each run of Strata
+ | | (see {n:appcfg-log}).
+.end
+These are all the files and directories that stay in the directory.  The other
+programs of Strata make no file there, and neither do the Macro and Library
+commands of the Editor: macro sets and libraries are files that you name, in
+a directory that you choose (see {n:appcfg-search-macro}).  The Typeface list
+of Global,
+Typeface is a part of the document, not of the user's settings (see
+{n:appcfg-notin}).
+.note Your settings are not written in the course of a normal session of
+  editing.  {c:config} is written only when the Setup panel of the Document
+  Manager is accepted or when the Options panel of the Editor is accepted,
+  and, for one line only, when you have changed the height of the window of
+  the Editor or of the Document Manager ({n:appcfg-key-rows}); {c:fonts} is
+  written only when a font panel of the Document Manager is accepted.  The log
+  of a run is the one thing that is made on every start of the Document
+  Manager (see {n:appcfg-log}).
+.h2 The log of a run [appcfg-log]
+.ix Log of a run
+.ix Log files
+.ix Problem report, what to send
+.ix run-DATE-TIME.log
+.ix current.log
+Every time the Document Manager is started, Strata makes a log of that run: a
+text file in which the Document Manager, the Editor, the Printer and the
+Viewer write what they did and what went wrong, in the order in which it
+happened.  You need it when something does not work and the screen shows too
+little, and the person who helps you asks for it.
+.table 17 43
+What | Where
+The directory | The directory {c:log} of the settings directory (see
+ | {n:appcfg-dir}), for example {c:~/.strata/log}.  It is made when it is
+ | needed and closed to everybody but you, like the directory above it.
+The file of a run | {c:run-DATE-TIME.log}: the date and the time at which the
+ | run started, for example {c:run-20261114-205227.log}.
+The newest run | {c:current.log} in the same directory always names the log of
+ | the newest run, so that you need not look for it.
+How many | The ten newest logs are kept.  When a run starts, the older logs
+ | are deleted.
+.end
+A line of the log has this form:
+.rows 20 50
+{c:TIME LEVEL NAME[NUMBER]: FILE:LINE: MESSAGE} | The time with the thousandths of
+ | a second; the LEVEL; the part of Strata that wrote the line and its
+ | process number; the place in the program; and the message.
+.end
+The LEVEL is {c:FATAL} (the program cannot go on and ends), {c:ERROR}
+(something failed), {c:WARN} (something was left out or could not be shown) or,
+in a few more detailed lines, {c:NOTE}.  The message shows what failed, with the
+name of the file or the value that it was about, and why.  The place at the
+front of the message shows a developer where in the program the line was
+written; it needs no explanation for you.
+When the Viewer could not show something in a preview, or failed, the message
+line of the Editor reports this and, because the run has a log, ends with the
+words
+"details in the log of the run": the log has the full text, with the page and
+the place.
+To read a log, open it in any editor or viewer of plain text, or show the end
+of it with {c:tail}.  To report a problem, send the log of the run in which it
+happened (the newest, {c:current.log}, if you report at once) together with a
+sentence about what you did.  The log holds the names of your documents and of
+the files that you export; read it before you send it, and cut what you do
+not want to show.
+.note A message that the Editor shows on its own screen (for example a
+  failed export) is also in the log, with the reason.  The log is the place
+  to look when the message on the screen was too short.
+.h2 The file config [appcfg-format]
+.ix config, format
+.ix key=value lines
+.ix Settings file format
+.ix Autosave setting
+The file is plain text.  Each line has the form {c:key=value}.  Every time the
+file is saved the program writes these lines, in this order.
+- Always: {c:workdir}, {c:stred}, {c:help}, {c:autosave}, {c:autosave_seconds},
+  {c:expanded_status}, {c:onscreen_help}, {c:show_marks} and {c:show_dots}.
+- When the value is not empty: {c:initial_macros}, {c:initial_library},
+  {c:pdf_dir}, {c:pdf_viewer} and {c:spell_language}.
+- When the value is not the default: {c:backups} (not 3), {c:undo_levels} (not
+  100), {c:x11_rows} (not 50), {c:terminal_rows} (set), {c:terminal_charset}
+  (not auto), {c:default_paper} (A4), {c:latex_pictures} (keep),
+  {c:latex_positions} (yes) and {c:latex_markers} (no).
+- {c:print_to}, and {c:print_queue} when it is not empty; a file of an older
+  version keeps {c:printer} instead until Setup is accepted
+  ({n:appcfg-key-printer}).
+- The color lines that are not the default ({n:appcfg-key-colors}).
+A program that keeps the height of a window changes only the line of that
+height ({n:appcfg-key-rows}) and leaves every other line as it is.
+.code
+workdir=/home/ann/docs
+stred=
+help=
+autosave=yes
+autosave_seconds=120
+expanded_status=no
+onscreen_help=yes
+show_marks=yes
+show_dots=no
+backups=5
+print_to=printer
+print_queue=laser
+spell_language=de_DE
+.end
+.h3 How the file is read [appcfg-format-read]
+.ix Reading the settings
+.ix Unknown key
+.ix Invalid value, settings
+The reader is forgiving, and it is also simple.  These are all the rules.
+.table 22 38
+Rule | Effect
+The line is split at the first {c:=} | The text before it is the key, all the
+ | text after it is the value, kept as it is, spaces included.
+A line with no {c:=} | Ignored.  There are no comments in the file: a line
+ | that begins with a number sign has no {c:=} and so is ignored, but a
+ | comment that contains {c:=} is read as a key and ignored only if the
+ | key is not known.
+Spaces | Not removed anywhere.  The key {c:" autosave"} is not the key
+ | {c:autosave}, and the value {c:"no "} is not {c:no}.
+Unknown key | Ignored, with no message.
+Repeated key | The last one wins.
+A missing key | The default of the key stays (see the table below).
+Text values | The keys {c:workdir}, {c:stred}, {c:help}, {c:printer} and
+ | {c:spell_language}.  Copied as they are: an empty value is an empty
+ | setting.
+Older names | The key {c:msed} is read as {c:stred} (its older name) and is
+ | never written.  The key {c:backup} is described in
+ | {x:appcfg-key-backups}.
+Yes-or-no values | See {x:appcfg-bool}.
+Number values | See {x:appcfg-int}.
+.end
+.h3 Yes-or-no values [appcfg-bool]
+.ix Yes or no value
+.ix Boolean setting
+For the keys {c:autosave}, {c:expanded_status}, {c:onscreen_help},
+{c:show_marks}, {c:show_dots}, {c:latex_positions} and
+{c:latex_markers} the value is read like this: the
+words {c:no} and {c:0} (in lower case, exactly) mean No; every other text
+means Yes, and so does an empty value.  So {c:No}, {c:NO}, {c:off}, {c:false}
+and {c:maybe} all mean Yes.  The program itself writes only {c:yes} and
+{c:no}.  Write {c:no} in lower case when you edit the file by hand.
+.note The Yes or No fields of the panels differ: they accept {c:yes} and
+  {c:no} in either case (the Autosave field of
+  Setup is a choice of Yes and No; see {n:appcfg-setup}).
+.h3 Number values [appcfg-int]
+.ix Number setting
+.ix Autosave interval, range
+The keys {c:autosave_seconds}, {c:backups}, {c:x11_rows}, {c:terminal_rows} and
+{c:undo_levels} are numbers.  A value that is refused leaves the setting as it
+was, so the default stays.  The rules differ by key.
+.table 19 41
+Key | Rule
+{c:autosave_seconds} | Leading spaces are skipped and the digits are read until
+ | the first other character, so {c:90 seconds} is 90.  A result outside 1 to
+ | 86400 is refused: 0, a negative number, a text that is not a number and a
+ | number over a day.
+{c:backups} | Only digits, nine at most: {c:5 } and {c:5x} are refused.  A number
+ | above 99 is made 99.
+{c:undo_levels} | The first character must be a digit; the digits are read until
+ | the first other character.  A number above 500 is made 500.
+{c:x11_rows}, {c:terminal_rows} | A number above 0, read like {c:autosave_seconds}.  A
+ | number below 20 is made 20 and one above 200 is made 200
+ | ({n:appcfg-key-rows}).
+.end
+The programs write the rows in the same limits.
+.h2 The keys of config [appcfg-keys]
+.ix Keys of config
+.ix Setting keys
+.ix Defaults of the settings
+This table lists every key.  Where the value is set and which program acts on
+it is described in the sections that follow it.
+.table 18 9 9 20
+Key | Values | Default | Read by and effect
+workdir | a directory | empty | Document Manager: the initial Working
+ | | | Directory of the panels.
+{c:initial_macros} | a file | empty | Editor: the macro set loaded at start.
+{c:initial_library} | a file | empty | Editor: the library loaded at start.
+stred | a file | empty | Document Manager: the Editor to start.
+{c:help} | a file | empty | Document Manager: the Help File of Setup, given to
+ | | | the Editor with {c:-H} ({n:str-help-search}).
+autosave | yes, no | yes | Editor: save a changed document now and then.
+{c:autosave_seconds} | 1 to 86400 | 120 | Editor: the interval of the autosave.
+{c:expanded_status} | yes, no | no | Editor: Expanded Status Line?
+{c:onscreen_help} | yes, no | yes | Editor: Display On-Screen Help?
+{c:show_marks} | yes, no | yes | Editor: Display Tab & End-of-Line Characters?
+{c:show_dots} | yes, no | no | Editor: Display Dots for Spaces?
+backups | 0 to 99 | 3 | Editor, Document Manager: Backups Kept.
+{c:print_to} | printer, file, viewer | file | Document Manager, Editor: Print To of
+ | | | Setup, where a print goes by default.
+{c:print_queue} | a queue name | empty | Document Manager, Editor: Printer Queue of
+ | | | Setup; empty is the default queue of the system.
+{c:print_last_printer} | a queue name, File only, PDF viewer | empty | Editor: the
+ | | | Printer of the last print; the Print panel starts with it.
+{c:print_last_sides} | default, one, two | empty | Editor: Print Double Sided? of the
+ | | | last print ({c:two} is Yes, {c:one} is No).
+{c:print_last_sort} | default, yes, no | empty | Editor: Sort Output Pages? of the
+ | | | last print.
+{c:print_last_bw} | yes, no | empty | Editor: Print in Black and White? of the
+ | | | last print.
+{c:pdf_dir} | a directory | empty | Document Manager, Editor: PDF Directory of
+ | | | Setup; empty is the directory of the document.
+{c:pdf_viewer} | a full path | empty | Document Manager, Editor: PDF Viewer of
+ | | | Setup, for PDF viewer.
+{c:spell_language} | a code such as en_US | empty (en_US) | Document Manager,
+ | | | Editor: the Dictionary Language of the spell check.
+{c:x11_rows} | 20 to 200 | empty (50) | Document Manager, Editor: the rows of the
+ | | | window of the X11 version.
+{c:terminal_rows} | 20 to 200 | empty (all) | Editor: the most rows of the terminal
+ | | | version.
+{c:terminal_charset} | {c:auto}, {c:utf8}, {c:ascii} | empty (auto) | Document Manager, Editor:
+ | | | how the terminal version draws its screen.
+{c:default_paper} | letter, a4 | empty (letter) | Document Manager, Editor: the paper
+ | | | of a document that is made new, without a template.
+{c:undo_levels} | 0 to 500 | empty (100) | Editor: the operations that Undo keeps;
+ | | | 0 turns Undo off ({n:edit-b-undo}).
+{c:latex_pictures} | copy, keep | copy | Editor: Export a LaTeX File copies the
+ | | | pictures, or names them in place.
+{c:latex_positions} | yes, no | no | Editor: Export a LaTeX File keeps the
+ | | | position comments.
+{c:latex_markers} | yes, no | yes | Printer: a LaTeX marker is printed as its
+ | | | words when the value is no.
+x11_color_KIND_fg, | a color | empty | Document Manager, Editor: the colors
+ x11_color_KIND_bg | | | of the X11 version ({n:appcfg-key-colors}).
+terminal_color_KIND_fg, | a color | empty | Document Manager, Editor: the
+ terminal_color_KIND_bg | | | colors of the terminal version.
+.end
+.h3 print_to and print_queue [appcfg-key-printer]
+.ix print_to, setting
+.ix print_queue, setting
+.ix printer, setting
+.ix Print To, setting
+Values of {c:print_to}: printer, file or viewer (the older word open is read
+as viewer).  Default: no line, which is file.
+Values of {c:print_queue}: the name of a print queue, or empty.  Default: empty.
+Print To and Printer Queue of the Setup panel.  They give the first value of
+the field Printer in the Print panels of the Document Manager and of the
+Editor, and where a print that is made without a panel sends the PDF when
+no printer is named: file is File only (make the PDF and send nothing), viewer is
+PDF viewer, and printer is the queue in {c:print_queue}, or the default queue
+of the system when {c:print_queue} is empty.  When the system has no print
+queue,
+printer acts as File only and a message reports this.  The line {c:print_queue}
+is
+written only when it is not empty.
+A file of an earlier version has the single key {c:printer}: a queue name,
+File only, Open to print (the old name of PDF viewer), or empty.  It keeps its
+meaning while the file has no
+line {c:print_to}: empty or File only is file, Open to print is viewer, and any
+other
+text is printer with that queue.  Accepting Setup writes {c:print_to} and
+{c:print_queue} and takes the line printer out.
+.h3 pdf_dir [appcfg-key-pdf-dir]
+.ix pdf_dir, setting
+.ix PDF Directory, setting
+Values: a full path, a path that starts with {c:~/}, or empty.  Default: empty,
+which is the directory of the document.  The PDF Directory of the Setup
+panel.  The Print panels offer {c:NAME.pdf} ({c:NAME-draft.pdf} for a Draft) in
+this
+directory, and so does a print that is made without a panel when no output
+file is named.  A relative
+path is refused by Setup and is not used when it is found in the file; a
+directory that does not exist or cannot be written is not used either, and
+a message reports this and the directory of the document is used.  The line is
+written only when it is not empty.
+.h3 pdf_viewer [appcfg-key-pdf-viewer]
+.ix pdf_viewer, setting
+.ix PDF, program that shows it
+Values: the full path of a program, or empty.  Default: empty.  The program
+that the Print panels start when the Printer field is PDF viewer: it is run
+by its full path with execv, is given the full path of the PDF as its only
+argument, is started without a shell, and is not waited for.  The environment
+is passed on, but for {c:LD_PRELOAD} and {c:LD_AUDIT}.  The value starts with a slash
+and has only letters, digits and the characters . _ + - /: no space, no
+quote, no .. and no relative path.  A name such as evince is refused, and a
+name or a relative path in an older settings file is not run: it is treated
+as not given.  {c:PATH} is never searched.  The program must be an executable
+file that other users cannot change, in a directory that others cannot write
+(see {n:str-setup-fields}).  Empty means the first of evince, okular, atril,
+zathura, qpdfview, mupdf, xpdf and epdfview that is in {c:/usr/bin},
+{c:/usr/local/bin} or {c:/bin}.  The field PDF Viewer of Setup shows and changes it;
+an empty field is saved as nothing.  A word processor is refused by Setup and is not used when it
+is found in the file: the Editor then behaves as if no program was found, and
+the PDF is saved.  The line is ignored when the settings file can be written
+by other users, and its log reports this.  The line is written only
+when it is not empty.
+.h3 spell_language [appcfg-key-spell]
+.ix spell_language, setting
+.ix Dictionary language, setting
+Values: a language code made of letters, digits and the signs _ - and @ (such
+as en_US or de_DE), or empty.  Default: empty, which is en_US.  The
+Dictionary Language of the Setup panel, used by the spell check.  The
+line is written only when the language is not en_US.
+.h3 x11_rows and terminal_rows [appcfg-key-rows]
+.ix x11_rows, setting
+.ix terminal_rows, setting
+.ix Window height, saved
+.ix Height of the window, saved
+Values: a whole number of rows from 20 to 200, or no line.  Default: no line.
+A program never writes a number outside the limits: a number below 20 is
+written as 20, and a number above the most is written as the most (200, and
+for the X11 version also not more than the rows of the screen).  Setup does
+the same with a number that you type.
+The rows of the window of the X11 version ({c:x11_rows}) and the rows of the
+terminal version ({c:terminal_rows}) are two settings, because the two
+versions are used on screens of different sizes.  Both are shown in the
+Setup panel (Window Rows, X11 Version and Window Rows, Terminal Version).
+.table 17 43
+Key | What it does
+{c:x11_rows} | The height of the window of the X11 version, in rows, for the
+ | Editor and for the Document Manager.  No line, or 50, means 50 rows.  The
+ | window is never taller than the screen.  When you change the height of the
+ | window with the window manager, the new height is kept after a second
+ | without a further change, and when the program ends at the latest; the
+ | next window opens with it.  The width of the window is not kept: it is
+ | always 80 columns.  The line is written only when the height is not 50.
+{c:terminal_rows} | The most rows that the Editor of the terminal version uses.  No
+ | line means all the rows of the terminal; a terminal that has fewer rows
+ | is used as it is, and the Editor always has at least 20 rows.  The
+ | program never changes the size of the window of the terminal.  When you
+ | have changed the height of the terminal while the Editor ran, the Editor
+ | keeps the new height in this line at the end of the run; a run in which the height
+ | stayed as it was changes nothing.
+.end
+.note A user who never changes the height of the terminal never gets a
+  {c:terminal_rows} line, and the Editor then uses all the rows of the
+  terminal.  A line that you or Setup wrote makes the Editor use at most that
+  many rows at its next start, even in a taller terminal; make the terminal
+  taller while the Editor runs to use the room again.
+.h3 terminal_charset [appcfg-key-charset]
+.ix terminal_charset, setting
+.ix ASCII characters, setting
+Values: {c:auto}, {c:utf8} or {c:ascii}; no line means {c:auto}.  The Terminal
+Characters field of the Setup panel.  {c:utf8} makes the terminal version of
+the Editor and of the Document Manager draw the shapes of the character set as
+UTF-8; {c:ascii} makes them draw ASCII characters that look like the shapes;
+{c:auto} checks the terminal at the start and chooses ({n:appterm-charset}).
+The variable {c:STRATA_ASCII} (1 or 0) overrules the setting.  The line is
+written only when the value is not auto.  The X11 version ignores it.
+.h3 default_paper [appcfg-key-paper]
+.ix default_paper, setting
+.ix Paper, new documents
+Values: {c:letter} or {c:a4}; no line means {c:letter}.  The field Paper for New
+Documents of the Setup panel.  A document that is made new, in the Document
+Manager or in the Editor, and does not come from a template gets this paper:
+the Paper Size of Global, Page.  A template keeps its own paper, and a
+document that exists keeps the paper that it has.  The line is written only
+when the value is {c:a4}; another word is ignored.
+.h3 The color keys [appcfg-key-colors]
+.ix Colors, setting
+.ix x11_color, setting
+.ix terminal_color, setting
+.ix Screen colors, settings
+Values: a color, or empty.  Default: empty, which is the color that the
+programs are delivered with.  There are two keys for every kind of text, one
+for the foreground and one for the background, for each of the two versions:
+the key is the version ({c:x11} or {c:terminal}), then _color_, then the kind, then _fg
+or _bg, as in {c:x11_color_normal_fg} or {c:terminal_color_status_bg}.  The
+two versions have separate keys so that a terminal of 16 colors and a window
+of millions can each have their own.  A color is a name of the VGA palette
+(black, blue, green, cyan, red, magenta, brown, light-grey, dark-grey,
+light-blue, light-green, light-cyan, light-red, light-magenta, yellow, white;
+capitals, spaces and hyphens do not matter) or {c:#rrggbb}, six
+digits or letters a to f.  The Colors panel of Setup writes them ({n:str-colours}).
+.table 15 15 29
+Kind | Default | Where it is used
+normal | yellow on blue | Normal text.
+bold | white on blue | Bold text.
+italic | light-green on blue | Italic text.
+underline | yellow on blue | Underlined text.
+marker | light-cyan on blue | Markers.
+dim | light-grey on blue | Dim text, the ruler.
+highlight | black on cyan | The highlight.
+{c:print_error} | light-red on blue | Print Error markers.
+keycap | black on light-grey | Keycaps.
+status | black on light-grey | The status line.
+message | black on light-grey | The message line.
+keys | black on light-grey | The function key labels.
+menu | black on light-grey | Menus.
+panel | black on light-grey | Panels.
+selected | white on black | The selected entry.
+cursor | black on #ffb000 | The cursor; only the background key counts.
+.end
+A line is written only for a color that is not the default.  A bad value (a
+word that is not a color, or #rrggbb with the wrong number of digits) is
+reported in the log of the run, and the default color is used; the next time
+that Setup writes the file the line is gone.  A key for a kind that does not
+exist is ignored, as every unknown key is.  A program that is started with
+the option {c:--default-colors}, or with the variable {c:STRATA_DEFAULT_COLORS}
+set to a value that is not 0, ignores all of these lines.
+.h3 latex_pictures [appcfg-key-latex-pictures]
+.ix latex_pictures, setting
+.ix Export a LaTeX File, pictures
+Values: {c:copy} or {c:keep}.  Default: {c:copy}.  The word {c:keep} means
+keep; every other text means copy.  With copy, Export a LaTeX File
+({n:file-export-latex}) copies each picture of the document into the directory
+beside the file and names it there; with keep the file names each picture
+where it is.  A picture of PostScript is copied in both cases.  The Setup
+panel has no field for it: edit the file.  The line is written only when the
+value is keep.
+.h3 latex_positions [appcfg-key-latex-positions]
+.ix latex_positions, setting
+.ix Export a LaTeX File, position comments
+Values: yes or no.  Default: no.  With yes, Export a LaTeX File keeps before
+each line of the file a comment that says which line of the document it came
+from; with no the comments are left out.  The Setup panel has no field for
+it: edit the file.  The line is written only when the value is yes.
+.h3 latex_markers [appcfg-key-latex-markers]
+.ix latex_markers, setting
+.ix Allow LaTeX Markers
+.ix LaTeX markers, not allowed
+Values: yes or no.  Default: yes.  With yes, every print of a document (Print,
+Preview and Export a LaTeX File) writes the text of its LaTeX markers
+({n:marker-latex}) into the page; with no the text is not written, each
+marker is printed as the words LaTeX instructions, and the Error Log has a
+warning for each one.  Use no to print a document of someone you do not know
+without the instructions that it holds.  The Setup panel has no field for it:
+edit the file.  The line is written only when the value is no.
+.h3 initial_macros and initial_library [appcfg-key-initial]
+.ix initial_macros
+.ix initial_library
+.ix Initial Macro Set, setting
+.ix Initial Library, setting
+Values: the name of a file, or empty.  Default: empty, which is saved as no
+line.  The Editor reads the two keys at start and loads the macro set and the
+library before the first key is read.  A name that begins with a slash
+is the file; any other name is looked for in the working directory of the
+Editor, then in the directory of the settings; a name with no period gets
+{c:.mac} or {c:.lib}.  They are set by the fields Initial Macro Set and Initial
+Library of Setup ({n:str-setup-fields}).  A file that cannot be used is a
+message and a line of the log; the Editor starts anyway.
+
+.h3 workdir [appcfg-key-workdir]
+.ix workdir
+.ix Initial Working Directory
+.ix Working directory, initial
+Values: the name of a directory, or empty.  Default: empty.
+.table 17 43
+Where | What happens
+Document Manager at start | If the value names a directory that exists, it
+ | is the Working Directory that the Edit / Preview / Print Document
+ | panel shows.  If it is empty, or names something that
+ | is not a directory, the current directory of the shell is used.
+Setup panel | The field Initial Working Directory.  Accepting Setup with a
+ | name that is not an existing directory is refused (see
+ | {n:appcfg-setup}); an empty field is accepted.
+Editor | Not used.  The Editor takes its working directory from the document
+ | that it has open or from its current directory.
+.end
+.caution The field of Setup is never empty when it is first shown: if the
+  key is empty, the field shows the current directory.  Accepting Setup
+  without changing that field therefore saves the current directory as
+  {c:workdir}, and from then on it is no longer empty.  Clear the field
+  (with {k:Backspace}) to keep the file empty.
+.h3 The key for the Editor [appcfg-key-stred]
+.ix Editor program, setting
+Values: the name of a program file, or empty.  Default: empty.  The key is
+named {c:stred}.  The Document Manager starts this program for Edit / Preview
+/ Print Document.
+The search
+that gives the value its meaning, and the reason why the value is usually
+empty, are in {x:str-find-editor}.  In short, the key is used only when it
+names a file that may be run; otherwise the Document Manager looks at the
+Editor's file in its own
+directory, then in the system directories.  When Setup is accepted the path is saved only
+if it differs from the one that the search finds by itself, so that a program
+that was found is not fixed in the file; a file made by Setup
+therefore has an empty value unless you typed another path.
+.if .STRATA_BUILD_TYPE # release
+For developers: the environment variable {c:STRED} is looked at after the key
+and
+before the Editor's file in the directory of the Document Manager.
+.endif
+.h3 autosave [appcfg-key-autosave]
+.ix Autosave
+.ix autosave
+.ix Autosave, Yes or No
+Values: {c:yes} or {c:no} (see {n:appcfg-bool}).  Default: yes.  The Editor
+reads it at start.  With Autosave Yes a document that has unsaved changes
+and has a name is saved under that name as soon as the autosave interval has
+passed since its first unsaved change.  No question is put.  A document with no
+name is not saved.  The save is the same as the Save command, but it
+makes no numbered backup.
+.if .STRATA_BUILD_TYPE # release
+For developers: the option {c:--autosave no} of the Editor
+({n:appcmd-stred-opt}) turns autosave off for one run; {c:--autosave yes}
+does not turn it on if the file says no.
+.endif
+.h3 autosave_seconds [appcfg-key-seconds]
+.ix autosave_seconds
+.ix Autosave interval
+.ix Save interval
+Values: a whole number from 1 to 86400.  Default: 120.  The interval of the
+autosave in seconds; see {x:appcfg-int} for the way a bad value is treated.
+The Document Manager
+starts the Editor with both values set from its own Setup, so a value that
+was accepted in Setup is used by the Editor even before it is read from
+the file.
+.if .STRATA_BUILD_TYPE # release
+For developers: the option {c:--autosave-seconds N} of the Editor replaces it
+for one run if N is in the same range, and is ignored otherwise.
+.endif
+.h3 expanded_status [appcfg-key-expanded]
+.ix expanded_status
+.ix Expanded Status Line
+Values: yes or no.  Default: no.  Read by the Editor at start; it is the
+setting of Global, Options, Expanded Status Line?.  Yes shows the longer
+status line (see the chapter on the screen).
+.h3 onscreen_help [appcfg-key-help-line]
+.ix onscreen_help
+.ix On-Screen Help
+.ix Key help lines
+Values: yes or no.  Default: yes.  Read by the Editor at start; it is the
+setting of Global, Options, Display On-Screen Help?.  Yes shows the two lines
+of key reminders at the bottom of the Editor screen.
+.h3 show_marks [appcfg-key-marks]
+.ix show_marks
+.ix Tab and end-of-line characters
+Values: yes or no.  Default: yes.  Read by the Editor at start; it is the
+setting of Global, Options, Display Tab & End-of-Line Characters?.  Yes
+shows the tab and end-of-line signs on the screen.
+.h3 show_dots [appcfg-key-dots]
+.ix show_dots
+.ix Dots for spaces
+Values: yes or no.  Default: no.  Read by the Editor at start; it is the
+setting of Global, Options, Display Dots for Spaces?.  Yes shows a dot for
+every space on the screen.
+.h3 backups [appcfg-key-backups]
+.ix backups
+.ix Backups Kept, setting
+.ix .BAK
+Values: a whole number from 0 to 99.  Default: 3, which is saved as no line.
+It is read by the Editor at start and set by the field Backups Kept of Setup
+in the Document Manager and of Global, Options in the Editor.  It is the
+number of numbered backups, such as {c:.backup/report.bak01}, that a Save keeps
+of the file that it replaces; 0 makes none.  Lowering it shows a box first
+({n:file-backup-option}).  A number above 99 is made 99.  A settings
+file that has the old key {c:backup} (yes or no) is read as if it was not
+there: the first versions wrote it, with its default no, in every file, so
+that a no was never a choice.  The default of 3 stays; only the key
+{c:backups} sets another number, and {c:backups=0} stays 0.  The key
+{c:backup} is not written any more.

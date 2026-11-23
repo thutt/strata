@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Formatted date/time string too long --
+
+The formatted date or time string exceeds the maximum number of characters 
+allowed.  Date or time string lengths vary after formatting depending on the
+information inserted during formatting.  For example, a date format of
+Month dd, year could format as May 1, 1988 or January 28, 1988.  Redefine the
+tag format to contain fewer characters and retry the operation.
+
+-- Formatted tag too long (<description>) --
+
+The formatted tag exceeds the maximum number of characters allowed. Tag lengths
+vary after formatting depending on the information inserted during formatting.
+For example, a page number format of \i\ could format as ii or xxviii.  
+Redefine the tag format to contain fewer characters and retry the operation.
+
+-- Function not available in Evaluation Kit -- 
+
+The function you have selected is not available in the Evaluation Software. 
+Press any key to continue.  For a complete product demonstration, please 
+contact your local dealer.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

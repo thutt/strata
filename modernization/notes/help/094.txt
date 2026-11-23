@@ -1,0 +1,25 @@
+
+----------------------------------- File Names ---------------------------------
+File names can be up to eight characters long, and can contain any letters or
+numbers or the character _ (underscore).  File name extensions can be up to 
+three characters long; the .SET extension is required for template files,
+the .BAK extension is used for backup files, and the .DOC extension is the
+extension used for documents unless you specify otherwise. 
+
+--Procedure---------------------------------------------------------------------
+                                              
+ Move the cursor to the File Name or Document Name prompt.
+ Enter the name of the file and press Enter.   
+                   or                          
+  Press Gray + to display a list of files in the current working directory.
+  Move the highlight to the file you want and press Enter.
+
+--------------------------------------------------------------------------------
+# Press Gray + twice to list the file names, descriptions, dates, and sizes.
+# Press Gray + a third time to reorder the list by date and then by size.
+# Enter wild card characters to display files in the current directory.
+                       *.BAK   displays all backup files.
+                       *.SET   displays all template files.
+                       *.*     displays all files.
+--------------------------------------------------------------------------------
+    File     Backup Files     Template Files    Keyboard Summary    Help Index

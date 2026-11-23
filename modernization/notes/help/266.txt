@@ -1,0 +1,25 @@
+-------------------------------- Error Messages --------------------------------
+
+-- Unable to Preview document --
+
+The file needed to complete the preview operation cannot be found.  Check to 
+make sure that all files from the original Manuscript disks have been copied 
+onto the hard disk and are in the same directory.
+
+-- Unable to print/preview marker --
+
+You can print or preview a graphics image directly from a marker only when 
+editing the document body.  Preview a graphics image in a header/footer, title 
+page, or notes as part of the entire document.
+
+-- Unable to scale graphics image -- 
+
+The graphics image cannot be zoomed.  Only an image whose width is dispropor-
+tionate to its height can be zoomed.
+
+-- Unacceptable page break --
+
+The page has had to be broken in an undesirable location. Insert Page Break
+markers in the document to manually set page breaks.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

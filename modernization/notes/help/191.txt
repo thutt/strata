@@ -1,0 +1,25 @@
+
+----------------------------- Cursor-Movement Keys -----------------------------
+
+Left/Right    Left/right one character
+Up/Down       Up/down one line
+PgUp/PgDn     Up/down approximately one-half screen
+Home          Beginning of line
+End           End of line
+
+Ctrl Left     Left one word
+Ctrl Right    Right one word
+Ctrl Home     Beginning of current column or block
+Ctrl End      End of current column or block
+
+Shift Left    Left one column or up one level
+Shift Right   Right one column or down one level
+Shift Up      Up to the current section's headline block
+Shift Down    Down to the next section's headline block
+Shift PgUp    Up one section at the same level (structured documents only)
+Shift PgDn    Down one section on the same level (structured documents only)
+Shift Home    Beginning of document
+Shift End     End of document
+
+--------------------------------------------------------------------------------
+                     Keyboard Summary             Help Index

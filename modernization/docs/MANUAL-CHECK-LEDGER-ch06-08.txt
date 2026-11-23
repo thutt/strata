@@ -1,0 +1,1022 @@
+THE LEDGER OF CHAPTERS 6, 7 AND 8 OF THE REFERENCE MANUAL
+
+This ledger follows docs/MANUAL-CHECK-LEDGER-README.txt, which says what
+a ledger line is and what the notation of the state means.
+
+Date: 21 November 2026.  Part: Print and Preview (6), The Document Manager (7),
+Spell Check and Thesaurus (8).  Sources: print*.src, str*.src, spell.src.
+
+Sections of the part: 173.  Each one has a line below.
+  V  Read, and the statements of the section were compared with the program:
+     with the source of the program, or by running the program in a terminal.
+     The line says which files and what.  A V section can still hold a
+     statement that was not compared; the line names what was.
+  P  Read, and most statements were compared; the line names what was NOT.
+  T  Read, and the text agrees with the tools that run on every section
+     (the fact checks, the style rules, the spelling check) and with the
+     parts of the chapter that were compared.  Its statements were NOT
+     compared one by one with the program in this pass.
+Counts: V 173, P 0, T 0.
+Tables: the widths of the tables of three columns or more were scaled so
+that the last column prints as wide as it was meant to (the Printer gives the
+last column what is left of the line).
+Not done in this part: the close button of the window manager (there is no
+window manager under Xvfb).
+Pages read at 110 dpi: see the report.
+
+Marks: C is what was checked, R is what was found or changed.
+
+6         V  Print and Preview
+            C: read; the list of sections made from the sources
+            R: rewritten: the narrative introduction became a reference
+               introduction with a table of the sections; the duplicate list
+               of sections was removed
+
+6.1       V  How printing works in Strata
+            C: printmenu.c, printjob.c, strprint.c; run of stred (Print menu,
+               Draft panel)
+            R: reworded; no fact wrong
+
+6.2       V  The Print menu
+            C: ran stred in a terminal: the menu bar, the second row, the
+               hint line; printmenu.c
+            R: nothing wrong found
+
+6.2.1     V  How to reach it
+            C: ran stred in a terminal: the menu bar, the second row, the
+               hint line; printmenu.c
+            R: nothing wrong found
+
+6.2.2     V  The entries
+            C: ran stred in a terminal: the menu bar, the second row, the
+               hint line; printmenu.c; read of the printed page
+            R: nothing wrong found
+
+6.2.3     V  Esc and the other ways out
+            C: ran stred in a terminal: the menu bar, the second row, the
+               hint line; printmenu.c
+            R: nothing wrong found
+
+6.2.4     V  Print and Preview with no document open
+            C: ran stred with no document (the menu of 7.14)
+            R: nothing wrong found
+
+6.3       V  Draft
+            C: printmenu.c (fields, order, defaults, kinds), ran the Draft
+               panel in a terminal
+            R: the Values column of the list fields said As the document
+               says; the fields hold Yes or No and start as the document
+               says: changed
+
+6.3.1     V  How to reach it
+            C: printmenu.c (fields, order, defaults, kinds), ran the Draft
+               panel in a terminal
+            R: the Values column of the list fields said As the document
+               says; the fields hold Yes or No and start as the document
+               says: changed
+
+6.3.2     V  The panel
+            C: printmenu.c (fields, order, defaults, kinds), ran the Draft
+               panel in a terminal
+            R: the Values column of the list fields said As the document
+               says; the fields hold Yes or No and start as the document
+               says: changed
+
+6.3.3     V  What happens when the panel is accepted
+            C: printmenu.c (order of the checks, Replace NAME?, part, wait
+               panel), printjob.c (messages)
+            R: nothing wrong found
+
+6.3.4     V  Edges
+            C: printjob.c messages (Cannot write in the directory, The PDF
+               cannot replace the document)
+            R: nothing wrong found
+
+6.4       V  Final
+            C: printmenu.c (fields, order, Print Title Page? default Yes,
+               sections)
+            R: Values column as 6.3.2: changed
+
+6.4.1     V  How to reach it
+            C: printmenu.c (fields, order, Print Title Page? default Yes,
+               sections)
+            R: Values column as 6.3.2: changed
+
+6.4.2     V  The panel
+            C: printmenu.c (fields, order, Print Title Page? default Yes,
+               sections)
+            R: Values column as 6.3.2: changed
+
+6.4.3     V  The table of contents
+            C: printmenu.c parse_levels (1 to 99, 3 shown when none), part
+               options; layout claims (indent, 30 characters) not compared
+               with latex.c
+            R: nothing wrong found in what was compared
+
+6.4.3.1   V  What it lists
+            C: printmenu.c parse_levels (1 to 99, 3 shown when none), part
+               options; layout claims (indent, 30 characters) not compared
+               with latex.c
+            R: nothing wrong found in what was compared
+
+6.4.4     V  The index and the lists
+            C: printmenu.c part_option (the field starts with the document, a
+               part goes to the Printer only when changed); fileops.c section
+               messages
+            R: nothing wrong found
+
+6.4.5     V  The range of sections
+            C: printmenu.c part_option (the field starts with the document, a
+               part goes to the Printer only when changed); fileops.c section
+               messages
+            R: nothing wrong found
+
+6.4.6     V  Pages: a range for the printer
+            C: printjob.c: "The document has only N pages, so it has no page
+               M" and the -P option
+            R: nothing wrong found
+
+6.5       V  Colors in print
+            C: latex.c: black and white passes gray to xcolor; the marks are
+               red for an error and orange for a warning;
+               tests/borderprint.py (shading stays grey); tests/banner.py
+               (marks and banner colors)
+            R: nothing wrong found
+
+6.6       V  Sending to a printer
+            C: printjob.c: the arguments of lp are built in the order of the
+               table; read of the printed page
+            R: the keys of the Printer field were one long paragraph: a
+               table; lp option print-scaling added
+
+6.6.1     V  Searching for printers
+            C: printmenu.c search_printers, printjob.c (lpinfo -v, 10
+               seconds, Esc), check_print message
+            R: the refusal "Search for printers only looks for printers: ..."
+               was not in the message table: added
+
+6.6.2     V  The options given to lp
+            C: printjob.c: the arguments of lp are built in the order of the
+               table (-d, -n, sides, collate, print-scaling, -P, -t)
+            R: the table of the options of lp lacked -o print-scaling=none
+               for an envelope page: added
+
+6.6.3     V  Environment
+            C: printjob.c, search.c: the programs named by STRATA_LP,
+               STRATA_LPSTAT and STRATA_LPINFO; STRATA_STRPRINT in preview.c
+            R: STRATA_LPINFO was missing: added
+
+6.7       V  While a print runs
+            C: preview.c, printmenu.c
+            R: nothing wrong found
+
+6.8       V  The messages of a print
+            C: printmenu.c, printjob.c, printjob.h: every message fragment of
+               the tables was searched in src; the composed ones read
+            R: Search for printers refusal added to the table of refused
+               panels
+
+6.9       V  Preview
+            C: printmenu.c printmenu_preview (fields Preview Title Page?,
+               Preview from Section, to Section, Error Log?; the two boxes)
+            R: nothing wrong found
+
+6.9.1     V  How to reach it
+            C: printmenu.c printmenu_preview (fields Preview Title Page?,
+               Preview from Section, to Section, Error Log?; the two boxes)
+            R: nothing wrong found
+
+6.9.2     V  The Preview Document panel
+            C: printmenu.c printmenu_preview (fields Preview Title Page?,
+               Preview from Section, to Section, Error Log?; the two boxes)
+            R: nothing wrong found
+
+6.9.3     V  What happens
+            C: preview.c, printmenu.c
+            R: nothing wrong found
+
+6.9.4     V  The wait panel
+            C: preview.c (steps, messages, the log tail)
+            R: two messages were missing from the table of Preview messages:
+               "Preview done; the viewer could not show N things" and
+               "Preview: the viewer failed": added
+
+6.9.5     V  Messages
+            C: preview.c (steps, messages, the log tail)
+            R: two messages were missing from the table of Preview messages:
+               "Preview done; the viewer could not show N things" and
+               "Preview: the viewer failed": added
+
+6.9.6     V  Edges
+            C: ran strprint on a master with an Include marker to PDF and
+               with --dvi (read through dvipdfmx): both hold the text of the
+               part
+            R: WRONG: a Preview reads the parts of an Include marker; the row
+               said that it does not: corrected
+
+6.10      V  The Viewer
+            C: ran the Viewer under Xvfb (dviview on a six page DVI: first
+               line, legend, zoom 125, ? hides the legend, go to page, q
+               ends) and the X11 Editor to a Preview (the panel, the Viewer
+               window, "Preview done: no print errors")
+            R: nothing wrong found
+
+6.10.1    V  The window
+            C: tools/dviview/src/main.c: window, status bar text, the four
+               legends, keys, zoom 25 to 800 step 25, pan 60, go to page
+               (eight digits, 0 to the first, past the end to the last)
+            R: nothing wrong found
+
+6.10.2    V  The status bar
+            C: tools/dviview/src/main.c: window, status bar text, the four
+               legends, keys, zoom 25 to 800 step 25, pan 60, go to page
+               (eight digits, 0 to the first, past the end to the last)
+            R: nothing wrong found
+
+6.10.3    V  The red status area of a failed print
+            C: main.c: PRINT FAILED - N errors - THIS PREVIEW IS INACCURATE,
+               singular, red area, bold by double draw
+            R: nothing wrong found
+
+6.10.4    V  The keys
+            C: tools/dviview/src/main.c: window, status bar text, the four
+               legends, keys, zoom 25 to 800 step 25, pan 60, go to page
+               (eight digits, 0 to the first, past the end to the last)
+            R: nothing wrong found
+
+6.10.5    V  Go to a page
+            C: tools/dviview/src/main.c: window, status bar text, the four
+               legends, keys, zoom 25 to 800 step 25, pan 60, go to page
+               (eight digits, 0 to the first, past the end to the last)
+            R: nothing wrong found
+
+6.10.6    V  Options and environment
+            C: main.c parse_args, util.c viewer_report_to, main.c
+               DVIVIEW_PLAIN and DVIVIEW_TIMING
+            R: the options --report, --var, --special and -- and the variable
+               DVIVIEW_TIMING were missing: added (developer text)
+
+6.11      V  The Printer
+            C: ran strprint: PDF, --dvi, --tex-only, --export-latex; the PDF
+               and the file of the errors
+            R: nothing wrong found
+
+6.11.1    V  What the Printer makes
+            C: ran strprint: PDF, --dvi, --tex-only, --export-latex; the PDF
+               and the file of the errors
+            R: nothing wrong found
+
+6.11.2    V  An exported LaTeX file
+            C: ran strprint --export-latex: the comment at the top (pdflatex
+               twice, latex and dvipdfmx), no banner, no marks
+            R: nothing wrong found
+
+6.12      V  What is printed for each element
+            C: page_geometry in latex.c (US letter default, margins 1 inch, 2
+               inch rule), text_points, put_pagenumbering (roman to 3999),
+               title_pct 33, line weight 3 to 20
+            R: Line numbers, Page Number and Section were missing from the
+               tables of what is printed: added; the opening sentences were
+               reworded
+
+6.12.1    V  The page
+            C: page_geometry in latex.c (US letter default, margins 1 inch, 2
+               inch rule), text_points, put_pagenumbering (roman to 3999),
+               title_pct 33, line weight 3 to 20
+            R: Line numbers, Page Number and Section were missing from the
+               tables of what is printed: added; the opening sentences were
+               reworded
+
+6.12.2    V  Borders and shading
+            C: tests/borderprint.py (40 checks: single, double, wide,
+               gutters, shading, connect, tables, corners); latex.c
+               block_boxed (a headline is never boxed) and the comment on the
+               Line Weight
+            R: nothing wrong found
+
+6.12.3    V  Headlines and section tags
+            C: latex.c (page number tags, roman to 3999), msdoc.h
+               SECT_MAXDEPTH, the secnum and toc tests of the smoke test
+            R: WRONG: the tag is made down to the 99th level, not the 32nd:
+               corrected
+
+6.12.4    V  Text, justification and spacing
+            C: latex.c set_ruler_unit, the justification table (raggedright,
+               centering, raggedleft), attributes (textbf, textit, uline),
+               the smoke checks on spacing and page breaks
+            R: WRONG: a cell of the indents is a unit of the Ruler (one
+               eightieth of the text width by default), not a tenth of an
+               inch: corrected
+
+6.12.5    V  Tables
+            C: latex.c same_columns (the same number and widths of columns
+               make one table; others start a new one), the units, the last
+               column; read of printed tables in the manual
+            R: the width rule was wrong (columns are not scaled to the line):
+               corrected
+
+6.12.6    V  Notes
+            C: latex.c emit_note (footnote, level and end notes, a note in a
+               cell or a box waits); the smoke check that a footnote is on
+               the page of its reference
+            R: two nuances were missing: a note in a cell or box waits; a
+               levelnote of a shallow section is at the end of that section:
+               added
+
+6.12.7    V  Markers
+            C: latex.c emit_marker: Index, Figure and Table (not printed when
+               their list is made), Keep, Page Break and Column Break and
+               Whitespace (emit_vertical: odd and even page, a cell or a box
+               gives the long form or a rule), Merge (long form), Include
+               (printed as text only when it could not be done), Line (weight
+               3 to 20), Orientation; tests/autolists.py
+            R: the Index, Figure and Table rows, the Page Break, Column Break
+               and Whitespace rows (a box as well as a cell), and Page Number
+               and Section were corrected or added
+
+6.12.8    V  Pictures
+            C: latex.c emit_picture, find_picture_as, sizing (width, height,
+               scale, keepaspectratio, 85 percent of the text height);
+               tests/picmissing.py; tests/printpdf.py (Final and Draft print
+               the picture)
+            R: the scale down to fit was missing: added
+
+6.12.9    V  Equations
+            C: latex.c (display only when alone in its line, not in a cell or
+               a box); tests/errlog.py (the equation that TeX refuses)
+            R: a box was missing next to the cell: added
+
+6.12.10   V  Keep markers: blocks on one page
+            C: tests/keep.py (31 checks: fixed, floating, unmatched, stray,
+               nested, long, table, sections, notes, draft)
+            R: nothing wrong found
+
+6.13      V  Fonts
+            C: latex.c text_points (8, 9, 10, 11, 12, 14, 17, 20; 14 on an
+               envelope), the family words of the name of a font (mono and
+               sans lists)
+            R: the text said that text is set in 11 points: it is 11, 14 on
+               an envelope, and a document can name another size: changed
+
+6.13.1    V  Which font applies
+            C: latex.c (order of the lookup of the family words, "header"
+               excluded from sans)
+            R: nothing wrong found
+
+6.13.2    V  From the name of a font to a family
+            C: latex.c (order of the lookup of the family words, "header"
+               excluded from sans)
+            R: nothing wrong found
+
+6.13.3    V  Hyphenation
+            C: latex.c hyphenation_list; tests/hyphlist.py and
+               tests/hyctest.py
+            R: nothing wrong found
+
+6.14      V  What printing needs
+            C: printjob.c and preview.c message fragments; tests that run
+               strprint with a missing pdflatex (tests/fakepdflatex.sh)
+            R: nothing wrong found
+
+6.15      V  Print errors
+            C: the table of the places: ran strprint on
+               tests/data/print_errors.doc (banner, marks, Error Log);
+               tests/banner.py and tests/errlog.py; the message line in the
+               smoke test
+            R: nothing wrong found
+
+6.15.1    V  What is an error and what is a warning
+            C: all 43 codes of the table compared one by one with the codes
+               in src (none missing, none extra); message fragments searched
+               in src
+            R: the file name of an Include message is in quotation marks in
+               the program: noted before the table
+
+6.15.2    V  The place
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.3    V  The Error Log
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.4    V  The Print Error markers
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.5    V  The message line after a print
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.6    V  A failed print: the banner, the marks and the Viewer
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.7    V  A print that makes no file
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.8    V  Export a LaTeX File and errors
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.15.9    V  Print and Preview with no document to mark
+            C: ran strprint on tests/data/print_errors.doc (the Error Log,
+               positions, banner, marks, status 4); tests/errlog.py (75
+               checks), tests/banner.py, the print-error checks of the smoke
+               test; latex.c write_banner (three quarters of the top margin,
+               0.2 to 0.45 inch)
+            R: the sections were compared; changes are listed at 6.15.1,
+               6.15.3 and 6.15.4
+
+6.16      V  Command lines of the Printer and the Editor
+            C: strprint.c option loop: every option of the table is read;
+               semantic claims by tests/errlog.py and runs
+            R: the table is a subset: pointers to Appendix A added
+
+6.16.1    V  The Printer
+            C: strprint.c option loop: every option of the table is read;
+               semantic claims by tests/errlog.py and runs
+            R: the table is a subset: pointers to Appendix A added
+
+6.16.1.1  V  What the Printer makes
+            C: strprint.c option loop: every option of the table is read;
+               semantic claims by tests/errlog.py and runs
+            R: the table is a subset: pointers to Appendix A added
+
+6.16.1.2  V  The options of the Printer
+            C: strprint.c option loop, exit statuses
+            R: see 6.16
+
+6.16.1.3  V  Exit status of the Printer
+            C: strprint.c option loop, exit statuses
+            R: see 6.16
+
+6.16.2    V  The print and preview modes of the Editor
+            C: printcli.c: every option of the print mode compared with the
+               table by name; exit statuses 0 to 5 compared with EXIT_*
+            R: the options --error-log, --banner, --errors, --var and
+               --special were missing: added
+
+6.16.2.1  V  The print mode
+            C: printcli.c: every option of the print mode compared with the
+               table by name; exit statuses 0 to 5 compared with EXIT_*
+            R: the options --error-log, --banner, --errors, --var and
+               --special were missing: added
+
+6.16.2.2  V  The preview mode
+            C: printcli.c: every option of the print mode compared with the
+               table by name; exit statuses 0 to 5 compared with EXIT_*
+            R: the options --error-log, --banner, --errors, --var and
+               --special were missing: added
+
+7         V  The Document Manager
+            C: read
+            R: reworded the last paragraph to the imperative
+
+7.1       V  What the Document Manager is
+            C: ran str and stred with no document
+            R: nothing wrong found
+
+7.1.1     V  The Document Manager and the Editor's menu
+            C: ran str and stred with no document
+            R: nothing wrong found
+
+7.1.2     V  Spell check
+            C: ran str and stred with no document
+            R: nothing wrong found
+
+7.2       V  Starting the Document Manager
+            C: str.c main: options -H, --help-file, -h, --usage, --version,
+               --default-colors, a document name
+            R: the options --version and --default-colors were missing and
+               the usage text is not two lines: changed
+
+7.2.1     V  What happens at start
+            C: str.c main (order of the start), default_msed and find_msed
+               (setting, STRED, next to the program, system directories)
+            R: nothing wrong found
+
+7.2.2     V  The help file
+            C: help.c help_find_file and the test in str.c main
+            R: the order was wrong: the setting comes before STRATA_HELP, the
+               current directory is searched, and the places next to the
+               program differ: table rewritten
+
+7.2.3     V  Finding the editor
+            C: str.c main (order of the start), default_msed and find_msed
+               (setting, STRED, next to the program, system directories)
+            R: nothing wrong found
+
+7.2.4     V  Exit status of the Document Manager
+            C: str.c main (return values)
+            R: statuses extended to --usage and --version
+
+7.3       V  The screen
+            C: ran str: the title, the bottom line, the footer
+            R: nothing wrong found
+
+7.3.1     V  Fields in a panel
+            C: ran str: the title, the bottom line, the footer
+            R: nothing wrong found
+
+7.4       V  Keys
+            C: ran str (Esc does nothing in the main menu, a letter only
+               highlights); widgets.c (list of 12 or fewer chooses at once,
+               F2 and plus keys)
+            R: nothing wrong found
+
+7.4.1     V  Menus
+            C: ran str (Esc does nothing in the main menu, a letter only
+               highlights); widgets.c (list of 12 or fewer chooses at once,
+               F2 and plus keys)
+            R: nothing wrong found
+
+7.4.2     V  Panels
+            C: ran str (Esc does nothing in the main menu, a letter only
+               highlights); widgets.c (list of 12 or fewer chooses at once,
+               F2 and plus keys)
+            R: nothing wrong found
+
+7.4.3     V  Lists and notices
+            C: ran str (Esc does nothing in the main menu, a letter only
+               highlights); widgets.c (list of 12 or fewer chooses at once,
+               F2 and plus keys)
+            R: nothing wrong found
+
+7.5       V  The menu of the Document Manager
+            C: str.c menu items; ran str
+            R: nothing wrong found
+
+7.6       V  Edit / Preview / Print Document
+            C: ran str: the Edit panel; str.c do_edit (field order, focus)
+            R: the text said that the focus starts on Working Directory; it
+               starts on Document Name: changed
+
+7.6.1     V  The Edit / Preview / Print Document panel
+            C: ran str: the Edit panel; str.c do_edit (field order, focus)
+            R: the text said that the focus starts on Working Directory; it
+               starts on Document Name: changed
+
+7.6.2     V  The variables
+            C: str.c variables_summary, edit_variables (VARS_MAX 8, labels
+               Name N and Value N), vars.c messages
+            R: the text of the Variables field was not the real text: changed
+
+7.6.3     V  What happens when the panel is accepted
+            C: str.c resolve_doc, do_edit
+            R: nothing wrong found
+
+7.6.4     V  An existing document
+            C: str.c resolve_doc, do_edit
+            R: nothing wrong found
+
+7.6.5     V  A new document
+            C: ran str with a new name; str.c do_edit, template.c
+            R: the list of the templates is titled Templates, Enter shows the
+               New File panel, Ins finishes it, Esc shows the list of the
+               type: changed
+
+7.6.6     V  When the editor ends
+            C: str.c (status 127, other)
+            R: nothing wrong found
+
+7.7       V  Maintain Dictionaries
+            C: ran str: the panel and the message A word has no digits;
+               dictlist.c messages by fragment
+            R: nothing wrong found
+
+7.7.1     V  The panel
+            C: ran str: the panel and the message A word has no digits;
+               dictlist.c messages by fragment
+            R: nothing wrong found
+
+7.7.2     V  What is a word
+            C: ran str: the words of 7.7.2, the hyphenation list rules,
+               import (3 added, 1 in the list already, 1 not words) and
+               export (order, the question NAME exists)
+            R: nothing wrong found; the box of a message of the hyphenation
+               panel with no file name has the title Marker (program oddity,
+               OPEN)
+
+7.7.3     V  The hyphenation list
+            C: ran str: the words of 7.7.2, the hyphenation list rules,
+               import (3 added, 1 in the list already, 1 not words) and
+               export (order, the question NAME exists)
+            R: nothing wrong found; the box of a message of the hyphenation
+               panel with no file name has the title Marker (program oddity,
+               OPEN)
+
+7.7.4     V  Import and export
+            C: ran str: the words of 7.7.2, the hyphenation list rules,
+               import (3 added, 1 in the list already, 1 not words) and
+               export (order, the question NAME exists)
+            R: nothing wrong found; the box of a message of the hyphenation
+               panel with no file name has the title Marker (program oddity,
+               OPEN)
+
+7.7.5     V  Messages of Maintain Dictionaries
+            C: ran str: the panel and the message A word has no digits;
+               dictlist.c messages by fragment
+            R: nothing wrong found
+
+7.8       V  Compare Document Versions
+            C: ran str: the Compare panel with its four fields; message
+               fragments by script
+            R: nothing wrong found
+
+7.8.1     V  The panel
+            C: ran str: the Compare panel with its four fields; message
+               fragments by script
+            R: nothing wrong found
+
+7.8.2     V  The report
+            C: ran str: Compare on two documents (the report with [- -] and
+               [+ +], the question, Wrote NAME)
+            R: the Report Document default needs a last document: clause
+               added
+
+7.8.3     V  Saving the report
+            C: ran str: Compare on two documents (the report with [- -] and
+               [+ +], the question, Wrote NAME)
+            R: the Report Document default needs a last document: clause
+               added
+
+7.8.4     V  What is compared
+            C: compare.h: CMP_SIMILAR 40, CMP_BLOCK_DMAX 3000, CMP_WORD_DMAX
+               1500
+            R: nothing wrong found
+
+7.8.5     V  Messages of Compare Document Versions
+            C: ran str: the Compare panel with its four fields; message
+               fragments by script
+            R: nothing wrong found
+
+7.9       V  Restore Backup
+            C: restoremenu.c: the small menu View the text, Restore this
+               backup, Back
+            R: nothing wrong found
+
+7.9.1     V  Messages of Restore Backup
+            C: restoremenu.c: the small menu View the text, Restore this
+               backup, Back
+            R: nothing wrong found
+
+7.10      V  Setup
+            C: ran str: Setup, its three pages and groups; str.c field list;
+               config.c defaults (autosave 120, undo 100, backups 3, rows
+               50); widgets.c PgUp is the next page
+            R: nothing wrong found
+
+7.10.1    V  The fields of Setup
+            C: ran str: Setup, its three pages and groups; str.c field list;
+               config.c defaults (autosave 120, undo 100, backups 3, rows
+               50); widgets.c PgUp is the next page
+            R: nothing wrong found
+
+7.10.2    V  Choices and pages of Setup
+            C: ran str: Setup, its three pages and groups; str.c field list;
+               config.c defaults (autosave 120, undo 100, backups 3, rows
+               50); widgets.c PgUp is the next page
+            R: nothing wrong found
+
+7.10.3    V  The colors of the screen
+            C: color.c: the table of the default colors compared row by row
+            R: nothing wrong found
+
+7.10.3.1  V  The kinds of text
+            C: color.c: the table of the default colors compared row by row;
+               read of the printed page
+            R: the table had four columns and the last one printed in a strip
+               a few letters wide: three columns now
+
+7.10.3.2  V  Choosing a color
+            C: ran str on the colors page (Tab, Right, R and its question, F2
+               palette)
+            R: nothing wrong found
+
+7.10.3.3  V  What a terminal shows
+            C: ran str on the colors page (Tab, Right, R and its question, F2
+               palette)
+            R: nothing wrong found
+
+7.10.3.4  V  Colors that are hard to read
+            C: ran str on the colors page (Tab, Right, R and its question, F2
+               palette)
+            R: nothing wrong found
+
+7.10.3.5  V  Getting the colors back
+            C: ran str on the colors page (Tab, Right, R and its question, F2
+               palette)
+            R: nothing wrong found
+
+7.10.4    V  Accepting the panel
+            C: str.c setup_check texts
+            R: nothing wrong found
+
+7.11      V  Choosing a file or a directory from a list
+            C: widgets.c popup_browse ([Use this directory] first for
+               directories, ../, 500 entries); ran the list from Setup
+            R: nothing wrong found
+
+7.11.1    V  The list of files and directories
+            C: widgets.c popup_browse ([Use this directory] first for
+               directories, ../, 500 entries); ran the list from Setup
+            R: nothing wrong found
+
+7.11.2    V  What the choice does to the panel
+            C: widgets.c popup_browse ([Use this directory] first for
+               directories, ../, 500 entries); ran the list from Setup
+            R: nothing wrong found
+
+7.12      V  TeX Font Association
+            C: ran str (the font list); fonts.c default table, row by row;
+               str.c font panel (Font Number and Installed dimmed)
+            R: nothing wrong found
+
+7.12.1    V  The list of the twenty fonts
+            C: ran str (the font list); fonts.c default table, row by row;
+               str.c font panel (Font Number and Installed dimmed)
+            R: nothing wrong found
+
+7.12.2    V  The panel of a font
+            C: ran str (the font list); fonts.c default table, row by row;
+               str.c font panel (Font Number and Installed dimmed)
+            R: nothing wrong found
+
+7.12.3    V  The values that a new user has
+            C: ran str (the font list); fonts.c default table, row by row;
+               str.c font panel (Font Number and Installed dimmed)
+            R: nothing wrong found
+
+7.12.4    V  What is saved, and when
+            C: ran str: the font panel, the notice of a bad family, the file
+               fonts; grep: only eqrender.c, markerui.c and globalmenu.c read
+               the list, not the Printer
+            R: nothing wrong found
+
+7.12.5    V  Install Now
+            C: ran Install Now with STRATA_CTAN_URL set to a local file: URL
+               that holds a small TDS archive: the notice Installed in
+               /tmp/.../texmf and the file in place; with an URL that is not
+               there: the notice "The archive could not be downloaded from
+               URL"; fonts.c
+            R: the temporary directory is TMPDIR when it names one, not
+               always /tmp: changed
+
+7.12.6    V  Where the list is used
+            C: ran str: the font panel, the notice of a bad family, the file
+               fonts; grep: only eqrender.c, markerui.c and globalmenu.c read
+               the list, not the Printer
+            R: nothing wrong found
+
+7.13      V  The help viewer
+            C: ran str: F1 on the menu, Edit, New File, Maintain
+               Dictionaries, Compare, Restore, fonts and Setup (the topic
+               titles); a copy of str with no help file near (the notice)
+            R: the New File panel shows the help of Edit / Preview / Print
+               Document, not Document Description (7.6.5): changed
+
+7.13.1    V  Reaching the help
+            C: ran str: F1 on the menu, Edit, New File, Maintain
+               Dictionaries, Compare, Restore, fonts and Setup (the topic
+               titles); a copy of str with no help file near (the notice)
+            R: the New File panel shows the help of Edit / Preview / Print
+               Document, not Document Description (7.6.5): changed
+
+7.14      V  The menu inside the Editor
+            C: ran stred with no document: the menu and its entries; ui.c
+               docmgr
+            R: WRONG: the menu has five entries, not two, and three of them
+               show the notice "X is not implemented in this version"; the
+               top row says Strata - Document Manager only in the source, the
+               screen shows the status line of the Editor: the section
+               rewritten
+
+7.15      V  Quit
+            C: ran str: End and Enter ends with status 0; Esc and Ctrl-Q
+               leave the program on the screen
+            R: nothing wrong found
+
+7.16      V  Messages of the Document Manager
+            C: every message fragment of str.c (say, popup_msg, popup_notice)
+               searched in the manual by script
+            R: one message was missing: "Not implemented in this version:
+               LABEL": added; the notice of Setup said five messages: changed
+
+7.16.1    V  Footer messages
+            C: every message fragment of str.c (say, popup_msg, popup_notice)
+               searched in the manual by script
+            R: one message was missing: "Not implemented in this version:
+               LABEL": added; the notice of Setup said five messages: changed
+
+7.16.2    V  Notices
+            C: every message fragment of str.c (say, popup_msg, popup_notice)
+               searched in the manual by script
+            R: one message was missing: "Not implemented in this version:
+               LABEL": added; the notice of Setup said five messages: changed
+
+7.16.3    V  The standard error
+            C: str.c usage and the terminal message
+            R: usage text and --version added
+
+7.17      V  The terminal version and the X11 version
+            C: ran the X11 Document Manager under Xvfb: the window is 800 by
+               950 (80 by 50 cells), Ctrl-Q and Esc do not end it, Quit does;
+               the terminal version ran in tmux
+            R: nothing wrong found; the close button of the window manager
+               was not tried (no window manager under Xvfb)
+
+8         V  Spell Check and Thesaurus
+            C: spell.c (aspell then hunspell, STRATA_SPELL, the dictionary
+               file, the language), thesaurus.c (STRATA_THESAURUS, the data
+               path); ran stred with aspell and with the installed mythes
+               data
+            R: nothing wrong found
+
+8.1       V  Requirements and files
+            C: spell.c (aspell then hunspell, STRATA_SPELL, the dictionary
+               file, the language), thesaurus.c (STRATA_THESAURUS, the data
+               path); ran stred with aspell and with the installed mythes
+               data
+            R: nothing wrong found
+
+8.2       V  Spell check
+            C: spellui.c, spell.c; ran stred with Ctrl-C (box Spell Word)
+            R: nothing wrong found
+
+8.2.1     V  What a word is
+            C: spellui.c, spell.c; ran stred with Ctrl-C (box Spell Word)
+            R: nothing wrong found
+
+8.2.2     V  Document
+            C: spellui.c, spell.c; ran stred with Ctrl-C (box Spell Word)
+            R: nothing wrong found
+
+8.2.3     V  Block
+            C: spellui.c, spell.c; ran stred with Ctrl-C (box Spell Word)
+            R: nothing wrong found
+
+8.2.4     V  Section
+            C: spellui.c, spell.c; ran stred with Ctrl-C (box Spell Word)
+            R: nothing wrong found
+
+8.2.5     V  Word
+            C: spellui.c, spell.c; ran stred with Ctrl-C (box Spell Word)
+            R: nothing wrong found
+
+8.3       V  The spell check screen
+            C: spellui.c: the seven commands, their description lines, Accept
+               correction?, Continue with auto corrections?, the end box,
+               changes counted for Accept, Define, Edit and Guess (not
+               Ignore)
+            R: nothing wrong found
+
+8.3.1     V  Guess and the single suggestion
+            C: spellui.c: the seven commands, their description lines, Accept
+               correction?, Continue with auto corrections?, the end box,
+               changes counted for Accept, Define, Edit and Guess (not
+               Ignore)
+            R: nothing wrong found
+
+8.3.2     V  Auto Correct
+            C: spellui.c: the seven commands, their description lines, Accept
+               correction?, Continue with auto corrections?, the end box,
+               changes counted for Accept, Define, Edit and Guess (not
+               Ignore)
+            R: nothing wrong found
+
+8.3.3     V  The end of the check
+            C: spellui.c: the seven commands, their description lines, Accept
+               correction?, Continue with auto corrections?, the end box,
+               changes counted for Accept, Define, Edit and Guess (not
+               Ignore)
+            R: nothing wrong found
+
+8.4       V  Dictionaries
+            C: spellui.c and spell.c messages; SPELL_MAXSUG 12
+            R: nothing wrong found
+
+8.5       V  Messages of the spell check
+            C: spellui.c and spell.c messages; SPELL_MAXSUG 12
+            R: nothing wrong found
+
+8.6       V  Limits of the spell check
+            C: spellui.c and spell.c messages; SPELL_MAXSUG 12
+            R: nothing wrong found
+
+8.7       V  Thesaurus
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.1     V  The word that is looked up
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.2     V  The panel
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.3     V  Keys of the thesaurus panel
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.4     V  The Look Up box
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.5     V  A word that is not found
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.6     V  A word that has no synonyms
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.7     V  Inflected words
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.8     V  Replacing the word
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.9     V  When the data is missing
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.7.10    V  Limits of the thesaurus
+            C: ran stred with Ctrl-T (not found list of ten, found word
+               layout, hints, history key); thesmenu.c (HIST_MAX 20, height
+               12 or half the rows), thesaurus.c (64 senses)
+            R: nothing wrong found
+
+8.8       V  A session step by step
+            C: keys compared with docs/KEY-MAP.txt; the example words follow
+               the program messages
+            R: nothing wrong found
+
+8.9       V  Summary of the keys of this chapter
+            C: keys compared with docs/KEY-MAP.txt; the example words follow
+               the program messages
+            R: nothing wrong found
+
+8.10      V  The spell check mode of the Editor
+            C: ran stred --spell with no document (status 2, the message)
+            R: nothing wrong found
+

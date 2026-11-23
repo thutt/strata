@@ -1,0 +1,427 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+LOGGING AND BUILD TYPES
+=======================
+
+This note is for the people who work on the programs.  It says how the
+build type reaches the C code, where the programs log, how the log of a
+run is made, and what the programs must not do.
+
+
+1. THE RULES
+------------
+
+These are the owner's rules.
+
+  - Strata is started with str.  str makes a log for the run.  Every
+    program that str starts (the Editor, the Printer, the Viewer) writes
+    its log messages to that log, and so does str.
+  - Neither the standard output nor the error output is used for logging,
+    in any build.  Both may be used for legitimate communication with the
+    user (see the end of this section).
+  - The C library's system log is not used.  No program calls syslog,
+    vsyslog, openlog or closelog (tests/logmsgs.py fails when one does).
+  - A log message is unique in the whole system, says what failed, with
+    which file or value, and why, and names the file and the line of the
+    call that wrote it (section 5).
+  - A release build records warnings, errors and fatal errors; a debug
+    build and an asan build record everything, notes and debug lines
+    included.  The asan build is treated like the debug build (confirmed by
+    the owner).
+  - A developer who wants to see the messages as they come uses the script
+    scripts/str-dev, which opens a second console that runs tail -F on the
+    log (section 7).  The programs, the collector and str have no console
+    logic of their own.
+  - The names of the subprograms and how to start them are not a
+    supported use.  They are known to the tests and to this note, not to
+    the user.
+
+What is not logging, and stays as it is:
+
+  - The output that is the job of a command line tool: the PDF of the
+    Printer, the usage text after --help or a wrong option, the progress
+    lines that the Editor reads from the Printer ("@@strprint ..."), the
+    answer of an option, an error about the command line itself (a file
+    that cannot be read, "needs an interactive terminal").
+  - Everything a program shows on its own screens: the message line, the
+    panels, the Error Log page, the Print Error markers, the Viewer's
+    status line, and the escape sequences that the terminal version writes
+    to draw the screen.
+
+Any other line that a program writes to the standard output or to the
+error output is a diagnostic, and it uses the log (section 3).
+
+
+2. THE BUILD TYPE
+-----------------
+
+The environment variable STRATA_BUILD_TYPE holds the build type: debug,
+release or asan (scripts/setup sets it).  The Makefile of the programs and
+the Makefile of the Viewer (tools/dviview/Makefile) turn it into exactly one
+define:
+
+    debug     -DSTRATA_DEBUG
+    release   -DSTRATA_RELEASE
+    asan      -DSTRATA_ASAN
+
+Any other value stops the build with a message.  A standalone build of the
+Viewer is a debug build.
+
+src/build_type.h is the one place that tests those macros.  It defines the
+constants strata_debug, strata_release and strata_asan (each 0 or 1, one of
+them 1), stops the compilation with #error when no define is given, adds
+strata_log_detail (1 for the debug and the asan build, the builds that
+record the detail of a run) and strata_build_name (the name of the build
+type as a string, for the log).  Every other file uses the constants in
+ordinary C conditions:
+
+    if (strata_log_detail) {
+        log_debug("dviview: page %ld ...", page);
+    }
+
+The block is compiled out of a build that does not want it, and it is type
+checked in every build (a type error in it stops a release build too).
+Conditional compilation on the build macros is not used anywhere else
+(tests/logpolicy.py fails when a source file has an #if or #ifdef on them).
+The one conditional that stays is HAVE_XFT in src/term_x11.c: it is not
+about the build type but about whether the Xft headers exist on the machine
+that builds, and the code it guards cannot be compiled without them.
+
+The release build cuts the levels note and debug in the call itself (the
+test "strata_release != 0 && level > LOG_LEVEL_WARN" in src/log.c is an
+ordinary condition on a constant), so the message is not even sent.  The
+arguments of the call are still evaluated: guard a call whose arguments are
+costly with "if (strata_log_detail)".
+
+
+3. THE LOG OF A RUN
+-------------------
+
+A run is one start of str.  str calls logrun_start (src/logrun.c) before it
+opens the terminal, with the directory of the logs: the directory "log" in
+the directory of the settings (config_directory in src/config.c, that is
+$STRATA_HOME, or ~/.strata).  logrun_start does this, in this order:
+
+  1. It makes the directory and the directories above it that are missing
+     (mode 0700).
+  2. It prunes the directory: it deletes the sockets of runs whose process
+     is gone (the name of a socket ends in the process number of str:
+     run-DATE-TIME-PID.sock) and the oldest logs, so that LOGRUN_KEEP (10)
+     logs remain with the new one.
+  3. It makes the log file run-DATE-TIME.log (DATE-TIME is YYYYMMDD-HHMMSS
+     in local time; a second run in the same second gets -2, -3 and so on),
+     opened with O_APPEND and mode 0600.
+  4. It makes the Unix datagram socket run-DATE-TIME-PID.sock in the same
+     directory.  A directory whose path is too long for the name of a socket
+     (108 bytes) gets the name @strata-UID-PID in the abstract namespace of
+     Linux instead: it is not a file, so nothing is made in /tmp.  (An
+     abstract socket has no file mode: any local program may send to it.)
+  5. It makes a pipe and forks the collector (below).
+  6. It puts the name of the socket in the environment variable
+     STRATA_LOG_SOCKET, so that every program that str starts inherits it.
+     A name that begins with @ is a name in the abstract namespace of Linux
+     (no file, so the length of a path does not matter; the zero byte takes
+     the place of the @): the tests use it for the sockets that they make,
+     so that a long TMPDIR cannot stop them.
+  7. It points the link current.log in the directory of the logs at the new
+     file (a symbolic link with a relative name, replaced atomically with
+     rename), so that "tail -F current.log" follows the newest run.
+
+When logrun_start fails (no home directory, a directory that cannot be
+made), str goes on without a log: the programs find no socket and log
+nowhere.  str registers logrun_end with atexit.
+
+The collector is a child process, not a thread.  It has nothing in common
+with the terminal handling and the signals of str, it ignores SIGINT,
+SIGQUIT, SIGHUP, SIGTSTP and SIGWINCH (a Ctrl-C of the user stops the run,
+not the log), it closes every inherited descriptor but its own three and
+points the standard descriptors at /dev/null.  It reads the socket and the
+read end of the pipe with poll.  When str ends in any way (a crash too) the
+write end of the pipe is closed, the collector sees the end of the pipe,
+reads what is still in the socket, deletes the socket and ends.  One reader
+means that two programs that log at the same time never mix their lines in
+the file: each datagram is one message and is written with one write(2).
+The collector writes only to the log file, never to the console.
+
+A line of the log:
+
+    2026-11-14 20:57:25.409 ERROR stred[459667]: src/filemenu.c:790: text
+
+that is: the time (the collector adds it when the message arrives, with the
+thousandths of a second), the level (FATAL, ERROR, WARN, NOTE, DEBUG), the
+program and its process number in brackets, the file and the line of the
+call, and the message.  The control characters of a message become blanks,
+so a message is always one line.
+
+The message that a program sends is in the syslog format of RFC 3164 without
+the time and the host, which the collector adds:
+
+    <PRIORITY>PROGRAM[PID]: FILE:LINE: TEXT
+
+with the priority of syslog (2 fatal, 3 error, 4 warning, 5 note, 7 debug).
+The longest message is 1400 bytes; a longer one is cut.
+
+A stale socket from a crashed run does not stop the next run: the new run
+has a name of its own (its own process number), and the first thing it does
+is to delete the sockets of dead processes.
+
+
+4. THE MODULE
+-------------
+
+src/log.h and src/log.c are used by all programs (the Editor, the Document
+Manager, the Printer and, from tools/dviview, the Viewer).  src/log.o is part
+of LIBOBJ in the Makefile, so every program links it.  The module has the
+interface of syslog (open, write with a priority and a printf format, close)
+but sends to the socket of the run, never to the system log.
+
+    log_open(program)         Names the program in what is logged and
+                              forgets an earlier connection.  Call it first
+                              in main.  The connection to the socket is made
+                              when the first message is sent.
+    log_close()               Closes the connection.
+    log_error(...)            One message of the level error.
+    log_warn(...)             One message of the level warning.
+    log_note(...)             One message of the level note.
+    log_debug(...)            One message of the level debug.
+    log_fatal(status, ...)    One message of the level fatal, then the
+                              program ends with the status.  It does not
+                              return.
+
+The macros add __FILE__ and __LINE__ to the call.  They are the one use of
+the preprocessor that the rule against conditional compilation allows, and
+only because there is no other way to know the place of a call.  The file is
+the name as it is compiled ("src/filemenu.c"); the Viewer has files with the
+same names (main.c), and the program name in the line tells them apart.
+
+A program that finds no socket (STRATA_LOG_SOCKET is not set, or nothing
+listens) logs nowhere: the calls do nothing, and log_fatal still ends the
+program with its status.  This is how the tests that start a program on its
+own behave unless they set the variable.  A test that wants the messages
+makes a socket itself and puts its name in STRATA_LOG_SOCKET: the class Sink
+in tests/logpolicy.py, tests/logsink.py's twin in tools/dviview/tests, and
+the real collector of src/logrun.c in tests/logtest.c and tests/runlog.py.
+
+Out of memory is fatal: xrealloc in src/msdoc.c, the buffers of
+src/latex.c and the allocation helpers of the Viewer call log_fatal.  The
+exit status of the Printer's LaTeX writer stays 2, the others 1.
+
+What the Editor logs: the start (build type, arguments), a document that
+cannot be opened, every export (the text, and LaTeX with its reason when it
+fails), a Preview that cannot be shown and the end of the viewer with its
+status and the count of things it could not show.  The Printer logs its
+start, its end and the status, and an error file that cannot be written.
+str logs the start of the run, the end of each program it starts with the
+status or the signal, and the end of the run.  The Viewer logs what it
+tells the Editor in its report file (section 6) and, in a debug or asan
+build, the time of each page that it draws when DVIVIEW_TIMING is set.
+
+
+5. MESSAGES
+-----------
+
+A message is unique and says what failed, with which file or value, and why,
+so that it can be understood and acted upon:
+
+  - The format string of every call is different from every other format
+    string of the system.  A message that occurs twice must be made to say
+    the difference (the site, the size, the file).
+  - Every format string has a variable part (a conversion such as %s or %d
+    that gives the file, the value or the reason), and has at least 24
+    characters.
+  - Write "what failed: the reason", with the reason from the system
+    (strerror(errno)) where there is one.  "failed" alone is a defect, and
+    so is an empty quotation.
+
+tests/logmsgs.py checks the sources (src/*.c and tools/dviview/src/*.c):
+every call of log_error, log_warn, log_note, log_debug and log_fatal has a
+literal format string, with a conversion, long enough, and unique; no source
+calls the system log.  It is part of "make test".
+
+To add a message: choose the level (error: it failed; warning: something was
+left out or could not be shown; note: what happened that a person who reads
+the log of a failed run wants to know; debug: for the developer only), write
+the call with the macro, make the text say what, which and why, and run
+tests/logmsgs.py.  If the user must learn it, do not only log it: show it on
+the program's own screen too.
+
+
+6. THE VIEWER AND THE EDITOR
+----------------------------
+
+The Editor starts the Viewer as a child process.  The Viewer inherits
+STRATA_LOG_SOCKET and writes its messages to the log of the run like every
+program; it writes nothing to the console in any build.
+
+What the user must learn is told to the Editor through a report file: the
+Editor starts the Viewer as
+
+    dviview FILE.dvi --report DIRECTORY/viewer.txt
+
+and the Viewer writes one line for each thing:
+
+    note: TEXT     something it cannot show (an unsupported special, a font
+                   or a picture that is not found); the Viewer goes on.
+    fail: TEXT     something it cannot go on with (a file that cannot be
+                   read, a display that cannot be opened); the Viewer ends
+                   with a status.
+
+The same text goes to the log of the run (a note as a warning, a failure as
+an error), so the details are there for a person who asks for the log.  When
+the Viewer ends, the Editor reads the report file (src/preview.c,
+read_viewer_report) and shows the result on the message line:
+
+  - a failure (a status other than 0, or a fail line):
+    "Preview: the viewer failed: TEXT";
+  - notes: "Preview done; the viewer could not show N things: TEXT" with the
+    text of the first one, after the existing "Preview done" message, so
+    that the count of print errors stays on it.
+
+The line for an unsupported special says (tools/dviview/src/dvi.c,
+dvi_report_special): the kind (the first word of the special), the page, the
+position on the page in inches from the left and the top, the text of the
+special (cut at 80 characters, the bytes that cannot be printed shown as
+\xNN), the name of the DVI file, why it is ignored (nothing is drawn, the
+preview may differ from the printed page, the PDF is not affected) and what
+to do.  It is told once for each kind.  An empty special, which the
+failed-print banner makes, is not an error and says nothing.
+
+
+7. THE DEVELOPER'S CONSOLE: scripts/str-dev
+-------------------------------------------
+
+    scripts/str-dev [-n|--no-window] [--] [arguments of str]
+
+str-dev is a bash script.  It starts str and, before that, a second console
+window that runs "tail -F" on ${STRATA_HOME}/log/current.log (or
+~/.strata/log/current.log), so that the log can be read as it is written
+and the screen of the Editor in the first console is never disturbed.
+
+  - The terminal program for the window: $TERMINAL when it is set, else the
+    first of x-terminal-emulator, xterm, gnome-terminal, konsole and
+    xfce4-terminal that is in the PATH.  Where none is found, the script
+    says so on the error output (it is the script's own message to the
+    developer) and starts str without a window.
+  - A link current.log that is left from the last run is removed first, so
+    that the window does not show the old log; tail -F waits for the new
+    link, which str makes before it starts any program.
+  - The window is closed when str ends (an EXIT trap), whatever its status;
+    the status of str is the status of the script.
+  - The str that is started: $STR, else the str in the PATH, else the build
+    in ${STRATA_BUILD_DIR}/term or /x11.
+  - --no-window starts str only.
+
+tests/strdev.py tests it with a fake terminal program (tests/faketerm.sh)
+and a fake str (tests/fakestr.sh).
+
+
+8. THE AUDIT
+------------
+
+Every write to the standard output and the error output was classified.  The
+step that made the log of a run (this note) found nothing to convert that the
+first step had not converted: the programs now write no diagnostic to the
+console, and what remains is command line output and screens.
+
+  Converted to the log of the run (the rule applies)
+    src/latex.c, src/msdoc.c           "out of memory" and "too many
+                                       markers": log_fatal.
+    tools/dviview/src/util.c           "out of memory": log_fatal; the
+                                       lines of the report file: warning
+                                       and error.
+    tools/dviview/src/dvi.c            unsupported special; unreadable,
+                                       wrong or damaged DVI file.
+    tools/dviview/src/font.c           no TFM file; font not found.
+    tools/dviview/src/fontmap.c        pdftex.map not found.
+    tools/dviview/src/image.c          picture not found or not decoded.
+    tools/dviview/src/main.c           the time of a page (debug and asan),
+                                       the display and font failures.
+    src/str.c, src/main.c, src/strprint.c, src/filemenu.c, src/preview.c,
+    src/ui.c                           the events of section 4.
+
+  Command line output (kept)
+    src/printcli.c, src/strprint.c     usage, option errors, errors about the
+                                       files of the command, progress lines
+                                       and the results of the Printer, the
+                                       lines of the protocol that the Editor
+                                       reads ("@@strprint ...").
+    src/main.c, src/str.c, src/spellui.c, src/ui.c
+                                       usage, "needs an interactive
+                                       terminal", the document that cannot
+                                       be opened, and the list of errors
+                                       that "stred --preview" gives back
+                                       after it closes the terminal.
+    tools/dviview/src/main.c           the usage text.
+    scripts/str-dev                    its own messages to the developer.
+
+  Screen output (kept)
+    src/term.c, src/term_x11.c, src/termbuf.c and the puts of the menus and
+    panels: they draw the screen.
+
+When a new line is added, put it in one of these groups.  A start-up failure
+of the log itself (a log that cannot be made) is not reported on the console
+either: str goes on without a log (section 3).
+
+
+9. TESTS
+--------
+
+  tests/logtest.c           (run by "make test")
+    - the socket interface and the collector together: levels, the form of
+      a line, a message that holds a newline, four programs that write 200
+      lines each at the same time (every line whole, in order), stale
+      sockets deleted and live ones kept, the newest logs kept, current.log,
+      log_fatal with and without a run.
+  tests/logmsgs.py          (run by "make test")
+    - the messages are unique, have a variable part and are long enough; no
+      call of the system log.
+  tests/strdev.py           (run by "make test")
+    - the wrapper script with the fakes.
+  tests/logpolicy.py BUILDDIR    (run by "make test")
+    - build_type.h with each of the three defines, and without one (the
+      #error); a guarded block is type checked in a release build.
+    - no source file tests the build macros outside build_type.h.
+    - the Viewer, run without a display on generated DVI files: an
+      unsupported special, a long text with unprintable bytes, an empty
+      special, a broken file, a cut file, a missing file, no display.  The
+      report file has the details; the console is empty in every build; a
+      socket (the class Sink) receives the lines.
+    - the Printer: a good print writes nothing to the console, its start
+      and end are in the log of the run (not in a release build), an
+      unreadable document ends with an error in the log, and a run without
+      a socket logs nothing.
+  tests/runlog.py           (run by "make smoke")
+    - str in a pty: a Preview, a failed Export, Quit; the log of the run
+      has the lines of str, the Editor and the Printer in order, each with
+      the time, the level, the program and its process, the file and the
+      line; current.log; no socket left; in a release build only warnings
+      and errors.
+  tests/preview.py          the Editor shows a note and a failure of the
+                            Viewer on the message line (a fake viewer,
+                            tests/fakeview.sh, writes the report).
+  tools/dviview/tests/run_tests.sh
+                            the Viewer tests read what the Viewer logs
+                            through tools/dviview/tests/logsink.py, which
+                            stands in for the collector.
+  tests/big.py full         the Viewer part reads the timing lines of the
+                            Viewer through a socket.
+
+Run the same tests on all three build types:
+
+    source scripts/setup -b release /tmp/strata
+    scripts/strata-build term dviview test
+    python3 -I -B tests/logpolicy.py "${STRATA_BUILD_DIR}"

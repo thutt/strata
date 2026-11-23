@@ -1,0 +1,527 @@
+# Chapter 5, part 5: the markers from Revision to Whitespace, and the markers
+# that are printed as a label.
+
+.h2 Revision [marker-revision]
+.ix Revision marker
+.ix Marker, Revision
+.ix Revision number in text
+A Revision marker prints the revision number of the document, the number that
+rises by one thousandth every time a changed document is saved.  Use it on the
+title page of a draft that goes round to several people, so that the paper says
+which version it is.
+.table 12 48
+Item | Value
+Panel | None.  The marker is inserted at once.
+Source of the | The Revision field of the Save panel, kept in the header of
+ text | the document ({n:file-revision}).
+.end
+.h3 On the screen
+Long and Short, the default being Long: the revision with three decimals in
+brackets, such as [1.007].  A new document is 1.000.  Name: [REV].
+.h3 When printed
+The revision as text, with three decimals (1.007), by the display mode of the
+marker ({n:markers-print-modes}).  The number is the one that the document has
+when the print is made, which is the number of the last Save: a document that
+was changed after the last Save prints the old number, because the number
+rises when the document is saved ({n:file-revision-rule}).
+.h3 Edges
+- The number is not a copy: when it is changed on the Save panel, all the
+  Revision markers of the document print the new number at the next print.
+- The number is always written with three decimals: 2 is 2.000.
+- A document that has no revision number is revision 1.000.
+
+.h2 Section [marker-section]
+.ix Section marker
+.ix Marker, Section
+.ix Section in a header or footer
+A Section marker prints the number, the title or both of the section that a
+page belongs to.  It is made for headers and footers: {c:\section\},
+{c:\sectionnumber\} and {c:\sectiontitle\} in the Header or Footer field of
+a page layout are this marker ({n:format-page-headers}).
+.table 12 48
+Item | Value
+Panel | Show.
+Place | A header or a footer, as for the Page Number marker
+ ({n:marker-page-number}).
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Show | Number and Title, Number Only, Title Only | Number and Title | What the
+ marker prints.
+.end
+The panel of a Section marker that stands in the text is opened with
+{k:Ctrl-F12} on it ({n:format-page-headers}).
+.h3 On the screen
+Name, the default: [SECTION].  Short and Long show [SECTION] as well.
+.h3 When printed
+The section whose headline is the first one on the page, or the section of
+the page before when the page has no headline.  The number is the tag of the
+headline as it is printed.
+.h3 Edges
+- A headline that has no tag gives its title for every choice.
+- The pages before the first headline show nothing.
+
+.h2 Time [marker-time]
+.ix Time marker
+.ix Marker, Time
+.ix Time format
+.ix H, HH, MM, SS, am/pm
+A Time marker prints the time of day at which the document is printed.  Use it
+with the Date marker ({n:marker-date}) on a page that must show when the paper
+was made.
+.table 12 48
+Item | Value
+Panel | Format.
+Global setting | Time Format on the Marker Format panel of Global, Marker
+  | ({n:format-marker-datetime}).
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Format | Text made of the | H:MM am/pm | How the time is written.
+  | time words below | (or the
+  | and ordinary | Time
+  | characters | Format of
+  |  | the
+  |  | document)
+.end
+The words are not case sensitive.  Anything else in the format is printed as it
+is.
+.table 6 54
+Word | Meaning
+H | The hour of the twelve-hour clock, without a zero in front: 6.
+HH | The hour of the twelve-hour clock as two digits: 06.
+MM | The minutes as two digits: 20.
+SS | The seconds as two digits: 39.
+am/pm | The letters am or pm: am before noon, pm from noon.  The words are
+  | written together with the slash.
+.end
+.table 20 40
+Format | Gives (twenty past six in the morning and 39
+  | seconds)
+H:MM am/pm | 6:20 am
+HH:MM:SS | 06:20:39
+H:MM | 6:20
+HH:MM am/pm | 06:20 am
+.end
+The hours are always those of a twelve-hour clock: there is no word for a
+twenty-four-hour clock, and 15:05 is 3:05 pm.  A single M is not a word in a
+time (the minutes are MM); the letters am without the slash and pm are not the
+word am/pm and print
+as they are.
+.caution The words H, HH, MM, SS and am/pm are found wherever they stand in the
+  format, so a text of your own in the format may be changed: in the format
+  "Time: H:MM" the letters of Time are not words, but "Hours: H" prints the h
+  of Hours as an hour.  Words in a format must not hold those letters.
+.h3 On the screen
+Long and Short: the time of now in brackets, such as [6:20 am].  The time is the
+local time of the system.  Name: [TIME].
+.h3 When printed
+The time at the moment of the print, as text, by the display mode of the marker
+({n:markers-print-modes}).  Final and Draft are the same.
+.h3 Edges
+- A format that is left as the default follows the Time Format of the Global
+  menu.
+- An empty field is the default: a format cannot be made of nothing.
+- The Filetime marker ({n:marker-filetime}) uses the same format words for the
+  time of the file.
+
+.h2 Whitespace [marker-whitespace]
+.ix Whitespace marker
+.ix Marker, Whitespace
+.ix Vertical space
+.ix Blank space for artwork
+.ix Treatment at end of page
+A Whitespace marker leaves a vertical space of a given height in the text.  Use
+it to make room for a picture that is pasted in by hand, for a signature, or for
+a gap that a blank line is too small for.
+.table 12 48
+Item | Value
+Panel | Size (vertical), Unit, Treatment at End of Page.
+Reached | The Marker Commands table, entry Whitespace.
+Place | Best in a block of its own.
+.end
+.h3 The panel
+.table 11 15 9 22
+Field | Values | Default | Effect
+Size (vertical) | A number with up to three decimals | None (required) | The
+ height of the space, in the Unit.  An empty field gives the message No string
+ specified.
+Unit | in, cm, mm, pt, bp, pc, dd, cc, sp, em, ex | in | The unit of the size
+ ({n:markers-panels}).
+Treatment at End of Page | Crop at End of Page, Place All on Next Page, Float
+ to Next Page | Place All on Next Page | What happens on paper when the space
+ does not fit on what is left of the page (see below).  It is also shown in the
+ label of the marker.
+.end
+.pic pictures/markers-whitespace.png 5.4 The panel of the Whitespace marker: a space of 0.5 centimeter that is placed on the next page when it does not fit.
+.h3 On the screen
+The default mode is Short.  Short: [WS 3 in] with the size and the unit, written
+without trailing zeros (1.5 cm).  Long: [WHITESPACE 3 in, Place All on Next
+Page] with the name of the treatment.  Name: [WS].  The screen does not leave
+the space.
+.h3 When printed
+Final and Draft:
+- The paragraph in which the marker stands ends there, and a space of the size
+  and the unit is left; the text after the marker begins after the space.  The
+  space is kept at the top of a page.
+- A Size of 0 prints nothing, not even the end of the paragraph.
+- In the cell of a table, or in a kept region, the space is left as a height
+  in the line.
+- A space that fits on what is left of the page is left in full, whatever the
+  Treatment says.
+- When the space does not fit, the Treatment says what is done.  Crop at End of
+  Page ends the page where the space begins; the space is cut off at the end
+  of the page and none of it is carried over, so the text after the marker
+  begins at the top of the next page.  Place All on Next Page ends the page
+  where the space begins and leaves the whole space at the top of the next
+  page; the text after the marker follows it.  Float to Next Page leaves the
+  whole space at the top of the next page too, but the text after the marker
+  moves up in front of it and fills the rest of the page.
+.h3 Edges
+- A size taller than the text area of a page (9 inches on Letter paper with
+  margins of 1 inch) is a whole page of space: the space is cut to the height
+  of the text area, and the text after the marker follows on the next page.
+- The Draft print is set in single spacing, but a Whitespace marker is a length
+  of its own: a space of 1 inch is 1 inch in Draft as well.
+.h3 Messages
+No string specified; Not a valid number (Size (vertical)).
+
+.h2 Markers that are printed as a Box [markers-labels]
+.ix Markers printed as a label
+.ix Box
+.ix Figure marker
+.ix Table marker
+.ix Index marker
+.ix Merge marker
+Four markers hold a name for the document and are printed as a Box: the label
+of the marker in a small typewriter face in a thin frame, in the place where
+the marker stands.  They are Figure, Index, Merge and Table.  A Box
+takes the place of the marker and changes nothing else on the page, so the text
+around it is printed whole.  (The markers If, Else and Endif are not printed at
+all; they select text, see {n:marker-if}.  The Include marker prints the text
+of another document, see {n:marker-include}.)
+Their panels are filled in as for any marker ({n:markers-panels}), and the
+label that each prints is the one that the Long mode shows
+({n:markers-screen}).  Their default display modes are in the table of
+{x:markers-table}.
+.table 10 15 32
+Marker | Panel | Label printed
+Figure | Name (for Table of Figures), may be empty | FIGURE "name"
+Index | Main Heading (required), Subheading, Reference Text | INDEX followed by
+ | | the main heading
+Merge | Variable Name (required) | MERGE "name", Delete:Yes
+Table | Name (for Table of Tables) (required) | Table
+.end
+An empty required field gives the message No string specified, and the name of
+a file or a field is not looked up when the marker is made.
+.h3 Figure and Table [marker-figure]
+.ix List of figures
+.ix List of tables
+A Figure marker and a Table marker give a name to a figure or a table.  Put
+one just before or after the picture, equation or table that it names.  The
+Picture marker has the same field ({n:marker-picture}), so a picture does not
+need a Figure marker next to it; its name makes an entry of the list of
+pictures, not of the list of figures.  The Figure is shown as [FIG "name"] by default
+(its Short mode) and prints FIGURE with the name between double quotation
+marks; the Table shows as [TABLE "name"] in Short and Long mode and prints a
+Box that holds only the word Table.  When the print makes the list of figures or of tables
+({n:print-index}) the marker prints nothing at its place.  The first marker of
+the kind in a document turns its list on, and the last one taken out turns it
+off again, unless the document has made the choice itself (Global, Format,
+fourth panel).  The name of a Table
+may not be empty.  A table of Strata is a
+block of several columns ({n:view-block}); it needs no Table marker.
+.h3 Index [marker-index]
+.ix Index entries
+An Index marker holds one entry for an index of the document: a Main Heading,
+a Subheading and a Reference Text that replaces the page number, such as See
+Map.  Put it at the word or the paragraph that the entry is for.  A subject
+that has several headings needs one marker for each heading.  The default mode
+is Short; Short and Long show INDEX followed by the main heading, Diamond
+shows a diamond, and the Box prints the same.  When the print makes the index ({n:print-index}) the
+marker prints nothing and the index lists its page.
+.pic pictures/markers-index.png 5.4 The panel of the Index marker, with the main heading Strata and the subheading Markers.
+.h3 Merge [marker-merge]
+.ix Variable name
+A Merge marker holds a Variable Name.  It prints as the Box MERGE "NAME",
+Delete:Yes.
+.h2 Include: a work made of parts [marker-include]
+.ix Include marker
+.ix Master document
+.ix Parts of a document
+.ix Several authors
+.ix Collaborative editing
+An Include marker puts the text of another document at its place in the print.
+It is made for a work that several people write at the same time.  Only one
+person can edit a document at a time, so each author keeps a part of the work
+in a document of their own, and a {b:master document} holds an Include marker
+for every part.  One print or one preview of the master is the whole work,
+made of the text that each part has when the print is made.  A single long
+document needs no parts: a document of thousands of pages is edited, searched
+and printed as one, by one person at a time.  Use Include to share the work,
+not to cut a long document into pieces.  Working with several authors, below,
+tells how to set it up ({n:authors}).
+.h3 The panel
+The Include marker is on the Marker Commands menu and has one field.
+.table 10 50
+Field | What to put in it
+File Name | The name of the part.  It is required.  It may be written with or
+ without the extension {c:.doc}, with capital or small letters, and with a
+ directory in front of it, such as {c:chapters/two}.  A name that begins with
+ a slash is a full path.  {k:Keypad +}, {k:Alt-+} or {k:F2} fills the field
+ from a checklist of the documents ({n:file-checklist}).
+.end
+.pic pictures/markers-include.png 5.4 The panel of the Include marker.
+On the screen the marker shows as INCLUDE "name" in the Long mode, like any
+marker ({n:markers-screen}).  The screen of the master shows the master only:
+the text of a part is not drawn there, and a section number on the screen of
+the master is the number that the section has in the master.  To read or
+change a part, open its document.  The name is not looked up when the marker
+is made; it is looked up when the work is printed.
+.h3 Where the marker goes
+Put the marker alone in a block: nothing else in that block but spaces.  The
+block is taken out of the print and the part is put in its place.
+.table 20 40
+The part | What is put at the marker
+Has no sections | Its blocks, one after the other, in the section that holds
+ the marker.
+Has sections | Its sections, one level below the section that holds the
+ marker, in front of the sections that this section already has.  The text
+ of its title page, if any, comes first, in the section of the marker.  The
+ marker must be in the last block of its section, and not in a headline.
+.end
+In a document that has no sections the blocks of a part are put at the marker
+and the headlines of the part are printed as blocks of text.
+.h3 What is printed [marker-include-print]
+.ix Include marker, print
+.ix Master document, print
+Final, Draft, Preview and Export a LaTeX File all put the parts in, and so does
+a print of the current section or of a range of sections when the marker is
+inside it.  The rest of this section tells what the print makes of the work.
+.table 20 40
+Thing | What is done
+Text of a part | Read from its file when the print is made.  The print has
+ the text that was last saved.  A change that is open in the Editor and not
+ saved is not in the print: save the part first.
+Numbers | The sections of the parts are numbered as the sections of one
+ document: the tags, the counters, the notes, the cross-references and the
+ pages go on through the parts.  The contents lists the headlines of the
+ parts with their pages.
+Cross-references | A cross-reference points at a section of the document
+ that holds it, and in the print it gives the number that the section has in
+ the whole work.
+Page layout and formats | The Global Format of the master is used: the page,
+ the margins, the headers and the footers, the fonts, the tags and the
+ formats of the notes and of the counters.  A part brings its text, its
+ pictures, its markers and the formats of its blocks and of its sections.  The
+ Global Format of a part is not used; a part that has a named format that the
+ master has not is printed with the formats that the master gives.
+Conditional text | The variables of the print select the text of the parts
+ as they select the text of the master ({n:marker-if-print}).
+Log of the run | Lists every file that was read: its path, its size and the
+ time of its last change.
+.end
+.h3 Where a part is looked for
+.ix Include marker, file names
+A name that begins with a slash is taken as it is.  Any other name is looked for
+in the directory of the document that holds the marker (the master, or the part
+that includes another part), and then in the working directory.  The extension
+{c:.doc} may be left out, and the case of the letters does not matter.  Keep
+the master and its parts in one directory, and the work can be copied to
+another computer and printed there.
+.h3 Parts inside parts
+A part may hold Include markers of its own, up to eight levels deep.  A part
+that includes itself, or that includes a part that includes it again, is a
+loop: the second include is not made and a mistake is told.
+.h3 Mistakes in an Include [marker-include-errors]
+.ix Include marker, errors
+.ix Invalid Include request
+.ix Error Log, Include
+These are mistakes of the document: a marker with no file name, a file that
+cannot be found or read, a file that is not a document or is damaged, a loop,
+more than eight levels, a marker with other text in its block, a marker in a
+headline, and a part with sections at a marker that is not in the last block
+of its section.  The print and the Preview are made all the same, and each
+mistake is told in two ways.  The Error Log lists it as
+{c:Invalid Include request} with the reason, at the place of the marker of the
+master (for a mistake inside a part, the marker of the master that brought the
+part in) ({n:print-errors}).  And a notice, in square brackets, is printed at
+that place: {c:[Invalid Include request: The file NAME cannot be found.]}.  A
+marker that has other text in its block is left as it is and is printed as a
+Box.  The messages and what to do about them are in {x:msg-errlog-faults}.
+.h2 Working with several authors [authors]
+.ix Several authors
+.ix Collaborative editing
+.ix Master document
+A group writes one work at the same time in these steps.
+.table 5 55
+Step | What to do
+1 | Agree on the parts, one for each author: a chapter, a section, a part of
+ the data.  Make a directory for the work and a document for each part.
+2 | Make the master document in the same directory.  Give it the Global Format
+ of the work: the page, the margins, the headers and the footers, the fonts
+ and the tags.  Give it the title page and the headlines that the authors
+ share, and for each part an Include marker alone in a block, in the last
+ block of the section that is to hold the part.
+3 | Each author opens the document of their own part and writes in it as in
+ any document.  The sections of a part are numbered by their place in the
+ whole work, not in the part, so there is no need to number them by hand.
+ To see a part on its own, print it: it is printed with its own Global
+ Format.
+4 | Each author saves the part often.  The print reads the files, so it has
+ what each author has saved and nothing more.
+5 | Print or Preview the master whenever the whole work is wanted: the text of
+ every part as it is saved, in the order of the markers, with the numbers, the
+ notes, the cross-references, the contents and the pages of one document.  The
+ master has the contents of the whole work when its Table of Contents Level
+ is not 0 ({n:format-fields-lists}), and its lists and its index have the
+ markers of every part.
+.end
+These are the limits.
+- Strata does not lock a file.  Nothing prevents two people from opening the
+  same part and changing it; the one who saves last replaces the other's
+  changes.  Agree on who writes which part.
+- The screen shows the master only.  The whole work is seen in a Preview or in
+  a print.
+- The master prints the parts that its markers name, and no others.  A
+  part that is not named is not in the work.
+- The cross-references of a document point at the sections of that document
+  only; to point from one part to another, name the section in words.
+- The pictures of a part are looked for where the pictures of the master are
+  looked for, so keep the pictures with the master.
+.h2 Conditional text: If, Else and Endif [marker-if]
+.ix Conditional text
+.ix If marker
+.ix Else marker
+.ix Endif marker
+.ix Expression of the If marker
+.ix Variables, in the If marker
+Conditional text is text that a print has for one use of a document and not
+for another: a paragraph for one region, a note for the staff, a table for
+the long version.  Three markers make it.  The {b:If} marker holds a condition.
+The text after it, up to the {b:Else} marker (or up to the {b:Endif} marker when
+there is no Else), is printed when the condition is true.  The text between
+Else and Endif is printed when it is false.  Endif ends the condition.  The
+If marker is on the Marker Commands menu with a field for its condition; Else
+and Endif have no field.
+.h3 What is printed [marker-if-print]
+.ix If marker, print
+.ix Conditional text, print and preview
+Print, Preview and Export a LaTeX File choose a branch by the condition and
+leave the other out of the pages together with the three markers: nothing of
+them is printed, not even a Box.  The text of a branch can be a few words in a
+line, whole blocks, a table or a picture.  A condition may be inside the
+branch of another, up to ten deep.  The screen, Search and the other export (the
+text file) show all of the text with the markers where they stand, so that the
+whole document can be worked on in one place.
+A section that stands inside the text of a branch that is left out is left out
+with its headline.  The sections that follow are numbered again as if it had
+never been there, and the cross-references to them and the contents follow;
+a cross-reference to a section that is left out says that its section is not
+there; see {x:print-errors}.  The Index markers and the pictures of the text
+that is left out are not used.
+.h3 The condition [marker-if-expression]
+.ix If marker, expression
+.ix Expression, operators
+The one field of the If marker, Expression, holds three parts: the name of a
+variable, an operator and a value.  Spaces around the parts do not matter.  The value is
+the rest of the line, so it may hold spaces inside it.
+.table 10 50
+Operator | The condition is true when
+= | the variable is equal to the value.
+{c:#} | the variable is not equal to the value.
+< | the variable is less than the value.
+> | the variable is greater than the value.
+<= | the variable is less than or equal to the value.
+>= | the variable is greater than or equal to the value.
+.end
+A not equal is written with the number sign: {c:<>} and {c:!=} are not
+operators.  A value is made of printable characters of 7-bit ASCII, at most 255
+of them, and it has no quotation marks (neither the double nor the single
+one), so it needs no quoting: {c:region = North America} compares the variable
+with the text North America.  There is nothing but one comparison in a
+condition: no and, no or, no arithmetic.
+.table 29 31
+Field of the If marker | Meaning
+{c:COLOR = red} | True when COLOR is red.
+{c:region # EU} | True when region is anything but EU.
+{c:version >= 12} | True when version is 12 or more.
+{c:.STRATA_BUILD_TYPE # release} | True in anything but a release.
+{c:edition = undefined} | True when no edition was given.
+.end
+.h3 Variables [marker-variables]
+.ix Variables
+.ix Variable names
+.ix Undefined variable
+.ix Variables, Edit / Preview / Print Document
+The variables are given when a document is edited, previewed or printed
+({n:str-variables}).  A name starts with a letter and holds letters, digits,
+hyphens and underscores, such as {c:region}, {c:Print-Run} or {c:v2_draft}.
+A value is any text of printable 7-bit ASCII, up to 255 characters, with no
+quotation marks.  No more than eight variables are given at a time.  A value
+is the text that was typed: a variable has no calculation in it and cannot
+refer to another variable.  Whoever needs a value that is worked out makes
+the value simple before it is given: a region number is {c:09}, a country
+code {c:SE}.
+A variable that was not given, and one whose value is empty, has the value
+{c:undefined}.  That is also how to test for it: {c:region = undefined} is
+true when no region was given.
+.h3 The special variables [marker-special-variables]
+.ix Special variables
+.ix .STRATA_BUILD_TYPE
+.ix Build type
+A name that begins with a period belongs to Strata.  The special variables
+are given by Strata itself and cannot be given by the user; the panels refuse
+a name with a period.  They can be used in the condition of an If marker like
+any other.
+.table 20 40
+Variable | Value
+.STRATA_BUILD_TYPE | {c:release} in the version that is installed for users,
+ | {c:debug} or {c:asan} in the versions that the developers of Strata make for
+ | their work.
+.end
+.h3 Comparing [marker-compare]
+.ix Comparing values
+.ix Numbers and text, comparing
+.ix Order of text, ASCII
+A comparison is a comparison of numbers when both sides are numbers, and a
+comparison of text in every other case.  A side is a number when it is made
+only of the digits 0 to 9 and is not greater than 4294967295: no sign, no
+decimal point, no space.  Leading zeros do not count, so {c:09} is the number 9.
+Numbers are compared by their value: {c:9} is less than {c:10}.
+All other values, and a pair in which one side is a number and the other is
+not, are compared as text, character by character, in the order of the ASCII
+codes: the digits come before the capital letters and the capital letters
+before the small ones, a capital letter is not the same as the small letter,
+and a text is less than a longer text that begins with it.
+In the table the variable is v, and the value that it was given is written
+after the comparison.
+.table 28 8 21
+Comparison | True? | Why
+{c:v < 10}, v is 9 | Yes | Both are numbers.
+{c:v = 9}, v is 09 | Yes | Both are numbers: 9 and 9.
+{c:v > 4294967294}, v is 4294967295 | Yes | Both are numbers.
+{c:v > 9}, v is 4294967296 | No | The first is too large to be a number.
+{c:v < a}, v is Z | Yes | Text: the capital letters come first.
+{c:v = Red}, v is red | No | Text: the letters are not the same.
+{c:v < abd}, v is abc | Yes | Text: c comes before d.
+{c:v > 10}, v is not given | Yes | Text: u comes after 1.
+.end
+The last row matters: a variable that was not given is the text
+{c:undefined}, so {c:version > 10} is true when no version was given.  When
+that is not wanted, ask for a missing variable first: put the condition
+{c:version = undefined} in front of it.  No comparison fails a print: it is
+only true or false.
+.h3 Mistakes in a condition [marker-if-errors]
+.ix If marker, errors
+.ix Conditional text, errors
+.ix Error Log, conditions
+A condition that cannot be read, an Else or an Endif that has no If before it,
+an If that has no Endif after it and more than ten conditions inside one
+another are mistakes of the document.  The print is made, and the Error Log
+lists each of them with its place ({n:print-errors}).  The branch of a
+condition that cannot be read is left out as if it were false.  An If that is
+never closed holds the rest of the document.  The messages and what to do
+about them are in {x:msg-errlog-faults}.

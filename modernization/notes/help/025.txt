@@ -1,0 +1,25 @@
+
+----------------------------- Virtual Memory Setup -----------------------------
+
+
+Use the Virtual Memory prompt on the Setup panel to configure virtual memory.
+Manuscript uses your system's available memory and storage devices as virtual 
+memory so you can work with large documents; virtual memory is initially 
+configured to use up to 1 Mb of free space either on an EMS board or your hard 
+disk.  This configuration can efficiently handle documents of up to 
+approximately 100 pages.
+
+
+# Select Standard if you plan to create a document less than 100 pages.
+
+# Select Custom if you plan to create a document larger than 100 pages, if you
+  do not have enough space available on an EMS board or your hard disk to 
+  create your documents, or if the error message "Out of Virtual Memory" is 
+  displayed.
+
+--------------------------------------------------------------------------------
+
+Press Ctrl M while in the editor to display the Virtual Memory Status panel.
+--------------------------------------------------------------------------------
+    Setup         Custom Virtual Memory Setup         Virtual Memory Status
+    Out of Virtual Memory Error         Keyboard Summary         Help Index

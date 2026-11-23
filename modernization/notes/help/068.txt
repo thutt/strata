@@ -1,0 +1,25 @@
+
+---------------------------------- File Import ---------------------------------
+
+
+File Import reads an ASCII text file from disk into the current document.
+
+---Procedure--------------------- +----------- Import ASCII Text File ---------+
+                                  |                                            |
+ Press Menu.                     | Working Directory:                         |
+ Select File Import.             |                                            |
+ Enter the ASCII text file name. | ASCII File Name:                           |
+ Select the import options       |                                            |
+  you want.                       |   Options: v Ignore Line Endings           |
+ Press Ins to import the file.   |              Preserve Line Endings         |
+                                  |                                            |
+                                  |              96 Character ASCII  (7 Bit)   |
+--------------------------------- |            v IBM Extended ASCII  (CP 437)  |
+                                  |              IBM Multilingual    (CP 850)  |
+                                  |              Portuguese          (CP 860)  |
+                                  |              Norwegian/Danish    (CP 865)  |
+                                  |                                            |
+                                  +---------- Press Ins to Import File --------+
+
+--------------------------------------------------------------------------------
+              File           Keyboard Summary           Help Index

@@ -1,0 +1,72 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+THINGS THAT ARE NOT GOING TO BE SUPPORTED
+=========================================
+
+Decision of the project owner: features that exist only to work with other
+programs (Lotus 1-2-3, Symphony and the file formats of the time), or to
+drive specific printers, are not part of Strata.  This is the list.
+
+Removed
+-------
+  - str, Import from 1-2-3/Symphony File: removed from the Document Manager
+    menu (str and the menu of stred).
+  - str, File Conversion Utilities (DCA, ThinkTank, scanner and image
+    imports, PC Paintbrush, MacPaint, Manuscript Document Downgrade, Manuscript
+    Local Format Reset): removed from the Document Manager menu.
+
+  - str, Maintain Download Fonts: removed (it comes back as TeX Font
+    Association with another job, docs/FONTS.txt).  It managed soft fonts for
+    PostScript and HP LaserJet printers (help topic 285); the operating
+    system and CUPS handle printers and fonts now, so it means nothing.
+
+  - Tools, Worksheet ("Import all on command worksheets"): removed with the
+    Worksheet marker (type 10), which stored the name of a 1-2-3 file and
+    when to import it.  Both were for 1-2-3 spreadsheets.  A document that
+    contains a Worksheet marker keeps it unchanged: it is a marker of an
+    unknown type, drawn as a marker character.
+
+  - The Symbol (type 32), Markup (type 20) and Escape Codes (type 21)
+    markers: removed from the Marker Commands menu, with their panels,
+    labels and display modes, and the printer symbol tables.  They are for
+    a specific printer (special characters, codes and bytes sent to it).  A
+    document that contains one keeps it unchanged: it is a marker of an
+    unknown type, drawn as a marker character.
+
+  - The Screen marker (type 38) and the Screen Capture Format of Global,
+    Marker: removed from the Marker Commands menu, with its panel, label and
+    display mode.  It inserted a captured text screen from the Screen Capture
+    utility of MS-DOS (SCR.EXE, the .SCT files), which no longer has a use.
+    A person who wants a picture of a screen can make an image with any tool
+    of the system and include it with a Picture marker.  A document that
+    contains a Screen marker keeps it unchanged: it is a marker of an unknown
+    type, drawn as a marker character.
+
+On the list for removal (still there)
+-------------------------------------
+  - Mentions of 1-2-3 and Symphony pictures (.PIC graphs, .WK1 worksheets)
+    in the documents of the project.
+
+Low priority: anything for a specific printer
+---------------------------------------------
+Printing goes through LaTeX and CUPS (PRINT-LATEX.txt), so these are of no
+use and are the lowest priority:
+  - printer drivers, bins, and the Setup panel entries about drivers.
+
+Still to look at
+----------------
+  - Batch Print Utility: the owner's reading is mail-merge and large print
+    jobs (command files run with @file).  Not implemented.

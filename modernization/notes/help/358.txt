@@ -1,0 +1,25 @@
+
+-------------------------------- Greeking Options ------------------------------
+
+Use the Menu (F10) Greeking commands in preview to display text on the full-page
+preview screen as dashed lines (graphics images are displayed normally).  
+Greeking shortens document formatting time while still displaying the final 
+printed page layout.
+
+None:    Removes greeking and displays all fonts as normal text.
+
+Partial: Displays smaller fonts greeked and larger fonts as normal text.
+
+All:     Displays all fonts greeked.
+
+
+--------------------------------------------------------------------------------
+
+# Any changes made to the preview display characteristics remain in effect 
+  for all preview sessions until changed.
+
+# Text in the magnifier window always displays as normal text characters, even
+  when greeking has been selected for preview display.
+
+--------------------------------------------------------------------------------
+        Preview Menu             Keyboard Summary             Help Index

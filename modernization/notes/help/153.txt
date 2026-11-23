@@ -1,0 +1,25 @@
+
+---------------------------------- Attributes ----------------------------------
+
+The Attributes prompt on local format (F6) and global format (F10 Format) 
+panels is where you assign attributes to text, columns, and blocks. Attribute 
+choices include:
+
+  Normal       Bold             Underscore All      Double Underscore All
+  Italics      Strikethrough    Underscore Words    Double Underscore Words
+  Subscript    Superscript      Small Caps          2 printer-specific
+--------------------------------------------------------------------------------
+
+# You can assign more than one attribute provided that the attributes can be 
+  logically combined.  For example, bold and underscore can be used together 
+  but underscore all and underscore words cannot.
+
+# Attribute settings can be assigned before or after you enter text. Or assign
+  local text attributes as you type with Set Attribute (Alt F6).
+
+# The attributes assigned to the current block or column are displayed on the 
+  Current Block or Column Format panel (F6).  The current text attributes are
+  displayed on the Status line.
+--------------------------------------------------------------------------------
+Global Format       Text Format       Set Attribute       Current Block Format
+Current Column Format     Status Line      Keyboard Summary          Help Index

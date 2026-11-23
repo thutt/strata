@@ -1,0 +1,14 @@
+.doc Equation gallery
+.h1 Equation gallery
+
+Inline: the area of a circle is {eq:A=\pi r^{{2}}} and its circumference is {eq:C=2\pi r}.
+
+{eq:\int_{{-\infty}}^{{\infty}} e^{{-x^2}}\,dx=\sqrt{{\pi}}}
+
+{eq:\begin{{pmatrix}} a & b \\ c & d \end{{pmatrix}}\begin{{pmatrix}} x \\ y \end{{pmatrix}}=\begin{{pmatrix}} ax+by \\ cx+dy \end{{pmatrix}}}
+
+{eq:f(x)=\begin{{cases}} 1 & \text{{if }} x>0 \\ 0 & \text{{otherwise}} \end{{cases}}}
+
+{eq:\left(\sum_{{k=1}}^n a_k b_k\right)^{{\!\!2}}\le\left(\sum_{{k=1}}^n a_k^2\right)\left(\sum_{{k=1}}^n b_k^2\right)}
+
+{eq:\mathbb{{R}}^n\ni\vec v,\quad \hat{{x}}\;\bar{{y}}\;\tilde{{z}}}

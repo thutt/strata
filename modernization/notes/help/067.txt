@@ -1,0 +1,25 @@
+
+---------------------------------- File Delete ---------------------------------
+
+File Delete permanently removes a file from the disk. 
+
+
+---Procedure--------------------------------------------------------------------
+
+
+ Press Menu.                          +-------------- Delete File ------------+
+ Select File Delete.                  |                                       |
+ Complete the Delete File panel       | Working Directory:                    |
+  and press Ins.                       |                                       |
+                                       | File Name:                            |
+                                       |                                       |
+                                       +------ Press Ins to Delete File -------+
+                                       
+--------------------------------------------------------------------------------
+
+
+Once you delete a file, it is gone forever. Be sure to back up important files.
+
+
+--------------------------------------------------------------------------------
+       File      Backup Files       Keyboard Summary       Help Index

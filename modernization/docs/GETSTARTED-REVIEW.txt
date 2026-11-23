@@ -1,0 +1,563 @@
+REVIEW OF THE GETTING STARTED DOCUMENT BY THE OWNER, 2026-11-17
+==================================================================
+The owner annotated a copy of the generated document with 47 comment
+markers (type 6): sample.docs/document-review/getstart.doc (not
+tracked).  Each comment is listed with the text around it and the
+action it asks for.  Actions are grouped: DOC A (rewrite of the
+Getting Started text), style rule S (for ALL the manuals), INSTALL
+(the install script and what it installs), DEFECT X11, and questions.
+
+Comment 1 (2026-11-17 17:15):
+  OWNER: Let's brand \strata 'A Technical Document Processing System'.Typeset
+    it so it doesn't look ugly.  Maybe across 2 or 3 lines.
+  PLACE: ST150 *B1 + <<HERE>>  BFJ2 TGetting Started  BFJ2 TVersion 0.9.0
+    BFJ2 TLogic Magicians Sof
+  ACTION: DOC A: brand it 'A Technical Document Processing System' and typeset
+    the title block over 2 or 3 lines so that it looks good.
+
+Comment 2 (2026-11-17 17:17):
+  OWNER: Strata doesn't edit anything.  It facilitates.  It helps. It enables.
+  PLACE: 2 <<HERE>> long, structured documents: reports, proposals and manuals
+    that are ma
+  ACTION: DOC A: rewrite the first sentence: Strata does not 'edit anything';
+    it facilitates, helps, enables.
+
+Comment 3 (2026-11-17 17:18):
+  OWNER: You are using terminology (section, block, etc.) that has not been
+    defined.I think it would be better to first describe the two modes of
+    operation (structured, and unstructured).  Start with unstructued because
+    people will be familiar with paragraphs (blocks) and columns.  Then seque
+    into structured documents for really big ideas that need an outline
+    structure.  Then describe how the outline structure works.   Be sure to
+    describe that structured / unstructured is a decision when creating the
+    document, and it cannot be changed after creation.
+  PLACE: ns Software <<HERE>>  A section has a headline and may have sections
+    below it, so a documen
+  ACTION: DOC A: RESTRUCTURE: define terms before use; first the two modes
+    (unstructured first: blocks, columns; then structured, for big ideas that
+    need an outline); then how the outline works; say that structured or
+    unstructured is decided when the document is made and cannot be changed
+    afterwards (CHECK that this is true in the product).
+
+Comment 4 (2026-11-17 17:39):
+  OWNER: It might be good to way that Strata is not a WYSIWYG editor.  This is
+    a deliberate choice for speed, and usability for people who are doing the
+    real work of actual writing.  The X11 is version does show graphics,
+    equations, pictures and keycaps in the editor, but they are static images
+    that give an idea how the text is going to look.  To see how it is
+    actually going to look, use the Previewer, which is also designed to be
+    fast.
+  PLACE: te. The text is made of blocks; a block of several columns is a
+    table. <<HERE>>  + S TWho Strata is for{C5}  B TStrata is for people who
+    do serious wo
+  ACTION: DOC A: say that Strata is NOT WYSIWYG, deliberately, for speed and
+    usability; the window version shows pictures, equations and keycaps as
+    static images that give an idea of the look; to see the real look use the
+    Preview, which is also fast.
+
+Comment 5 (2026-11-17 17:28):
+  OWNER: Is this good English?
+  PLACE: e text is made of blocks; a block of several columns is a table.{C4}
+    + <<HERE>>  B TStrata is for people who do serious work with their hands
+    on the k
+  ACTION: DOC A: check the English of the sentence at 'Who Strata is for' (the
+    owner asks if it is good English); rewrite.
+
+Comment 6 (2026-11-17 17:30):
+  OWNER: The document manager should be first on this list.  Then the editor,
+    which controls all aspects of the editing, spell checking, previewing and
+    printing process.  Do you think the previewer and printer are important
+    enough to mention
+  PLACE:  package <<HERE>>  The Document Manager It is a menu that opens
+    a document in the E
+  ACTION: DOC A: the package list: Document Manager first; then the Editor (it
+    controls editing, spell checking, previewing and printing); decide whether
+    the Previewer and the Printer need their own entries.
+
+Comment 7 (2026-11-17 17:35):
+  OWNER: The printer program must also print to the system printer, as
+    previously discussed.
+  PLACE:  <<HERE>>  The Printer prints a document to a PDF through LaTeX.
+    It is a pr
+  ACTION: DOC A: the Printer must also print to the SYSTEM PRINTER (it does:
+    Print To, Printer Queue); the text says only PDF: say both.
+
+Comment 8 (2026-11-17 17:40):
+  OWNER: This is an actual, honest-to-goodness, reference manual.  Not a help
+    file.  Not a google search.  It's real documentation that describes how
+    the program really works.
+  PLACE: aches Strata in short sessions, with documents that you type and
+    keep. <<HERE>>  B T The Key Reference is a leaflet of the keys, to
+    print and to
+  ACTION: DOC A: say plainly that the reference is a real reference manual,
+    not a help file and not a web search: documentation that describes how the
+    program really works.
+
+Comment 9 (2026-11-17 17:42):
+  OWNER: Crow more about this.  How many document processing systems actually
+    have all the documentation actually provided, and in the file format of
+    the program!?  This is an amazing feature, and reference because people
+    can use those documents as blueprints on how they can use the program as
+    well.
+  PLACE: ee. <<HERE>>  They use{C10} what Strata can do: sections, keycaps
+    such as [m37], pi
+  ACTION: DOC A: CROW more: the complete documentation is provided, in the
+    file format of the program itself; the documents can be used as blueprints
+    of how to use the program.
+
+Comment 10 (2026-11-17 17:42):
+  OWNER: Use?No.  They are written using....
+  PLACE: rsion needs. All of these documents are Strata documents.{C9} They
+    use <<HERE>>  what Strata can do: sections, keycaps such as [m37],
+    pictures, tables
+  ACTION: DOC A: 'They use' is wrong: 'They are written using ...'.
+
+Comment 11 (2026-11-17 17:43):
+  OWNER: Press and hold....
+  PLACE:  made. <<HERE>>  the first key and press the second. The names of
+    menus and panels are
+  ACTION: DOC A: key combinations: 'Press and hold the first key and press the
+    second.'
+
+Comment 12 (2026-11-17 17:45):
+  OWNER: It can be built from source, but that should be secondary
+    instructions.  The first instructions are must be how to use the install
+    package, and what operating systems are supported.First, Linux.
+    Possibly Windows using WSL2g, and a distant third is maybe Mac.  But,
+    that's after extensive testing.
+  PLACE: oc[m15] and [m15]config[m15]. - <<HERE>>   + S TBefore you build  B
+    TYou need a C compiler and make. The termin
+  ACTION: DOC A + INSTALL: the first instructions must be how to use the
+    INSTALL PACKAGE and which operating systems are supported: Linux first;
+    possibly Windows through WSL2; a distant third maybe Mac (only after
+    extensive testing); building from source is SECONDARY.
+
+Comment 13 (2026-11-17 17:46):
+  OWNER: For people who are building from source, they need first configure
+    their work environment.Use a courier font to show commands they will type
+    on the command line.
+  PLACE: on uses. On Debian and Ubuntu the C compiler and make are one
+    package: <<HERE>> Choose a build directory and run the build script that
+    comes with the
+  ACTION: DOC A: for people who build from source: first how to configure the
+    work environment; show commands to type in a COURIER (monospace) font.
+
+Comment 14 (2026-11-17 17:47):
+  OWNER: Always!!! reference shell variable as '${variable}'.
+  PLACE: he one that you built in: <<HERE>> /usr/install[m15]{C15}. The
+    install{C16} is never{C17} a part of the d
+  ACTION: DOC A (style rule S): ALWAYS write a shell variable as ${variable}
+    (not $HOME).
+
+Comment 15 (2026-11-17 17:48):
+  OWNER: I think the default without --prefix should be to put it in /usr, as
+    is normal.
+  PLACE: in: <<HERE>> . The install{C16} is never{C17} a part of the default
+    build. The scri
+  ACTION: INSTALL: the default prefix WITHOUT --prefix should be /usr, as is
+    normal (today the default is $HOME/usr/install: a script change in
+    scripts/strata-install; with a non-root user say so and suggest --prefix).
+
+Comment 16 (2026-11-17 17:49):
+  OWNER: install should be a courier font.
+  PLACE: scripts/strata-build install --prefix $HOME/usr/install[m15] <<HERE>>
+    is never{C17} a part of the default build. The script checks first wh
+  ACTION: DOC A (style rule S): the command name 'install' in a courier font.
+
+Comment 17 (2026-11-17 17:49):
+  OWNER: never executed, not just never.
+  PLACE: -build install --prefix $HOME/usr/install[m15] <<HERE>>  a part of
+    the default build. The script checks first which of the pro
+  ACTION: DOC A: 'never executed', not just 'never'.
+
+Comment 18 (2026-11-17 17:50):
+  OWNER: requires.This entire sentence is tortured.  Make it better
+  PLACE:  build. The script checks first which of the programs that Strata
+    uses <<HERE>>  are on the computer, and says for each one that is missing
+    what needs
+  ACTION: DOC A: 'requires'. The whole sentence ('checks which of the programs
+    that Strata uses are on the computer ...') is tortured: rewrite.
+
+Comment 19 (2026-11-17 17:53):
+  OWNER: Only checks?  Only checks WHAT?
+  PLACE: r DIR[m15] <<HERE>>  the programs that Strata uses{C20}; installs
+    nothing.  BM15 CW22 CB16
+  ACTION: DOC A: 'only checks' what? say WHAT is checked.
+
+Comment 20 (2026-11-17 17:51):
+  OWNER: requires, not uses.
+  PLACE: verything under DIR as well, to make a package. <<HERE>> ; installs
+    nothing.  BM15 CW22 CB16,1 CFT1 T[m15]--dry-run[m15]  CB16,
+  ACTION: DOC A: 'requires', not 'uses'.
+
+Comment 21 (2026-11-17 17:52):
+  OWNER: --prefix, in courier font
+  PLACE:  <<HERE>>  put there.  BM15 CW22 CB16,1 CFT1 T[m15]--with-
+    prereqs[m15]  CB16,1 C
+  ACTION: DOC A (style rule S): --prefix in courier font.
+
+Comment 22 (2026-11-17 17:53):
+  OWNER: This should show which ones are present, and which ones need to be
+    installed
+  PLACE: es what [m15]--with-prereqs[m15] listed. <<HERE>> ; fetches and
+    installs nothing.  + S TWhat is installed  B TThe prefix
+  ACTION: INSTALL: the check (or list) must show which prerequisites are
+    PRESENT and which must be INSTALLED (change the script output if it does
+    not; say it in the text).
+
+Comment 23 (2026-11-17 17:54):
+  OWNER: When it was built?  What does that mean?
+  PLACE: t is there <<HERE>>  (its programs have [m15]-x11[m15] at the end of
+    the name{C24}).  BM15
+  ACTION: DOC A: 'when it was built'? What does it mean: say it plainly or
+    remove (programs with -x11 at the end of the name).
+
+Comment 24 (2026-11-17 17:54):
+  OWNER: Provide a full list of pathnames, in courier font, for what is
+    installed.  Don't make the user guess!
+  PLACE: B16,1 <<HERE>> ).  BM15 CW22 CB16,1 CFT1 T[m15]share/strata[m15]
+    CB16,1 CFT1 TThe he
+  ACTION: INSTALL + DOC A: give the FULL LIST OF PATHNAMES, in courier, of
+    what is installed (generate it from the manifest): do not make the user
+    guess.
+
+Comment 25 (2026-11-17 17:55):
+  OWNER: Where are the sample documents, and the reference manuals?
+  PLACE: ory that the install made. <<HERE>>   CB16,1 CFT1 T  B T{C26}Every
+    program finds the files that it needs f
+  ACTION: INSTALL + DOC A: where are the SAMPLE DOCUMENTS and the REFERENCE
+    MANUALS after the install? Tell the paths; install the sample documents
+    (our own) if they are not installed.
+
+Comment 26 (2026-11-17 18:22):
+  OWNER: This comment is unnecessary, and it should be removed entirely.
+  PLACE: 15 <<HERE>> Every program finds the files that it needs from the
+    place where it is
+  ACTION: DOC A: 'This comment is unnecessary and should be removed entirely':
+    it refers to the paragraph it sits in (the one that says every program
+    finds its files from the place where it is installed: an implementation
+    detail): REMOVE that paragraph. (CONFIRM with the owner if it was another
+    sentence.)
+
+Comment 27 (2026-11-17 18:25):
+  OWNER: The other graphic elements also need some support from LaTeX:
+    pictures, keycaps.  Just says the graphic displays, and don't be too
+    specific
+  PLACE: made once they are empty. Files of your own in the prefix stay.
+    <<HERE>>  in the X11 version need [m15]dvipng[m15]. If an administrator
+    has not
+  ACTION: DOC A: the other graphics (pictures, keycaps) also need LaTeX: say
+    that the graphic display needs support from LaTeX, without being too
+    specific.
+
+Comment 28 (2026-11-17 18:50):
+  OWNER: system, not computer
+  PLACE: r has not installed them, add [m15]--with-prereqs[m15] to the
+    install. <<HERE>>  the script asks apt{C29} which packages are missing,
+    downloads them{C
+  ACTION: DOC A: 'system', not 'computer'.
+
+Comment 29 (2026-11-17 18:50):
+  OWNER: courier font.
+  PLACE: r has not installed them, add [m15]--with-prereqs[m15] to the
+    install. <<HERE>>  which packages are missing, downloads them{C30} without
+    any administr
+  ACTION: DOC A (style rule S): the program name apt in courier.
+
+Comment 30 (2026-11-17 18:51):
+  OWNER: them?  This is imprecise.  You you saying that the dpk is downloaded
+    an unpacked into the prefix directory?  Is this known to work?
+  PLACE: hem, add [m15]--with-prereqs[m15] to the install. <<HERE>>  without
+    any administrator right{C31} and unpacks them into a director
+  ACTION: DOC A: 'downloads them' is imprecise: say that the packages are
+    downloaded and unpacked into the prefix directory; and VERIFY that it is
+    known to work (the install job proved it on a simulated clean machine:
+    cite the test).
+
+Comment 31 (2026-11-17 18:49):
+  OWNER: The word should be 'rights' but privileges is even better.
+  PLACE: the install. <<HERE>>  and unpacks them into a directory below the
+    prefix. Start Strata thro
+  ACTION: DOC A: 'rights' -> 'privileges'.
+
+Comment 32 (2026-11-17 18:51):
+  OWNER: This should be ${PREFIX}/bin/..., right?
+  PLACE: m into a directory below the prefix. Start Strata through the program
+    <<HERE>> [m15]bin/strata-run[m15], followed by the file name of the
+    Document Ma
+  ACTION: DOC A (style rule S): the path must be ${PREFIX}/bin/strata-run.
+
+Comment 33 (2026-11-17 18:52):
+  OWNER: Always give a concrete example (in courier font) of how something is
+    supposed to function.  Do not leave the user to figure out what you mean:
+    give an example to copy!
+  PLACE: bin/strata-run[m15], followed by the file name of the Document
+    Manager <<HERE>> ; it sets the environment of the programs that were
+    fetched and then s
+  ACTION: DOC A (style rule S): ALWAYS give a concrete EXAMPLE, in courier, of
+    how something works: an example to copy.
+
+Comment 34 (2026-11-17 18:53):
+  OWNER: Terrible sentence.  What does it even mean?
+  PLACE: s given: <<HERE>> . The script first shows a table with every package
+    that it would fetc
+  ACTION: DOC A: terrible sentence ('... which is given:'): rewrite.
+
+Comment 35 (2026-11-17 18:53):
+  OWNER: Remove of.
+  PLACE: etch: the name, the version, the estimated size of the download and
+    of <<HERE>>  the installed files, and what the package is needed for, with
+    the tot
+  ACTION: DOC A: remove 'of'.
+
+Comment 36 (2026-11-17 18:54):
+  OWNER: The 'prefix' is just a string.  Are you talking about the prefix
+    directory?  Say so.
+  PLACE:  the script before anything is downloaded or installed, and the
+    prefix <<HERE>>  is left as it was. To look at the list without being
+    asked, use [m15]
+  ACTION: DOC A: 'prefix' is just a string: say 'the prefix directory'.
+
+Comment 37 (2026-11-17 18:55):
+  OWNER: This is probably too technical for most users.  Either be specific,
+    or state that this option gives an unattended download.
+  PLACE: ing asked, use [m15]--list-prereqs[m15]. A script that has no
+    terminal <<HERE>>  must add [m15]--yes[m15], or nothing is downloaded. The
+    download{C38}
+  ACTION: DOC A: too technical: be specific, or say that the option gives an
+    unattended download (--yes).
+
+Comment 38 (2026-11-17 19:10):
+  OWNER: The download of all the prerequisites is about 700mb.  The user's set
+    of downloads may be different.
+  PLACE: {C37} must add [m15]--yes[m15], or nothing is downloaded. The
+    download <<HERE>>  is about 700 MB on a computer that has no TeX Live. The
+    script does n
+  ACTION: DOC A: the download of ALL prerequisites is about 700 MB; a user's
+    set may be different: say 'up to about 700 MB, depending on what is
+    already installed'.
+
+Comment 39 (2026-11-17 19:11):
+  OWNER: Provide an example, in courier, in its own block of how to do that!
+  PLACE: equirements lists the packages that each version needs. - - +
+    <<HERE>> , in its terminal version or in its window version. It shows a
+    menu of
+  ACTION: DOC A (style rule S): give an example, in courier, in its own block,
+    of how to do that (start the program).
+
+Comment 40 (2026-11-17 19:12):
+  OWNER: Vacuous sentence, it's clear form the picture what the selections
+    are.  Maybe refer to the picture with a cross reference:  The selections
+    are shown in figure <xref>.
+  PLACE: are Document Versions, TeX Font Association, Setup and
+    Quit. <<HERE>>  Edit / Preview / Print Document opens a panel with
+    the Working D
+  ACTION: DOC A: vacuous sentence listing the menu selections (the picture
+    shows them): refer to the figure with a cross reference: 'The selections
+    are shown in figure <xref>.'
+
+Comment 41 (2026-11-17 19:14):
+  OWNER: Isn't this the USER created dictionaries?  Is the system dictionary
+    managed?
+  PLACE:  are done in the Editor. Maintain Dictionaries keeps the word
+    lists <<HERE>>  of the spell check, and Compare Document Versions shows
+    what chang
+  ACTION: DOC A + CHECK: is Maintain Dictionaries about the USER's
+    dictionaries? Is the system dictionary managed? Say exactly.
+
+Comment 42 (2026-11-17 19:17):
+  OWNER: There is a small vertical bar next to this keycap, and included in
+    the keycap image, in the editor.  I can't tell why.
+  PLACE: or one without. The two lines at the foot name the function keys
+    [m37] <<HERE>>  to [m37]. Press [m37] for the menu and [m37] for help;
+    [m37] saves an
+  ACTION: DEFECT X11: a small vertical bar next to a keycap, included in the
+    keycap image in the Editor (window version): find why.
+
+Comment 43 (2026-11-17 19:18):
+  OWNER: Oh, good grief why are undo and redo such entirely different
+    characters?
+  PLACE:  a mistake, [m37] takes back the last change and [m37] makes it
+    again. <<HERE>>   S TTerminal or window  B TIn a terminal, some keys never
+    reach the p
+  ACTION: DESIGN QUESTION (owner): why are Undo and Redo such entirely
+    different keys (Ctrl-F10/Ctrl-Z and Ctrl-F11)? Consider a natural pair
+    (for example Redo also on Ctrl-Y or Shift-Ctrl-Z) and keep the old ones.
+
+Comment 44 (2026-11-17 19:19):
+  OWNER: Vertical bar on keycap here, as well.  And several others in this
+    vicinity.
+  PLACE: them. Strata has other keys for those: [m37] opens a menu of the
+    [m37] <<HERE>>  commands, [m37] opens the marker commands and [m37]
+    switches overtype
+  ACTION: DEFECT X11: vertical bar on keycaps again, and on several others
+    nearby (same fault as 42).
+
+Comment 45 (2026-11-17 19:20):
+  OWNER: You haven't introduced sections, and you're talking about folding
+    them already.
+  PLACE:  is, and the keypad keys [m37], [m37] and [m37] fold and open
+    sections <<HERE>> . Equations, keycaps and pictures are shown as images
+    only in the wind
+  ACTION: DOC A: sections are folded before they have been introduced: reorder
+    (see 3).
+
+Comment 46 (2026-11-17 19:20):
+  OWNER: 50 rows.a) 50 is not guaranteed.b) They are not rows, they are
+    lines.
+  PLACE: re shown as images only in the window. The window has 80 columns of
+    50 <<HERE>>  rows.  B T[m33]  B TThe environment variables STRATA_X11_GEOM
+    and STR
+  ACTION: DOC A + CHECK: '50 rows': (a) 50 is not guaranteed (the window
+    height is a setting); (b) they are LINES, not rows: fix the text.
+
+Comment 47 (2026-11-17 19:21):
+  OWNER: This is also changed in the SDM setup option, or just by making the
+    window bigger.
+  PLACE: ges only in the window. The window has 80 columns of 50{C46} rows.
+    <<HERE>>   B T[m35]  - S TSetting up Strata  + S TThe Setup panel  B TIn
+    the Do
+  ACTION: DOC A: add that the height is also changed in the Setup of the
+    Document Manager, or just by making the window bigger.
+
+STYLE RULES S, taken from the comments (they apply to EVERY document):
+  S1  Commands, options, file names and paths are set in a courier
+      (monospace) font.  Check whether the manual generator has a style for
+      it (mkmanual.py); if not, add one (for example {t:...}) that makes the
+      Font marker of the product, and use it in every document.
+  S2  A shell variable is always written ${variable}.
+  S3  Always give a concrete example, in courier, in a block of its own, of
+      how something works: an example that can be copied.
+  S4  Say 'privileges', not 'rights'; 'system', not 'computer'; 'requires'
+      where a program needs something; 'prefix directory', not 'prefix'.
+  S5  A sentence that only repeats what a picture shows is removed and a
+      cross reference to the figure takes its place.
+
+TASKS TO SCHEDULE:
+  T1  Getting Started rewrite (DOC A, with the style rules S): restructure,
+      the install first, the examples, the courier font, the wording of the
+      comments, and a check that every statement is true.  Needs the answers
+      to the open questions below first for the install part.
+  T2  The style rules S for the Reference, Tutorial and the other documents
+      (courier font style in the generator, ${variable}, examples).
+  T3  INSTALL: default prefix /usr; the check and the list show what is
+      present and what is missing; install the sample documents and the
+      reference manuals and tell where; the full list of installed paths
+      generated from the manifest into the manual.
+  T4  DEFECT X11: the small vertical bar on keycap images (comments 42, 44).
+      DONE (2026-11-18, W17): pdftoppm wrote the last pixel column of the
+      keycap page in the paper color (white) because the page ended inside
+      a pixel; the keycap job now scales the page to the whole pixels
+      (png_page_pixels in src/png.c, eqrender.c).  Test: tests/xkeycap.py.
+  T5  QUESTION: Undo and Redo keys (comment 43).
+
+OPEN QUESTIONS FOR THE OWNER (also in claude-interchange):
+  Q1  Comment 26 'this comment is unnecessary': does it mean the paragraph
+      that follows, 'Every program finds the files that it needs from the
+      place where it is installed'?  I assume yes, an implementation detail.
+  Q2  Comment 3: structured or unstructured cannot be changed after the
+      document is made: is that the rule you want the text to say?  (Strata
+      today has no conversion command; I will confirm in the program.)
+  Q3  Comment 15: with /usr as the default, an ordinary user cannot install
+      without --prefix.  The script would stop with a message that says to
+      use --prefix ${HOME}/usr (or run as an administrator).  Agreed?
+  Q4  Comment 12: Windows through WSL2 and Mac: the text says only what is
+      tested.  Today only Debian and Ubuntu are tested.  Say 'Linux' and
+      'Debian and Ubuntu' only, and put WSL2 and Mac on the worklist?
+  Q5  Comment 43: do you want Redo on a second key (Ctrl-Y)?
+
+
+RESULT: THE COMBINED DOCUMENT (W04, 2026-11-18)
+===============================================
+Getting Started is now ONE document (manual/src/GettingStarted.src, which
+includes gs-need.src, gs-install.src, gs-about.src, gs-start.src and
+gs-tutorial.src): the system requirements first, then the install, what
+Strata is, starting and setting up, and the Tutorial.  The separate
+Prerequisites and Tutorial documents are no longer made, published or
+installed.  How each comment was met (the numbers of the comments above):
+
+   1 title lines "A Technical Document" / "Processing System", over two
+     lines.
+   2 first sentence: "Strata is a technical document processing system.  It
+     helps you write long documents".
+   3 About Strata: first the two kinds (unstructured with blocks and columns,
+     then structured, for ideas that need an outline), then how the outline
+     works.  CHECKED: the product does NOT forbid a change: Edit, Structured
+     makes an unstructured document one section, and Edit, Unstructured works
+     on a structured document that has one section and no subsections
+     (manual/src/edit.src, edit-b-structured).  So the text says that the kind
+     is chosen when the document is made, and says exactly how far it can be
+     changed later.
+   4 "Strata is not WYSIWYG", deliberately; images in the window are static;
+     Preview shows the real pages.
+   5 "Who Strata is for" rewritten.
+   6 The programs table: Document Manager first, then the Editor (it controls
+     editing, spell check, previewing and printing); the Printer and the
+     Viewer keep entries because they are programs that need packages.
+   7 The Printer prints to a PDF file or to a printer of the system.
+   8 The Reference is "a real reference manual, not a help file and not a web
+     search".
+   9 The documentation paragraph crows: all the documentation is provided, in
+     the file format of Strata, and each document is a working example.
+  10 "written using what Strata can do".
+  11 "press and hold the first key, and press the second".
+  12 The install comes first (with the supported systems: Linux, tested on
+     Debian and Ubuntu; WSL2 and macOS not tested, not supported yet);
+     building from the source is the last section of the chapter.
+  13 Building from the source: configure the shell with the setup script,
+     commands in code blocks.
+  14 Every shell variable is written ${variable} (also in the program font).
+  15 The default prefix directory is /usr (the script already did this); a
+     user without privileges is told to use --prefix ${HOME}/usr.
+  16 The commands are in the program font, in blocks of their own.
+  17 "never executed as a part of the default build".
+  18 The option --check: "checks which of the programs that Strata requires are
+     on the system".
+  19 --list-prereqs says WHAT is shown: present and missing programs with the
+     sizes of the packages.
+  20 "requires", not "uses".
+  21 --prefix is in the program font.
+  22 The script prints which programs are present and which are missing (done
+     in W11), and the text shows the output.
+  23 "when it was built" is gone: "if it was built".
+  24 The full list of the installed files (gs-files.src), made from the
+     manifest of a real install by manual/mkinstalled.py and compared with
+     the manifest by tests/gsdoc.py.
+  25 Where the samples and manuals are: share/strata/samples, share/strata/
+     doc, share/strata/pdf; the documents of the Tutorial are installed in
+     share/strata/tutorial (a new install step: they were not installed).
+  26 The paragraph "every program finds its files" is removed.
+  27 "Support from LaTeX" for equations, keycaps and pictures.
+  28 "system", not "computer".
+  29 apt is in the program font.
+  30 "downloads them, and unpacks them into a directory below the prefix
+     directory".  CHECKED that it works: tests/installtest.py makes the
+     install with a simulated apt (a download and an unpack into the prefix
+     tree) in prereq_default_test; the real network run is
+     with_prereqs_test (STRATA_TEST_PREREQS=1: 125 packages, 700 MB), which is
+     not part of the routine tests.
+  31 "privileges".
+  32 ${PREFIX}/bin/strata-run, with the sentence that ${PREFIX} stands for the
+     prefix directory.
+  33 Every use has an example in a block of its own (install, start,
+     strata-run, copy of the Tutorial documents, tmux and xterm).
+  34 The sentence is rewritten.
+  35 "of" removed.
+  36 "prefix directory".
+  37 "--yes makes the install unattended".
+  38 "up to about 700 MB on a system that has no TeX Live; your system may need
+     fewer."
+  39 Starting the Document Manager: an example block for the terminal version
+     and one for the window version.
+  40 "The selections are shown in figure N."
+  41 Maintain Dictionaries keeps the words of the user; the dictionary of the
+     language comes from the spelling program and is not managed (checked in
+     manual/src/str4.src).
+  42 Fixed (W17): the white column in the keycap images.
+  43 NOT CHANGED: Undo and Redo keys; the owner wants to discuss it (W21).
+  44 Fixed with 42.
+  45 Sections are introduced (About Strata) before folding is described, and
+     the Starting chapter no longer mentions folding.
+  46 "80 columns wide and 50 lines high until you change it".
+  47 The height is the Window Rows setting of Setup, or the height of the
+     window with the window manager.

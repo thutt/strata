@@ -1,0 +1,66 @@
+.doc Equation probe
+.h1 Probe
+
+N1 {eq:\input{{x}}}
+
+N2 {eq:\begin{{align}} a \end{{align}}}
+
+N3 {eq:a$b}
+
+N4 {eq:a%b}
+
+N5 {eq:a#b}
+
+N6 {eq:\hspace{{1cm}}}
+
+N7 {eq:\badcmd{{x}}}
+
+N8 {eq:x^}
+
+N9 {eq:{{a}
+
+N10 {eq:a}}}
+
+N11 {eq:\label{{x}}}
+
+N12 {eq:\tag{{1}}}
+
+N13 {eq:a \\ b}
+
+N14 {eq:\begin{{split}} a &= b \\ &= c \end{{split}}}
+
+N15 {eq:\color{{red}} x}
+
+N16 {eq:\begin{{equation}} a \end{{equation}}}
+
+N17 {eq:\begin{{matrix}} a & b \end{{matrix}}}
+
+N18 {eq:\verb|x|}
+
+N19 {eq:a^^41}
+
+N20 {eq:\newcommand{{\foo}}{{x}}}
+
+N21 {eq:\frac{{1}}{{2}
+
+N22 {eq:\left( x}
+
+N23 {eq:\sqrt[3}
+
+N24 {eq:\text{{caf}}}
+
+N25 {eq:\begin{{array}}{{cc}} a & b & c \end{{array}}}
+
+N26 {eq:\left( x \right]}
+
+N27 {eq:a_1_2}
+
+N28 {eq:a^1^2}
+
+N29 {eq:\over}
+
+N30 {eq:\end{{aligned}}}
+
+N31 {eq:\if a b c \fi}
+
+N32 {eq:x &= y}

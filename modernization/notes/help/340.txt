@@ -1,0 +1,25 @@
+--------------------------------- Retrieve Library -----------------------------
+
+Use Library Retrieve to retrieve an existing library from disk into memory.  A
+library must be in memory before you can use any of the entries in that library.
+
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Tools    +----------- Retrieve Library ----------+
+  Library Retrieve.                    |                                       |
+                                       |Working Directory:                     |
+ Enter the library file name or press |  File Name:                           |
+  Gray + and select from the list.     |    Options:v Overwrite ... Entries    |
+                                       |              Merge ... Entries        |
+ Select whether the retrieved entries |                                       |
+  should overwrite the current entries +------ Press Ins to Retrieve File -----+
+  in memory or should be added to the 
+  current entries. Use the Library Save 
+  command before overwriting to save the current entries for future use.
+--------------------------------------------------------------------------------
+# The file name must use a .LIB extension; you do not need to specify a file
+  name extension because the .LIB extension is assumed.  Be sure to change the 
+  working directory or specify the full path name to retrieve the file from a 
+  directory other than the current working directory.
+--------------------------------------------------------------------------------
+Library Overview    Library Menu    Library Save   Keyboard Summary   Help Index

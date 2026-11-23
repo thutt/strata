@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Cannot retrieve multiple sections into an unstructured area --
+
+The document you are retrieving contains sections, which cannot be retrieved
+into an unstructured document.  Use Menu Edit Structured to enter structured 
+mode or retrieve one section at a time.
+
+-- Cannot Save Pagebreaks for documents with Include markers --
+
+Manuscript only expands Include markers during preview or print; therefore,
+pagebreaks while editing would not be accurate.
+
+-- Cannot specify Section Number and Page Number --
+
+You cannot specify both a section number and page number on the Go To panel.
+Specify one or the other and retry the operation.
+
+-- Cannot split column if text wraps within a column --
+
+A column cannot be split if its text wraps to a second line.  Extend the width
+of the column or add end-of-line characters in the column and retry the split.
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

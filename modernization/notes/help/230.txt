@@ -1,0 +1,25 @@
+
+------------------------------------ Markers -----------------------------------
+The following markers control various aspects of the printed page format.
+
+Column Break: Inserts a manual column break into a winding-column portion of 
+              text. Place the marker in its own block.
+
+Page Break:   Inserts a page break and prints subsequent text on the next page,
+              next odd page, or next even page.  
+
+Whitespace:   Inserts white space (for example, for inserting art) at the marker
+              location during final print. Crop at End of Page inserts white
+              space in the amount specified or until the end of a page is 
+              encountered, whichever is less. Place All on Next Page inserts
+              white space in the amount specified and moves it to the next
+              page if it does not fit on the current page. Float to Next page is
+              the same as Place on Next Page except that it moves subsequent
+              text forward to fill the space preceding the white space.
+
+Font:         Changes the font for text from the marker to the end of the 
+              current column or block or until another Font marker is 
+              encountered.                       
+
+--------------------------------------------------------------------------------
+    Controlling Page Breaks      Markers     Keyboard Summary     Help Index

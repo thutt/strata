@@ -1,0 +1,25 @@
+
+------------------------------------ Thesaurus ---------------------------------
+
+Use the Menu (F10) Tools Thesaurus command to look up the current word in the 
+thesaurus.                                
+
+Accelerator:  Ctrl T
+                                       
+# If the word is in the thesaurus, synonyms are displayed.
+
+   To replace the word in the document with a synonym, highlight the new word 
+    and press Enter.    
+   To look up one of the synonyms in the thesaurus, highlight the word and 
+    press Ctrl T.
+   To leave the thesaurus without changing the document, press Esc.
+
+# If the word is not in the thesaurus, a list of similarly spelled words is
+  displayed.
+  
+   To look up one of the words on the list, highlight the word and press 
+    Enter or Ctrl T.
+   To look up a new word, simply start typing the word and press Enter.
+   To leave the thesaurus without changing the document, press Esc.
+--------------------------------------------------------------------------------
+    Tools         Accelerators          Keyboard Summary         Help Index

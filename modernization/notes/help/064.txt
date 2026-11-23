@@ -1,0 +1,25 @@
+
+----------------------------------- File Save ----------------------------------
+
+File Save stores the current document, section, or global settings to a file on
+disk and makes a backup copy if the Maintain Backup File option is set to Yes 
+on the Menu (F10) Global Options panel.
+Accelerator:   Ctrl S             +------------------- Save File --------------+
+                                  | Working Directory:                         |
+--Procedure-------------------    |                                            |
+                                  | Document Name:                             |
+ Press Menu.                     |                                            |
+ Select File Save.               |     Options: v Save Entire Document        |
+ Complete the Save File panel    |                Save Global Settings Only   |
+  and press Ins.                  |                Extract Current Section     |
+                                  | Description:                               |
+-------------------------------   |      Author:                               |
+                                  |    Revision:                               |
+Save Entire Document: Saves both  +----------- Press Ins to Save File ---------+
+  the text and the global format settings.
+Save Global Settings Only: Saves only the global format settings. Use this 
+  option to create a template file (.SET) from the current document.
+Extract Current Section: Saves the text and all format settings of the current
+  section in a structured document.
+--------------------------------------------------------------------------------
+File    File Types    Options    Accelerators    Keyboard Summary    Help Index

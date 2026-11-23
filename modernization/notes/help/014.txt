@@ -1,0 +1,25 @@
+
+-------------------------------- Full-Page Preview -----------------------------
+
+The full-page preview display includes a fully formatted document page, the 
+selector box, the magnifier window, and the preview status.     
+
+# The full-page display shows the current page of the document, formatted as it
+  will be when printed.
+
+# The selector box shows the portion of the page that is displayed in the
+  magnifier window. You can move the selector box around the page with the 
+  cursor-movement keys or adjust the size of the box with Gray + and Gray -.
+
+# The magnifier window displays the portion of the page in the selector box. 
+  As the size of the selector box increases, the size of the text in the 
+  magnifier window decreases.
+
+
+Additional commands are available by pressing Menu (F10).  With these commands
+you can change the preview display style, go to another page, display format
+errors for the current page, or zoom a graphics image on screen.
+
+-------------------------------------------------------------------------------
+Preview Keys     Preview Status     Preview Menu Commands     Preview Document
+                 Keyboard Summary                 Help Index

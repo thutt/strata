@@ -1,0 +1,103 @@
+# Chapter 4, first part: global and local formats, the order in which a
+# setting is looked up, and the default format.  Part of
+# the chapter source;
+# headlines of the second level and below only.
+
+.h2 Global and local formats [format-kinds]
+.ix Format, global and local
+.ix Global and local formats
+.ix Override of formats
+.ix Order in which formats are looked up
+.ix Resolution order of formats
+.ix Format hierarchy
+
+.h3 The two kinds [format-two]
+.ix Global setting
+.ix Local setting
+.ix Text attribute
+A global setting is made for the whole document.  It is made on a panel of
+the Global menu ({n:format-global-menu}) and is saved with the document.  A
+local setting is made for one block, one column of a block, or a run of
+characters.  It is saved in the block, the column or the text itself and
+overrides the global setting for that piece alone.  The File menu saves,
+retrieves and replaces the global settings of a document as a whole
+({n:file}).
+
+The settings of the headlines and of the text are separate.  In a structured
+document the first block of every section is its headline and the other
+blocks are text; the global panels have a Headline and a Text half, and
+every level of section from 1 to 5 can have settings of its own.  In an
+unstructured document every block is text and no headline setting is used.
+
+.h3 The order in which a setting is looked up [format-order]
+.ix Look-up order of a format
+.ix Column format
+.ix Block format
+.ix Named format
+When the Editor or the Printer needs the justification, the indent, the
+attributes or the tab stops of a piece of text, the first value found in this
+order is taken and the search goes no further.
+.table 5 16 36
+Step | Setting | Where it comes from
+1 | Column | The format of the column ({k:F6} in a table).
+2 | Block | The format of the block ({k:F6}, {k:Ctrl-H}).
+3 | Named format | The named format that the block has.
+4 | Level | The Level Format panel, for a headline or text.
+5 | Global | The Global Format panel.
+6 | Built in | Left, no indent, normal, no tabs (a stop every 5 cells).
+.end
+The level value is taken only when the block is in a section of level 1 to 5
+and the level has a value of its own for the setting; a level that has none
+takes the global value.  A headline uses the Headline settings and a text
+block the Text settings.  The left block indent is different: it has no
+global form.  It is the left block indent of the block, or that of its named
+format, and 0 when neither has one.
+
+The font is looked up in the same order ({n:format-set-typefaces}).
+
+.behavior A text attribute is added to the attribute of the format, not put
+  in its place.  A block whose format is Bold stays bold when
+  {k:Ctrl-N} (Normal) is typed inside it: Normal only switches off what
+  the text turned on.  The marks of a run of characters (bold, italics,
+  underscore) are kept in the text; the format of the block gives the
+  attribute that the text starts with.  Both the screen and the printed page
+  work this way.
+
+.h3 The default format [format-default]
+.ix Default format
+.ix Defaults of the format
+.ix New document, format of
+.ix Template
+The defaults below are what a document has for a setting that nobody has
+changed.  They are also what a panel shows for a global setting that has no
+value of its own.
+.table 28 20
+Setting | Default
+Headline Attributes | Normal
+Headline Justification | Left
+Headline Indent | None
+Headline Font | Font 4
+Headline Ruler | no tab stops
+Text Attributes | Normal
+Text Justification | Left
+Text Indent | None
+Text Font | Font 2
+Text Ruler | no tab stops
+Line Spacing | 1.00
+Headline Spacing | 1.50
+Block Spacing | 1.50
+Subsection Spacing | 1.50
+Peer Section Spacing | 2.00
+Indent per Level | 0
+Auto Numbering? | Yes
+.end
+A new document does not start with the defaults alone.  It has bold
+headlines, evenly justified text, a text ruler with one stop at 5, the
+spacings 1.50 for a headline and for a block and 2.00 for a subsection and
+a peer section, a level indent of 3, the paper Letter and a title page that
+starts 33 % down the page.  Those settings show these values on the
+panels and not the defaults of the table.
+
+The defaults of the other panels are in their own sections: Page
+({n:format-page}), Typeface ({n:format-typeface}), Marker
+({n:format-marker}), Options ({n:format-options}).

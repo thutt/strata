@@ -1,0 +1,339 @@
+# Chapter 5, part 1: what a marker is, the table of the markers, the panels,
+# the screen and the print.  Headlines of the second level and below only.
+
+.h2 What a marker is [markers-what]
+.ix Marker, what it is
+.ix Marker character
+A marker is one item of the text.  On the screen it takes one cell, the
+cursor stops on it, and it is selected, copied, cut, pasted and moved
+together with the letters around it.  Because it is an item and not a letter,
+Search does not find it and does not look inside it ({n:edit-b-search}).
+
+A marker is not a command that is carried out while the document is edited.
+It stands in the text and is carried out when the document is printed or
+previewed: a Date marker holds the way to write a date, and the date itself
+is made at the time of the print.  Only a few markers show their result on
+the screen, and they show it as text of their own: a Counter and a
+Cross-reference show the number or the tag that they print (when their
+display mode is Long, which is their default), a Date, a Time and the other
+values show the value in brackets, and an Equation, a Picture, a Keycap and a
+LaTeX marker show an image in the X11 version.
+
+.h3 Where a marker may stand
+A marker may stand anywhere in the text of a block: in a headline, in the text
+of a note, in a column of a table.  The Cross-reference marker may stand only
+in a structured document, because it refers to a section; in an unstructured
+document its name is in parentheses in the Marker Commands table and the
+command is refused with the message Invalid marker selection (the full text is
+in {n:markers-messages}).  The Page Number and Section markers stand only in a
+Header or a Footer ({n:format-page-headers}); in the Marker Commands table of
+the text of a document their names are in parentheses and the command is
+refused in the same way.  A Page Break, a Column Break, an Orientation marker
+and a Whitespace marker are best put in a block of their own, and the Keep
+marker has its own rules, which are in its entry.
+
+.h3 How a marker is made and changed
+The steps are the same for every marker and are described in {x:edit-b-marker}; this is the short form.
+1. Put the cursor where the marker is to be and press {k:Alt-F12} (or
+   {k:Ctrl-F12}).  The table Marker Commands opens, with the names in three
+   columns.
+2. Move to a name with the arrow keys, or press the first letter of its name,
+   and press {k:Ins} or {k:Return}.
+3. If the marker has a panel it opens, with the starting values.  Fill in
+   the fields and press {k:Ins}.  {k:Esc} cancels the panel and nothing is
+   inserted.  A marker without a panel (Author, Column Break, Description,
+   Else, Endif, Filename, Pathname, Printer and Revision) is inserted at
+   once.
+4. The marker is put into the text before the character that the cursor was
+   on, and the cursor moves past it.
+.pic pictures/markers-menu.png 5.4 The table Marker Commands, with the names of all the markers in three columns.
+To change a marker, put the cursor on it and press the same key: its panel
+opens with the saved values.  The markers that hold text of their own (Note,
+Comment and Equation) first open an editor for that text.
+
+.h2 The markers in one table [markers-table]
+.ix Marker table
+.ix Display mode defaults
+.ix Where markers may stand
+The table lists all the markers in the order of the table Marker Commands.
+The column Screen is the display mode that the marker has until the document
+says otherwise ({n:markers-screen}): Diamond, Name, Short, Long or Inline.
+The column Print says what the Printer does with the marker in a Final print
+and in a Preview: Text means that a text is printed, Typeset that a thing is
+made on the page (a rule, a space, a picture), Label that the name of the
+marker and what it holds are printed in a small box in a typewriter face, and
+Nothing that nothing is printed.  The last column says what is printed; the
+entries give the differences of a Draft print.
+.table 14 7 6 30
+Marker | Screen | Print | What is printed
+Author | Long | Text | The author of the document.
+Column Break | Short | Typeset | A page break.
+Comment | Short | Nothing | Draft: the comment, by name and time.
+Counter | Long | Text | The number, in the style of the counter.
+Cross-reference | Long | Text | The tag, the headline or both of a
+ section, or its page number.
+Date | Long | Text | The date of the print.
+Description | Long | Text | The description of the document.
+Else | Name | Nothing | The text after it is printed when the If is false.
+Endif | Name | Nothing | The end of the condition of an If.
+Equation | Inline | Typeset | The formula, as TeX math.
+Figure | Short | Label | The label with the name of the figure.
+Filedate | Long | Text | The date of the file on disk.
+Filename | Long | Text | The name of the file, in capitals.
+Filetime | Long | Text | The time of the file on disk.
+Font | Short | Typeset | The family of type to the block's end.
+If | Long | Nothing | The text after it is printed when the expression
+ | | | is true ({n:marker-if}).
+Include | Long | Text | The text of the document that the marker
+ | | | names ({n:marker-include}).
+Index | Short | Label | The label with the main heading.
+Keep | Long | Nothing | The blocks it encloses stay on one page.
+Keycap | Inline | Typeset | A key box with the legend.
+LaTeX | Inline | Typeset | The text of the marker, as it is typed
+ | | | ({n:marker-latex}); in the X11 version the picture that LaTeX
+ | | | makes of it ({n:marker-latex-picture}).
+Line | Short | Typeset | A rule or a row of characters.
+Merge | Long | Label | The label with the Variable Name.
+Note | Short | Typeset | A footnote, levelnote or endnote.
+Orientation | Short | Typeset | Portrait or landscape pages.
+Page Break | Short | Typeset | A page, odd page or even page break.
+Page Number | Name | Text | The page number, in a header or a footer.
+Pathname | Long | Text | The path of the document.
+Picture | Inline | Typeset | The picture; the label if it cannot be read.
+Printer | Long | Text | The name of the printer of the document.
+Revision | Long | Text | The revision of the document.
+Section | Name | Text | The number or the title of the section, in a header or
+ a footer.
+Table | Short | Label | The label TABLE.
+Time | Long | Text | The time of the print.
+Whitespace | Short | Typeset | Vertical space.
+.end
+The only marker that differs in a Draft print is the Comment (printed in a
+Draft only).
+
+.h2 Panels and fields [markers-panels]
+.ix Marker panel
+.ix Marker fields
+.ix Field kinds of marker panels
+.ix Keypad + in a marker panel
+Every marker that has fields opens a panel in a box that is titled with the
+name of the marker.  The panel is a form: one field is highlighted, the label
+of the field is in bold at its left, and the box has the line "Ins accepts,
+Esc cancels" at the bottom.  The keys of the panel are in the table of
+{x:edit-b-marker}; what matters for this chapter is the kinds of
+field.
+.table 12 48
+Kind | What it holds
+Text | A string.  A field that is marked "required" in the entries must not
+ be empty when {k:Ins} is pressed: the message is "No string specified".
+Number | A number with a fixed number of decimal places: zero (the counter
+ number, the center of a line), one (the shades of a keycap) or three (lengths
+ and scales).  A number is typed as digits, with a decimal point if the field
+ has decimals, for example 2.5.  Anything else gives "Not a valid number
+ (label)".
+Choice | One entry of a list.  {k:Space}, {k:Left} and {k:Right} step
+ through the list, and {k:Keypad +}, {k:Alt-+} or {k:F2} show it to pick from.
+Shown only | A value that the panel shows and that you cannot change (the
+ Created time of a comment, the Section Tag and Headline of a
+ cross-reference).  The cursor skips it.
+.end
+.h3 Defaults and brackets
+A field that is left at its default follows the setting of the Global menu
+when that is changed later: a Date marker whose Format is left as "Month D,
+Year" follows the Date Format of the Global menu.  Two kinds of default are
+shown in square brackets.  The first entry of some choice lists stands for a
+value that comes from the document: [Footnote] in the Type of a Note is the
+Primary Note Type of Global, Marker; [Tag] in the Style of a Cross-reference;
+[Portrait] in the Orientation marker; [Text] in the Font of a Font marker and
+a Keycap; [Style of the counter] in a Counter.  The fields of a Keycap that
+are numbers show the value of the Keycap Format in brackets, such as [0.0],
+until a value is typed.  A value that is typed replaces the bracket, even if
+it is equal to the global value, so that it stays when the global value
+changes.
+
+.h3 Lengths and units
+Lengths are typed in the panel as numbers of the unit of the field.  The
+Picture and the Whitespace marker have a field Unit with the eleven units that
+TeX defines.
+.table 6 54
+Unit | Meaning
+in | Inch.  The default.
+cm | Centimeter.
+mm | Millimeter.
+pt | Point, one 72.27th of an inch.
+bp | Big point, one 72nd of an inch.
+pc | Pica, 12 points.
+dd | Didot point.
+cc | Cicero, 12 didot points.
+sp | Scaled point, the smallest unit of TeX.
+em | The width of the letter M in the current font.
+ex | The height of the letter x in the current font.
+.end
+The Line marker's Length and Weight and the Picture's Width and Height are
+given in inches in the panel; the entry of each marker says where the Unit is
+used.  The decimal places of a length are three, so the smallest step is one
+thousandth.
+
+.h3 File name fields
+The fields that hold the name of a file (the File Name of an Include, the
+File Name of a Picture) can be filled from a list: with the cursor in the field
+press {k:Keypad +}, {k:Alt-+} or {k:F2}, and a checklist of the files shows
+only those that fit the marker (documents ending in {c:.doc} for an Include;
+files ending in {c:.png}, {c:.jpg}, .jpeg, {c:.pdf} or .eps for a Picture).
+Checklists are
+described in {x:file-checklist}.
+
+.h2 How a marker looks on the screen [markers-screen]
+.ix Display mode
+.ix Marker display modes
+.ix Diamond, Name, Short, Long, Hidden, Inline
+.ix Display Hidden Markers
+Each type of marker has a display mode, chosen on the panels Marker Display
+Modes of Global, Marker ({n:format-marker}).  The mode is kept with the
+document, and changing it marks the document as changed.
+.table 7 53
+Mode | The marker is drawn as
+Diamond | One diamond character, whatever the marker is.
+Name | The short name of the type in brackets and in the color of markers,
+ with no data: [DATE], [PB], [KEY].
+Short | The short name and the data of the marker: [LN Length:2 in], [PB Odd
+ Page], [Key: Enter].  A value marker shows its value: [November 13, 2026].
+Long | The whole word and the data: [LINE Length:2 in, Weight:0.01 in],
+ [COLUMN BREAK].  A Counter and a Cross-reference show their text.
+Hidden | Nothing.  The marker is still there; the cursor stops on it.
+Inline | Only for the Equation, the Picture, the Keycap and the LaTeX
+ marker, and their default: the image that is made of the marker, in
+ the X11 version.  When the image cannot be made, and in the terminal
+ version, the marker is shown in the Short form.
+.end
+.pic pictures/markers-modes-panel.png 5.4 The first of the three pages of the panel Marker Display Modes: the global mode and the mode of each marker.
+A marker that is hidden is shown anyway, in the Short form, when Display Hidden
+Markers? is Yes in Global, Marker.  A field that is not set is left out of
+the label.  The labels are drawn between square brackets; a
+Counter and a Cross-reference in the Long mode are drawn as their text without
+brackets, in the color of markers.
+
+The table gives the label that each marker has in each mode, for a marker
+with the fields shown after the name.
+.table 15 13 15 15
+Marker (example) | Name | Short | Long
+Author | AUTHOR | AUTHOR | AUTHOR
+Column Break | CB | CB | COLUMN BREAK
+Comment "Check" | COM | COM "Check" | COMMENT "Check"
+Counter 3 | C | C3 | the text, 7.
+Cross-reference | XREF | XREF 1.1 | the text, 1.1
+Date | DATE | the date | the date
+Description | DESC | DESC | DESCRIPTION
+Else | ELSE | ELSE | ELSE
+Endif | ENDIF | ENDIF | ENDIF
+Equation x^2 | EQN | EQN x^2 | EQUATION x^2
+Figure "My fig" | FIG | FIG "My fig" | FIGURE "My fig"
+Filedate | FDATE | FILEDATE | FILEDATE
+Filename | FNAME | the name | the name
+Filetime | FTIME | FILETIME | FILETIME
+Font | FONT | FONT | FONT
+If "A = 1" | IF | IF "A = 1" | IF "A = 1"
+Include "x.doc" | INCLUDE | INCLUDE "x.doc" | INCLUDE "x.doc"
+Index Heading | INDEX | INDEX Heading | INDEX Heading
+Keep | KEEP | Start Keep (Fixed) | Start Keep (Fixed)
+Keycap Enter | KEY | Key: Enter | Key: Enter
+LaTeX | LaTeX | LaTeX instructions | LaTeX instructions
+Line | LN | LN Length:RM | LINE Length:RM
+Merge "NAME" | MERGE | MERGE "NAME" | MERGE "NAME", Delete:Yes
+Note "text" | NOTE | NOTE | NOTE "text"
+Orientation | ORIENTATION | ORIENTATION | ORIENTATION
+Page Break | PB | PB | PB
+Page Number | PAGE | PAGE | PAGE
+Pathname | PATH | the path | the path
+Picture {c:a.png} | PIC | PIC {c:a.png} | PIC {c:a.png}
+Printer | PRINTER | the name | the name
+Revision | REV | 1.001 | 1.001
+Section | SECTION | SECTION | SECTION
+Table "T1" | TABLE | TABLE "T1" | TABLE "T1"
+Time | TIME | the time | the time
+Whitespace 3 in | WS | WS 3 in | WHITESPACE 3 in, ...
+.end
+The details that this table cannot hold (the words that a Page Break, a Line,
+an Orientation marker, a Keep marker or a Whitespace marker adds to its label)
+are in the entries, which give the exact labels.
+
+The next three pictures show one document that holds a marker of each kind, in
+front of a copy of its name, in three display modes: each marker in its own
+default mode, every marker in the Name mode, and every marker in the Long
+mode.
+.pic pictures/markers-all-default.png 5.4 A document with a marker of each kind, each in its default display mode.
+.pic pictures/markers-all-name.png 5.4 The same document with every marker in the Name mode.
+.pic pictures/markers-all-long.png 5.4 The same document with every marker in the Long mode.
+
+.note The Filedate and Filetime markers show their name on the screen, not the
+  date, because the date of the file is only known when the file is written.
+  The Date and Time markers show the date and time now.  The Filename marker
+  shows the name of the document in capitals.
+
+.h2 How a marker is printed [markers-printed]
+.ix Printing markers
+.ix Markers, printing
+.ix Long form of a marker
+.ix Boxed label
+.ix Draft print and markers
+Markers are carried out when the Printer makes the pages: in a Final print, in
+a Preview and in a Draft print ({n:print-elements}).  For nearly every marker
+the display mode (Diamond, Short, Hidden and so on) does not change what is
+printed: a Hidden marker still prints.  The exception is six value markers,
+Date, Time, Filename, Pathname, Printer and Revision, which follow the display
+mode, as the subsection on value markers below says.
+.h3 Four ways to print a marker
+.table 10 50
+Way | What is printed
+Text | The marker is replaced by a text that is made when printing: the author,
+ the date, the number of a counter, the tag of a section, the page number, the
+ text of the document that an Include marker names.  The
+ text is typeset in the font of the text around it.
+Typeset | The marker makes something on the page: a rule or a row of
+ characters (Line), a vertical space (Whitespace), a page break (Page Break,
+ Column Break), a landscape or portrait page (Orientation), a note, a picture,
+ an equation, a keycap, a change of the family of type (Font), the
+ instructions of a LaTeX marker.
+Label | The label of the marker in its long form, printed in a small typewriter
+ face in a thin box.  The label shows where the marker stands and what it
+ holds ({n:markers-labels}).
+Nothing | Nothing is printed.  The Keep marker, and a Comment in a Final print.
+.end
+The label is the long form of the marker, that is, the text that the Long
+display mode gives (a Merge marker is printed as MERGE "NAME", Delete:Yes).  A marker
+whose picture or equation cannot be made (a missing file, a file that TeX
+cannot read, a formula that TeX does not accept) is also printed as a label.
+The
+markers that are always printed as a label are Figure, Index, Merge
+and Table ({n:markers-labels}).
+
+.h3 Draft and Final
+A Final print (and the Preview, which is made the same way) leaves out the
+comments and draws the pictures.  A Draft print is a quick print: it prints
+the comments (in brackets, with the name of the commenter and the time),
+sets the text in single spacing and prints the pictures as a Final print does,
+in color.  The
+other panels of the Print menu are in {n:print}.
+
+.h3 Value markers and the display mode [markers-print-modes]
+.ix Display mode and print
+The display mode of the type is applied to the text of the Date, Time,
+Filename, Pathname, Printer and Revision markers.  In the modes Diamond,
+Short and Long the Printer prints the value.  In the Name mode it prints the
+name (DATE, TIME, FNAME, PATH, PRINTER, REV).  In the Hidden mode it prints
+nothing.  The other value markers (Author, Description, Filedate and
+Filetime) and the Counter and the Cross-reference do not follow the mode and
+always print their value.  A date that is set to Name or Hidden to get it out
+of the way on the screen is set back before printing.
+
+.h3 Markers in tables and boxes
+A Page Break, a Column Break or an Orientation marker cannot take effect
+inside the cell of a table or inside a kept region (see Keep); in a table cell
+the Page Break and Column Break markers print as labels, and a Keep region
+that holds one of these markers or an Orientation marker is not kept: the Keep
+markers are dropped and the text is set as if they were not there.  A footnote
+inside a table cell waits until the table has ended.
+
+.h3 Limits of the printed markers
+- The Unit field of a Picture is used for the picture on the screen; on paper
+  the Width and the Height are read as inches.

@@ -1,0 +1,34 @@
+# The keys that terminals keep for themselves.  This is a part:
+# the Reference Manual includes it with the Include marker (appendix D,
+# "Which terminals keep which keys"), and it is a document of
+# its own that can be opened, printed and kept up to date by itself.  The
+# facts are those of the study of the keys of the environments: a row is a
+# terminal that was run and probed.
+.part
+.table 16 22 19
+Terminal | Keys that it keeps | What to do
+{c:xterm} | {k:Shift-Ins}, {k:Shift-PgUp}, | Set the resource, see
+  | {k:Shift-PgDn}: paste and scroll | the section on the Esc
+  | back.  Without the resource | key and the Alt key.
+  | {c:XTerm*metaSendsEscape: true} an | For {k:Shift-Ins} use
+  | {k:Alt} key sends a character, and | the Append entry of
+  | the Alt commands type it. | the {k:Ctrl-F} list;
+  |  | for {k:Shift-PgUp} use
+  |  | {k:Alt-F7}.
+{c:xfce4-terminal} | {k:F1} (its help), {k:F10} (its | Change {k:F1} and
+  | menu), {k:F11} (full screen), | {k:F11} on its
+  | {k:Shift-F10}, {k:Ctrl--} (zoom | Shortcuts page, and
+  | out), {k:Ctrl-Ins}, {k:Shift-Ins}, | switch off its menu
+  | {k:Shift-Home}, {k:Shift-End}, | access keys in its
+  | {k:Shift-Up}, {k:Shift-Down}, | preferences.  For the
+  | {k:Shift-PgUp}, {k:Shift-PgDn}, | cursor keys use
+  | and the Menu key. | {k:Alt-F7} (Go To);
+  |  | for {k:Ctrl--} (soft
+  |  | hyphen) use the
+  |  | {k:Ctrl-F} list.
+{c:tmux} | {k:Ctrl-B}, its command key (in | Press {k:Ctrl-B}
+  | the Editor it is Bold).  {c:tmux} keeps | twice, or set another
+  | what the terminal around it keeps. | command key in the
+  |  | {c:tmux} settings
+  |  | file.
+.end

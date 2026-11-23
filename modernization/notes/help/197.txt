@@ -1,0 +1,25 @@
+
+----------------------------------- Table Keys ---------------------------------
+
+  Table (F8), twice          Highlight contiguous blocks with same column layout
+  Table (F8) Up, Down, End   Highlight contiguous blocks with same number of 
+                             columns
+
+Within the Column and Table Editor:
+  
+  Up, Down, Right, Left      Move the cursor around
+     Home, End
+  Ctrl Right, Ctrl Left      Move the cursor five ruler units
+  Shift Right, Shift Left    Move the cursor to the next column
+  Space Bar                  Increase the width of a column or gutter
+  Del, Backspace             Decrease the width of a column or gutter
+  Shift Del (in column)      Delete the current column
+     (on column separator)   Join two columns
+  Shift Ins (in column)      Split the current column
+     (on column separator)   Insert a column
+  Ctrl [                     Move the current column one column to the left
+  Ctrl ]                     Move the current column one column to the right
+  =                          Make all column widths equal to the current
+                             column and set all column types to Fixed 
+-------------------------------------------------------------------------------
+      Column and Table Editor       Keyboard Summary       Help Index

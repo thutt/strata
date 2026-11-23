@@ -1,0 +1,143 @@
+SECTION DEPTH: HOW DEEP THE ORIGINAL NESTS SECTIONS, AND WHAT STRATA DOES
+=========================================================================
+
+The owner asked (2026-11-19): probe how many levels deep the documents of the
+original go; Strata was limited, and if the original does more, Strata must do
+more; the Printer must print the same way, above all the section numbering.
+
+1. HOW IT WAS PROBED
+--------------------
+
+The original (release 2.1) ran in DOSBox-X on its own Xvfb display, silent
+(all output to a file), keys by xdotool, screenshots by xwd.  The documents
+were made by a script (tests/mkdeep.py: a chain of sections, one nested in
+the previous one, each with a one-line headline and one block of text) and
+copied to the scratch DOS drive.  Each was opened with Edit Document, and the
+original was driven with Page Down to the last section.  Screenshots of the
+evidence are in docs/probe/ (depth-NNN-*.png).
+
+2. WHAT THE ORIGINAL DOES (observed)
+------------------------------------
+
+  nesting depth    result in the original
+  ---------------  ------------------------------------------------------
+  6, 12, 24, 33    loaded; every section shown with its number (1.1.1...)
+  100              loaded; level 99 has a tag of 99 numbers, the headline
+                   of level 100 has NO tag
+  200, 500         loaded; levels above 99 have no tag
+  1000             loaded (file of 48 KB)
+  3000             loaded after a longer wait (file of 148 KB); the screen
+                   shows the first sections as usual
+  10000            refused: the box "Out of virtual memory" (file of
+                   498 KB).  This is a limit of memory, not of depth.
+
+So the file and the editor of the original do not limit the nesting of
+sections to any small number: at least 3000 levels load, and what stops a
+deeper document is the memory of the program.
+
+The numbers.  The original numbers every level with the full decimal number
+of its place (1, 1.1, 1.1.1, ...) up to level 99.  The Global Format panel
+shows "Auto Numbering? Yes" and "to Level: 99" for a new document (see
+docs/probe/global-format-numbering.png).  A section of level 100 or deeper
+has no tag.  The status line of the Editor ("Sect:") shows the number of the
+section as far as it fits.
+
+The screen.  The indent of a section grows with its level (Indent per Level),
+and stops growing when the text column is about 17 cells wide at the right
+edge of the screen; the text of the deepest sections is wrapped in that
+narrow column, and a long tag is wrapped with it (docs/probe/depth-24-end.png
+and depth-100-end.png).  This is the rule that view.c already has (the shift
+stops 24 cells short of the width of the screen).
+
+The formats of the levels.  The Global Format panels are six: Global Format
+and Level 1 to Level 5 Format (the Reference says the same).  A probe
+document with the records F5HA1 (the headlines of level 5 in bold) and F5GQ\1\.
+(the tag format of level 5) showed: the headline of level 5 in bold with the
+tag "Q1."; the headlines of levels 6, 7 and 8 NORMAL, with the tags
+1.1.1.1.1.1, 1.1.1.1.1.1.1 and 1.1.1.1.1.1.1.1 (the full decimal number, and
+not the format of level 5).  So a level deeper than 5 takes the Global
+Format settings, as Strata does; the sentence of the manual of the original
+("headlines at levels lower than 5 have the same format as level 5") does not
+describe what the program does.
+
+What the manuals of the original say (documentation/original/manuals-1.0):
+different formats for the first 5 levels of headlines; the Numbering Level
+setting is a number of levels (the examples are 1, 2 and 5; 0 means no
+numbering); the Table of Contents Level (Page Layout panel) is "the level
+number, from 1 to 99, of the lowest head level that you want to include in
+the table (0 excludes all levels)"; and the custom layout of the contents
+says the table "can contain up to five levels of headlines, and for each
+level you can set an indent, fill character, attribute, and font": five
+levels have their own layout, up to 99 levels can be listed.
+
+The probe documents had one more "-" than "+" at their end (the original
+loaded them all the same); tests/mkdeep.py makes balanced ones.
+
+3. WHAT IS UNKNOWN
+------------------
+
+  - The largest value that the field "to Level" accepts (the panel shows 99).
+    Strata keeps 99 as the last numbered level.
+  - The exact largest depth that loads: between 3000 and 10000 levels, and
+    it depends on the memory that is left.
+  - How the original PRINTS a section of level 6 or deeper, and the indent of
+    deeply nested sections on paper.  The printer was not driven: the numbers
+    are those of the screen and the numbering rules above.
+  - The keys that move a section one level (Ctrl-] and Ctrl-[) at the depth
+    limit: they were not probed, as no depth limit was found.
+
+4. WHERE STRATA LIMITED THE DEPTH (before this change)
+-------------------------------------------------------
+
+The Editor, the file reader and writer, Go To, the cross references and the
+Printer count the levels with ONE constant, SECT_MAXDEPTH in src/msdoc.h, and
+one room for the text of a number, SECT_NUMLEN.  The arrays that use them are
+in src/layout.c (the counters of the tags), src/editor.c (the status line
+number and Go To), src/markereval.c (the cross references), src/compare.c
+(the compared outline), src/diag.c (the Error Log).  Nothing in Strata
+limited the NESTING (the reader keeps a counter); the constant limited the
+levels that get a number: 32.  I found no limit of four levels in the program
+code; the manual generator (manual/mkmanual.py) writes sections of the levels
+1 to 4 only, which is a limit of the manual's own sources and not of the
+program.
+
+  place                      limit before        now
+  -------------------------  ------------------  ---------------------------
+  SECT_MAXDEPTH (msdoc.h)    32                  99 (as the original)
+  SECT_NUMLEN (msdoc.h)      256                 1024 (99 numbers of 7 digits)
+  indent of a section in     none: the left skip stops 24 cells short of the
+  the print (latex.c         could pass the      width of the text, as on the
+  item_indent)               page                screen (view.c)
+  a tag longer than a line   one word to TeX,   may be broken after a point
+  in the print (latex.c      ran out of the      when it has more than 40
+  take_pretag)               page                characters
+  Contents Levels of a       1 to 9              1 to 99, as the original
+  print (printcli.c,
+  strprint.c, printmenu.c)
+  the contents lines of      a tag of any length  a tag of more than 30
+  deep sections (latex.c     in one box           characters is broken after
+  emit_contents_page)                             a point in its column
+  Print From/To section      numbers of up to    room of a 99 level number
+  (printcli.c)               63 characters
+
+5. WHAT STRATA DOES NOW
+-----------------------
+
+  - Sections nest to any depth that the document limits allow (DOC_MAX_ITEMS
+    in docs/DOC-FORMAT.txt, section 8.2); a document of 3000 levels is
+    loaded, shown and printed.
+  - The levels 1 to 99 have a number or a tag, the same on the screen (the
+    status line, the tag drawn before the headline, Go To), in the cross
+    references, in the Section marker, in the Error Log and in the print.  A
+    section of level 100 or deeper has no tag and no cross reference number
+    of its own; the status line shows the number of its ancestor of level 99,
+    and Go To to that number goes to the ancestor.
+  - The print indents a deeply nested section as the screen does and may break
+    a long tag after a point.
+  - Tests: tests/data/secnum_deeper.doc (made by tests/mksecdata.py: 120
+    levels, two sections on every level); tests/secnum.py compares the tag of
+    every one of its headlines on the screen (sectags, the function that the
+    Editor calls) with the number that the Printer prints in the PDF, whole
+    and in parts; sectags --check compares the status line, Go To, the Error
+    Log and the cross references; tests/deepsect.py loads, shows and prints
+    documents nested 33, 100, 500 and 3000 levels deep.

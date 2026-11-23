@@ -1,0 +1,25 @@
+
+------------------------------------- Named ------------------------------------
+
+Use the Menu (F10) Global Named options to edit or delete master named block 
+formats.
+
+
+                 Create or edit master       Delete master named
+                 named block formats.        block formats.
+                        |                           |
+                        +---+                    +--+
+                            |                    |  
+                +---------------------------------------------+
+                |          Edit               Delete          |
+                +---------------------------------------------+
+
+
+----------------------------------------------------------------------------
+
+You can use master named block format settings by entering a named block name 
+at the Named Block Format prompt on the Current Block Format panel.
+
+--------------------------------------------------------------------------------
+    Edit        Delete        Named Block Format        Current Block Format
+                Keyboard Summary                Help Index

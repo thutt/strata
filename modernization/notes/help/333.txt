@@ -1,0 +1,25 @@
+
+---------------------------------- Save Macro Set ------------------------------
+
+Use Macro Save to permanently save a macro set to a file on disk.
+          
+---Procedure--------------------------------------------------------------------
+
+ Press Menu (F10) and select Tools   +----------- Save Macro Set ------------+
+  Macro Save.                         |                                       |
+                                      |  Working Directory:                   |
+ Enter the file name of the macro    |      File Name:                       |
+  set.                                |    Description:                       |
+                                      |         Author:                       |
+ Enter a description and author      |       Revision:                       |
+  name if desired and press Ins.      |                                       |
+                                      +-------- Press Ins to Save File -------+
+
+--------------------------------------------------------------------------------
+# The file name must use a .MAC extension; you do not need to specify a file
+  name extension because the .MAC extension is assumed.  Be sure to change the 
+  working directory or specify the full path name to save the file to a 
+  directory other than the current working directory.
+
+--------------------------------------------------------------------------------
+Macro Overview    Macro Retrieve    Macro Menu    Keyboard Summary    Help Index

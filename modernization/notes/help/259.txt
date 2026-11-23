@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Range not found in worksheet (range:<name>) --
+
+The range name specified is not in the worksheet.  Check that the range name is
+spelled correctly or use worksheet coordinates (for example, A1..D12) to define
+the range to import.
+
+
+-- Remove invalid markers? -- 
+
+You are pasting markers that are not valid in the current part of the document.
+Type Y to remove the invalid markers and proceed with the paste, or N to cancel.
+
+
+-- Restore previous version? --
+
+You pressed Esc after editing an edit panel. To cancel the edits, press Y to 
+return to the last saved entry and then press Esc again to leave the edit panel.
+If you do not want to cancel the edits, press N to cancel the Esc and press
+Ins to accept the edit panel.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

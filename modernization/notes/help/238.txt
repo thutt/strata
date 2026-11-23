@@ -1,0 +1,25 @@
+
+--------------------------- Print/Preview/Compare Document ---------------------
+
+Print:              Select the parts of the document to print. For example, if 
+                    you do not want a table of contents, remove the mark next
+                    to Table of Contents. Note: to print parts of the document,
+                    the graphics print option, Print Text, must be marked.
+
+Print from Section: To print only selected sections of a structured document, 
+        to Section  enter the section number tag where printing should begin 
+                    (Print from Section) and end (to Section).
+
+Print from Page:    To print only selected pages of a document, enter the page
+        to Page     number tag where printing should begin (Print from Page) 
+                    and end (to Page). 
+
+                    Note: You cannot specify both "Print from Section/to 
+                    Section" and "Print from Page/to Page."
+
+Printer:            Select either the Primary or Secondary printer (as defined
+                    in Setup) to which to final print the document.
+
+--------------------------------------------------------------------------------
+       Print Document              Setup              Graphics Print Options
+             Keyboard Summary                 Help Index

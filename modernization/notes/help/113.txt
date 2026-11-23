@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+
+-- File must be specified (<description>) -- 
+
+A file name must be specified before proceeding with the operation.
+
+
+-- File will overwrite <description> (<filename>) -- 
+
+You have specified the same file name for both files in a file conversion 
+procedure.  Press Y to continue with the conversion and overwrite the original
+file or N to cancel the conversion and retain the original file.
+
+
+-- Footnote cannot fit on one page; will be split between two pages -- 
+
+The footnote will not fit on one page and must be continued on another page.
+
+
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

@@ -1,0 +1,25 @@
+
+--------------------------------- Starting Value -------------------------------
+
+Use the Starting Value prompt on the Current Section Format and Page Layout 
+panels when you want the section tag or page numbering to start at a specific 
+number for certain sections or types of pages.
+
+Section Tag      Type the numeric starting value for the Section Tag.
+Starting Value:
+
+Page Number      Type the numeric starting value for the Page Number Tag.  The
+Starting Value:  new numbering sequence remains in effect for the remainder of 
+                 the document unless another Starting Value is entered.
+
+
+If you change the Section Tag or Page Number Tag and do not enter a Starting 
+Value, Manuscript uses the new tag with the next number in sequence. For 
+example, if you have a document with numeric section tags but the last five 
+sections are appendixes that you want to have alphabetic section tags starting 
+at A, set the section tag for the last five sections to \A\ and set the 
+Starting Value to 1 for only the first appendix section.
+
+--------------------------------------------------------------------------------
+Section Format     Section Tags     Page Layout      Page Number Tags
+                Keyboard Summary                     Help Index

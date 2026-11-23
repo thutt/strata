@@ -1,0 +1,159 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+THE PLACE OF THE CURSOR, SAVED WITH THE DOCUMENT
+================================================
+
+Owner request (2026-11-19): the current file position in the Editor is saved
+with the document; opening the document again puts the Editor back at the
+place it was the last time the document was edited.
+
+1. Where it is stored
+---------------------
+
+In the document file, as one record in the header, just before the *B record:
+
+    ZP<item>,<col>,<tok>,<row>
+
+four decimal numbers without signs or spaces, each of at most seven digits
+(DOC_MAX_DIGITS), ended like the other header records by CR LF (no NUL).
+
+  item   the index of the item of the document (a section mark, a block, ...)
+         that holds the cursor.  The same number that the program uses
+         inside (Pos.item).
+  col    the column of the block that holds the cursor.
+  tok    the token of the text of that column at the cursor, 0 before the
+         first token.
+  row    the row of the screen on which the cursor line was drawn, counted
+         from 0 at the first row of the text, so that the same text is on
+         the screen after the reload.
+
+Why a header record: a record that the reader does not know is kept as it is
+by every build of Strata that came before (the header is a list of raw
+records), so older builds read the file, ignore the place, and write it back
+unchanged.  The original product does not use the letters ZP, as far as the
+sample files show (no sample has a header record that starts with Z).  The
+file layout of the original need not be matched, but the file must be read by
+msdump, str, strprint, the Viewer path and the dictionary tools: they read
+the record like the Editor does and ignore it.
+
+In the program the place is not one of the header records: the loader takes
+the record out of the header into the fields vp_set, vp_item, vp_col, vp_tok
+and vp_row of Doc, and the writer puts it back before *B.  So the settings of
+the header are exactly what they were, every program that copies header
+records (Include, Conditional, the parts for printing) copies the same
+records as before, and the length of the header that some programs add up is
+unchanged.
+
+2. When it is written
+---------------------
+
+  - Save (the panel, Save Entire Document), Save As and the quick save
+    Ctrl-S, when the document was changed, or when the file is a new one:
+    the place of the cursor at that moment goes with the document.
+  - Autosave: it is the same as Ctrl-S (no backup), so the same rule.
+  - A backup is a copy of the file that was on the disk before, so it has the
+    place of that earlier version.
+  - Save Section, Save Global Settings and Save Body (the other modes of the
+    Save panel) write other files than the document; they do not write a
+    place.  The parts that are made for printing and for Preview carry none.
+
+  A place is written only if it is not the start: a cursor on the first block
+  that the cursor can be on, column 0, token 0, with the first row of the
+  text on the first row of the screen, writes no record and removes the old
+  one.
+
+Decisions:
+
+  - Moving the cursor does not mark the document as changed (no star, no
+    Autosave, no question when the Editor ends).  The place is written at the
+    next Save of a changed document.  This is what "the last time they edited
+    the document" says: the place of the last saved edit.
+  - An unmodified document is not written just because the cursor moved:
+    Save of an unmodified document writes nothing, as it did, and the
+    Editor does not write when it ends.  Reason: the Editor holds the
+    document in memory; another program may have changed the file since it was
+    read, and a write of an unchanged copy would put the old text over the
+    new one.  A write only for the place has no safe form.  The price is that
+    a document that was only read, scrolled and closed comes back at the
+    place of its last saved change, not at the place where it was closed.
+  - The place is kept apart from the settings (Section 1) so that a copy of
+    the settings (a template) does not take a place along.
+
+3. When it is read
+------------------
+
+The Editor goes to the place in these cases: it is started on a document (the
+command line, and the Document Manager's Edit, which starts it), Retrieve
+Entire Document (it can be a backup, which is a document that the Editor opens
+and refuses to write over), and the opening of a document after the
+Document Manager's Restore Backup.  It does not do it for Retrieve Body Only,
+Retrieve Global Settings or Retrieve & Insert, for a document made from a
+template (the loader's place is cleared: a new document starts at the top),
+for Preview, for the export of a screen image or for printing.
+
+The record is read by one rule: four numbers, each with 1 to 7 digits, with
+commas between them and nothing after them.  Everything else is ignored (the
+document opens at the top and loads as usual; the record is not kept, so the
+next Save leaves it out).
+
+A place that is no longer there is moved: an item beyond the end goes to the
+last item, then the Editor puts the cursor on the nearest block that can hold
+it (ed_fix_cursor), a column beyond the last goes to the last, a token
+beyond the end of the text goes to the end of the text.  A document that was
+folded when it was saved opens folded in the same way (the fold state is saved
+with the sections); a place that lies in a section that is folded now opens
+the section.  A place in the hidden title page goes to the first block that
+is shown.
+
+The screen: the first row of the screen is chosen so that the cursor line is on
+the stored row; if the screen is smaller now, the usual rule that keeps the
+cursor on the screen moves it.
+
+Time: one layout of the document and one walk to the block of the place, the
+same work as the first drawing; a place far down in a large document costs
+nothing more.
+
+4. What it does not do
+----------------------
+
+  - It does not keep the highlight, the insert mode, the attribute state, the
+    folded state of the Editor, or Edit, Section.
+  - It does not move the cursor when the document is changed by another
+    program after it was saved, apart from the clamping above.
+
+5. Tests
+--------
+
+tests/cursorpos.py: 26 checks in pty sessions of the Editor on made documents.
+Mutations that were run, each made checks fail:
+
+  M1  the restore does nothing
+  M2  the place is not put into the document at a save
+  M3  the screen row is not restored
+  M4  the limit of seven digits is gone
+  M6  a document made from a template keeps the place of the template
+  M9  a save of an unmodified document writes the place
+  M11 an item beyond the end is not moved
+  M12 the writer leaves the record out
+  M13 the loader does not read the record
+
+Setting the place does not mark the document as changed: the Editor writes
+it only inside a save, which ends with the document as not changed, so no
+check can see a mutation of that rule; the check that a moved cursor shows no
+star is a guard against a later change that writes the place elsewhere.
+
+The print check (the LaTeX is the same bytes with and without the record)
+holds by the way the place is kept apart; it has no mutation of its own.

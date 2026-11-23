@@ -1,0 +1,25 @@
+------------------ Convert Document to Hyphenation Dictionary ------------------
+
+Convert Document to Hyphenation Dictionary converts a document to a custom 
+hyphenation dictionary, which you can use when you print, preview, or compare 
+a document.
+  +--------------- Convert Document to Hyphenation Dictionary ---------------+
+  |                                                                          |
+  |             Working Directory:                                           |
+  |                                                                          |
+  |                 Document Name:                                           |
+  |                                                                          |
+  |   Hyphenation Dictionary Name:                                           |
+  |                                                                          |
+  +--------------------- Press Ins to Convert Document ----------------------+
+
+--Procedure---------------------------------------------------------------------
+
+ Create and save a document containing the custom hyphenated words.
+ Select Maintain Dictionaries from the Document Manager.
+ Select Convert Document to Hyphenation Dictionary.
+ Enter the name of the document containing the hyphenated words.
+ Enter a name for the dictionary to create (the extension .HYC is assumed).
+--------------------------------------------------------------------------------
+      Custom Hyphenation Dictionary                 Maintain Dictionaries
+                Keyboard Summary                    Help Index

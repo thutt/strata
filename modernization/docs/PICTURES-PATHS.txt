@@ -1,0 +1,131 @@
+WHERE THE FILE OF A PICTURE IS LOOKED FOR, AND WHAT IS SHOWN WHEN IT IS NOT
+THERE
+
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.  Copyright (c) 2026 Logic Magicians Software.
+
+
+1. WHY THIS FILE
+
+The owner found that a Picture marker whose file is not there (the name may
+be relative) was drawn as its short or long text, like the marker of a
+picture that is set to be shown in that form.  A missing file gave the
+impression that the pictures were not set to display.  Some indication of
+the error had to be shown.  Two programs also looked for the file by two
+different rules.  This file says the one rule they have now and what the
+Editor and the Printer show when a file cannot be used.
+
+2. THE RULE (latex_find_picture in src/latex.c, used by both programs)
+
+The name of the file is the field File Name of the Picture marker.  A
+backslash in it is a slash (the name may come from a DOS disk).
+
+  1. A name with a full path (it starts with a slash) is used as it is, and
+     nothing else is tried.
+  2. Any other name is looked for in this order, and the first place that
+     has a regular file of that name wins:
+       a. the directory of the document (the directory of the file that is
+          being edited or printed; "." for a document with no name);
+       b. the working directory of the panels (the one that Edit Document,
+          Retrieve and the other panels show as Working Directory);
+       c. the directory the program was started in.
+  3. A name that has no directory in it also matches any case of its letters
+     (the names of a DOS disk have no case): okay.png finds OKAY.PNG.  A name
+     with a directory is tried as it is written, below each of the places.
+
+The original documents the first two places: it first looks in the directory
+where it found the document file that is being printed, and if the file is
+not there it looks for the file in the working directory (its Reference
+manual, section 5, about names of files in backslash commands).  The third
+place was already looked in by the Printer, and by the Editor first of all;
+it is kept at the end so that a document that used it still finds its
+pictures.
+
+BEFORE this change the Editor looked in the directory it was started in
+first, then next to the document, then in the working directory, and the
+Printer looked next to the document and then in the directory it was started
+in (and knew nothing of the working directory).  The same document could show
+a picture in the Editor and print without it, or the reverse.  Now a name that
+is in two of the places is found in the first of them by both programs.
+
+The Printer gets the working directory of the panels with the option
+--workingdir DIR (the Print, Preview and Export commands of the Editor give
+it); a program that is started from the command line has none, and the third
+place (the directory it was started in) is the working directory then.
+
+3. WHAT IS SHOWN WHEN THE FILE CANNOT BE USED
+
+The reason is one of three on the screen (the Printer also knows a fourth:
+the file is damaged, which it finds by reading all of it):
+
+  file not found    no place of the rule has a regular file of that name;
+  cannot be read    the file is there and the program may not read it;
+  not a picture     the first bytes are none of PNG, JPEG, PDF or PostScript.
+
+3.1 The Editor (terminal and X11)
+
+  - The marker is drawn in brackets with its name and the reason, dim (the
+    colour of a marker, halfway to the background, and the dim attribute of
+    a terminal):  [PIC gone.png: file not found]  in every display mode but
+    Hidden, in the long mode  [PICTURE "gone.png": file not found].  A
+    Diamond cannot carry words, so the words are written there too.  Hidden
+    shows nothing, because the person chose that.
+  - A picture whose file IS there is drawn as before in every mode: the
+    picture itself in the Inline mode (the X11 version), the short or long
+    text in the other modes, never with an error text.
+  - When the cursor is on such a marker the message line says
+    "Picture file not found: NAME" (or "cannot be read", "is not a
+    picture").  A message that a command made is left alone.
+  - The check reads the first bytes of the file only.  The answer is kept per
+    marker for two seconds, so that drawing a screen of pictures does not
+    look at the files again for every row.  After a key, the markers that
+    were errors and were last looked at more than two seconds ago are looked
+    at again; if one is good now (the file was made, or the name was
+    corrected) the screen is laid out again and the marker is drawn as a good
+    picture.  The cursor coming to a marker looks at its file at once.
+  - The document is not changed by the check.
+
+3.2 The Printer
+
+  - The place of the picture on the page gets a red framed box with the words
+    "Picture file not found: NAME" (or "cannot be read", "is not an image
+    that can be printed", "is damaged", "Picture marker without a file
+    name"), so that a page with a gap cannot be taken for a picture that is
+    not set to print.  A very long name makes the box smaller to fit the line.
+  - The Error Log (at the end of the document, and the file of --errors, and
+    the Print Error markers the Editor puts into the text after a Print or a
+    Preview) has the entry picture-missing:  "Picture file not found: NAME
+    (looked in DIR, DIR, DIR)."  with the full path of each place that was
+    looked in.
+  - strprint tells on stderr, on a line of its own, "strprint: N picture
+    files not found" and, with --progress, the line "@@strprint
+    missingpictures N".  The status is 4 (made, with errors) as for every
+    error of the document; the page carries the banner PRINT FAILED unless
+    --no-banner is given.
+  - A document with missing pictures opens, is saved and printed as any other
+    document: the file name stays in the marker.
+
+4. TESTS
+
+  tests/picmissing.py (in the smoke): the terminal Editor and the Printer on
+  documents made by the test: the error text and the dim style (read from the
+  bytes the Editor sends: SGR 2 with the marker colour), the message line,
+  every display mode, a file that is not a picture, a file that cannot be
+  read, the lookup rule (next to the document, the directory the program was
+  started in, any case, the working directory with --workingdir, the document
+  first), the second look after the file is made, the Printer's line, the
+  Error Log, the red box in the page (pixels of a page made by pdftoppm) and
+  the status.  tests/xsmoke.py: the pixels of the window of the X11 Editor
+  (the marker of a missing file is darker than the marker of a good one) and
+  the message line.
+
+5. WHAT IS NOT DONE
+
+  - A picture that the renderer of the X11 Editor cannot make (a file that
+    looks like a PNG but is damaged) is not told on the screen; the Printer
+    tells it when it prints.
+  - The working directory is not given to the Printer when it is started
+    from the command line (printcli.c): there the directory it was started in
+    is the working directory.

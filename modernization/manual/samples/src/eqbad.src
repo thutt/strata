@@ -1,0 +1,4 @@
+.doc Equation with an error
+.h1 An equation with an error
+
+{eq:\frac{{1}}{{2}} + \badcmd{{x}}}

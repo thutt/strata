@@ -1,0 +1,25 @@
+
+---------------------------------- Note Marker ---------------------------------
+
+Use the Note marker to enter a footnote, levelnote, or endnote.
+
+
+--Procedure---------------------------------------------------------------------
+                                         
+ Move the cursor to the position of the note reference in the text.            
+ Press Marker.                          
+ Select Note.                           
+ Press Space Bar at the Note prompt to display the Note Edit panel.     
+ Enter the note text and press Ins.
+ Press Space Bar at the Type prompt to select the note type.   
+ Press Ins to accept the note and return to the editor.
+
+--------------------------------------------------------------------------------
+
+# You can add blocks and columns and set local formats in the Note Edit panel.
+
+# To establish global formats for notes, select Menu (F10) Global Marker and 
+  press Space Bar at the Note Format prompt to display the Note Format panels.
+
+--------------------------------------------------------------------------------
+Global Marker    Note Type    Note Format    Keyboard Summary    Help Index

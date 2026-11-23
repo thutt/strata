@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- No room for <description> --
+
+There is not enough room in the right margin to print the error log or revision
+markers or in the left margin to print line numbers. Change the margins on the
+Page Layout panels and reprint the document.
+
+-- No "Save as:" format name specified -- 
+
+You have tried to save a master named block format without specifying a name in
+the Save as prompt.
+
+-- No section <description> available to use in Section marker --
+
+The Section marker cannot be formatted because the referenced section does not
+have a headline, number, or tag. 
+
+-- No SHEET, DOC, or FORM window in worksheet (<filename>) --
+
+The file you are importing does not contain a SHEET, DOC, or FORM window.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

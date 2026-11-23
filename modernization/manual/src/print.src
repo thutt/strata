@@ -1,0 +1,66 @@
+# Chapter 6 of the Reference Manual: Print and Preview.  The chapter is kept
+# in six files that this one includes: the Print menu, Draft and Final
+# (print1); Preview and the Viewer
+# (print2); the Printer and the command line modes of the Editor (print3);
+# what is printed for each element of a document (print4); fonts,
+# hyphenation and what printing needs (print5); the Error Log and the Print
+# Error markers (print6).
+.doc Strata Reference: Print and Preview
+.chapter 6
+.h1 Print and Preview [print]
+.ix Print menu
+.ix Printing
+.ix Preview
+.ix Final print
+.ix Draft print
+.ix Page layout
+This chapter describes how Strata puts a document on paper or on a screen as
+pages.  It covers the Print entry of the {k:F12} menu bar with its commands
+(Draft, Final and Preview), the panels of those commands with every field and
+every message, the Printer that typesets a document into a PDF file, the
+Viewer that shows the pages of a Preview, the fonts of the printed page, what
+is printed for each element of a document, and the errors that a print finds
+in a document.
+
+{b:Draft and Final make a PDF file.}  The PDF is put where the Output File
+field says.  When the Printer field of the panel names a print queue, the PDF
+is also sent to that queue with the system's print command, {c:lp}.
+{b:Preview} typesets the same way and shows the pages in the Viewer, a window
+of its own.
+
+The first half of the chapter follows the Print menu in the order of its
+entries.  The second half is organized by object: the Printer, the elements of
+a document, fonts, what printing needs and the errors of a document.
+.table 26 34
+Section | What it describes
+{x:print-overview} | The pieces that take part in a print and what each command gives.
+{x:print-menu} | How to reach the Print menu, its entries and its keys.
+{x:print-draft} | The Draft Print panel, field by field.
+{x:print-final} | The Print Document panel; the contents, the index and the
+ lists; the range of sections.
+{x:print-colors} | What a print shows in color and in grey.
+{x:print-sending} | The Printer field, the options of {c:lp} and the search for
+ printers.
+{x:print-progress} | The wait panel of a print.
+{x:print-messages} | Every message of a print.
+{x:print-preview} | The Preview commands and their panel.
+{x:print-dviview} | The window, the status bar and the keys of the Viewer.
+{x:print-strprint} | What the Printer makes; the exported LaTeX file.
+{x:print-elements} | The page, borders, headlines, text, tables, notes, markers,
+ pictures, equations and Keep markers.
+{x:print-fonts} | The fonts of the printed page and hyphenation.
+{x:print-prereq} | The programs that printing needs.
+{x:print-errors} | The Error Log, the Print Error markers and what a failed
+ print does.
+.end
+.if .STRATA_BUILD_TYPE # release
+For developers: {x:print-cmdline} gives the command lines of the
+Printer and the print and preview modes of the Editor.
+.endif
+.include print1.src
+.include print2.src
+.include print3.src
+.include print4.src
+.include print5.src
+.include print6.src
+.include print7.src

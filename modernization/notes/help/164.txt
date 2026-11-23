@@ -1,0 +1,25 @@
+
+------------------------------ Headers and Footers -----------------------------
+
+Headers and footers print information on the top and bottom of document pages.
+
+--Procedure---------------------------------------------------------------------
+
+ Press Menu (F10) and select Global Page to display the Page Layout panels.
+ Move the cursor to the Header or Footer prompt.
+ Press Space Bar to display the Header or Footer Edit panel.
+ Enter the header or footer text and formats.
+ Press Ins to accept your edits and return to the Page Layout panel.
+
+--------------------------------------------------------------------------------
+
+# You can define a global header and footer for all pages or vary them by
+  page type, such as the first, odd, or even pages.
+# You can use local text, column, and block formats in headers and footers.
+# Use combinations of columns, blocks, and formats to create a header or footer
+  layout.  For example, the default format uses a three-column layout and 
+  column justification settings to create a format that prints specific 
+  information left justified, centered, and right justified.
+# You can also use markers in headers and footers.
+--------------------------------------------------------------------------------
+  Global Page     Page Numbers     Markers     Keyboard Summary     Help Index

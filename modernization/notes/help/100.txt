@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Cannot download Pre-Load fonts --
+
+You can download fonts only to printers compatible with either the Apple
+LaserWriter or HP Laserjet.  Change the primary or secondary printers defined
+in Setup and try again to download Pre-Load fonts.
+
+
+-- Cannot edit same document in both windows --
+
+You cannot edit the same document in both windows.  Save the file under a
+different name and edit the new file in the second window.
+
+
+-- Cannot export a Manuscript Release 1 document --
+
+You cannot use Manuscript Release 2's DCA (Revisable) File Export utility to 
+export a Release 1 document.  Read the document into the editor and save as a
+Release 2 document, then retry the export operation.
+
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

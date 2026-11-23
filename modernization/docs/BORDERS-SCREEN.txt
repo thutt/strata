@@ -1,0 +1,71 @@
+HOW THE SCREEN JOINS THE LINES OF BORDERS
+=========================================
+
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.  Copyright (c) 2026 Logic Magicians Software.
+
+This file says how the Editor draws the corners, the tees and the crossings
+where border lines meet on the screen.  The code is border_row, border_line
+and join_char in src/view.c; the tests are tests/joins.py (the cells) and
+tests/xsmoke.py (the pixels in X11).
+
+1. THE CELLS OF A ROW BETWEEN TWO BLOCKS
+----------------------------------------
+  A row between two blocks (the row above the first block, the row below the
+  last block, and the separator row between two blocks) is a row of cells.
+  Each cell has a horizontal line or has none, and the vertical lines of the
+  block above (its side borders, which come to the cell from above) and of
+  the block below (which go down from it).
+
+  The horizontal line of a cell is, in this order:
+    1. the top border of the block below or the bottom border of the block
+       above, when a column of one of them has one at that cell (the
+       heavier of the two when both have one);
+    2. nothing, when the cell lies between the lines of two columns (the
+       gap between two bordered columns stays clear);
+    3. the RULE of the separator row, when the row carries one, from the
+       left offset of the block to the right edge;
+    4. nothing.
+  The rule is therefore the horizontal line of every cell that has no
+  border line of a block.  It is not replaced as a whole by the border lines
+  of a block: it goes on to the right of a bordered column (and to the left
+  of one that does not start at the left offset).
+
+  The character of a cell comes from the four directions that have a line
+  (up, down, left and right of the cell centre) and from the kinds of the
+  lines (single, double; wide is drawn as bold double).  The table is
+  join_cp437 in src/view.c; where the horizontal lines or the vertical lines
+  of one cell are of two kinds, the heavier kind is used (code page 437 has
+  no character for a single line joined to a double one on one axis).
+
+2. THE SEAM BETWEEN A BORDERED COLUMN AND ONE WITHOUT BORDERS  (2026-11-19)
+---------------------------------------------------------------------------
+  Before this rule the whole rule was dropped as soon as any block had a
+  horizontal border line of its own on the row.  The column without borders
+  then had no line in the joining, so the right side of the bordered column
+  was drawn as a right tee, while the plain rule still ran on to the right
+  of it on the screen.  The owner called it a defect: the rule crosses the
+  side, so the seam is a crossing.
+
+  Now the seam is a crossing (single, double or wide, with the heavier kind
+  where they differ) wherever the rule goes on to the right of the side, and
+  a tee where it does not (the last column).  Above the first block and
+  below the last block there is no rule, so the corners stay corners.
+
+  The cases that the tests cover (tests/joins.py, "seam" and the others):
+    bordered next to none, single, double and wide: crossing at the seam;
+    the corner above the first block is a corner;
+    two bordered columns side by side: the cell between them stays clear;
+    sides only: tees and crossings of the rule with the sides;
+    no border at all: the rule stays a plain line.
+  The pixel test (tests/xsmoke.py) checks that the four arms of the crossing
+  at the seam meet the cells around it in the pixels, with no gap.
+
+3. THE OTHER OUTPUTS
+--------------------
+  The ASCII fallback draws a plus sign for every corner, tee and crossing
+  (STRATA_ASCII=1), the screen image export writes the same characters in
+  UTF-8 and code page 437 and plus, hyphen, equals sign and bar in 7 bit
+  ASCII and Latin-1.  They take the cells of the screen, so they agree.

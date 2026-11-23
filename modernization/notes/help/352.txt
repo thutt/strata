@@ -1,0 +1,25 @@
+
+------------------------------------ Spell Word --------------------------------
+
+Use Menu (F10) Tools Spell Word to spell the current word.   Accelerator: Ctrl C
+
+
+---Procedure--------------------------------------------------------------------
+
+ With the cursor on the word you want
+  to spell check, press Menu (F10) and        +------- Spell Word -------+
+  select Tools Spell Word, or press Ctrl C.   |                          |
+  The Spell Word panel will display whether   |           panl           |
+  the word is spelled correctly or not.       | Not found in dictionary  |
+                                              |                          |
+ If the word is spelled correctly, press     | Suggested alternatives:  |
+  any key to return to the editor.            |   panel pail pain pal    |
+                                              |                          |
+ If the word is spelled incorrectly,         + Press Ins to select word +
+  suggested alternatives are displayed. Use
+  Right and Left to select the word you
+  want and press Ins to replace the word in
+  the document.
+
+--------------------------------------------------------------------------------
+  Tools       Spell       Accelerators       Keyboard Summary       Help Index

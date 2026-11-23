@@ -1,0 +1,25 @@
+
+------------------------------------- Table ------------------------------------
+
+Table (F8) creates or modifies a multicolumn format in one or more blocks.
+              +-------------------------------------------------------------+
+              | Column Number: 1    Width: 10    Type: Fixed       Pos:1    |
+              |    +--------+|+------------------~~~~~~~~~~~~~~~~~~~~~~~~~~+|
+              +-------------------------------------------------------------+
+--Procedure---------------------------------------------------------------------
+
+ Press Table.
+ Highlight the columns or blocks to include in the table.  Press Table 
+  again to highlight all blocks with the same column layout or Up, Down, or End
+  to extend the highlight to adjacent blocks with the same number of columns.
+ Press Enter to accept the highlighted region.
+ Use the Column and Table Editor to format the table. Insert or delete columns,
+  adjust widths and gutters, set column types, and switch column locations.
+ Press Ins to accept the format and return to the document.
+
+--------------------------------------------------------------------------------
+# You can start a table by formatting a single block of columns. Then use 
+  Ctrl A to append new blocks with the same column format.
+# When finished entering table data, append an "ordinary" block with Ctrl O.
+--------------------------------------------------------------------------------
+ Column and Table Editor    Table Editor Keys    Keyboard Summary    Help Index

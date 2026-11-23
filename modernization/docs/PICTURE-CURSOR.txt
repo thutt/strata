@@ -1,0 +1,137 @@
+PICTURE-CURSOR: THE CURSOR AND A DISPLAYED PICTURE
+==================================================
+
+Strata is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.  Copyright (c) 2026 Logic Magicians Software.
+
+The owner's report (2026-11-19): "Moving the cursor through a picture isn't
+right.  It's one line: the image.  But the cursor needs many presses to get
+through it, as if it's occupying a whole bunch of lines.  This is probably
+related to the jump-scroll of bringing images in."  A second remark: "If you
+make one key press move past the image, you will be back to jump scrolling the
+entire image in."  Both must hold: one key crosses the picture, and the
+screen does not leap.
+
+1. WHAT WAS WRONG (measured before the change)
+----------------------------------------------
+A Picture marker is one token of the text, and the X11 window draws its image
+over many rows of the screen (11 rows for the test picture of 240 by 160
+pixels, many more for a tall one).  The layout gives the picture a row for
+each row of the image, so the cursor walked the rows:
+
+  - the W18 fix (2026-11-18) made Up and Down step down the rows of the
+    picture one row for each key, so that the window moved one row for each
+    key and did not leap (before that fix the window leapt by the whole
+    height of the picture: 1, 3 and 11 rows in three keys);
+  - the cost: crossing the 11 rows of the test picture took 11 keys, and
+    bringing it onto the screen from the bottom took 9 (tests/xpicscroll.py
+    of that time: "9 keys for 11 rows", "grows by at most 2 rows for each
+    key");
+  - the end of line mark of the picture's block has a row of its own under
+    the image (the image fills its rows), and it was one more stop.
+
+2. THE CHOICES AND WHY
+----------------------
+The picture is one line, so one key onto it and one key off it.  The window
+has to move by about the height of the image when the cursor goes onto a
+picture or off one, and that move must not be a leap.
+
+  (a) Glide the window in steps (CHOSEN).  The cursor moves at once; the
+      window moves to its new place in steps of at most 4 rows, 10 ms apart,
+      14 steps at the most (about 150 ms), and a key that is typed meanwhile
+      ends the steps at once (the key is handled, the window is drawn in
+      its final place).  A frame is drawn for each step; the cursor is
+      hidden while the window glides.
+  (b) A picture taller than the text area (CHOSEN, with (a)).  It cannot be
+      seen at once.  Page Up, Page Down, Up and Down then move the cursor
+      down and up the rows of the picture a window at a time, with the
+      cursor staying on the picture, until the last or first row has been
+      shown; only then does the key leave the picture.  A picture that fits
+      in the text area is crossed with one key.
+  (c) Keep the cursor row where it is on the screen and let the text slide
+      up under it.  That is what the glide does; without the glide it is the
+      leap (the "leap" mutation below: the window moved 13 rows in one
+      drawing).
+  (d) A picture at the bottom edge is drawn clipped, not pulled in whole
+      (CHOSEN): when the cursor goes onto a picture from above the window
+      scrolls only as far as the first row of the image needs, so the top
+      edge shows (3 rows in the test), and the next key slides the window by
+      the rest, in steps.  Pulling the whole picture in at the moment of
+      arrival was tried on paper and rejected: it is the leap again, only one
+      key earlier.
+
+3. THE RULES
+------------
+  - Down from the line above puts the cursor on the first row of the image;
+    the next Down puts it on the first line below; Up is the same upwards.
+    The cursor shows on the first row of the image.
+  - The end of line mark under the image is not a stop of Up and Down.  Right
+    and End still reach it.  Arriving at it by Up puts the cursor on the
+    picture.
+  - Left and Right step over the marker as over one character (unchanged).
+  - Page Up and Page Down on a picture that fits the text area act as before
+    (they go half a screen of lines; the picture counts as one line).
+  - The glide starts only when the cursor goes onto a picture, off one, or
+    down the rows of a tall picture (Editor.glide in src/editor.h, set in
+    src/move.c) and the window moves by 3 rows or more.  Nothing else glides.
+  - The terminal draws a picture as one row with its name in brackets (the
+    terminal has no images), so a picture is already one stop there; the
+    glide never happens there.
+  - Displayed equations (marker 9 in a block of its own) are two rows high in
+    the test and are crossed with one key each way; the same skip of the end
+    of line mark applies to them.  Inline equations and keycaps are one line
+    (inline equations are passed over as before).  Tables are not touched:
+    a table row of several screen rows is a line of text in each column.
+
+4. THE CODE
+-----------
+  src/move.c   vertical() is a wrapper of vertical_step() that sets the glide
+               flag; pic_eol_row() finds the row of the end of line mark under
+               a picture; arrive() puts the cursor on the picture when it
+               arrives upwards at that row; picture_page() scrolls through a
+               tall picture for Page Up, Page Down, Up and Down.
+  src/view.c   ed_picture_rows() and ed_set_picture_row() keep the row of a
+               tall picture that the cursor shows (unchanged).
+  src/ui.c     glide() moves the window in steps from draw_base(); the file
+               that STRATA_SCROLL_LOG names (a test aid) gets a line for each
+               step and a line that starts with "abort" when a key ended the
+               steps.
+  src/term.h, src/termbuf.c, src/term.c, src/term_x11.c
+               term_key_pending() is true only for a waiting KEY, not for an
+               exposure, a pointer event or a resize.  (The first version
+               used term_input_pending, which is true for any X event: the
+               glide stopped after three steps and the window leapt for the
+               rest.)
+
+5. THE TESTS
+------------
+  tests/xpicscroll.py (X11, in xtest): one Down puts the cursor on the
+  picture (its first row, the top edge of the image shows); one more Down puts
+  it on the first line below; the window moved in steps of at most 6 rows
+  (4, 4, 4, 1 measured), at most 14 steps; the same going up from far below;
+  two and seven fast keys end in the right place; a key typed during a glide
+  ends it; a picture taller than the window is scrolled through in 3 keys
+  with the cursor on it and steps of at most 6 rows; a structured document.
+  tests/picturecursor.py (terminal, in the smoke): Down and Up go line by line
+  through a first, a middle, a doubled and a last picture, structured and not.
+  This is a guard only: with a picture on one row the terminal behaved like
+  this before.
+
+  Mutations of the program, each of which makes tests/xpicscroll.py fail:
+    noglide      (GLIDE_MIN 100000: the window leaps)            4 failures
+    leap         (GLIDE_ROWS 400: one step of 13 rows)           5 failures
+    perrow       (a tall picture one row for each key)           2 failures
+    eolstop      (the mark under the picture is a stop)          9 failures
+    twopress     (a picture that fits is scrolled like a tall)   2 failures
+    nokeyabort   (a key does not end a glide)                    1 failure
+
+6. OPEN POINTS
+--------------
+  - The original's own behaviour for a picture is not documented in the
+    repository notes (docs/ORIGINAL-EDITOR-GAPS.txt names the picture marker
+    only); the rules above follow the owner's wish, not a measurement of the
+    original.
+  - The mouse (W31) will need the same rule: a click on a row of the image
+    puts the cursor on the picture.

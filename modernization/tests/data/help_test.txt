@@ -1,0 +1,21 @@
+; A small help file for the tests of the reader (tests/helptest.c).
+; This line is a comment and is not part of any topic.
+= Alpha
+~ Alpha name
+~ Panel:Field
+? Cannot do alpha
+? Cannot do alpha twice
+? N things
+Some text with the key {Ctrl-S} and a [[Beta]] link, a [[Beta|link with words]]
+and a brace {{ and }} in it.  A [[No such topic]] stays plain text.
+
+- The first item is long enough to be broken into more lines when the
+  window is narrow, and it has {F12} in it.
+- The second item.
+
+| literal    line   with [[Beta|a link]]
+
+= Beta
+~ Menu:File:Save
+? Cannot do beta
+The topic Beta.  It has just one paragraph.

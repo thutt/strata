@@ -1,0 +1,25 @@
+
+-------------------------------- Error Messages --------------------------------
+
+-- Merge variable name does not exist in merge data document -- 
+
+A variable name included in a Merge marker is not in the merge data document.
+Check the spelling of the variable name and that it exists in the data document.
+
+-- Misplaced diacritical --
+
+The diacritical mark in an equation must follow a formula. Edit the equation 
+and reprint the document.
+
+-- Missing opening or closing bracket ([ ]) --
+
+There is an unmatched set of brackets in an equation.  Edit the command and 
+reprint.
+
+-- Missing opening or closing parentheses in math equation --
+
+The mathematical expression is missing an opening or closing parenthesis.  
+Redefine the expression.
+
+--------------------------------------------------------------------------------
+     More Error Messages     Error Index     Keyboard Summary     Help Index

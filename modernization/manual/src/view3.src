@@ -1,0 +1,640 @@
+# Chapter 1, part 3: command keys, the F12 menu, accelerators, markers.
+.h2 The keys [view-keys]
+.ix Keys
+.ix Keyboard
+.ix Command keys
+.ix Function keys
+.ix Keystroke summary
+Strata is driven from the keyboard.  A command is given in one of four ways:
+by a function key ({n:view-fkeys}), by an accelerator, which is a Ctrl letter
+({n:view-accel}), by a choice from the {k:F12} menu ({n:view-menu}), or by a
+marker inserted with the Marker command ({n:view-markers}).  Most commands
+can be reached in more than one way.  This section lists every key that the
+Editor reads, in groups.  In the tables the column Mode says S for a key that
+works only in a structured document, U for a key that works only in an
+unstructured one and B for both.
+
+.h3 Typing text [view-typing]
+.ix Typing
+.ix Backspace
+.ix Del
+.ix Tab key
+.ix Enter key
+.ix Overtype
+.ix Alt-O
+.ix OVR
+.table 15 39 5
+Key | Effect | Mode
+Printing key | Insert the character at the cursor.  In Overtype it | B
+ | replaces the character under the cursor. | 
+{k:Enter} | End the line.  The lines stay in the same block. | B
+{k:Tab} | Insert a tab.  The text after it begins at the next tab stop. | B
+{k:Backspace} | Delete the character before the cursor.  At the start of a | B
+ | block, join the block to the one before it (both of one column). | 
+{k:Del} | Delete the character at the cursor.  At the end of a block, | B
+ | join the next block to it; on an empty block, delete the block. | 
+{k:Ctrl-D} | Delete the next word. | B
+{k:Alt-Backspace} | Delete the previous word. | B
+{k:Alt-F5}, {k:Alt-O} | Overtype on or off.  The message line shows | B
+ | {c:Overtype on} or {c:Overtype off}; {c:OVR} is on the status line. |
+{k:Ctrl-Shift-Space} | Insert a no-break space ({n:edit-nbsp}). | B
+{k:Alt-_} | Insert a soft hyphen ({n:appchar}). | B
+.end
+
+.note {k:Alt-Backspace} is the key that deletes the previous word.
+  {k:Ctrl-Backspace} is the same as {k:Backspace} in the X11 version (the
+  Ctrl is ignored) and is {k:Ctrl-H}, Hanging indent, in a terminal.
+
+.h3 Moving the cursor [view-moving]
+.ix Cursor movement
+.ix Moving around the document
+.ix Go To
+.ix Word, moving by
+.table 15 39 5
+Key | Effect | Mode
+{k:Left}, {k:Right} | One character left, right.  At the end of a line the | B
+ | cursor goes on to the next. | 
+{k:Up}, {k:Down} | One line up, down. | B
+{k:PgUp}, {k:PgDn} | About half a screen up, down. | B
+{k:Home}, {k:End} | The beginning, the end of the line. | B
+{k:Ctrl-Left} | The start of the word to the left. | B
+{k:Ctrl-Right} | The start of the next word. | B
+{k:Ctrl-Home} | The beginning of the block (of its column). | B
+{k:Ctrl-End} | The end of the block (of its column). | B
+{k:Shift-Home} | The beginning of the document. | B
+{k:Shift-End} | The end of the document. | B
+{k:Shift-Left} | The column to the left in the same block; in the first | B
+ | column, the headline of the enclosing section (one level up). | 
+{k:Shift-Right} | The next column of the same block; in the last column, | B
+ | the headline of the first subsection (one level down). | 
+{k:Shift-Up} | The headline of the current section; when the cursor is | S
+ | on it already, the headline of the previous section. | 
+{k:Shift-Down} | The headline of the next section, of any level. | S
+{k:Shift-PgUp} | The headline of the previous section of the same level, | S
+ | not crossing a section of a higher level. | 
+{k:Shift-PgDn} | The headline of the next section of the same level. | S
+{k:Alt-F7} | Go To: a menu (below). | B
+.end
+
+Go To ({k:Alt-F7}, or {k:Ctrl-F} then Go To) opens a list of five choices:
+Document start, Document end, Section number..., Next section and Previous
+section.  The fourth and the fifth do what {k:Shift-Down} and {k:Shift-Up}
+do.  Section number... prompts for a number such as {c:2.1} and puts the cursor
+in the headline of that section; if there is no such section the message
+{c:No section 2.1} is shown.
+
+The keys that go by headlines work on the sections that are shown: a section
+that is hidden by Edit, Section is not reached, and one that is collapsed
+shows only its headline.
+
+.h3 The outline: showing and hiding [view-outline-keys]
+.ix Outline
+.ix Collapse
+.ix Expand
+.ix Alt-1 to Alt-9
+.ix Alt-0
+.ix Alt-+
+.ix Alt--
+.ix Alt-*
+.ix Keypad +
+.ix Keypad -
+.ix Keypad *
+.ix Fold state
+.ix Section tag, + and *
+In a structured document the text and the subsections of a section can be
+folded out of sight, which shows the outline of the document.  The state of
+the folds is part of the file: changing it modifies the document, and Quit
+offers to save it.
+
+.table 18 36 5
+Key | Effect | Mode
+{k:Keypad -}, {k:Alt--} | Collapse the current section to its headline. | S
+{k:Keypad +}, {k:Alt-+}, {k:Alt-=} | Expand the current section one step: first | S
+ | show its text, then its subsections as headlines. |
+{k:Keypad *}, {k:Alt-*} | Show or hide the text of the section's blocks | S
+ | (the headline stays). | 
+{k:Alt-1} to {k:Alt-9} | Show the headlines down to that level.  Pressed | S
+ | again, show them with their text. | 
+{k:Alt-0} | Outline the whole document: only headlines; again, all. | S
+.end
+
+On the screen a section that is folded has a mark in its double line:
+a {c:*} when the text of the section is hidden and a {c:+} when the
+subsections are hidden as well.  The picture shows the same report after
+{k:Alt-2}: the sections of level 1 are headlines with a star, and the
+sections of level 2 have a plus because their subsections are hidden.
+
+.pic pictures/view-outline.png 5.4 The outline at level 2.
+
+In an unstructured document these keys show the message {c:Collapse/expand
+works in structured documents}.  The keypad keys: see the note on
+{k:Keypad +} in {x:view-form-keys}.
+
+.h3 Sections, blocks and columns [view-sbc]
+.ix Append
+.ix Split
+.ix Join
+.ix Cut block
+.ix Cut section
+.ix Promote section
+.ix Demote section
+.ix Alt-[
+.ix Alt-]
+.ix Ins (append section)
+.table 15 39 5
+Key | Effect | Mode
+{k:Ins} | Append a section of the same level, after the current one | B
+ | and all its subsections.  In an unstructured document it appends a | 
+ | block that has the global format. | 
+{k:Shift-Ins} | Append a subsection: the last subsection of the current | B
+ | section.  In an unstructured document, the same as Ins. | 
+{k:Ctrl-A} | Append a block with the same local format as the current. | B
+{k:Ctrl-O} | Append a block with the global format. | B
+{k:Alt-F2} | Append: a menu of Column, Block, Global-block, | B
+ | Peer-section and Sub-section (the last two in a structured document). | 
+{k:F2} | Split: a menu of Column, Block, Section. | B
+{k:Ctrl-V} | Split the block at the cursor. | B
+{k:Ctrl-Y} | Split the section at the cursor. | S
+{k:Alt-F3} | Join: a menu of Block, Section. | B
+{k:Ctrl-K} | Cut the block that holds the cursor. | B
+{k:Ctrl-L} | Cut the section that holds the cursor. | S
+{k:Alt-F4} | Delete: the unit menu, then highlight. | B
+{k:Alt-[} {k:Alt-<} | Promote the section one level (it becomes a | S
+ | peer of its parent, placed after it).  {k:Alt-,} also. | 
+{k:Alt-]} {k:Alt->} | Demote the section one level (it becomes the | S
+ | last subsection of the section before it).  {k:Alt-.} also. | 
+{k:Ctrl-^} | Edit Section; then Edit Document. | S
+{k:F8} | Table: a menu of Add column and Split column here. | B
+.end
+
+In a terminal {k:Alt-[} cannot be told from the start of a key sequence;
+{k:Alt-<} and {k:Alt->} (or {k:Alt-,} and {k:Alt-.}) are the keys that
+work there.  The subsections of a section go with it when it moves.  With the
+sections 2, 2.1, 2.2 and 2.3, promoting 2.1 gives 3 with the sections 3.1
+and 3.2 (the old 2.2 and 2.3) below it.
+
+.h3 Highlight, copy, cut, paste [view-copykeys]
+.ix Copy
+.ix Cut
+.ix Paste
+.ix Move
+.ix Library
+.ix Lib Copy
+.ix Lib Cut
+.ix Lib Paste
+.table 9 45 5
+Key | Effect | Mode
+{k:F3} | Copy: the unit menu, then highlight, then Enter. | B
+{k:F4} | Cut: the same, and the area is removed. | B
+{k:F5} | Paste what the last Copy or Cut kept, at the cursor. | B
+{k:F7} | Move: move columns, blocks or sections in the place. | B
+{k:Ctrl-X} | Cut text: highlight text at once (no unit menu), Enter to | B
+ | cut. | 
+{k:Ctrl-F3} | Lib Copy: copy to the library (the unit menu first). | B
+{k:Ctrl-F4} | Lib Cut: cut to the library. | B
+{k:Ctrl-F5} | Lib Paste: paste an entry of the library. | B
+{k:Enter} | In highlight mode: accept. | B
+{k:Esc} | In highlight mode: cancel. | B
+.end
+
+.h3 Attributes and formats [view-attrkeys]
+.ix Bold
+.ix Italics
+.ix Underscore
+.ix Normal text
+.ix Set Attributes
+.ix Ctrl-B
+.ix Ctrl-U
+.ix Ctrl-N
+.ix Alt-I
+.table 15 39 5
+Key | Effect | Mode
+{k:Ctrl-B} | Bold on or off. | B
+{k:Alt-I} | Italics on or off ({k:Ctrl-I} is the Tab key). | B
+{k:Ctrl-U} | Underscore on or off. | B
+{k:Ctrl-N} | Normal text: all attributes off. | B
+{k:Alt-F6} | Set Attributes: a menu of Normal, Bold, Italics and | B
+ | Underscore Words. | 
+{k:F6}, {k:Ctrl-E} | The Block Format Editor for the block and column. | B
+{k:Ctrl-H} | Hanging indent: set the tab and the indent so that the lines | B
+ | after the first start where the text now starts. | 
+.end
+
+An attribute key puts a switch into the text at the cursor, a mark that
+changes the attribute from there on: the text typed next, and the text that
+already follows up to the next attribute mark, has the new attribute.  The
+same key at the end of the stretch turns the attribute off.  The marks are
+not shown in the text; the field Attr of the status line shows the attribute
+at the cursor.  {n:edit} gives the exact behavior.
+
+.h3 Undo and Redo [view-undo-keys]
+.ix Undo
+.ix Redo
+.ix Ctrl-/
+.ix Ctrl-F10
+.table 24 30 5
+Key | Effect | Mode
+{k:Ctrl-/}, {k:Ctrl-_}, {k:Ctrl-Z}, {k:Ctrl-F10} | Undo the last change. | B
+{k:Alt-/}, {k:Ctrl-F11} | Redo what was undone. | B
+.end
+{n:edit-b-undo} describes both and the number of levels.
+
+.h3 Search, replace, markers, files [view-miscellaneous]
+.ix Search
+.ix Replace
+.ix Marker key
+.ix Save key
+.ix Retrieve key
+.ix Quit key
+.table 15 39 5
+Key | Effect | Mode
+{k:F9} | Search: prompts for a string and goes to the next place. | B
+{k:Alt-F9} | Replace: the panel; prompts at each place, or | B
+ | changes all of them at once. |
+{k:Alt-F12}, {k:Ctrl-F12} | Marker: the Marker Commands grid, or the panel | B
+ | of the marker under the cursor. |
+{k:Alt-F8} | Border: the Border panel ({n:edit-c-border}). | B
+{k:Ctrl-F2} | Math: calculate in a column or a table ({n:edit-c-math}). | B
+{k:Ctrl-F6} | Case: change the case of the highlighted text | B
+ | ({n:edit-c-case}). |
+{k:Ctrl-F9} | Again: search for the string of the last Search. | B
+{k:Ctrl-F7}, {k:Ctrl-F8} | Go to the previous, the next print error | B
+ | ({n:print-errors}). |
+{k:Ctrl-G} | Text indent: insert the text indent character. | B
+{k:Ctrl-S} | Save the document at once, under its own name. | B
+{k:Ctrl-R} | Retrieve: the panel of File, Retrieve. | B
+{k:Ctrl-Q} | Quit the Editor.  A changed document puts a question first. | B
+{k:Ctrl-P} | Print, Final. | B
+{k:F12} | The menu bar. | B
+{k:F1} | Help for the edit screen (anywhere in the Editor). | B
+{k:Ctrl-F} | The menu of the Alt commands (below). | B
+{k:Ctrl-W} | In the equation editor only: show the typeset equation. | B
+{k:Ctrl-C} | Spell check of the word at the cursor ({n:spell}). | B
+{k:Ctrl-T} | Thesaurus for the word at the cursor ({n:spell}). | B
+{k:Alt-A} to {k:Alt-Z} | Run the macro of that key, if there is one. | B
+{k:Ctrl-F1} | Learn: start the recording of a macro, and end it (see Tools, Macros, Learn). | B
+.end
+
+.caution A macro takes its key before any other command does.  If you give a
+  macro a key that is also a command key ({k:Alt-O}, {k:Alt-I}, {k:Alt-1}),
+  the macro runs and the command is lost for as long as the macro exists.
+
+.h3 The Ctrl-F menu [view-ctrlf]
+.ix Ctrl-F
+.ix Alt commands menu
+.ix Commands menu, function keys
+.ix Function keys, list of commands
+Many terminals and window managers keep the function keys with Alt or Ctrl for
+themselves.  {k:Ctrl-F} opens a list headed {c:Commands} with every command
+that has a function key, each with its key: {c:Copy (F3)}, {c:Search Again
+(Ctrl-F9)}, {c:Border (Alt-F8)} and the others.  Choose with the cursor keys
+and {k:Enter}, which runs the command as the key does; {k:Esc} leaves.  The
+list is longer than the screen and scrolls.  It ends with three commands
+whose keys a terminal may not pass either: {c:Promote section (Alt-[)},
+{c:Demote section (Alt-])} and {c:Soft hyphen (Alt-_)}.  The list is made from
+the same table as the keys, so a command is in it when it has a key and in no
+other case.  A key that has a label on the key strip but no command, such as
+{k:Alt-F1}, is not in it.
+
+.pic pictures/view-altmenu.png 5.4 The Commands list that {k:Ctrl-F} opens (X11 version): it scrolls.
+
+.h3 Alternative keys for terminals [view-terminal-keys]
+.ix Terminal keys, alternates
+.ix Alternates for terminals
+The keys that a terminal may not pass on have alternates that work in both
+versions: {k:Ctrl-F} for the Alt function keys, {k:Ctrl-F12} for
+{k:Alt-F12}, {k:Alt-O} for {k:Alt-F5}, {k:Alt-I} for {k:Ctrl-I},
+{k:Alt-<} and {k:Alt->} for
+{k:Alt-[} and {k:Alt-]}, {k:Alt-+}, {k:Alt--} and {k:Alt-*} for the keypad
+keys, and {k:F2} for {k:Keypad +} in a panel.  {n:appterm} lists them.
+
+.h2 The function keys [view-fkeys]
+.ix Function keys
+.ix F1 to F12
+.ix Alt-F keys
+.ix Ctrl-F keys
+.ix Shift-F keys
+The function keys have three layers, as the labels on the screen show.  The
+plain keys are the commands used most.  The Alt layer holds the commands that
+append, join and delete, and the Border, Go To and Marker commands.  The Ctrl
+layer holds the library, the macro recording, Math, Case, the print errors
+and Undo and Redo.
+
+.table 8 15 36
+Key | Command | What it does
+{k:F1} | Help | Opens the help viewer on the topic Edit Screen.
+{k:F2} | Split | Split Column, Block or Section at the cursor.
+{k:F3} | Copy | Copy text, a column, blocks or sections.
+{k:F4} | Cut | Cut them.
+{k:F5} | Paste | Insert what was copied or cut.
+{k:F6} | Format | The Block Format Editor.
+{k:F7} | Move | Move columns, blocks or sections in the place.
+{k:F8} | Table | Add column, Split column here.
+{k:F9} | Search | Search for a string.
+{k:F12} | Menu | The menu bar.
+{k:Alt-F2} | Append | Column, Block, Global-block, Peer-section,
+ | | Sub-section.
+{k:Alt-F3} | Join | Block, Section.
+{k:Alt-F4} | Delete | The unit menu, then highlight, then Enter.
+{k:Alt-F5} | Overtype | On or off.
+{k:Alt-F6} | Set Attribute | Normal, Bold, Italics, Underscore Words.
+{k:Alt-F7} | Go To | The Go To list.
+{k:Alt-F8} | Border | The Border panel.
+{k:Alt-F9} | Replace | Search and replace: prompts at each place.
+{k:Alt-F12} | Marker | Marker Commands, or edit the marker under the cursor.
+{k:Ctrl-F1} | Learn | Start recording a macro; end it.
+{k:Ctrl-F2} | Math | Calculate in a column or a table.
+{k:Ctrl-F3} | Lib Copy | Copy to the library.
+{k:Ctrl-F4} | Lib Cut | Cut to the library.
+{k:Ctrl-F5} | Lib Paste | Paste from the library.
+{k:Ctrl-F6} | Case | Change the case of the highlighted text.
+{k:Ctrl-F7} | Prev Error | Go to the previous print error.
+{k:Ctrl-F8} | Next Error | Go to the next print error.
+{k:Ctrl-F9} | Again | Search for the same string again.
+{k:Ctrl-F10} | Undo | Undo the last change.
+{k:Ctrl-F11} | Redo | Redo what was undone.
+{k:Ctrl-F12} | Marker | The same as Alt-F12, for terminals.
+.end
+{k:F10} and {k:F11} have no command, and a macro keeps them and plays them
+back.  {k:Alt-F1}, {k:Alt-F10} and {k:Alt-F11} show the message
+{c:Alt-F1: not available} (with their own number).  {k:Shift} with {k:F1} to
+{k:F12} does nothing.  {k:F12} and its forms belong to the menu bar and to the
+Marker command: a macro never keeps them.
+
+.h2 The F12 menu [view-menu]
+.ix Menu bar
+.ix F12 menu
+.ix Command menu
+.ix Menu, F12
+.ix MENU (label)
+{k:F12} opens the menu bar on the two top rows of the screen, over the
+status line.  The first row has the names of the entries, with the one
+that is chosen in reverse video; the second row says in one line what that
+entry does.  At the right end of the first row a label names the path:
+{c:MENU}, {c:MENU-GLOBAL}, {c:MENU-TOOLS-MACROS} and so on.
+
+.pic pictures/view-menu-top.png 5.4 The menu bar (F12).
+
+An entry that opens another list replaces the names on the first row with
+those of its entries.  The top level is
+
+.code
+File  Global  Edit  Print  Tools  Quit
+.end
+
+.table 13 47
+Key | Effect in the menu
+{k:Left}, {k:Right} | Choose the entry to the left, to the right.  They wrap
+ | round at the ends.
+{k:Home}, {k:End} | The first, the last entry.
+{k:Enter}, {k:Ins}, {k:Down} | Open the entry (a list below it) or carry the
+ | command out.
+A letter | The entry whose name begins with that letter, and open it.
+{k:Esc} | Go up one level; at the top level, close the menu.
+{k:F12} | Close the menu from any level.
+.end
+
+The Editor draws the menu over the document and removes it when a command is
+chosen.
+
+.pic pictures/view-menu-global.png 5.4 The menu bar one level down: Global.
+
+.h3 The menus entry by entry [view-menu-entries]
+.ix Menu entries
+.ix File menu
+.ix Global menu
+.ix Edit menu
+.ix Print menu
+.ix Tools menu
+.ix Quit menu
+This table lists every entry, the path to reach it, what the second row
+says and the key (if any).  The chapter that describes the entry is named in
+the last column.
+
+.table 18 23 7 8
+Path | The line it shows | Key | Chapter
+File | Save, Retrieve, New, Delete, Import, Export | | 2
+File, Save | Save the current document on the disk | {k:Ctrl-S} | 2
+File, Retrieve | Retrieve a new document file from the disk | {k:Ctrl-R} | 2
+File, New | Create a new document | | 2
+File, Delete | Delete a document file from the disk | | 2
+File, Import | Import an ASCII text file | | 2, 10
+File, Export | Export an ASCII text file | | 2, 10
+Global | Format, Page, Typeface, Marker, Options, Named | | 4
+Global, Format | Global section settings | | 4
+Global, Page | Page layout settings | | 4
+Global, Typeface | Font assignments | | 4
+Global, Marker | Marker settings | | 4, 5
+Global, Options | Other settings | | 4
+Global, Named, Edit | Edit a named block format | | 4
+Global, Named, Delete | Delete a named block format | | 4
+Edit | Title, Structured/Unstructured, Section/Document, Window | | 3
+Edit, Title | Edit title page | | 3
+Edit, Structured | Enter structured mode | | 3
+Edit, Unstructured | Enter unstructured mode | | 3
+Edit, Section | Edit current section only | Ctrl-^ | 3
+Edit, Document | Edit entire document | Ctrl-^ | 3
+Edit, Window | Open, Close, Adjust, Zoom-up, Zoom-down, Switch | | 3
+Edit, Window, Open | Open a second window | | 3
+Edit, Window, Close | Close the window of the cursor | | 3
+Edit, Window, Adjust | Change the size of the windows | | 3
+Edit, Window, Zoom-up | The window of the cursor fills the screen | | 3
+Edit, Window, Zoom-down | Both windows share the screen again | | 3
+Edit, Window, Switch | Move the cursor to the other window | | 3
+Print | Draft, Final, Preview, Errors | | 6
+Print, Draft | Print document in draft quality | | 6
+Print, Final | Print document in final quality | {k:Ctrl-P} | 6
+Print, Preview, Document | Preview entire document | | 6
+Print, Preview, Block | Preview the current block | | 6
+Print, Preview, Section | Preview the current section | | 6
+Print, Next Error | Find the next Print Error | {k:Ctrl-F8} | 6
+Print, Previous Error | Find the previous Print Error | {k:Ctrl-F7} | 6
+Print, Remove Error | Remove the Print Error under the cursor | | 6
+Print, Remove Print Errors | Remove all the Print Errors | | 6
+Tools | Macros, Library, Spell, Thesaurus, Autosort, Count, Undo | | 3
+Tools, Macros, Edit | Edit a macro | | 3
+Tools, Macros, Delete | Delete a macro | | 3
+Tools, Macros, Learn | Record keystrokes as a macro | | 3
+Tools, Macros, Save | Save macros in a file | | 3
+Tools, Macros, Retrieve | Retrieve macros from a file | | 3
+Tools, Library, Edit | Edit a library entry | | 3
+Tools, Library, Delete | Delete a library entry | | 3
+Tools, Library, Save | Save the library in a file | | 3
+Tools, Library, Retrieve | Retrieve a library from a file | | 3
+Tools, Spell | Document, Block, Section, Word | | 8
+Tools, Thesaurus | Find synonyms for the current word | {k:Ctrl-T} | 8
+Tools, Autosort, Section | Sort the subsections of the current section | | 3
+Tools, Autosort, Table | Sort the highlighted blocks | | 3
+Tools, Count | Display word count | | 3
+Tools, Undo | Undo the last change | {k:Ctrl-/} | 3
+Tools, Redo | Do again what was undone | {k:Alt-/} | 3
+Quit | Return to the Document Manager | {k:Ctrl-Q} | below
+.end
+
+The Edit menu depends on the document, as {x:view-make-kind} says: it has
+Title; Structured (unstructured document) or Unstructured (a document that is
+one section); Section (or Document while one section is shown); and Window.
+
+.h3 Quit [view-quit]
+.ix Shell, no exit to a shell
+.ix Quit (menu entry)
+.ix Quit, unsaved changes
+.ix Discard changes
+.ix Ctrl-Q
+The Editor has no entry that leaves it for a shell.  Open another terminal
+or window to use a shell.
+
+{b:Quit} (or {k:Ctrl-Q}) leaves the Editor.  If the document has unsaved
+changes (the asterisk before its name) a list headed {c:Document has unsaved
+changes} is shown first:
+
+.table 22 38
+Entry | Effect
+Save and quit | Save the document under its own name, then leave.  If the
+ | save fails the Editor stays.
+Discard changes and quit | Leave without saving.
+Cancel | Stay.  ({k:Esc} does the same.)
+.end
+The hint of the Quit entry shows "Return to the Document Manager".  When the
+Document Manager started the Editor, that is what happens.  When the Editor
+was started on its own, it ends and the terminal prompt or the desktop
+returns.  The close button of the X11 window acts as {k:Ctrl-Q}.
+
+.h2 Accelerators [view-accel]
+.ix Accelerators
+.ix Ctrl keys
+.ix Shortcuts
+.ix Command shortcuts
+An accelerator is a Ctrl letter that does at once what a menu or a
+function key does in several steps.  The table lists them.
+
+.table 10 37 12
+Key | Effect | Same as
+{k:Ctrl-A} | Append a block, local format | Alt-F2, Block
+{k:Ctrl-B} | Bold on or off | Alt-F6, Bold
+{k:Ctrl-C} | Spell check of the current word |
+{k:Ctrl-D} | Delete the next word |
+{k:Ctrl-E} | Block Format Editor | {k:F6}
+{k:Ctrl-F} | The menu of Alt commands |
+{k:Ctrl-H} | Hanging indent | ({k:F6})
+{k:Ctrl-I} | A tab | Tab
+{k:Ctrl-K} | Cut the block | {k:F4}, Block
+{k:Ctrl-L} | Cut the section | {k:F4}, Section
+{k:Ctrl-N} | Normal text | Alt-F6, Normal
+{k:Ctrl-O} | Append a block, global format | Alt-F2, Global
+{k:Ctrl-P} | Print, Final | Print, Final
+{k:Ctrl-Q} | Quit | {k:F12}, Quit
+{k:Ctrl-R} | Retrieve | File, Retrieve
+{k:Ctrl-S} | Save | File, Save
+{k:Ctrl-T} | Thesaurus for the current word |
+{k:Ctrl-U} | Underscore on or off | Alt-F6
+{k:Ctrl-V} | Split the block at the cursor | {k:F2}, Block
+{k:Ctrl-W} | View the equation (equation editor) |
+{k:Ctrl-X} | Cut text | {k:F4}, Text
+{k:Ctrl-Y} | Split the section at the cursor | {k:F2}, Section
+{k:Ctrl-^} | Edit Section or Document | Edit menu
+.end
+
+.note {k:Ctrl-J} and {k:Ctrl-M} end the line as {k:Enter} does, and {k:Ctrl-I}
+  is {k:Tab}.  A terminal sends the same code for the Ctrl form of those letters and
+  for the keys themselves.
+
+.h2 Markers in brief [view-markers]
+.ix Markers
+.ix Marker commands
+.ix Backslash commands
+.ix Marker menu
+.ix Insert a marker
+.ix Edit a marker
+A marker is a command in the text.  A character stands for itself; a marker
+stands for a value that the Editor or the Printer works out: today's date, a
+page number, a footnote, a picture, an equation, a line of a given length, a
+cross-reference to another section.  A marker is one object in the line of
+text and moves with the text when the text is moved, copied or cut.  A marker
+is chosen from a list and its panel is filled in.
+
+.h3 Inserting and changing a marker [view-marker-use]
+.ix Marker, insert
+.ix Marker, change
+.ix Marker panel
+.ix Invalid marker selection
+Press {k:Alt-F12} (or {k:Ctrl-F12}, or {k:Ctrl-F} and then Marker) with the
+cursor where the marker is to go.  The Marker Commands grid appears
+({n:view-grid}).  Choose a name with the cursor keys or by its
+first letter and press {k:Ins}.  A marker that has fields opens its panel
+(for a Date marker, the Format of the date); fill it in and press {k:Ins}.  A
+marker without fields is inserted at once.  The marker takes the place of
+the cursor, and the document is changed.  {k:Esc} in the grid or in the
+panel inserts nothing.
+
+To change a marker that is already in the text, put the cursor on it and press
+{k:Alt-F12}: the panel of that marker opens at once, with its values.
+{k:Esc} leaves it as it was.
+
+A name that is in parentheses cannot be used where the cursor is.  Choosing
+it shows the box {c:Marker} with the text {c:Invalid marker selection (Not
+available in an unstructured document)} or {c:Invalid marker selection (Not
+available in document body)}.
+
+.h3 The markers [view-marker-list]
+.ix Marker list
+.ix Marker names
+Strata has 35 markers.  The Marker Commands grid lists them in this order.
+
+.table 15 6 37
+Marker | Where | What it is for
+Author | B | The author of the document, from its header.
+Column Break | B | Begins the text that follows in the next column.
+Comment | B | A note to yourself that is not printed.  It has blocks.
+Counter | B | A number that counts up, with a style; there are 99 counters.
+Cross-reference | S | The number, the headline or the page of a section.
+Date | B | The date, in a format that you choose.
+Description | B | The description of the document, from its header.
+Else | B | The other branch of an If.
+Endif | B | The end of an If.
+Equation | B | An equation, shown as text or, in X11, as a picture.
+Figure | B | A caption number for the table of figures.
+Filedate | B | The date of the file.
+Filename | B | The name of the file.
+Filetime | B | The time of the file.
+Font | B | A change of font from here on.
+If | B | Text that is used only if an expression is true.
+Include | B | The text of another document, put here at print.
+Index | B | An entry of the index: heading, subheading, text.
+Keep | B | Keep what follows together on one page.
+Keycap | B | A key drawn as a key: {c:Legend}, shades, scale, font.
+LaTeX | B | LaTeX instructions, handed to LaTeX as they are typed.
+Line | B | A line, of a length and a weight, or a string repeated.
+Merge | B | A field that print merge fills in.
+Note | B | A footnote, a levelnote or an endnote.  It has blocks.
+Orientation | B | Portrait or landscape page.
+Page Break | B | Start the next text on a new, an odd or an even page.
+Page Number | H | The number of the page.  Headers and footers only.
+Pathname | B | The directory and name of the file.
+Picture | B | A picture from a file: PNG, JPEG, PDF or EPS.
+Printer | B | The name of the printer.
+Revision | B | The revision of the document, from its header.
+Section | H | The number of the section.  Headers and footers only.
+Table | B | A caption number for the table of tables.
+Time | B | The time, in a format that you choose.
+Whitespace | B | A vertical space of a size.
+.end
+In the column Where, B means the marker can be used anywhere, S only in
+a structured document and H only in a header or a footer (in the body Page
+Number and Section are in parentheses).  The markers are the subject of
+{n:markers}, where every marker has its panel, its fields and its effect
+described.
+
+.h3 How a marker looks on the screen [view-marker-look]
+.ix Marker, display modes
+.ix Marker Display Modes
+.ix Diamond (marker)
+Each marker is drawn in the text according to the setting Marker Display
+Modes of the Global, Marker panel, which has a mode for each kind of marker:
+the value (the date itself), its short label ({c:[WS 0.3 in]}), a long
+label, a diamond, its name, or nothing at all.  Markers are drawn in cyan
+(the terminal) or in the color of the markers (X11).  In the X11 version
+equations, keycaps, pictures and LaTeX markers are drawn as pictures when
+their mode is Inline.  While the cursor is on a marker the field Attr of the
+status line shows {c:Special}.  A marker is one unit for the editing keys:
+{k:Del} removes it, and the cursor moves over it in one step.

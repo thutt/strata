@@ -1,0 +1,25 @@
+
+------------------------------ Common Compose Sequences ------------------------
+
+Use Compose (Alt F1) followed by two characters to create special characters 
+(such as nonbreaking spaces and international characters) not otherwise 
+available on the keyboard.  The following are examples of special characters 
+and the two-character compose sequences that you use to create them.
+
+Character       Description             First Character     Second Character
+--------------------------------------------------------------------------------
+               paragraph                      p                   p
+               section                        s                   s
+               bullet                         . (period)          . (period)
+   L            British pound                  l                   = 
+   a            a grave                        a                   `
+   e            e circumflex                   e                   ^
+   o            o acute                        o                   '
+   C            C cedilla                      C                   , (comma)
+   +/-            plus/minus                     +                   -
+   /            division                       :                   -
+   1/2            one-half                       1                   2
+               non-breaking space         Space Bar           Space Bar
+
+--------------------------------------------------------------------------------
+         Compose              Keyboard Summary              Help Index

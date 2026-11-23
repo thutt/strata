@@ -1,0 +1,416 @@
+AVERY LABEL SHEETS: THE DATA BEHIND THE LABEL TEMPLATES
+=======================================================
+
+Written 2026-11-21 for the owner's request of 2026-11-20 (worklist item W69):
+make a template for common Avery sticker label sheets; research the sheets,
+the size of the stickers, the number of stickers across and down.  The data
+are in tests/labeldata.py, the templates are made from them by
+tests/mklabels.py (the committed copies are in templates/), the table of this
+document is made from the data by tests/mklabelsdoc.py, and tests/labels.py
+compares the data, this document, the templates and the manual.
+
+How to read this document: every number says where it comes from, with the
+letter of its source (section 2).  A number that no published source gave is
+not used; the sheets for which none was found are listed at the end.  The
+web was read on 2026-11-21 with the search tool and the page reader of the
+session.
+
+
+1.  WHAT WAS FOUND, AND WHAT WAS NOT
+------------------------------------
+
+  - Avery's own pages give the size of the sticker and the number on a
+    sheet and nothing else.  The product page of the 5160
+    (https://www.avery.com/products/labels/5160) lists "1" x 2-5/8"",
+    "Rectangle" and "30 per Sheet", and no margin and no pitch.  The help
+    article on the margins of the Word templates
+    (https://www.avery.com/help/article/margin-settings-word-template) says
+    that the margins, the pitch and the size are in the Details of the label
+    options of Word, and in the product specifications of a blank template:
+    they are not printed on the page.  The blank templates themselves are
+    files for Word, Illustrator, InDesign, Photoshop, Pages and PDF, which
+    were not read (the page reader gives text only).
+  - The pages of Avery in the United Kingdom and of Avery Zweckform refuse
+    the page reader (HTTP 403), and the Zweckform catalogue (a PDF of
+    several hundred pages) was not read.  The product title of the L7160 on
+    avery.co.uk says 63.5 x 38.1 mm.
+  - Avery's pages name no list of the best selling sheets (the site's own
+    index, https://www.avery.com/llms.txt, says "None are listed").  The
+    criterion of this document is therefore the request itself: the kinds
+    that it names (address, shipping, return address, name badge, file
+    folder, round, CD or DVD, mini) and the sheets of the two sources below
+    that are of those kinds, and that a template can show (business cards,
+    cards, tent cards and index tabs are not stickers on a sheet of
+    paper).  The 5160 family and the L7160 family are the ones that the
+    request names first.
+  - The geometry of every sheet therefore comes from one published data set,
+    the label templates of gLabels (an open source label program) that give
+    for every sheet the size, the number across and down, the margins and the
+    pitch.  It was made by measuring and by Avery's data, and it differs
+    from the older data of Microsoft in a few places (section 3).
+
+
+2.  THE SOURCES  (all read on 2026-11-21)
+------------------------------------------
+
+  U   the US Letter sheets of gLabels (template file avery-us-templates.xml)
+      https://raw.githubusercontent.com/jimevins/glabels-qt/master/templates/
+      avery-us-templates.xml
+      The sizes are in inches; some in points.  Lengths: label size, x0 and
+      y0 (the left and the top margin: the position of the first sticker),
+      dx and dy (the pitch: from one sticker to the next one across and
+      down).  A sheet that the file gives as an alias of another one ("equiv")
+      has the layout of that one; the numbers of the aliases are listed under
+      the sheet.
+  I   the A4 sheets of gLabels (avery-iso-templates.xml)
+      https://raw.githubusercontent.com/jimevins/glabels-qt/master/templates/
+      avery-iso-templates.xml
+      The file gives no unit for a number that has none: they are points
+      (1/72 inch), as the paper of the file is 595.28 x 841.89.
+  K   Microsoft Knowledge Base article Q146892, Avery LaserJet and InkJet
+      Product Information, reviewed 1997-07-31 (the numbers of Word for
+      Windows 95)
+      https://techshelps.github.io/MSDN/KB/Source/word/q146892.htm
+      It gives the size, the number across and down and the pitch of 80
+      sheets, no margin.  It is used to check the pitch of the sheets that
+      it has (the line "check" below), and nothing is taken from it.
+  A   Avery's own pages: the product page of the 5160 (see above), the
+      product titles at avery.co.uk for the L7160 (63.5 x 38.1 mm).  They
+      confirm the size and the count; no number of the table is from them.
+
+The paper sizes are US Letter, 8.5 x 11 in (the sheets of U), and A4,
+210 x 297 mm (the sheets of I); a document records them in thousandths of an
+inch: 8500 x 11000 and 8268 x 11693.
+
+
+3.  CONFLICTS BETWEEN THE SOURCES
+---------------------------------
+
+  K and U differ for three sheets by more than half a millimetre: the 5160
+  (K has 2.75 in across, U has 2.78125 in; the left margin of U is 0.15625
+  in), the 5197 (4.188 in against 4.125 in) and the 5295 (3.937 in against
+  3.9063 in across and 3.333 in against 3.3594 in down).  The templates use
+  U for every sheet: it is one set of numbers that has the margins that K
+  does not have, and a pitch of K with a margin of U would be a mixture.  The
+  reading of a sheet of U is the sheet that the data set's author measured;
+  the owner should compare one printed sheet with a template when a printer
+  is at hand (no sheet was printed here: the tests measure PDFs).
+  The sticker of the L7160 is 181.4 x 108.0 points (64.0 x 38.1 mm) in I and
+  63.5 x 38.1 mm on the product title of Avery: 0.5 mm wider in I.  The
+  template uses I, so that the first sticker and its pitch are the same data.
+
+
+4.  THE LAYOUT OF A TEMPLATE
+----------------------------
+
+  See tests/mklabels.py, and the manual.  The sticker is the position that the
+  data give; the text starts 2 mm from its left edge and 1.5 mm from its top
+  edge (1 mm and 0.5 mm on a small sticker, and the corner of the square that
+  fits in the circle on a round one).  A template is blank: it has one block
+  for each sticker, and no text.
+
+
+5.  THE SHEETS
+--------------
+
+BEGIN TABLE (made by tests/mklabelsdoc.py from tests/labeldata.py)
+
+US Letter sheets
+
+5160  address, US Letter, 30 per sheet; also 5260 8160
+    size: w=2.625 h=1 across=3 down=10 shape=rect
+    place: x0=0.15625 y0=0.5 dx=2.78125 dy=1 unit=in src=U
+    check: pitch 2.75 x 1 in (K)
+    CONFLICT: K differs by 0.79 mm across, 0.00 mm down; the pitch of U is used
+
+5161  address, US Letter, 20 per sheet; also 5261 8161
+    size: w=4 h=1 across=2 down=10 shape=rect
+    place: x0=0.15625 y0=0.5 dx=4.1875 dy=1 unit=in src=U
+    check: pitch 4.188 x 1 in (K)
+
+5162  address, US Letter, 14 per sheet; also 5262 8162 5962
+    size: w=4 h=1.333333 across=2 down=7 shape=rect
+    place: x0=0.15625 y0=0.833333 dx=4.1875 dy=1.333333 unit=in src=U
+    check: pitch 4.188 x 1.333 in (K)
+
+5159  address, US Letter, 14 per sheet
+    size: w=4 h=1.5 across=2 down=7 shape=rect
+    place: x0=0.15625 y0=0.25 dx=4.1875 dy=1.5 unit=in src=U
+
+5197  address, US Letter, 12 per sheet
+    size: w=4 h=1.5 across=2 down=6 shape=rect
+    place: x0=0.1875 y0=1 dx=4.125 dy=1.5 unit=in src=U
+    check: pitch 4.188 x 1.5 in (K)
+    CONFLICT: K differs by 1.60 mm across, 0.00 mm down; the pitch of U is used
+
+5163  shipping, US Letter, 10 per sheet; also 5263 8163 8463 8663
+    size: w=4 h=2 across=2 down=5 shape=rect
+    place: x0=0.1625 y0=0.5 dx=4.1875 dy=2 unit=in src=U
+    check: pitch 4.188 x 2 in (K)
+
+5164  shipping, US Letter, 6 per sheet; also 5264 8164
+    size: w=4 h=3.333333 across=2 down=3 shape=rect
+    place: x0=0.15625 y0=0.5 dx=4.1875 dy=3.333333 unit=in src=U
+    check: pitch 4.188 x 3.333 in (K)
+
+5168  shipping, US Letter, 4 per sheet
+    size: w=3.5 h=5 across=2 down=2 shape=rect
+    place: x0=0.5 y0=0.5 dx=4 dy=5 unit=in src=U
+
+6873  shipping, US Letter, 8 per sheet
+    size: w=3.75 h=2 across=2 down=4 shape=rect
+    place: x0=0.375 y0=1.125 dx=4 dy=2.25 unit=in src=U
+
+6874  shipping, US Letter, 6 per sheet
+    size: w=3.75 h=3 across=2 down=3 shape=rect
+    place: x0=0.375 y0=0.625 dx=4 dy=3.375 unit=in src=U
+
+6573  shipping, US Letter, 2 per sheet
+    size: w=8.12992 h=5 across=1 down=2 shape=rect
+    place: x0=0.18504 y0=0.5 dx=0 dy=5 unit=in src=U
+
+5126  shipping, US Letter, 2 per sheet
+    size: w=8.5 h=5.5 across=1 down=2 shape=rect
+    place: x0=0 y0=0 dx=0 dy=5.5 unit=in src=U
+
+5165  full page, US Letter, 1 per sheet; also 8165 5265
+    size: w=8.5 h=11 across=1 down=1 shape=rect
+    place: x0=0 y0=0 dx=0 dy=0 unit=in src=U
+    check: pitch 0 x 0 in (K)
+
+5167  return address, US Letter, 80 per sheet; also 5267 8167
+    size: w=1.75 h=0.5 across=4 down=20 shape=rect
+    place: x0=0.28125 y0=0.5 dx=2.0625 dy=0.5 unit=in src=U
+    check: pitch 2.063 x 0.5 in (K)
+
+8195  return address, US Letter, 60 per sheet
+    size: w=1.75 h=0.666 across=4 down=15 shape=rect
+    place: x0=0.297 y0=0.531 dx=2.031 dy=0.666 unit=in src=U
+
+5366  file folder, US Letter, 30 per sheet; also 5066 5166 5266 8066 8166 8366
+    size: w=3.4375 h=0.666667 across=2 down=15 shape=rect
+    place: x0=0.53125 y0=0.5 dx=4 dy=0.666667 unit=in src=U
+    check: pitch 4 x 0.667 in (K)
+
+5026  file folder, US Letter, 18 per sheet
+    size: w=3.4375 h=0.9375 across=2 down=9 shape=rect
+    place: x0=0.49755 y0=0.51125 dx=4.0674 dy=1.13 unit=in src=U
+
+5195  round, US Letter, 6 per sheet; also 5295
+    size: r=1.65625 across=2 down=3 shape=round
+    place: x0=0.6406 y0=0.4844 dx=3.9063 dy=3.3594 unit=in src=U
+    check: pitch 3.937 x 3.333 in (K)
+    CONFLICT: K differs by 0.78 mm across, 0.67 mm down; the pitch of U is used
+
+5193  round, US Letter, 24 per sheet; also 5293
+    size: r=0.8125 across=4 down=6 shape=round
+    place: x0=0.4157 y0=0.549 dx=2.0145 dy=1.6554 unit=in src=U
+    check: pitch 2 x 1.667 in (K)
+
+5194  round, US Letter, 12 per sheet; also 5294
+    size: r=1.25 across=3 down=4 shape=round
+    place: x0=0.21 y0=0.425 dx=2.75 dy=2.515 unit=in src=U
+    check: pitch 2.75 x 2.5 in (K)
+
+3274.2  round, US Letter, 20 per sheet; also 3112 8293
+    size: r=0.75 across=4 down=5 shape=round
+    place: x0=0.5 y0=0.75 dx=2 dy=2 unit=in src=U
+
+3274.3  round, US Letter, 9 per sheet
+    size: r=1.25 across=3 down=3 shape=round
+    place: x0=0.3125 y0=1.25 dx=2.6875 dy=3 unit=in src=U
+
+5395  name badge, US Letter, 8 per sheet; also 5095 5895 8395
+    size: w=3.375 h=2.333333 across=2 down=4 shape=rect
+    place: x0=0.6875 y0=0.583333 dx=3.75 dy=2.5 unit=in src=U
+    check: pitch 3.75 x 2.5 in (K)
+
+5196  diskette, US Letter, 9 per sheet
+    size: w=2.75 h=2.75 across=3 down=3 shape=rect
+    place: x0=0.125 y0=0.5 dx=2.75 dy=3 unit=in src=U
+    check: pitch 2.75 x 3 in (K)
+
+5931  CD or DVD, US Letter, 2 per sheet
+    size: r=2.3125 across=1 down=2  hole=0.8125 shape=cd
+    place: x0=1.9375 y0=0.6875 dx=0 dy=5 unit=in src=U
+
+5824  CD or DVD, US Letter, 2 per sheet
+    size: r=166.5 across=1 down=2 shape=cd
+    place: x0=144 y0=36 dx=351 dy=396 unit=pt src=U
+
+8960  CD or DVD, US Letter, 2 per sheet
+    size: r=166.5 across=1 down=2 shape=cd
+    place: x0=138.898 y0=50.1732 dx=351.142 dy=360 unit=pt src=U
+
+A4 sheets
+
+L7160  address, A4, 21 per sheet; also J8160
+    size: w=181.4 h=108 across=3 down=7 shape=rect
+    place: x0=21.2 y0=43.9 dx=187.2 dy=108 unit=pt src=I
+
+L7161  address, A4, 18 per sheet; also J8161
+    size: w=180.2 h=132.6 across=3 down=6 shape=rect
+    place: x0=21 y0=23 dx=186.9 dy=132.5 unit=pt src=I
+
+L7162  address, A4, 16 per sheet
+    size: w=280.9 h=96.1 across=2 down=8 shape=rect
+    place: x0=11.3 y0=36.8 dx=290.5 dy=96.1 unit=pt src=I
+
+L7163  address, A4, 14 per sheet
+    size: w=280.9 h=108 across=2 down=7 shape=rect
+    place: x0=9.5 y0=43 dx=292 dy=108 unit=pt src=I
+
+L7164  address, A4, 12 per sheet; also J8164
+    size: w=180 h=204.038 across=3 down=4 shape=rect
+    place: x0=20.84 y0=10 dx=187.08 dy=204.038 unit=pt src=I
+
+L7165  address, A4, 8 per sheet; also J8165
+    size: w=280.8 h=191.991 across=2 down=4 shape=rect
+    place: x0=13.2378 y0=36.9638 dx=288.113 dy=191.991 unit=pt src=I
+
+L7169  shipping, A4, 4 per sheet
+    size: w=280.9 h=394 across=2 down=2 shape=rect
+    place: x0=14.2 y0=20 dx=287.7 dy=394 unit=pt src=I
+
+L4785  name badge, A4, 10 per sheet; also L4784 L4786 L4787
+    size: w=80 h=50 across=2 down=5 shape=rect
+    place: x0=18 y0=13 dx=95 dy=55 unit=mm src=I
+
+L4732  mini address, A4, 80 per sheet
+    size: w=35.6 h=16.9 across=5 down=16 shape=rect
+    place: x0=11 y0=13 dx=38.1 dy=16.9 unit=mm src=I
+
+L4770  mini address, A4, 40 per sheet; also J8654 L6140 L6145 L7654
+    size: w=45.7 h=25.4 across=4 down=10 shape=rect
+    place: x0=10 y0=22 dx=48.5 dy=25.4 unit=mm src=I
+
+J8157  address, A4, 33 per sheet
+    size: w=64 h=24.3 across=3 down=11 shape=rect
+    place: x0=6 y0=14 dx=66.5 dy=24.3 unit=mm src=I
+
+8651  mini address, A4, 65 per sheet; also L8651 J8651 J8551 L7651 L7551
+    size: w=108 h=60.09 across=5 down=13 shape=rect
+    place: x0=13.32 y0=30.9 dx=115.09 dy=60.09 unit=pt src=I
+
+8658  ID, A4, 189 per sheet; also J8658 L8658
+    size: w=25.4 h=10 across=7 down=27 shape=rect
+    place: x0=5 y0=13 dx=28.5 dy=10.14 unit=mm src=I
+
+L7664  diskette, A4, 8 per sheet
+    size: w=70 h=71.9 across=2 down=4 shape=rect
+    place: x0=17 y0=5 dx=104.5 dy=72 unit=mm src=I
+
+8666  diskette, A4, 10 per sheet; also J8666
+    size: w=198.4 h=147.4 across=2 down=5 shape=rect
+    place: x0=66 y0=53 dx=264 dy=147 unit=pt src=I
+
+L6043  CD or DVD, A4, 2 per sheet
+    size: r=58.7 across=1 down=2  hole=20.6 shape=cd
+    place: x0=46 y0=21.8 dx=123.75 dy=137 unit=mm src=I
+
+L7676  CD or DVD, A4, 2 per sheet
+    size: r=165.827 across=1 down=2  hole=24.9449 shape=cd
+    place: x0=131.811 y0=62.3622 dx=342.992 dy=388.346 unit=pt src=I
+
+8676  CD or DVD, A4, 2 per sheet; also J8676
+    size: r=166.5 across=1 down=2  hole=17 shape=cd
+    place: x0=130 y0=59.5 dx=0 dy=388 unit=pt src=I
+
+L6015  CD or DVD, A4, 2 per sheet
+    size: r=165.827 across=1 down=2  hole=58.1102 shape=cd
+    place: x0=131.811 y0=60.6614 dx=349.795 dy=392.4 unit=pt src=I
+
+38931  address, A4, 33 per sheet; also DL33 CR33
+    size: w=70 h=25 across=3 down=11 shape=rect
+    place: x0=0 y0=10 dx=70 dy=25 unit=mm src=I
+
+18036  address, A4, 27 per sheet
+    size: w=198 h=91 across=3 down=9 shape=rect
+    place: x0=0 y0=13 dx=198 dy=91 unit=pt src=I
+
+Sheets of the sources with no template
+
+L4730  ten stickers across: a block winds in nine columns at most
+
+Not found in any source (nothing is used)
+
+  5390 5392 L7159 L7106 L7418 6240 5931 spine
+
+END TABLE
+
+
+6.  THE LAYOUT: WHAT WAS MEASURED, AND WHAT WAS DECIDED
+-------------------------------------------------------
+
+  Three ways to put one block on each sticker were considered.
+
+  a) A table with fixed cell sizes.  The width of a column of a table is a
+     number of ruler cells, and a cell is a part of the width of the text
+     (an eightieth by default, a tenth, twelfth or fifteenth of an inch at
+     the other settings of the ruler).  Measured on a PDF of a table of ten
+     rows and three columns on US Letter paper (the text 8.1875 in wide, one
+     cell 2.6 mm): the first column starts 6.07 mm from the left edge, and
+     the second column starts 69.19, 71.81, 74.40 or 77.00 mm further for
+     columns of 25, 26, 27 and 28 cells.  The pitch of the 5160 across is
+     70.64 mm: the best columns are 1.45 mm too narrow or 1.17 mm too wide,
+     so no number of cells puts a column within half a millimetre.  A row of
+     the table is as high as its lines (4.22 mm for the lines of one line at
+     10 points here), not as high as a sticker.  Not used.
+  b) Columns with column breaks.  A block can have columns, but their width
+     is again a number of cells, and a column break moves the text to the
+     next column on the same page, not to the next row.  Not used.
+  c) Winding columns (a Strata mechanism: the block property that sets the
+     number of columns a block is set in, with the gutter between them in
+     thousandths of an inch).  The columns have equal width and the gutter
+     is exact, so the width of the text is the number of stickers across
+     times the width of the text of a sticker, plus the gutters.  Used.
+     Down a column the pitch is made by the lines of a block and the space
+     after the block (hundredths of a line, the line pitch measured in the
+     PDF for each text size: tests/labeldata.py).  The sum of the spaces is
+     rounded, not each one, so that the rows do not drift.
+
+  Measured (tests/labels.py): every one of the 48 sheets was printed twice to
+  a PDF, once with a text in every line of every sticker and once with a
+  probe in the first line of the first, the middle and the last sticker only.
+  The distance of the left and top of every probe from the place that the data
+  give (the sticker, the distance of the text from its edge, and the top of
+  the glyph box of the text size) was at most 0.036 mm, the sheet was one page
+  in every case, and every text was inside its sticker.  The test asks for
+  0.5 mm (the request) and for 0.1 mm (so that a drift shows).
+
+  The sheet in the template is filled down the first column, then down the
+  next: that is the order of the blocks.  Avery's own order (across the rows)
+  is not possible with winding columns.
+
+  Text that is too long.  A block holds the lines that fit in the sticker
+  (the column Lines of the manual).  The Printer cannot cut a block at the
+  height of a sticker, so a text of more lines pushes the stickers below it
+  down, and the stickers of that column after it are off their place: the
+  text is not cut, and the fault can be seen in the Preview.  The manual says it.  A line that
+  is too wide wraps and has the same effect.
+
+  The page number is not printed: the template has a header that is one
+  space, because the Printer prints the page number of a document that has no
+  header and no footer text, and on a sheet that has no margin (5165) the
+  number would be on the sticker.
+
+
+7.  DECISIONS AND OPEN ITEMS
+----------------------------
+
+  - One template for each product number that the source shows as the same
+    sheet (101 templates for 48 sheets); the name is the paper and the lower
+    case number: label-us-5160, label-a4-l7160.  The description starts with
+    "Avery", the number, the kind, the count and the paper.
+  - The list of New finds a sheet by typing: the first entry that has a word
+    that begins with the typed text, in its name or its description.
+  - Round stickers and discs: the box that holds them is the position; the
+    text starts in the corner of the square inside the circle.  The hole of
+    a disc is not left free.  The sheet 5931 has spine labels too, which have
+    no template (the disc is the template).
+  - The ten stickers across of the L4730 are more than a block winds in (nine
+    columns at most): no template.
+  - The sheets 5390, 5392, L7159, L7106, L7418 and 6240 of the request were
+    not found in a source that has numbers; no template.
+  - Which of K and U is right for the 5160, the 5197 and the 5295 can only
+    be decided with a printed sheet.
