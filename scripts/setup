@@ -32,9 +32,10 @@
 # validation) fails.
 #
 # Exports   STRATA_HOST_OS     linux
-#           STRATA_DIR         the source tree: <project>/modernization
-#           STRATA_ROOT        the project directory (holds scripts/, the
-#                              source tree and the original media)
+#           STRATA_DIR         the source tree: <project>
+#           STRATA_ROOT        the project directory (the root of the
+#                              repository: it holds scripts/ and the source
+#                              tree, so STRATA_DIR is the same directory)
 #           STRATA_BUILD_TYPE  debug | release | asan
 #           STRATA_BUILD_ROOT  the directory that holds the builds
 #           STRATA_BUILD_DIR   the directory of this build type:
@@ -42,7 +43,7 @@
 #           STRATA_HELP        the help file that the build makes:
 #                              STRATA_BUILD_DIR/strata.hlp
 #           STRATA_TEMPLATES   the templates of the source tree:
-#                              <project>/modernization/templates, so that a
+#                              <project>/templates, so that a
 #                              program that runs in place from the build
 #                              directory lists the templates as an installed
 #                              one does (the other STRATA_ variables of the
@@ -145,8 +146,10 @@ function _strata_setup {
     sdir=$(cd "$(dirname -- "${self}")" && pwd -P) || return 1
     # the project directory
     root=$(cd "${sdir}/.." && pwd -P) || return 1
-    # the source tree
-    dir="${root}/modernization"
+    # the source tree: the root of the repository (the same directory as the
+    # project directory since the sources were moved up from the directory
+    # modernization; the programs that read STRATA_DIR keep working)
+    dir="${root}"
     if [ ! -d "${dir}/src" ]; then
         echo "setup: cannot find the source tree at ${dir}" >&2
         return 1

@@ -21,7 +21,8 @@ $(error STRATA_BUILD_DIR is not set.  Run: \
         source <project>/scripts/setup /tmp/strata)
 endif
 O        := $(STRATA_BUILD_DIR)
-SRCROOT  := $(abspath $(CURDIR)/..)
+# The source tree is the root of the repository: the Makefile is in it.
+SRCROOT  := $(abspath $(CURDIR))
 ifneq ($(filter $(SRCROOT)/%,$(abspath $(O))/),)
 $(error refusing to build inside the source tree \
         ($(abspath $(O)) is inside $(SRCROOT)); use <project>/scripts/setup)
@@ -545,7 +546,7 @@ memprof: $(BIN)/memprof
 # pdflatex, latex, dvipdfmx, dvitype and pdfinfo; PRINTDOCS may list several
 # directories separated by colons);
 # the PDFs, the DVI files, the .tex files and SUMMARY.txt go to PRINTRES.
-PRINTDOCS ?= ../sample.docs:tests/samples
+PRINTDOCS ?= sample.docs:tests/samples
 PRINTPAT  ?= *.doc
 PRINTRES  ?= $(O)/printtest
 printtest: $(BIN)/strprint

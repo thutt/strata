@@ -274,7 +274,7 @@ def read_version():
     or with the SHA of a commit.  The sources write @VERSION@ where the
     version is to be shown."""
     here = os.path.dirname(os.path.abspath(__file__))
-    root = os.path.abspath(os.path.join(here, "..", ".."))
+    root = os.path.abspath(os.path.join(here, ".."))
     script = os.path.join(root, "scripts", "strata-version")
     try:
         out = subprocess.run([script, "--manual", root],
