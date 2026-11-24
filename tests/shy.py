@@ -35,8 +35,8 @@ stred = os.environ.get('STRED', os.path.join(build, 'term', 'stred'))
 strprint = os.environ.get('STRPRINT', os.path.join(build, 'term',
     'strprint'))
 sample = os.environ.get('DOCSRC', os.path.join(root, 'tests', 'samples'))
-helpf = os.environ.get('STRATA_HELP', os.path.join(root, '..',
-    'lotus-manuscript', 'utility_3', 'strata.hlp'))
+helpf = os.environ.get('STRATA_HELP', os.path.join(
+    os.environ.get('STRATA_BUILD_DIR', ''), 'strata.hlp'))
 fails = 0
 tmp = tempfile.mkdtemp()
 os.environ['SOURCE_DATE_EPOCH'] = '1700000000'

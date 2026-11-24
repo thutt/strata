@@ -46,7 +46,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TREE = os.path.dirname(HERE)
-PROJECT = os.path.dirname(TREE)
+PROJECT = TREE
 SRC = os.path.join(TREE, "manual", "src")
 PARTS = ["gs-need.src", "gs-install.src", "gs-about.src", "gs-start.src",
          "gs-tutorial.src"]

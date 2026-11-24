@@ -39,7 +39,7 @@ import tempfile
 
 here = os.path.dirname(os.path.abspath(__file__))
 tree = os.path.dirname(here)
-project = os.path.dirname(tree)
+project = tree
 # The variable STRATA_INSTALL_SCRIPT names another copy of the script (a
 # file in the scripts folder), which is how the mutations of the tests
 # are tried.
@@ -1068,8 +1068,8 @@ try:
     check('install: programs have mode 755 (install -m)', mode == 0o755,
           oct(mode))
 
-    st, out = run([os.path.join(os.path.dirname(tree), 'scripts',
-                                'strata-version'), os.path.dirname(tree)])
+    st, out = run([os.path.join(tree, 'scripts',
+                                'strata-version'), tree])
     version = out.strip()
     st, out = run([os.path.join(prefix, 'bin', 'stred'), '--version'])
     check('version: stred --version says the version of the branch',

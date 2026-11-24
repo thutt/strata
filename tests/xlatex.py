@@ -286,8 +286,8 @@ check('a wrong value of --pictures is a usage error', rc3 == 2 and
     'usage' in e3, (rc3, e3))
 
 # ---- The Editor: F12, File, Export, Export a LaTeX File --------------------
-helpf = os.environ.get('STRATA_HELP', os.path.join(sample, '..', 'utility_3',
-    'strata.hlp'))
+helpf = os.environ.get('STRATA_HELP', os.path.join(
+    os.environ.get('STRATA_BUILD_DIR', ''), 'strata.hlp'))
 FILE = ['F12', 'ENTER']
 PANEL = FILE + ['RIGHT'] * 5 + ['ENTER', 'wait']
 

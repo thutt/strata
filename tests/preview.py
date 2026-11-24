@@ -33,8 +33,8 @@ stred = os.environ.get('STRED', os.path.join(bdir, 'term', 'stred'))
 sample = os.environ.get('DOCSRC', os.path.join(root, 'tests', 'samples'))
 twain = os.environ.get('TWAIN', '/home/claude/lotus-manuscript/sample.docs/'
     'twain.doc')
-helpf = os.environ.get('STRATA_HELP', os.path.join(root, '..',
-    'lotus-manuscript', 'utility_3', 'strata.hlp'))
+helpf = os.environ.get('STRATA_HELP', os.path.join(
+    os.environ.get('STRATA_BUILD_DIR', ''), 'strata.hlp'))
 if not shutil.which('latex'):
     print('SKIP: latex is not installed')
     sys.exit(0)

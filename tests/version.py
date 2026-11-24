@@ -36,8 +36,8 @@ import sys
 import tempfile
 
 here = os.path.dirname(os.path.abspath(__file__))
-modernization = os.path.dirname(here)
-root = os.path.dirname(modernization)
+root = os.path.dirname(here)
+tree = root
 script = os.path.join(root, "scripts", "strata-version")
 UNSUPPORTED = "UNSUPPORTED BUILD CONFIGURATION"
 
@@ -216,7 +216,7 @@ def run_build(bd):
     check("the build writes its version into the file BUILD_DIR/version, "
           "which the install script copies", body == want + "\n", body)
 
-    sys.path.insert(0, os.path.join(modernization, "manual"))
+    sys.path.insert(0, os.path.join(tree, "manual"))
     import mkmanual
     manual_want = derive(script, root, True)
     check("the generator shows the version without a SHA (%s)" % manual_want,
@@ -224,7 +224,7 @@ def run_build(bd):
           re.search(r"\s[0-9a-f]{7,}$", mkmanual.VERSION) is None,
           mkmanual.VERSION)
 
-    doc = os.path.join(modernization, "manual", "doc", "GettingStarted.doc")
+    doc = os.path.join(tree, "manual", "doc", "GettingStarted.doc")
     with open(doc, "rb") as f:
         data = f.read()
     check("the title page of the committed Getting Started document has "
@@ -233,7 +233,7 @@ def run_build(bd):
           (b"Version " + manual_want.encode("ascii")) in data,
           data[data.find(b"Version "):][:30])
     check("the tree has no file VERSION: the branch is the version",
-          not os.path.exists(os.path.join(modernization, "VERSION")))
+          not os.path.exists(os.path.join(tree, "VERSION")))
 
 
 if __name__ == "__main__":

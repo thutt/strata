@@ -100,8 +100,11 @@ check('header: a type error in a guarded block stops a release build',
 
 # ---- the sources do not test the build macros -----------------------------
 bad = []
-for dirpath, dirs, files in os.walk(os.path.dirname(here)):
-    if '/.git' in dirpath or '/tests/data' in dirpath:
+base = os.path.dirname(here)
+for dirpath, dirs, files in os.walk(base):
+    rel = os.path.relpath(dirpath, base)
+    if rel.split(os.sep)[0] in ('.git', '.claude') or \
+            '/tests/data' in dirpath:
         continue
     for name in files:
         if not name.endswith(('.c', '.h')) or name == 'build_type.h':

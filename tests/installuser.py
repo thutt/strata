@@ -54,7 +54,7 @@ import tempfile
 
 here = os.path.dirname(os.path.abspath(__file__))
 tree = os.path.dirname(here)
-project = os.path.dirname(tree)
+project = tree
 script = os.environ.get('STRATA_INSTALL_SCRIPT', 'strata-install')
 if not os.path.isabs(script):
     script = os.path.join(project, 'scripts', script)

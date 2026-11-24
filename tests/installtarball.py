@@ -52,7 +52,7 @@ import time
 
 here = os.path.dirname(os.path.abspath(__file__))
 tree = os.path.dirname(here)
-project = os.path.dirname(tree)
+project = tree
 scripts = os.path.join(project, 'scripts')
 build = os.environ.get('STRATA_BUILD_DIR', '')
 btype = os.environ.get('STRATA_BUILD_TYPE', 'debug')
@@ -196,7 +196,7 @@ for opts in (['-j', '4'], ['-j4'], ['--jobs=4']):
 st, out = run([build_script, '-j', 'x', 'install'], ienv, work)
 check('request: a number of jobs that is not a number is refused',
       st != 0 and 'number of jobs' in out, out[-200:])
-st, out = run(['make', '-C', os.path.join(project, 'modernization'), 'install'],
+st, out = run(['make', '-C', project, 'install'],
               dict(ienv), work)
 check('request: make install makes the tarball too and installs nothing',
       st == 0 and os.path.isfile(tarball) and

@@ -237,7 +237,7 @@ check("the document is GettingStarted.doc",
                                   "GettingStarted.doc")))
 left = []
 for top in ("manual", "tests", "scripts", "src", "help", "Makefile",
-            "README.txt", "../scripts"):
+            "README.txt"):
     path = os.path.join(ROOT, top)
     files = []
     if os.path.isdir(path):

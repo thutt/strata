@@ -8,7 +8,7 @@
 # The test of scripts/str-dev, the wrapper that starts str and opens a
 # second console window that follows the log of the run.  A fake terminal
 # program (tests/faketerm.sh) records its arguments, and a fake str
-# (tests/fakestr.sh) records its own.  Run it from the directory modernization:
+# (tests/fakestr.sh) records its own.  Run it from the root of the source tree:
 #
 #     python3 -I -B tests/strdev.py
 
@@ -20,8 +20,7 @@ import tempfile
 import time
 
 here = os.path.dirname(os.path.abspath(__file__))
-script = os.path.join(os.path.dirname(os.path.dirname(here)), 'scripts',
-                      'str-dev')
+script = os.path.join(os.path.dirname(here), 'scripts', 'str-dev')
 fails = 0
 
 

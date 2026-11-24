@@ -49,7 +49,7 @@ import tempfile
 
 here = os.path.dirname(os.path.abspath(__file__))
 tree = os.path.dirname(here)
-project = os.path.dirname(tree)
+project = tree
 scripts = os.path.join(project, 'scripts')
 
 fails = 0
@@ -154,8 +154,8 @@ class Repo:
         self.env = dict(env, TMPDIR=self.tmpdir)
         r = self.dir
         os.makedirs(os.path.join(r, 'scripts'))
-        os.makedirs(os.path.join(r, 'modernization', 'src'))
-        write(os.path.join(r, 'modernization', 'src', 'keep'), 'x\n')
+        os.makedirs(os.path.join(r, 'src'))
+        write(os.path.join(r, 'src', 'keep'), 'x\n')
         for n in ('strata-version', 'setup'):
             shutil.copy(os.path.join(scripts, n), os.path.join(r, 'scripts'))
         os.chmod(os.path.join(r, 'scripts', 'strata-version'), 0o755)
@@ -223,7 +223,7 @@ def scenarios(tool_text, label):
           st == 1 and '1.0.0' in out, (st, out))
 
     # ---- a changed tracked file ----------------------------------------
-    path = os.path.join(r.dir, 'modernization', 'src', 'keep')
+    path = os.path.join(r.dir, 'src', 'keep')
     write(path, 'changed\n')
     st, out = r.release('4.0.0')
     check('%s: a modified tracked file is refused and nothing is made' %

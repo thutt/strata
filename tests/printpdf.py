@@ -34,8 +34,8 @@ bdir = os.environ.get('STRATA_BUILD_DIR', '')
 stred = os.environ.get('STRED', os.path.join(bdir, 'term', 'stred'))
 strprog = os.environ.get('STR', os.path.join(bdir, 'term', 'str'))
 sample = os.environ.get('DOCSRC', os.path.join(root, 'tests', 'samples'))
-helpf = os.environ.get('STRATA_HELP', os.path.join(root, '..',
-    'lotus-manuscript', 'utility_3', 'strata.hlp'))
+helpf = os.environ.get('STRATA_HELP', os.path.join(
+    os.environ.get('STRATA_BUILD_DIR', ''), 'strata.hlp'))
 for tool in ('pdflatex', 'pdfinfo', 'pdftotext', 'pdfimages'):
     if not shutil.which(tool):
         print('SKIP: %s is not installed' % tool)

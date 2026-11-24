@@ -29,8 +29,8 @@ stred = os.environ.get('STRED', os.path.join(bdir, 'term', 'stred'))
 strprint = os.environ.get('STRPRINT', os.path.join(bdir, 'x11', 'strprint'))
 if not os.path.exists(strprint):
     strprint = os.path.join(os.path.dirname(stred), '..', 'x11', 'strprint')
-helpf = os.environ.get('STRATA_HELP', os.path.join(root, '..',
-    'lotus-manuscript', 'utility_3', 'strata.hlp'))
+helpf = os.environ.get('STRATA_HELP', os.path.join(
+    os.environ.get('STRATA_BUILD_DIR', ''), 'strata.hlp'))
 for tool in ('pdflatex', 'latex', 'pdfinfo', 'pdftotext', 'pdftoppm'):
     if not shutil.which(tool):
         print('SKIP: %s is not installed' % tool)

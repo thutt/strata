@@ -41,7 +41,7 @@ import sys
 
 here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
-repo = os.path.dirname(root)
+repo = root
 orig = os.path.join(repo, 'lotus-manuscript', 'sample')
 
 # The files of the original samples, by name.
@@ -60,7 +60,7 @@ triita.lvf trirom.lvf vidpc.gmf""".split()
 # generic.  They are not looked for.
 GENERIC = {'memo.set', 'outline.set', 'envelope.set', 'temp.val'}
 
-SCAN_DIRS = ['tests', 'manual', '../scripts']
+SCAN_DIRS = ['tests', 'manual', 'scripts']
 SKIP_DIRS = {'doc', 'samples', 'data', 'pictures', 'shadowbin', '__pycache__'}
 # The test publishclone.py makes a scratch repository that has a directory
 # of the original name, on purpose, to see that the tool removes it.

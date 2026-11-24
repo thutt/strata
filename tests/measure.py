@@ -837,7 +837,7 @@ def dir_kb(path):
 def disk(build, prefix):
     """Install under PREFIX and print the sizes."""
     root = os.path.dirname(HERE)
-    script = os.path.join(os.path.dirname(root), "scripts", "strata-install")
+    script = os.path.join(root, "scripts", "strata-install")
     env = dict(os.environ, STRATA_BUILD_DIR=build)
     r = subprocess.run([script, "--prefix", prefix, "--build-dir", build,
                         "--no-prereqs", "--quiet"], env=env,

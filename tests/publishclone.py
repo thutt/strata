@@ -34,7 +34,7 @@ import sys
 import tempfile
 
 here = os.path.dirname(os.path.abspath(__file__))
-project = os.path.dirname(os.path.dirname(here))
+project = os.path.dirname(here)
 script = os.path.join(project, 'scripts', 'strata-publish-clone')
 fails = 0
 OWNER = ('Owner Name', 'owner@example.org')

@@ -183,7 +183,7 @@ check('tree: the Reference Manual does not hold the rows itself (they are '
 appterm = open(os.path.join(manual, 'src', 'appterm.src')).read()
 check('tree: the appendix source includes the part with .includedoc',
       '.includedoc ' + PART in appterm)
-inst = open(os.path.join(here, '..', '..', 'scripts',
+inst = open(os.path.join(here, '..', 'scripts',
                          'strata-install')).read()
 check('tree: the install script installs every document of manual/doc '
       '(so the part is installed beside the Reference Manual)',

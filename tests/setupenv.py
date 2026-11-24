@@ -37,8 +37,8 @@ import tui
 import mktemplates
 import labeldata
 
-root = os.path.abspath(os.path.join(here, '..', '..'))
-src = os.path.join(root, 'modernization')
+root = os.path.abspath(os.path.join(here, '..'))
+src = root
 shipped = os.path.join(src, 'templates')
 setup = os.path.join(root, 'scripts', 'setup')
 build = (sys.argv[1] if len(sys.argv) > 1 else

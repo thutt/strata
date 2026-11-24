@@ -382,8 +382,8 @@ check('table 6.3 of the document has the counts of the verification: the '
       (counts, t_cnt))
 git = shutil.which('git')
 days = {'days': sd.DAYS, 'commits': sd.COMMITS}
-if git is not None and os.path.isdir(os.path.join(root, '..', '.git')) or \
-        os.path.isfile(os.path.join(root, '..', '.git')):
+if git is not None and os.path.isdir(os.path.join(root, '.git')) or \
+        os.path.isfile(os.path.join(root, '.git')):
     st, out, err = run([git, '-C', root, 'log', '--format=%ad',
                         '--date=format:%d'] , env=dict(os.environ))
     st2, out2, err2 = run([git, '-C', root, 'log', '--format=%ad',

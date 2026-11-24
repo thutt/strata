@@ -13,19 +13,20 @@
 # with Strata.  If not, see <https://www.gnu.org/licenses/>.
 # Copyright (c) 2026 Logic Magicians Software
 
-"""Fail if anything under the source tree or the original media changed.
+"""Fail if anything under the source tree changed.
 usage: tree_guard.py snapshot STATEFILE | check STATEFILE
-Watches ../modernization (this tree), ../scripts and ../lotus-manuscript (the
-original install media)."""
+Watches the source tree, which is the root of the repository (the directory
+scripts is in it); the metadata of git and the worktrees are not watched."""
 import sys as _s; _s.dont_write_bytecode = True
 import os, sys, json
 here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-roots = [here, os.path.normpath(os.path.join(here, '..', 'lotus-manuscript')),
-    os.path.normpath(os.path.join(here, '..', 'scripts'))]
+roots = [here]
+SKIP = ('.git', '.claude')
 def scan():
     out = {}
     for r in roots:
         for d, dirs, files in os.walk(r):
+            dirs[:] = [x for x in dirs if x not in SKIP or d != r]
             for f in files + dirs:
                 p = os.path.join(d, f)
                 try: st = os.lstat(p)
@@ -43,6 +44,6 @@ elif cmd == 'check':
         elif p not in new: bad.append('deleted   ' + p)
         elif old[p] != new[p]: bad.append('modified  ' + p)
     for b in bad: print('TREE GUARD:', b)
-    print('tree guard: %s' % ('source tree and original media untouched'
+    print('tree guard: %s' % ('source tree untouched'
         if not bad else '%d CHANGES' % len(bad)))
     sys.exit(1 if bad else 0)

@@ -63,7 +63,7 @@ def main():
     bd, btype = os.path.abspath(sys.argv[1]), sys.argv[2]
     work = os.path.join(bd, 'depcheck')
     shutil.rmtree(work, ignore_errors=True)
-    tree = os.path.join(work, 'tree', 'modernization')
+    tree = os.path.join(work, 'tree')
     out = os.path.join(work, 'build', btype)
     os.makedirs(tree); os.makedirs(out)
     shutil.copytree(os.path.join(root, 'src'), os.path.join(tree, 'src'))

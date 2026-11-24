@@ -32,7 +32,7 @@ import sys
 import tempfile
 
 here = os.path.dirname(os.path.abspath(__file__))
-project = os.path.dirname(os.path.dirname(here))
+project = os.path.dirname(here)
 # The variable STRATA_CHECK_TOOLS names another copy of the script (a file
 # of the scripts folder), which is how the mutations of the test are tried.
 script = os.path.join(project, 'scripts', os.environ.get(

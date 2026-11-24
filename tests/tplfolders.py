@@ -42,8 +42,8 @@ here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, here)
 import tui
 
-modernization = os.path.dirname(here)
-shipped = os.path.join(modernization, 'templates')
+tree = os.path.dirname(here)
+shipped = os.path.join(tree, 'templates')
 build = os.environ.get('STRATA_BUILD_DIR', '')
 stred = os.environ.get('STRED', os.path.join(build, 'term', 'stred'))
 helpf = os.environ.get('STRATA_HELP', os.path.join(build, 'strata.hlp'))
@@ -68,7 +68,7 @@ def compile_driver(src, out):
     """Build tests/tplfinddrv.c with the file src (a copy of src/tplfind.c)."""
     r = subprocess.run(
         ['cc', '-std=gnu11', '-DSTRATA_DEBUG', '-iquote',
-         os.path.join(modernization, 'src'),
+         os.path.join(tree, 'src'),
          os.path.join(here, 'tplfinddrv.c'), src, '-o', out],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if r.returncode != 0:
@@ -221,7 +221,7 @@ def lookup_failures(drv, label):
 
 
 # ---- (a) and (b): the lookups ------------------------------------------
-srcfile = os.path.join(modernization, 'src', 'tplfind.c')
+srcfile = os.path.join(tree, 'src', 'tplfind.c')
 src_text = open(srcfile).read()
 drv = os.path.join(tmp, 'drv')
 compile_driver(srcfile, drv)
