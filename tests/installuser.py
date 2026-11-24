@@ -131,7 +131,20 @@ def go(args, cwd=work, e=None):
 
 
 # ---- the release directory ------------------------------------------------
-st, out = run([script, '--build-dir', build, '--make-release', rel], env,
+# A release holds every manual and the PDF file of every manual (it is a
+# fatal error to make one without), so the release is made from a build
+# directory of stand-ins: the programs, the help file and the version of the
+# real build, and the PDF files of the manuals as files of a few bytes.
+relbuild = os.path.join(tmp, 'release-build')
+os.makedirs(os.path.join(relbuild, 'manual', 'pdf'))
+for n in ('term', 'x11', 'strata.hlp', 'version'):
+    if os.path.exists(os.path.join(build, n)):
+        os.symlink(os.path.join(build, n), os.path.join(relbuild, n))
+manual_list = run([script, '--list-manuals'], env, work)[1].split('\n')
+for n in [ln.split()[1] for ln in manual_list if ln.startswith('pdf ')]:
+    with open(os.path.join(relbuild, 'manual', 'pdf', n), 'w') as f:
+        f.write('%PDF-1.4\n% a stand-in for a manual\n%%EOF\n')
+st, out = run([script, '--build-dir', relbuild, '--make-release', rel], env,
               work)
 all_output.append(out)
 check('release: the release directory is made from the build directory',

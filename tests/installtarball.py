@@ -101,6 +101,42 @@ env = {'PATH': os.environ['PATH'], 'HOME': home, 'LANG': 'C',
        'TMPDIR': os.path.join(tmp, 'tmp'),
        'SOURCE_DATE_EPOCH': '1700000000'}
 
+# The list of the manuals that a release delivers: the one list of the install
+# script.
+st, out = run([os.path.join(scripts, 'strata-install'), '--list-manuals'],
+              env, work)
+listed_docs = [ln.split()[1] for ln in out.split('\n')
+               if ln.startswith('document ')]
+listed_pdfs = [ln.split()[1] for ln in out.split('\n')
+               if ln.startswith('pdf ')]
+FAKE_PDF = '%PDF-1.4\n% a stand-in for a manual\n%%EOF\n'
+
+
+def fake_build(path, pdfs=None, manual=True):
+    """A build directory of stand-ins: the programs, the help file and the
+    version of the real build (symbolic links), and the PDF files of the
+    manuals that pdfs names (all of them by default) as files of a few bytes.
+    The real build directory is not changed, so that the manual that a
+    developer has made there stays as it is."""
+    os.makedirs(path)
+    for n in ('term', 'x11', 'strata.hlp', 'version'):
+        if os.path.exists(os.path.join(build, n)):
+            os.symlink(os.path.join(build, n), os.path.join(path, n))
+    if manual:
+        os.makedirs(os.path.join(path, 'manual', 'pdf'))
+        for n in (listed_pdfs if pdfs is None else pdfs):
+            with open(os.path.join(path, 'manual', 'pdf', n), 'w') as f:
+                f.write(FAKE_PDF)
+
+    return path
+
+
+# From here on the tarball is made from a build directory of stand-ins; the
+# plain build, which writes into the real build directory, is checked there.
+realbuild = build
+fbroot = os.path.join(tmp, 'fbroot')
+build = fake_build(os.path.join(fbroot, btype))
+
 version = open(os.path.join(build, 'version')).readline().strip()
 safe = re.sub(r'[^A-Za-z0-9._-]+', '-', version)
 if btype != 'release':
@@ -141,29 +177,35 @@ benv = dict(os.environ)
 build_script = os.path.join(scripts, 'strata-build')
 
 
-def tarballs():
-    return sorted(n for n in os.listdir(build) if n.endswith('.tar.xz'))
+def tarballs(directory=None):
+    d = directory or build
+    return sorted(n for n in os.listdir(d) if n.endswith('.tar.xz'))
 
 
 # Every tarball of an earlier run (another commit has another name) goes
 # first: the plain build must leave none.
-for n in os.listdir(build):
+for n in os.listdir(realbuild):
     if n.startswith('strata-') and (n.endswith('.tar.xz') or
                                     n.endswith('.tar.xz.sha256')):
-        os.remove(os.path.join(build, n))
+        os.remove(os.path.join(realbuild, n))
 st, out = run([build_script], benv, work)
 check('request: a plain strata-build (the target all) leaves no tarball in '
-      'the build directory', st == 0 and tarballs() == [], (st, tarballs()))
+      'the build directory', st == 0 and tarballs(realbuild) == [],
+      (st, tarballs(realbuild)))
 
 # The build writes the file version again when the commit has changed since
 # the programs were built; the name of the tarball follows the file.
-version = open(os.path.join(build, 'version')).readline().strip()
+version = open(os.path.join(realbuild, 'version')).readline().strip()
 safe = re.sub(r'[^A-Za-z0-9._-]+', '-', version)
 if btype != 'release':
     safe += '-' + btype
 name = 'strata-' + safe
 tarball = os.path.join(build, name + '.tar.xz')
 sumfile = tarball + '.sha256'
+
+# The commands that make the tarball use the build directory of stand-ins.
+renv = dict(benv)
+benv = dict(benv, STRATA_BUILD_ROOT=fbroot, STRATA_BUILD_DIR=build)
 st, out = run([build_script, 'install-tarball'], benv, work)
 check('request: strata-build install-tarball makes the tarball and its '
       'checksum file', st == 0 and os.path.isfile(tarball) and
@@ -228,6 +270,14 @@ except (OSError, tarfile.TarError) as e:
 names = [m[0] for m in members]
 tops = sorted(set(n.split('/')[0] for n in names))
 check('content: one top-level directory, %s' % name, tops == [name], tops)
+check('content: every manual document and the PDF file of every manual are in '
+      'the payload',
+      listed_docs != [] and listed_pdfs != [] and
+      all((name + '/payload/share/strata/doc/' + d) in names
+          for d in listed_docs) and
+      all((name + '/payload/share/strata/pdf/' + d) in names
+          for d in listed_pdfs),
+      [n for n in names if '/doc/' in n or '/pdf/' in n][:12])
 check('content: the install script, the payload and INSTALL.txt are in it',
       all((name + '/' + n) in names for n in
           ('strata-install', 'payload/bin/stred', 'payload/bin/str',
@@ -320,6 +370,172 @@ check('version: a build with no supported version makes no tarball and the '
       not [n for n in os.listdir(fake) if n.endswith('.xz')] and
       len(out.strip().split('\n')) == 1, out)
 
+
+# ---- the manuals are required ----------------------------------------------
+tree_docs = sorted(n[:-4] for n in os.listdir(os.path.join(tree, 'manual',
+                                                           'doc'))
+                   if n.endswith('.doc') and 'strata-file-format' not in n)
+check('manuals: the list is the documents of manual/doc that the install '
+      'delivers (all but the specification of the file formats)',
+      sorted(d[:-4] for d in listed_docs) == tree_docs,
+      (listed_docs, tree_docs))
+check('manuals: every manual has a PDF file in the list, except the part '
+      'terminal-keys that is a part of the Reference Manual',
+      sorted(d[:-4] for d in listed_pdfs) ==
+      sorted(set(tree_docs) - {'terminal-keys'}), listed_pdfs)
+
+COMMAND = 'scripts/strata-build manual'
+
+
+def left_over(directory):
+    """What a refused run must not leave in the build directory."""
+    return [n for n in os.listdir(directory)
+            if n.endswith('.tar.xz') or n.endswith('.sha256') or
+            n == 'image']
+
+
+def refused(tarball_script, directory, what, install=None):
+    """Run the tarball script on a build directory with something missing;
+    return (True, '') when it is refused as a fatal error that names what is
+    missing and the command that makes the manuals, and leaves nothing."""
+    e = dict(env)
+    if install is not None:
+        e['STRATA_INSTALL_SCRIPT'] = install
+    st, out = run([tarball_script, directory, btype], e, work)
+    problems = []
+    if st != 1:
+        problems.append('status %d' % st)
+    if 'FATAL ERROR' not in out:
+        problems.append('no FATAL ERROR')
+    if what not in out:
+        problems.append('does not name %s' % what)
+    if COMMAND not in out:
+        problems.append('does not give the command')
+    if left_over(directory):
+        problems.append('left over: %s' % left_over(directory))
+
+    return (not problems, problems or out)
+
+
+tarball_script = os.path.join(scripts, 'strata-install-tarball')
+victim = 'cheat.pdf'
+
+d = fake_build(os.path.join(tmp, 'f-missing'),
+               [n for n in listed_pdfs if n != victim])
+ok, why = refused(tarball_script, d, victim)
+check('fatal: one PDF file missing: refused, the file is named and the '
+      'command is given, and nothing is left', ok, why)
+
+d = fake_build(os.path.join(tmp, 'f-empty'))
+open(os.path.join(d, 'manual', 'pdf', victim), 'w').close()
+ok, why = refused(tarball_script, d, victim)
+check('fatal: an empty PDF file: refused, the file is named', ok, why)
+
+d = fake_build(os.path.join(tmp, 'f-text'))
+with open(os.path.join(d, 'manual', 'pdf', victim), 'w') as f:
+    f.write('this is not a PDF file\n')
+ok, why = refused(tarball_script, d, victim)
+check('fatal: a file that does not begin with %PDF: refused, the file is '
+      'named', ok, why)
+
+d = fake_build(os.path.join(tmp, 'f-none'), manual=False)
+ok, why = refused(tarball_script, d, 'strata-reference-manual.pdf')
+check('fatal: the manual is not built at all: refused, every PDF file is '
+      'named', ok and all(n in run([tarball_script, d, btype], env,
+                                    work)[1] for n in listed_pdfs), why)
+
+# A document that is missing from the tree of the sources: a scratch project
+# with the scripts and a manual/doc that lacks one document.
+sp = os.path.join(tmp, 'sp')
+os.makedirs(os.path.join(sp, 'scripts'))
+os.makedirs(os.path.join(sp, 'manual', 'doc'))
+for n in ('strata-install-tarball', 'strata-install', 'INSTALL-USER.txt'):
+    shutil.copy2(os.path.join(scripts, n), os.path.join(sp, 'scripts', n))
+for n in listed_docs:
+    if n != 'GettingStarted.doc':
+        shutil.copy2(os.path.join(tree, 'manual', 'doc', n),
+                     os.path.join(sp, 'manual', 'doc', n))
+d = fake_build(os.path.join(tmp, 'f-doc'))
+ok, why = refused(os.path.join(sp, 'scripts', 'strata-install-tarball'), d,
+                  'GettingStarted.doc')
+check('fatal: a manual document missing from the sources: refused, the '
+      'document is named', ok, why)
+
+# 'strata-build install' with no manual built is fatal and gives the command.
+root4 = os.path.join(tmp, 'root4')
+d4 = fake_build(os.path.join(root4, btype), manual=False)
+e4 = dict(benv, STRATA_BUILD_ROOT=root4, STRATA_BUILD_DIR=d4)
+st, out = run([build_script, 'install'], e4, work)
+check('fatal: strata-build install with no manual built is fatal, gives the '
+      'command, and makes no tarball', st == 1 and 'FATAL ERROR' in out and
+      COMMAND in out and not left_over(d4), out[-300:])
+
+# strata-install itself: a note without the option, a fatal error with it.
+d5 = fake_build(os.path.join(tmp, 'f-install'), manual=False)
+pre5 = os.path.join(tmp, 'usr5')
+st, out = run([os.path.join(scripts, 'strata-install'), '--build-dir', d5,
+               '--no-prereqs', '--prefix', pre5], env, work)
+check('install: without --require-manuals a missing manual is a note and the '
+      'install is made', st == 0 and 'PDF files are not built' in out and
+      os.path.isdir(pre5), out[-300:])
+pre6 = os.path.join(tmp, 'usr6')
+st, out = run([os.path.join(scripts, 'strata-install'), '--build-dir', d5,
+               '--no-prereqs', '--prefix', pre6, '--require-manuals'], env,
+              work)
+check('install: with --require-manuals a missing manual is fatal and nothing '
+      'is installed', st == 1 and 'FATAL ERROR' in out and
+      not os.path.exists(pre6), out[-300:])
+rel7 = os.path.join(tmp, 'rel7')
+st, out = run([os.path.join(scripts, 'strata-install'), '--build-dir', d5,
+               '--make-release', rel7], env, work)
+check('install: a release directory made without the manuals is fatal and '
+      'nothing is made', st == 1 and 'FATAL ERROR' in out and
+      not os.path.exists(rel7), out[-300:])
+
+# The check of the result: an install script that leaves a PDF file out of
+# the payload (the check before the payload passes) makes a tarball that does
+# not hold every manual; that is fatal, and the tarball is removed.
+spoil_dir = os.path.join(tmp, 'spoiled')
+os.makedirs(spoil_dir)
+
+
+def spoiled_install(fname, old, new):
+    """A copy of the install script with one rule spoiled, that still takes
+    the documents, the templates and the samples from the real source tree;
+    return its path, or None when the text of the rule is not found."""
+    data = open(os.path.join(scripts, 'strata-install')).read()
+    if old not in data:
+        return None
+    data = data.replace(old, new, 1)
+    data = data.replace('tree_dir="${project_dir}"', 'tree_dir="%s"' % tree, 1)
+    path = os.path.join(spoil_dir, fname)
+    open(path, 'w').write(data)
+    os.chmod(path, 0o755)
+
+    return path
+
+
+INSTALL_LINE = ('    install -m 755 -- "${BASH_SOURCE[0]}" '
+                '"${out}/strata-install"')
+drop = spoiled_install(
+    'drops-a-pdf', INSTALL_LINE,
+    '    rm -f -- "${out}/payload/share/strata/pdf/cheat.pdf"\n' +
+    INSTALL_LINE)
+
+
+def result_checked(tarball_script_path):
+    """True when a tarball with a manual left out is refused and removed."""
+    d = fake_build(tempfile.mkdtemp(prefix='f-', dir=tmp) + '/b')
+    e = dict(env, STRATA_INSTALL_SCRIPT=drop)
+    st, out = run([tarball_script_path, d, btype], e, work)
+
+    return (st == 1 and 'does not hold every manual' in out and
+            'cheat.pdf' in out and not left_over(d))
+
+
+check('result: a tarball that lacks a manual is fatal and is removed',
+      drop is not None and result_checked(tarball_script), drop)
+
 # ---- the mutations ---------------------------------------------------------
 mut = os.path.join(tmp, 'mut', 'scripts')
 os.makedirs(mut)
@@ -391,16 +607,19 @@ spot = '        echo "  X11:      ${build}/x11/stred and ${build}/x11/str"\n'
 if spot in data:
     open(mb, 'w').write(data.replace(
         spot, spot + '        "${STRATA_ROOT}/scripts/strata-install-tarball" '
-        '"${build}" "${STRATA_BUILD_TYPE:-debug}"\n', 1))
-    for n in tarballs():
+        '"${STRATA_TEST_FAKE_BUILD}" "${STRATA_BUILD_TYPE:-debug}"\n', 1))
+    # The spoiled default build makes the tarball of the build directory of
+    # stand-ins, which holds the manuals, so that the tarball is made.
+    for n in tarballs(build):
         os.remove(os.path.join(build, n))
-    for p in (sumfile,):
-        if os.path.exists(p):
-            os.remove(p)
-    st, out = run([mb], benv, work)
+    st, out = run([mb], dict(renv, STRATA_TEST_FAKE_BUILD=build), work)
     check('mutation: a build script that makes the tarball in the default '
-          'build leaves one, so the check of the request fails',
-          tarballs() != [])
+          'build makes one, which the check of the request refuses',
+          tarballs(build) != [])
+    for n in os.listdir(realbuild):
+        if n.startswith('strata-') and (n.endswith('.tar.xz') or
+                                        n.endswith('.tar.xz.sha256')):
+            os.remove(os.path.join(realbuild, n))
 else:
     check('mutation: the text of the end of the default build is in the '
           'build script', False)
@@ -420,6 +639,58 @@ check('mutation: an install script with the test for bash after the set '
       'lines fails the check of the place', not (0 <= mt.find(
           '${BASH_VERSION:-}') < mt.find('set -o pipefail;')))
 restore('strata-install')
+
+
+# ---- the mutations of the rule about the manuals ---------------------------
+layer1 = ('"${install_script}" --build-dir "${build_dir}" --check-manuals || '
+          'exit 1\n')
+restore('strata-install-tarball')
+data = open(os.path.join(mut, 'strata-install-tarball')).read()
+start = data.find('if [ -n "${absent}" ]; then')
+end = data.find('\nfi\n', start) + 4
+layer3_gone = data[:start] + data[end:]
+layer1_gone = data.replace(layer1, '', 1)
+check('mutation: the texts of the checks are in the tarball script',
+      layer1 in data and start > 0 and end > start)
+
+
+def copy_tarball_script(text, fname):
+    path = os.path.join(spoil_dir, fname)
+    open(path, 'w').write(text)
+    os.chmod(path, 0o755)
+    shutil.copy2(os.path.join(scripts, 'INSTALL-USER.txt'),
+                 os.path.join(spoil_dir, 'INSTALL-USER.txt'))
+
+    return path
+
+
+# The check of the result removed: the tarball with a manual left out stays.
+no3 = copy_tarball_script(layer3_gone, 'strata-install-tarball')
+check('mutation: a tarball script without the check of the result makes the '
+      'tarball that lacks a manual, so the test of the result fails',
+      not result_checked(no3))
+
+# The checks before the payload removed, and the option not passed: only the
+# check of the result is left, and it does not give the command.
+no1 = copy_tarball_script(layer1_gone, 'strata-install-tarball')
+no2 = spoiled_install('without-option',
+                      '--no-prereqs --quiet --require-manuals',
+                      '--no-prereqs --quiet')
+d = fake_build(os.path.join(tmp, 'f-mut-a'),
+               [n for n in listed_pdfs if n != victim])
+check('mutation: a tarball script without the check before the payload, and '
+      'an install script that does not pass --require-manuals, still stop '
+      'but not with the message that gives the command, so the test fails',
+      no2 is not None and not refused(no1, d, victim, no2)[0])
+
+# The option not passed: a release directory is made without the manuals.
+d = fake_build(os.path.join(tmp, 'f-mut-b'),
+               [n for n in listed_pdfs if n != victim])
+rel8 = os.path.join(tmp, 'rel8')
+st, out = run([no2, '--build-dir', d, '--make-release', rel8], env, work)
+check('mutation: an install script that does not pass --require-manuals makes '
+      'a release directory without a PDF file, so the check fails',
+      no2 is not None and st == 0 and os.path.exists(rel8))
 
 # The tarball of the mutations is not kept: make it again as it should be,
 # with the time of the commit and not the time of this test.

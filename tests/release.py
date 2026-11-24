@@ -34,6 +34,11 @@ Strata is needed.  The tests check that:
   - a failure after the tag was made removes the tag, the worktree and the
     build directory, and removes no tag that it did not make, also when the
     tag appears between the check and the creation;
+  - the manuals are made between the build and the tarball (the stand-in of
+    the build logs the order: build, manual, install), the PDF files are
+    named in the output, a failure of the manual build is rolled back like
+    any other, and a machine without the tools of the manual (LaTeX) is
+    refused at the start with nothing changed;
   - a tagged checkout whose version is not the version is an error;
   - the tool run with --dry-run in the real repository changes nothing.
 
@@ -112,13 +117,25 @@ def git(repo, *args):
 STUB_BUILD = '''#!/bin/bash
 set -e
 while [ "${1:-}" = "-j" ]; do shift 2; done
+log() { echo "${1}" >> "${STRATA_BUILD_DIR}/order.log"; }
 if [ "${#}" -eq 0 ]; then
     mkdir -p "${STRATA_BUILD_DIR}"
     "${STRATA_ROOT}/scripts/strata-version" > "${STRATA_BUILD_DIR}/version"
     VERSION_LINE
+    log build
+    exit 0
+fi
+if [ "${1}" = "manual" ]; then
+    MANUAL_FAILING
+    log manual
+    mkdir -p "${STRATA_BUILD_DIR}/manual/pdf"
+    for n in GettingStarted cheat strata-reference-manual; do
+        echo "%PDF-1.4" > "${STRATA_BUILD_DIR}/manual/pdf/${n}.pdf"
+    done
     exit 0
 fi
 if [ "${1}" = "install" ]; then
+    log install
     FAILING
     exec "${STRATA_ROOT}/scripts/strata-install-tarball" \\
         "${STRATA_BUILD_DIR}" release
@@ -131,16 +148,23 @@ set -e
 build="${1}"
 version="$(head -n 1 "${build}/version")"
 name="strata-${version}"
-mkdir -p "${build}/stage/${name}"
-echo "payload" > "${build}/stage/${name}/payload"
+mkdir -p "${build}/stage/${name}/payload/share/strata/pdf"
+echo "payload" > "${build}/stage/${name}/payload/file"
+cp "${build}"/manual/pdf/*.pdf \\
+    "${build}/stage/${name}/payload/share/strata/pdf/" 2>/dev/null || true
 tar -C "${build}/stage" -cJf "${build}/${name}.tar.xz" "${name}"
 (cd "${build}" && sha256sum "${name}.tar.xz" > "${name}.tar.xz.sha256")
 '''
 
 
-def stub_build(failing=False, version_line=''):
-    return (STUB_BUILD.replace('FAILING', 'exit 3' if failing else ':')
+def stub_build(failing=False, version_line='', manual_failing=False):
+    return (STUB_BUILD.replace('MANUAL_FAILING',
+                               'exit 4' if manual_failing else ':')
+            .replace('FAILING', 'exit 3' if failing else ':')
             .replace('VERSION_LINE', version_line or ':'))
+
+
+STUB_CHECK_TOOLS = '#!/bin/bash\nexit 0\n'
 
 
 class Repo:
@@ -162,6 +186,8 @@ class Repo:
         write(os.path.join(r, 'scripts', 'strata-release'), tool_text, 0o755)
         write(os.path.join(r, 'scripts', 'strata-install-tarball'),
               STUB_TARBALL, 0o755)
+        write(os.path.join(r, 'scripts', 'check-tools'), STUB_CHECK_TOOLS,
+              0o755)
         git(r, 'init', '-q', '-b', 'dev')
         self.commit('good', stub_build())
         self.good = git(r, 'rev-parse', 'HEAD')
@@ -175,6 +201,8 @@ class Repo:
         self.race = git(r, 'rev-parse', 'HEAD')
         self.commit('failing install', stub_build(failing=True))
         self.failing = git(r, 'rev-parse', 'HEAD')
+        self.commit('failing manual', stub_build(manual_failing=True))
+        self.mfailing = git(r, 'rev-parse', 'HEAD')
         self.commit('wrong version', stub_build(version_line=
                     'echo 9.9.9 > "${STRATA_BUILD_DIR}/version"'))
         self.wrong = git(r, 'rev-parse', 'HEAD')
@@ -299,6 +327,14 @@ def scenarios(tool_text, label):
           label, os.path.join(built, 'strata-2.0.0.tar.xz') in out and
           'SHA-256:' in out and r.good in out and 'pushes nothing' in out,
           out)
+    order = read(os.path.join(built, 'order.log')).split()
+    check('%s: the manuals are made between the build and the tarball: the '
+          'order is build, manual, install' % label,
+          order == ['build', 'manual', 'install'], order)
+    check('%s: the output names the PDF files that are in the tarball' %
+          label, 'manual PDF files in the tarball' in out and
+          all(n + '.pdf' in out for n in ('GettingStarted', 'cheat',
+                                          'strata-reference-manual')), out)
     check('%s: the scratch worktree is removed afterwards' % label,
           not os.path.exists(r.wt_dir('2.0.0')) and r.worktrees() == 1)
     check('%s: nothing is pushed: the remote has no tag' % label,
@@ -331,6 +367,29 @@ def scenarios(tool_text, label):
           and 'removed the tag v3.0.0' in out, (st, out, r.tags()))
     check('%s: the rollback left the tags that existed before' % label,
           'v5.0.0' in r.tags() and 'v2.0.0' in r.tags())
+
+    # ---- the manual build fails: the rollback -------------------------------
+    st, out = r.release('3.1.0', '--commit', r.mfailing)
+    check('%s: a failed manual build removes the tag, the worktree and the '
+          'build directory and says so' % label, st == 1 and
+          'v3.1.0' not in r.tags() and not os.path.exists(r.wt_dir('3.1.0'))
+          and not os.path.exists(r.build_dir('3.1.0')) and r.worktrees() == 1
+          and 'removed the tag v3.1.0' in out, (st, out, r.tags()))
+
+    # ---- the tools of the manual are missing: refused at the start ----------
+    tools = os.path.join(r.dir, 'scripts', 'check-tools')
+    write(tools, '#!/bin/bash\necho "missing: pdflatex"\nexit 1\n', 0o755)
+    tags_before = r.tags()
+    for extra in ([], ['--dry-run']):
+        st, out = r.release('4.1.0', *extra)
+        check('%s: missing tools of the manual%s are refused at the start, '
+              'the missing tool is shown, and nothing was changed' %
+              (label, ' (dry run)' if extra else ''), st == 1 and
+              'pdflatex' in out and 'nothing was changed' in out and
+              r.tags() == tags_before and r.worktrees() == 1 and
+              not os.path.exists(r.wt_dir('4.1.0')) and
+              not os.path.exists(r.build_dir('4.1.0')), (st, out))
+    git(r.dir, 'checkout', '--', 'scripts/check-tools')
 
     # ---- a wrong version in the tagged checkout -----------------------------
     st, out = r.release('8.0.0', '--commit', r.wrong)
@@ -399,6 +458,11 @@ def spoiled(text):
          'git -C "${project_dir}" push origin "v${version}" >/dev/null '
          '2>&1 || true;\n'
          'echo "strata-release: building v${version} in ${worktree} ...";'),
+        ('the manual build is removed',
+         '       ./scripts/strata-build -j "${jobs}" manual &&\n', ''),
+        ('the check of the tools of the manual is removed',
+         'if ! tools_report="$("${check_tools}" --build --run --quiet '
+         '2>&1)"; then', 'if false; then'),
         ('the check of the existing tag is removed',
          'if git -C "${project_dir}" rev-parse -q --verify \\\n'
          '       "refs/tags/v${version}" >/dev/null 2>&1; then',

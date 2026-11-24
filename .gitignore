@@ -1,3 +1,5 @@
 __pycache__/
 *.pyc
 .backup/
+*.pdf
+!tests/data/pics/bad.pdf

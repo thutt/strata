@@ -16,8 +16,10 @@
 #     Prerequisites and Tutorial documents are not in the build, the
 #     published documents or the installed files;
 #   - the options of the install script that the text lists are the options
-#     of its help (the option --build-dir belongs to the build and is not in
-#     the text), and the commands that the text tells to run exist;
+#     of its help (the options --build-dir, --list-manuals, --check-manuals
+#     and --require-manuals belong to the build and the making of a release
+#     and are not in the text), and the commands that the text tells to run
+#     exist;
 #   - the text never sends a user to the build script, has no section about
 #     building, shows no sample document and no list of the files of an
 #     install, and does not mention the File Format documents;
@@ -143,10 +145,19 @@ def doc_options(t):
                                  re.MULTILINE)))
 
 
+# The options of the install script that are for the developers: they belong
+# to the build and to the making of a release, and the guide for the user
+# does not list them.
+DEVELOPER_OPTIONS = {"--build-dir", "--list-manuals", "--check-manuals",
+                     "--require-manuals"}
+
+
 def help_options(t):
-    """The options of the help of the install script, without --help."""
+    """The options of the help of the install script, without --help and
+    the options of the developers."""
     return sorted(set(re.findall(r"^\s+(?:-[a-z], )?(--[a-z-]+)", t["help"],
-                                 re.MULTILINE)) - {"--help", "--build-dir"})
+                                 re.MULTILINE)) - {"--help"} -
+                  DEVELOPER_OPTIONS)
 
 
 def check_options(t):
