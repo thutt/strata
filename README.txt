@@ -335,14 +335,16 @@ Building
 --------
 
 Build products never go into the source tree. Everything is built through a
-sourced setup script, scripts/setup in the project directory (next to
-modernization/), that names the build directory:
+sourced setup script, scripts/setup in the project directory (the root of the
+repository, where the Makefile is), that names the build directory.  (The
+sources were in the directory modernization until 2026-11-24; they are at the
+root of the tree now.)
 
-    # the directory holding scripts/ and modernization/
+    # the root of the repository
     cd <project>
     source scripts/setup /tmp/strata             # the debug build
     source scripts/setup -b release /tmp/strata  # or release, or asan
-    cd modernization && make
+    make
 
 Or, from any directory once setup has been sourced, strata-build (in scripts/,
 on PATH) does the build: strata-build builds everything, strata-build x11 adds

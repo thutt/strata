@@ -9,7 +9,7 @@
 # every message is unique in the whole system, and every message has a
 # variable part, so that it shows what failed, with which file or value, and
 # why.  It also checks that no program calls the system log.  Run it from
-# the directory modernization:
+# the root of the source tree:
 #
 #     python3 -I -B tests/logmsgs.py
 #

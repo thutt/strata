@@ -12,7 +12,7 @@ writable), leaves the Editor and quits str.  Then the log of the run is
 read: the lines of str, the Editor and the Printer are in it, in the order
 in which things happened, each with the time, the level, the program and its
 process number, the file and the line of the call and a message.  Run from
-the directory modernization:
+the root of the source tree:
 
     STR=BUILD/term/str python3 -I -B tests/runlog.py
 """

@@ -17,7 +17,7 @@ DPI defaults to 100, so 100 percent zoom is the same size as "dvipng -D
 100".  Needs libx11-dev, libfreetype-dev, libpng-dev, and a TeX installation
 with kpsewhich; pictures of PDF and EPS files also need ghostscript (gs) and
 pdfinfo.  The compiler options are the WARN list of
-modernization/Makefile (-std=c11 -Werror -Wall -Wextra -Wpedantic ...); the
+Makefile of the source tree (-std=c11 -Werror -Wall -Wextra -Wpedantic ...); the
 program builds with no warnings.  Setting DVIVIEW_TIMING=1 prints the draw
 time of each page on stderr; DVIVIEW_NOPFB=1 skips the Type 1 fonts so that
 the PK fallback is used (this is how the PK fallback is tested).

@@ -94,7 +94,7 @@ and it says why.  The sample has no footnote and no credit.
 To use another text
 -------------------
 Put the text into samples/fonts/specimen.txt (or into any other file) and
-make the sample again.  From the directory modernization:
+make the sample again.  From the root of the source tree:
 
     python3 -I -B tests/mkfonts.py
 
