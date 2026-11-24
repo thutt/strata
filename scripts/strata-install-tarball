@@ -11,6 +11,12 @@
 # release.  No signature is made or planned: the SHA-256 checksum is the
 # integrity check of a release.
 #
+# A release holds every manual and the PDF file of every manual (the list is
+# that of strata-install --list-manuals).  Without one of them it is a fatal
+# error: the exit status is 1, the message names what is missing and the
+# command that makes it, and no tarball, no checksum file and no release
+# directory is left.  The manuals are made by scripts/strata-build manual.
+#
 # Usage: strata-install-tarball BUILD_DIR [BUILD_TYPE]
 #
 # The variable STRATA_INSTALL_SCRIPT names another install script; the tests
@@ -19,6 +25,10 @@
 set -o pipefail;
 set -o nounset;
 set -o errexit;
+
+# The command that makes the manuals, which the install script shows in its
+# fatal error (the install script is delivered and does not name this tool).
+export STRATA_MANUALS_HINT="scripts/strata-build manual"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 project_dir="$(dirname "${script_dir}")"
@@ -30,6 +40,41 @@ function die
     echo "strata-install-tarball: ${*}" >&2
     exit 1
 }
+
+# What this run has made, so that a failure leaves none of it.
+made_root=""
+made_stage=""
+made_tarball=""
+made_list=""
+finished="no"
+
+
+# Removes the release directory, the tarball and the checksum file when the
+# run does not finish.
+function cleanup
+{
+    if [ -n "${made_list}" ]; then
+        rm -f -- "${made_list}"
+    fi
+
+    if [ "${finished}" = "yes" ]; then
+        return 0
+    fi
+
+    if [ -n "${made_tarball}" ]; then
+        rm -f -- "${made_tarball}" "${made_tarball}.sha256"
+    fi
+
+    if [ -n "${made_stage}" ]; then
+        rm -rf -- "${made_stage}"
+    fi
+
+    if [ -n "${made_root}" ]; then
+        rmdir -- "${made_root}" 2>/dev/null || true
+    fi
+}
+
+trap cleanup EXIT
 
 
 [ ${#} -ge 1 ] || die "usage: strata-install-tarball BUILD_DIR [BUILD_TYPE]"
@@ -50,6 +95,10 @@ case "${version}" in
         exit 0
         ;;
 esac
+
+# Every manual and the PDF file of every manual must be there: this is checked
+# before anything is made, and a missing one is a fatal error that names it.
+"${install_script}" --build-dir "${build_dir}" --check-manuals || exit 1
 
 # The name: letters, digits, dot, underscore and hyphen; any run of other
 # characters (a space, a slash) becomes one hyphen.
@@ -76,7 +125,12 @@ stage="${release_root}/${name}"
 tarball="${build_dir}/${name}.tar.xz"
 
 rm -rf -- "${stage}"
+if [ ! -d "${release_root}" ]; then
+    made_root="${release_root}"
+fi
+
 mkdir -p -- "${release_root}"
+made_stage="${stage}"
 
 "${install_script}" --build-dir "${build_dir}" \
     --make-release "${stage}" --quiet
@@ -85,9 +139,39 @@ sed -e "s/@NAME@/${safe}/g" "${script_dir}/INSTALL-USER.txt" \
 chmod 644 -- "${stage}/INSTALL.txt"
 
 rm -f -- "${tarball}" "${tarball}.sha256"
+made_tarball="${tarball}"
 tar --sort=name --owner=0 --group=0 --numeric-owner "--mtime=@${epoch}" \
     -C "${release_root}" -cf - "${name}" | xz -9e > "${tarball}"
+
+# The second check, on the tarball itself: its payload holds every manual
+# document and every PDF file of a manual.
+made_list="$(mktemp "${TMPDIR:-/tmp}/strata-tarball-list.XXXXXX")"
+tar -tJf "${tarball}" > "${made_list}"
+absent=""
+
+while read -r kind file; do
+    case "${kind}" in
+        document) path="${name}/payload/share/strata/doc/${file}" ;;
+        pdf) path="${name}/payload/share/strata/pdf/${file}" ;;
+        *) continue ;;
+    esac
+
+    if ! grep -qxF -- "${path}" "${made_list}"; then
+        absent="${absent}  missing from the tarball: ${path}"$'\n'
+    fi
+done < <("${install_script}" --list-manuals)
+
+if [ -n "${absent}" ]; then
+    {
+        echo "strata-install-tarball: FATAL ERROR: the tarball does not hold" \
+             "every manual, so it was removed:"
+        printf '%s' "${absent}"
+    } >&2
+    exit 1
+fi
+
 (cd "${build_dir}" && sha256sum "${name}.tar.xz" > "${name}.tar.xz.sha256")
+finished="yes"
 
 echo "strata-install-tarball: made ${tarball}"
 echo "strata-install-tarball: made ${tarball}.sha256"

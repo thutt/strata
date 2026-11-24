@@ -55,6 +55,7 @@ assume_yes="no"
 list_only="no"
 dry_run="no"
 quiet="no"
+require_manuals="no"
 
 # The programs that --with-prereqs fetches go into this tree below the prefix
 # (the uninstall removes the tree as a whole).
@@ -83,6 +84,19 @@ scratch=""
 term_programs=(str stred strprint)
 x11_programs=(str stred)
 
+# The manuals that a release delivers.  The documents are in manual/doc of
+# the source tree; their PDF files are made by the manual build into
+# manual/pdf of the build directory.  The variable STRATA_MANUALS_HINT may
+# name the command that makes them; it is shown in the fatal error.  The
+# document terminal-keys is a part of the Reference Manual and has no PDF of
+# its own.  The specification of the file formats is never delivered.  This
+# is the one list: the tarball is made from it, and tests/installtarball.py
+# proves that it is the set of the documents that the install delivers.
+manual_documents=(GettingStarted cheat cheat-short mathcheat
+                  strata-reference-manual terminal-keys)
+manual_pdfs=(GettingStarted cheat cheat-short mathcheat
+             strata-reference-manual)
+
 
 # Prints the help text.
 function usage
@@ -92,6 +106,8 @@ usage: strata-install [options]
        strata-install --uninstall [--prefix DIR] [--destdir DIR]
        strata-install --check
        strata-install --list-prereqs
+       strata-install --list-manuals
+       strata-install --check-manuals --build-dir DIR
 
 Install Strata under a prefix, or remove it again.
 
@@ -133,6 +149,16 @@ Install Strata under a prefix, or remove it again.
                     an administrator the packages with their estimated
                     sizes.  Nothing is installed.
   --dry-run         Say what would be done and do nothing.
+  --require-manuals Stop with a fatal error when a manual or the PDF file of
+                    a manual is missing from the source tree or from the
+                    build directory (an install from a build directory
+                    otherwise makes a note and goes on).  The tarball is made
+                    with this option.
+  --list-manuals    Print the manuals that a release delivers, one line for
+                    each file: "document NAME.doc" or "pdf NAME.pdf".
+  --check-manuals   Only check that every manual and every PDF file of a
+                    manual is there (see --build-dir); a fatal error and
+                    the exit status 1 when one is missing.
   --quiet           Print only warnings and errors.
   -h, --help        This text.
 
@@ -664,6 +690,78 @@ function in_list
 }
 
 
+# Prints one line for each manual that is not as it must be: a document
+# of the source tree that is missing, or a PDF file of the build directory
+# that is missing, empty or not a PDF file (it does not begin with %PDF).
+function manual_problems
+{
+    local name
+    local file
+
+    for name in "${manual_documents[@]}"; do
+        file="${tree_dir}/manual/doc/${name}.doc"
+        if [ ! -f "${file}" ]; then
+            echo "missing: ${file}"
+        elif [ ! -s "${file}" ]; then
+            echo "empty: ${file}"
+        fi
+    done
+
+    for name in "${manual_pdfs[@]}"; do
+        file="${build_dir}/manual/pdf/${name}.pdf"
+        if [ ! -f "${file}" ]; then
+            echo "missing: ${file}"
+        elif [ ! -s "${file}" ]; then
+            echo "empty: ${file}"
+        elif [ "$(head -c 4 -- "${file}")" != "%PDF" ]; then
+            echo "not a PDF file: ${file}"
+        fi
+    done
+}
+
+
+# Stops with a fatal error that names every manual that is not as it must
+# be, when there is one, and says how to make them.
+function require_all_manuals
+{
+    local problems
+
+    problems="$(manual_problems)"
+
+    if [ -z "${problems}" ]; then
+        return 0
+    fi
+
+    {
+        echo "strata-install: FATAL ERROR: the manuals are not all there," \
+             "so nothing was made:"
+        echo "${problems}" | sed -e 's/^/  /'
+        echo "Make the manuals and their PDF files first, in the build" \
+             "directory${STRATA_MANUALS_HINT:+, with:}"
+        if [ -n "${STRATA_MANUALS_HINT:-}" ]; then
+            echo "  ${STRATA_MANUALS_HINT}"
+        fi
+    } >&2
+
+    exit 1
+}
+
+
+# Prints the manuals that a release delivers.
+function list_manuals
+{
+    local name
+
+    for name in "${manual_documents[@]}"; do
+        echo "document ${name}.doc"
+    done
+
+    for name in "${manual_pdfs[@]}"; do
+        echo "pdf ${name}.pdf"
+    done
+}
+
+
 # Installs the programs, the help file, the documents, the templates and
 # the samples from a build directory and the source tree of a developer.
 function install_from_tree
@@ -675,6 +773,10 @@ function install_from_tree
     local sample
     local tpl
     local tpl_rel
+
+    if [ "${require_manuals}" = "yes" ]; then
+        require_all_manuals
+    fi
 
     for prog in "${term_programs[@]}"; do
         put_file 755 "${build_dir}/term/${prog}" "${prefix}/bin/${prog}"
@@ -1755,7 +1857,7 @@ function do_make_release
     mkdir -p -- "${stage}"
 
     "${BASH_SOURCE[0]}" --build-dir "${build_dir}" --destdir "${stage}" \
-        --prefix /release --no-prereqs --quiet
+        --prefix /release --no-prereqs --quiet --require-manuals
 
     rm -f -- "${stage}/release/share/strata/manifest" \
         "${stage}/release/bin/strata-run"
@@ -1842,6 +1944,18 @@ while [ ${#} -gt 0 ]; do
             mode="list-prereqs"
             shift
             ;;
+        --list-manuals)
+            mode="list-manuals"
+            shift
+            ;;
+        --check-manuals)
+            mode="check-manuals"
+            shift
+            ;;
+        --require-manuals)
+            require_manuals="yes"
+            shift
+            ;;
         --dry-run)
             dry_run="yes"
             shift
@@ -1918,6 +2032,11 @@ case "${mode}" in
         do_make_release
         ;;
     check) run_check ;;
+    list-manuals) list_manuals ;;
+    check-manuals)
+        [ -n "${build_dir}" ] || die "--check-manuals needs --build-dir."
+        require_all_manuals
+        ;;
     list-prereqs)
         list_only="yes"
         with_prereqs_asked="yes"

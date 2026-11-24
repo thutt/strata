@@ -58,7 +58,15 @@
 #                            strata-NAME.tar.xz.sha256, where NAME is the
 #                            version of the build (and the build type when
 #                            it is not release).  The programs must be built
-#                            first; no other target makes the tarball.
+#                            first; no other target makes the tarball.  It is a
+#                            fatal error to make it without every manual and
+#                            the PDF file of every manual: run
+#                            'strata-build manual' first.
+#     strata-build manual    Make the manuals and their PDF files in the
+#                            build directory (manual/doc and manual/pdf
+#                            below it), with manual/build.sh; it needs LaTeX
+#                            and the programs built.  It writes nothing into
+#                            the source tree.  Never part of 'all'.
 #
 # Every other argument is handed to make as a target name, so 'strata-build
 # help' always shows the current list.  The options -j N, -jN and --jobs=N
@@ -173,6 +181,17 @@ case "${1}" in
     install-tarball)
         exec "${STRATA_ROOT}/scripts/strata-install-tarball" "${build}" \
             "${STRATA_BUILD_TYPE:-debug}"
+        ;;
+    manual)
+        shift
+        if [ ${#} -ne 0 ]; then
+            die "manual takes no arguments: it makes the manuals and their" \
+                "PDF files in ${build}/manual."
+        fi
+        echo "strata-build: making the manuals and their PDF files in" \
+             "${build}/manual"
+        exec env -u PDFDIR -u MANUAL_OUT XBIN="${build}/x11" \
+            STRATA_BUILD_DIR="${build}" "${STRATA_ROOT}/manual/build.sh" all
         ;;
 esac
 

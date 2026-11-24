@@ -9,7 +9,9 @@
 #
 # VERSION is the release number X.Y.0, for example 1.0.0 or 1.1.0.  The
 # release is the first number.  The tool is a tool of the developers: it is
-# never shipped, and it never pushes, signs or contacts a network.
+# never shipped, and it never pushes, signs or contacts a network.  It makes
+# the manuals and their PDF files too (they are in every release), so it
+# needs LaTeX: this is checked before anything is changed.
 #
 set -o pipefail;
 set -o nounset;
@@ -40,8 +42,10 @@ function usage
 usage: strata-release VERSION [OPTIONS]
 
 Makes the annotated tag vVERSION on a commit, builds that tag in a scratch
-worktree and makes the install tarball strata-VERSION.tar.xz with its
-checksum file strata-VERSION.tar.xz.sha256.
+worktree, makes the manuals and their PDF files (it needs LaTeX), and makes
+the install tarball strata-VERSION.tar.xz with its checksum file
+strata-VERSION.tar.xz.sha256.  A tarball without the manuals is a fatal
+error.
 
   VERSION             the release number X.Y.0, for example 1.0.0 or 1.1.0.
   --commit REV        the commit to tag (default HEAD).
@@ -199,6 +203,20 @@ top="$(git -C "${project_dir}" rev-parse --show-toplevel 2>/dev/null)" ||
 [ "$(cd "${top}" && pwd -P)" = "${project_dir}" ] ||
     die "${project_dir} is only a part of the repository at ${top}.";
 
+# The manuals and their PDF files are made with LaTeX, and a release without
+# them is a fatal error: the tools that build the programs and print with them
+# must be there, and this is checked before anything is changed.
+check_tools="${project_dir}/scripts/check-tools";
+[ -x "${check_tools}" ] ||
+    die "${check_tools} is not there: the tools of the manual cannot be" \
+        "checked.";
+
+if ! tools_report="$("${check_tools}" --build --run --quiet 2>&1)"; then
+    echo "${tools_report}" >&2;
+    die "the tools that make the manuals and their PDF files are missing" \
+        "(see above): nothing was changed.";
+fi
+
 # The first check of all: the tag.  A tag of any kind counts.
 if git -C "${project_dir}" rev-parse -q --verify \
        "refs/tags/v${version}" >/dev/null 2>&1; then
@@ -303,8 +321,9 @@ if ! ( cd "${worktree}" &&
        set +o nounset &&
        source scripts/setup -b release "${build_root}" >/dev/null &&
        ./scripts/strata-build -j "${jobs}" &&
+       ./scripts/strata-build -j "${jobs}" manual &&
        ./scripts/strata-build -j "${jobs}" install ); then
-    die "the build or the tarball failed.";
+    die "the build, the manuals or the tarball failed.";
 fi
 
 built="${build_root}/release";
@@ -334,6 +353,12 @@ tops="$(tar -tJf "${tarball}" | awk -F/ '{ print $1 }' | sort -u)";
 [ "${tops}" = "${name}" ] ||
     die "the tarball must hold the one directory ${name}, not: ${tops}.";
 
+pdf_list="$(tar -tJf "${tarball}" |
+            grep -E "^${name}/payload/share/strata/pdf/.+\.pdf$" |
+            sed -e 's#.*/##')" || pdf_list="";
+[ -n "${pdf_list}" ] ||
+    die "the tarball holds no PDF file of a manual.";
+
 if [ -n "${output_dir}" ]; then
     mkdir -p -- "${output_dir}";
     cp -- "${tarball}" "${sumfile}" "${output_dir}/";
@@ -348,6 +373,8 @@ echo "commit:   ${rev}";
 echo "tarball:  ${tarball}";
 echo "checksum: ${sumfile}";
 echo "SHA-256:  $(cut -d' ' -f1 "${sumfile}")";
+echo "manual PDF files in the tarball:";
+echo "${pdf_list}" | sed -e 's/^/  /';
 if [ -n "${output_dir}" ]; then
     echo "copied to ${output_dir}";
 fi
