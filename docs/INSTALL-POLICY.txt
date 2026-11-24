@@ -141,6 +141,57 @@ strata-development-1-230cb783-debug.tar.xz, which is for tests only.  A
 build whose version is UNSUPPORTED BUILD CONFIGURATION makes no tarball; the
 build prints one line that says so and is no failure.
 
+The manuals are required.  It is a fatal error to make the tarball without
+the manuals and the PDF files of the manuals (owner decision, 2026-11-24).
+The manuals are the documents GettingStarted, cheat, cheat-short, mathcheat,
+strata-reference-manual and terminal-keys of manual/doc in the source tree
+(committed files), and the PDF files of the first five (terminal-keys is a
+part of the Reference Manual and has none of its own) in manual/pdf of the
+build directory.  The specification of the file formats is never delivered.
+The one list is in scripts/strata-install (strata-install --list-manuals
+prints it); the tarball script and the tests use it, so that they cannot
+differ, and tests/installtarball.py proves that it is the set of the
+documents that the install delivers.  The checks are three, made in
+different places so that none hides the failure of another:
+
+  1. Before anything is made, scripts/strata-install-tarball asks the install
+     script to check the manuals (strata-install --check-manuals): every
+     document must exist and not be empty, and every PDF file must exist, not
+     be empty, and begin with the bytes %PDF.
+  2. The release directory is made with the option --require-manuals of the
+     install script, which makes the same check and stops before it copies a
+     file; 'strata-install --make-release DIR' always passes it.
+  3. After the tarball is made, its list (tar -tJf) must hold every manual
+     document in share/strata/doc and every PDF file in share/strata/pdf of
+     its payload.
+
+A failure of any check is a FATAL ERROR: the status is 1, the message on the
+error output names every file that is missing, empty or not a PDF file and
+gives the command that makes them, and no tarball, no checksum file and no
+release directory is left.  The command is 'scripts/strata-build manual'
+(the install script is delivered and does not name the tool of the
+developers: the tarball script gives it the command in the variable
+STRATA_MANUALS_HINT).  'strata-build install' does not make the manuals
+itself.  The ordinary install of a developer from a build directory
+(strata-install --build-dir DIR, without --require-manuals) still only makes a
+note and goes on when the PDF files are not there.
+
+'strata-build manual' makes the manuals and their PDF files into the build
+directory (manual/doc and manual/pdf below it) with manual/build.sh, target
+all (the Reference Manual and the guides and cards), with the build directory
+as the place of the products and the programs of the x11 build directory.  It
+needs the programs built and LaTeX with the packages of the Printer
+(scripts/check-tools --build --run lists what is needed).  It writes nothing
+into the source tree: the targets publish and pics, which do, are not used.
+It is never a part of the default build.
+
+No PDF file is ever committed.  The PDF files are products of the build.
+.gitignore has the rule *.pdf and one exception, tests/data/pics/bad.pdf (a
+file of a few bytes that is not a PDF file on purpose, which a picture test
+reads), and tests/pdfguard.py fails when any other file with the suffix .pdf
+is tracked or when the rules are missing.  The documents of manual/doc, which
+the build writes by 'publish' (never PDF files), stay committed.
+
 The same bytes every time.  The entries are sorted by name, belong to root
 (numeric owner 0), and have one time: SOURCE_DATE_EPOCH when it is set, else
 the time of the commit of the source, else the time of the run.  The
@@ -181,7 +232,14 @@ bytes of a second run, the install and the uninstall as an ordinary user from
 the unpacked tarball, the start with sh, the text of INSTALL.txt and the
 build with no supported version.  It checks that a plain 'strata-build'
 leaves no tarball in the build directory and that 'strata-build install-tarball'
-makes it.  It also checks that a tarball made without the fixed time, an
+makes it, that every manual and PDF file is in the tarball, and that a missing,
+empty or damaged PDF file, a missing document, and a build with no manual
+built are each a fatal error that names the file and gives the command and
+leaves nothing, with a copy of the scripts without each check failing a
+check.  The tarball is made from a build directory of stand-ins (links to the
+real programs and PDF files of a few bytes), so the test needs no LaTeX and
+leaves the manuals of a developer alone.  It also checks that a tarball
+made without the fixed time, an
 INSTALL.txt that says sh, an install script without the test for bash and a
 build script that makes the tarball in the default build each fail a check.
 
@@ -210,7 +268,10 @@ changes nothing.
 The tool makes these steps, in this order.
 
 1. It checks, and changes nothing: the version number; the tools git, tar, xz
-   and sha256sum; that it is in a repository whose top is the project
+   and sha256sum; that the tools of the manual are there
+   (scripts/check-tools --build --run: LaTeX and the packages of the Printer;
+   without them a release cannot have its PDF files, and the tool refuses
+   before the tag is made); that it is in a repository whose top is the project
    directory; first of all that the tag vVERSION does not exist (a tag of any
    kind, annotated or not, counts; and a remote that has it counts too); that
    the commit exists and carries no release tag already (a commit is one
@@ -226,14 +287,17 @@ The tool makes these steps, in this order.
    git, so that git itself refuses a tag that appeared in between.
 3. It makes a scratch worktree of the tag, detached, in
    .claude/worktrees/release-VERSION, sources scripts/setup there for a
-   release build, and runs strata-build and then strata-build install.
+   release build, and runs strata-build, then strata-build manual (the
+   manuals and their PDF files, with LaTeX), and then strata-build install.
 4. It checks the result: the version of the checkout is VERSION (so that the
    file is called strata-VERSION.tar.xz and not after a branch), the files
    strata-VERSION.tar.xz and strata-VERSION.tar.xz.sha256 exist, sha256sum -c
-   passes, and the tarball holds the one directory strata-VERSION.
+   passes, the tarball holds the one directory strata-VERSION and holds PDF
+   files of the manuals (the tarball script has checked every one).
 5. It removes the scratch worktree, copies the files to the --output
    directory when there is one, and prints the tag, the commit, the paths,
-   the SHA-256 value and, as text only, the next steps.
+   the SHA-256 value, the names of the manual PDF files in the tarball and,
+   as text only, the next steps.
 
 If a step after the tag was made fails, the tool removes the tag it made, the
 scratch worktree and the build directory it made, and says so.  It never

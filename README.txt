@@ -353,7 +353,8 @@ to make.  It does not run if the build directory is unset or inside the source
 tree.
 
 The install tarball is a build artifact that is made only on request:
-strata-build install-tarball (after the programs are built) makes
+strata-build install-tarball (after the programs are built, and after the
+manuals are built with strata-build manual) makes
 strata-NAME.tar.xz and its checksum file strata-NAME.tar.xz.sha256 in the
 build directory, where NAME is the version of the build (for example
 strata-development-1-230cb783.tar.xz; a build type other than release is
@@ -362,7 +363,13 @@ The default build, strata-build with no argument, does not make it.  The
 tarball holds one directory with the install script, the payload and
 INSTALL.txt, and two runs from the same commit give the same file.  A reader
 checks the download with sha256sum -c, unpacks it with tar -xJf and runs
-bash strata-install; INSTALL.txt says so.  A release has no
+bash strata-install; INSTALL.txt says so.  It is a fatal error to make the
+tarball without every manual and the PDF file of every manual: the message
+names what is missing and the command, and no tarball is left.
+'strata-build manual' makes
+the manuals and their PDF files in the build directory (it needs LaTeX) and
+writes nothing into the source tree.  No PDF file is committed (.gitignore and
+tests/pdfguard.py).  A release has no
 signature: the SHA-256 value is its integrity check, and a reader who wants
 more builds from the source.  docs/INSTALL-POLICY.txt has the rules.
 
@@ -370,7 +377,9 @@ A developer makes a release with scripts/strata-release, which takes the
 release number X.Y.0 as its argument: 'scripts/strata-release 1.0.0 --dry-run'
 checks everything and changes nothing, and 'scripts/strata-release 1.0.0'
 makes the annotated tag v1.0.0 on HEAD (or on the commit of --commit), builds
-that tag in a scratch worktree and leaves strata-1.0.0.tar.xz and its
+that tag in a scratch worktree, makes the manuals and their PDF files (it
+needs LaTeX, which it checks before it makes the tag) and leaves
+strata-1.0.0.tar.xz and its
 .sha256 file in the build directory (default /tmp/strata-release-1.0.0/
 release; --output DIR copies them).  An existing tag is refused and never
 changed, a failure removes the tag that the tool made, and nothing is pushed
