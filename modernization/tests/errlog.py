@@ -437,16 +437,16 @@ check('Alt-F12 grid: no Print Error in the Marker Commands',
 check('Alt-F12 on a Print Error shows its text, read only',
     'read only' in d[1] and 'is not valid' in d[1], d[1])
 
-# Remove Error, Remove Print Errors, and not piling up.
-menu = ['F12', 'text:P'] + ['RIGHT'] * 6 + ['ENTER']
+# Remove, Remove All (Print, Errors), and not piling up.
+menu = ['F12', 'text:P', 'text:E'] + ['RIGHT'] * 3 + ['ENTER']
 d = edit(env, path, FINAL + ['text:' + fresh_out(run), 'INS'] + WAIT +
-    ['C-F8', 'F12', 'text:P'] + ['RIGHT'] * 5 + ['ENTER', 'show'] +
+    ['C-F8', 'F12', 'text:P', 'text:E'] + ['RIGHT'] * 2 + ['ENTER', 'show'] +
     ['C-F8', 'show'] + menu + ['show', 'C-F8', 'show'])
-check('Remove Error: one removed (the message shows so)',
+check('Remove: one removed (the message shows so)',
     'Print Error removed' in msgline(d[0]), msgline(d[0]))
 check('after one is removed there are 3 of them',
     'of 3' in msgline(d[1]), msgline(d[1]))
-check('Remove Print Errors: all removed', 'print errors removed' in
+check('Remove All: all removed', 'print errors removed' in
     msgline(d[2]) or '3 print errors removed' in msgline(d[2]),
     msgline(d[2]))
 check('Ctrl-F8 with none: "No print errors"',

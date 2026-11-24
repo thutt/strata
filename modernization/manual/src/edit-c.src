@@ -14,8 +14,9 @@
 .ix Ctrl-F9
 .ix Ctrl-F8
 .ix Ctrl-F7
-.ix Remove Error
-.ix Remove Print Errors
+.ix Remove, Print Error
+.ix Remove All, Print Errors
+.ix Errors menu
 .ix Print Error, find
 Find Next Error is the second method of Search.  Where the method Text looks
 for a string of characters ({n:edit-b-search}), the method Print Error looks
@@ -37,18 +38,15 @@ Way | What it does
  previous one; after a search for text, the next or previous match.
 {k:F9} | The Search panel, with the fields Search for, Find, Direction, Match
  Case, Whole Word and Attribute.
-{k:F12}, Print, Next Error | The same as {k:Ctrl-F8}.
-{k:F12}, Print, Previous Error | The same as {k:Ctrl-F7}.
-{k:F12}, Print, Remove Error | Take out the Print Error marker under the cursor.
-{k:F12}, Print, Remove Print Errors | Take out every Print Error marker.
+{k:F12}, Print, Errors, Next | The same as {k:Ctrl-F8}.
+{k:F12}, Print, Errors, Previous | The same as {k:Ctrl-F7}.
+{k:F12}, Print, Errors, Remove | Take out the Print Error marker under the cursor.
+{k:F12}, Print, Errors, Remove All | Take out every Print Error marker.
 .end
-The four entries are the fourth to the seventh of the Print menu
+The four entries make the submenu Errors of the Print menu
 ({n:print-menu}), after Draft, Final and Preview.
-They are reached with {k:F12}, {k:P} and the cursor keys.  The menu bar
-is wider than a screen of 80 columns, so the entries that do not fit
-(Remove Error and Remove Print Errors) continue on a second row; every
-entry is whole, and the name of the mode stays alone at the right end of
-the first row.  The hint line shows which entry is chosen and shows "Find
+They are reached with {k:F12}, {k:P}, {k:E} and the cursor keys; the Print row
+and the Errors row each fit in one row of the menu bar.  The hint line shows which entry is chosen and shows "Find
 the next Print Error [Ctrl-F8]", "Find the previous Print Error [Ctrl-F7]",
 "Remove the Print Error under the cursor" and "Remove all the Print Errors".
 Search itself is reached with the keys and the panel; Find Next Error also
@@ -142,9 +140,9 @@ the string of the last Search or Replace, and the message is "Found" or
 "Nothing to search for: use Search (F9) first".
 
 .h3 Taking markers out
-Remove Error takes out the marker under the cursor and shows "Print Error
+Remove takes out the marker under the cursor and shows "Print Error
 removed"; with the cursor on anything else the message line shows "The cursor
-is not on a Print Error".  Remove Print Errors takes out all of them and shows
+is not on a Print Error".  Remove All takes out all of them and shows
 "4 print errors removed" ("1 print error removed"), or "No print errors" when
 there
 were none.  {k:Del} with the cursor on a marker and {k:Backspace} just after
@@ -156,10 +154,10 @@ Message | Meaning
 Print error N of M: MESSAGE [code] | The cursor is on the Nth of M markers.
 Wrapped to the start.  Print error 1 of M: ... | The search went round the end.
 Wrapped to the end.  Print error M of M: ... | The search went round the start.
-No print errors | None in the document (also from Remove Print Errors).
-Print Error removed | Remove Error did its work.
-The cursor is not on a Print Error | Remove Error with the cursor elsewhere.
-N print errors removed | Remove Print Errors took out N markers.
+No print errors | None in the document (also from Remove All).
+Print Error removed | Remove did its work.
+The cursor is not on a Print Error | Remove with the cursor elsewhere.
+N print errors removed | Remove All took out N markers.
 Nothing to search for: use Search ({k:F9}) first | {k:Ctrl-F9} before any text search.
 Found | The text was found.
 Found: the search wrapped to the start of the document | The text was found after the search went round the end of the document.

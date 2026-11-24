@@ -14,9 +14,10 @@
 # Copyright (c) 2026 Logic Magicians Software
 
 """The layout of the three sheets that are folded in three: the key leaflet
-(3 pages), the card of the first forty keys (1 page) and the Math Symbols card
-(2 pages).  Each is made from its source (manual/src), printed by the Printer
-and measured with pdftotext -bbox.  The sheet is landscape letter paper, 792
+(4 pages, the fourth lists the F12 menu routes), the card of the first forty
+keys (1 page) and the Math Symbols card (2 pages).  Each is made from its
+source (manual/src), printed by the Printer and measured with pdftotext
+-bbox.  The sheet is landscape letter paper, 792
 points wide.  The rules between the panels are at a third and two thirds of
 the sheet (264 and 528 points), so the text of the second and the third panel
 begins 6 points (the space of the column) after them, on every page; no text
@@ -39,7 +40,7 @@ if not os.path.exists(strprint):
     print('SKIP: build strprint first')
     sys.exit(0)
 
-SHEETS = (('cheat', 3), ('cheat-short', 1), ('mathcheat', 2))
+SHEETS = (('cheat', 4), ('cheat-short', 1), ('mathcheat', 2))
 MARGIN = 0.2 * 72       # The margin of the sheets, 0.2 inch.
 SPACE = 6.0             # The space of a column on each side (tabcolsep).
 MM5 = 5 / 25.4 * 72 - 1.5

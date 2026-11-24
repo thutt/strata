@@ -134,7 +134,7 @@ print-border-page | script | strprint | border.doc | 2026-11-19 | manual/scenes/
 print-colour | script | strprint | colour.doc | 2026-11-17 | manual/scenes/colour-pdf.sh PRINTER manual/samples/colour.doc OUT.png
 print-draft-panel | scene | stred | report.doc | 2026-11-21 | build.sh pics print-draft-panel
 print-envelope-sample | script | strprint | sample-envelope-us-ca-10.doc | 2026-11-20 | manual/scenes/envelope-pdf.sh PRINTER samples/envelopes/sample-envelope-us-ca-10.doc OUT.png
-print-errlog | script | strprint | print_errors.doc | 2026-11-20 | manual/scenes/errlog-pdf.sh PRINTER tests/data/print_errors.doc OUT.png
+print-errlog | script | strprint | print_errors.doc | 2026-11-23 | manual/scenes/errlog-pdf.sh PRINTER tests/data/print_errors.doc OUT.png
 print-failed-message | scene | stred | print_errors.doc | 2026-11-16 | build.sh pics print-failed-message
 print-failed-page | script | strprint | print_errors.doc | 2026-11-20 | manual/scenes/failed-pdf.sh PRINTER tests/data/print_errors.doc OUT.png
 print-final-panel | scene | stred | report.doc | 2026-11-21 | build.sh pics print-final-panel
@@ -143,9 +143,9 @@ print-index-page | script | strprint | indexlist.doc | 2026-11-17 | manual/scene
 print-label-sample | script | strprint | sample-label-us-5160.doc | 2026-11-21 | manual/scenes/envelope-pdf.sh PRINTER samples/labels/sample-label-us-5160.doc OUT.png
 print-letter-page | script | strprint | complaint-to-utility-us.doc | 2026-11-19 | manual/scenes/letter-pdf.sh PRINTER samples/letters/complaint-to-utility-us.doc OUT.png
 print-lists-page | script | strprint | indexlist.doc | 2026-11-17 | manual/scenes/lists-pdf.sh PRINTER indexlist.doc OUT.png
-print-menu | scene | stred | report.doc | 2026-11-18 | build.sh pics print-menu
+print-menu | scene | stred | report.doc | 2026-11-23 | build.sh pics print-menu
 print-preview-doc-panel | scene | stred | report.doc | 2026-11-17 | build.sh pics print-preview-doc-panel
-print-preview-menu | scene | stred | report.doc | 2026-11-16 | build.sh pics print-preview-menu
+print-preview-menu | scene | stred | report.doc | 2026-11-23 | build.sh pics print-preview-menu
 print-viewer-failed | scene | stred | print_errors.doc | 2026-11-20 | build.sh pics print-viewer-failed
 print-viewer-first | scene | stred | showcase.doc | 2026-11-22 | build.sh pics print-viewer-first
 spell-ctrl-c | scene | stred | spelldemo.doc | 2026-11-19 | build.sh pics spell-ctrl-c

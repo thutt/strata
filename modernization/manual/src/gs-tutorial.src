@@ -258,8 +258,8 @@ queue of your system to send it to (the field shows {c:File only} until a queue
 is chosen).  Both need LaTeX.  The other fields hold the number of copies,
 whether to print on both sides, which pages or sections, and whether to keep a
 log of the errors.  The rest of the {b:Print} menu is for the errors that a
-print found: {b:Next Error}, {b:Previous Error}, {b:Remove Error} and {b:Remove
-Print Errors}.
+print found, in its submenu {b:Errors}: {b:Next}, {b:Previous}, {b:Remove} and
+{b:Remove All}.
 .h2 Preview [s6-preview]
 Preview shows the document as it will be printed, with its fonts, keycaps,
 pictures and equations.  Preview needs LaTeX and an X display.

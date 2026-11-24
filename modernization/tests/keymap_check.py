@@ -156,11 +156,12 @@ check('every command of fkeys[] (%d keys) has a line of the key list'
 check('no line of the key list has an unknown word', '  ?  ' not in
       a.stdout and ' ? ' not in a.stdout.split('1.2  Cursor')[0])
 
-# 6. The menu routes: every command without an entry has a proposal.
+# 6. The menu routes: every command with a function key has a route.
 part4 = a.stdout.split('PART 4.')[1]
-check('PART 4 lists the commands with no menu entry and a proposal for each',
-      'Commands with a function key and NO menu entry (24)' in part4 and
-      'Border ' in part4 and 'Tools, Library, Copy' in part4 and
+check('PART 4 lists the route of every command with a function key',
+      'Route in the F12 menu' in part4 and 'NO menu entry' not in part4 and
+      'F12, Edit, Layout, Border' in part4 and
+      'F12, Tools, Library, Copy' in part4 and 'F12, Help' in part4 and
       ' ?\n' not in part4)
 
 # 7. Mutations: each change that the tables do not know must be found.

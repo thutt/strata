@@ -60,7 +60,8 @@ Way | What it does
 {k:Shift-Ins} | Sub-section, without the list.
 {k:F8}, then Add column | Column, without the list.
 .end
-Append is not on the {k:F12} menu bar, and it has no panel.  When a terminal does
+Append is on the {k:F12} menu bar ({k:F12}, Edit, Parts, Append), and it has no
+panel of its own.  When a terminal does
 not hand {k:Alt-F2} to the Editor, the {k:Ctrl-F} list works everywhere.  Most
 terminals use {k:Shift-Ins} to paste the clipboard of the desktop and never
 hand it to the Editor: there, append a subsection from the list
@@ -202,7 +203,7 @@ Way | What it does
 .pic pictures/edit-a-join-menu.png 5 The list Join in a structured document.
 The list has two choices, Block and Section, and in an unstructured document
 one, Block.  The key {k:B} or {k:S} chooses at once; {k:Esc} cancels.  Join
-is not on the {k:F12} menu bar.
+is on the {k:F12} menu bar: {k:F12}, Edit, Parts, Join.
 .h4 Block
 Join, Block joins the block of the cursor and the block that follows it
 in the same section.

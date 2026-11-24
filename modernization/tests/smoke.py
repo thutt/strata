@@ -3418,12 +3418,12 @@ d = session(base, nk + ['text:Hello note', 'INS', 'wait', 'INS', 'wait',
     'LEFT', 'F1', 'wait', 'show'])
 check('help: F1 on a marker in the text shows the topic of the marker',
     'HELP: Note Marker' in d[0], d[0])
-d = session(base, ['F12', 'text:P'] + ['RIGHT'] * 3 + ['F1', 'wait', 'show'])
-check('help: F1 on the entry Next Error of the Print menu shows Print Errors',
+d = session(base, ['F12', 'text:P', 'text:E', 'F1', 'wait', 'show'])
+check('help: F1 on the entry Next of Print, Errors shows Print Errors',
     'HELP: Print Errors' in d[0], d[0])
-d = session(base, ['F12', 'text:P'] + ['RIGHT'] * 6 + ['wait', 'show'])
-check('the sixth Right in the Print menu reaches the last entry',
-    'Remove all the Print Errors' in d[0].split('\n')[2], d[0])
+d = session(base, ['F12', 'text:P', 'text:E'] + ['RIGHT'] * 3 + ['wait', 'show'])
+check('the third Right in Print, Errors reaches the last entry',
+    'Remove all the Print Errors' in d[0].split('\n')[1], d[0])
 d = session(base, ['F1', 'wait', 'show'])
 check('help: F1 on the Edit Screen without a marker still shows the screen',
     'HELP: Edit Screen' in d[0], d[0])
@@ -3475,10 +3475,11 @@ def menu_levels():
 
 
 # The Editor has no Shell entry: the top level of the menu tree is exactly
-# these six names, and no level of the tree has an entry of that name.
+# these seven names (Help is the entry that W29.2 added), and no level of
+# the tree has an entry of the name Shell.
 _top = [names for path, names in menu_levels() if path == []]
-check('the menu tree of the program has no Shell entry and six top entries',
-    _top == [['File', 'Global', 'Edit', 'Print', 'Tools', 'Quit']] and
+check('the menu tree of the program has no Shell entry and seven top entries',
+    _top == [['File', 'Global', 'Edit', 'Print', 'Tools', 'Help', 'Quit']] and
     all('Shell' not in names for _, names in menu_levels()), _top)
 
 
@@ -3486,22 +3487,19 @@ check('the menu tree of the program has no Shell entry and six top entries',
 # dimmed, did nothing and are gone (owner, 2026-11-18); no level of the tree
 # has an entry of either name.
 _print = [names for path, names in menu_levels() if path == ['Print']]
-check('the Print menu has seven entries and no Repaginate or Clear-pages',
-    _print == [['Draft', 'Final', 'Preview', 'Next Error', 'Previous Error',
-                'Remove Error', 'Remove Print Errors']] and
+check('the Print menu has four entries and no Repaginate or Clear-pages',
+    _print == [['Draft', 'Final', 'Preview', 'Errors']] and
     all('Repaginate' not in names and 'Clear-pages' not in names
         for _, names in menu_levels()), _print)
 d = session(base, ['F12', 'text:P', 'wait', 'show'])
 _rows = d[0].split('\n')
-check('the Print bar at 80 columns: seven whole entries on two rows and the '
-    'mode name alone at the end of the first',
-    _rows[0].startswith('Draft Final Preview Next Error Previous Error '
-    'Remove Error')
-    and _rows[0].rstrip().endswith('MENU-PRINT') and
-    _rows[0].split('MENU-PRINT')[0].rstrip().endswith('Remove Error') and
-    _rows[1].strip() == 'Remove Print Errors', d[0])
-d = session(base, ['F12', 'text:P', 'text:R', 'show'])
-check('the letter R in the Print menu chooses an entry that works: the '
+check('the Print bar at 80 columns: four whole entries on one row and the '
+    'mode name at the end of it, the hint on the second row',
+    _rows[0].startswith('Draft Final Preview Errors') and
+    _rows[0].rstrip().endswith('MENU-PRINT') and
+    'Print document in draft quality' in _rows[1], d[0])
+d = session(base, ['F12', 'text:P', 'text:E', 'text:R', 'show'])
+check('the letter R in Print, Errors chooses an entry that works: the '
     'menu closes and nothing says it is not available',
     'MENU' not in d[0].split('\n')[0] and
     'Not available in this version' not in d[0], d[0])
@@ -3553,8 +3551,8 @@ def boxes_whole(text):
 
 
 levels = menu_levels()
-check('menus: the program lists its menu tree (16 levels)',
-      len(levels) == 16 and ['Print'] in [lv[0] for lv in levels], levels)
+check('menus: the program lists its menu tree (23 levels)',
+      len(levels) == 23 and ['Print'] in [lv[0] for lv in levels], levels)
 mtop = [lv for lv in levels if lv[0] == []][0][1]
 
 for mcols in (80, 100, 132):

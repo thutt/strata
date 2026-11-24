@@ -215,9 +215,9 @@ Place | Meaning
 .ix Ctrl-F8
 .table 29 31
 Message | After
-{c:N print errors removed} | Remove Print Errors took out all of them.
-{c:No print errors} | Find Next Error, Find Previous Error and Remove Print
- | Errors: there are no Print Error markers in the document.
+{c:N print errors removed} | Remove All took out all of them.
+{c:No print errors} | Find Next Error, Find Previous Error and Remove All:
+ | there are no Print Error markers in the document.
 {c:No print errors.} | The end of the line of a good print when there was
  | none.
 {c:Print error N of M: TEXT} | Find Next Error went to the marker N of M; TEXT
@@ -225,7 +225,7 @@ Message | After
  | before it when the search went round.
 {c:Print Error (read only; Del removes it)} | The title of the box that shows
  | the text of a marker ({k:Alt-F12} on it).
-{c:Print Error removed} | Remove Error took out the marker under the cursor.
+{c:Print Error removed} | Remove took out the marker under the cursor.
 {c:PRINT FAILED: Preview shown in spite of errors of LaTeX: TEXT} | A Preview
  | whose pages LaTeX made in spite of an error of its own.
 {c:Print: no print errors} | After a Print that found none.
@@ -233,7 +233,7 @@ Message | After
  | Print that found errors: the number of markers made.
  | {c:Preview done: PRINT FAILED, N print errors (Ctrl-F8 finds the next)} after a Preview.  With
  | warnings only the words {c:PRINT FAILED, } are not there.
-{c:The cursor is not on a Print Error} | Remove Error with the cursor
+{c:The cursor is not on a Print Error} | Remove with the cursor
  | elsewhere.
 .end
 {x:print-errmarks} and {x:print-errline} describe the markers and the keys.

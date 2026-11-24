@@ -25,7 +25,9 @@ Terminal | Keys that it keeps | What to do
   | and the Menu key. | {k:Alt-F7} (Go To);
   |  | for {k:Ctrl--} (soft
   |  | hyphen) use the
-  |  | {k:Ctrl-F} list.
+  |  | {k:Ctrl-F} list;
+  |  | for {k:F1} use
+  |  | {k:F12}, Help.
 {c:tmux} | {k:Ctrl-B}, its command key (in | Press {k:Ctrl-B}
   | the Editor it is Bold).  {c:tmux} keeps | twice, or set another
   | what the terminal around it keeps. | command key in the

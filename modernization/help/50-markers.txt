@@ -24,6 +24,7 @@ Marker]], [[Page Break Marker]], [[Page Number and Section Markers]],
 Marker]], [[Print Errors]].
 
 = Marker Commands
+~ Menu:Edit:Insert:Marker
 ~ Alt-F12
 ~ Marker (Alt-F12)
 The table of the markers, in three columns.  Move with the arrow keys or press
@@ -344,10 +345,11 @@ condition.  None of the three is printed.
 ~ Marker:Print Error
 ~ Print Error (read only; Del removes it)
 ~ Print Error
-~ Menu:Print:Next Error
-~ Menu:Print:Previous Error
-~ Menu:Print:Remove Error
-~ Menu:Print:Remove Print Errors
+~ Menu:Print:Errors
+~ Menu:Print:Errors:Next
+~ Menu:Print:Errors:Previous
+~ Menu:Print:Errors:Remove
+~ Menu:Print:Errors:Remove All
 A Print Error is a note that the Editor leaves in the text where a Print or a
 Preview found something wrong: a picture whose file is not there, an equation
 that does not typeset, a character that no font has.  It carries the message and
@@ -355,6 +357,6 @@ the code.  You cannot make one by hand.
 
 - {Ctrl-F8} finds the next Print Error and {Ctrl-F7} the previous one.
 - {Del} removes the one under the cursor.
-- Remove Error and Remove Print Errors on the Print menu remove one or all.
+- Remove and Remove All in Print, Errors remove one or all.
 - Search can look for the next Print Error: set Find to Print Error in the
   [[Search]] panel.

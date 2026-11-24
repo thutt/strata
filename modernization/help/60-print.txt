@@ -1,8 +1,9 @@
 ; Printing and previewing.
 = Print Menu
 ~ Menu:Print
-The Print menu has Draft, Final and Preview for printing, and four entries for
-the Print Errors that a print finds.  {Ctrl-P} opens Print, Final directly.
+The Print menu has Draft, Final and Preview for printing, and the submenu Errors
+with four entries for the Print Errors that a print finds.  {Ctrl-P} opens
+Print, Final directly.
 
 See [[Print Draft]], [[Print]], [[Preview]] and [[Print Errors]].
 

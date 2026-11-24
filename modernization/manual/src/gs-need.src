@@ -155,7 +155,7 @@ underscore.  Run inside the {c:xterm} of the previous section, {c:tmux} takes
 one key of Strata, because {k:Ctrl-B} is its command key.
 .table 18 20 22
 Key the terminal takes | Strata command | Alternative Strata keybinding
-{k:Ctrl-B} | Bold on and off. | {k:Alt-F6}, the Attribute menu, then Bold.
+{k:Ctrl-B} | Bold on and off. | {k:F12}, Edit, Layout, Attribute, then Bold.
 .end
 The command key of {c:tmux} can be changed in the file {c:~/.tmux.conf}, for
 example with {c:set -g prefix C-]}, and {c:tmux} sends its own command key to
@@ -168,7 +168,7 @@ lists in the order of the key tables of this manual.  Each of them can be
 replaced by the alternative in the table.
 .table 18 20 22
 Key the terminal takes | Strata command | Alternative Strata keybinding
-{k:F1} | Help. | {k:Ctrl-F}, then Help.
+{k:F1} | Help. | {k:F12}, Help.
 {k:Shift-Insert} | Append a subsection. | {k:Alt-F2}, then Sub-section.
 {k:Shift-PageUp} | Previous section of the same level. | {k:Alt-F7}, then
  Previous section, of any level.
@@ -200,13 +200,15 @@ Way | What it does
  the key written beside it.  Choose a command with {k:Up}, {k:Down} and
  {k:Enter}.  The list also has the commands of {k:Alt-[}, {k:Alt-]} and the
  soft hyphen.
-{k:F12} | Opens the menu bar: File, Global, Edit, Print and Tools.  Undo, Redo,
- Learn, Next Error and Previous Error are in it with their keys.
+{k:F12} | Opens the menu bar: File, Global, Edit, Print, Tools, Help and
+ Quit.  Every command that has a function key is in it, with its key
+ beside it: Copy, which is {k:F3}, is {k:F12}, Edit, Block, Copy.
 {k:Alt-O} | Switches overtype.
 .end
-When your desktop or terminal keeps a key, press {k:Ctrl-F} and choose the
-command from the list.  When a key carries a command that is not in the list,
-such as {k:Ctrl-B} (Bold), the Attribute menu has it.  Press the key twice
+When your desktop or terminal keeps a key, press {k:F12} and choose the
+command from the menu, or press {k:Ctrl-F} and choose it from the list.  When a
+key carries a command that is not in either, such as {k:Ctrl-B} (Bold), the
+Attribute menu has it ({k:F12}, Edit, Layout, Attribute).  Press the key twice
 when tmux keeps it: {k:Ctrl-B}.
 .h2 Memory, time and disk space [resources]
 The memory and time numbers in this section were measured on a PC with an Intel

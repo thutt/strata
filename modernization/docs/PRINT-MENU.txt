@@ -300,8 +300,8 @@ has, a Keep that is not closed, an error that LaTeX reports ...).  The
 Error Log is at the end of the pages.  The Editor also reads the file that
 the Printer wrote and puts a PRINT ERROR marker at each place in the
 document (MARKERS.txt, "Print Error"), so that the errors can be found and
-fixed in the Editor: the Print menu has Next Error (Ctrl-F8), Previous
-Error (Ctrl-F7), Remove Error and Remove Print Errors, and the Search panel
+fixed in the Editor: the Print menu has the submenu Errors with Next
+(Ctrl-F8), Previous (Ctrl-F7), Remove and Remove All, and the Search panel
 (F9) can search for the next Print Error (Ctrl-F9 repeats the search).  The
 message line says how many ("Print: 3 print errors", "Print: no print
 errors").  A new Preview or Print replaces the markers that the same kind

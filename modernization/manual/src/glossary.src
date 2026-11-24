@@ -182,7 +182,7 @@ the term is described in full.  The entries are in alphabetical order.
 .term Preview | The command that typesets a part of the document with LaTeX and shows its pages in the Viewer, without keeping a file.  See {x:print-preview}.
 .term Print Error | A marker, made only by the Editor, that marks a fault found by Print or Preview and carries the message of the Printer.  See {x:markers-errors}.
 .term Print in Black and White | The field of the Print panels that prints every color of the print, pictures included, as a grey.  See {x:print-colors}.
-.term Print menu | The menu of {k:F12} with Draft, Final, Preview, Next Error, Previous Error, Remove Error and Remove Print Errors.  See {x:print-menu}.
+.term Print menu | The menu of {k:F12} with Draft, Final, Preview and Errors (Next, Previous, Remove, Remove All).  See {x:print-menu}.
 .term Printer | The program that makes a PDF, or the pages of a Preview, from a document, through LaTeX. See {x:print-strprint}.
 .term Printer field | The field of the Print panel that names the CUPS queue to which the PDF is sent; File only keeps the PDF. See {x:print-sending}.
 .term Printer marker | A marker that prints the name of the printer of the document.  See {x:marker-printer}.

@@ -1224,7 +1224,7 @@ pop-up lists and prompts that the editing commands open themselves.
 .pic pictures/edit-a-menubar.png 5.5 The menu bar opened with F12: the label of the bar is MENU, the bar names the menus and the second line explains the one selected.
 .pic pictures/edit-a-menubar-tools.png 5.5 The menu bar with Tools selected: the second line says what the selected entry holds.
 {k:F12} puts a bar over the top two rows of the screen.  The first row names
-the menus: File, Global, Edit, Print, Tools and Quit.  The second row
+the menus: File, Global, Edit, Print, Tools, Help and Quit.  The second row
 explains the entry that is selected.  At the right end of the first row is
 the label of the bar: MENU, and, as submenus open, MENU-EDIT, MENU-TOOLS and
 so on.  When the entries of a menu do not all fit in the first row, as with
@@ -1245,49 +1245,90 @@ and Down opens or runs the entry.  The entries are:
 Menu | Entries
 File | Save, Retrieve, New, Delete, Import, Export ({n:file}).
 Global | Format, Page, Typeface, Marker, Options, Named (Edit, Delete).
-Edit | Title, Structured or Unstructured, Section or Document, and Window
- (Open, Close, Adjust, Zoom-up, Zoom-down, Switch: {n:edit-b-window}).
-Print | Draft, Final, Preview (Document, Block, Section), and the Print
- Error entries Next Error, Previous Error, Remove Error and Remove Print
- Errors ({n:print}).
-Tools | Macros, Library, Spell, Thesaurus, Autosort, Count, Undo, Redo.
+Edit | Title, Structured or Unstructured, Section or Document, Window
+ (Open, Close, Adjust, Zoom-up, Zoom-down, Switch: {n:edit-b-window}), and the
+ four groups of commands Block, Parts, Layout and Insert ({n:edit-menu-routes}).
+Print | Draft, Final, Preview (Document, Block, Section), and the submenu
+ Errors with Next, Previous, Remove and Remove All for the Print Errors
+ ({n:print}).
+Tools | Macros, Library (Edit, Delete, Save, Retrieve, Copy, Cut, Paste),
+ Spell, Thesaurus, Autosort, Count, Undo, Redo, the group Find (Search,
+ Replace, Again, Go To) and Math ({n:edit-menu-routes}).
+Help | The help of the edit screen, as {k:F1} shows it.
 Quit | Leave the Editor ({n:edit-b-quit}).
 .end
 The bar of the menus fits in 80 columns.  The row of the entries of a menu
 that is wider than that, as the Print menu is, goes on a second row and the
 hint line is one row lower; {k:Right} reaches every entry and the hint line
 shows which one is chosen.  The letters of the entries are: Edit {k:T}, {k:S},
-{k:U}, {k:D} (Title, Section or Structured, Unstructured, Document); Tools
-{k:M}, {k:L}, {k:S}, {k:T}, {k:A}, {k:C}, {k:U}, {k:R} (Macros, Library, Spell,
-Thesaurus, Autosort, Count, Undo, Redo); Autosort {k:S} and {k:T} (Section,
-Table).
+{k:U}, {k:D} (Title, Section or Structured, Unstructured, Document), {k:W}
+(Window), {k:B}, {k:P}, {k:L}, {k:I} (Block, Parts, Layout, Insert); Tools
+{k:M}, {k:L}, {k:S}, {k:T}, {k:A}, {k:C}, {k:U}, {k:R}, {k:F} (Macros,
+Library, Spell, Thesaurus, Autosort, Count, Undo, Redo, Find); Autosort {k:S}
+and {k:T} (Section, Table).  When two entries of a menu begin with the same
+letter, the letter chooses the first of them and {k:Right} reaches the other:
+Math has the letter of Macros, and Cut has the letter of Copy.
 
-Most of the editing commands are keys and are not on the menu bar: Append is
-{k:Alt-F2}, Copy {k:F3}, Cut {k:F4}, Delete {k:Alt-F4}, Go To {k:Alt-F7} and
-Join {k:Alt-F3}; the keys that contract and expand are {k:Alt--}, {k:Alt-+}
-and {k:Alt-*}.  The other commands, and where to reach them, are:
+.h4 The commands of the function keys on the menu [edit-menu-routes]
+.ix Menu entries of the function keys
+.ix Function keys, entries on the menu
+Every command that has a function key also has an entry in the {k:F12} menu, so
+that a key that a terminal or a desktop keeps for itself still has a way.  An
+entry runs the command of its key, with the same panel or the same message
+that the key gives.  The entries are:
+.table 16 14 28
+Command | Key | Entry on the menu
+Help | {k:F1} | {k:F12}, Help
+Split | {k:F2} | {k:F12}, Edit, Parts, Split
+Copy | {k:F3} | {k:F12}, Edit, Block, Copy
+Cut | {k:F4} | {k:F12}, Edit, Block, Cut
+Paste | {k:F5} | {k:F12}, Edit, Block, Paste
+Format | {k:F6} | {k:F12}, Edit, Layout, Format
+Move | {k:F7} | {k:F12}, Edit, Block, Move
+Table | {k:F8} | {k:F12}, Edit, Layout, Table
+Search | {k:F9} | {k:F12}, Tools, Find, Search
+Math | {k:Ctrl-F2} | {k:F12}, Tools, Math
+Lib Copy | {k:Ctrl-F3} | {k:F12}, Tools, Library, Copy
+Lib Cut | {k:Ctrl-F4} | {k:F12}, Tools, Library, Cut
+Lib Paste | {k:Ctrl-F5} | {k:F12}, Tools, Library, Paste
+Case | {k:Ctrl-F6} | {k:F12}, Edit, Layout, Case
+Prev Error | {k:Ctrl-F7} | {k:F12}, Print, Errors, Previous
+Next Error | {k:Ctrl-F8} | {k:F12}, Print, Errors, Next
+Search Again | {k:Ctrl-F9} | {k:F12}, Tools, Find, Again
+Marker | {k:Ctrl-F12} | {k:F12}, Edit, Insert, Marker
+Append | {k:Alt-F2} | {k:F12}, Edit, Parts, Append
+Join | {k:Alt-F3} | {k:F12}, Edit, Parts, Join
+Delete | {k:Alt-F4} | {k:F12}, Edit, Block, Delete
+Overtype | {k:Alt-F5} | {k:F12}, Edit, Insert, Overtype
+Set Attribute | {k:Alt-F6} | {k:F12}, Edit, Layout, Attribute
+Go To | {k:Alt-F7} | {k:F12}, Tools, Find, Go To
+Border | {k:Alt-F8} | {k:F12}, Edit, Layout, Border
+Replace | {k:Alt-F9} | {k:F12}, Tools, Find, Replace
+.end
+The commands that already had an entry keep it: Learn ({k:Ctrl-F1}) is
+{k:F12}, Tools, Macros, Learn, Undo ({k:Ctrl-F10}) and Redo ({k:Ctrl-F11}) are
+in Tools, and Next Error ({k:Ctrl-F8}) and Previous Error ({k:Ctrl-F7}) are in
+Print, Errors.  The keys that contract and expand are {k:Alt--}, {k:Alt-+} and
+{k:Alt-*}; the other commands, and where to reach them, are:
 .table 23 8 27
 Command | Menu | Keys
 Count | Tools, Count | none
-Marker | None | {k:Alt-F12}, {k:Ctrl-F12}
-Move | None | {k:F7}; section level {k:Alt-[} {k:Alt-]}
 Options | Global, Options | none
 Outlines | None | {k:Alt-1} to {k:Alt-9}, {k:Alt-0}
-Overtype | None | {k:Alt-F5}, {k:Alt-O}
-Paste | None | {k:F5}, {k:Ctrl-F5}
 Quit | Quit | {k:Ctrl-Q}
-Replace | None | {k:Alt-F9}
-Search | None | {k:F9}
 Section/Document | Edit, Section or Document | {k:Ctrl-^}
 Sort | Tools, Autosort | none
-Split | None | {k:F2}, {k:Ctrl-V}, {k:Ctrl-Y}, {k:F8}
 Structured/Unstructured | Edit, one of them | none
 Title | Edit, Title | none
 .end
+Some commands have other keys as well: Move works on a section level with
+{k:Alt-[} and {k:Alt-]}, Overtype is also {k:Alt-O}, Paste is also {k:Ctrl-F5}
+for the library, and Split is also {k:Ctrl-V} for a block and {k:Ctrl-Y} for a
+section.
 .h4 The Edit menu
 The entries depend on the document:
 .table 26 34
-The document is | The Edit menu offers
+The document is | The Edit menu offers, before the groups
 Unstructured | Title, Structured, Window
 Structured, and it can be made unstructured (it is one section with nothing
  below it) | Title, Unstructured, Section, Window
@@ -1296,6 +1337,8 @@ Being edited in Section edit, and it can be made unstructured | Title,
  Unstructured, Document, Window
 Being edited in Section edit, and it cannot | Title, Document, Window
 .end
+After these entries, the four groups Block, Parts, Layout and Insert follow in
+every document ({n:edit-menu-routes}).
 Each entry is described in {x:edit-modes}: Title in {x:edit-b-title},
 Structured and Unstructured in {x:edit-b-structured}, Section and Document in
 {x:edit-b-section}.

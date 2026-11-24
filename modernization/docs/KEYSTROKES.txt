@@ -38,6 +38,11 @@ Alt-F keys, Shift-Ins or Ctrl-Hyphen.  Strata therefore also has: Ctrl-F
 (a menu of the Alt-F commands), Ctrl-F12 (the Marker menu), Alt-O
 (Overtype) and Alt-I (italics, because Ctrl-I is Tab).
 
+Menu routes.  Every command that has a function key is also in the F12 menu,
+with its key in the hint: Edit (Block, Parts, Layout, Insert), Tools (Find,
+Math, Library Copy, Cut, Paste) and the bar entry Help.  docs/KEY-MAP.txt,
+part 4, lists the route of each key.
+
 1. Cursor movement
 ------------------
   Key              Function                          Orig Strata    Mode
@@ -188,7 +193,7 @@ Alt-F keys, Shift-Ins or Ctrl-Hyphen.  Strata therefore also has: Ctrl-F
   Key              Function                          Orig Strata    Mode
   ---------------- --------------------------------- ---- --------- ----
   F12              Menu (File Global Edit Print...)  H    diff      B   
-  F1               Help                              H    yes       B   
+  F1               Help (also F12, Help)             H    yes       B   
   Ctrl-S           Save                              H    yes       B   
   Ctrl-R           Retrieve                          H    yes       B   
   Ctrl-Q           Quit the editor                   H    yes       B   

@@ -29,6 +29,20 @@ document:
 The collapse, expand, promote and demote commands, which this program once
 had on this menu, are not on it in the original.  They stay on their keys.
 
+After those entries Strata has four groups that the original does not have.
+Every command of a function key is in one of them, so that a key that a
+terminal or a desktop takes still has a route.  Each entry runs what its key
+runs, with the same panel or message, and its hint names the key:
+
+  Block   Copy [F3]  Cut [F4]  Paste [F5]  Move [F7]  Delete [Alt-F4]
+  Parts   Split [F2]  Join [Alt-F3]  Append [Alt-F2]
+  Layout  Format [F6]  Table [F8]  Attribute [Alt-F6]  Border [Alt-F8]
+          Case [Ctrl-F6]
+  Insert  Marker [Ctrl-F12]  Overtype [Alt-F5]
+
+The letters B, P, L and I choose the groups.  The groups keep the row of the
+bar within the room that the label MENU-EDIT leaves in 80 columns.
+
 Title
 -----
 Edit title page.  The title page is a section of its own in front of the

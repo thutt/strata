@@ -65,12 +65,11 @@ Contents
      Ctrl-F4 (and by its manual Ctrl-F7, F9, F10 and F12).  So there is no
      Alt-function key and no Ctrl-function key that is safe everywhere.
   5. The Editor has an alternative for the Alt-F commands: Ctrl-F (a
-     menu), Ctrl-F12, Alt-O.  But FOUR groups of commands have NO key and
-     NO menu entry that works when their key is taken: Border (Alt-F8:
-     taken by GNOME and Xfce), Math (Ctrl-F2), Case (Ctrl-F6) and
-     Lib Copy, Lib Cut, Lib Paste (Ctrl-F3 to Ctrl-F5: taken by Xfce, and
-     by KDE for Ctrl-F3 and Ctrl-F4).  Search Again (Ctrl-F9) and Redo
-     (Ctrl-F11, menu only) are the same kind of case.
+     menu), Ctrl-F12, Alt-O.  At the time of the study four groups of
+     commands had NO key and NO menu entry that worked when their key was
+     taken: Border, Math, Case, the Library commands, Search Again and
+     Redo.  That gap is closed (task W29.2): every command that has a
+     function key is in the F12 menu now (docs/KEY-MAP.txt, part 4).
   6. Compose (Alt-F1) and Alt-F10 and Alt-F11 do nothing yet, so losing
      them costs nothing.
   7. The F12 menu is safe in every environment tried except the quake
@@ -168,8 +167,8 @@ docs/KEYSTROKES.txt.  "Command" is what the key does in the Editor now.
 
 The commands that have a key and ALSO a route without that key today:
     Menu F12: File (Save, Retrieve, New, Delete, Import, Export), Global,
-    Edit, Print (Draft, Final, Preview, Next Error, Previous Error, Remove
-    Error), Tools (Macros with Learn, Library, Spell, Thesaurus, Autosort,
+    Edit, Print (Draft, Final, Preview, Errors with Next, Previous, Remove,
+    Remove All), Tools (Macros with Learn, Library, Spell, Thesaurus, Autosort,
     Count, Undo, Redo), Quit.
     Ctrl-F popup "Alt commands": Append, Join, Delete, Overtype, Set
     Attribute, Go To, Replace, Marker, Promote section, Demote section.
@@ -363,8 +362,7 @@ Alternative: the other route that works with the key taken.
 
   Key        Command      Taken by         Alternative today        Gap
   ---------- ------------ ---------------- ------------------------ ----
-  F1         Help         t (xfce4-term.)  none: no menu entry      YES
-                                           for Help
+  F1         Help         t (xfce4-term.)  F12, Help                no
   F10 F11    (none)       t, X, G          not a command            no
   F12        Menu         quake terminals  none                     (rare)
   Alt-F1     Compose      G, X, (K)        not available anyway     no
@@ -374,18 +372,18 @@ Alternative: the other route that works with the key taken.
   Alt-F5     Overtype     G                Ctrl-F popup, Alt-O      no
   Alt-F6     Set Attr.    G, X             Ctrl-F popup             no
   Alt-F7     Go To        G, X             Ctrl-F popup             no
-  Alt-F8     Border       G, X, (K)        NONE                     YES
+  Alt-F8     Border       G, X, (K)        F12, Edit, Layout        no
   Alt-F9     Replace      X                Ctrl-F popup             no
   Alt-F12    Marker       (none)           Ctrl-F12, Ctrl-F popup   no
   Ctrl-F1    Learn        X, K             Tools > Macros > Learn   no
-  Ctrl-F2    Math         X, K             NONE                     YES
-  Ctrl-F3    Lib Copy     X, K             NONE                     YES
-  Ctrl-F4    Lib Cut      X, K             NONE                     YES
-  Ctrl-F5    Lib Paste    X                NONE                     YES
-  Ctrl-F6    Case         X                NONE                     YES
-  Ctrl-F7    Prev Error   X, K             Print > Previous Error   no
-  Ctrl-F8    Next Error   X                Print > Next Error       no
-  Ctrl-F9    Search Again X, K             NONE (F9 asks again)     small
+  Ctrl-F2    Math         X, K             F12, Tools, Math         no
+  Ctrl-F3    Lib Copy     X, K             F12, Tools, Library      no
+  Ctrl-F4    Lib Cut      X, K             F12, Tools, Library      no
+  Ctrl-F5    Lib Paste    X                F12, Tools, Library      no
+  Ctrl-F6    Case         X                F12, Edit, Layout        no
+  Ctrl-F7    Prev Error   X, K             Print > Errors > Previous no
+  Ctrl-F8    Next Error   X                Print > Errors > Next     no
+  Ctrl-F9    Search Again X, K             F12, Tools, Find         no
   Ctrl-F10   Undo         X, K             Ctrl-Z, Tools > Undo     no
   Ctrl-F11   Redo         X                Tools > Redo (menu only) no
   Ctrl-F12   Marker       X, K             Alt-F12, Ctrl-F popup    no
@@ -398,8 +396,9 @@ Alternative: the other route that works with the key taken.
   Alt-letter Overtype etc. xterm default   a resource (section 6)   fix
   Ctrl-B     Bold         tmux prefix      press twice              no
 
-Dangerous (no alternative): Help (F1) in xfce4-terminal, Border, Math, Case,
-Lib Copy, Lib Cut, Lib Paste and Search Again.  Redo has only the menu.
+Dangerous (no alternative): none now.  Help, Border, Math, Case, Lib Copy,
+Lib Cut, Lib Paste and Search Again were the gaps of the study; the F12 menu
+has a route for each (docs/KEY-MAP.txt, part 4).
 
 
 6. RECOMMENDATION FOR RELEASE 1
@@ -415,8 +414,7 @@ xfce4-terminal and tmux), keeping every key as it is:
      the three Library commands; Edit gets Border).  Every command is then
      reached by Ctrl-F (the byte 6: no terminal, window manager or console
      keeps it, section 4) or by F12.  Size S: the handlers exist.
-  2. HELP WITHOUT F1.  Put Help in the F12 menu (it has no entry) and in the
-     popup.  F1 stays.
+  2. HELP WITHOUT F1.  Done: Help is in the F12 bar (W29.2).  F1 stays.
   3. TELL THE USER ABOUT XTERM.  In the manual's appendix D and in the
      getting started text: for xterm, start it with
          xterm -xrm 'XTerm*metaSendsEscape: true'

@@ -3514,6 +3514,10 @@ equations_init(void)
 #define MI(n, h, a) {n, h, a, NULL, 0}
 #define MSUB(n, h, a, s) {n, h, a, s, sizeof s / sizeof s[0]}
 
+/* Run the command of a function key; 1 when there is one. */
+static int
+fkey_run(int mod, int n);
+
 static const MenuItem file_items[] = {
     MI("Save", "Save the current document on the disk [Ctrl-S]", 1),
     MI("Retrieve", "Retrieve a new document file from the disk [Ctrl-R]", 1),
@@ -3556,24 +3560,89 @@ static const MenuItem window_items[] = {
 static const MenuItem edit_window_item =
     MSUB("Window", "Open/Close, Adjust, Zoom, Switch", 1, window_items);
 
+/*
+ * The commands of the function keys that have no other menu entry.  Each
+ * entry runs the command of its key (fkey_run), so that a key that a terminal
+ * or a desktop takes still has a way.  The groups of Edit work on the text
+ * that is highlighted or that the cursor is in; the group Find and the
+ * entry Math are in Tools.
+ */
+static const MenuItem block_items[] = {
+    MI("Copy", "Copy text, column, block or section [F3]", 1),
+    MI("Cut", "Cut text, column, block or section [F4]", 1),
+    MI("Paste", "Paste what was copied or cut [F5]", 1),
+    MI("Move", "Move text, column, block or section [F7]", 1),
+    MI("Delete", "Delete the highlighted area [Alt-F4]", 1)};
+
+static const MenuItem parts_items[] = {
+    MI("Split", "Split a column, block or section [F2]", 1),
+    MI("Join", "Join columns, blocks or sections [Alt-F3]", 1),
+    MI("Append", "Append a column, block or section [Alt-F2]", 1)};
+
+static const MenuItem layout_items[] = {
+    MI("Format", "Block or column format [F6]", 1),
+    MI("Table", "Add a column or split a column [F8]", 1),
+    MI("Attribute", "Set an attribute of the text [Alt-F6]", 1),
+    MI("Border", "Put a border on columns [Alt-F8]", 1),
+    MI("Case", "Change the case of the text [Ctrl-F6]", 1)};
+
+static const MenuItem insert_items[] = {
+    MI("Marker", "Insert a marker, or edit the one at the cursor [Ctrl-F12]",
+       1),
+    MI("Overtype", "Type over the text, or insert again [Alt-F5]", 1)};
+
+static const MenuItem edit_block_item =
+    MSUB("Block", "Copy, Cut, Paste, Move, Delete", 1, block_items);
+static const MenuItem edit_parts_item =
+    MSUB("Parts", "Split, Join, Append", 1, parts_items);
+static const MenuItem edit_layout_item =
+    MSUB("Layout", "Format, Table, Attribute, Border, Case", 1, layout_items);
+static const MenuItem edit_insert_item =
+    MSUB("Insert", "Marker, Overtype", 1, insert_items);
+
+/* The groups of Edit that every document has, after the entries of the kind. */
+#define EDIT_GROUPS 4
+static const MenuItem *const edit_group_items[EDIT_GROUPS] = {
+    &edit_block_item, &edit_parts_item, &edit_layout_item, &edit_insert_item};
+
+/* The entries of the groups of Edit, in the order of the tables above. */
+enum {
+    EDG_BLOCK,
+    EDG_PARTS,
+    EDG_LAYOUT,
+    EDG_INSERT
+};
+
 static const MenuItem preview_items[] = {
     MI("Document", "Preview entire document", 1),
     MI("Block", "Preview the current block", 1),
     MI("Section", "Preview the current section", 1)};
 
+/* The entries of the Errors submenu of the Print menu. */
+enum {
+    PRE_NEXT,
+    PRE_PREVIOUS,
+    PRE_REMOVE,
+    PRE_REMOVE_ALL
+};
+
+static const MenuItem print_error_items[] = {
+    MI("Next", "Find the next Print Error [Ctrl-F8]", 1),
+    MI("Previous", "Find the previous Print Error [Ctrl-F7]", 1),
+    MI("Remove", "Remove the Print Error under the cursor", 1),
+    MI("Remove All", "Remove all the Print Errors", 1)};
+
 static const MenuItem print_items[] = {
     MI("Draft", "Print document in draft quality", 1),
     MI("Final", "Print document in final quality", 1),
     MSUB("Preview", "Document, Block, Section", 1, preview_items),
-    MI("Next Error", "Find the next Print Error [Ctrl-F8]", 1),
-    MI("Previous Error", "Find the previous Print Error [Ctrl-F7]", 1),
-    MI("Remove Error", "Remove the Print Error under the cursor", 1),
-    MI("Remove Print Errors", "Remove all the Print Errors", 1)};
+    MSUB("Errors", "Next, Previous, Remove, Remove All", 1,
+         print_error_items)};
 
 static const MenuItem macro_items[] = {
     MI("Edit", "Edit a macro", 1),
     MI("Delete", "Delete a macro", 1),
-    MI("Learn", "Record keystrokes as a macro", 1),
+    MI("Learn", "Record keystrokes as a macro [Ctrl-F1]", 1),
     MI("Save", "Save macros in a file", 1),
     MI("Retrieve", "Retrieve macros from a file", 1)};
 
@@ -3581,7 +3650,16 @@ static const MenuItem library_items[] = {
     MI("Edit", "Edit a library entry", 1),
     MI("Delete", "Delete a library entry", 1),
     MI("Save", "Save the library in a file", 1),
-    MI("Retrieve", "Retrieve a library from a file", 1)};
+    MI("Retrieve", "Retrieve a library from a file", 1),
+    MI("Copy", "Copy text to the library [Ctrl-F3]", 1),
+    MI("Cut", "Cut text to the library [Ctrl-F4]", 1),
+    MI("Paste", "Paste from the library [Ctrl-F5]", 1)};
+
+static const MenuItem find_items[] = {
+    MI("Search", "Search for text [F9]", 1),
+    MI("Replace", "Search for text and replace it [Alt-F9]", 1),
+    MI("Again", "Search again as the last search [Ctrl-F9]", 1),
+    MI("Go To", "Go to a section or a page [Alt-F7]", 1)};
 
 static const MenuItem spell_items[] = {
     MI("Document", "Check spelling of the document", 1),
@@ -3601,24 +3679,30 @@ static const MenuItem tools_items[] = {
     MSUB("Autosort", "Section, Table", 1, sort_items),
     MI("Count", "Display word count", 1),
     MI("Undo", "Undo the last change [Ctrl-/]", 1),
-    MI("Redo", "Do again what was undone [Alt-/]", 1)};
+    MI("Redo", "Do again what was undone [Alt-/]", 1),
+    MSUB("Find", "Search, Replace, Again, Go To", 1, find_items),
+    MI("Math", "Do arithmetic on the highlighted numbers [Ctrl-F2]", 1)};
 
 static const MenuItem top_items[] = {
     MSUB("File", "Save, Retrieve, New, Delete, Import, Export", 1,
          file_items),
     MSUB("Global", "Format, Page, Typeface, Marker, Options, Named", 1,
          global_items),
-    MI("Edit", "Title, Structured/Unstructured, Section/Document, Window", 1),
+    MI("Edit", "Title, Structured, Section, Window, Block, Parts, Layout, "
+               "Insert", 1),
     MSUB("Print", "Draft, Final, Preview, Errors", 1,
          print_items),
-    MSUB("Tools", "Macros, Library, Spell, Thesaurus, Autosort, Count, Undo", 1,
-         tools_items),
+    MSUB("Tools", "Macros, Library, Spell, Thesaurus, Autosort, Count, Undo, "
+                  "Find, Math", 1, tools_items),
+    MI("Help", "Show the help [F1]", 1),
     MI("Quit", "Return to the Document Manager [Ctrl-Q]", 1)};
 
 
 /* The entries of the Tools menu that are not a submenu. */
 enum {
-    TOOLS_THESAURUS = 3
+    TOOLS_THESAURUS = 3,
+    TOOLS_FIND = 8,
+    TOOLS_MATH = 9
 };
 
 enum {
@@ -3627,6 +3711,7 @@ enum {
     TOP_EDIT,
     TOP_PRINT,
     TOP_TOOLS,
+    TOP_HELP,
     TOP_QUIT,
     TOP_COUNT
 };
@@ -3663,6 +3748,58 @@ run_file(int cmd)
 }
 
 
+/*
+ * The function key of each entry of the groups of Edit and Tools: the module
+ * (0 plain, 1 Ctrl, 2 Alt) and the number.  The menu runs the command of the
+ * key itself, so that the two cannot differ.
+ */
+typedef struct {
+    int mod;
+    int n;
+} MenuKey;
+
+static const MenuKey block_keys[] = {{0, 3}, {0, 4}, {0, 5}, {0, 7}, {2, 4}};
+static const MenuKey parts_keys[] = {{0, 2}, {2, 3}, {2, 2}};
+static const MenuKey layout_keys[] = {{0, 6}, {0, 8}, {2, 6}, {2, 8}, {1, 6}};
+static const MenuKey insert_keys[] = {{1, 12}, {2, 5}};
+static const MenuKey find_keys[] = {{0, 9}, {2, 9}, {1, 9}, {2, 7}};
+static const MenuKey library_keys[] = {{1, 3}, {1, 4}, {1, 5}};
+
+
+/* Run the command of the key of entry leaf of a group. */
+static void
+run_group_key(const MenuKey *keys, int count, int leaf)
+{
+    if (leaf >= 0 && leaf < count) {
+        fkey_run(keys[leaf].mod, keys[leaf].n);
+    }
+}
+
+
+/* Run an entry of a group of Edit: group is one of EDG_BLOCK and so on. */
+static void
+run_edit_group(int group, int leaf)
+{
+    switch (group) {
+        case EDG_BLOCK:
+            run_group_key(block_keys, 5, leaf);
+            break;
+
+        case EDG_PARTS:
+            run_group_key(parts_keys, 3, leaf);
+            break;
+
+        case EDG_LAYOUT:
+            run_group_key(layout_keys, 5, leaf);
+            break;
+
+        default:
+            run_group_key(insert_keys, 2, leaf);
+            break;
+    }
+}
+
+
 static void
 run_edit(const char *name)
 {
@@ -3681,7 +3818,9 @@ run_edit(const char *name)
 /*
  * Write the names of the entries of one menu level on one line: the path of
  * the level (the names of the entries that were chosen to reach it, joined
- * by colons), a tab, and the names joined by bars.
+ * by colons), a tab, and the names joined by bars.  An entry has a line of
+ * its own too: item, the path, the name and the hint that is shown below the
+ * bar, separated by tabs.
  */
 static void
 dump_level(FILE *out, const char *path, const MenuItem *items, int n)
@@ -3693,6 +3832,11 @@ dump_level(FILE *out, const char *path, const MenuItem *items, int n)
     }
 
     fprintf(out, "\n");
+
+    for (int i = 0; i < n; i++) {
+        fprintf(out, "item\t%s\t%s\t%s\n", path, items[i].name,
+                items[i].hint);
+    }
 }
 
 
@@ -3733,12 +3877,27 @@ ui_dump_menus(FILE *out)
 
     dump_tree(out, "", top_items, TOP_COUNT);
 
+    for (int i = 0; i < EDIT_GROUPS; i++) {
+        char sub[64];
+
+        snprintf(sub, sizeof sub, "Edit:%s", edit_group_items[i]->name);
+        dump_level(out, sub, edit_group_items[i]->sub,
+                   edit_group_items[i]->nsub);
+    }
+
+    dump_level(out, "Edit:Window", window_items,
+               sizeof window_items / sizeof window_items[0]);
+
     for (int v = 0; v < 5; v++) {
-        MenuItem edit[4];
+        MenuItem edit[4 + EDIT_GROUPS];
         int ne = 0;
 
         for (int i = 0; i < 4 && variants[v][i] != NULL; i++) {
             edit[ne++] = *variants[v][i];
+        }
+
+        for (int i = 0; i < EDIT_GROUPS; i++) {
+            edit[ne++] = *edit_group_items[i];
         }
 
         dump_level(out, "Edit", edit, ne);
@@ -3752,8 +3911,9 @@ menu_bar(void)
 {
     int path[MENU_MAXDEPTH];
     MenuItem top[TOP_COUNT];
-    MenuItem edit[4];
+    MenuItem edit[4 + EDIT_GROUPS];
     int ne = 0;
+    int groups_at;
 
     /* What Edit offers depends on the document. */
     edit[ne++] = edit_title_item;
@@ -3781,6 +3941,12 @@ menu_bar(void)
     edit[ne] = edit_window_item;
     edit[ne].sub = wsub;
     ne++;
+    groups_at = ne;
+
+    for (int i = 0; i < EDIT_GROUPS; i++) {
+        edit[ne++] = *edit_group_items[i];
+    }
+
     memcpy(top, top_items, sizeof top);
     top[TOP_EDIT].sub = edit;
     top[TOP_EDIT].nsub = ne;
@@ -3816,6 +3982,8 @@ menu_bar(void)
         case TOP_EDIT:
             if (strcmp(edit[path[1]].name, "Window") == 0 && n >= 3) {
                 run_window(path[2]);
+            } else if (path[1] >= groups_at) {
+                run_edit_group(path[1] - groups_at, n >= 3 ? path[2] : -1);
             } else {
                 run_edit(edit[path[1]].name);
             }
@@ -3830,13 +3998,23 @@ menu_bar(void)
                                       path[2] == 1 ? PV_BLOCK :
                                                      PV_SECTION);
             } else if (path[1] == 3) {
-                find_error(1);
-            } else if (path[1] == 4) {
-                find_error(0);
-            } else if (path[1] == 5) {
-                remove_error_here();
-            } else if (path[1] == 6) {
-                remove_all_errors();
+                switch (path[2]) {
+                    case PRE_NEXT:
+                        find_error(1);
+                        break;
+
+                    case PRE_PREVIOUS:
+                        find_error(0);
+                        break;
+
+                    case PRE_REMOVE:
+                        remove_error_here();
+                        break;
+
+                    default:
+                        remove_all_errors();
+                        break;
+                }
             }
 
             break;
@@ -3878,8 +4056,12 @@ menu_bar(void)
                         library_save(ED);
                         break;
 
-                    default:
+                    case 3:
                         library_retrieve(ED);
+                        break;
+
+                    default:
+                        run_group_key(library_keys, 3, path[2] - 4);
                         break;
                 }
             } else if (path[1] == 2) {
@@ -3892,12 +4074,20 @@ menu_bar(void)
                 undo_undo(ED);
             } else if (path[1] == 7) {
                 undo_redo(ED);
+            } else if (path[1] == TOOLS_FIND) {
+                run_group_key(find_keys, 4, path[2]);
+            } else if (path[1] == TOOLS_MATH) {
+                fkey_run(1, 2);
             } else if (path[1] == 4 && path[2] == 0) {
                 ed_sort_sections(ED, 0);
             } else if (path[1] == 4) {
                 autosort_table();
             }
 
+            break;
+
+        case TOP_HELP:
+            fkey_run(0, 1);
             break;
 
         default:

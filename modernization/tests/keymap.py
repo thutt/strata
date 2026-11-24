@@ -341,75 +341,58 @@ LEAF_KEYS = {
     'Global:Named:Edit': None, 'Global:Named:Delete': None,
     'Edit:Title': None, 'Edit:Structured': None, 'Edit:Unstructured': None,
     'Edit:Section': 'Ctrl-^', 'Edit:Document': 'Ctrl-^',
-    'Edit:Window': None,
+    'Edit:Window:Open': None, 'Edit:Window:Close': None,
+    'Edit:Window:Adjust': None, 'Edit:Window:Zoom-up': None,
+    'Edit:Window:Zoom-down': None, 'Edit:Window:Switch': None,
+    'Edit:Block:Copy': 'F3', 'Edit:Block:Cut': 'F4', 'Edit:Block:Paste': 'F5',
+    'Edit:Block:Move': 'F7', 'Edit:Block:Delete': 'Alt-F4',
+    'Edit:Parts:Split': 'F2', 'Edit:Parts:Join': 'Alt-F3',
+    'Edit:Parts:Append': 'Alt-F2',
+    'Edit:Layout:Format': 'F6', 'Edit:Layout:Table': 'F8',
+    'Edit:Layout:Attribute': 'Alt-F6', 'Edit:Layout:Border': 'Alt-F8',
+    'Edit:Layout:Case': 'Ctrl-F6',
+    'Edit:Insert:Marker': 'Ctrl-F12', 'Edit:Insert:Overtype': 'Alt-F5',
     'Print:Draft': None, 'Print:Final': 'Ctrl-P',
     'Print:Preview:Document': None, 'Print:Preview:Block': None,
     'Print:Preview:Section': None,
-    'Print:Next Error': 'Ctrl-F8', 'Print:Previous Error': 'Ctrl-F7',
-    'Print:Remove Error': None, 'Print:Remove Print Errors': None,
+    'Print:Errors:Next': 'Ctrl-F8', 'Print:Errors:Previous': 'Ctrl-F7',
+    'Print:Errors:Remove': None, 'Print:Errors:Remove All': None,
     'Tools:Macros:Edit': None, 'Tools:Macros:Delete': None,
     'Tools:Macros:Learn': 'Ctrl-F1', 'Tools:Macros:Save': None,
     'Tools:Macros:Retrieve': None,
     'Tools:Library:Edit': None, 'Tools:Library:Delete': None,
     'Tools:Library:Save': None, 'Tools:Library:Retrieve': None,
+    'Tools:Library:Copy': 'Ctrl-F3', 'Tools:Library:Cut': 'Ctrl-F4',
+    'Tools:Library:Paste': 'Ctrl-F5',
+    'Tools:Find:Search': 'F9', 'Tools:Find:Replace': 'Alt-F9',
+    'Tools:Find:Again': 'Ctrl-F9', 'Tools:Find:Go To': 'Alt-F7',
+    'Tools:Math': 'Ctrl-F2',
     'Tools:Spell:Document': None, 'Tools:Spell:Block': None,
     'Tools:Spell:Section': None, 'Tools:Spell:Word': 'Ctrl-C',
     'Tools:Thesaurus': 'Ctrl-T',
     'Tools:Autosort:Section': None, 'Tools:Autosort:Table': None,
     'Tools:Count': None, 'Tools:Undo': 'Ctrl-F10', 'Tools:Redo': 'Ctrl-F11',
-    'Quit': 'Ctrl-Q',
+    'Help': 'F1', 'Quit': 'Ctrl-Q',
 }
 
 # The commands of fkeys[] that already have a menu entry.
 MENU_OF_COMMAND = {
-    'Learn': 'Tools:Macros:Learn',
-    'Prev Error': 'Print:Previous Error',
-    'Next Error': 'Print:Next Error',
-    'Undo': 'Tools:Undo',
-    'Redo': 'Tools:Redo',
+    'Help': 'Help',
+    'Split': 'Edit:Parts:Split', 'Copy': 'Edit:Block:Copy',
+    'Cut': 'Edit:Block:Cut', 'Paste': 'Edit:Block:Paste',
+    'Format': 'Edit:Layout:Format', 'Move': 'Edit:Block:Move',
+    'Table': 'Edit:Layout:Table', 'Search': 'Tools:Find:Search',
+    'Learn': 'Tools:Macros:Learn', 'Math': 'Tools:Math',
+    'Lib Copy': 'Tools:Library:Copy', 'Lib Cut': 'Tools:Library:Cut',
+    'Lib Paste': 'Tools:Library:Paste', 'Case': 'Edit:Layout:Case',
+    'Prev Error': 'Print:Errors:Previous', 'Next Error': 'Print:Errors:Next',
+    'Search Again': 'Tools:Find:Again', 'Undo': 'Tools:Undo',
+    'Redo': 'Tools:Redo', 'Marker': 'Edit:Insert:Marker',
+    'Append': 'Edit:Parts:Append', 'Join': 'Edit:Parts:Join',
+    'Delete': 'Edit:Block:Delete', 'Overtype': 'Edit:Insert:Overtype',
+    'Set Attribute': 'Edit:Layout:Attribute', 'Go To': 'Tools:Find:Go To',
+    'Border': 'Edit:Layout:Border', 'Replace': 'Tools:Find:Replace',
     'Menu': None,
-}
-
-# The proposals for the commands that have no menu entry: (menu, position,
-# label, the reason).  The owner chooses.
-PROPOSALS = {
-    'Border': ('Tools', 'before Autosort', 'Border',
-               'chapter 3 of the manual puts Border, Case and Math side by '
-               'side, ahead of Tools: Macros and Library'),
-    'Case': ('Tools', 'before Autosort', 'Case',
-             'as Border: a command on highlighted text'),
-    'Math': ('Tools', 'before Autosort', 'Math',
-             'next to Autosort, which also works on a column or table'),
-    'Lib Copy': ('Tools, Library', 'first entry', 'Copy',
-                 'the library chapter keeps the three commands together; '
-                 'Library now has Edit, Delete, Save and Retrieve'),
-    'Lib Cut': ('Tools, Library', 'second entry', 'Cut', 'as Lib Copy'),
-    'Lib Paste': ('Tools, Library', 'third entry', 'Paste', 'as Lib Copy'),
-    'Search': ('Tools', 'before Border', 'Search',
-               'there is no Search menu; the Edit menu is for the kind of '
-               'document, so Tools holds the three search commands'),
-    'Replace': ('Tools', 'after Search', 'Replace', 'as Search'),
-    'Search Again': ('Tools', 'after Replace', 'Search Again', 'as Search'),
-    'Help': ('the bar', 'between Tools and Quit', 'Help',
-             'F1 is taken by xfce4-terminal; a bar entry is where a user '
-             'looks for Help (letter H is free in the bar)'),
-    'Marker': ('Edit', 'last entry', 'Marker',
-               'Global, Marker is the marker SETTINGS, so inserting a '
-               'marker needs a different label'),
-    'Split': ('Edit', 'new entries', 'Split', 'the editing commands'),
-    'Copy': ('Edit', 'new entries', 'Copy', 'the editing commands'),
-    'Cut': ('Edit', 'new entries', 'Cut', 'the editing commands'),
-    'Paste': ('Edit', 'new entries', 'Paste', 'the editing commands'),
-    'Move': ('Edit', 'new entries', 'Move', 'the editing commands'),
-    'Format': ('Edit', 'new entries', 'Format', 'the editing commands'),
-    'Table': ('Edit', 'new entries', 'Table', 'the editing commands'),
-    'Append': ('Edit', 'new entries', 'Append', 'the editing commands'),
-    'Join': ('Edit', 'new entries', 'Join', 'the editing commands'),
-    'Delete': ('Edit', 'new entries', 'Delete', 'the editing commands'),
-    'Overtype': ('Edit', 'new entries', 'Overtype', 'the editing commands'),
-    'Set Attribute': ('Edit', 'new entries', 'Set Attribute',
-                      'the editing commands'),
-    'Go To': ('Edit', 'new entries', 'Go To', 'the editing commands'),
 }
 
 
@@ -967,95 +950,45 @@ def build(stred):
     show('', 0)
     leaves = menu_leaves(levels)
     p()
-    p('Commands that have a key and an entry:')
-    p()
-
-    for name, path in sorted(MENU_OF_COMMAND.items()):
-        if path is not None:
-            key = [fkey_name(m, n) for c, m, n in fk if c == name][0]
-            p('  %-14s %-10s %s' % (name, key, path.replace(':', ', ')))
-
-    p()
     p(wrap('Menu entries that have no key of their own: ' +
            ', '.join(l.replace(':', ' ') for l in leaves
                      if LEAF_KEYS.get(l) is None) + '.'))
     p()
     p(wrap('The original: the repository documents say that its menus hold '
-           'only these entries.  docs/EDIT-MENU.txt: the Edit menu has '
-           'Title, Structured or Unstructured, Section or Document, and '
-           'Window, and the commands of the function keys are "not on it '
-           'in the original" (the collapse, expand, promote and demote '
-           'commands stay on their keys).  docs/TOOLS-MENU.txt: Tools has '
-           'Macros, Library, Spell, Thesaurus, Autosort and Count.  '
-           'docs/KEYSTROKES.txt marks Undo and Redo (Tools) as not in '
-           'the original.  So none of the commands below has a menu '
-           'entry in the original: its function key is its only way.'))
+           'only the entries of docs/EDIT-MENU.txt and docs/TOOLS-MENU.txt '
+           '(Edit: Title, Structured or Unstructured, Section or Document, '
+           'Window; Tools: Macros, Library, Spell, Thesaurus, Autosort, '
+           'Count), so in the original the function key was the only way '
+           'to the commands below.  Strata adds the routes of this part: '
+           'every command that has a function key has an entry in the F12 '
+           'menu, in the groups Edit Block, Edit Parts, Edit Layout, Edit '
+           'Insert and Tools Find, in Tools Math, in Tools Library and in '
+           'the bar entry Help.  The groups keep every row of the bar '
+           'within 80 columns.'))
     p()
-    p('Commands with a function key and NO menu entry (' +
-      str(len(missing_commands(fk))) + '):')
+    p('The route of every command with a function key (' +
+      str(len([1 for n, m, k in fk if n != 'Menu'])) + ' keys):')
     p()
-    p('  %-16s %-10s %s' % ('Command', 'Key', 'Proposed menu route'))
+    p('  %-16s %-10s %s' % ('Command', 'Key', 'Route in the F12 menu'))
     p('  %-16s %-10s %s' % ('-' * 16, '-' * 10, '-' * 30))
 
-    for name, key in missing_commands(fk):
-        pr = PROPOSALS.get(name)
-        route = '?' if pr is None else '%s, %s' % (pr[0], pr[2])
-        p('  %-16s %-10s %s' % (name, key, route))
+    for name, mod, n in fk:
+        path = MENU_OF_COMMAND.get(name)
 
-    p()
-    p('The proposals, with the reason:')
-
-    for name, key in missing_commands(fk):
-        pr = PROPOSALS.get(name, ('?', '?', '?', '?'))
-
-        if pr[3] == 'the editing commands':
+        if path is None:
             continue
 
-        p()
-        p(wrap('%s (%s): %s, %s, %s.  %s.' % (name, key, pr[0], pr[1],
-                                              pr[2], pr[3][0].upper() +
-                                              pr[3][1:]), 2))
+        p('  %-16s %-10s %s' % (name, fkey_name(mod, n),
+                                'F12, ' + path.replace(':', ', ')))
 
     p()
-    p(wrap('The editing commands (Split, Copy, Cut, Paste, Move, Format, '
-           'Table, Append, Join, Delete, Overtype, Set Attribute, Go To '
-           'and Marker): fourteen entries would double the Edit menu, '
-           'which the original keeps to three.  Two ways, and the owner '
-           'chooses.  Way 1: new entries on the Edit menu with those '
-           'names, each running the command as its key does.  Way 2: ONE '
-           'new entry, "Commands", on the Tools menu (or on the bar), '
-           'that opens the same list as Ctrl-F with every command that '
-           'has a function key and its key (W29.1 made that list).  Way '
-           '2 also covers Border, Case, Math, the library commands, the '
-           'search commands and Help, so the proposals above are the '
-           'alternative to it for those commands.', 2))
-    p()
-    p(wrap('Letters of the bar entries: with Case, Math and Count, '
-           'Macros and Math, Spell and Search all in Tools, a letter '
-           'jumps to the first entry that starts with it, so a new '
-           'entry changes which entry a letter reaches; the manual and '
-           'the cheat sheet name the letters.', 2))
+    p(wrap('Letters of the bar entries: a letter chooses the first entry '
+           'that starts with it, so in Tools the letter M is Macros (Math '
+           'is reached with the arrow keys) and in Edit Block and in Tools '
+           'Library the letter C is Copy (Cut is reached with the arrow '
+           'keys).  The manual and the cheat sheet name the letters.', 2))
 
     return '\n'.join(out) + '\n'
-
-
-def missing_commands(fk):
-    """The commands of fkeys[] with no menu entry: (name, key)."""
-    out = []
-
-    for name, mod, n in fk:
-        if name in ('Menu',):
-            continue
-
-        if MENU_OF_COMMAND.get(name) is None:
-            key = fkey_name(mod, n)
-
-            if name == 'Marker' and mod == 2:
-                continue
-
-            out.append((name, key))
-
-    return out
 
 
 # ------------------------------------------------------------------- check
@@ -1118,14 +1051,9 @@ def check(stred, drop=None):
            probe not in read_source('term_x11.c'):
             bad.append('the source has no "%s" for the key %s' % (probe, key))
 
-    for name, route in PROPOSALS.items():
-        if name not in names:
-            bad.append('a proposal for %s, which has no function key' % name)
-
     for name, mod, n in fk:
-        if (MENU_OF_COMMAND.get(name) is None and name != 'Menu' and
-                name not in PROPOSALS):
-            bad.append('command %s has no menu entry and no proposal' % name)
+        if MENU_OF_COMMAND.get(name) is None and name != 'Menu':
+            bad.append('command %s has no menu entry' % name)
 
     if stred is not None:
         levels = menu_tree(stred)

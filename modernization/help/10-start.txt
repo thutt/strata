@@ -57,16 +57,18 @@ shows as you hold {Alt} or {Ctrl}.
 
 Some terminals and desktops keep keys such as {Alt-F4} for themselves.  The
 [[Alt Commands]] menu ({Ctrl-F}) and the [[Menu Bar]] reach the same
-commands.  See [[Copy Cut and Paste]], [[Search]], [[Learn a Macro]],
+commands: every command of a function key is in the Edit and Tools menus.
+See [[Copy Cut and Paste]], [[Search]], [[Learn a Macro]],
 [[Library]].
 
 = Menu Bar
 ~ Menu
+~ Menu:Help
 {F12} opens the menu bar over the top two lines of the screen.  The first line
 holds the names; the second says what the highlighted entry does.  When the
 names of a menu do not all fit in one line, the rest continue on a second
 line and the explanation moves down.  The top level is File, Global, Edit,
-Print, Tools and Quit.
+Print, Tools, Help and Quit.
 
 - {Left} and {Right} choose an entry; {Home} and {End} go to the first and the
   last.
@@ -77,7 +79,7 @@ Print, Tools and Quit.
 - {F1} shows the help for the entry that is highlighted.
 
 The entries: [[Menu:File]], [[Menu:Global]], [[Menu:Edit]], [[Menu:Print]],
-[[Menu:Tools]], [[Menu:Quit]].
+[[Menu:Tools]], [[Menu:Help]], [[Menu:Quit]].
 
 = Panels and Fields
 ~ Panel

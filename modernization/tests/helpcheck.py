@@ -336,8 +336,8 @@ def check_exact(index):
     wanted = ["Marker:" + n for n in names]
     wanted += ["Text Editor:" + n for n in
                ("Note", "Comment", "Equation", "Title Page")]
-    wanted += ["Text Editor", "Menu:Print:Next Error",
-               "Menu:Print:Remove Print Errors"]
+    wanted += ["Text Editor", "Menu:Print:Errors:Next",
+               "Menu:Print:Errors:Remove All"]
     bad = 0
     for name in wanted:
         if lookup(index, name) is None:

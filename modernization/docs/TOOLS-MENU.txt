@@ -18,7 +18,16 @@ THE TOOLS MENU
 ==============
 
 F12, Tools.  Every entry was compared with the original program
-(Manuscript 2.1 running under DOSBox-X).
+(Manuscript 2.1 running under DOSBox-X), except the entries that Strata
+adds so that every command of a function key has a route in the menu:
+
+  Library Copy [Ctrl-F3], Cut [Ctrl-F4] and Paste [Ctrl-F5]
+  Find    Search [F9], Replace [Alt-F9], Again [Ctrl-F9], Go To [Alt-F7]
+  Math    [Ctrl-F2]
+
+Each runs what its key runs.  The letter F chooses Find.  The letter M
+chooses Macros, so Math is reached with the arrow keys, and in Library the
+letter C chooses Copy, so Cut is reached with the arrow keys.
 
 Count
 -----

@@ -80,9 +80,9 @@ E1, W2 ... that the Printer puts at the same places in the pages
 Action | What happens
 {k:Del} on the marker | Removes it, like one character.
 {k:Backspace} just after it | Removes it.
-Remove Error (Print menu) | Removes the marker under the cursor, or shows "The
+Remove (Print, Errors) | Removes the marker under the cursor, or shows "The
  cursor is not on a Print Error".
-Remove Print Errors (Print menu) | Removes every Print Error marker of the
+Remove All (Print, Errors) | Removes every Print Error marker of the
  document and shows how many.
 Copy, Cut | The marker is not put on the clipboard.  Cut takes it out of the
  text with the rest of the cut text, but it is not in what is pasted.  A block

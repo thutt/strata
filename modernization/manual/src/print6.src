@@ -263,10 +263,10 @@ Cancelled | A run that was stopped with {k:Esc} changes no marker.
 The file of the document | Not touched by a print; the document in the Editor
  is marked as changed (the star in the status line), because markers were
  put in.  {k:Ctrl-S} writes the markers with the text and they load again;
- Remove Print Errors takes them out first if they are not wanted.
+ Remove All of the Print menu takes them out first if they are not wanted.
 .end
 A marker that has been put in is taken out with
-{k:Del}, with Remove Error or with Remove Print Errors of the Print menu
+{k:Del}, with Remove or with Remove All of Print, Errors
 ({n:edit-c-find-error}).
 
 .h3 The message line after a print [print-errline]
@@ -298,12 +298,11 @@ Print error 3 of 4: MESSAGE [code] | After {k:Ctrl-F8}, {k:Ctrl-F7} or
 Wrapped to the start.  Print error 1 of 4: ... | The same, after the search
  went round the end of the document.
 Wrapped to the end.  Print error 4 of 4: ... | The same, backward.
-No print errors | A search for the next error, or Remove Print Errors, when
- there
- is none.
-Print Error removed | Remove Error took out the marker under the cursor.
-The cursor is not on a Print Error | Remove Error with the cursor elsewhere.
-4 print errors removed | Remove Print Errors took them out ("1 print error
+No print errors | A search for the next error, or Remove All, when there is
+ none.
+Print Error removed | Remove took out the marker under the cursor.
+The cursor is not on a Print Error | Remove with the cursor elsewhere.
+4 print errors removed | Remove All took them out ("1 print error
  removed" in the singular).
 PRINT FAILED: Preview shown in spite of errors of LaTeX: MESSAGE | The Viewer
  ended after a preview whose pages LaTeX made in spite of an error of its own.

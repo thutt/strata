@@ -54,8 +54,9 @@ letter takes the selection to the next name that begins with E: Else, Endif,
 Equation; press it until Equation is highlighted) and press {k:Ins} or
 {k:Return}.  The editor of the equation opens at once.
 .pic pictures/equations-grid.png 5.5 Marker Commands with Equation selected.
-The command is not on the {k:F12} menu bar.  The terminal version reaches it through
-{k:Ctrl-F} and the menu of the Alt commands (see {n:edit-b-marker}).
+The command is also on the {k:F12} menu bar: {k:F12}, Edit, Insert, Marker.  The
+terminal version reaches it through {k:Ctrl-F} and the menu of the Alt commands
+too (see {n:edit-b-marker}).
 The marker can be placed in structured and unstructured text, in a table
 column, in notes and comments.
 

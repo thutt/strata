@@ -1,12 +1,17 @@
 ; The Tools menu: macros, library, spell check, thesaurus, autosort, count.
 = Tools Menu
 ~ Menu:Tools
-The Tools menu holds Macros, Library, Spell, Thesaurus, Autosort and Count.
+~ Menu:Tools:Find
+The Tools menu holds Macros, Library, Spell, Thesaurus, Autosort, Count,
+Undo, Redo, Find and Math.
 
 - [[Macros]] record keystrokes that run again on {Alt} and a key.
 - [[Library]] keeps named pieces of text that you can paste into any document.
 - [[Spell Check]] checks the spelling; [[Thesaurus]] finds other words.
 - [[Autosort]] sorts blocks or sections; [[Word Count]] counts the words.
+- Find has Search ({F9}), Replace ({Alt-F9}), Again ({Ctrl-F9}) and Go To
+  ({Alt-F7}); Math ({Ctrl-F2}) does arithmetic on highlighted numbers.  See
+  [[Search]], [[Replace]], [[Go To]], [[Math]].
 
 = Macros
 ~ Menu:Tools:Macros
@@ -74,8 +79,8 @@ The library holds named pieces of text, blocks and sections, that you can paste
 into any document.  It lives as long as the Editor runs.
 
 - {Ctrl-F3} copies to the library, {Ctrl-F4} cuts to it, and {Ctrl-F5} pastes
-  from
-  it.  See [[Copy to Library and Paste from Library]].
+  from it; the Library menu has Copy, Cut and Paste for them.  See
+  [[Copy to Library and Paste from Library]].
 - [[Edit a Library Entry]] looks at an entry or makes one, [[Delete a Library
   Entry]] removes one, and [[Save the Library]] and [[Retrieve a Library]] use a
   file.
@@ -83,6 +88,9 @@ into any document.  It lives as long as the Editor runs.
 = Copy to Library and Paste from Library
 ~ Copy to Library
 ~ Paste from Library
+~ Menu:Tools:Library:Copy
+~ Menu:Tools:Library:Cut
+~ Menu:Tools:Library:Paste
 After {Ctrl-F3} or {Ctrl-F4}, choose a unit of text and highlight it as for Copy
 and Cut.  A panel prompts for the Entry Name and a Description.  {Ctrl-F5}
 prompts for the name of the entry to paste: {F2} lists the entries.  See [[Units

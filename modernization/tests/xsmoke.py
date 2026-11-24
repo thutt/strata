@@ -263,14 +263,15 @@ try:
     check('x11: F1 in the editor of a note shows the topic Note Text',
         'HELP: Note Text' in s, s)
     key(w, 'Escape'); time.sleep(0.4); key(w, 'Escape'); time.sleep(0.4)
-    key(w, 'F12'); key(w, 'p')
-    for _ in range(3):
-        key(w, 'Right')
+    key(w, 'F12'); key(w, 'p'); key(w, 'e')
     key(w, 'F1')
     s = wait(lambda s: 'HELP:' in s)
-    check('x11: F1 on the entry Next Error shows the topic Print Errors',
+    check('x11: F1 on the entry Errors, Next shows the topic Print Errors',
         'HELP: Print Errors' in s, s)
-    key(w, 'Escape'); key(w, 'Escape'); key(w, 'Escape'); time.sleep(0.4)
+    # The help topic, the submenu Errors, the menu Print and the menu bar
+    # are four levels: one Escape closes each.
+    key(w, 'Escape'); key(w, 'Escape'); key(w, 'Escape'); key(w, 'Escape')
+    time.sleep(0.4)
     key(w, 'ctrl+Home'); key(w, 'F12');
     s = wait(lambda s: 'File' in s.split('\n')[0]
         and 'Quit' in s.split('\n')[0])
@@ -1024,20 +1025,20 @@ try:
         check('x11: a checked export runs LaTeX and says that it accepts '
             'the file', 'LaTeX accepts it' in s and os.path.exists(ctex), s)
         p.terminate(); p.wait(5)
-    # The Print menu has more entries than fit in 80 columns: the entries
-    # continue on a second row, every entry is whole, and the label of the
-    # mode is alone at the end of the first row.
+    # The Print row (Draft Final Preview Errors) fits one row of 80 columns:
+    # the label of the mode is whole at the end of the first row and the
+    # hint of the first entry is on the second row.
     p = start([os.path.join(bindir, 'stred'), '-H', helpf, doc])
     w = win('stred')
     key(w, 'F12'); key(w, 'p')
     s = wait(lambda s: 'MENU-PRINT' in s)
     rows = s.split('\n')
-    check('x11: the Print menu bar continues on a second row and the label '
-        'MENU-PRINT is whole at the end of the first row',
+    check('x11: the Print menu bar is one row, Draft Final Preview Errors, '
+        'with the label MENU-PRINT whole at its end',
         rows[0].rstrip().endswith('MENU-PRINT') and
-        rows[0].split('MENU-PRINT')[0].rstrip().endswith('Remove Error') and
-        rows[1].strip() == 'Remove Print Errors' and
-        'Print document in draft quality' in rows[2], '\n'.join(rows[:4]))
+        rows[0].split('MENU-PRINT')[0].split() ==
+        ['Draft', 'Final', 'Preview', 'Errors'] and
+        'Print document in draft quality' in rows[1], '\n'.join(rows[:4]))
     p.terminate(); p.wait(5)
 
 

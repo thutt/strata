@@ -3,6 +3,10 @@
 ~ Copy
 ~ Cut
 ~ Paste
+~ Menu:Edit:Block:Copy
+~ Menu:Edit:Block:Cut
+~ Menu:Edit:Block:Paste
+~ Menu:Edit:Block:Move
 ~ Move
 {F3} copies, {F4} cuts and {F5} pastes.  {F7} moves: it cuts, and the next
 {F5} puts the text in its new place.
@@ -21,6 +25,7 @@ See [[Delete]], [[Search]].
 
 = Border
 ~ Border Layout
+~ Menu:Edit:Layout:Border
 Alt-F8 puts lines around columns and blocks.  Highlight the column or columns
 with the cursor keys and press {Enter}; the panel Border Layout opens.  All,
 Outside, Top, Left, Inside, Right and Bottom are None, Single, Double or
@@ -40,6 +45,7 @@ away.  See [[Print]].
 
 = Math
 ~ Math of
+~ Menu:Tools:Math
 Ctrl-F2 calculates the numbers in a part of the document.  Choose what to
 calculate, a Text, a Column, a Block or a Section (see [[Units of Text]]),
 highlight it with the cursor keys and press {Enter}.  The result is on the
@@ -52,6 +58,7 @@ changed.  See [[Case]].
 
 = Case
 ~ Case of
+~ Menu:Edit:Layout:Case
 Ctrl-F6 changes the case of letters.  A box prompts for Upper (every letter a
 capital), Lower (every letter a small letter) or Capitalize (the first letter
 of each word a capital, the others small).  Then choose what to change, a Text,
@@ -65,6 +72,7 @@ change back as one step. See [[Copy Cut and Paste]].
 
 = Delete
 ~ Delete (Alt-F4)
+~ Menu:Edit:Block:Delete
 Alt-F4 deletes text, a column, a block or a section after you highlight it.  To
 remove less, use a key:
 
@@ -78,6 +86,7 @@ See [[Copy Cut and Paste]], [[Join]].
 
 = Append
 ~ Append (Alt-F2)
+~ Menu:Edit:Parts:Append
 Append adds something after the cursor.  {Alt-F2} opens the list:
 
 - Column: a new column in the block.
@@ -91,24 +100,28 @@ See [[Split]], [[Join]].
 
 = Split
 ~ Split (F2)
+~ Menu:Edit:Parts:Split
 {F2} splits at the cursor.  The list offers Column, Block and, in a structured
 document, Section.  {Ctrl-V} splits the block and {Ctrl-Y} splits the section.
 See [[Append]], [[Join]].
 
 = Join
 ~ Join (Alt-F3)
+~ Menu:Edit:Parts:Join
 {Alt-F3} joins what is split: Block puts the next block after the text of this
 one, and Section (in a structured document) joins the next section.  If nothing
 can be joined the message line shows so.  See [[Split]], [[Delete]].
 
 = Overtype
 ~ Overtype (Alt-F5)
+~ Menu:Edit:Insert:Overtype
 {Alt-F5} turns Overtype on or off.  With Overtype on, what you type replaces
 the characters under the cursor instead of pushing them to the right.  The
 status line shows OVR while it is on.
 
 = Set Attributes
 ~ Attributes
+~ Menu:Edit:Layout:Attribute
 {Alt-F6} opens a list: Normal, Bold, Italics and Underscore Words.  Each puts a
 change of attribute into the text at the cursor; everything after it, up to the
 next change, has the attribute.  The keys are quicker:
@@ -120,6 +133,7 @@ next change, has the attribute.  The keys are quicker:
 
 = Block Format Editor
 ~ Justification
+~ Menu:Edit:Layout:Format
 ~ Indent
 ~ Format
 {F6} (or {Ctrl-E}) changes the format of the block that holds the cursor.  The
@@ -136,6 +150,8 @@ characters that are to hang, a bullet and a space, then press it.
 
 = Search
 ~ Search (F9)
+~ Menu:Tools:Find:Search
+~ Menu:Tools:Find:Again
 ~ Search:Search for
 ~ Search:Find
 ~ Search:Direction
@@ -157,6 +173,7 @@ See [[Replace]], [[Print Errors]].
 
 = Replace
 ~ Replace (Alt-F9)
+~ Menu:Tools:Find:Replace
 ~ Replace:Search for
 ~ Replace:Replace with
 ~ Replace:Find
@@ -182,6 +199,7 @@ replaces every place at once.  The message line shows how many were replaced.
 
 = Go To
 ~ Go To (Alt-F7)
+~ Menu:Tools:Find:Go To
 {Alt-F7} jumps to a place: Document start, Document end, Section number (you
 are asked for the number), Next section and Previous section.  See
 [[Go To Section]].
@@ -193,6 +211,7 @@ such section the message line shows so.  The sections are those of a
 
 = Table
 ~ Table (F8)
+~ Menu:Edit:Layout:Table
 {F8} opens the Table list: Add column puts a new column in the block, and Split
 column here splits the column at the cursor.  A table is a block with several
 columns, drawn side by side.  See [[Append]], [[Split]].
@@ -205,6 +224,10 @@ columns, drawn side by side.  See [[Append]], [[Split]].
 ~ Menu:Edit:Section
 ~ Menu:Edit:Document
 ~ Menu:Edit:Window
+~ Menu:Edit:Block
+~ Menu:Edit:Parts
+~ Menu:Edit:Layout
+~ Menu:Edit:Insert
 The Edit menu depends on the document.
 
 - Title edits the title page.
@@ -213,6 +236,9 @@ The Edit menu depends on the document.
 - Section edits only the section that holds the cursor, and Document brings
   back the whole document ({Ctrl-^} does either).
 - Window is not available.
+- Block has Copy, Cut, Paste, Move and Delete; Parts has Split, Join and
+  Append; Layout has Format, Table, Attribute, Border and Case; Insert has
+  Marker and Overtype.  Each entry does what its function key does.
 
 See [[Title Page]], [[Structured and Unstructured]].
 

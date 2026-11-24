@@ -239,6 +239,39 @@ Key | Effect | Mode
 .end
 {n:edit-b-undo} describes both and the number of levels.
 
+.h3 The function keys on the F12 menu [view-menu-routes]
+.ix F12 menu, entries of the function keys
+.table 14 24 22
+Key | Command | Entry on the menu
+{k:F1} | Help | {k:F12}, Help
+{k:F2} | Split | {k:F12}, Edit, Parts, Split
+{k:F3} | Copy | {k:F12}, Edit, Block, Copy
+{k:F4} | Cut | {k:F12}, Edit, Block, Cut
+{k:F5} | Paste | {k:F12}, Edit, Block, Paste
+{k:F6} | Format | {k:F12}, Edit, Layout, Format
+{k:F7} | Move | {k:F12}, Edit, Block, Move
+{k:F8} | Table | {k:F12}, Edit, Layout, Table
+{k:F9} | Search | {k:F12}, Tools, Find, Search
+{k:Ctrl-F2} | Math | {k:F12}, Tools, Math
+{k:Ctrl-F3} | Lib Copy | {k:F12}, Tools, Library, Copy
+{k:Ctrl-F4} | Lib Cut | {k:F12}, Tools, Library, Cut
+{k:Ctrl-F5} | Lib Paste | {k:F12}, Tools, Library, Paste
+{k:Ctrl-F6} | Case | {k:F12}, Edit, Layout, Case
+{k:Ctrl-F7} | Prev Error | {k:F12}, Print, Errors, Previous
+{k:Ctrl-F8} | Next Error | {k:F12}, Print, Errors, Next
+{k:Ctrl-F9} | Search Again | {k:F12}, Tools, Find, Again
+{k:Ctrl-F12} | Marker | {k:F12}, Edit, Insert, Marker
+{k:Alt-F2} | Append | {k:F12}, Edit, Parts, Append
+{k:Alt-F3} | Join | {k:F12}, Edit, Parts, Join
+{k:Alt-F4} | Delete | {k:F12}, Edit, Block, Delete
+{k:Alt-F5} | Overtype | {k:F12}, Edit, Insert, Overtype
+{k:Alt-F6} | Set Attribute | {k:F12}, Edit, Layout, Attribute
+{k:Alt-F7} | Go To | {k:F12}, Tools, Find, Go To
+{k:Alt-F8} | Border | {k:F12}, Edit, Layout, Border
+{k:Alt-F9} | Replace | {k:F12}, Tools, Find, Replace
+.end
+Every entry runs the command of its key.  {n:edit-menu-routes} gives the letters.
+
 .h3 Search, replace, markers, files [view-miscellaneous]
 .ix Search
 .ix Replace
@@ -447,10 +480,10 @@ Print, Final | Print document in final quality | {k:Ctrl-P} | 6
 Print, Preview, Document | Preview entire document | | 6
 Print, Preview, Block | Preview the current block | | 6
 Print, Preview, Section | Preview the current section | | 6
-Print, Next Error | Find the next Print Error | {k:Ctrl-F8} | 6
-Print, Previous Error | Find the previous Print Error | {k:Ctrl-F7} | 6
-Print, Remove Error | Remove the Print Error under the cursor | | 6
-Print, Remove Print Errors | Remove all the Print Errors | | 6
+Print, Errors, Next | Find the next Print Error | {k:Ctrl-F8} | 6
+Print, Errors, Previous | Find the previous Print Error | {k:Ctrl-F7} | 6
+Print, Errors, Remove | Remove the Print Error under the cursor | | 6
+Print, Errors, Remove All | Remove all the Print Errors | | 6
 Tools | Macros, Library, Spell, Thesaurus, Autosort, Count, Undo | | 3
 Tools, Macros, Edit | Edit a macro | | 3
 Tools, Macros, Delete | Delete a macro | | 3

@@ -546,6 +546,31 @@ The menu as the program has it (the bar; Edit varies with the document):
     Title
     Structured
     Window
+      Open
+      Close
+      Adjust
+      Zoom-up
+      Zoom-down
+      Switch
+    Block
+      Copy   [F3]
+      Cut   [F4]
+      Paste   [F5]
+      Move   [F7]
+      Delete   [Alt-F4]
+    Parts
+      Split   [F2]
+      Join   [Alt-F3]
+      Append   [Alt-F2]
+    Layout
+      Format   [F6]
+      Table   [F8]
+      Attribute   [Alt-F6]
+      Border   [Alt-F8]
+      Case   [Ctrl-F6]
+    Insert
+      Marker   [Ctrl-F12]
+      Overtype   [Alt-F5]
     Unstructured
     Section   [Ctrl-^]
     Document   [Ctrl-^]
@@ -556,10 +581,11 @@ The menu as the program has it (the bar; Edit varies with the document):
       Document
       Block
       Section
-    Next Error   [Ctrl-F8]
-    Previous Error   [Ctrl-F7]
-    Remove Error
-    Remove Print Errors
+    Errors
+      Next   [Ctrl-F8]
+      Previous   [Ctrl-F7]
+      Remove
+      Remove All
   Tools
     Macros
       Edit
@@ -572,6 +598,9 @@ The menu as the program has it (the bar; Edit varies with the document):
       Delete
       Save
       Retrieve
+      Copy   [Ctrl-F3]
+      Cut   [Ctrl-F4]
+      Paste   [Ctrl-F5]
     Spell
       Document
       Block
@@ -584,111 +613,74 @@ The menu as the program has it (the bar; Edit varies with the document):
     Count
     Undo   [Ctrl-F10]
     Redo   [Ctrl-F11]
+    Find
+      Search   [F9]
+      Replace   [Alt-F9]
+      Again   [Ctrl-F9]
+      Go To   [Alt-F7]
+    Math   [Ctrl-F2]
+  Help   [F1]
   Quit   [Ctrl-Q]
-
-Commands that have a key and an entry:
-
-  Learn          Ctrl-F1    Tools, Macros, Learn
-  Next Error     Ctrl-F8    Print, Next Error
-  Prev Error     Ctrl-F7    Print, Previous Error
-  Redo           Ctrl-F11   Tools, Redo
-  Undo           Ctrl-F10   Tools, Undo
 
   Menu entries that have no key of their own: File New, File Delete, File
   Import, File Export, Global Format, Global Page, Global Typeface, Global
   Marker, Global Options, Global Named Edit, Global Named Delete, Edit Title,
-  Edit Structured, Edit Window, Edit Unstructured, Print Draft, Print Preview
-  Document, Print Preview Block, Print Preview Section, Print Remove Error,
-  Print Remove Print Errors, Tools Macros Edit, Tools Macros Delete, Tools
-  Macros Save, Tools Macros Retrieve, Tools Library Edit, Tools Library
-  Delete, Tools Library Save, Tools Library Retrieve, Tools Spell Document,
-  Tools Spell Block, Tools Spell Section, Tools Autosort Section, Tools
-  Autosort Table, Tools Count.
+  Edit Structured, Edit Window Open, Edit Window Close, Edit Window Adjust,
+  Edit Window Zoom-up, Edit Window Zoom-down, Edit Window Switch, Edit
+  Unstructured, Print Draft, Print Preview Document, Print Preview Block,
+  Print Preview Section, Print Errors Remove, Print Errors Remove All, Tools
+  Macros Edit, Tools Macros Delete, Tools Macros Save, Tools Macros Retrieve,
+  Tools Library Edit, Tools Library Delete, Tools Library Save, Tools Library
+  Retrieve, Tools Spell Document, Tools Spell Block, Tools Spell Section,
+  Tools Autosort Section, Tools Autosort Table, Tools Count.
 
-  The original: the repository documents say that its menus hold only these
-  entries.  docs/EDIT-MENU.txt: the Edit menu has Title, Structured or
-  Unstructured, Section or Document, and Window, and the commands of the
-  function keys are "not on it in the original" (the collapse, expand, promote
-  and demote commands stay on their keys).  docs/TOOLS-MENU.txt: Tools has
-  Macros, Library, Spell, Thesaurus, Autosort and Count.  docs/KEYSTROKES.txt
-  marks Undo and Redo (Tools) as not in the original.  So none of the commands
-  below has a menu entry in the original: its function key is its only way.
+  The original: the repository documents say that its menus hold only the
+  entries of docs/EDIT-MENU.txt and docs/TOOLS-MENU.txt (Edit: Title,
+  Structured or Unstructured, Section or Document, Window; Tools: Macros,
+  Library, Spell, Thesaurus, Autosort, Count), so in the original the function
+  key was the only way to the commands below.  Strata adds the routes of this
+  part: every command that has a function key has an entry in the F12 menu, in
+  the groups Edit Block, Edit Parts, Edit Layout, Edit Insert and Tools Find,
+  in Tools Math, in Tools Library and in the bar entry Help.  The groups keep
+  every row of the bar within 80 columns.
 
-Commands with a function key and NO menu entry (24):
+The route of every command with a function key (30 keys):
 
-  Command          Key        Proposed menu route
+  Command          Key        Route in the F12 menu
   ---------------- ---------- ------------------------------
-  Help             F1         the bar, Help
-  Split            F2         Edit, Split
-  Copy             F3         Edit, Copy
-  Cut              F4         Edit, Cut
-  Paste            F5         Edit, Paste
-  Format           F6         Edit, Format
-  Move             F7         Edit, Move
-  Table            F8         Edit, Table
-  Search           F9         Tools, Search
-  Math             Ctrl-F2    Tools, Math
-  Lib Copy         Ctrl-F3    Tools, Library, Copy
-  Lib Cut          Ctrl-F4    Tools, Library, Cut
-  Lib Paste        Ctrl-F5    Tools, Library, Paste
-  Case             Ctrl-F6    Tools, Case
-  Search Again     Ctrl-F9    Tools, Search Again
-  Marker           Ctrl-F12   Edit, Marker
-  Append           Alt-F2     Edit, Append
-  Join             Alt-F3     Edit, Join
-  Delete           Alt-F4     Edit, Delete
-  Overtype         Alt-F5     Edit, Overtype
-  Set Attribute    Alt-F6     Edit, Set Attribute
-  Go To            Alt-F7     Edit, Go To
-  Border           Alt-F8     Tools, Border
-  Replace          Alt-F9     Tools, Replace
+  Help             F1         F12, Help
+  Split            F2         F12, Edit, Parts, Split
+  Copy             F3         F12, Edit, Block, Copy
+  Cut              F4         F12, Edit, Block, Cut
+  Paste            F5         F12, Edit, Block, Paste
+  Format           F6         F12, Edit, Layout, Format
+  Move             F7         F12, Edit, Block, Move
+  Table            F8         F12, Edit, Layout, Table
+  Search           F9         F12, Tools, Find, Search
+  Learn            Ctrl-F1    F12, Tools, Macros, Learn
+  Math             Ctrl-F2    F12, Tools, Math
+  Lib Copy         Ctrl-F3    F12, Tools, Library, Copy
+  Lib Cut          Ctrl-F4    F12, Tools, Library, Cut
+  Lib Paste        Ctrl-F5    F12, Tools, Library, Paste
+  Case             Ctrl-F6    F12, Edit, Layout, Case
+  Prev Error       Ctrl-F7    F12, Print, Errors, Previous
+  Next Error       Ctrl-F8    F12, Print, Errors, Next
+  Search Again     Ctrl-F9    F12, Tools, Find, Again
+  Undo             Ctrl-F10   F12, Tools, Undo
+  Redo             Ctrl-F11   F12, Tools, Redo
+  Marker           Ctrl-F12   F12, Edit, Insert, Marker
+  Append           Alt-F2     F12, Edit, Parts, Append
+  Join             Alt-F3     F12, Edit, Parts, Join
+  Delete           Alt-F4     F12, Edit, Block, Delete
+  Overtype         Alt-F5     F12, Edit, Insert, Overtype
+  Set Attribute    Alt-F6     F12, Edit, Layout, Attribute
+  Go To            Alt-F7     F12, Tools, Find, Go To
+  Border           Alt-F8     F12, Edit, Layout, Border
+  Replace          Alt-F9     F12, Tools, Find, Replace
+  Marker           Alt-F12    F12, Edit, Insert, Marker
 
-The proposals, with the reason:
-
-  Help (F1): the bar, between Tools and Quit, Help.  F1 is taken by
-  xfce4-terminal; a bar entry is where a user looks for Help (letter H is free
-  in the bar).
-
-  Search (F9): Tools, before Border, Search.  There is no Search menu; the
-  Edit menu is for the kind of document, so Tools holds the three search
-  commands.
-
-  Math (Ctrl-F2): Tools, before Autosort, Math.  Next to Autosort, which also
-  works on a column or table.
-
-  Lib Copy (Ctrl-F3): Tools, Library, first entry, Copy.  The library chapter
-  keeps the three commands together; Library now has Edit, Delete, Save and
-  Retrieve.
-
-  Lib Cut (Ctrl-F4): Tools, Library, second entry, Cut.  As Lib Copy.
-
-  Lib Paste (Ctrl-F5): Tools, Library, third entry, Paste.  As Lib Copy.
-
-  Case (Ctrl-F6): Tools, before Autosort, Case.  As Border: a command on
-  highlighted text.
-
-  Search Again (Ctrl-F9): Tools, after Replace, Search Again.  As Search.
-
-  Marker (Ctrl-F12): Edit, last entry, Marker.  Global, Marker is the marker
-  SETTINGS, so inserting a marker needs a different label.
-
-  Border (Alt-F8): Tools, before Autosort, Border.  Chapter 3 of the manual
-  puts Border, Case and Math side by side, ahead of Tools: Macros and Library.
-
-  Replace (Alt-F9): Tools, after Search, Replace.  As Search.
-
-  The editing commands (Split, Copy, Cut, Paste, Move, Format, Table, Append,
-  Join, Delete, Overtype, Set Attribute, Go To and Marker): fourteen entries
-  would double the Edit menu, which the original keeps to three.  Two ways,
-  and the owner chooses.  Way 1: new entries on the Edit menu with those
-  names, each running the command as its key does.  Way 2: ONE new entry,
-  "Commands", on the Tools menu (or on the bar), that opens the same list as
-  Ctrl-F with every command that has a function key and its key (W29.1 made
-  that list).  Way 2 also covers Border, Case, Math, the library commands, the
-  search commands and Help, so the proposals above are the alternative to it
-  for those commands.
-
-  Letters of the bar entries: with Case, Math and Count, Macros and Math,
-  Spell and Search all in Tools, a letter jumps to the first entry that starts
-  with it, so a new entry changes which entry a letter reaches; the manual and
-  the cheat sheet name the letters.
+  Letters of the bar entries: a letter chooses the first entry that starts
+  with it, so in Tools the letter M is Macros (Math is reached with the arrow
+  keys) and in Edit Block and in Tools Library the letter C is Copy (Cut is
+  reached with the arrow keys).  The manual and the cheat sheet name the
+  letters.

@@ -523,6 +523,8 @@ test: $(BIN)/roundtrip $(BIN)/tabcheck $(BIN)/edtest $(BIN)/memtest \
 	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/installtest.py
 	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/gsdoc.py
 	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/fileversions.py
+	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/menuwidth.py $(BIN)/stred
+	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/menutext.py
 	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/checktools.py
 	PYTHONDONTWRITEBYTECODE=1 python3 -I -B tests/docversion.py
 	$(MAKE) docversion

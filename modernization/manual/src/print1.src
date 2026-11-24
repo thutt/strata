@@ -62,8 +62,8 @@ text to the typesetter exactly as it was typed ({n:marker-latex}).
 .ix Draft, Final, Preview
 .ix Hint line, Print menu
 The Print menu is the fourth entry of the menu bar, after File, Global and
-Edit and before Tools.  It has seven entries: three for printing and four for
-the errors that a print finds.
+Edit and before Tools.  It has four entries: Draft, Final and Preview for
+printing, and Errors, a menu of four for the errors that a print finds.
 The hint line of the menu bar shows the hint of the highlighted entry.
 
 .h3 How to reach it
@@ -87,26 +87,33 @@ Final | {k:F} | Works | Makes the PDF with all that the document has, with
  title page, copies and ranges, and sends it to a printer if one is named
  ({n:print-final}).
 Preview | {k:P} | Works | A menu of three: Document, Block, Section ({n:print-preview}).
-Next Error | (cursor keys) | Works | Finds the next Print Error marker, as
- {k:Ctrl-F8} does ({n:edit-c-find-error}).
-Previous Error | (cursor keys) | Works | Finds the previous one, as {k:Ctrl-F7}
- does.
-Remove Error | (cursor keys) | Works | Takes out the Print Error marker under
- the cursor.
-Remove Print Errors | (cursor keys) | Works | Takes out every Print Error
- marker.
+Errors | {k:E} | Works | A menu of four for the Print Errors that a print
+ found ({n:print-errors-menu}).
 .end
-The last four entries are reached with {k:Right} and {k:Enter}.  The row of
-the seven entries is wider than 80 columns: on a screen of 80 columns the last
-entry, Remove Print Errors, is on a second row, and the hint line is one row
-lower.  The markers are described in {x:print-errors}.
+The row of the four entries fits in one row of 80 columns.  The markers are
+described in {x:print-errors}.
 When an entry is highlighted the hint line shows its text: "Print document in
-draft quality", "Print document in final quality" and "Document, Block,
-Section" for Preview.  The three entries of the Preview menu have "Preview
-entire document", "Preview the current block" and "Preview the current
-section".  The hints of the last four are "Find the next Print Error
-[Ctrl-F8]", "Find the previous Print Error [Ctrl-F7]", "Remove the Print Error
-under the cursor" and "Remove all the Print Errors".
+draft quality", "Print document in final quality", "Document, Block, Section"
+for Preview and "Next, Previous, Remove, Remove All" for Errors.  The three
+entries of the Preview menu have "Preview entire document", "Preview the
+current block" and "Preview the current section".
+
+.h3 The Errors menu [print-errors-menu]
+.ix Errors menu, Print
+.ix Print Errors, menu entries
+The four entries of Errors are reached with {k:F12}, {k:P}, {k:E}, the cursor
+keys and {k:Enter}.
+.table 12 18 28
+Entry | Key | What it does
+Next | {k:Ctrl-F8} | Finds the next Print Error marker ({n:edit-c-find-error}).
+Previous | {k:Ctrl-F7} | Finds the previous Print Error marker.
+Remove | | Takes out the Print Error marker under the cursor.
+Remove All | | Takes out every Print Error marker.
+.end
+The hints of the four are "Find the next Print Error [Ctrl-F8]", "Find the
+previous Print Error [Ctrl-F7]", "Remove the Print Error under the cursor" and
+"Remove all the Print Errors".  Remove and Remove All share the first letter R,
+so the letter chooses Remove and the cursor keys reach Remove All.
 
 .h3 Esc and the other ways out
 {k:Esc} closes the menu one level at a time.  A panel is left with {k:Esc},

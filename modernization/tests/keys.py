@@ -81,7 +81,9 @@ d = fm(['A-SLASH', 'show'])
 check('Alt-/ with nothing to redo says so', 'Nothing to redo' in d[0], d[0])
 
 # The menu hints.
-d = fm(['F12', 'text:T', 'END', 'show', 'LEFT', 'show'])
+# Tools now ends with Redo, Find and Math: Redo is two entries left of the
+# last one, Undo three.
+d = fm(['F12', 'text:T', 'END', 'LEFT', 'LEFT', 'show', 'LEFT', 'show'])
 check('the hint of Redo names Alt-/', 'Do again what was undone [Alt-/]' in
     d[0], d[0])
 check('the hint of Undo names Ctrl-/', 'Undo the last change [Ctrl-/]' in

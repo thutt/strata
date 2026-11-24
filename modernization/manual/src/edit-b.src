@@ -32,9 +32,8 @@ Way | What it does
 {k:Ctrl-F12} | The same as {k:Alt-F12}.  Many window managers and terminals keep {k:Alt-F12} for themselves and never pass it on, which is why there is a second key.
 {k:Ctrl-F}, then {c:Marker (Alt-F12)} | The menu of the Alt commands (see the end of this chapter): the entry Marker (Alt-F12).  The entry always works in a terminal.
 .end
-The command is not on the {k:F12} menu bar.  The Edit menu has only Title,
-Structured or Unstructured, Section or Document, and Window
-({n:edit-menus}); Marker is reached by the keys above.
+The command is also on the {k:F12} menu bar: {k:F12}, Edit, Insert, Marker
+({n:edit-menu-routes}); the keys above reach it too.
 
 .h3 The table Marker Commands
 .pic pictures/edit-b-marker-grid.png 5 The table Marker Commands.
@@ -334,7 +333,8 @@ document as modified.
 document at the cursor.  The clipboard is filled by Copy ({k:F3}), Cut ({k:F4},
 {k:Ctrl-K}, {k:Ctrl-L}, {k:Ctrl-X}) and Move ({k:F7}); a Delete ({k:Alt-F4}) does
 not
-fill it.  The command is not on the {k:F12} menu bar.
+fill it.  The command is also on the {k:F12} menu bar: {k:F12}, Edit, Block,
+Paste.
 
 .h4 What is pasted and where
 The clipboard keeps the kind of thing that it holds, and Paste puts that kind
@@ -552,8 +552,8 @@ Way | What it does
  the panel ({n:edit-c-find-error}).
 {k:Ctrl-F8}, {k:Ctrl-F7} | Find the next and the previous Print Error, without the panel ({n:edit-c-find-error}).
 .end
-The command is not on the {k:F12} menu bar, and the menu of the Alt commands has an
-entry for Search too: {k:F9} reaches every terminal.
+The command is also on the {k:F12} menu bar: {k:F12}, Tools, Find, Search.  The
+menu of the Alt commands has an entry for Search too.
 
 .h4 The panel
 A panel titled Search has six fields.  "Search for" is a line of input of 79
@@ -640,8 +640,8 @@ Way | What it does
 {k:Alt-F9} | The Replace key (the label Replace of the key line when {k:Alt} is held, in the X11 version).
 {k:Ctrl-F}, then {c:Replace (Alt-F9)} | The menu of the Alt commands (see the end of this chapter): the entry Replace (Alt-F9).  Use it when the terminal does not pass {k:Alt-F9}.
 .end
-The command is not on the {k:F12} menu bar.  There is no accelerator key apart
-from these two.
+The command is also on the {k:F12} menu bar: {k:F12}, Tools, Find, Replace.  There
+is no accelerator key apart from the keys above.
 
 .h4 The panel
 .pic pictures/edit-b-replace.png 5 The Replace panel.
@@ -954,7 +954,7 @@ Block selection must stay within one section | The highlight reaches over a head
 .ix Count words
 .ix Number of words
 Words counts the words of the document and shows the number.  It is Count, on
-the Tools menu: {k:F12}, Tools, Count (the sixth of the eight entries of Tools;
+the Tools menu: {k:F12}, Tools, Count (the sixth of the ten entries of Tools;
 the letter {k:C} chooses it).  It is not on the Edit menu and there is no key for
 it.
 
