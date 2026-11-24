@@ -1,0 +1,42 @@
+HOW TO INSTALL STRATA
+
+Strata is a word processor for long documents.  This file is for a person who
+has downloaded the tarball of Strata.  The steps need a terminal and no
+knowledge of the source.
+
+1. Check the download before you unpack it.  Put the file
+   strata-@NAME@.tar.xz.sha256 in the same directory and type:
+
+       sha256sum -c strata-@NAME@.tar.xz.sha256
+
+   The answer must be "strata-@NAME@.tar.xz: OK".
+
+2. Unpack the file and go into the directory that it makes:
+
+       tar -xJf strata-@NAME@.tar.xz
+       cd strata-@NAME@
+
+3. Run the install script with bash.  Do not run it with sh: the script needs
+   bash, and sh stops at once with a message.
+
+       bash strata-install
+
+   An ordinary user installs Strata in the directory usr below the home
+   directory.  An administrator installs it in /usr, and the script asks
+   before it installs any packages that are missing.
+
+4. At the end the script may print "Optional programs are missing:" with the
+   programs, what is lost without each one, and one command that an
+   administrator can run to install them.  Strata runs without them.
+
+5. Start the programs.  If the directory usr/bin below your home directory is
+   not in your PATH, type the whole name: ~/usr/bin/str starts the Document
+   Manager and ~/usr/bin/stred starts the Editor.
+
+To see what would be done without changing anything, type:
+
+       bash strata-install --dry-run
+
+To remove Strata again, type:
+
+       bash strata-install --uninstall

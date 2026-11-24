@@ -5,7 +5,8 @@ Written 2026-11-21 for the owner's request of 2026-11-20 (worklist item W69):
 make a template for common Avery sticker label sheets; research the sheets,
 the size of the stickers, the number of stickers across and down.  The data
 are in tests/labeldata.py, the templates are made from them by
-tests/mklabels.py (the committed copies are in templates/), the table of this
+tests/mklabels.py (the committed copies are in templates/labels/avery/us and
+templates/labels/avery/a4, docs/TEMPLATES.txt), the table of this
 document is made from the data by tests/mklabelsdoc.py, and tests/labels.py
 compares the data, this document, the templates and the manual.
 

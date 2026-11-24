@@ -44,6 +44,7 @@ import tui
 import labeldata as D
 import mklabels as L
 import mklabelsdoc as T
+import mktemplates as MT
 
 build = os.environ.get('STRATA_BUILD_DIR', '')
 strprint = os.environ.get('STRPRINT', os.path.join(build, 'term', 'strprint'))
@@ -164,13 +165,14 @@ check('every number that is missing is named in the document',
 gen = os.path.join(tmp, 'gen')
 subprocess.run([sys.executable, '-I', '-B', os.path.join(here, 'mklabels.py'),
                 gen], check=True)
-have = sorted(f[:-4] for f in os.listdir(shipped) if f.startswith('label-'))
+have = sorted(f[:-4] for d, _, fs in os.walk(shipped) for f in fs
+              if f.startswith('label-'))
 check('the templates folder has the label templates of the generator and no '
       'other label template', have == sorted(names), set(have) ^ set(names))
 check('the committed label templates are what the generator makes',
-      all(os.path.exists(os.path.join(shipped, n + '.doc')) and
-          read(os.path.join(shipped, n + '.doc')) ==
-          read(os.path.join(gen, n + '.doc')) for n in names))
+      all(os.path.exists(os.path.join(shipped, MT.relpath(n))) and
+          read(os.path.join(shipped, MT.relpath(n))) ==
+          read(os.path.join(gen, MT.relpath(n))) for n in names))
 
 
 def strip_desc(raw):
@@ -179,11 +181,11 @@ def strip_desc(raw):
 
 same = True
 for s in sheets:
-    base = strip_desc(read(os.path.join(shipped, D.key(s['num'], s) +
-                                        '.doc')))
+    base = strip_desc(read(os.path.join(shipped,
+                                        MT.relpath(D.key(s['num'], s)))))
     for n in s['also']:
         same = same and strip_desc(read(os.path.join(
-            shipped, D.key(n, s) + '.doc'))) == base
+            shipped, MT.relpath(D.key(n, s))))) == base
 check('a template of an alias differs from the one of its sheet in the '
       'description only', same)
 
@@ -210,7 +212,7 @@ paper_ok = True
 desc_ok = True
 trip_ok = True
 for name, num, s in D.every():
-    raw = read(os.path.join(shipped, name + '.doc'))
+    raw = read(os.path.join(shipped, MT.relpath(name)))
     g = L.layout(s)
     code, pw, ph, pname = D.PAPER[s['paper']]
     bl = blocks_of(raw)
@@ -241,7 +243,7 @@ for name, ok in (('has no text: every line of every block is empty', texts_ok),
 for name, num, s in D.every():
     if quick and s is not sheets[0]:
         continue
-    rc, out, err = run([rtrip, os.path.join(shipped, name + '.doc')])
+    rc, out, err = run([rtrip, os.path.join(shipped, MT.relpath(name))])
     trip_ok = trip_ok and rc == 0
 check('every label template is read and written again unchanged', trip_ok)
 
@@ -303,7 +305,7 @@ for s in sheets:
         continue
     num = s['num']
     name = D.key(num, s)
-    raw = read(os.path.join(shipped, name + '.doc'))
+    raw = read(os.path.join(shipped, MT.relpath(name)))
     g = L.layout(s)
     k = g['k']
     n_all = D.count(s)

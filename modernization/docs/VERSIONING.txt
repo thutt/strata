@@ -123,6 +123,16 @@ to give to users.  A build is made, installation media are produced, and they
 are uploaded to github.  The installation media carry no source code.  No
 build of a development branch or of a defect branch is a release.
 
+The tool scripts/strata-release VERSION makes the tag v<x>.<y>.0 on a commit
+(the number is X.Y.0 only; the release is the first number, so the tag
+message of 1.1.0 is "Strata 1.1.0 (release 1)") and builds the installation
+tarball from a detached checkout of that tag, whose version is then x.y.0
+and whose tarball is called strata-x.y.0.tar.xz.  A commit carries one
+release tag only.  The tool never moves or deletes an existing tag and
+refuses a tag that exists; it never pushes.  docs/INSTALL-POLICY.txt,
+section "Making a release", has the steps.  The tool does not make the
+release branch that the text above describes.
+
 5. The file format version
 --------------------------
 
@@ -166,6 +176,12 @@ writes the original file with whatever version number it uses.
 
 Before a release, a tool visits all the documents and sample documents and
 changes their version; it creates no backup files.
+
+The name of the install tarball is made from the version of the build: every
+run of characters other than letters, digits, dot, underscore and hyphen
+becomes one hyphen, so the version "development-1 230cb783" gives
+strata-development-1-230cb783.tar.xz (docs/INSTALL-POLICY.txt, the section
+The install tarball).
 
 6. Open items
 -------------

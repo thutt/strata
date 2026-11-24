@@ -39,6 +39,7 @@ import os, shutil, sys, tempfile
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, here)
 import tui
+import mktemplates
 build = os.environ.get('STRATA_BUILD_DIR', '')
 stred = os.environ.get('STRED', os.path.join(build, 'term', 'stred'))
 strprog = os.environ.get('STR', os.path.join(os.path.dirname(stred), 'str'))
@@ -77,13 +78,14 @@ def check(name, cond, extra=''):
 places = os.path.join(tmp, 'places')
 os.makedirs(places)
 for name in ('envelope-uk-dl.doc', 'letter-us.doc'):
-    shutil.copy(os.path.join(shipped, name), os.path.join(places, name))
+    shutil.copy(os.path.join(shipped, mktemplates.relpath(name[:-4])),
+                os.path.join(places, name))
 os.environ['STRATA_TEMPLATES'] = places
 
 work = os.path.join(tmp, 'work')
 os.makedirs(work)
 base = os.path.join(work, 'base.doc')
-shutil.copy(os.path.join(shipped, 'letter-a4.doc'), base)
+shutil.copy(os.path.join(shipped, 'letters', 'letter-a4.doc'), base)
 os.chdir(work)
 
 

@@ -139,7 +139,8 @@ check('two runs of the generator make the same bytes (nothing changes from '
 for t in sorted(mktemplates.ENVELOPES):
     n = mksamples.sample_name(t)
     raw = read(os.path.join(tree, n + '.doc')) if n in have else b''
-    traw = read(os.path.join(here, '..', 'templates', t + '.doc'))
+    traw = read(os.path.join(here, '..', 'templates', 'envelopes',
+                                  t + '.doc'))
     m = re.search(rb'\r\nMD([^\x00]*)\x00', raw)
     d = m.group(1).decode('ascii') if m else ''
     size = envzones.SOURCES[t][2]

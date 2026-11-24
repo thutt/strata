@@ -150,12 +150,14 @@ help:
 	@echo "          seconds only: about 5 minutes (see docs/TESTING.txt)."
 	@echo "  xtest   Run the X11 smoke tests."
 	@echo "  verify  Run every suite and check the source tree."
-	@echo "  install Install under a prefix with scripts/strata-install; never"
-	@echo "          part of 'all'.  The default prefix is /usr, which needs an"
-	@echo "          administrator; use 'strata-build install --prefix"
-	@echo "          \$$HOME/usr' without one, or 'strata-build install --help'"
-	@echo "          for the options.  It also installs the programs that"
-	@echo "          Strata needs to run (--no-prereqs leaves that out)."
+	@echo "  install (strata-build only) Make the install tarball and its"
+	@echo "          checksum in the build directory, only when asked: no"
+	@echo "          other target makes it.  It installs nothing.  To install"
+	@echo "          from a build directory run scripts/strata-install"
+	@echo "          --build-dir DIR [OPTIONS]; the default prefix is /usr,"
+	@echo "          which needs an administrator, and --prefix \$$HOME/usr"
+	@echo "          is for anybody else."
+	@echo "  install-tarball (strata-build only) The same as install."
 	@echo "  check-tools  (strata-build only) Report which programs, headers"
 	@echo "          and libraries that building, testing and running need"
 	@echo "          are present; installs nothing."
@@ -173,13 +175,14 @@ DOCVERSION_DIRS = samples templates tests/data tests/samples manual/samples
 docversion:
 	python3 -I -B tools/docversion.py --check --quiet $(DOCVERSION_DIRS)
 
-# The install is done by the script scripts/strata-install, which uses
-# /usr/bin/install and writes a manifest.  It is never a part of 'all'.
-# 'strata-build install OPTIONS' runs the script itself with the options;
-# these targets run it with the options of INSTALL_ARGS.
+# The target install makes the install tarball in the build directory and
+# installs nothing, as 'strata-build install' does; it is never a part of
+# 'all'.  The script scripts/strata-install installs from a build directory
+# when it is run directly, and uninstall runs it with the options of
+# INSTALL_ARGS.
 install:
-	$(SRCROOT)/scripts/strata-install --build-dir $(abspath $(O)) \
-	    $(INSTALL_ARGS)
+	$(SRCROOT)/scripts/strata-install-tarball $(abspath $(O)) \
+	    $(STRATA_BUILD_TYPE)
 
 uninstall:
 	$(SRCROOT)/scripts/strata-install --uninstall $(INSTALL_ARGS)

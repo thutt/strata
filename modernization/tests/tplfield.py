@@ -37,6 +37,7 @@ import os, shutil, sys, tempfile
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, here)
 import tui
+import mktemplates
 build = os.environ.get('STRATA_BUILD_DIR', '')
 stred = os.environ.get('STRED', os.path.join(build, 'term', 'stred'))
 strprog = os.environ.get('STR', os.path.join(os.path.dirname(stred), 'str'))
@@ -77,13 +78,13 @@ def check(name, cond, extra=''):
 work = os.path.join(tmp, 'work')
 os.makedirs(os.path.join(work, 'tpl'))
 os.makedirs(os.path.join(work, 'empty'))
-shutil.copy(os.path.join(shipped, 'envelope-uk-dl.doc'),
+shutil.copy(os.path.join(shipped, 'envelopes', 'envelope-uk-dl.doc'),
             os.path.join(work, 'tpl', 'envelope-uk-dl.doc'))
-shutil.copy(os.path.join(shipped, 'letter-us.doc'),
+shutil.copy(os.path.join(shipped, 'letters', 'letter-us.doc'),
             os.path.join(work, 'tpl', 'letter-us.doc'))
 open(os.path.join(work, 'empty', 'notes.txt'), 'w').write('not a template\n')
 base = os.path.join(work, 'base.doc')
-shutil.copy(os.path.join(shipped, 'letter-a4.doc'), base)
+shutil.copy(os.path.join(shipped, 'letters', 'letter-a4.doc'), base)
 os.chdir(work)
 
 # The keys of New in the Editor: F12, File, New; no list of templates is
@@ -152,7 +153,7 @@ check('Unstructured in the list of the field puts that word in the field',
 # ---- (b) a name typed in the field -----------------------------------------
 tdir = os.path.join(tmp, 'places')
 os.makedirs(tdir)
-shutil.copy(os.path.join(shipped, 'envelope-uk-dl.doc'),
+shutil.copy(os.path.join(shipped, 'envelopes', 'envelope-uk-dl.doc'),
             os.path.join(tdir, 'envelope-uk-dl.doc'))
 os.environ['STRATA_TEMPLATES'] = tdir
 newb = os.path.join(work, 'byname')
@@ -176,7 +177,7 @@ for tname, fmt in (('envelope-us-ca-9', b'BGSender'),
                    ('envelope-us-ca-monarch', b'BGSender'),
                    ('envelope-jp-yougata-4', b'BGRecipient'),
                    ('letter-us', b'BGSender')):
-    shutil.copy(os.path.join(shipped, tname + '.doc'),
+    shutil.copy(os.path.join(shipped, mktemplates.relpath(tname)),
                 os.path.join(tdir2, tname + '.doc'))
     newc = os.path.join(work, 'typed-' + tname)
     tui.session([stred, '-H', helpf, base], NEW + ['ESC', 'wait', 'DOWN',
@@ -200,14 +201,14 @@ del os.environ['STRATA_TEMPLATES']
 tdir3 = os.path.join(tmp, 'places3')
 os.makedirs(tdir3)
 os.environ['STRATA_TEMPLATES'] = tdir3
-mine = open(os.path.join(shipped, 'envelope-us-ca-9.doc'), 'rb').read()
+mine = open(os.path.join(shipped, 'envelopes', 'envelope-us-ca-9.doc'), 'rb').read()
 at = mine.index(b'BGSender')
 at = mine.index(b'\r\nT', at)
 end = mine.index(b'\x00', at)
 mine = (mine[:at] + b'\r\nTMy Return Address Co\x1d12 Oak Road\x1dTown, ST 00000' +
         mine[end:])
 open(os.path.join(tdir3, 'my-envelope.doc'), 'wb').write(mine)
-shutil.copy(os.path.join(shipped, 'envelope-us-ca-9.doc'),
+shutil.copy(os.path.join(shipped, 'envelopes', 'envelope-us-ca-9.doc'),
             os.path.join(tdir3, 'shipped-envelope.doc'))
 for tname, expect in (('my-envelope', True), ('shipped-envelope', False)):
     newt = os.path.join(work, 'text-' + tname)
@@ -229,7 +230,7 @@ del os.environ['STRATA_TEMPLATES']
 # ---- (c) the Document Manager ------------------------------------------------
 mgr = os.path.join(tmp, 'mgr')
 os.makedirs(os.path.join(mgr, 'tpl'))
-shutil.copy(os.path.join(shipped, 'envelope-uk-dl.doc'),
+shutil.copy(os.path.join(shipped, 'envelopes', 'envelope-uk-dl.doc'),
             os.path.join(mgr, 'tpl', 'envelope-uk-dl.doc'))
 os.chdir(mgr)
 DM = [strprog, '-H', helpf, mgr]
@@ -294,7 +295,7 @@ check('the Document Manager: a name on the command line shows the list of '
 del os.environ['STRATA_TEMPLATES']
 # an existing name opens the document with no list and no panel
 open(os.path.join(mgr, 'exists.doc'), 'wb').write(
-    open(os.path.join(shipped, 'letter-us.doc'), 'rb').read())
+    open(os.path.join(shipped, 'letters', 'letter-us.doc'), 'rb').read())
 d = tui.session(DM, ['ENTER', 'text:exists', 'INS', 'wait', 'wait', 'wait',
     'show'], rows=30)
 scr = d[0]

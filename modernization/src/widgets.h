@@ -57,6 +57,38 @@ popup_list_desc(const char *title, const char **names, const char **descs,
                 int n, int sel);
 
 
+/* What popup_list_desc_up returns when the key Left (or Backspace with no
+   typed text) asks to go up one folder. */
+#define POPUP_LIST_UP (-2)
+
+
+/*
+ * What popup_list_desc_up returns when a typed text is in no entry of the
+ * list: the text is in widgets_list_find, and the caller may look for it in
+ * the other folders.  The caller sets widgets_list_find before it shows the
+ * list again, to the text that is to be shown as typed.
+ */
+#define POPUP_LIST_FIND (-4)
+extern char widgets_list_find[48];
+
+
+/* Does the text have a word that begins with the first n characters of find
+   (any case)?  A word begins at the start and after a character that is
+   neither a letter nor a digit. */
+int
+list_word_has(const char *text, const char *find, size_t n);
+
+
+/*
+ * The same list for folders and files: the keys Left and Backspace return
+ * POPUP_LIST_UP, so that the caller shows the folder above.  The other keys
+ * and the results are those of popup_list_desc.
+ */
+int
+popup_list_desc_up(const char *title, const char **names, const char **descs,
+                   int n, int sel);
+
+
 /* 1 = Enter, 0 = Esc */
 int
 popup_input(const char *title, const char *label, char *buf, int cap);

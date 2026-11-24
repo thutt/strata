@@ -155,7 +155,11 @@ def main(argv):
     os.makedirs(args[0], exist_ok=True)
 
     for name, d in build(probe).items():
-        with open(os.path.join(args[0], name + ".doc"), "wb") as f:
+        folder = os.path.join(args[0], M.folder_of(name))
+
+        os.makedirs(folder, exist_ok=True)
+
+        with open(os.path.join(folder, name + ".doc"), "wb") as f:
             f.write(d.bytes())
 
     return 0

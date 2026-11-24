@@ -53,6 +53,15 @@ tmp = tempfile.mkdtemp(prefix='tmpl')
 os.environ['STRATA_HOME'] = tempfile.mkdtemp(prefix='home', dir=tmp)
 os.environ['HOME'] = tempfile.mkdtemp(prefix='uhome', dir=tmp)
 os.environ['SOURCE_DATE_EPOCH'] = '1700000000'
+# Copies of the Editor and the Printer in a folder with no share/strata/
+# templates beside them: the build directory has a link to the shipped
+# templates, which would put their folders into the list of New.
+bindir = os.path.join(tmp, 'bin')
+os.makedirs(bindir)
+for prog in (stred, strprint, os.path.join(os.path.dirname(stred), 'str')):
+    shutil.copy(prog, bindir)
+stred = os.path.join(bindir, os.path.basename(stred))
+strprint = os.path.join(bindir, os.path.basename(strprint))
 CRLF = b'\r\n'
 EOL = b'\x1d'
 
@@ -197,21 +206,29 @@ names = ['letter-us', 'letter-a4'] + sorted(mktemplates.ENVELOPES)
 # The label sheets have their own test (tests/labels.py).
 import labeldata
 labels = [n for n, num, sheet in labeldata.every()]
-check('the templates folder has every template of the generator',
-    all(os.path.exists(os.path.join(shipped, n + '.doc'))
+check('the templates folder has every template of the generator, each in '
+    'its folder',
+    all(os.path.exists(os.path.join(shipped, mktemplates.relpath(n)))
         for n in names + labels),
     os.listdir(shipped) if os.path.isdir(shipped) else 'no folder')
 check('the templates folder has no template that the generator does not '
     'make (a renamed template leaves no old file)',
-    sorted(f[:-4] for f in os.listdir(shipped) if f.endswith('.doc')) ==
-    sorted(names + labels), sorted(os.listdir(shipped)))
+    sorted(f[:-4] for d, _, fs in os.walk(shipped) for f in fs
+           if f.endswith('.doc')) == sorted(names + labels),
+    sorted(os.listdir(shipped)))
+check('the templates are in the folders envelopes, letters and '
+    'labels/avery, and nowhere else',
+    sorted(os.path.relpath(d, shipped) for d, _, fs in os.walk(shipped)
+           if fs) ==
+    sorted(['envelopes', 'letters', 'labels/avery/us', 'labels/avery/a4']),
+    sorted(os.path.relpath(d, shipped) for d, _, fs in os.walk(shipped)))
 gen = os.path.join(tmp, 'gen')
 subprocess.run([sys.executable, '-I', '-B',
      os.path.join(here, 'mktemplates.py'),
     gen], check=True)
-same = all(os.path.exists(os.path.join(shipped, n + '.doc')) and
-    open(os.path.join(shipped, n + '.doc'), 'rb').read() ==
-    open(os.path.join(gen, n + '.doc'), 'rb').read()
+same = all(os.path.exists(os.path.join(shipped, mktemplates.relpath(n))) and
+    open(os.path.join(shipped, mktemplates.relpath(n)), 'rb').read() ==
+    open(os.path.join(gen, mktemplates.relpath(n)), 'rb').read()
     for n in names + labels)
 check('the committed templates are what the generator makes', same)
 
@@ -243,8 +260,8 @@ def records_without_text(raw):
 
 
 for n in names:
-    raw = open(os.path.join(shipped, n + '.doc'), 'rb').read()
-    ex = open(os.path.join(exgen, n + '.doc'), 'rb').read()
+    raw = open(os.path.join(shipped, mktemplates.relpath(n)), 'rb').read()
+    ex = open(os.path.join(exgen, mktemplates.relpath(n)), 'rb').read()
     check('%s: the template holds no text of its own (every block is an '
         'empty paragraph, a marker only for a field)' % n,
         all(t == b'' for t in body_texts(raw)) and
@@ -265,10 +282,10 @@ os.makedirs(pdfs)
 expdfs = os.path.join(tmp, 'expdfs')
 os.makedirs(expdfs)
 for n in names:
-    shutil.copy(os.path.join(exgen, n + '.doc'), expdfs)
+    shutil.copy(os.path.join(exgen, mktemplates.relpath(n)), expdfs)
     run([strprint, os.path.join(expdfs, n + '.doc'), '-o',
         os.path.join(expdfs, n + '.pdf'), '--no-banner'])
-    shutil.copy(os.path.join(shipped, n + '.doc'), pdfs)
+    shutil.copy(os.path.join(shipped, mktemplates.relpath(n)), pdfs)
     rc, out, err = run([strprint, os.path.join(pdfs, n + '.doc'), '-o',
         os.path.join(pdfs, n + '.pdf'), '--no-banner'])
     check('%s: prints to a PDF with no error' % n,
@@ -281,7 +298,7 @@ for n in names:
                                        'Ejemplo', 'Exemple', 'Mustermann',
                                        '123-4567')), printed[:200])
     desc = ''
-    raw = open(os.path.join(shipped, n + '.doc'), 'rb').read()
+    raw = open(os.path.join(shipped, mktemplates.relpath(n)), 'rb').read()
     m = re.search(rb'\r\nMD([^\x00]*)\x00', raw)
     check('%s: has a description' % n, m is not None and
         10 < len(m.group(1)) <= 250, m)
@@ -421,7 +438,7 @@ for n, w, h in (('letter-us', 612, 792), ('letter-a4', 595.3, 841.9)):
             'letter (play of 10 mm across, 5 mm up and down)' % n,
             not worst, (worst, rb, DIN_WINDOW))
     # a long letter: the first page has no head, the next one has it
-    raw = open(os.path.join(exgen, n + '.doc'), 'rb').read()
+    raw = open(os.path.join(exgen, mktemplates.relpath(n)), 'rb').read()
     more = b''.join(b'B' + CRLF + b'BGBody\x00' + CRLF + b'TFiller paragraph '
         + b'%d ' % i + b'of the letter goes on and on and on and on and on '
         b'and on and on and on.' + EOL + b'\x00' + CRLF for i in range(40))

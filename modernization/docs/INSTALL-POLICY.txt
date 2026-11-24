@@ -6,7 +6,9 @@ permission and install everything if allowed.  If running as non-root, install
 in the user's home directory, if the minimum set of prerequisites are
 available.  If the prerequisites are not all available, do not install."
 
-The script is scripts/strata-install; 'strata-build install' runs it.  The
+The script is scripts/strata-install; run it directly, with --build-dir for a
+build.  ('strata-build install' makes the install tarball and installs
+nothing; strata-build is a tool of the developers and is never shipped.)  The
 tests are tests/installtest.py (prereq_question_test for an administrator,
 prereq_default_test, user_prereq_test for anybody else).  No test installs a
 package or uses sudo: a directory of small programs first in the PATH plays
@@ -106,3 +108,153 @@ leaves its document and its PDF out, and a payload that holds it is refused
 before anything is installed.  The test tests/installuser.py checks all of
 this as an ordinary user, with a private home directory, from a release
 directory with no source.
+
+
+The install tarball
+-------------------
+
+The install tarball is a build artifact.  The build makes it into the build
+directory, never into the source tree, and it is never committed.
+
+How it is made.  It is made only on request: 'strata-build install-tarball'
+makes it for the current build type, after the programs are built (the
+target all builds everything that the payload needs).  The default build,
+with no argument, and every other target leave no tarball, and 'strata-build
+tarball' is not a target (owner decision, 2026-11-24).  'strata-build help'
+lists the target.  The script is scripts/strata-install-tarball:
+
+  1. The release directory is made in BUILD_DIR/image/strata-NAME with the
+     install script and the payload that 'strata-build release DIR' makes,
+     and INSTALL.txt, made from the template scripts/INSTALL-USER.txt.
+  2. The tarball BUILD_DIR/strata-NAME.tar.xz holds that directory as its
+     only top-level entry.
+  3. The file BUILD_DIR/strata-NAME.tar.xz.sha256 holds the checksum, written
+     from inside the build directory so that the file name is relative; the
+     user checks the download with 'sha256sum -c'.
+
+NAME is the version of the build (the first line of the file version in the
+build directory) in which every run of characters other than letters, digits,
+dot, underscore and hyphen is one hyphen: the version "development-1
+230cb783" gives strata-development-1-230cb783.  The build type is part of
+the name only when it is not release: a debug build makes
+strata-development-1-230cb783-debug.tar.xz, which is for tests only.  A
+build whose version is UNSUPPORTED BUILD CONFIGURATION makes no tarball; the
+build prints one line that says so and is no failure.
+
+The same bytes every time.  The entries are sorted by name, belong to root
+(numeric owner 0), and have one time: SOURCE_DATE_EPOCH when it is set, else
+the time of the commit of the source, else the time of the run.  The
+compression is xz -9e.  Two runs from the same commit give the same file.
+
+There is no signature at this time (decision of the owner, 2026-11-24).  The
+SHA-256 value in the file strata-NAME.tar.xz.sha256 is the integrity check of
+a release: it shows that the file that was downloaded is the file that was
+published and that it is not damaged.  A reader who does not want to trust
+a binary builds Strata from the source.  Nothing in the build generates a
+key or signs, and the file INSTALL-USER.txt says nothing about a signature.
+A signature can be added later, as a file strata-NAME.tar.xz.asc next to the
+tarball, without a change of the tarball.
+
+The instructions for the reader are INSTALL.txt: check the checksum, unpack
+with tar -xJf, run 'bash strata-install'.  The install script is written
+for bash, and a shell that is not bash stops at the first line that needs
+bash, with a confusing message.  The script therefore starts with a test in
+plain shell syntax, placed BEFORE its three set lines, because a shell that is
+not bash can stop at the line with set -o pipefail (an older dash does not
+know the option).  This is the one place where the script does not follow the
+rule of the owner that the three set lines come right after the copyright
+block; a comment in the script gives the reason.  A start with sh prints
+"strata-install: run this script with bash: bash strata-install" on the
+error output and ends with the status 1.
+
+Delivery (decision of the owner, 2026-11-24).  A user downloads the tarball
+from GitHub.  The files that a release publishes there are the tarball
+strata-NAME.tar.xz and its checksum file strata-NAME.tar.xz.sha256, as the
+files of one release of the repository.  The address of the repository and
+the steps of the publication are not part of this policy: the build only
+makes the two files in the build directory, and a person publishes them.
+Nothing in the build or in the install script uses the network.
+
+The test tests/installtarball.py (in the smoke list) makes the tarball from the
+build directory and checks the name, the checksum file, the content, the
+bytes of a second run, the install and the uninstall as an ordinary user from
+the unpacked tarball, the start with sh, the text of INSTALL.txt and the
+build with no supported version.  It checks that a plain 'strata-build'
+leaves no tarball in the build directory and that 'strata-build install-tarball'
+makes it.  It also checks that a tarball made without the fixed time, an
+INSTALL.txt that says sh, an install script without the test for bash and a
+build script that makes the tarball in the default build each fail a check.
+
+
+Making a release
+----------------
+
+A release is made by the tool scripts/strata-release, which takes the release
+number as its argument.  It is a tool of the developers, like strata-build:
+it is never shipped, and the tarball holds none of the scripts of the
+developers (tests/installtarball.py checks that).
+
+    scripts/strata-release 1.0.0 --dry-run
+    scripts/strata-release 1.0.0
+
+The release number is X.Y.0, with digits for X and Y: the version scheme reads
+only a tag named vX.Y.0 as a release (docs/VERSIONING.txt).  The tag message
+names the release, which is the first number of the version: "Strata 1.1.0
+(release 1)".  The options
+are --commit REV (the commit to tag, default HEAD), --build-dir DIR (the build
+root, default ${TMPDIR:-/tmp}/strata-release-VERSION; the files are made in
+DIR/release), --output DIR (also copy the two files there), --jobs N and
+--dry-run, which checks everything, prints the commit and the tag and
+changes nothing.
+
+The tool makes these steps, in this order.
+
+1. It checks, and changes nothing: the version number; the tools git, tar, xz
+   and sha256sum; that it is in a repository whose top is the project
+   directory; first of all that the tag vVERSION does not exist (a tag of any
+   kind, annotated or not, counts; and a remote that has it counts too); that
+   the commit exists and carries no release tag already (a commit is one
+   release only, because the version of a checkout is read from its release
+   tag); that no tracked file is modified or staged (an untracked file does
+   not count); that the scratch worktree and the build directory do not exist
+   yet and that the build directory is outside the source tree.  A refusal
+   prints a message, ends with the status 1 and has changed nothing.  An
+   existing tag is refused with "the tag vVERSION exists already: nothing was
+   changed" and the advice to delete it with git tag -d if it was never
+   pushed.  The tool has no option that deletes or moves a tag.
+2. It makes the annotated tag vVERSION on the commit, without the option -f of
+   git, so that git itself refuses a tag that appeared in between.
+3. It makes a scratch worktree of the tag, detached, in
+   .claude/worktrees/release-VERSION, sources scripts/setup there for a
+   release build, and runs strata-build and then strata-build install.
+4. It checks the result: the version of the checkout is VERSION (so that the
+   file is called strata-VERSION.tar.xz and not after a branch), the files
+   strata-VERSION.tar.xz and strata-VERSION.tar.xz.sha256 exist, sha256sum -c
+   passes, and the tarball holds the one directory strata-VERSION.
+5. It removes the scratch worktree, copies the files to the --output
+   directory when there is one, and prints the tag, the commit, the paths,
+   the SHA-256 value and, as text only, the next steps.
+
+If a step after the tag was made fails, the tool removes the tag it made, the
+scratch worktree and the build directory it made, and says so.  It never
+removes a tag that it did not make.  It never pushes, never signs, never
+contacts a network (except to ask a configured remote whether it has the tag
+in step 1; a remote that cannot be asked is reported and the check goes on
+without it), never changes the branch that is checked out, never commits and
+never touches the working tree of the project.  To make a release again for
+the same number, delete the tag with git tag -d vVERSION when it was not
+pushed.
+
+The tool makes the tag and the tarball.  The release branch of section 1 of
+docs/VERSIONING.txt and the publication of the files on GitHub are made by
+hand.
+
+The test tests/release.py (in the smoke list) runs the tool in a scratch
+repository with small stand-ins for the build and the tarball, so that no
+build is needed.  It checks the refusals, the dry run, the tag and its
+message, the file names, the checksum, that nothing is pushed, the output
+directory, the rollback, a tag that appears between the check and the
+creation, a wrong version of the checkout, and a dry run in the real
+repository.  A copy of the tool without the check of changed files, without the
+rollback, without the check of the version, with a push, or without the check
+of the existing tag each fails a check.

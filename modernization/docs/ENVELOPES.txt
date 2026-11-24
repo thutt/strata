@@ -6,7 +6,8 @@ countries of Europe, Asia, North America and South America and compare them
 with the paper size and the page layout that the templates use; and make a
 set of country or region templates for the sizes and positions that can be
 verified.  The templates are made by
-tests/mktemplates.py (the committed copies are in templates/); the positions
+tests/mktemplates.py (the committed copies are in templates/envelopes,
+docs/TEMPLATES.txt); the positions
 used in this document were MEASURED on a PDF printed from each template (the
 boxes of ink, in millimetres from the top left corner of the page).
 

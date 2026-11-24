@@ -68,20 +68,32 @@ place that has a file of that name, without regard to the case of the
 letters, is used.
 .table 5 55
 Step | Place
-1 | If the name contains a slash, exactly that path (relative to the
- | directory in which the Editor was started, not to the Working Directory).
+1 | If the name contains a slash and is a path of the file system, exactly
+ | that path (relative to the directory in which the Editor was started, not
+ | to the Working Directory).
 2 | The Working Directory of the panel.
 3 | The directory named by the environment variable {c:STRATA_TEMPLATES}, if
- | it is set.
-4 | The directory {c:templates} of the settings.
-5 | The directory {c:share/strata/templates} beside the programs.
+ | it is set, and the subdirectories in it.
+4 | The directory {c:templates} of the settings, and the subdirectories in it.
+5 | The directory {c:share/strata/templates} beside the programs, and the
+ | subdirectories in it.
 6 | The directory in which the program file of the Editor is.
 .end
-The list that New shows ({n:file-new-list}) is made from three directories: the
-one named by {c:STRATA_TEMPLATES}, the directory {c:templates} in the directory of
-the settings ({c:~/.strata/templates}), and the directory
-{c:share/strata/templates}
-of the installation.  The place that the settings are kept in, {c:~/.strata},
+The directories of the steps 3 to 5 may hold subdirectories, down to four
+levels.  A name without a slash is looked for in the directory and in the
+subdirectories below it, so the name {c:label-us-5160} finds the file in
+{c:labels/avery/us}; the directory itself is looked in first, then the
+subdirectories in the order of their names.  A name with a slash that is not a
+path of the file system is a path below the directory, with the subdirectories
+separated by a slash, such as {c:labels/avery/us/label-us-5160}.  The first file that is found
+is used, so a template of a person's own hides a shipped template of the same
+name.
+The list that New shows ({n:file-new-list}) is made from three directories and
+the subdirectories in them: the one named by {c:STRATA_TEMPLATES}, the
+directory {c:templates} in the directory of the settings
+({c:~/.strata/templates}), and the directory {c:share/strata/templates} of the
+installation.  Subdirectories of the same name in the three directories are one
+subdirectory in the list.  The place that the settings are kept in, {c:~/.strata},
 is not searched for the name typed in the field.  See
 {x:appcfg-search-templates} for the rule in the chapter on the configuration.
 If no file is found and the name is {c:DEFAULT.SET}, which is the name that

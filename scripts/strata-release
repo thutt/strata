@@ -1,0 +1,357 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Makes a release: the tag vX.Y.0 on a commit, and the install tarball built
+# from that tag (see docs/INSTALL-POLICY.txt, section "Making a release"):
+#
+#     strata-release VERSION [--commit REV] [--build-dir DIR] [--output DIR]
+#                            [--jobs N] [--dry-run] [--help]
+#
+# VERSION is the release number X.Y.0, for example 1.0.0 or 1.1.0.  The
+# release is the first number.  The tool is a tool of the developers: it is
+# never shipped, and it never pushes, signs or contacts a network.
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+script_dir="$(cd "$(dirname "${0}")" && pwd -P)";
+project_dir="$(dirname "${script_dir}")";
+
+version="";
+commit="HEAD";
+build_root="";
+output_dir="";
+jobs="$(nproc 2>/dev/null || echo 2)";
+dry_run="no";
+
+# These record what the tool has made, so that a failure removes only that.
+tag_made="no";
+worktree="";
+worktree_made="no";
+build_made="no";
+finished="no";
+
+
+# Prints the usage on the standard output.
+function usage
+{
+    cat <<EOF
+usage: strata-release VERSION [OPTIONS]
+
+Makes the annotated tag vVERSION on a commit, builds that tag in a scratch
+worktree and makes the install tarball strata-VERSION.tar.xz with its
+checksum file strata-VERSION.tar.xz.sha256.
+
+  VERSION             the release number X.Y.0, for example 1.0.0 or 1.1.0.
+  --commit REV        the commit to tag (default HEAD).
+  --build-dir DIR     the build root (default \${TMPDIR:-/tmp}/strata-release-
+                      VERSION); the files are made in DIR/release.
+  --output DIR        also copy the two files to DIR.
+  --jobs N            the number of jobs of the build (default: processors).
+  --dry-run           check everything, print what would be done, change
+                      nothing.
+  --help              print this text.
+
+Nothing is pushed, signed or sent.  An existing tag is never changed or
+removed.
+EOF
+}
+
+
+# Stops with a message on the error output.
+function die
+{
+    echo "strata-release: ${*}" >&2;
+    exit 1;
+}
+
+
+# Removes what the tool has made when it does not finish.  It is run when
+# the tool exits, and it removes only what the tool made itself.
+function cleanup
+{
+    local removed="";
+
+    if [ "${finished}" = "yes" ]; then
+        return 0;
+    fi
+
+    if [ "${worktree_made}" = "yes" ]; then
+        git -C "${project_dir}" worktree remove --force "${worktree}" \
+            >/dev/null 2>&1 || rm -rf -- "${worktree}";
+        git -C "${project_dir}" worktree prune >/dev/null 2>&1 || true;
+        removed="the scratch worktree";
+    fi
+
+    if [ "${tag_made}" = "yes" ]; then
+        git -C "${project_dir}" tag -d "v${version}" >/dev/null 2>&1 || true;
+        removed="the tag v${version}${removed:+ and }${removed}";
+    fi
+
+    if [ "${build_made}" = "yes" ]; then
+        rm -rf -- "${build_root}";
+    fi
+
+    if [ -n "${removed}" ]; then
+        echo "strata-release: failed: removed ${removed}." >&2;
+    fi
+}
+
+trap cleanup EXIT;
+trap 'exit 130' INT TERM;
+
+
+# Refuses because the tag exists, as the first refusal of the tool.
+function refuse_tag_exists
+{
+    echo "strata-release: the tag v${version} exists already: nothing was" \
+         "changed" >&2;
+    echo "if it was not pushed and the release is to be made again, delete" \
+         "it with git tag -d v${version}" >&2;
+    exit 1;
+}
+
+
+# Reads the command line.
+while [ "${#}" -gt 0 ]; do
+    case "${1}" in
+        --help | -h)
+            usage;
+            exit 0;
+            ;;
+        --dry-run)
+            dry_run="yes";
+            shift;
+            ;;
+        --commit | --build-dir | --output | --jobs)
+            [ "${#}" -ge 2 ] || die "${1} needs a value.";
+            case "${1}" in
+                --commit)
+                    commit="${2}";
+                    ;;
+                --build-dir)
+                    build_root="${2}";
+                    ;;
+                --output)
+                    output_dir="${2}";
+                    ;;
+                --jobs)
+                    jobs="${2}";
+                    ;;
+            esac
+            shift 2;
+            ;;
+        --commit=* | --build-dir=* | --output=* | --jobs=*)
+            case "${1}" in
+                --commit=*)
+                    commit="${1#--commit=}";
+                    ;;
+                --build-dir=*)
+                    build_root="${1#--build-dir=}";
+                    ;;
+                --output=*)
+                    output_dir="${1#--output=}";
+                    ;;
+                --jobs=*)
+                    jobs="${1#--jobs=}";
+                    ;;
+            esac
+            shift;
+            ;;
+        -*)
+            die "unknown option: ${1} (strata-release --help lists them).";
+            ;;
+        *)
+            [ -z "${version}" ] ||
+                die "more than one version: ${version} ${1}.";
+            version="${1}";
+            shift;
+            ;;
+    esac
+done
+
+[ -n "${version}" ] || die "no version given.  Example: strata-release 1.0.0";
+
+# Only a tag vX.Y.0 is read as a release by scripts/strata-version, so only
+# a version X.Y.0 is made.
+if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.0$ ]]; then
+    die "the version must be X.Y.0, with digits for X and Y, for example" \
+        "1.0.0 or 1.1.0 (scripts/strata-version reads only a tag named" \
+        "vX.Y.0 as a release): not '${version}'.";
+fi
+
+case "${jobs}" in
+    "" | *[!0-9]* | 0)
+        die "the number of jobs must be a positive number, not '${jobs}'.";
+        ;;
+esac
+
+major="${version%%.*}";
+
+for tool in git tar xz sha256sum; do
+    command -v "${tool}" >/dev/null 2>&1 || die "${tool} is not installed.";
+done
+
+# The tool runs in a git repository whose top is the project directory.
+top="$(git -C "${project_dir}" rev-parse --show-toplevel 2>/dev/null)" ||
+    die "${project_dir} is not in a git repository.";
+[ "$(cd "${top}" && pwd -P)" = "${project_dir}" ] ||
+    die "${project_dir} is only a part of the repository at ${top}.";
+
+# The first check of all: the tag.  A tag of any kind counts.
+if git -C "${project_dir}" rev-parse -q --verify \
+       "refs/tags/v${version}" >/dev/null 2>&1; then
+    refuse_tag_exists;
+fi
+
+# A remote that has the tag counts too.  This is the one place where the tool
+# asks another repository, and only when a remote is configured.
+for remote in $(git -C "${project_dir}" remote); do
+    if remote_tags="$(git -C "${project_dir}" ls-remote --tags "${remote}" \
+                          "refs/tags/v${version}" 2>/dev/null)"; then
+        if [ -n "${remote_tags}" ]; then
+            echo "strata-release: the remote ${remote} has the tag" \
+                 "v${version}: nothing was changed" >&2;
+            exit 1;
+        fi
+    else
+        echo "strata-release: the remote ${remote} could not be asked about" \
+             "the tag v${version}; the check was made without it." >&2;
+    fi
+done
+
+rev="$(git -C "${project_dir}" rev-parse -q --verify \
+           "${commit}^{commit}" 2>/dev/null)" ||
+    die "there is no commit '${commit}'.";
+
+# A commit is one release only: scripts/strata-version takes the version of a
+# checkout from the release tag on it, so a second release tag would be built
+# under the name of the first.
+other_tag="$(git -C "${project_dir}" tag --points-at "${rev}" |
+             grep -E '^v[0-9]+\.[0-9]+\.0$' | head -n 1)" || other_tag="";
+if [ -n "${other_tag}" ]; then
+    die "the commit ${rev} has the release tag ${other_tag} already: a" \
+        "commit is one release only.";
+fi
+
+# Untracked files do not count; a changed or staged tracked file does.
+if [ -n "$(git -C "${project_dir}" status --porcelain \
+               --untracked-files=no)" ]; then
+    die "a tracked file is modified or staged: commit or restore it first," \
+        "so that the release holds what is committed.";
+fi
+
+worktree="${project_dir}/.claude/worktrees/release-${version}";
+[ ! -e "${worktree}" ] ||
+    die "the scratch worktree ${worktree} exists: remove it first.";
+
+if [ -z "${build_root}" ]; then
+    build_root="${TMPDIR:-/tmp}/strata-release-${version}";
+fi
+
+build_root="$(realpath -m -- "${build_root}")";
+
+case "${build_root}/" in
+    "${project_dir}"/*)
+        die "the build directory ${build_root} is inside the source tree.";
+        ;;
+esac
+
+case "${project_dir}/" in
+    "${build_root}"/*)
+        die "the build directory ${build_root} contains the source tree.";
+        ;;
+esac
+
+[ ! -e "${build_root}" ] ||
+    die "the build directory ${build_root} exists: remove it or use" \
+        "--build-dir.";
+
+subject="$(git -C "${project_dir}" log -1 --format=%s "${rev}")";
+echo "commit: ${rev}";
+echo "        ${subject}";
+echo "tag:    v${version} (Strata ${version} (release ${major}))";
+echo "build:  ${build_root}/release";
+
+if [ "${dry_run}" = "yes" ]; then
+    echo "strata-release: dry run: nothing was changed.";
+    exit 0;
+fi
+
+# The tag, made without -f, so that git refuses a tag that appeared since the
+# check above.
+if ! git -C "${project_dir}" tag -a "v${version}" \
+         -m "Strata ${version} (release ${major})" "${rev}" 2>/dev/null; then
+    refuse_tag_exists;
+fi
+
+tag_made="yes";
+
+mkdir -p -- "${project_dir}/.claude/worktrees";
+git -C "${project_dir}" worktree add --detach -q "${worktree}" \
+    "v${version}" >/dev/null 2>&1 || die "the scratch worktree failed.";
+worktree_made="yes";
+
+build_made="yes";
+mkdir -p -- "${build_root}";
+
+echo "strata-release: building v${version} in ${worktree} ...";
+
+# The build is done by the scripts of the tagged checkout.
+if ! ( cd "${worktree}" &&
+       set +o nounset &&
+       source scripts/setup -b release "${build_root}" >/dev/null &&
+       ./scripts/strata-build -j "${jobs}" &&
+       ./scripts/strata-build -j "${jobs}" install ); then
+    die "the build or the tarball failed.";
+fi
+
+built="${build_root}/release";
+name="strata-${version}";
+tarball="${built}/${name}.tar.xz";
+sumfile="${tarball}.sha256";
+
+# The version of the tagged checkout is the name of the tarball.
+if [ -r "${built}/version" ]; then
+    built_version="$(head -n 1 "${built}/version")";
+else
+    built_version="";
+fi
+
+if [ "${built_version}" != "${version}" ]; then
+    die "the version of the tagged checkout is '${built_version}', not" \
+        "'${version}': the tarball would have another name.";
+fi
+
+[ -f "${tarball}" ] || die "the tarball ${tarball} was not made.";
+[ -f "${sumfile}" ] || die "the checksum file ${sumfile} was not made.";
+
+( cd "${built}" && sha256sum -c --status "${name}.tar.xz.sha256" ) ||
+    die "the checksum of ${tarball} does not match its file.";
+
+tops="$(tar -tJf "${tarball}" | awk -F/ '{ print $1 }' | sort -u)";
+[ "${tops}" = "${name}" ] ||
+    die "the tarball must hold the one directory ${name}, not: ${tops}.";
+
+if [ -n "${output_dir}" ]; then
+    mkdir -p -- "${output_dir}";
+    cp -- "${tarball}" "${sumfile}" "${output_dir}/";
+fi
+
+git -C "${project_dir}" worktree remove --force "${worktree}";
+worktree_made="no";
+finished="yes";
+
+echo "tag:      v${version}";
+echo "commit:   ${rev}";
+echo "tarball:  ${tarball}";
+echo "checksum: ${sumfile}";
+echo "SHA-256:  $(cut -d' ' -f1 "${sumfile}")";
+if [ -n "${output_dir}" ]; then
+    echo "copied to ${output_dir}";
+fi
+echo "Next, by hand (the tool pushes nothing):";
+echo "  git push github v${version}";
+echo "  then make a release on the page of the repository on GitHub from";
+echo "  the tag v${version}, with the two files above attached.";

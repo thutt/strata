@@ -71,8 +71,8 @@ r = subprocess.run(['bash', '-c', 'source "%s" "%s" > /dev/null; '
     capture_output=True, text=True, env=clean_env())
 vals = dict(l.split('=', 1) for l in r.stdout.split('\n') if '=' in l)
 tvar = vals.get('T', '')
-have = sorted(f[:-4] for f in os.listdir(tvar) if f.endswith('.doc')) \
-    if os.path.isdir(tvar) else []
+have = sorted(f[:-4] for d, _, fs in os.walk(tvar) for f in fs
+              if f.endswith('.doc')) if os.path.isdir(tvar) else []
 check('sourcing setup in a clean shell sets STRATA_TEMPLATES to the templates '
     'of the source tree',
     os.path.realpath(tvar) == os.path.realpath(shipped), (r.stdout, r.stderr))
@@ -117,7 +117,8 @@ else:
     scr = d[0] if d else ''
     check('the Document Manager of the build directory, with only setup '
         'sourced, lists the templates in New',
-        'Templates' in scr and all(n in scr for n in names[2:3]), scr)
+        'Templates' in scr and all(n in scr for n in (
+            'envelopes/', 'labels/', 'letters/')), scr)
     # the variable taken out again: the link is found by the program itself
     cmd = ('unset STRATA_TEMPLATES STRATA_HELP; exec "%s/term/str" -H "%s" '
            '"%s"' % (build, helpf, mgr))
@@ -125,7 +126,8 @@ else:
     scr = d[0] if d else ''
     check('without any variable the Document Manager of the build directory '
         'still lists the templates, by the link in the build directory',
-        'Templates' in scr and all(n in scr for n in names[2:3]), scr)
+        'Templates' in scr and all(n in scr for n in (
+            'envelopes/', 'labels/', 'letters/')), scr)
 
 shutil.rmtree(tmp, ignore_errors=True)
 print('setupenv: %s' % ('all passed' if fails == 0 else '%d failed' % fails))

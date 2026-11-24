@@ -16,17 +16,18 @@ MEMO = ["@/memo.doc"]
 TEMPLATES = HERE + "/scenes/templates-stred.sh"
 
 NEW = "F12 Return Right Right Return "
-# The list of the templates is in the order of their names after the two
-# built-in settings; four Down keys choose the German window envelope, and
-# End and Up choose the first letter (the two letters are the last two
-# templates: the label sheets come after the envelopes).
-LETTER = NEW + "End Up Return "
+# The list that New shows has the folders envelopes, labels and letters after
+# the two built-in settings.  Two Down keys and Enter open the folder
+# envelopes, whose entries are in the order of their names; two more Down keys
+# choose the German window envelope.  End and Enter open the folder letters,
+# and Enter chooses its first template, the letter on A4.
+LETTER = NEW + "End Return Return "
 
 SCENES = [
     # Ctrl-F12 on the marker at the start of the line opens its panel.
     ("format-section-marker", "stred", SEC, "ctrl+F12 wait:1",
      (0, 0, 800, 520)),
-    ("file-new-list", TEMPLATES, MEMO, NEW + "Down Down Down Down wait:1",
+    ("file-new-list", TEMPLATES, MEMO, NEW + "Down Down Return Down Down wait:1",
      (0, 0, 800, 1000)),
     # The label sheet 5160 found by typing its number.
     ("file-new-labels", TEMPLATES, MEMO, NEW + "text:5160 wait:1",

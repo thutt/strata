@@ -1,0 +1,93 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Makes the install tarball of a build: a build artifact that is written into
+# the build directory and never into the source tree.  The release directory
+# strata-NAME (the install script, the directory payload and INSTALL.txt) is
+# made in BUILD_DIR/image, the tarball BUILD_DIR/strata-NAME.tar.xz holds
+# that directory as its only top-level entry, and the file with the suffix
+# .sha256 next to it holds its checksum.  NAME is the version of the build
+# made safe for a file name, with the build type added when it is not
+# release.  No signature is made or planned: the SHA-256 checksum is the
+# integrity check of a release.
+#
+# Usage: strata-install-tarball BUILD_DIR [BUILD_TYPE]
+#
+# The variable STRATA_INSTALL_SCRIPT names another install script; the tests
+# use it to try copies of this script that have been spoiled.
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+project_dir="$(dirname "${script_dir}")"
+install_script="${STRATA_INSTALL_SCRIPT:-${script_dir}/strata-install}"
+
+# Stops with a message on the error output.
+function die
+{
+    echo "strata-install-tarball: ${*}" >&2
+    exit 1
+}
+
+
+[ ${#} -ge 1 ] || die "usage: strata-install-tarball BUILD_DIR [BUILD_TYPE]"
+
+build_dir="${1}"
+build_type="${2:-release}"
+
+[ -d "${build_dir}" ] || die "no such build directory: ${build_dir}"
+[ -r "${build_dir}/version" ] ||
+    die "the version is not in ${build_dir}: build the programs first."
+
+version="$(head -n 1 "${build_dir}/version")"
+
+# A build with no usable version has no name, so no tarball is made.
+case "${version}" in
+    "" | "UNSUPPORTED BUILD CONFIGURATION"*)
+        echo "strata-install-tarball: no tarball: no supported version."
+        exit 0
+        ;;
+esac
+
+# The name: letters, digits, dot, underscore and hyphen; any run of other
+# characters (a space, a slash) becomes one hyphen.
+safe="$(printf '%s' "${version}" |
+        sed -e 's/[^A-Za-z0-9._-][^A-Za-z0-9._-]*/-/g')"
+if [ "${build_type}" != "release" ]; then
+    safe="${safe}-${build_type}"
+fi
+name="strata-${safe}"
+
+# The time of every entry in the tarball: SOURCE_DATE_EPOCH if it is set, else
+# the time of the commit of the source, else the time of this run.
+if [ -n "${SOURCE_DATE_EPOCH:-}" ]; then
+    epoch="${SOURCE_DATE_EPOCH}"
+else
+    epoch="$(git -C "${project_dir}" log -1 --format=%ct 2>/dev/null || true)"
+    if [ -z "${epoch}" ]; then
+        epoch="$(date +%s)"
+    fi
+fi
+
+release_root="${build_dir}/image"
+stage="${release_root}/${name}"
+tarball="${build_dir}/${name}.tar.xz"
+
+rm -rf -- "${stage}"
+mkdir -p -- "${release_root}"
+
+"${install_script}" --build-dir "${build_dir}" \
+    --make-release "${stage}" --quiet
+sed -e "s/@NAME@/${safe}/g" "${script_dir}/INSTALL-USER.txt" \
+    > "${stage}/INSTALL.txt"
+chmod 644 -- "${stage}/INSTALL.txt"
+
+rm -f -- "${tarball}" "${tarball}.sha256"
+tar --sort=name --owner=0 --group=0 --numeric-owner "--mtime=@${epoch}" \
+    -C "${release_root}" -cf - "${name}" | xz -9e > "${tarball}"
+(cd "${build_dir}" && sha256sum "${name}.tar.xz" > "${name}.tar.xz.sha256")
+
+echo "strata-install-tarball: made ${tarball}"
+echo "strata-install-tarball: made ${tarball}.sha256"

@@ -882,8 +882,10 @@ def installed_list_test():
                                                          'doc'))
                       if n.endswith('.doc') and
                       'strata-file-format' not in n)
-        tpls = sorted(n for n in os.listdir(os.path.join(tree, 'templates'))
-                      if n.endswith('.doc'))
+        tpl_top = os.path.join(tree, 'templates')
+        tpls = sorted(os.path.relpath(os.path.join(d, f), tpl_top)
+                      for d, _, fs in os.walk(tpl_top)
+                      for f in fs if f.endswith('.doc'))
         check('list: the end lists where everything is: the directory and '
               'the number of files of each group',
               'Installed under %s' % pre in out and
@@ -891,15 +893,21 @@ def installed_list_test():
               and ('Manuals as PDF files: 2 files in %s/pdf' % shared)
               in out and ('Sample documents, macros and libraries: %d files '
                           'in %s/samples' % (len(samples), shared)) in out
-              and ('Templates of New: %d files in %s/templates' % (
-                  len(tpls), shared)) in out
+              and all(('%s: %d files in %s/templates/%s'
+                       % (what, len([x for x in tpls if x.startswith(
+                           folder + os.sep)]), shared, folder)) in out
+                      for folder, what in (
+                          ('letters', 'Templates of New, letters'),
+                          ('envelopes', 'Templates of New, envelopes'),
+                          ('labels/avery/us', 'Avery labels, US'),
+                          ('labels/avery/a4', 'Avery labels, A4')))
               and ('Sample business letters: %d files in %s/samples/letters'
                    % (len(letters), shared)) in out
               and ('Documents of the Tutorial: %d files in %s/tutorial' % (
                   len(tdocs), shared)) in out, out)
         check('list: the names of the files are listed', 'alpha.pdf' in out
               and 'beta.pdf' in out and samples[0] in out and docs[0] in out
-              and tpls[0] in out and 'manifest' in out, out)
+              and os.path.basename(tpls[0]) in out and 'manifest' in out, out)
         st, out = run([script, '--prefix', pre, '--uninstall', '--quiet'],
                       env=env)
         check('list: the uninstall removes the PDF files and the samples '
@@ -972,20 +980,37 @@ try:
         check('install: bin/%s is an executable file' % prog,
               os.path.isfile(p) and os.access(p, os.X_OK))
     tpl_dir = os.path.join(prefix, 'share', 'strata', 'templates')
-    shipped_names = sorted(f for f in os.listdir(os.path.join(tree,
-                           'templates')) if f.endswith('.doc'))
-    all_names = sorted(n + '.doc' for n in (
+    def tree_names(top):
+        """The paths of the .doc files below top, relative to it."""
+        return sorted(os.path.relpath(os.path.join(d, f), top)
+                      for d, _, fs in os.walk(top) for f in fs
+                      if f.endswith('.doc'))
+
+    shipped_names = tree_names(os.path.join(tree, 'templates'))
+    all_names = sorted(mktemplates.relpath(n) for n in (
         ['letter-us', 'letter-a4'] + list(mktemplates.ENVELOPES) +
         [n for n, num, s in labeldata.every()]))
-    check('install: the templates are installed with mode 644 and listed in '
-          'the manifest, and they are the complete set of the generator '
-          '(%d templates)' % len(all_names), shipped_names == all_names and
-          sorted(os.listdir(tpl_dir)) == all_names and
+    check('install: the templates are installed with their folders, with '
+          'mode 644 and listed in the manifest, and they are the complete '
+          'set of the generator (%d templates)' % len(all_names),
+          shipped_names == all_names and
+          tree_names(tpl_dir) == all_names and
           all(
               os.path.isfile(os.path.join(tpl_dir, n)) and
               os.path.join(tpl_dir, n) in listed_files and
               stat.S_IMODE(os.stat(os.path.join(tpl_dir, n)).st_mode) == 0o644
               for n in shipped_names), (shipped_names, tpl_dir))
+    tpl_folders = ['envelopes', 'labels', 'labels/avery', 'labels/avery/a4',
+                   'labels/avery/us', 'letters']
+    check('install: the folders envelopes, labels, labels/avery, '
+          'labels/avery/a4, labels/avery/us and letters are made, listed in '
+          'the manifest as directories that the install made, and no other '
+          'folder is below the templates',
+          all(os.path.join(tpl_dir, f) in listed_dirs and
+              os.path.isdir(os.path.join(tpl_dir, f)) for f in tpl_folders)
+          and sorted(os.path.relpath(os.path.join(d, x), tpl_dir)
+                     for d, ds, _ in os.walk(tpl_dir) for x in ds) ==
+          tpl_folders, sorted(os.listdir(tpl_dir)))
     env_dir = os.path.join(prefix, 'share', 'strata', 'samples', 'envelopes')
     env_names = sorted(mksamples.sample_name(t) + '.doc'
                        for t in mktemplates.ENVELOPES)
@@ -1140,13 +1165,14 @@ try:
     labels = [n for n, num, s in labeldata.every()]
     d = tui.session(view + [where + '/bin/stred', doc],
                     ['F12', 'ENTER', 'RIGHT', 'RIGHT', 'ENTER', 'wait',
-                     'wait', 'END', 'wait', 'show'], env=clean, rows=34)
+                     'wait', 'END', 'ENTER', 'wait', 'show'], env=clean,
+                    rows=34)
     check('run: the installed stred lists the installed templates with '
-          'their descriptions in New (the end of the list: the last labels '
-          'and both letters)', len(d) == 1 and 'Templates' in d[0] and
+          'their descriptions in New (the end of the list is the folder '
+          'letters: it holds both letters)', len(d) == 1 and
+          'Templates: letters' in d[0] and
           'letter-us' in d[0] and 'letter-a4' in d[0] and
-          labels[-1] in d[0] and 'business letter' in d[0],
-          d[0] if d else '')
+          'business letter' in d[0], d[0] if d else '')
     d = tui.session(view + [where + '/bin/stred', doc],
                     ['F12', 'ENTER', 'RIGHT', 'RIGHT', 'ENTER', 'wait',
                      'wait', 'text:5160', 'wait', 'show'], env=clean,
@@ -1165,9 +1191,10 @@ try:
                     ['ENTER', 'wait', 'text:newmemo', 'INS', 'wait', 'wait',
                      'show'], env=clean, rows=34)
     check('run: the installed str lists the installed templates when a new '
-          'document is asked for (all %d of them)' % len(names),
+          'document is asked for (the three subdirectories of the list)',
           len(d) == 1 and 'Templates' in d[0] and
-          all(n in d[0] for n in names[2:3]) and 'Structured' in d[0],
+          all(n in d[0] for n in ('envelopes/', 'labels/', 'letters/')) and
+          'Structured' in d[0],
           d[0] if d else '')
 
     # str starts the stred that is next to it: choose Edit, give the name of

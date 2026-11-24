@@ -125,7 +125,7 @@ us10 = make('portrait', b'4125,9500')
 for label, steps in (('Business Envelope', 13), ('DL Envelope', 14),
                      ('C5 Envelope', 15), ('Monarch Envelope', 12)):
     plain = os.path.join(tmp, 'plain.doc')
-    shutil.copy(os.path.join(root, 'templates', 'letter-us.doc'), plain)
+    shutil.copy(os.path.join(root, 'templates', 'letters', 'letter-us.doc'), plain)
     dvi, part = preview(plain, PANEL + ['DOWN'] * 11 + ['F2', 'wait'] +
                         ['DOWN'] * steps + ['ENTER', 'wait', 'INS', 'wait'] +
                         FINAL, 'pick')

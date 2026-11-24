@@ -595,7 +595,7 @@ check('cli: no lp gives status 3 and the PDF is made',
 # An envelope is sent with print-scaling=none, a letter with the default of
 # the system: a scaled envelope has small type and a corner that moved.
 envsrc = os.path.join(os.path.dirname(here), 'templates',
-    'envelope-us-ca-9.doc')
+    'envelopes', 'envelope-us-ca-9.doc')
 envdoc = fresh(run, envsrc, 'env9.doc')
 envout = os.path.join(run, 'env9.pdf')
 nlines = len(lines(log))

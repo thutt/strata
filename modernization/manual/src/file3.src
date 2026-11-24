@@ -80,12 +80,25 @@ To begin with other settings, use a template ({n:file-templates}).
 .ix New, list of templates
 When there is at least one template in the directories of {x:file-templates-path},
 New first shows a list.  The first two entries are the built-in settings,
-Structured and Unstructured; the others are the templates, in the order of
-their names.  The lines below the list show the description of the entry
-that is chosen, and a template that has none says so.  {k:Up} and {k:Down}
-choose, {k:Enter} or {k:Ins} takes the entry, and {k:Esc} takes the built-in
-settings.  In the Editor the New File panel follows, with the entry in its
-field Template.  The Document Manager shows the same list when it is given
+Structured and Unstructured; then come the subdirectories that hold the
+templates, each as its name with a slash after it, and then the templates of
+the top directory, in the order of their names.  The templates that come with
+Strata are in the subdirectories envelopes, labels and letters
+({n:file-new-shipped}).  The lines below the list show the description of the
+entry that is chosen: for a template its own description, and a template that
+has none says so; for a subdirectory the number of the templates in it.
+{k:Up} and {k:Down} choose, {k:Enter} or {k:Ins} takes a template, and
+{k:Esc} takes the built-in settings.  {k:Enter} on a subdirectory opens it: the
+title of the list then names it, as {c:Templates: labels/avery}, and the list shows
+the subdirectories and the templates in it.  {k:Left}, or {k:Backspace} when no
+text has been typed, goes up one level, with the cursor on the subdirectory
+that was left.  Text that is typed selects the first entry of the open
+subdirectory that has a word that begins with it, in its name or its
+description; text that no entry of the open subdirectory has is looked for in
+all the subdirectories, and the list shows the subdirectory of the first
+template that has it, so that the number of a sheet, such as 5160, finds its
+sheet from wherever the list was opened.  In the Editor the New File panel
+follows, with the entry in its field Template.  The Document Manager shows the same list when it is given
 the name of a document that does not exist; there {k:Ins} makes the document
 at once from the entry, with no panel and with the description and the author
 left blank, and {k:Enter} shows the New File panel first.  The description of
@@ -101,14 +114,23 @@ were.  The entry Another file... opens a list of files and does not finish the
 panel.  Every other list of choices, such as the list of printers of a print
 panel, takes the entry with {k:Ins} or {k:Enter} and leaves the panel open.
 .pic pictures/file-new-list.png 5 The list that New shows, with the description of the chosen template below it. [file-new-list-figure]
-The list is shown in {fig:file-new-list-figure}: the template that is chosen is
-the German window envelope, and its description is in the three lines below the
-list.
+The list is shown in {fig:file-new-list-figure}: the subdirectory envelopes is
+open, the template that is chosen is the German window envelope, and its
+description is in the three lines below the list.
 .h3 The templates that come with Strata [file-new-shipped]
 .ix Letter templates
 .ix Envelope templates
 .ix Templates that come with Strata
-Strata comes with templates for business letters and for envelopes.  The
+Strata comes with templates for business letters, for envelopes and for the
+label sheets of Avery.  They are in subdirectories: letters (the two letters),
+envelopes (the 16 envelopes), and labels, which holds the subdirectory {c:avery}
+with the subdirectories us (58 sheets for US Letter paper) and a4 (43 sheets
+for A4 paper).  A template is named by its file name without the extension,
+such as {c:envelope-uk-dl} or {c:label-us-5160}, or by its path below the
+directory of the templates, such as {c:envelopes/envelope-uk-dl} or
+{c:labels/avery/us/label-us-5160}; both name the same file, and the
+subdirectories of a person's own templates work the same way
+({n:file-templates-path}).  The
 layout is Strata's own.  The templates that come with Strata hold the page
 set-up, the size of the text, the named formats and the blocks as empty
 paragraphs, and no text of their own: the new document has no address or

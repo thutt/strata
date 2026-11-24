@@ -106,7 +106,7 @@ templates = os.path.join(root, 'templates')
 samples = os.path.join(root, 'samples', 'envelopes')
 EXPECT = {'envelope-de-din5008-dl': 11, 'envelope-eu-c5': 12}
 
-for f in sorted(glob.glob(os.path.join(templates, 'envelope-*.doc'))):
+for f in sorted(glob.glob(os.path.join(templates, 'envelopes', 'envelope-*.doc'))):
     name = os.path.basename(f)[:-4]
     want = EXPECT.get(name, 14)
     got = latex(f)
@@ -120,8 +120,8 @@ for f in sorted(glob.glob(os.path.join(samples, 'sample-envelope-*.doc'))):
     check('sample %s is set in %d points' % (name, want),
           got[0] == want, got)
 
-us10 = os.path.join(templates, 'envelope-us-ca-10.doc')
-letter = os.path.join(templates, 'letter-us.doc')
+us10 = os.path.join(templates, 'envelopes', 'envelope-us-ca-10.doc')
+letter = os.path.join(templates, 'letters', 'letter-us.doc')
 check('a letter is set in 11 points', latex(letter) == (11, 'article'),
       latex(letter))
 check('a size above 11 uses the class with the larger sizes',
@@ -162,7 +162,7 @@ exdir = os.path.join(tmp, 'example')
 subprocess.run([sys.executable, '-I', '-B',
                 os.path.join(here, 'mktemplates.py'), '--example', exdir],
                check=True)
-us10ex = os.path.join(exdir, 'envelope-us-ca-10.doc')
+us10ex = os.path.join(exdir, 'envelopes', 'envelope-us-ca-10.doc')
 small_ex = variant(us10ex, b'PS14\r\n', b'PS11\r\n', 'small-ex.doc')
 h14 = height(us10ex)
 h11 = height(small_ex)
@@ -173,7 +173,7 @@ check('the letters of the number 10 envelope are higher than at 11 points '
 # The number 9 envelope: the template without its PS record and margins, as
 # a document of the owner has it when only the paper was chosen.  It is the
 # case that a printed envelope showed small type for.
-us9 = os.path.join(templates, 'envelope-us-ca-9.doc')
+us9 = os.path.join(templates, 'envelopes', 'envelope-us-ca-9.doc')
 bare9 = variant(us9, b'PS14\r\n', b'', 'bare9.doc')
 check('the number 9 envelope (Custom size 8 7/8 x 3 7/8) with no PS record has '
       '14 points', latex(bare9)[0] == 14, latex(bare9))
@@ -376,7 +376,7 @@ check('Undo takes the paper, the margins and the type size back together',
 # the PDF, is within 0.5 mm of 7 mm from the left and the top edge, for every
 # envelope that has a sender (the Japanese envelopes have none).  The
 # templates hold no text, so the example copies of the generator are printed.
-for f in sorted(glob.glob(os.path.join(exdir, 'envelope-*.doc'))):
+for f in sorted(glob.glob(os.path.join(exdir, 'envelopes', 'envelope-*.doc'))):
     name = os.path.basename(f)[:-4]
     if 'yougata' in name:
         continue

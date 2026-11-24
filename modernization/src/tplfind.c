@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -148,6 +149,150 @@ find_with_extension(const char *dir, const char *name, char *out, size_t cap)
 }
 
 
+/* Is the path a directory? */
+static int
+is_dir(const char *path)
+{
+    struct stat st;
+
+    return stat(path, &st) == 0 && S_ISDIR(st.st_mode) ? 1 : 0;
+}
+
+
+static int
+by_dirname(const void *a, const void *b)
+{
+    return strcasecmp(*(const char *const *)a, *(const char *const *)b);
+}
+
+
+/*
+ * Find name in dir or in a folder below dir, at most depth folders down.  The
+ * folder dir itself is looked at first, then the folders below it in the order
+ * of their names, each with its own folders.  The depth limit also ends a
+ * loop of links.
+ */
+static int
+find_below(const char *dir, const char *name, int depth, char *out,
+           size_t cap)
+{
+    DIR *dp;
+    struct dirent *de;
+    char *subs[TEMPLATE_FOLDERS_MAX];
+    int nsub = 0;
+    int found = 0;
+
+    if (find_ci(dir, name, out, cap) != 0 && is_dir(out) == 0) {
+        return 1;
+    }
+
+    if (depth <= 0) {
+        return 0;
+    }
+
+    dp = opendir(dir != NULL && dir[0] != '\0' ? dir : ".");
+
+    if (dp == NULL) {
+        return 0;
+    }
+
+    while ((de = readdir(dp)) != NULL && nsub < TEMPLATE_FOLDERS_MAX) {
+        char sub[PATH_MAX];
+
+        if (de->d_name[0] == '.') {
+            continue;
+        }
+
+        path_join(sub, sizeof sub, dir != NULL && dir[0] != '\0' ? dir : ".",
+                  de->d_name);
+
+        if (is_dir(sub) != 0) {
+            char *copy = strdup(de->d_name);
+
+            if (copy != NULL) {
+                subs[nsub++] = copy;
+            }
+        }
+    }
+
+    closedir(dp);
+    qsort(subs, usz(nsub), sizeof subs[0], by_dirname);
+
+    for (int i = 0; i < nsub; i++) {
+        if (found == 0 && subs[i] != NULL) {
+            char sub[PATH_MAX];
+
+            path_join(sub, sizeof sub, dir != NULL && dir[0] != '\0' ? dir :
+                      ".", subs[i]);
+            found = find_below(sub, name, depth - 1, out, cap);
+        }
+
+        free(subs[i]);
+    }
+
+    return found;
+}
+
+
+/* Find name in dir or below it, as it is typed or with .doc or .set added. */
+static int
+find_deep(const char *dir, const char *name, char *out, size_t cap)
+{
+    static const char *const ext[] = {"", ".doc", ".set"};
+    char full[PATH_MAX];
+
+    for (size_t i = 0; i < sizeof ext / sizeof ext[0]; i++) {
+        snprintf(full, sizeof full, "%s%s", name, ext[i]);
+
+        if (find_below(dir, full, TEMPLATE_DEPTH, out, cap) != 0) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+
+/*
+ * Find the path name rel (folders and file name, folders separated by a slash,
+ * as the template list shows them, for example labels/avery/us/label-us-5160)
+ * below dir.  The letters of the names may be of any case.
+ */
+static int
+find_relative(const char *dir, const char *rel, char *out, size_t cap)
+{
+    char cur[PATH_MAX];
+    char part[PATH_MAX];
+    const char *p = rel;
+
+    str_copy(cur, sizeof cur, dir != NULL && dir[0] != '\0' ? dir : ".");
+
+    for (;;) {
+        const char *sl;
+        char next[PATH_MAX];
+
+        if (strchr(p, '/') == NULL) {
+            return find_with_extension(cur, p, out, cap);
+        }
+
+        sl = str_copy_to(part, sizeof part, p, '/');
+
+        if (part[0] == '\0') {
+            p = sl + 1;
+            continue;
+        }
+
+        if (find_ci(cur, part, next, sizeof next) == 0 ||
+            is_dir(next) == 0) {
+            return 0;
+        }
+
+        str_copy(cur, sizeof cur, next);
+        p = sl + 1;
+    }
+}
+
+
 int
 template_find(const char *name, const char *dir, char *out, size_t cap)
 {
@@ -163,12 +308,30 @@ template_find(const char *name, const char *dir, char *out, size_t cap)
             return 1;
         }
 
+        /* Not a path of the file system: a path below a template place, as
+           the list of templates shows it. */
+        if (name[0] != '/') {
+            if (find_relative(dir, name, out, cap) != 0) {
+                return 1;
+            }
+
+            n = template_dirs(dirs, 4);
+
+            for (int i = 0; i < n; i++) {
+                if (find_relative(dirs[i], name, out, cap) != 0) {
+                    return 1;
+                }
+            }
+        }
+
         return 0;
     }
 
     /* The working directory first, then the places that the list of New
        has: the folder that STRATA_TEMPLATES names, the folder templates of
-       the settings and ../share/strata/templates of the programs. */
+       the settings and ../share/strata/templates of the programs; a name
+       without a folder is looked for in the folders below those places too,
+       so that the names of the time before the folders still work. */
     if (find_with_extension(dir, name, out, cap) != 0) {
         return 1;
     }
@@ -176,7 +339,7 @@ template_find(const char *name, const char *dir, char *out, size_t cap)
     n = template_dirs(dirs, 4);
 
     for (int i = 0; i < n; i++) {
-        if (find_with_extension(dirs[i], name, out, cap) != 0) {
+        if (find_deep(dirs[i], name, out, cap) != 0) {
             return 1;
         }
     }

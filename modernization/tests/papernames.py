@@ -26,6 +26,7 @@ import sys as _s; _s.dont_write_bytecode = True
 import atexit, glob, os, shutil, sys, tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tui
+import mktemplates
 
 here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
@@ -115,7 +116,7 @@ templates = os.path.join(root, 'templates')
 samples = os.path.join(root, 'samples', 'envelopes')
 
 for name, want in sorted(EXPECT.items()):
-    path = copy(os.path.join(templates, name + '.doc'), name + '.doc')
+    path = copy(os.path.join(templates, mktemplates.relpath(name)), name + '.doc')
     got = paper_line(panel(path))
     check('template %s shows [%s]' % (name, want), got == '[%s]' % want, got)
 
@@ -129,7 +130,7 @@ for f in sorted(glob.glob(os.path.join(samples, 'sample-envelope-*.doc'))):
 # A size that belongs to no named paper is Custom with that size, even when
 # the index of the record names a paper; a record with no size has the paper
 # of its index.
-base = copy(os.path.join(templates, 'letter-us.doc'), 'odd.doc')
+base = copy(os.path.join(templates, 'letters', 'letter-us.doc'), 'odd.doc')
 data = bytes_of(base)
 odd = os.path.join(tmp, 'odd-size.doc')
 open(odd, 'wb').write(data.replace(b'DP0,8500,11000', b'DP14,5125,5125'))
@@ -149,7 +150,7 @@ check('a named paper stored with its sides the other way round is the '
       paper_line(panel(flip)))
 
 # Accepting the panel with no change leaves the file as it was.
-us9 = copy(os.path.join(templates, 'envelope-us-ca-9.doc'), 'keep.doc')
+us9 = copy(os.path.join(templates, 'envelopes', 'envelope-us-ca-9.doc'), 'keep.doc')
 before = bytes_of(us9)
 tui.session([stred, '-H', helpf, us9], PANEL + ['INS', 'wait', 'C-s',
             'wait'], rows=30)
@@ -157,19 +158,19 @@ check('accepting the panel with no change keeps the stored size',
       bytes_of(us9) == before and dp(us9) == 'DP16,8875,3875', dp(us9))
 
 # Choosing an envelope stores it with the long side as the width.
-doc = copy(os.path.join(templates, 'letter-us.doc'), 'pick.doc')
+doc = copy(os.path.join(templates, 'letters', 'letter-us.doc'), 'pick.doc')
 tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait'] +
             ['DOWN'] * 13 + ['ENTER', 'wait', 'INS', 'wait', 'C-s', 'wait'],
             rows=30)
 check('choosing the Business Envelope stores the long side as the width',
       dp(doc) == 'DP13,9500,4125', dp(doc))
-doc = copy(os.path.join(templates, 'letter-us.doc'), 'pick2.doc')
+doc = copy(os.path.join(templates, 'letters', 'letter-us.doc'), 'pick2.doc')
 tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait'] +
             ['DOWN'] * 14 + ['ENTER', 'wait', 'INS', 'wait', 'C-s', 'wait'],
             rows=30)
 check('choosing the DL Envelope stores 220 mm as the width',
       dp(doc) == 'DP14,8661,4331', dp(doc))
-doc = copy(os.path.join(templates, 'letter-us.doc'), 'pick3.doc')
+doc = copy(os.path.join(templates, 'letters', 'letter-us.doc'), 'pick3.doc')
 tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait'] +
             ['DOWN'] * 8 + ['ENTER', 'wait', 'INS', 'wait', 'C-s', 'wait'],
             rows=30)
@@ -179,7 +180,7 @@ check('choosing A4 keeps the portrait sides',
 # Custom keeps the size that the document has; a document with a named paper
 # gets the default custom size.  The size of the first document is one that
 # no named paper has.
-base9 = bytes_of(os.path.join(templates, 'envelope-us-ca-9.doc'))
+base9 = bytes_of(os.path.join(templates, 'envelopes', 'envelope-us-ca-9.doc'))
 doc = os.path.join(tmp, 'cust.doc')
 open(doc, 'wb').write(base9.replace(b'DP16,8875,3875', b'DP16,5125,5125'))
 tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait',
@@ -188,7 +189,7 @@ tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait',
             ['ENTER', 'wait', 'INS', 'wait', 'C-s', 'wait'], rows=30)
 check('Custom chosen after another paper keeps the custom size of the '
       'document', dp(doc) == 'DP16,5125,5125', dp(doc))
-doc = copy(os.path.join(templates, 'letter-us.doc'), 'cust2.doc')
+doc = copy(os.path.join(templates, 'letters', 'letter-us.doc'), 'cust2.doc')
 tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait'] +
             ['DOWN'] * 20 + ['ENTER', 'wait', 'INS', 'wait', 'C-s', 'wait'],
             rows=30)
@@ -201,7 +202,7 @@ check('the panel of a document that was set to Custom shows its size',
 
 # The Number 9 Envelope is in the list: a document made in the Editor with
 # it chosen stores the long side as the width.
-doc = copy(os.path.join(templates, 'letter-us.doc'), 'pick9.doc')
+doc = copy(os.path.join(templates, 'letters', 'letter-us.doc'), 'pick9.doc')
 tui.session([stred, '-H', helpf, doc], PANEL + PAPER_FIELD + ['F2', 'wait'] +
             ['DOWN'] * 16 + ['ENTER', 'wait', 'INS', 'wait', 'C-s', 'wait'],
             rows=30)

@@ -25,10 +25,21 @@
 #include <stddef.h>
 #include "msdoc.h"
 
-#define TEMPLATE_MAX 200
+#define TEMPLATE_MAX 400
+
+/* The most folders below a template place that are looked into: a template
+   is at most this many folders down. */
+#define TEMPLATE_DEPTH 4
+
+/* The longest path of folders below a template place, such as labels/avery. */
+#define TEMPLATE_FOLDER_MAX 128
+
+/* The most folders that one folder holds and that are looked into. */
+#define TEMPLATE_FOLDERS_MAX 64
 
 typedef struct {
     char name[64]; /* the name of the file without .doc or .set */
+    char folder[TEMPLATE_FOLDER_MAX]; /* folders below the place */
     char path[PATH_MAX];
     char desc[DOC_MAX_DESC + 1]; /* empty when the file has none */
 } Template;

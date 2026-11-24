@@ -18,6 +18,16 @@
 #
 # Run the script with --help for the options.
 #
+# The next lines are the one place where this script does not follow the
+# rule that the three set lines come first.  A person who starts the script
+# with sh, as in sh strata-install, gets the message below and nothing else.
+# A shell that is not bash can stop at the line with set -o pipefail, so the
+# test is written in plain shell syntax and comes before it.
+if [ -z "${BASH_VERSION:-}" ]; then
+    echo "strata-install: run this script with bash: bash strata-install" >&2
+    exit 1
+fi
+
 set -o pipefail;
 set -o nounset;
 set -o errexit;
@@ -145,7 +155,8 @@ The layout under the prefix:
   share/strata/tutorial/             the documents of the Tutorial, and
                                      their pictures in a directory next to
                                      them
-  share/strata/templates/            the templates of New (letters, envelopes)
+  share/strata/templates/            the templates of New, in folders
+                                     (envelopes, labels, letters)
   share/strata/manifest              every file and directory installed
   share/doc/strata/                  the licence, the README and the known
                                      issues
@@ -662,6 +673,7 @@ function install_from_tree
     local prog
     local sample
     local tpl
+    local tpl_rel
 
     for prog in "${term_programs[@]}"; do
         put_file 755 "${build_dir}/term/${prog}" "${prefix}/bin/${prog}"
@@ -699,12 +711,14 @@ function install_from_tree
         fi
     done
 
-    for tpl in "${tree_dir}"/templates/*.doc; do
+    # The templates keep their folders (envelopes, labels/avery/us, ...): the
+    # path below the templates folder is the path in the install.
+    while IFS= read -r tpl; do
         if [ -f "${tpl}" ]; then
-            put_file 644 "${tpl}" \
-                     "${prefix}/share/strata/templates/$(basename "${tpl}")"
+            tpl_rel="${tpl#"${tree_dir}"/templates/}"
+            put_file 644 "${tpl}" "${prefix}/share/strata/templates/${tpl_rel}"
         fi
-    done
+    done < <(find "${tree_dir}/templates" -type f -name '*.doc' | sort)
 
     # The manuals as PDF files, when the manual was built into the build
     # directory (the guides and cards, and the Reference Manual).
@@ -1003,7 +1017,10 @@ function show_installed
                   "share/strata/samples/comments|Sample memo with comments"
                   "share/strata/samples/story|Sample document, the story"
                   "share/strata/samples/story/pictures|Pictures of the story"
-                  "share/strata/templates|Templates of New"
+                  "share/strata/templates/letters|Templates of New, letters"
+                  "share/strata/templates/envelopes|Templates of New, envelopes"
+                  "share/strata/templates/labels/avery/us|Avery labels, US"
+                  "share/strata/templates/labels/avery/a4|Avery labels, A4"
                   "share/strata/tutorial|Documents of the Tutorial"
                   "share/strata/tutorial/pictures|Pictures of the Tutorial"
                   "share/strata|Help, version and the manifest"

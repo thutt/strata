@@ -35,9 +35,10 @@ system allows.
 .h3 Templates [templates]
 When the name does not exist, a list shows the templates that Strata comes with,
 as well as the two kinds of documents: letters in the style of the LaTeX letter
-class for US Letter and for A4 paper, and envelopes for many countries.
-Each template has a description, which is shown below the list when the template
-is chosen.
+class for US Letter and for A4 paper, envelopes for many countries and the
+label sheets of Avery.  The templates are in subdirectories (letters,
+envelopes and labels): Enter on a subdirectory opens it, and Left goes up.  Each template has a
+description, which is shown below the list when the template is chosen.
 .pic pictures/file-new-list.png 5.5 The list of the templates, with the description of the one that is chosen. [new-list-figure]
 {Fig:new-list-figure} shows the list.  The description is a line of text that
 you can write for any document of your own, in the panel of New File or Save

@@ -131,6 +131,21 @@ list_hint(int x, int y, int w)
 }
 
 
+/* The hint of a list of folders and files: Left goes up one folder. */
+static void
+list_hint_up(int x, int y, int w)
+{
+    const char *full = " Ins or Enter selects, Left goes up, Esc cancels ";
+    const char *shrt = " Ins selects, Left goes up ";
+
+    if (w >= slen(full) + 4) {
+        term_puts(x + 2, y, full, 0);
+    } else if (w >= slen(shrt) + 4) {
+        term_puts(x + 2, y, shrt, 0);
+    }
+}
+
+
 /* generic scrolling list; returns index or -1.  First-letter selection. */
 int
 popup_menu(const char *title, const char **items, int n, int sel)
@@ -337,7 +352,7 @@ put_wrapped(int x, int y, int w, int rows, const char *d)
  * neither a letter nor a digit, so "5160" finds "label-us-5160" and
  * "avery 5160 address" finds "Avery 5160 address labels".
  */
-static int
+int
 list_word_has(const char *text, const char *find, size_t n)
 {
     for (size_t i = 0; text[i] != '\0'; i++) {
@@ -370,15 +385,25 @@ list_find_entry(const char **names, const char **descs, int n,
 }
 
 
-int
-popup_list_desc(const char *title, const char **names, const char **descs,
-                int n, int sel)
+char widgets_list_find[48];
+
+
+static int
+list_desc_run(const char *title, const char **names, const char **descs,
+              int n, int sel, int up)
 {
     int top = 0;
     const int drows = 3;
     char find[48] = "";
 
     widgets_list_ins = 0;
+
+    /* A list of folders is shown again with the text that was typed: the
+       caller sets the text in widgets_list_find. */
+    if (up != 0) {
+        str_copy(find, sizeof find, widgets_list_find);
+        widgets_list_find[0] = '\0';
+    }
 
     if (sel < 0 || sel >= n) {
         sel = 0;
@@ -431,6 +456,8 @@ popup_list_desc(const char *title, const char **names, const char **descs,
 
             snprintf(shown, sizeof shown, " Find: %s ", find);
             term_puts(x + 2, y + h - 1, shown, 0);
+        } else if (up != 0) {
+            list_hint_up(x, y + h - 1, w);
         } else {
             list_hint(x, y + h - 1, w);
         }
@@ -500,6 +527,12 @@ popup_list_desc(const char *title, const char **names, const char **descs,
             case K_ESC:
                 return -1;
 
+            case K_LEFT:
+                if (up != 0) {
+                    return POPUP_LIST_UP;
+                }
+                break;
+
             case K_BKSP:
                 if (find[0] != '\0') {
                     find[strlen(find) - 1] = '\0';
@@ -509,6 +542,8 @@ popup_list_desc(const char *title, const char **names, const char **descs,
 
                         sel = f >= 0 ? f : sel;
                     }
+                } else if (up != 0) {
+                    return POPUP_LIST_UP;
                 }
                 break;
 
@@ -526,6 +561,13 @@ popup_list_desc(const char *title, const char **names, const char **descs,
 
                     if (f >= 0) {
                         sel = f;
+                    } else if (up != 0) {
+                        /* Not in this folder: the caller looks in the others,
+                           and shows the list again with the text. */
+                        str_copy(widgets_list_find, sizeof widgets_list_find,
+                                 find);
+
+                        return POPUP_LIST_FIND;
                     } else {
                         find[len] = '\0';
                     }
@@ -533,6 +575,22 @@ popup_list_desc(const char *title, const char **names, const char **descs,
                 break;
         }
     }
+}
+
+
+int
+popup_list_desc(const char *title, const char **names, const char **descs,
+                int n, int sel)
+{
+    return list_desc_run(title, names, descs, n, sel, 0);
+}
+
+
+int
+popup_list_desc_up(const char *title, const char **names, const char **descs,
+                   int n, int sel)
+{
+    return list_desc_run(title, names, descs, n, sel, 1);
 }
 
 

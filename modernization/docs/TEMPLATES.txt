@@ -1,0 +1,165 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright (c) 2026 Logic Magicians Software
+
+
+THE TEMPLATES IN SUBDIRECTORIES
+===============================
+
+Written 2026-11-23 for the owner's request (worklist item W92, release R1):
+the templates lie in subdirectories, such as envelopes and labels, with a
+subdirectory avery below labels.  Before, the 119 templates were the files of
+one directory.
+
+
+1. THE TREE
+-----------
+
+The directory templates of the source tree, and share/strata/templates of an
+install, hold these subdirectories:
+
+    envelopes/           16 envelopes (envelope-us-ca-10, envelope-uk-dl, ...)
+    labels/avery/us/     58 sheets of Avery for US Letter paper
+                         (label-us-5160, label-us-8160, ...)
+    labels/avery/a4/     43 sheets of Avery for A4 paper (label-a4-l7160,
+                         label-a4-j8160, label-a4-18036, ...)
+    letters/             2 letters (letter-us, letter-a4)
+
+Decisions (the owner said "envelopes and labels subdirectories, with an avery
+subdirectory below labels"; the rest is mine, for the owner to change):
+
+  - The brand.  The description (the record MD) of each of the 101 label
+    sheets begins with the word Avery: the US sheets, the Avery Zweckform
+    L-codes, the Avery J-codes and the sheets 18036, 38931, 8651 to 8676,
+    cr33 and dl33 are all sheets of Avery (the table is docs/LABELS.txt and
+    tests/labeldata.py).  No sheet names another maker, so no other brand
+    subdirectory exists.  A subdirectory of another brand is added below
+    labels when a sheet of that brand is added (labels/herma, for example);
+    a sheet whose brand is not known goes to labels/other.
+  - The paper size.  One subdirectory avery with 101 entries is too long a
+    list, so avery has a subdirectory for each paper size, us and a4, of 58
+    and 43 entries.  Every other subdirectory has fewer than 20.
+  - The names of the files do not change.  A template file is still called
+    label-us-5160.doc or envelope-uk-dl.doc, so that every name that was used
+    before still names the same template (section 2), and a template that is
+    copied out of its subdirectory keeps a name that says what it is.
+  - The depth.  A template may lie at most four subdirectories below a place
+    of templates (TEMPLATE_DEPTH in src/template.h); the shipped tree uses
+    three.
+
+
+2. THE NAME OF A TEMPLATE
+-------------------------
+
+A template is named in one of two ways, and both reach the same file:
+
+  - The bare name, the name of the file without the extension: label-us-5160.
+    This is the name that every earlier version had, so documents, scripts
+    and a person's habits keep working.
+  - The path name, the subdirectories and the name below the place of the
+    templates, with a slash between them: labels/avery/us/label-us-5160.
+    This is how the list of templates shows where a template is, and it is
+    precise when a person has two templates of the same bare name in two
+    subdirectories.
+
+The extension .doc or .set may be left out, and the case of the letters does
+not matter.
+
+template_find (src/tplfind.c) looks for the name in this order:
+
+  1. A name with a slash that is a path of the file system (relative to the
+     directory in which the program was started, or absolute): that file.
+  2. The Working Directory of the panel, the directory itself only.
+  3. Each place of templates, in this order: the directory that
+     STRATA_TEMPLATES names, the directory templates of the settings
+     (~/.strata/templates) and share/strata/templates beside the programs.
+     In a place, a bare name is looked for in the place and in all
+     subdirectories below it (at most four deep): the place itself first,
+     then the subdirectories in the order of their names, each with the
+     subdirectories below it.  A name with a slash is looked for as a path
+     below the place.
+  4. The directory of the program file, as before.
+
+The first file found is used.  So a person's own directory of templates may
+have subdirectories too, with any names, and a template of the same bare name
+there hides the shipped one: a person who copies
+labels/avery/us/label-us-5160.doc into ~/.strata/templates and changes it
+finds the changed template first, by the bare name and by the path name
+labels/avery/us/label-us-5160.
+
+The template that a document or a panel stores is the full path of the file
+as chosen in the list, as before.
+
+
+3. THE LIST OF TEMPLATES
+------------------------
+
+The list that New shows (src/template.c, template_navigate) shows one
+subdirectory at a time:
+
+  - At the top: the built-in settings Structured and Unstructured, then the
+    subdirectories (each as its name with a slash, with the number of
+    templates in it in the lines below the list), then the templates of the
+    top directory.  The field Template of the New File panel has the same
+    list and one more entry last, Another file....
+  - Enter on a subdirectory opens it; the title of the list names it
+    (Templates: labels/avery/us).  Left, or Backspace when no text has been
+    typed, goes up one level and puts the cursor on the subdirectory that was
+    left.  Esc ends the list, as before (the built-in settings are taken).
+    Enter or Ins on a template takes it.
+  - The subdirectories of all places are merged: the subdirectory labels of
+    the shipped templates and the subdirectory labels of the settings are one
+    entry in the list.  A template whose bare name is in an earlier place
+    hides the one of a later place, as before.
+  - Typed text searches the entries of the open subdirectory (the first entry
+    that has a word that begins with the text, in its name or its
+    description, as before).  When the text is in no entry of the open
+    subdirectory, it is searched in all subdirectories, and the list is shown
+    again with the subdirectory of the first template that has the text open,
+    the cursor on that template, and the text kept: typing 5160 in the list
+    of New goes to label-us-5160 at once, from wherever the list was opened.
+    The text is shown as Find: 5160.
+
+The list is the one widget of the Document Manager and the Editor
+(popup_list_desc_up of src/widgets.c: popup_list_desc with the keys Left and
+Backspace, and the result for text that is in no entry).
+
+
+4. THE INSTALL
+--------------
+
+scripts/strata-install installs every .doc file below templates, with the
+subdirectories: share/strata/templates/envelopes/envelope-uk-dl.doc, and so
+on.  The subdirectories are recorded in the manifest as directories that the
+install made, and --uninstall removes them when they are empty, as it does
+the other directories.  A second install of the same version changes nothing.
+The list at the end of an install shows one group for each subdirectory that
+holds templates.
+
+
+5. THE GENERATORS AND THE TESTS
+-------------------------------
+
+tests/mktemplates.py and tests/mklabels.py write the templates into
+subdirectories below their argument, with mktemplates.folder_of (the
+subdirectory of a template name) and mktemplates.relpath (the path of its
+file).  The committed copies are the output of
+
+    python3 -I -B tests/mktemplates.py templates
+
+tests/templates.py (the subdirectories, the committed copies, the printed
+pages), tests/labels.py (the label templates), tests/tplfield.py and
+tests/inslist.py (the list), tests/tplfolders.py (the names, the lookup, the
+subdirectories of the list; also the lookup on spoiled copies of
+src/tplfind.c) and tests/installtest.py (the install) check it.

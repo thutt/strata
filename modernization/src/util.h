@@ -175,6 +175,32 @@ str_copy(char *dst, size_t cap, const char *src)
 
 
 /*
+ * Copy src into dst (capacity cap, truncating, always NUL terminated) up to
+ * the first character stop of src or its end.  Returns the place in src where
+ * the copying ended: the character stop or the final NUL.
+ */
+static inline const char *
+str_copy_to(char *dst, size_t cap, const char *src, char stop)
+{
+    size_t n = 0;
+
+    while (src[n] != '\0' && src[n] != stop) {
+        if (n + 1 < cap) {
+            dst[n] = src[n];
+        }
+
+        n++;
+    }
+
+    if (cap > 0) {
+        dst[n < cap ? n : cap - 1] = '\0';
+    }
+
+    return src + n;
+}
+
+
+/*
  * Fits a message of the message line into width characters.  A message that
  * is longer holds a path or a name of a file (a long word) in most cases, and
  * the end of the message is what matters, so the first word that is long

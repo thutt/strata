@@ -74,9 +74,9 @@ file-export-charset | scene | stred | memo.doc | 2026-11-20 | build.sh pics file
 file-export | scene | stred | memo.doc | 2026-11-22 | build.sh pics file-export
 file-import | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-import
 file-letter-screen | scene | stred | sample-letter.doc | 2026-11-20 | build.sh pics file-letter-screen
-file-new-description | scene | templates-stred.sh | memo.doc | 2026-11-21 | build.sh pics file-new-description
-file-new-labels | scene | templates-stred.sh | memo.doc | 2026-11-21 | build.sh pics file-new-labels
-file-new-list | scene | templates-stred.sh | memo.doc | 2026-11-21 | build.sh pics file-new-list
+file-new-description | scene | templates-stred.sh | memo.doc | 2026-11-23 | build.sh pics file-new-description
+file-new-labels | scene | templates-stred.sh | memo.doc | 2026-11-23 | build.sh pics file-new-labels
+file-new-list | scene | templates-stred.sh | memo.doc | 2026-11-23 | build.sh pics file-new-list
 file-new-type | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-new-type
 file-new | scene | stred | memo.doc | 2026-11-19 | build.sh pics file-new
 file-overwrite | scene | stred | memo.doc | 2026-11-20 | build.sh pics file-overwrite

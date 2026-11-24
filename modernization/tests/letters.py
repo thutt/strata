@@ -167,7 +167,7 @@ STYLE = mkletters.STYLE
 EXTRA = mkletters.EXTRA
 COLUMN_OK = (b'CW', b'CB', b'CL', b'CR', b'CF')
 for kind, tpl in (('us', 'letter-us.doc'), ('a4', 'letter-a4.doc')):
-    tfmt = named_formats(records(os.path.join(templates, tpl)))
+    tfmt = named_formats(records(os.path.join(templates, 'letters', tpl)))
     bad = []
     unnamed = []
     handset = []

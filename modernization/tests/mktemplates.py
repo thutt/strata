@@ -11,6 +11,9 @@
 #     python3 -I tests/mktemplates.py templates
 #     python3 -I tests/mktemplates.py --example FOLDER   (with example text)
 #
+# The templates are written into folders below FOLDER: envelopes, letters,
+# labels/avery/us and labels/avery/a4 (docs/TEMPLATES.txt).
+#
 # Letters in the style of the LaTeX letter class (US Letter and A4) and
 # envelopes for several countries, and the label sheets (tests/mklabels.py).  Every template has a description (the
 # record MD, which the list of templates shows).  All text and layout are
@@ -435,6 +438,31 @@ def build(example=False):
     return docs
 
 
+def folder_of(name):
+    """The folder below the templates folder that holds the template name:
+    envelopes, letters, or labels/avery/us and labels/avery/a4 for the label
+    sheets of Avery (every label sheet of the table is an Avery sheet)."""
+    if name.startswith("envelope-"):
+        return "envelopes"
+
+    if name.startswith("letter-"):
+        return "letters"
+
+    if name.startswith("label-us-"):
+        return "labels/avery/us"
+
+    if name.startswith("label-a4-"):
+        return "labels/avery/a4"
+
+    raise ValueError("no folder for the template " + name)
+
+
+def relpath(name):
+    """The path of the file of the template name below the templates folder,
+    folders separated by a slash (labels/avery/us/label-us-5160.doc)."""
+    return folder_of(name) + "/" + name + ".doc"
+
+
 def main(argv):
     example = "--example" in argv
     args = [a for a in argv[1:] if a != "--example"]
@@ -446,7 +474,11 @@ def main(argv):
     os.makedirs(args[0], exist_ok=True)
 
     for name, d in build(example).items():
-        with open(os.path.join(args[0], name + ".doc"), "wb") as f:
+        folder = os.path.join(args[0], folder_of(name))
+
+        os.makedirs(folder, exist_ok=True)
+
+        with open(os.path.join(folder, name + ".doc"), "wb") as f:
             f.write(d.bytes())
 
     return 0

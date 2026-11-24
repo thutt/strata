@@ -137,9 +137,10 @@ The list is moved with {k:Up} {k:Down}; {k:Enter} chooses; {k:S} and
 {k:U} choose at once (see {n:str-keys-list}).  {k:Esc} here goes back
 to the Edit / Preview / Print Document panel with the values as they were.
 When there are templates ({n:file-new-list}), the list of the type is
-preceded by a list titled Templates.  It holds Structured, Unstructured and
-each template, and the lines below it show the description of the chosen
-entry.  {k:Enter} takes the entry and shows the New File panel; {k:Ins} takes
+preceded by a list titled Templates.  It holds Structured, Unstructured, the
+subdirectories of the templates and the templates, and the lines below it
+show the description of the chosen entry; {k:Enter} on a subdirectory opens it
+and {k:Left} goes up one level ({n:file-new-list}).  {k:Enter} takes the entry and shows the New File panel; {k:Ins} takes
 it and finishes at once, with Description and Author empty; {k:Esc} shows the
 list of the type instead.  A new document goes through these questions
 whichever way names it: a name typed in the panel, a name given on the

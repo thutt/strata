@@ -1,0 +1,242 @@
+#!/bin/bash
+# Copyright (c) 2026 Logic Magicians Software
+#
+# Makes a copy of a branch of this repository that can be published: the
+# original program disks and documents (the directory lotus-manuscript) are
+# removed from every commit, every line that names anthropic is removed from
+# every commit message, and every author or committer address that names
+# anthropic is replaced by the identity of the owner.  The copy is checked
+# before the script ends.  The script never pushes and never changes this
+# repository.  It is a tool of the developers and is never shipped.
+#
+# Usage: strata-publish-clone [--branch BRANCH] [--exclude PATH]...
+#                             [--name NAME] [--email ADDRESS] DIR
+#
+set -o pipefail;
+set -o nounset;
+set -o errexit;
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+project_dir="$(dirname "${script_dir}")"
+
+branch=""
+name=""
+email=""
+excludes=()
+target=""
+
+# Stops with a message on the error output.
+function die
+{
+    echo "strata-publish-clone: ${*}" >&2
+    exit 1
+}
+
+
+function usage
+{
+    sed -n '/^# Usage:/,/^#$/p' "${BASH_SOURCE[0]}" | sed -e 's/^# \{0,1\}//'
+}
+
+
+while [ ${#} -gt 0 ]; do
+    case "${1}" in
+        --branch)
+            [ ${#} -ge 2 ] || die "--branch needs a branch name."
+            branch="${2}"
+            shift 2
+            ;;
+        --exclude)
+            [ ${#} -ge 2 ] || die "--exclude needs a path."
+            excludes+=("${2}")
+            shift 2
+            ;;
+        --name)
+            [ ${#} -ge 2 ] || die "--name needs a name."
+            name="${2}"
+            shift 2
+            ;;
+        --email)
+            [ ${#} -ge 2 ] || die "--email needs an address."
+            email="${2}"
+            shift 2
+            ;;
+        --help | -h)
+            usage
+            exit 0
+            ;;
+        -*)
+            die "unknown option ${1}."
+            ;;
+        *)
+            [ -z "${target}" ] || die "only one directory may be named."
+            target="${1}"
+            shift
+            ;;
+    esac
+done
+
+[ -n "${target}" ] || die "a directory for the copy is needed (see --help)."
+
+if [ ${#excludes[@]} -eq 0 ]; then
+    excludes=("lotus-manuscript")
+fi
+
+for tool in git perl sha1sum; do
+    command -v "${tool}" > /dev/null ||
+        die "${tool} is needed and was not found."
+done
+
+git -C "${project_dir}" rev-parse --git-dir > /dev/null 2>&1 ||
+    die "${project_dir} is not a git repository."
+
+if [ -z "${branch}" ]; then
+    branch="$(git -C "${project_dir}" rev-parse --abbrev-ref HEAD)"
+fi
+
+git -C "${project_dir}" rev-parse -q --verify "refs/heads/${branch}" \
+    > /dev/null || die "the branch ${branch} does not exist."
+
+if [ -z "${name}" ]; then
+    name="$(git -C "${project_dir}" config user.name || true)"
+fi
+
+if [ -z "${email}" ]; then
+    email="$(git -C "${project_dir}" config user.email || true)"
+fi
+
+[ -n "${name}" ] && [ -n "${email}" ] ||
+    die "no identity: give --name and --email or set them in git config."
+
+case "${name}${email}" in
+    *[Aa]nthropic*)
+        die "the identity must not name anthropic."
+        ;;
+esac
+
+if [ -e "${target}" ]; then
+    die "${target} exists already: name a directory that does not exist."
+fi
+
+scratch="$(mktemp -d "${TMPDIR:-/tmp}/publish-clone.XXXXXX")"
+trap 'rm -rf -- "${scratch}"' EXIT
+
+# The filters are written as files, so that git runs them as they are.
+cat > "${scratch}/message.pl" <<'EOF'
+local $/;
+my $m = <STDIN>;
+$m =~ s/^[^\n]*anthropic[^\n]*\n?//gim;
+$m =~ s/\s+\z/\n/;
+print $m;
+EOF
+
+cat > "${scratch}/env.sh" <<EOF
+case "\${GIT_AUTHOR_EMAIL}\${GIT_AUTHOR_NAME}" in
+    *[Aa]nthropic*)
+        GIT_AUTHOR_NAME="${name}"
+        GIT_AUTHOR_EMAIL="${email}"
+        ;;
+esac
+case "\${GIT_COMMITTER_EMAIL}\${GIT_COMMITTER_NAME}" in
+    *[Aa]nthropic*)
+        GIT_COMMITTER_NAME="${name}"
+        GIT_COMMITTER_EMAIL="${email}"
+        ;;
+esac
+export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+EOF
+
+index_command="git rm -r -q --cached --ignore-unmatch"
+for path in "${excludes[@]}"; do
+    index_command="${index_command} '${path}'"
+done
+
+echo "strata-publish-clone: cloning ${branch} into ${target}."
+git clone -q --no-local --single-branch --branch "${branch}" \
+    "${project_dir}" "${target}"
+
+cd "${target}"
+
+echo "strata-publish-clone: rewriting the history; this takes a few minutes."
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --prune-empty \
+    --index-filter "${index_command}" \
+    --msg-filter "perl '${scratch}/message.pl'" \
+    --env-filter ". '${scratch}/env.sh'" \
+    --tag-name-filter cat -- --all > /dev/null 2>&1
+
+# The copy must hold nothing of the old history: the saved refs, the remote
+# and every unreachable object go.
+for ref in $(git for-each-ref --format='%(refname)' refs/original); do
+    git update-ref -d "${ref}"
+done
+
+git remote remove origin
+git reflog expire --expire=now --all
+git gc -q --prune=now --aggressive
+
+# The checks.  Each one that fails is reported, and the copy is removed.
+failed=0
+
+function check
+{
+    local label="${1}"
+    local count="${2}"
+
+    if [ "${count}" -eq 0 ]; then
+        echo "  ok    ${label}"
+    else
+        echo "  FAIL  ${label}: ${count}" >&2
+        failed=1
+    fi
+}
+
+
+refs="$(git for-each-ref --format='%(refname)' refs/heads refs/tags)"
+check "a branch or tag exists" "$([ -n "${refs}" ] && echo 0 || echo 1)"
+
+check "lines of commit messages that name anthropic" \
+    "$(git log --all --format=%B | grep -ci anthropic || true)"
+check "authors and committers that name anthropic" \
+    "$(git log --all --format='%an %ae %cn %ce' | grep -ci anthropic || true)"
+check "objects that hold the address of anthropic" \
+    "$(git cat-file --batch-all-objects --batch |
+       grep -aci 'anthropic\.com' || true)"
+
+for path in "${excludes[@]}"; do
+    paths="$(git log --all --name-only --format= |
+             grep -c "^${path}\(/\|\$\)" || true)"
+    check "paths in the history that start with ${path}" "${paths}"
+done
+
+# The last commit of the copy holds the same files as the branch, less the
+# excluded paths.
+function listing
+{
+    local repo="${1}"
+    local rev="${2}"
+    local pattern
+
+    pattern="^($(IFS='|'; echo "${excludes[*]}"))(/|\$)"
+    git -C "${repo}" ls-tree -r "${rev}" |
+        awk -F'\t' -v pat="${pattern}" '$2 !~ pat' | sha1sum
+}
+
+
+want="$(listing "${project_dir}" "refs/heads/${branch}")"
+have="$(listing "${PWD}" "refs/heads/${branch}")"
+check "differences of the files of the last commit from the branch" \
+    "$([ "${want}" = "${have}" ] && echo 0 || echo 1)"
+
+cd "${OLDPWD}"
+
+if [ "${failed}" -ne 0 ]; then
+    rm -rf -- "${target}"
+    die "the checks failed: the copy was removed."
+fi
+
+echo "strata-publish-clone: made ${target}:"
+echo "  branch     ${branch}"
+echo "  commits    $(git -C "${target}" rev-list --count "${branch}")"
+echo "  last       $(git -C "${target}" rev-parse "${branch}")"
+echo "  identity   ${name} <${email}>"
+echo "  nothing was pushed; this repository was not changed."

@@ -47,7 +47,10 @@ is /usr, which needs administrator privileges:
 
 Without administrator privileges the script installs into $HOME/usr:
 
-    scripts/strata-build install
+    scripts/strata-install --build-dir "$STRATA_BUILD_DIR"
+
+'scripts/strata-build install' installs nothing: it makes the install
+tarball in the build directory.
 
 An ordinary user's install is made whether or not the programs that Strata can
 use at run time are on the system: they are optional.  A warning at the end of
@@ -76,8 +79,8 @@ The layout under the prefix:
                                        style of envelope
     share/strata/tutorial/             the documents of the Tutorial and their
                                        pictures, in a directory next to them
-    share/strata/templates/            the templates of New: letters and
-                                       envelopes
+    share/strata/templates/            the templates of New, in folders:
+                                       envelopes, letters and labels/avery
     share/strata/manifest              every file and directory installed
     share/doc/strata/                  this file and the licence
 
@@ -346,6 +349,30 @@ on PATH) does the build: strata-build builds everything, strata-build x11 adds
 the X11 frontend, strata-build test and strata-build clean pass those targets
 to make.  It does not run if the build directory is unset or inside the source
 tree.
+
+The install tarball is a build artifact that is made only on request:
+strata-build install-tarball (after the programs are built) makes
+strata-NAME.tar.xz and its checksum file strata-NAME.tar.xz.sha256 in the
+build directory, where NAME is the version of the build (for example
+strata-development-1-230cb783.tar.xz; a build type other than release is
+added to the name, and a build with no supported version makes no tarball).
+The default build, strata-build with no argument, does not make it.  The
+tarball holds one directory with the install script, the payload and
+INSTALL.txt, and two runs from the same commit give the same file.  A reader
+checks the download with sha256sum -c, unpacks it with tar -xJf and runs
+bash strata-install; INSTALL.txt says so.  A release has no
+signature: the SHA-256 value is its integrity check, and a reader who wants
+more builds from the source.  docs/INSTALL-POLICY.txt has the rules.
+
+A developer makes a release with scripts/strata-release, which takes the
+release number X.Y.0 as its argument: 'scripts/strata-release 1.0.0 --dry-run'
+checks everything and changes nothing, and 'scripts/strata-release 1.0.0'
+makes the annotated tag v1.0.0 on HEAD (or on the commit of --commit), builds
+that tag in a scratch worktree and leaves strata-1.0.0.tar.xz and its
+.sha256 file in the build directory (default /tmp/strata-release-1.0.0/
+release; --output DIR copies them).  An existing tag is refused and never
+changed, a failure removes the tag that the tool made, and nothing is pushed
+or signed.  The tool is never shipped.
 
 Sourcing setup also sets STRATA_HELP (the help file that the build makes) and
 STRATA_TEMPLATES (the templates folder of the source tree), so that a program

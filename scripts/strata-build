@@ -21,7 +21,8 @@
 #
 # Then run one of these commands:
 #
-#     strata-build           Build everything (the same as 'all').
+#     strata-build           Build everything (the same as 'all').  The
+#                            install tarball is not made here.
 #     strata-build help      List the valid targets.
 #     strata-build term      Build only the terminal version.
 #     strata-build x11       Build only the X11 version.
@@ -37,20 +38,31 @@
 #                            present, and the package of each missing one;
 #                            installs nothing.  It needs no build directory.
 #     strata-build clean     Delete the build products.
-#     strata-build install [OPTIONS]
-#                            Install what is built under a prefix, by the
-#                            script scripts/strata-install (never part of
-#                            'all'); 'strata-build install --help' lists
-#                            the options.  'strata-build uninstall
-#                            [--prefix DIR]' removes it again.
+#     strata-build install   Make the install tarball in the build directory
+#                            (see install-tarball below); it installs
+#                            nothing.  To install from a build directory
+#                            run scripts/strata-install --build-dir DIR
+#                            [OPTIONS] (never part of 'all').
+#                            'strata-build uninstall [--prefix DIR]'
+#                            removes an install again.
 #     strata-build release DIR
 #                            Make the release directory DIR for delivery:
 #                            the install script and the directory payload
 #                            with the files that it installs.  The release
 #                            holds no build script and no source.
+#     strata-build install-tarball
+#                            The same as 'strata-build install': make the
+#                            install tarball in the build directory
+#                            (a build artifact, never in the source tree),
+#                            only when asked: strata-NAME.tar.xz and
+#                            strata-NAME.tar.xz.sha256, where NAME is the
+#                            version of the build (and the build type when
+#                            it is not release).  The programs must be built
+#                            first; no other target makes the tarball.
 #
-# Every argument is handed to make as a target name, so 'strata-build help'
-# always shows the current list.
+# Every other argument is handed to make as a target name, so 'strata-build
+# help' always shows the current list.  The options -j N, -jN and --jobs=N
+# before the command give the number of jobs.
 
 set -euo pipefail
 
@@ -102,6 +114,36 @@ esac
 # Build with one job per processor.
 jobs=$(nproc 2>/dev/null || echo 2)
 
+# Leading options: -j N, -jN and --jobs=N give the number of jobs.  They are
+# taken here, so that the command that follows them is found: the line
+# 'strata-build -j 32 install' is the command install.
+while [ ${#} -gt 0 ]; do
+    case "${1}" in
+        -j)
+            [ ${#} -ge 2 ] || die "-j needs a number of jobs."
+            jobs="${2}"
+            shift 2
+            ;;
+        -j[0-9]*)
+            jobs="${1#-j}"
+            shift
+            ;;
+        --jobs=*)
+            jobs="${1#--jobs=}"
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+case "${jobs}" in
+    "" | *[!0-9]*)
+        die "the number of jobs must be a number, not '${jobs}'."
+        ;;
+esac
+
 # With no arguments, build the default target.
 if [ ${#} -eq 0 ]; then
     set -- all
@@ -111,8 +153,13 @@ fi
 case "${1}" in
     install)
         shift
-        exec "${STRATA_ROOT}/scripts/strata-install" \
-            --build-dir "${build}" "${@}"
+        if [ ${#} -ne 0 ]; then
+            die "install takes no options: it makes the install tarball in" \
+                "the build directory.  To install from the build directory" \
+                "run: scripts/strata-install --build-dir DIR [OPTIONS]."
+        fi
+        exec "${STRATA_ROOT}/scripts/strata-install-tarball" "${build}" \
+            "${STRATA_BUILD_TYPE:-debug}"
         ;;
     uninstall)
         shift
@@ -122,6 +169,10 @@ case "${1}" in
         shift
         exec "${STRATA_ROOT}/scripts/strata-install" \
             --build-dir "${build}" --make-release "${@}"
+        ;;
+    install-tarball)
+        exec "${STRATA_ROOT}/scripts/strata-install-tarball" "${build}" \
+            "${STRATA_BUILD_TYPE:-debug}"
         ;;
 esac
 

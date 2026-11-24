@@ -62,7 +62,9 @@ GENERIC = {'memo.set', 'outline.set', 'envelope.set', 'temp.val'}
 
 SCAN_DIRS = ['tests', 'manual', '../scripts']
 SKIP_DIRS = {'doc', 'samples', 'data', 'pictures', 'shadowbin', '__pycache__'}
-SKIP_FILES = {'samplesguard.py', 'SAMPLES.txt'}
+# The test publishclone.py makes a scratch repository that has a directory
+# of the original name, on purpose, to see that the tool removes it.
+SKIP_FILES = {'samplesguard.py', 'SAMPLES.txt', 'publishclone.py'}
 SCAN_EXT = {'.py', '.c', '.h', '.sh', '.txt', '.src', '.allow', '.mk', ''}
 fails = 0
 
