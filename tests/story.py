@@ -388,7 +388,10 @@ if git is not None and os.path.isdir(os.path.join(root, '.git')) or \
                         '--date=format:%d'] , env=dict(os.environ))
     st2, out2, err2 = run([git, '-C', root, 'log', '--format=%ad',
                            '--date=format:%Y-%m'])
-    if st == 0 and st2 == 0:
+    # A repository with a minimal history has far fewer commits than the
+    # timeline of the story counts: the timeline cannot be compared then.
+    if st == 0 and st2 == 0 and \
+            len(out.split()) >= sum(days['commits']):
         per = {}
         for d, ym in zip(out.split(), out2.split()):
             if ym == '2026-11':
@@ -408,7 +411,8 @@ if git is not None and os.path.isdir(os.path.join(root, '.git')) or \
               len([h for h in upto if h < '07']) == sd.COMMITS_NIGHT,
               (len(upto), len([h for h in upto if h < '07'])))
     else:
-        print('SKIP: the log of the repository cannot be read')
+        print('SKIP: the log of the repository cannot be read or holds less '
+              'history than the timeline counts')
 else:
     print('SKIP: the source tree has no log of the repository')
 
