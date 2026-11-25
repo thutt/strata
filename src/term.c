@@ -941,7 +941,9 @@ mode_name(int mode)
 /*
  * Decides once how the screen is drawn: UTF-8, VT100 or ASCII.  The order:
  * (a) the variable STRATA_ASCII (1 or 0) and the setting terminal_charset
- * (utf8, vt100, ascii); (b) in a multiplexer, which translates the
+ * (utf8, vt100, ascii); when there is no setting the screen is VT100, the
+ * default.  The rest decides only when the setting is auto: (b) in a
+ * multiplexer, which translates the
  * characters itself, UTF-8 when the locale is UTF-8, else VT100 when the
  * terminal type has the line characters, else ASCII; (c) in a UTF-8 locale
  * the answer of probe_cell: one column means UTF-8, and so does no answer;
@@ -986,6 +988,9 @@ choose_charset(void)
     } else if (strcmp(cfg.terminal_charset, "vt100") == 0) {
         mode = CS_VT100;
         how = "the setting terminal_charset=vt100";
+    } else if (cfg.terminal_charset[0] == '\0') {
+        mode = CS_VT100;
+        how = "the default: there is no setting terminal_charset";
     } else if (in_multiplexer() != 0) {
         automatic = 1;
 

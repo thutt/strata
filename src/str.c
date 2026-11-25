@@ -95,7 +95,7 @@ static Config cfg;
 /* The rows of the windows (Setup); 0 is the default of the version. */
 static int x11_rows_val;
 static int term_rows_val;
-/* Setup: terminal_charset: auto, utf8, vt100, ascii. */
+/* Setup: terminal_charset: auto, ascii, vt100, utf8; vt100 is the default. */
 static char charset_val[8];
 static char paper_val[8]; /* Setup: default_paper: "" for Letter, or a4 */
 static int undo_levels_val; /* Setup: the operations that Undo keeps. */
@@ -129,7 +129,8 @@ conf_load(void)
     x11_rows_val = cfg.x11_rows;
     term_rows_val = cfg.terminal_rows;
     str_copy(charset_val, sizeof charset_val,
-             cfg.terminal_charset[0] != '\0' ? cfg.terminal_charset : "auto");
+             cfg.terminal_charset[0] != '\0' ? cfg.terminal_charset :
+                                                "vt100");
     str_copy(paper_val, sizeof paper_val, cfg.default_paper);
     undo_levels_val = cfg.undo_levels;
     backups_val = cfg.backups;
@@ -169,8 +170,7 @@ conf_save(void)
              strcmp(spell_lang, "en_US") == 0 ? "" : spell_lang);
     cfg.x11_rows = x11_rows_val;
     cfg.terminal_rows = term_rows_val;
-    str_copy(cfg.terminal_charset, sizeof cfg.terminal_charset,
-             strcmp(charset_val, "auto") == 0 ? "" : charset_val);
+    str_copy(cfg.terminal_charset, sizeof cfg.terminal_charset, charset_val);
     str_copy(cfg.default_paper, sizeof cfg.default_paper, paper_val);
     cfg.undo_levels = undo_levels_val;
     cfg.backups = backups_val;
@@ -2598,8 +2598,8 @@ do_setup(void)
     char file_line[PATH_MAX + 40];
     static const char *yes_no[] = {"Yes", "No"};
     static const char *papers[] = {"Letter", "A4"};
-    static const char *charset_choices[] = {"Automatic", "UTF-8", "VT100",
-                                            "ASCII"};
+    static const char *charset_choices[] = {"Automatic", "ASCII", "VT100",
+                                            "UTF-8"};
 
     pj_queues(&q);
     setup_queues = q.pending != 0 ? SETUP_QUEUES_PENDING : q.n;
@@ -2711,16 +2711,16 @@ do_setup(void)
                "", "none");
     field_init(&f[SU_A_CHARSET], "Terminal Characters:",
                strcmp(charset_val, "utf8") == 0  ? "UTF-8" :
-               strcmp(charset_val, "vt100") == 0 ? "VT100" :
                strcmp(charset_val, "ascii") == 0 ? "ASCII" :
-                                                   "Automatic",
+               strcmp(charset_val, "auto") == 0  ? "Automatic" :
+                                                   "VT100",
                0, NULL);
     f[SU_A_CHARSET].choices = charset_choices;
     f[SU_A_CHARSET].nchoices = 4;
     field_hint(&f[SU_A_CHARSET],
-               "How the terminal draws its screen: Automatic, UTF-8, VT100 or "
-               "ASCII.",
-               "Automatic", NULL);
+               "How the terminal draws its screen: Automatic, ASCII, VT100 or "
+               "UTF-8.",
+               "VT100", NULL);
     field_init(&f[SU_A_EDITOR], "Editor program:", msed_path, 0, NULL);
     field_hint(&f[SU_A_EDITOR],
                "The Editor that this program starts; the install sets it.",

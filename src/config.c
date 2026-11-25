@@ -454,9 +454,9 @@ set_value(Config *c, const char *key, const char *val)
         set_rows(&c->terminal_rows, val);
     } else if (strcmp(key, "terminal_charset") == 0) {
         if (strcmp(val, "utf8") == 0 || strcmp(val, "vt100") == 0 ||
-            strcmp(val, "ascii") == 0) {
+            strcmp(val, "ascii") == 0 || strcmp(val, "auto") == 0) {
             str_copy(c->terminal_charset, sizeof c->terminal_charset, val);
-        } else if (strcmp(val, "auto") == 0) {
+        } else {
             c->terminal_charset[0] = '\0';
         }
     } else if (strcmp(key, "default_paper") == 0) {
