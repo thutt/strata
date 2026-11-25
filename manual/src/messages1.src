@@ -203,12 +203,14 @@ N replacements | Replace changed N places. {c:1 replacement} for one;
  | {c:(stopped)} is added when {k:Q} or {k:Esc} ended the run.
 New document | New.
 {c:No UTF-8 or VT100 terminal: ASCII is drawn. See Setup, terminal_charset.} | The
- | start of the Editor, and of the Document Manager (on its footer line).  The
+ | start of the Editor, and of the Document Manager (on its footer line), when
+ | Terminal Characters is Automatic.  The
  | terminal reads neither UTF-8 nor the VT100 line characters, so the screen is
  | drawn with ASCII characters ({n:appterm-charset}).  Field Terminal
  | Characters of Setup and the variable STRATA_ASCII change the choice.
 {c:No UTF-8 terminal: VT100 lines are drawn. See Setup, terminal_charset.} | The
- | start of the Editor, and of the Document Manager (on its footer line).  The
+ | start of the Editor, and of the Document Manager (on its footer line), when
+ | Terminal Characters is Automatic.  The
  | terminal does not read UTF-8 or the locale is not a UTF-8 locale, so the
  | screen is drawn with the line characters of the VT100 set
  | ({n:appterm-charset}).  Field Terminal Characters of Setup and the

@@ -442,14 +442,16 @@ recommended).  The terminal version draws its screen in one of three ways: in
 UTF-8 (double and single lines and the other shapes, in a UTF-8 locale with a
 font that has them), with the line characters of the VT100 set (single lines;
 ASCII bytes only; nearly every terminal speaks VT100, and no locale or font is
-needed), or with plain ASCII look-alikes (+ - = | # : < >).  At the start the
-program chooses: in a UTF-8 locale it requests the position of the cursor from
+needed), or with plain ASCII look-alikes (+ - = | # : < >).  The default is the
+VT100 screen; with the Setup field set to Automatic the program chooses at its
+start: in a UTF-8 locale it requests the position of the cursor from
 the terminal after one box character (one column: UTF-8); otherwise it uses
 VT100 when the type of the terminal (TERM) has the line characters, or the
 terminal answers that it is a VT100 or later, else ASCII.  A note is shown once
 on the message line, and the choice is written to the log.  STRATA_ASCII=1
 forces ASCII, STRATA_ASCII=0 forces UTF-8; the Setup field Terminal Characters
-(key terminal_charset: auto, utf8, vt100, ascii) does the same.  The font
+(key terminal_charset: auto, ascii, vt100, utf8; the default, with no setting,
+is vt100, and auto is the choice that checks the terminal) does the same.  The font
 cannot be checked: a font without the shapes shows squares (choose VT100, whose
 lines the terminal draws itself).  To test a terminal by hand, type
 printf '\033(0lqqk\033(B\n' (a box top: the terminal speaks VT100) and

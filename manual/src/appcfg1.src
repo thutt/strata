@@ -297,7 +297,7 @@ backups | 0 to 99 | 3 | Editor, Document Manager: Backups Kept.
  | | | window of the X11 version.
 {c:terminal_rows} | 20 to 200 | empty (all) | Editor: the most rows of the terminal
  | | | version.
-{c:terminal_charset} | {c:auto}, {c:utf8}, {c:vt100}, {c:ascii} | empty (auto) | Document Manager, Editor:
+{c:terminal_charset} | {c:auto}, {c:ascii}, {c:vt100}, {c:utf8} | empty (vt100) | Document Manager, Editor:
  | | | how the terminal version draws its screen.
 {c:default_paper} | letter, a4 | empty (letter) | Document Manager, Editor: the paper
  | | | of a document that is made new, without a template.
@@ -419,15 +419,18 @@ Key | What it does
 .h3 terminal_charset [appcfg-key-charset]
 .ix terminal_charset, setting
 .ix ASCII characters, setting
-Values: {c:auto}, {c:utf8}, {c:vt100} or {c:ascii}; no line means {c:auto}.  The
-Terminal Characters field of the Setup panel.  {c:utf8} makes the terminal
-version of the Editor and of the Document Manager draw the shapes of the
-character set as UTF-8; {c:vt100} makes them draw the lines with the line
+Values: {c:auto}, {c:ascii}, {c:vt100} or {c:utf8}; no line means {c:vt100}, the
+default.  The Terminal Characters field of the Setup panel, whose choices are
+Automatic, ASCII, VT100 and UTF-8 in that order.  {c:vt100} makes the terminal
+version of the Editor and of the Document Manager draw the lines with the line
 characters of the VT100 set, writing ASCII characters only; {c:ascii} makes
-them draw ASCII characters that look like the shapes; {c:auto} checks the
-terminal at the start and chooses ({n:appterm-charset}).
-The variable {c:STRATA_ASCII} (1 or 0) overrules the setting.  The line is
-written only when the value is not auto.  The X11 version ignores it.
+them draw ASCII characters that look like the shapes; {c:utf8} makes them draw
+the shapes of the character set as UTF-8; {c:auto} checks the terminal at the
+start and chooses ({n:appterm-charset}).  An unknown value is read as no line,
+so it means {c:vt100}.
+The variable {c:STRATA_ASCII} (1 or 0) overrules the setting.  Setup writes the
+line with the value that was chosen, so that Automatic is saved as {c:auto}: a
+missing line is VT100.  The X11 version ignores it.
 .h3 default_paper [appcfg-key-paper]
 .ix default_paper, setting
 .ix Paper, new documents

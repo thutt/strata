@@ -25,9 +25,9 @@ The X11 programs are not changed: they draw every cell with their own fonts
 and do not use the three screens.
 
 The setting terminal_charset (Setup, Terminal Characters) takes auto (the
-field says Automatic, and no line is written to the file), utf8, vt100 and
-ascii.  The variable STRATA_ASCII=1 forces ascii and STRATA_ASCII=0 forces
-utf8; it wins over the setting.
+field says Automatic), ascii, vt100 and utf8.  With no setting the screen is
+vt100, the default (section 8).  The variable STRATA_ASCII=1 forces ascii and
+STRATA_ASCII=0 forces utf8; it wins over the setting.
 
 2. THE MAPPING
 
@@ -211,8 +211,9 @@ signal:NAME and rawbytes (the bytes as they were written).  The checks:
     double lines; with no answer it does too; with the answer of three
     columns it gives vt100.
   - The setting vt100, utf8 and ascii force their mode whatever the terminal
-    and the locale say; STRATA_ASCII wins over the setting; auto and an
-    unknown value are the automatic choice.
+    and the locale say; STRATA_ASCII wins over the setting; auto is the
+    automatic choice; with no setting, and with an unknown value, the screen
+    is vt100 (section 8).
   - An unknown TERM with no answer gives ascii in less than 4 seconds; the
     answers of a VT100 and of a VT220 give vt100; another answer gives
     ascii; TERM=xterm is not asked; TERM=dumb gives ascii; TERM=linux gives
@@ -295,3 +296,50 @@ To check a terminal yourself (also written in the manual): the command
 printf '\033(0lqqk\033(B\n' prints the top of a box if the terminal speaks
 VT100, and printf '\342\224\200\n' prints a horizontal line if it reads UTF-8
 and has the shape in its font.
+
+8. THE DEFAULT AND THE FIELD OF SETUP
+
+The owner saw wrong characters in an xterm and asked for a field in Setup, a
+setting that the space bar switches, and for VT100 as the default.
+
+The field Terminal Characters of the Setup of the Document Manager (the third
+page, the advanced settings) has four choices, in this order: Automatic, ASCII,
+VT100 and UTF-8.  The label of the last choice is UTF-8: it is the name that a
+person finds in the settings of a terminal and of a locale, and the longer
+names that were considered (Unicode, UTF-8 (Unicode)) say no more.  Space goes
+to the next choice and round from the last to the first, as in every field of
+Setup that has choices; Left and Right stop at the ends.  The stored values
+are auto, ascii, vt100 and utf8 in the line terminal_charset, as before, and an
+old settings file keeps its meaning.
+
+The default is VT100.  A settings file with no line terminal_charset, or with
+a value that is not one of the four, means VT100 (before, no line meant
+Automatic), and the field shows VT100 with the default VT100 at its right.
+Saving Setup writes the value that was chosen, so Automatic is saved as auto,
+not as nothing.  The detection of section 3 runs only for Automatic; with the
+default nothing is asked of the terminal, so the start does not wait for an
+answer.  The notice of the first screen is shown only when Automatic made the
+choice.  The log says "the default: there is no setting terminal_charset".
+STRATA_ASCII still wins over everything.
+
+What was seen (xterm 407 on a clean Ubuntu 26.04 virtual machine of the
+farm, Xvfb, locale en_US.UTF-8, the font -fn 6x13, a bitmap font without the
+double lines and the triangles):
+  - With the old default (Automatic: a UTF-8 locale and an answer of one
+    column mean UTF-8) the Document Manager menu had a ring of hatched
+    squares for its double border, and the Editor screen had a square after
+    each block (in place of the triangle) and squares for the frame of the
+    title.  These are the wrong characters of the complaint: the check
+    cannot see the font.
+  - With the new default (VT100) the same screens are right: single lines
+    drawn by the terminal, the markers as > and <.  The same was seen on the
+    Setup panel (the field shows VT100 and the space bar goes to UTF-8, the
+    key line says Space Next, Left Right Choose, F2 List), a list of
+    commands, the Edit panel and the help.
+  - The tests walk through the screens of both programs in a UTF-8 locale
+    with no setting (tests/vt100.py): the Document Manager menu, the pages of
+    Setup, the panels of its five entries, and the Editor with its help,
+    menus, Find, Replace, the marker list, the attribute list and the format
+    panel.  No byte above 0x7F is written, the graphics set is never left on,
+    and no box has the plus and hyphen corners of the ASCII look-alike.  No
+    character had to be fixed in the mapping: the walk found none.

@@ -147,10 +147,21 @@ down to 40 columns by 20 lines.  The 16 colours of the terminal are used, and
 more when {c:TERM} says {c:256color} or {c:COLORTERM} says {c:truecolor}; it
 also works on a terminal with no colours.
 .h3 How Strata chooses, and how to change it [term-choose]
-At its start the program chooses the screen once, in this order.
-- When the environment variable {c:STRATA_ASCII} is 1 or 0, or the field
-  Terminal Characters of Setup is UTF-8, VT100 or ASCII, that is the screen.
-  Nothing is asked of the terminal.
+Unless you change it, the terminal programs draw the VT100 screen.  It is the
+screen that needs the least of a terminal: its lines are drawn right in a
+terminal that is not in UTF-8 and in one whose font lacks the shapes.  The choice is the field
+Terminal Characters of Setup, on its third page (the advanced settings), and
+it has four values, in this order: Automatic, ASCII, VT100 (the default) and
+UTF-8.  {k:Space} steps through them and goes round from the last to the
+first; {k:Left} and {k:Right} step back and forward and stop at the first and
+the last.  Press {k:Ins} to use the choice; it is saved with the other
+settings, and applies the next time a terminal program starts.
+- ASCII, VT100 and UTF-8 are the three screens above, as you chose.  Nothing is
+  asked of the terminal.
+- Automatic lets Strata choose once, at its start, in the order below.
+The environment variable {c:STRATA_ASCII} comes first: when it is 1 the screen
+is ASCII, and when it is 0 the screen is UTF-8, whatever the field says.
+This is the order of Automatic.
 - When Strata runs inside {c:tmux} or {c:screen}, a UTF-8 locale means the UTF-8
   screen.  Any other locale means the VT100 screen when the type of terminal
   ({c:TERM}) has the line characters, and the ASCII screen when it has not.
@@ -162,16 +173,16 @@ At its start the program chooses the screen once, in this order.
   type has the line characters in the terminal database, or the terminal
   answers the question who it is as a VT100 or a later model.  If not, the
   ASCII screen is drawn.
-When Strata chose the VT100 or the ASCII screen by itself, the message line of
-the first screen says so once, for example {c:No UTF-8 terminal: VT100 lines are
+When Automatic chose the VT100 or the ASCII screen, the message line of the
+first screen says so once, for example {c:No UTF-8 terminal: VT100 lines are
 drawn. See Setup, terminal_charset.}  The choice and its reason are also in the
-log of the run.  To choose yourself, open Setup, find Terminal Characters, and
-choose Automatic, UTF-8, VT100 or ASCII with {k:Left} and {k:Right}; or set
-{c:STRATA_ASCII} to 1 (ASCII) or 0 (UTF-8) in the environment.
+log of the run, whatever the field says.  The field is Automatic only when you
+set it so; a settings file that has no line for it means VT100.
 .h3 When the characters look wrong [term-check]
 A screen that looks wrong has one of three causes: the terminal is not in UTF-8
-and the UTF-8 screen was forced, the font lacks the shapes, or the terminal does
-not speak VT100 although its type says so.  Run these two commands in the
+and the UTF-8 screen was chosen, the font lacks the shapes of the UTF-8 screen,
+or the terminal does not speak VT100 although its type says so.  The default
+screen, VT100, is wrong only in the third case.  Run these two commands in the
 terminal, outside Strata, to see what it does.  The first prints the top of a
 box if the terminal speaks VT100:
 .code
@@ -184,9 +195,8 @@ terminal reads UTF-8 and its font has the shape:
 printf '\342\224\200\n'
 .end
 If it prints several odd letters, the terminal is not in UTF-8: set Terminal
-Characters to VT100, or Automatic in a locale that is not a UTF-8 locale.  If it
-prints a square, the font lacks the shape: use another font, or set Terminal
-Characters to VT100.
+Characters to VT100, which is the default.  If it prints a square, the font
+lacks the shape: use another font, or set Terminal Characters to VT100.
 .h3 xterm [term-xterm]
 {c:xterm} has been used with Strata (version 407, run on a virtual display), and
 each of these cases was run and its screen looked at.  The options of the third
@@ -201,16 +211,19 @@ Case | What the screen showed
 4 The options, UTF-8 locale | The double lines, as in case 2.
 5 {c:-fn fixed}, locale C | The VT100 lines, drawn right.
 6 {c:-fn fixed}, UTF-8 locale | Squares in place of the double lines, the
- | blocks and the arrows: this font does not have the shapes.  The field
- | Terminal Characters of Setup set to VT100 gave the right lines.
+ | blocks and the arrows, when Terminal Characters is UTF-8 or Automatic: this
+ | font does not have the shapes.  With the default, VT100, the lines are
+ | drawn right: the Document Manager menu, Setup, the Editor with a table and
+ | its markers, a menu and a list of commands.
 7 UTF-8 forced in the locale C | The box falls apart: each box character
  | shows as several odd letters, with or without the font DejaVu Sans Mono.
  | ({c:STRATA_ASCII=0}) Do not force UTF-8 there.
 .end
-So a plain {c:xterm} needs no option and no setting: in the locale C it shows
-the VT100 lines, and in a UTF-8 locale the UTF-8 shapes.  The options of
-case 3 changed nothing on the screen.  The one case that fails is a font that
-lacks the shapes, and the cure is VT100 in Setup.  The keys are another
+So a plain {c:xterm} needs no option and no setting: with the default, VT100,
+it shows the single lines in every case, and in a UTF-8 locale, when you choose
+UTF-8 or Automatic, the UTF-8 shapes.  The options of case 3 changed nothing on
+the screen.  The one case that fails is a font that lacks the shapes while the
+screen is UTF-8, and the cure is VT100, which is the default.  The keys are another
 matter: when the commands that use {k:Alt} type a character, the resource
 {c:XTerm*metaSendsEscape: true} makes {k:Alt} send {k:Esc} before the key, and
 the keys that a terminal keeps for itself are listed in {x:appterm-reach}.

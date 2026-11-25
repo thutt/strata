@@ -180,9 +180,10 @@ terminal arrives as typed keys, one character after another: a character that
 is not in the set is lost, a line end becomes {k:Enter} and so makes a new
 block, and a tab is a tab.  The selection and the paste of the terminal work
 as in any other program.
-.note The UTF-8 screen needs a terminal in UTF-8 mode.  The program checks
-  this when it starts ({n:appterm-charset}) and draws the VT100 screen, or the
-  ASCII screen, when the terminal is not.
+.note The UTF-8 screen needs a terminal in UTF-8 mode.  The screen is VT100
+  unless the field Terminal Characters of Setup is changed ({n:appterm-charset}),
+  and the choice Automatic checks the terminal at the start and draws the VT100
+  screen, or the ASCII screen, when the terminal is not in UTF-8.
 
 .h2 The start check and the three screens [appterm-charset]
 .ix Start check, terminal
@@ -192,11 +193,16 @@ as in any other program.
 .ix STRATA_ASCII
 .ix UTF-8, check at start
 .ix Font, terminal
-When the Editor or the Document Manager starts in a terminal, the way to draw
-the screen is chosen: with UTF-8 characters, with the line characters of the
-VT100 set, or with plain ASCII characters.  Where the locale is a UTF-8
-locale, one box character is written in a corner of the screen, the terminal is
-asked where the cursor is, and the answer is read before the first key is read.
+The Editor and the Document Manager draw the screen of a terminal in one of
+three ways: with UTF-8 characters, with the line characters of the VT100 set,
+or with plain ASCII characters.  The default is the VT100 screen: when the field
+Terminal Characters of Setup has not been changed, and has no value in the
+settings, the screen is VT100, and nothing is asked of the terminal.  The
+choices of the field are Automatic, ASCII, VT100 and UTF-8, in this order.  Only
+with Automatic is the way chosen when the program starts.  Where the locale is
+a UTF-8 locale, one box character is written in a corner of the screen, the
+terminal is asked where the cursor is, and the answer is read before the first
+key is read.
 A terminal that reads UTF-8 moves the cursor by one column; a terminal that
 reads Latin-1 or another set of eight bits shows three characters and moves it
 by three.  The answer is never taken for typed keys, and neither is any other
@@ -205,9 +211,10 @@ the question is not asked, because the answer could not change the choice, and
 no character outside ASCII is written at all.
 
 A terminal that is not in UTF-8 would show rubbish for the UTF-8 characters, so
-the program draws the VT100 screen when the terminal can, and the ASCII screen
+Automatic draws the VT100 screen when the terminal can, and the ASCII screen
 when it cannot, in the same cells, so that nothing moves.  A note on the
-message line of the first screen reports this once:
+message line of the first screen reports this once, when Automatic made the
+choice:
 .code
 No UTF-8 terminal: VT100 lines are drawn. See Setup, terminal_charset.
 .end
@@ -221,8 +228,9 @@ the run.  The choice follows this order.
 What | The result
 The variable {c:STRATA_ASCII} | 1 means ASCII characters, 0 means UTF-8,
  | whatever the terminal reports.  Nothing is asked, and no message is shown.
-The field Terminal Characters of Setup | UTF-8, VT100 or ASCII is used as it
- | is, like the variable.  Automatic, the usual value, goes on.  Saved as
+The field Terminal Characters of Setup | ASCII, VT100 or UTF-8 is used as it
+ | is, like the variable.  With no value in the settings the field is VT100,
+ | the default.  Automatic goes on to the steps below.  Saved as
  | {c:terminal_charset} ({n:appcfg-key-charset}).
 A terminal multiplexer (tmux, screen) | A UTF-8 locale means UTF-8.  Any other
  | locale means VT100 when the type of terminal ({c:TERM}) has the line
@@ -280,8 +288,8 @@ The check cannot test the font.  A terminal that reads UTF-8 but has a font
 without the shapes shows squares in place of the lines, the bars and the
 triangle.  That is not a fault of the program, and the check cannot see it.
 Two cures exist: give the terminal a font that has the shapes, or set the field
-Terminal Characters of Setup to VT100 (the lines are then drawn by the
-terminal itself), or start with {c:STRATA_ASCII=1} in the environment.  A
+Terminal Characters of Setup to VT100 (the default: the lines are then drawn by
+the terminal itself), or start with {c:STRATA_ASCII=1} in the environment.  A
 terminal that reads Latin-1 and is told to read UTF-8 with {c:STRATA_ASCII=0}
 or the field shows rubbish, and some of them type an answer to a question that
 the program never asked; the program drops such answers, but do not force UTF-8

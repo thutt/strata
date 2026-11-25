@@ -404,7 +404,7 @@ page, the advanced settings, has these fields:
 Field | Value shown
 Initial Macro Set | Empty, or the saved name of a macro file.
 Initial Library | Empty, or the saved name of a library file.
-Terminal Characters | Automatic, UTF-8, VT100 or ASCII: Automatic at the start.
+Terminal Characters | Automatic, ASCII, VT100 or UTF-8: VT100 at the start.
 Editor program | The Editor that was found, or the saved path.
 Help File | The help file that was found, or empty.
 .end
@@ -544,13 +544,17 @@ Window Rows | One line with two edit fields: X11 and Terminal.  {k:Tab} (or
  | the size of your terminal window; the height that you gave
  | the terminal is kept here when the run ends ({n:appterm-size}).  Saved as
  | {c:terminal_rows}.
-Terminal Characters | How the terminal version draws its screen.
- | Automatic: the program checks at its start how to draw the screen:
- | with UTF-8 when the terminal reads it, else with the lines of the VT100
- | set, else with ASCII characters.  UTF-8, VT100 and ASCII decide without
- | the check.  Choose with {k:Left} and {k:Right}.  It is for
- | the terminal version; the window version is not concerned.  Saved as
- | {c:terminal_charset}; Automatic is saved as nothing
+Terminal Characters | How the terminal version draws its screen.  The choices
+ | are Automatic, ASCII, VT100 and UTF-8, in this order, and the default is
+ | VT100: the lines of the VT100 set, with ASCII characters only, which looks
+ | right in every terminal that speaks VT100.  Automatic: the program checks
+ | at its start how to draw the screen: with UTF-8 when the terminal reads it,
+ | else with the lines of the VT100 set, else with ASCII characters.  ASCII,
+ | VT100 and UTF-8 decide without the check.  {k:Space} goes through the
+ | choices and round from the last to the first; {k:Left} and {k:Right} stop
+ | at the first and the last.  It is for the terminal version; the window
+ | version is not concerned.  Saved as {c:terminal_charset}, with the value
+ | that was chosen; a settings file with no line for it means VT100
  | ({n:appterm-charset}).
 Undo Levels (0 to 500) | The number of operations that the Editor keeps
  | for Undo ({n:edit-b-undo}).  0 turns Undo off.  A number above 500 is

@@ -93,7 +93,7 @@ print is sent, the {b:PDF Directory} and the {b:PDF Viewer}.  {b:Writing}:
 {b:Screen}: {b:Window Rows}.  Press {k:PgUp} for the next page, the colors of
 the screen, and again for the third page, the advanced settings that are seldom
 changed ({k:PgDn} goes back): {b:Initial Macro Set}, {b:Initial Library},
-{b:Terminal Characters}, the {b:Editor program} that {b:Edit / Preview / Print
+{b:Terminal Characters} (VT100 unless you change it), the {b:Editor program} that {b:Edit / Preview / Print
 Document} starts and the {b:Help File}.  The default of a field is shown at its
 right, and {k:Del} puts it back.  A field that holds a name of a directory or a
 file lists the choices when you press {k:Keypad +}.  A wrong value is refused in
