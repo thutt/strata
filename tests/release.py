@@ -462,7 +462,10 @@ def real_dry_run():
         return
     tags = git(project, 'tag', '-l')
     trees = git(project, 'worktree', 'list')
-    st, out = run([tool, '987.0.0', '--dry-run'], project)
+    # The tool needs the build root of the environment, which the test has
+    # not got of its own: a directory that is not made is enough for a dry run.
+    real_env = dict(env, STRATA_BUILD_ROOT=os.path.join(tmp, 'real-root'))
+    st, out = run([tool, '987.0.0', '--dry-run'], project, real_env)
     head = git(project, 'rev-parse', 'HEAD')
     check('real: --dry-run prints the commit and the tag', st == 0 and
           head in out and 'v987.0.0' in out, (st, out))
