@@ -435,7 +435,8 @@ Many terminals, window managers and desktops keep some keys for themselves,
 and some keys have no way to reach a terminal program.  Strata has an
 alternate for each of the keys that this affects most; the alternates work in
 the X11 version too.  {n:view} lists them ({n:view-terminal-keys}); this is
-the full table.
+the full table.  A key that does nothing for a reason that is unknown is in
+the document Errata ({n:errata-pgup}).
 .table 16 18 25
 Key | In a terminal | Use instead
 {k:Alt-F2} to | Often kept by the | {k:Ctrl-F}: the Alt commands

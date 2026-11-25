@@ -106,7 +106,8 @@ each of them looks like ({x:term-screens}), what a terminal needs
 ({x:term-choose}), what to do when the characters look wrong
 ({x:term-check}), and describes each terminal that has been used with Strata:
 {x:term-xterm}, {x:term-tmux} and {x:term-xfce4}.  Another terminal is covered
-by {x:term-others}.
+by {x:term-others}.  The anomalies that are known in the terminal programs are
+in the document Errata ({x:errata-about}).
 .h3 The three screens [term-screens]
 Which of the three screens you get depends on your terminal and your locale.
 .table 18 54

@@ -75,7 +75,8 @@ Directory | What the directory is for
 {c:share/strata} | The help file, and the manifest, which lists what the
  install made.
 {c:share/strata/doc} | The documents of Strata, in the format of Strata: open
- them in the Editor.
+ them in the Editor.  They are the Reference Manual, Getting Started, the key
+ cards and the Errata.
 {c:share/strata/pdf} | The manuals as PDF files, to print or to read.
 {c:share/strata/tutorial} | The documents that the Tutorial teaches with.
 {c:share/strata/templates} | The templates of the New command.
