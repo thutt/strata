@@ -2,6 +2,21 @@ TERMINALS: WHICH TERMINALS WORK FOR THE TERMINAL VERSION
 =========================================================
 
 Status: study with measurements (task 31).  No program change was made.
+
+UPDATE (task 66): the terminal programs have a third screen, VT100 (docs/
+VT100.txt), and the choice changed: a locale that is not UTF-8 now gives the
+VT100 lines (or ASCII for a terminal type without them), and a terminal that
+reads UTF-8 in such a locale gets the VT100 lines too, not the UTF-8 shapes.
+The statements about xterm below (the table of section 3, section 4.1, the
+settings of section 7) are the results of the probes of task 31, on another
+machine.  They were NOT repeated: xterm is not installed on the machine of
+task 66 (alien), so no xterm was run under Xvfb.  The owner said that what
+the manual claimed about xterm was wrong; the manual no longer calls xterm
+the recommended terminal and no longer gives the options as facts.  Where this
+file says that an option is needed or sufficient, read it as "was observed
+once, not rechecked".  Only two results about xterm are confirmed by pictures
+(the sample of task 66, in an xterm in the C locale): the VT100 lines are
+drawn right with no option, and the UTF-8 lines fall apart.
 The owner saw: in a 7-bit xterm the screen looked horrible; in an 8-bit xterm
 there were odd characters; "xterm +lc -u8" was nearly sufficient; bars and
 triangles showed as boxes (tofu).  This file says why, which terminals and

@@ -22,6 +22,12 @@ managers and terminals".  This is a study.  Nothing in the program was
 changed.  Written 2026-11-18.  The probing tool is tools/keyprobe.py (not
 part of the smoke tests; its header says how to run it).
 
+NOTE (task 66): the statements about xterm in this file are the results of the
+probes of the day on which it was written.  They were not repeated for task
+66: xterm is not installed on the machine of that task (alien).  They are
+about KEYS; what xterm draws on the screen is in docs/VT100.txt and
+docs/TERMINALS.txt.
+
 Contents
   1. The findings in eleven lines
   2. How the study was done: probed or documented

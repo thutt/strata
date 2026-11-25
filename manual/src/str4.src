@@ -404,7 +404,7 @@ page, the advanced settings, has these fields:
 Field | Value shown
 Initial Macro Set | Empty, or the saved name of a macro file.
 Initial Library | Empty, or the saved name of a library file.
-Terminal Characters | Automatic, UTF-8 or ASCII: Automatic at the start.
+Terminal Characters | Automatic, UTF-8, VT100 or ASCII: Automatic at the start.
 Editor program | The Editor that was found, or the saved path.
 Help File | The help file that was found, or empty.
 .end
@@ -545,9 +545,10 @@ Window Rows | One line with two edit fields: X11 and Terminal.  {k:Tab} (or
  | the terminal is kept here when the run ends ({n:appterm-size}).  Saved as
  | {c:terminal_rows}.
 Terminal Characters | How the terminal version draws its screen.
- | Automatic: the program checks at its start whether the terminal reads
- | UTF-8 and draws ASCII characters when it does not.  UTF-8 and ASCII
- | decide without the check.  Choose with {k:Left} and {k:Right}.  It is for
+ | Automatic: the program checks at its start how to draw the screen:
+ | with UTF-8 when the terminal reads it, else with the lines of the VT100
+ | set, else with ASCII characters.  UTF-8, VT100 and ASCII decide without
+ | the check.  Choose with {k:Left} and {k:Right}.  It is for
  | the terminal version; the window version is not concerned.  Saved as
  | {c:terminal_charset}; Automatic is saved as nothing
  | ({n:appterm-charset}).

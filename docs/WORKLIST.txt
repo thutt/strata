@@ -5541,3 +5541,27 @@ LaTeX markers drawn as pictures in the X11 Editor (task 45, 2026-11-20)
     job at a time, so a page of many markers fills in one after another.
   - Question for the owner: should a marker whose display mode is Hidden be
     drawn as a picture?  It stays hidden now.
+
+The VT100 character set of the terminal programs (task 66, 2026-11-24)
+  -- DONE (see VT100.txt).
+  - A third screen, vt100: ASCII bytes only, the lines of the DEC Special
+    Graphics set between ESC ( 0 and ESC ( B; the setting terminal_charset
+    and the Setup field take auto, utf8, vt100 and ascii.  The automatic
+    choice: STRATA_ASCII and the setting; a multiplexer (UTF-8 locale: utf8,
+    else vt100 when the type of terminal has the line characters, else
+    ascii); a UTF-8 locale: the probe; else vt100 when the entry of TERM has
+    acsc or the terminal answers ESC [ c as a VT100 or later, else ascii.
+  - A locale that is not UTF-8 asks nothing, so vt100 writes no byte of
+    0x80 or more.  A terminal that reads UTF-8 in such a locale gets vt100.
+  - The set is switched off at the end of every update, before the cursor
+    is moved, at the exit, at a signal and before a child program runs.
+  - Tests: tests/vt100.py (smoke), tests/termcheck.py (updated); the screen
+    model of tests/tui.py knows the set.
+  - Not done: xterm was not run (it is not installed on alien), so the
+    statements of the manual about its options were removed, not replaced
+    by new measurements; the box shapes of a document text are drawn as
+    lines in vt100, not as the ASCII look-alike.
+  - Question for the owner: run tests/vt100.py's cases by hand in an xterm
+    (C locale, UTF-8 locale, with and without a font that has the shapes) and
+    report what the screen shows, so that the xterm subsection of Getting
+    Started can say more.

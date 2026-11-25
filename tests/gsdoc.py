@@ -665,8 +665,10 @@ def main():
          wrong(t, "gs-need.src", "WindowMaker takes none",
                "GNOME takes none")),
         ("the Linux console is named in a part of the manual",
-         check_names, wrong(t, "allsrc", "The Editor checks it when it",
-                            "The Linux console is checked when it")),
+         check_names, wrong(t, "allsrc",
+                            "The UTF-8 screen needs a terminal in UTF-8 mode.",
+                            "The Linux console needs a terminal in UTF-8 "
+                            "mode.")),
         ("a terminal of the appendix that was never run is named",
          check_names, wrong(t, "termkeys", "{c:tmux} |", "Konsole |")),
         ("the old sentence about WSL2 is back", check_names,

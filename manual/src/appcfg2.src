@@ -98,7 +98,7 @@ Window Rows, X11 | {c:x11_rows} | Empty, or a whole number, else the
  | | is saved as no line.
 Window Rows, Terminal | {c:terminal_rows} | The same.  Empty is saved as no
  | | line.  The two fields are one line of the panel.
-Terminal Characters | {c:terminal_charset} | One of three choices, so no check.
+Terminal Characters | {c:terminal_charset} | One of four choices, so no check.
  | | Automatic is saved as no line, UTF-8 as {c:utf8},
  | | ASCII as {c:ascii}.
 Undo Levels (0 to 500) | {c:undo_levels} | A whole number, else the reason "Undo

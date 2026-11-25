@@ -13,7 +13,7 @@ the term is described in full.  The entries are in alphabetical order.
 .term Alternate screen | The second screen that the terminal version switches the terminal to when it starts, so that what was on the terminal comes back when the Editor ends.  See {x:appterm-leave}.
 .term AltGr | The right Alt key of many keyboard layouts, which gives the third level of the keys; the X11 version reads it as a way to type special characters.  See {x:appx11-keys}.
 .term Append | The command ({k:Alt-F2}) that adds a new column, block, section or subsection next to the current one; the box of choices depends on whether the document is structured.  See {x:edit-append}.
-.term ASCII characters | The plain characters with which the terminal version draws its screen when the terminal cannot read UTF-8 (or when the field Terminal Characters of Setup reports this): lines as - = and |, corners as +, blocks as #. See {x:appterm-charset}.
+.term ASCII characters | The plain characters with which the terminal version draws its screen when the terminal reads neither UTF-8 nor the VT100 line characters (or when the field Terminal Characters of Setup is set to ASCII): lines as - = and |, corners as +, blocks as #. See {x:appterm-charset}.
 .term Attribute | The look of a run of characters: normal, bold, italic or underscore, or a mix such as bold italic.  The attribute is the most local format there is.  See {x:view-text}.
 .term Author | The name of the person who wrote a document, kept in the header of the file and printed in place of an Author marker.  See {x:file-revision}.
 .term Auto Correct | A field of the spell check panel.  When it is Yes, each correction that you make is remembered and made again, without a stop, when the same word comes again.  See {x:spell-autocorrect}.
@@ -246,6 +246,7 @@ the term is described in full.  The entries are in alphabetical order.
 .term Verbatim | Exactly as typed: the text of a LaTeX marker is written into the print verbatim, with nothing changed, escaped or wrapped.  See {x:marker-latex}.
 .term Viewer | The program that shows the pages of a Preview in an X11 window.  See {x:print-dviview}.
 .h2 W
+.term VT100 characters | The line characters of the VT100 set, which a terminal provides itself: the terminal version uses them to draw the lines of its screen when the terminal is not in UTF-8, writing ASCII characters only.  See {x:appterm-charset}.
 .term Wait panel | The box that shows the stage and the progress while a print or a Preview runs.  See {x:print-progress}.
 .term Whitespace | A marker that leaves a vertical space of a given height in the text.  See {x:marker-whitespace}.
 .term Winding columns | Columns in which the printed text of a block, a level or the document flows down one column and winds to the top of the next; the number, the gutter and the vertical rules are set in the Winding Column Layout panel.  See {x:format-fields-spacing}.

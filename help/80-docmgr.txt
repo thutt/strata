@@ -213,11 +213,12 @@ in the line at the foot.  Nothing else that you typed is lost.
   is looked for in the working directory and then in the settings directory,
   and empty loads none; a file that cannot be used is a message of the Editor
   and it starts anyway.  Terminal Characters: how the terminal version draws
-  its screen: Automatic (it checks the terminal at the start), UTF-8, or ASCII
-  (plain characters for lines and blocks, for a terminal that cannot show the
-  shapes); choose with Left and Right; the variable STRATA_ASCII (1 or 0)
-  overrules it.  Editor program: the path of the Editor.  Help File: the path
-  of the help file, one file for every version.
+  its screen: Automatic (it checks the terminal at the start), UTF-8, VT100
+  (the line characters of the VT100 set: ASCII bytes only, for a terminal that
+  is not in UTF-8), or ASCII (plain characters for lines and blocks); choose
+  with Left and Right; the variable STRATA_ASCII (1 or 0) overrules it.
+  Editor program: the path of the Editor.  Help File: the path of the help
+  file, one file for every version.
 
 = Screen Colors
 ~ Setup:Screen Colors

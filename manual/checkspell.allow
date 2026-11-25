@@ -260,6 +260,7 @@ lowergreek
 lowriter
 lp
 lpadmin
+lqqk
 lr
 luatex
 lunate
@@ -370,6 +371,7 @@ postamble
 poste
 postscript
 prereq
+printf
 providecommand
 providespackage
 qpdfview

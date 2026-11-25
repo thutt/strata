@@ -353,6 +353,11 @@ cell in a byte, and so changes to 16 or 32 bits or reads it from the text
 
 6.1 The terminal [code: termbuf.c, term.c; the box drawing tried]
 
+  NOTE (task 66): the terminal version has three screens (docs/VT100.txt):
+  UTF-8, VT100 and ASCII.  Only the first writes UTF-8.  In the other two a
+  character of a document that is not ASCII (an accented letter, a Greek
+  letter) is drawn as its ASCII look-alike and the document keeps it.
+
   - The cell buffer keeps one 16 bit code point and one 8 bit attribute per
     cell (u16(cp) in term_putu).  A code point above FFFF (some CJK, all
     emoji, and the characters of historic scripts) is cut: this is a

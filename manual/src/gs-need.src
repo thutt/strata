@@ -100,59 +100,114 @@ documents in the Linux file system, in your home directory, and not under
 The window version of the Editor, run with no window manager, receives every
 key of Strata.
 .h2 Terminals [terminal-needs]
-The terminal version draws its screen with the line, bar, block, arrow and
-triangle characters of Unicode.  This part says what a terminal needs
-({x:term-needs}) and describes each terminal that has been used with Strata:
+The terminal version draws its screen in one of three ways.  This part says what
+each of them looks like ({x:term-screens}), what a terminal needs
+({x:term-needs}), how to see and to change what Strata chose
+({x:term-choose}), what to do when the characters look wrong
+({x:term-check}), and describes each terminal that has been used with Strata:
 {x:term-xterm}, {x:term-tmux} and {x:term-xfce4}.  Another terminal is covered
 by {x:term-others}.
+.h3 The three screens [term-screens]
+Which of the three screens you get depends on your terminal and your locale.
+.table 18 54
+Screen | The shapes
+UTF-8 | Double lines and single lines, shaded and solid blocks, triangles and
+ arrows: all the shapes of the character set.  The terminal must
+ be in UTF-8 (your locale is a UTF-8 locale, such as {c:en_US.UTF-8}), and its
+ font must have the shapes.
+VT100 | Single lines, drawn by the terminal itself, with the double lines
+ turned into single lines, a checkerboard for the shaded blocks and the
+ arrows of the VT100 for the triangles.  Strata writes ASCII characters only.
+ Nearly every terminal speaks VT100, and no UTF-8 and no special font are
+ needed.
+ASCII | Plain characters that look like the lines and blocks: {c:+}, {c:-},
+ {c:|}, {c:=} and {c:#}.  It works in every terminal.
+.end
+In all three the text of your document is the same.  The screen is only the way
+that the terminal draws it: a letter with an accent, or a Greek letter, that the
+VT100 and the ASCII screens cannot draw is shown as the nearest ASCII letter,
+and the document keeps the letter, also when you save it.  The window version
+of the Editor draws with its own fonts and has no such choice.
 .h3 What a terminal needs [term-needs]
-A terminal needs three things.
-- It must read UTF-8.  Most do when your locale is a UTF-8 locale, such as
-  {c:en_US.UTF-8}.  At the start the terminal is asked whether it reads UTF-8;
-  when the answer is no, the screen is drawn with plain characters that look
-  like the lines and bars, and the message line reports it.
-- It must use a fixed-width font that has the line, block and arrow
-  characters, such as DejaVu Sans Mono, Liberation Mono, Cousine or FreeMono.
-  Squares with numbers in them, or empty squares, where lines and bars belong
-  mean that the font does not have them; the cure is a better font, or the
-  Terminal Characters field of Setup set to ASCII.
-- It must send {k:Esc} when you press {k:Alt} with a key.  Redo
-  ({k:Alt-/}), the soft hyphen ({k:Alt-_}) and many other commands use
-  {k:Alt}.
+Any terminal that speaks VT100, which is nearly every terminal, can show the
+VT100 screen.  The UTF-8 screen needs more.
+- To read UTF-8.  Most terminals do when your locale is a UTF-8 locale.
+- A fixed-width font that has the line, block and arrow characters, such as
+  DejaVu Sans Mono, Liberation Mono, Cousine or FreeMono.  Squares with numbers
+  in them, or empty squares, where lines and bars belong mean that the font does
+  not have them; the cure is a better font, or the Terminal Characters field of
+  Setup set to VT100.
+A terminal needs one more thing for every screen: it must send {k:Esc} when you
+press {k:Alt} with a key.  Redo ({k:Alt-/}), the soft hyphen ({k:Alt-_}) and many
+other commands use {k:Alt}.
 
 The terminal must have at least 80 columns by 25 lines; the Editor can be used
 down to 40 columns by 20 lines.  The 16 colours of the terminal are used, and
 more when {c:TERM} says {c:256color} or {c:COLORTERM} says {c:truecolor}; it
 also works on a terminal with no colours.
+.h3 How Strata chooses, and how to change it [term-choose]
+At its start the program chooses the screen once, in this order.
+- When the environment variable {c:STRATA_ASCII} is 1 or 0, or the field
+  Terminal Characters of Setup is UTF-8, VT100 or ASCII, that is the screen.
+  Nothing is asked of the terminal.
+- When Strata runs inside {c:tmux} or {c:screen}, a UTF-8 locale means the UTF-8
+  screen.  Any other locale means the VT100 screen when the type of terminal
+  ({c:TERM}) has the line characters, and the ASCII screen when it has not.
+- Otherwise, when the locale is a UTF-8 locale, the terminal is asked where its
+  cursor is after a box character.  One column, or no answer, means the UTF-8
+  screen.
+- Otherwise (the locale is not a UTF-8 locale, or the terminal moved the cursor
+  by more than one column) the VT100 screen is drawn when the terminal can: its
+  type has the line characters in the terminal database, or the terminal
+  answers the question who it is as a VT100 or a later model.  If not, the
+  ASCII screen is drawn.
+When Strata chose the VT100 or the ASCII screen by itself, the message line of
+the first screen says so once, for example {c:No UTF-8 terminal: VT100 lines are
+drawn. See Setup, terminal_charset.}  The choice and its reason are also in the
+log of the run.  To choose yourself, open Setup, find Terminal Characters, and
+choose Automatic, UTF-8, VT100 or ASCII with {k:Left} and {k:Right}; or set
+{c:STRATA_ASCII} to 1 (ASCII) or 0 (UTF-8) in the environment.
+.h3 When the characters look wrong [term-check]
+A screen that looks wrong has one of three causes: the terminal is not in UTF-8
+and the UTF-8 screen was forced, the font lacks the shapes, or the terminal does
+not speak VT100 although its type says so.  Run these two commands in the
+terminal, outside Strata, to see what it does.  The first prints the top of a
+box if the terminal speaks VT100:
+.code
+printf '\033(0lqqk\033(B\n'
+.end
+If it prints the letters {c:lqqk}, the terminal does not speak VT100: set
+Terminal Characters to ASCII.  The second prints a horizontal line if the
+terminal reads UTF-8 and its font has the shape:
+.code
+printf '\342\224\200\n'
+.end
+If it prints several odd letters, the terminal is not in UTF-8: set Terminal
+Characters to VT100, or Automatic in a locale that is not a UTF-8 locale.  If it
+prints a square, the font lacks the shape: use another font, or set Terminal
+Characters to VT100.
 .h3 xterm [term-xterm]
-{c:xterm} is the terminal that Strata recommends.  Started with the settings
-below, it meets all three needs, and it takes none of the keys of Strata, so
-every command works.  The command is:
-.code
-xterm -lc -u8 -fa "DejaVu Sans Mono" -fs 11 -xrm 'XTerm*metaSendsEscape: true'
-.end
-Each setting has a purpose.  The option {c:-lc} makes {c:xterm} follow the
-locale, and {c:-u8} makes it read and write UTF-8.  The options {c:-fa} and
-{c:-fs} choose the font and its size, here DejaVu Sans Mono at 11 points, which
-has the line, block and arrow characters.  The resource
-{c:XTerm*metaSendsEscape: true} makes {k:Alt} send {k:Esc} before the key;
-without it {c:xterm} sends another character, and the commands that use {k:Alt}
-type that character.
-To give every {c:xterm} the same settings, put these lines in the file
-{c:.Xresources} in your home directory:
-.code
-XTerm*locale: false
-XTerm*utf8: 2
-XTerm*faceName: DejaVu Sans Mono
-XTerm*faceSize: 11
-XTerm*metaSendsEscape: true
-.end
+{c:xterm} has been used with Strata.  What was observed: in an {c:xterm} that
+was started in the C locale with no option and no setting, the VT100 screen
+shows its lines correctly, and in the same {c:xterm} the UTF-8 screen falls
+apart, because every box character shows as several odd letters; that is what
+a terminal that is not in UTF-8 does with the UTF-8 characters.  That is why
+Strata draws the VT100 screen in a locale that is not a UTF-8 locale, so that
+the plain {c:xterm} works with no setting.  Which options make an {c:xterm} read
+UTF-8, and which fonts it needs for the UTF-8 screen, have not been established
+here, and none is recommended.  If the screen looks wrong, use the two commands
+of {x:term-check} and the field Terminal Characters of Setup.
+When the commands that use {k:Alt} type a character, the resource
+{c:XTerm*metaSendsEscape: true} makes {k:Alt} send {k:Esc} before the key.  The
+keys that a terminal keeps for itself are listed in {x:appterm-reach}.
 .h3 tmux [term-tmux]
 {c:tmux} is a terminal multiplexer: it runs inside a terminal and shows another
 one.  Start it in UTF-8 mode ({c:tmux -u}), or set the locale to a UTF-8 locale;
 a {c:tmux} that is not in UTF-8 mode turns every character outside ASCII into an
-underscore.  Run inside the {c:xterm} of the previous section, {c:tmux} takes
-one key of Strata, because {k:Ctrl-B} is its command key.
+underscore.  Run inside an {c:xterm}, {c:tmux} takes
+one key of Strata, because {k:Ctrl-B} is its command key.  A multiplexer
+translates the characters itself, so Strata chooses the screen from the locale
+and the type of terminal and asks the terminal nothing ({x:term-choose}).
 .table 18 20 22
 Key the terminal takes | Strata command | Alternative Strata keybinding
 {k:Ctrl-B} | Bold on and off. | {k:F12}, Edit, Layout, Attribute, then Bold.

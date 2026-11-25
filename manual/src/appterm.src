@@ -39,10 +39,12 @@ A terminal on input | The keys must come from a terminal.  A program that
   | reads its keys from a file or from another program cannot be driven.
 A terminal on output | The screen must be a terminal too.  The standard
   | error may go elsewhere.
-A UTF-8 terminal | The screen is written in UTF-8, and the keys are read
-  | as UTF-8 when they are not plain ASCII ({n:appterm-chars}).  The
-  | terminal must support the usual control sequences of the {c:xterm}
-  | family, as the terminal emulators of desktops do.
+A terminal that can draw | The screen is written in UTF-8 when the terminal reads
+  | it, and otherwise with the line characters of the VT100 set, which
+  | nearly every terminal has ({n:appterm-charset}).  The keys are read as
+  | UTF-8 when they are not plain ASCII ({n:appterm-chars}).  The terminal
+  | must support the usual control sequences of the {c:xterm} family, as the
+  | terminal emulators of desktops do.
 .end
 When the keys or the screen are not a terminal, the program writes one line on
 the standard error and ends.  The line of the Editor reads {c:needs an
@@ -147,16 +149,30 @@ for dim text.
 .ix Paste, terminal
 The screen of Strata is a grid of cells that hold the characters of the set
 of {n:appchar} (the Latin letters, the accented letters, the box drawing
-characters, the arrows and the dots).  The terminal version shows each cell
-as the Unicode character that has that shape, so the font of the terminal
-must have the box drawing characters (the lines and corners of boxes), the
-dotted and shaded blocks and the two triangle arrows that mark the end of a
-block.  The fonts that desktop terminals use by default have them; the plain
-bitmap font that {c:xterm} uses when you give it no font does not, and shows
-squares in place of the lines and the triangle.  A terminal that shows other
-shapes for them makes the boxes and the guidelines look untidy and does
-nothing worse.  When the terminal cannot read UTF-8 at all, the Editor draws
-the screen with plain ASCII characters instead ({n:appterm-charset}).
+characters, the arrows and the dots).  The terminal version draws the cells in
+one of three ways, which are chosen when the program starts
+({n:appterm-charset}).
+.table 16 44
+Screen | What is written
+UTF-8 | Each cell as the Unicode character that has that shape: the double
+  | and the single lines, the shaded blocks and the triangles.  The terminal
+  | must read UTF-8, and its font must have the box drawing characters, the
+  | dotted and shaded blocks and the two triangle arrows that mark the end of
+  | a block.  A terminal that shows other shapes for them makes the boxes
+  | and the guidelines look untidy and does nothing worse.
+VT100 | Only ASCII characters are written.  The lines, the corners, the
+  | shaded blocks, the arrows and the dots are drawn with the line characters
+  | of the VT100 set, which the terminal itself provides: no locale, no UTF-8
+  | and no special font are needed.  The set has single lines only, so the
+  | double lines of a box become single lines.
+ASCII | Plain characters that look like the shapes, such as {c:+}, {c:-} and
+  | {c:|}.
+.end
+When the terminal cannot read UTF-8 at all, the program draws the VT100 screen
+or, when the terminal does not speak VT100 either, the ASCII screen.  The text
+of a document is never changed by the screen: a letter with an accent, or a
+Greek letter, that the VT100 and ASCII screens cannot draw is shown as the
+nearest ASCII letter, and the document keeps the letter.
 
 Which characters can be typed, and what happens to the others, is in
 {x:edit-special-chars} and {x:appchar-type}.  A text that you paste into the
@@ -164,49 +180,84 @@ terminal arrives as typed keys, one character after another: a character that
 is not in the set is lost, a line end becomes {k:Enter} and so makes a new
 block, and a tab is a tab.  The selection and the paste of the terminal work
 as in any other program.
-.note The terminal must be in UTF-8 mode.  The Editor checks it when it
-  starts ({n:appterm-charset}) and draws ASCII characters when it is not.
+.note The UTF-8 screen needs a terminal in UTF-8 mode.  The program checks
+  this when it starts ({n:appterm-charset}) and draws the VT100 screen, or the
+  ASCII screen, when the terminal is not.
 
-.h2 The start check and the ASCII characters [appterm-charset]
+.h2 The start check and the three screens [appterm-charset]
 .ix Start check, terminal
 .ix ASCII characters
+.ix VT100 characters
 .ix Terminal Characters
 .ix STRATA_ASCII
 .ix UTF-8, check at start
 .ix Font, terminal
-When the Editor or the Document Manager starts in a terminal, one box character
-is written in a corner of the screen, the terminal is asked where the cursor
-is, and the answer is read before the first key is read.  A terminal that reads
-UTF-8 moves the cursor by one column; a terminal that reads Latin-1 or
-another set of eight bits shows three characters and moves it by three.  The
-answer is never taken for typed keys, and neither is any other answer that a
-terminal sends by itself.  If the terminal cannot read UTF-8, the screen
-would be rubbish, so the program draws the screen with ASCII characters that
-look like the shapes, in the same cells, so that nothing moves.  A note on the
+When the Editor or the Document Manager starts in a terminal, the way to draw
+the screen is chosen: with UTF-8 characters, with the line characters of the
+VT100 set, or with plain ASCII characters.  Where the locale is a UTF-8
+locale, one box character is written in a corner of the screen, the terminal is
+asked where the cursor is, and the answer is read before the first key is read.
+A terminal that reads UTF-8 moves the cursor by one column; a terminal that
+reads Latin-1 or another set of eight bits shows three characters and moves it
+by three.  The answer is never taken for typed keys, and neither is any other
+answer that a terminal sends by itself.  Where the locale is not a UTF-8 locale
+the question is not asked, because the answer could not change the choice, and
+no character outside ASCII is written at all.
+
+A terminal that is not in UTF-8 would show rubbish for the UTF-8 characters, so
+the program draws the VT100 screen when the terminal can, and the ASCII screen
+when it cannot, in the same cells, so that nothing moves.  A note on the
 message line of the first screen reports this once:
 .code
-No UTF-8 terminal: ASCII is drawn. The font is not checked. See Setup.
+No UTF-8 terminal: VT100 lines are drawn. See Setup, terminal_charset.
 .end
-The line goes with the first key, and the choice is also written in the log
-of the run.  The choice follows this order.
+or
+.code
+No UTF-8 or VT100 terminal: ASCII is drawn. See Setup, terminal_charset.
+.end
+The note goes with the first key, and the choice is also written in the log of
+the run.  The choice follows this order.
 .table 22 38
 What | The result
 The variable {c:STRATA_ASCII} | 1 means ASCII characters, 0 means UTF-8,
  | whatever the terminal reports.  Nothing is asked, and no message is shown.
-The field Terminal Characters of Setup | UTF-8 or ASCII is used as it is, like
- | the variable.  Automatic, the usual value, goes on.  Saved as
+The field Terminal Characters of Setup | UTF-8, VT100 or ASCII is used as it
+ | is, like the variable.  Automatic, the usual value, goes on.  Saved as
  | {c:terminal_charset} ({n:appcfg-key-charset}).
-A terminal multiplexer (tmux) | The name of the locale determines: a name
- | with UTF-8 in {c:LC_ALL}, {c:LC_CTYPE} or {c:LANG} (the first that is set)
- | means UTF-8, any other ASCII.  A multiplexer sets the characters from the
- | locale itself, so the answer of the terminal behind it is not used.
-The answer of the terminal | One column is UTF-8, any other number is not.  A UTF-8
- | terminal wins over a locale that says otherwise, and a terminal that reads
- | eight bits wins over a locale that says UTF-8.
-No answer in 0.8 seconds | The locale determines as above.  The start is never
- | held up for longer.
+A terminal multiplexer (tmux, screen) | A UTF-8 locale means UTF-8.  Any other
+ | locale means VT100 when the type of terminal ({c:TERM}) has the line
+ | characters, and ASCII when it has not.  A multiplexer translates the
+ | characters itself, so the answer of the terminal behind it is not used,
+ | and nothing is asked.
+A UTF-8 locale | The terminal is asked where its cursor is.  One column, or no
+ | answer in 0.8 seconds, means UTF-8.  Any other number goes on.
+Any other locale, or an answer of more than one column | VT100 when the
+ | terminal can draw it, else ASCII.  The terminal can when its type has the
+ | line characters in the terminal database, or when it answers the question
+ | who it is (the device attributes) as a VT100 or a later model.  The
+ | question is asked only when the type does not decide, and the wait is 0.1
+ | second at most.
 .end
-What the ASCII characters are:
+Each of these steps leaves the start free to go on: a terminal that does not
+answer never holds up the program for longer than the times named.  The
+database of the terminal types is read from the usual directories of the system
+({c:TERMINFO} and {c:TERMINFO_DIRS} are used when they are set).
+
+What the VT100 screen draws:
+.table 22 38
+Shape | VT100
+Horizontal and vertical lines | The lines of the set, single; double lines too
+Corners, crossings, tees | The corners, crossing and tees of the set, single
+Shaded blocks | The checkerboard of the set
+Solid blocks and half blocks | A space in reverse video
+Triangles and arrows | The four arrows of the set (right, left, up, down)
+Dots and the bullet | The centered dot of the set
+Diamond | The diamond of the set
+Letters with an accent | The letter without the accent
+Greek letters and math signs | The nearest letter or sign, as in ASCII
+Any other shape | {c:?}
+.end
+What the ASCII screen draws:
 .table 22 38
 Shape | ASCII
 Horizontal lines | {c:-}, and {c:=} for the double line
@@ -227,20 +278,28 @@ concerned.
 
 The check cannot test the font.  A terminal that reads UTF-8 but has a font
 without the shapes shows squares in place of the lines, the bars and the
-triangle.  That is not a fault of the Editor, and the check cannot see it; two
-cures exist.  Give the terminal a font that has the shapes, for example in
-{c:xterm}:
+triangle.  That is not a fault of the program, and the check cannot see it.
+Two cures exist: give the terminal a font that has the shapes, or set the field
+Terminal Characters of Setup to VT100 (the lines are then drawn by the
+terminal itself), or start with {c:STRATA_ASCII=1} in the environment.  A
+terminal that reads Latin-1 and is told to read UTF-8 with {c:STRATA_ASCII=0}
+or the field shows rubbish, and some of them type an answer to a question that
+the program never asked; the program drops such answers, but do not force UTF-8
+on a terminal that cannot read it.
+
+To see what a terminal does, type these commands in it, outside Strata.  The
+first prints the top of a box when the terminal speaks VT100:
 .code
-xterm +lc -u8 -fa "DejaVu Sans Mono" -fs 11
+printf '\033(0lqqk\033(B\n'
 .end
-(the option {c:+lc -u8} makes {c:xterm} read UTF-8 whatever the locale names),
-or
-set the field Terminal Characters of Setup to ASCII, or start with
-{c:STRATA_ASCII=1} in the environment.  A terminal that reads Latin-1 and is
-told to read UTF-8 with {c:STRATA_ASCII=0} or the field shows rubbish, and
-some of them type an answer to a question that the program never asked; the
-program drops such answers, but do not force UTF-8 on a terminal that cannot
-read it.
+The second prints a horizontal line when the terminal reads UTF-8 and its font
+has the shape:
+.code
+printf '\342\224\200\n'
+.end
+A terminal that is a VT100 shows {c:lqqk} drawn as a box top by the first
+command, and a terminal that reads UTF-8 shows a line by the second.  When the
+first shows the letters {c:lqqk}, set Terminal Characters to ASCII.
 
 .h2 Screen sizes [appterm-size]
 .ix Screen size, terminal
@@ -504,11 +563,15 @@ Nothing of this needs a key from you except the {k:Q} that closes the Viewer.
 What you see | Cause | Remedy
 Box lines and the | The terminal is not in | Set UTF-8 and a font with
  blocks are rubbish | UTF-8, or the font | box drawing characters.
-  | lacks them. | Or choose ASCII in Setup.
+  | lacks them. | Or choose VT100 in Setup.
 Squares in place of | The font lacks the | Use a font with them, or set
- the lines | shapes. | Terminal Characters to ASCII.
+ the lines | shapes. | Terminal Characters to VT100.
+Letters {c:lqqk} or | The terminal does not | Set Terminal Characters
+ {c:x} in place of the | speak VT100. | to ASCII.
+ lines | |
 The first line shows | The terminal does not | Set the terminal to UTF-8
- that ASCII is drawn | read UTF-8. | ({n:appterm-charset}).
+ that VT100 or ASCII | read UTF-8. | ({n:appterm-charset}).
+ is drawn | |
 A cursor key types | The parts of the | Use a terminal or a
  {c:A} or {c:[A} | key were slow. | multiplexer that does not
   |  | delay them; see above.

@@ -24,7 +24,8 @@ Name | Read by | Effect
  | | empty or 0, the colors that the program is delivered with replace those
  | | of the settings.  The option {c:--default-colors} does the same.
 {c:STRATA_ASCII} | Terminal version | 1 draws the screen with ASCII characters,
- | | 0 with UTF-8, whatever the terminal reports ({n:appterm-charset}).
+ | | 0 with UTF-8, whatever the terminal reports ({n:appterm-charset}).  The
+ | | field Terminal Characters of Setup has the third choice, VT100.
 {c:STRATA_HOME} | Document Manager, Editor | The directory of the settings, instead
  | | of .strata in the home directory.  When it is set, the older settings
  | | file is not read ({n:appcfg}).

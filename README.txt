@@ -437,15 +437,23 @@ directory, next to term and x11, where the programs find it (or pass
 -H path/to/file, or set STRATA_HELP, which scripts/setup sets). Without a help
 file F1 shows a message that no help file was found.
 
-Needs a UTF-8 terminal of at least about 40 columns by 20 rows (80x25 or larger
-recommended).  At the start the terminal version requests the position of the
-cursor from the terminal after one box character (one column: UTF-8); if the
-terminal does not read UTF-8, ASCII look-alikes (+ - = | # : < >) are drawn
-instead, a note is shown once on the message line, and the choice is written to
-the log.  STRATA_ASCII=1 forces ASCII, STRATA_ASCII=0 forces UTF-8; the Setup
-field Terminal Characters (key terminal_charset: auto, utf8, ascii) does the
-same.  The font cannot be checked: a font without the shapes shows squares (use
-for example xterm +lc -u8 -fa "DejaVu Sans Mono", or choose ASCII).
+Needs a terminal of at least about 40 columns by 20 rows (80x25 or larger
+recommended).  The terminal version draws its screen in one of three ways: in
+UTF-8 (double and single lines and the other shapes, in a UTF-8 locale with a
+font that has them), with the line characters of the VT100 set (single lines;
+ASCII bytes only; nearly every terminal speaks VT100, and no locale or font is
+needed), or with plain ASCII look-alikes (+ - = | # : < >).  At the start the
+program chooses: in a UTF-8 locale it requests the position of the cursor from
+the terminal after one box character (one column: UTF-8); otherwise it uses
+VT100 when the type of the terminal (TERM) has the line characters, or the
+terminal answers that it is a VT100 or later, else ASCII.  A note is shown once
+on the message line, and the choice is written to the log.  STRATA_ASCII=1
+forces ASCII, STRATA_ASCII=0 forces UTF-8; the Setup field Terminal Characters
+(key terminal_charset: auto, utf8, vt100, ascii) does the same.  The font
+cannot be checked: a font without the shapes shows squares (choose VT100, whose
+lines the terminal draws itself).  To test a terminal by hand, type
+printf '\033(0lqqk\033(B\n' (a box top: the terminal speaks VT100) and
+printf '\342\224\200\n' (a line: UTF-8 with the shape in the font).
 docs/TERMINALS.txt has the study of which terminals work.  The Editor needs at
 least 20 rows, and its X11 window is not made lower than 20 rows.  The height
 of the X11 window is kept in ~/.strata/config (x11_rows) when you change it,

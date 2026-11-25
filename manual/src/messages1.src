@@ -202,11 +202,17 @@ N library entries | The library has N entries (after Cut to Library or the
 N replacements | Replace changed N places. {c:1 replacement} for one;
  | {c:(stopped)} is added when {k:Q} or {k:Esc} ended the run.
 New document | New.
-{c:No UTF-8 terminal: ASCII is drawn. The font is not checked. See Setup.} | The
+{c:No UTF-8 or VT100 terminal: ASCII is drawn. See Setup, terminal_charset.} | The
  | start of the Editor, and of the Document Manager (on its footer line).  The
- | terminal does not read UTF-8, so the screen is drawn with ASCII characters
- | ({n:appterm-charset}).  The font cannot be checked.  Field Terminal
+ | terminal reads neither UTF-8 nor the VT100 line characters, so the screen is
+ | drawn with ASCII characters ({n:appterm-charset}).  Field Terminal
  | Characters of Setup and the variable STRATA_ASCII change the choice.
+{c:No UTF-8 terminal: VT100 lines are drawn. See Setup, terminal_charset.} | The
+ | start of the Editor, and of the Document Manager (on its footer line).  The
+ | terminal does not read UTF-8 or the locale is not a UTF-8 locale, so the
+ | screen is drawn with the line characters of the VT100 set
+ | ({n:appterm-charset}).  Field Terminal Characters of Setup and the
+ | variable STRATA_ASCII change the choice.
 Not included in the library | Copy to Library with Include in Library? set to
  | No: nothing was stored.
 Preview cancelled | {k:Esc} was pressed while the preview was prepared.
