@@ -250,7 +250,7 @@ Horizontal and vertical lines | The lines of the set, single; double lines too
 Corners, crossings, tees | The corners, crossing and tees of the set, single
 Shaded blocks | The checkerboard of the set
 Solid blocks and half blocks | A space in reverse video
-Triangles and arrows | The four arrows of the set (right, left, up, down)
+Triangles and arrows | {c:>} {c:<} {c:^} {c:v}, as in ASCII
 Dots and the bullet | The centered dot of the set
 Diamond | The diamond of the set
 Letters with an accent | The letter without the accent

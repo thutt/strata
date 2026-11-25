@@ -24,9 +24,8 @@ part of the smoke tests; its header says how to run it).
 
 NOTE (task 66): the statements about xterm in this file are the results of the
 probes of the day on which it was written.  They were not repeated for task
-66: xterm is not installed on the machine of that task (alien).  They are
-about KEYS; what xterm draws on the screen is in docs/VT100.txt and
-docs/TERMINALS.txt.
+66, which ran xterm for the SCREEN only.  They are about KEYS; what xterm
+draws on the screen is in docs/VT100.txt (section 7) and docs/TERMINALS.txt.
 
 Contents
   1. The findings in eleven lines

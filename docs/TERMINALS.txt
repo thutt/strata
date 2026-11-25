@@ -9,14 +9,16 @@ VT100 lines (or ASCII for a terminal type without them), and a terminal that
 reads UTF-8 in such a locale gets the VT100 lines too, not the UTF-8 shapes.
 The statements about xterm below (the table of section 3, section 4.1, the
 settings of section 7) are the results of the probes of task 31, on another
-machine.  They were NOT repeated: xterm is not installed on the machine of
-task 66 (alien), so no xterm was run under Xvfb.  The owner said that what
-the manual claimed about xterm was wrong; the manual no longer calls xterm
-the recommended terminal and no longer gives the options as facts.  Where this
-file says that an option is needed or sufficient, read it as "was observed
-once, not rechecked".  Only two results about xterm are confirmed by pictures
-(the sample of task 66, in an xterm in the C locale): the VT100 lines are
-drawn right with no option, and the UTF-8 lines fall apart.
+machine.  Task 66 then ran xterm 407 on alien under Xvfb, with the screens
+read as pictures (docs/VT100.txt section 7), and the results differ from
+this file: a plain xterm with no option showed the UTF-8 shapes right in a
+UTF-8 locale and the VT100 lines right in the locale C; the options +lc -u8
+-fa -fs changed nothing on the screen; only a bitmap font without the shapes
+(-fn fixed) gave squares, and only in the UTF-8 screen.  The owner said that
+what the manual claimed about xterm was wrong; the manual now says what the
+task 66 pictures showed.  Where this file says that an option is needed or
+sufficient for xterm, the pictures of task 66 do not confirm it.  What this
+file says about KEYS (Alt, the keys that xterm keeps) was not rechecked.
 The owner saw: in a 7-bit xterm the screen looked horrible; in an 8-bit xterm
 there were odd characters; "xterm +lc -u8" was nearly sufficient; bars and
 triangles showed as boxes (tofu).  This file says why, which terminals and

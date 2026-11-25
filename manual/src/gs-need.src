@@ -117,7 +117,8 @@ UTF-8 | Double lines and single lines, shaded and solid blocks, triangles and
  font must have the shapes.
 VT100 | Single lines, drawn by the terminal itself, with the double lines
  turned into single lines, a checkerboard for the shaded blocks and the
- arrows of the VT100 for the triangles.  Strata writes ASCII characters only.
+ plain signs {c:>}, {c:<}, {c:^} and {c:v} for the triangles and arrows.  Strata
+ writes ASCII characters only.
  Nearly every terminal speaks VT100, and no UTF-8 and no special font are
  needed.
 ASCII | Plain characters that look like the lines and blocks: {c:+}, {c:-},
@@ -187,19 +188,32 @@ Characters to VT100, or Automatic in a locale that is not a UTF-8 locale.  If it
 prints a square, the font lacks the shape: use another font, or set Terminal
 Characters to VT100.
 .h3 xterm [term-xterm]
-{c:xterm} has been used with Strata.  What was observed: in an {c:xterm} that
-was started in the C locale with no option and no setting, the VT100 screen
-shows its lines correctly, and in the same {c:xterm} the UTF-8 screen falls
-apart, because every box character shows as several odd letters; that is what
-a terminal that is not in UTF-8 does with the UTF-8 characters.  That is why
-Strata draws the VT100 screen in a locale that is not a UTF-8 locale, so that
-the plain {c:xterm} works with no setting.  Which options make an {c:xterm} read
-UTF-8, and which fonts it needs for the UTF-8 screen, have not been established
-here, and none is recommended.  If the screen looks wrong, use the two commands
-of {x:term-check} and the field Terminal Characters of Setup.
-When the commands that use {k:Alt} type a character, the resource
-{c:XTerm*metaSendsEscape: true} makes {k:Alt} send {k:Esc} before the key.  The
-keys that a terminal keeps for itself are listed in {x:appterm-reach}.
+{c:xterm} has been used with Strata (version 407, run on a virtual display), and
+each of these cases was run and its screen looked at.  The options of the third
+case are {c:-lc -u8 -fa "DejaVu Sans Mono" -fs 11}, and {c:-fn fixed} chooses
+the bitmap font of that name.
+.table 24 48
+Case | What the screen showed
+1 No option, locale C | The VT100 lines, drawn right.
+2 No option, UTF-8 locale | The double lines and the other shapes, drawn
+ | right.
+3 The options, locale C | The VT100 lines, as in case 1.
+4 The options, UTF-8 locale | The double lines, as in case 2.
+5 {c:-fn fixed}, locale C | The VT100 lines, drawn right.
+6 {c:-fn fixed}, UTF-8 locale | Squares in place of the double lines, the
+ | blocks and the arrows: this font does not have the shapes.  The field
+ | Terminal Characters of Setup set to VT100 gave the right lines.
+7 UTF-8 forced in the locale C | The box falls apart: each box character
+ | shows as several odd letters, with or without the font DejaVu Sans Mono.
+ | ({c:STRATA_ASCII=0}) Do not force UTF-8 there.
+.end
+So a plain {c:xterm} needs no option and no setting: in the locale C it shows
+the VT100 lines, and in a UTF-8 locale the UTF-8 shapes.  The options of
+case 3 changed nothing on the screen.  The one case that fails is a font that
+lacks the shapes, and the cure is VT100 in Setup.  The keys are another
+matter: when the commands that use {k:Alt} type a character, the resource
+{c:XTerm*metaSendsEscape: true} makes {k:Alt} send {k:Esc} before the key, and
+the keys that a terminal keeps for itself are listed in {x:appterm-reach}.
 .h3 tmux [term-tmux]
 {c:tmux} is a terminal multiplexer: it runs inside a terminal and shows another
 one.  Start it in UTF-8 mode ({c:tmux -u}), or set the locale to a UTF-8 locale;

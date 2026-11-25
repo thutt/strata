@@ -15,8 +15,8 @@ The choice is made once per run, when the terminal is opened.
           arrows.  Every shape is written as its UTF-8 bytes.  The terminal
           must read UTF-8 and its font must have the shapes.
   vt100   Only ASCII bytes are written (no byte of 0x80 or more).  The
-          lines, the checkerboard, the diamond, the bullet and the arrows
-          are the letters of the DEC Special Graphics set, written between
+          lines, the checkerboard, the diamond and the bullet are the
+          letters of the DEC Special Graphics set, written between
           ESC ( 0 and ESC ( B; everything else is ASCII.  The terminal does
           not need UTF-8, a locale or a font with box characters.
   ascii   Only ASCII bytes, with plain look-alikes (+ - | = # and so on).
@@ -53,10 +53,8 @@ column wide.
                                              board)
   blocks DB to DF and FE          as drawn   a space in the  #
                                              reverse attribute
-  triangles 10 11 1E 1F, arrows   as drawn   + , - . (the    > < ^ v
-  18 19 1A 1B                                arrows of the
-                                             set: right,
-                                             left, up, down)
+  triangles 10 11 1E 1F, arrows   as drawn   ASCII           > < ^ v
+  18 19 1A 1B                                (see below)
   the arrows 12 and 1D (two-way)  as drawn   ASCII           | and -
   diamond 04                      as drawn   ` (diamond)     *
   bullet 07, centered dots F9 FA  as drawn   ~ (centered     * and .
@@ -68,9 +66,13 @@ column wide.
   a character with no CP437 form  none       ?               ?
 
 Decisions:
-  - The arrows of the set (+ , - .) are used for the triangles of the lists
-    and the markers and for the arrows, because every VT100 has them; the
-    other shapes that the set lacks keep their ASCII look-alike.
+  - The arrows of the set (the letters + , - .) are NOT used.  They are in the
+    definition of the VT100, but the xterm of the tests (version 407) draws
+    them as the plain signs + , - . (the screen of the Editor showed + and ,
+    where the triangles of the list belong), so the triangles and arrows keep
+    their ASCII look-alikes > < ^ v.  The first version of this work used the
+    arrows of the set, because the task said every VT100 has them; the
+    pictures of the xterm cases showed that this is not so for xterm.
   - A block is a space in the reverse attribute (the attribute that the cell
     has, with reverse added), so that it is a filled cell on every terminal
     whatever the set has at the letter 0.  The half blocks (DC to DF) are
@@ -178,11 +180,10 @@ the question who it is, and the probe keeps its 800 ms as before.
   - No accented letters: they are drawn as the letter without the accent.
   - A terminal that lies in TERM (a type that has the capability on a
     terminal that has not) draws letters where the lines belong; the cure is
-    the setting ascii.  A terminal that lacks the arrows of the set (they are
-    in the VT100, but not every emulator draws them) shows + , - . in place
-    of the arrows; the setting ascii shows > < ^ v.
+    the setting ascii.
   - Nothing here is a test of the fonts of the terminals: the lines of the
-    set are drawn by the terminal itself, the arrows by its font.
+    set are drawn by the terminal itself, so a font without box characters
+    does not matter in the VT100 screen (observed in xterm, section 7).
 
 6. HOW IT WAS TESTED
 
@@ -200,7 +201,8 @@ signal:NAME and rawbytes (the bytes as they were written).  The checks:
     who it is; the notice names the setting; the log names the reason.
   - The Editor: a document of ASCII text, the same with an accented letter
     typed (drawn as e, kept as the byte 82, saved as after the same keys on
-    the UTF-8 screen), the table of the characters.
+    the UTF-8 screen), the table of the characters (the triangles and arrows
+    are > < ^ v).
   - After SIGTERM the bytes of the handler begin with ESC ( B and leave the
     alternate screen; after Ctrl-Z; after Quit; before the output of a child
     program (a shell script that the Document Manager runs in place of the
@@ -226,26 +228,68 @@ test knows the new value (Automatic, UTF-8, VT100, ASCII).
 
 7. WHAT XTERM SHOWS
 
-Not checked again for this work: xterm is not installed on the machine on
-which the work was done (alien), so no xterm was run under Xvfb and no
-picture of an xterm was taken.  What is known comes from earlier work:
+xterm was installed on the machine of the work (alien, xterm 407, from the
+packages of the system) and run on a virtual display (Xvfb, 1000x620), 90
+columns by 28 rows, with the Document Manager (str) and with the Editor on
+the sample chars.doc (the table of all the shapes).  The screen of the root
+window was written with xwd, made a PNG with convert, and READ.  The programs
+were the debug build of the terminal version.  The environment of each case
+was empty but TERM=xterm, DISPLAY, HOME, the locale and STRATA_HOME.
 
-  - The pictures of the sample that came with the order (the stand-alone
-    program vt100menu.c, not part of the repository), made in an xterm with
-    LC_ALL=C: the single-line box of the VT100 set is drawn right with no
-    option and no font setting; and the double lines of the UTF-8 screen
-    fall apart in the same xterm (each box character shows as a letter with
-    a circumflex and other signs, the box is gone).
-  - docs/TERMINALS.txt has the probes of xterm 407 of an earlier machine
-    (the table of section 3): the outcomes there are what was observed then;
-    they were not repeated.  The owner said that the statements of the
-    manual about xterm were wrong; the manual no longer calls xterm the
-    recommended terminal and no longer gives the options as facts (see
-    manual/src/gs-need.src).
-  - Not observed, and so not claimed: the effect of the options -lc, -u8,
-    -fa and -fs, of the resources utf8, locale and faceName, and of the
-    metaSendsEscape resource, in this version; and the arrows of the set in
-    xterm.
+  Case                                     Result
+  ---------------------------------------  ---------------------------------
+  xterm, locale C, auto                    VT100 lines right (log: VT100, the
+                                           locale is not UTF-8); the notice
+                                           on the last line
+  xterm, locale en_US.UTF-8, auto          UTF-8 double lines right (log:
+                                           UTF-8, one column, UTF-8 locale)
+  options -lc -u8 -fa "DejaVu Sans Mono"   as the plain xterm, in the locale
+   -fs 11 -xrm XTerm*metaSendsEscape,      C and in the UTF-8 locale
+   both locales
+  -fn fixed, locale C                      VT100 lines right
+  -u8 -fn fixed, locale C                  VT100 lines right (-u8 does not
+                                           change the choice: the locale
+                                           decides)
+  -fn fixed, locale en_US.UTF-8, auto      SQUARES in place of the double
+                                           lines; in the Editor table every
+                                           shape of the set is a square.
+                                           The font has no shapes; the check
+                                           cannot see the font (it said
+                                           UTF-8)
+  -u8 -fn fixed, locale en_US.UTF-8        the same squares
+  -fn fixed, en_US.UTF-8, setting vt100    VT100 lines right (menu and Editor
+                                           table): the cure
+  -fn fixed, en_US.UTF-8, setting ascii    plain + - | lines (menu)
+  UTF-8 forced (STRATA_ASCII=0), locale C, the box falls apart: each box
+   plain or -fa DejaVu                     character is shown as an a with a
+                                           circumflex and other signs (the
+                                           owner's complaint)
+  UTF-8 forced, en_US.UTF-8, plain or      UTF-8 double lines right
+   -fa DejaVu
+  Editor table, locale C, auto             lines, tees, corners, checkerboard
+                                           right; triangles and arrows as
+                                           > < ^ v; blocks as filled cells
+  Editor table, en_US.UTF-8, auto          every shape right, with the
+                                           default font
+
+What follows from it:
+  - A plain xterm needs no option for Strata: the plain defaults in the C
+    locale give the VT100 lines, and in a UTF-8 locale the UTF-8 shapes.
+  - The options of the old manual (-lc, -u8, -fa, -fs) changed nothing on the
+    screen in either locale.  The statement that xterm is "the terminal that
+    Strata recommends" has no test behind it and is gone.
+  - The case that fails is a font without the shapes in a UTF-8 locale; the
+    cure is the setting vt100.
+  - The first version of the VT100 screen drew the triangles and arrows with
+    the arrows of the set (+ , - .).  In this xterm they were the plain signs
+    + , - . (the picture of the Editor table), so they were replaced by the
+    ASCII shapes > < ^ v.  The other letters of the set (lines, tees, corners,
+    the checkerboard, the diamond, the centered dot) were drawn right.
+  - Not tried: the keys (the resource metaSendsEscape and the keys that xterm
+    keeps: Shift-Insert and so on): these are about keys, not the screen.
+    The probes of task 31 in docs/TERMINALS.txt were not repeated.
+  - The pictures are in the scratchpad of the task (x66/), not in the
+    repository.
 
 To check a terminal yourself (also written in the manual): the command
 printf '\033(0lqqk\033(B\n' prints the top of a box if the terminal speaks
