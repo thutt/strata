@@ -67,7 +67,8 @@ SCRIPTS = ['smoke.py', 'movesect.py', 'windows.py', 'retnamed.py', 'textindent.p
            'fileversion.py',
            'spacechoice.py', 'installuser.py', 'nolatex.py',
            'menuroute.py', 'tplfolders.py', 'installtarball.py',
-           'publishclone.py', 'release.py', 'pdfguard.py']
+           'publishclone.py', 'release.py', 'pdfguard.py',
+           'errata.py']
 
 
 def expand(names):

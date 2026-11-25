@@ -92,9 +92,9 @@ x11_programs=(str stred)
 # its own.  The specification of the file formats is never delivered.  This
 # is the one list: the tarball is made from it, and tests/installtarball.py
 # proves that it is the set of the documents that the install delivers.
-manual_documents=(GettingStarted cheat cheat-short mathcheat
+manual_documents=(GettingStarted cheat cheat-short mathcheat errata
                   strata-reference-manual terminal-keys)
-manual_pdfs=(GettingStarted cheat cheat-short mathcheat
+manual_pdfs=(GettingStarted cheat cheat-short mathcheat errata
              strata-reference-manual)
 
 
