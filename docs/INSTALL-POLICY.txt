@@ -88,8 +88,8 @@ release directory with two entries:
   payload/           the files to install, with the layout of an installed
                      prefix: bin/ (str, stred, strprint, dviview and the
                      X11 versions), share/strata/ (the help file, VERSION,
-                     the documents, the templates, the samples and the
-                     Tutorial) and share/doc/strata/
+                     the documents and their PDF files, the templates, the
+                     samples and the Tutorial) and share/doc/strata/
 
 A developer makes it from a build with 'strata-build release DIR' (the
 option --make-release DIR of the script).  The payload has no manifest and

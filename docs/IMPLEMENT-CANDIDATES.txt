@@ -22,7 +22,8 @@ Sources, read together:
 
   - Appendix G of the reference manual, "Features of the original that
     Strata does not have" (manual/src/appnot.src and appnot1.src, taken
-    from git: git show d7a1981:modernization/manual/src/appnot.src).  The
+    from git: git show d7a1981:modernization/manual/src/appnot.src; d7a1981 is a
+    commit of the old repository and is not in this one).  The
     appendix was removed from the manual; this document is where its
     information is kept.
   - docs/NOT-IMPLEMENTED.txt (written 2026-11-13, partly out of date now),

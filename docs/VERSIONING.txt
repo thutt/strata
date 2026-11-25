@@ -35,8 +35,10 @@ branch, the installation media are produced, and they are uploaded to github.
 A release branch is not changed after the release is created: no commit is
 added to it and no development occurs on it.
 
-The current branch (port-to-c) is not development-1.  Until release 1 is
-reached the current branch is used, and then the development model shifts.
+The branch development-1 is the development branch of the major line 1, and
+since 2026-11-24 the work towards release 1 is done on it.  Before that the
+work was done on the branches port-to-c and then reimagining, which are in the
+old repository only.
 
 2. The version number
 ---------------------

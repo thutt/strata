@@ -2054,8 +2054,9 @@ Candidates to implement from Appendix G (coalesce)
       ("Features of the original that Strata does not have", the sources
       manual/src/appnot.src and appnot1.src, 718 lines; the documentation
       cleanup removes Appendix G from the manual, so read it from git:
-      git show d7a1981:modernization/manual/src/appnot.src and appnot1.src,
-      and keep this item as the place where its information is saved)
+      git show d7a1981:modernization/manual/src/appnot.src and appnot1.src
+      (d7a1981 is a commit of the old repository, not of this one), and keep
+      this item as the place where its information is saved)
       into ONE list of the features that PROBABLY SHOULD BE IMPLEMENTED.
       The result is a plain text document, docs/IMPLEMENT-CANDIDATES.txt,
       and a short summary of it in the worklist.  It is a proposal; the

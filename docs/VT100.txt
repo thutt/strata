@@ -229,7 +229,7 @@ test knows the new value (Automatic, UTF-8, VT100, ASCII).
 
 7. WHAT XTERM SHOWS
 
-xterm was installed on the machine of the work (alien, xterm 407, from the
+xterm was installed on a test machine (xterm 407, from the
 packages of the system) and run on a virtual display (Xvfb, 1000x620), 90
 columns by 28 rows, with the Document Manager (str) and with the Editor on
 the sample chars.doc (the table of all the shapes).  The screen of the root
@@ -289,8 +289,7 @@ What follows from it:
   - Not tried: the keys (the resource metaSendsEscape and the keys that xterm
     keeps: Shift-Insert and so on): these are about keys, not the screen.
     The probes of task 31 in docs/TERMINALS.txt were not repeated.
-  - The pictures are in the scratchpad of the task (x66/), not in the
-    repository.
+  - The pictures that were read are not kept in the repository.
 
 To check a terminal yourself (also written in the manual): the command
 printf '\033(0lqqk\033(B\n' prints the top of a box if the terminal speaks
