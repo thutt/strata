@@ -171,7 +171,7 @@ str-restore-box | scene | str | - | 2026-11-17 | build.sh pics str-restore-box
 str-restore-list | scene | str | - | 2026-11-20 | build.sh pics str-restore-list
 str-restore-menu | scene | str | - | 2026-11-20 | build.sh pics str-restore-menu
 str-restore-panel | scene | str | - | 2026-11-17 | build.sh pics str-restore-panel
-str-setup-advanced | scene | str | - | 2026-11-18 | build.sh pics str-setup-advanced
+str-setup-advanced | scene | str | - | 2026-11-25 | build.sh pics str-setup-advanced
 str-setup-browse | scene | str | - | 2026-11-20 | build.sh pics str-setup-browse
 str-setup-error | scene | str | - | 2026-11-18 | build.sh pics str-setup-error
 str-setup-panel | scene | str | - | 2026-11-18 | build.sh pics str-setup-panel
