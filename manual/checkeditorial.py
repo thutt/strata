@@ -143,7 +143,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # The sources that are not the Reference Manual.
-OTHER = ("gs-", "cheat", "mathcheat", "GettingStarted",
+OTHER = ("gs-", "cheat", "mathcheat", "GettingStarted", "errata",
          "strata-file-format")
 
 # The sources that no document of the product is made from (the Strata File

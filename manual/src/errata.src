@@ -1,0 +1,133 @@
+# Errata: the known anomalies of the terminal programs, with what is known of
+# each cause and what to do.  A guide of its own, in the manner of Getting
+# Started: it has a title block and no number on its sections, and it is not
+# part of the Reference Manual.  The list is short and grows; an entry says
+# what is seen, what is known and what is not, and what to do.
+.doc Strata: Errata
+.numbering off
+.h1 Strata: Errata
+.center
+A Technical Document
+.center
+Processing System
+.center
+Errata
+.center
+Version @VERSION@
+.center
+Logic Magicians Software
+.center
+{latex:\lmslogo[0.8]}
+
+.h1 About this document [errata-about]
+This document lists the anomalies that are known in the terminal programs, the
+Editor and the Document Manager when they run in a terminal.  An anomaly is
+something that looks wrong and is not a mistake of yours.  Each entry says what
+is seen, what is known about the cause and what is not, and what to do.  Where
+a cause is only suspected, the entry says so and gives a test that tells.
+
+The list is short, and it grows.  The window version of the Editor is not in
+it, except where an entry says so.  The faults and limits that the project has
+decided not to fix, such as those of the Printer, are in the file
+{c:KNOWN-ISSUES.txt} that is installed with the documents.
+
+.h1 The entries [errata-entries]
+The entries are in the order in which they were found.  An entry is a
+section of its own, so that another document can refer to it.
+
+.h2 PgUp and PgDn of the main block do nothing in xterm [errata-pgup]
+{b:What is seen.}  The keys {k:PgUp} and {k:PgDn} between the keyboard and the
+keypad do nothing in the terminal programs run in an {c:xterm}.  The {k:PgUp}
+and {k:PgDn} of the keypad work, and so does {k:Ins}.
+
+{b:What is known.}  The keys never reach the program, so the program is not the
+cause.  On the desktop where this was seen, {c:xev} shows both keys with no
+modifier: the {k:PgDn} of the main block as keycode 117, keysym {c:Next}, and
+the {k:PgDn} of the keypad as keycode 89, keysym {c:KP_Next}.  So the keyboard
+is right.  The command {c:cat -v}, run in that {c:xterm}, prints nothing for
+the main {k:PgUp} and {k:PgDn} and prints {c:^[[5~} and {c:^[[6~} for the keypad
+ones.  In a plain {c:xterm} 407 on a clean machine both keys send the same two
+codes, and the terminal programs treat the codes alike, so the two keys behave
+the same there; the window version treats the two key names alike too.
+
+{b:What is not known.}  Why the keys are lost on that desktop.  The session
+runs the input method IBus with its X input method switched on
+({c:ibus-daemon --xim}, with {c:XMODIFIERS} set to {c:@im=ibus}), under
+WindowMaker.  IBus uses the Page Up and Page Down keys for its lists of
+candidates, so the input method is the suspect.  It is not proven.  The
+suspicion could not be reproduced on a clean machine with IBus running and its
+default engines: both keys arrived there.
+
+{b:What to do.}  To find out whether the input method is the cause, start an
+{c:xterm} with no input method and look at the keys again:
+.code
+XMODIFIERS= xterm
+cat -v
+.end
+Press the main {k:PgDn} and then the keypad {k:PgDn}.  If both print
+{c:^[[6~}, the input method is the cause: start {c:xterm} that way, or switch
+the X input method of IBus off for it.  If the main key still prints nothing,
+the cause is elsewhere (a binding of the terminal or of the window manager).
+Meanwhile use the keypad {k:PgUp} and {k:PgDn} (with NumLock off), or the
+arrow keys.
+
+.h2 Keys that a terminal or a desktop keeps for itself [errata-keys]
+{b:What is seen.}  A key does nothing, or does what the terminal does, when it
+is pressed in a terminal program.  Examples are {k:Shift-Ins}, {k:Shift-PgUp}
+and {k:Shift-PgDn}, the {k:Alt} keys, the keypad {k:+}, {k:-} and {k:*}, and
+{k:Ctrl-I}, which is {k:Tab}.
+
+{b:What is known.}  The terminal takes some keys before they reach the program,
+sends the same code for two keys, or sends a plain character in place of a
+command.  {c:xterm}, {c:tmux} and {c:xfce4-terminal} were probed and the table
+of their keys is in {x:appterm-reach} and in {x:view-terminal-keys}, with a
+key to use in place of each.
+
+{b:What to do.}  Use the key that the table gives.  The alternates work in the
+window version too.
+
+.h2 Lines and shapes drawn as odd characters [errata-chars]
+{b:What is seen.}  The boxes of the screen are drawn as letters with accents,
+as squares or as empty squares.
+
+{b:What is known.}  The screen of a terminal program has three forms, and the
+UTF-8 form draws the double lines and the shapes of the character set.  It is
+right only in a terminal that is in UTF-8 and has a font with the shapes.  In
+a terminal that is not in UTF-8 each shape shows as several odd
+letters; where the font lacks the shape a square is drawn.  Both were seen in
+{c:xterm} 407, the squares with the bitmap font {c:fixed} in a UTF-8 locale.
+For that reason the screen is the VT100 form unless you choose another: it
+draws single lines with the VT100 line characters, which nearly every terminal
+has, and needs neither UTF-8 nor a special font.  The VT100 form has no double
+lines, so a double line is drawn single.
+
+{b:What to do.}  Use the field Terminal Characters of Setup, on its third page,
+to choose Automatic, ASCII, VT100 or UTF-8.  {x:term-choose} says how it works
+and {x:term-check} gives two commands that show what your terminal does.
+
+.h2 A letter with an accent is shown as another letter [errata-accents]
+{b:What is seen.}  On the VT100 screen and on the ASCII screen a letter with an
+accent, a Greek letter or a shape of the character set shows as the plain
+letter that looks most like it, or as a question mark.
+
+{b:What is known.}  The two screens write ASCII characters only.  The text of
+the document is not changed: the document keeps the letter, also when it is
+saved, and the letter is shown right on the UTF-8 screen and in the window
+version.
+
+{b:What to do.}  To see the letters, set Terminal Characters to UTF-8 in a
+terminal that is in UTF-8 and whose font has them (see
+{x:errata-chars}), or use the window version.
+
+.h2 Terminals that report keys with several modifiers [errata-modified]
+{b:What is seen.}  Nothing is known to be wrong.  This entry states a limit of
+the checks.
+
+{b:What is known.}  Some terminals send a distinct code for a key held with
+Ctrl, Alt and Shift together, for example the Ctrl-Shift forms of the arrow
+keys.  The terminal programs read these codes, but no terminal of that kind
+was run: the reading was checked against the documented codes.
+
+{b:What to do.}  If such a key does not act as the key tables say, use the
+alternate in {x:appterm-reach} and report what the terminal sends, which
+{c:cat -v} shows.

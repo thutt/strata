@@ -82,7 +82,7 @@ smp=${out}/samples
 pdf=${PDFDIR:-${out}/pdf}
 mk="python3 -I -B ${here}/mkmanual.py"
 cardnames="cheat cheat-short mathcheat GettingStarted"
-cardnames="${cardnames} strata-file-format"
+cardnames="${cardnames} errata strata-file-format"
 
 function help
 {

@@ -20,6 +20,7 @@ F glossary Glossary
 - cheat Key Reference
 - mathcheat Math Symbols
 - GettingStarted Getting Started
+- errata Errata
 - tutorial Tutorial
 - prereq Prerequisites
 - strata-file-format Strata File Formats
