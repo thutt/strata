@@ -235,7 +235,8 @@ The Edit menu depends on the document.
   the reverse.
 - Section edits only the section that holds the cursor, and Document brings
   back the whole document ({Ctrl-^} does either).
-- Window is not available.
+- Window shows two documents on the screen at once: Open, Close, Adjust,
+  Zoom-up, Zoom-down and Switch.
 - Block has Copy, Cut, Paste, Move and Delete; Parts has Split, Join and
   Append; Layout has Format, Table, Attribute, Border and Case; Insert has
   Marker and Overtype.  Each entry does what its function key does.
