@@ -30,7 +30,8 @@ Strata is needed.  The tests check that:
   - the option --dry-run changes nothing;
   - a release makes the annotated tag with its message on the right commit,
     the files strata-VERSION.tar.xz and strata-VERSION.tar.xz.sha256, removes
-    its scratch worktree, pushes nothing, and copies the files with --output;
+    its scratch worktree, pushes nothing, and puts the files in the directory
+    release of the build root of the environment (there is no option for it);
   - a failure after the tag was made removes the tag, the worktree and the
     build directory, and removes no tag that it did not make, also when the
     tag appears between the check and the creation;
@@ -175,7 +176,8 @@ class Repo:
         self.dir = tempfile.mkdtemp(prefix='repo.', dir=tmp)
         self.bare = self.dir + '.git'
         self.tmpdir = tempfile.mkdtemp(prefix='tmp.', dir=tmp)
-        self.env = dict(env, TMPDIR=self.tmpdir)
+        self.root = os.path.join(self.tmpdir, 'bld')
+        self.env = dict(env, TMPDIR=self.tmpdir, STRATA_BUILD_ROOT=self.root)
         r = self.dir
         os.makedirs(os.path.join(r, 'scripts'))
         os.makedirs(os.path.join(r, 'src'))
@@ -229,7 +231,9 @@ class Repo:
         return git(self.dir, 'worktree', 'list').count('\n') + 1
 
     def build_dir(self, version):
-        return os.path.join(self.tmpdir, 'strata-release-' + version)
+        """The tarball of the version in the build root of the environment."""
+        return os.path.join(self.root, 'release',
+                            'strata-' + version + '.tar.xz')
 
     def wt_dir(self, version):
         return os.path.join(self.dir, '.claude', 'worktrees',
@@ -293,8 +297,8 @@ def scenarios(tool_text, label):
     check('%s: a missing commit is refused' % label,
           st == 1 and 'no commit' in out and 'v6.0.0' not in r.tags(),
           (st, out))
-    st, out = r.release('6.0.0', '--build-dir',
-                        os.path.join(r.dir, 'build'))
+    st, out = r.release('6.0.0', e=dict(r.env, STRATA_BUILD_ROOT=
+                                        os.path.join(r.dir, 'build')))
     check('%s: a build directory inside the repository is refused' % label,
           st == 1 and 'inside the source tree' in out and
           not os.path.exists(os.path.join(r.dir, 'build')), (st, out))
@@ -309,7 +313,7 @@ def scenarios(tool_text, label):
 
     # ---- a release -------------------------------------------------------
     st, out = r.release('2.0.0')
-    built = os.path.join(r.build_dir('2.0.0'), 'release')
+    built = os.path.join(r.root, 'release')
     check('%s: a release succeeds' % label, st == 0, out)
     check('%s: the tag is annotated, has its message and is on the commit' %
           label, git(r.dir, 'cat-file', '-t', 'v2.0.0') == 'tag' and
@@ -351,12 +355,33 @@ def scenarios(tool_text, label):
           st == 1 and 'v2.0.0 already' in out and 'v2.2.0' not in r.tags(),
           (st, out))
 
-    outdir = os.path.join(r.tmpdir, 'out')
-    st, out = r.release('2.1.0', '--commit', r.good2, '--output', outdir)
-    check('%s: --output copies the two files' % label,
-          st == 0 and sorted(os.listdir(outdir)) ==
-          ['strata-2.1.0.tar.xz', 'strata-2.1.0.tar.xz.sha256'],
-          (st, out, os.path.exists(outdir) and os.listdir(outdir)))
+    st, out = r.release('2.1.0', '--commit', r.good2)
+    check('%s: a second release is made in the same build directory of the '
+          'environment, and both are there' % label, st == 0 and
+          os.path.isfile(os.path.join(built, 'strata-2.1.0.tar.xz')) and
+          os.path.isfile(os.path.join(built, 'strata-2.1.0.tar.xz.sha256'))
+          and os.path.isfile(os.path.join(built, 'strata-2.0.0.tar.xz')),
+          (st, out, os.listdir(built)))
+    for opt in ('--output', '--build-dir'):
+        st, out = r.release('2.3.0', opt, os.path.join(r.tmpdir, 'elsewhere'))
+        check('%s: there is no option %s: it is refused and nothing is made'
+              % (label, opt), st == 1 and 'unknown option' in out and
+              'v2.3.0' not in r.tags() and
+              not os.path.exists(os.path.join(r.tmpdir, 'elsewhere')),
+              (st, out))
+    noroot = {k: v for k, v in r.env.items() if k != 'STRATA_BUILD_ROOT'}
+    st, out = r.release('2.3.0', e=noroot)
+    check('%s: without STRATA_BUILD_ROOT the tool refuses and changes nothing'
+          % label, st == 1 and 'STRATA_BUILD_ROOT is not set' in out and
+          'v2.3.0' not in r.tags() and r.worktrees() == 1, (st, out))
+    old = os.path.join(built, 'strata-2.3.0.tar.xz')
+    write(old, 'older\n')
+    st, out = r.release('2.3.0', '--commit', r.race)
+    check('%s: a tarball of that version that exists is not made over: the '
+          'tool refuses and changes nothing' % label, st == 1 and
+          'exists already' in out and 'v2.3.0' not in r.tags() and
+          read(old) == 'older\n', (st, out))
+    os.remove(old)
 
     # ---- a failure after the tag: the rollback ----------------------------
     st, out = r.release('3.0.0', '--commit', r.failing)
@@ -365,6 +390,10 @@ def scenarios(tool_text, label):
           'v3.0.0' not in r.tags() and not os.path.exists(r.wt_dir('3.0.0'))
           and not os.path.exists(r.build_dir('3.0.0')) and r.worktrees() == 1
           and 'removed the tag v3.0.0' in out, (st, out, r.tags()))
+    check('%s: the rollback left the tarballs that were in the build '
+          'directory before' % label,
+          os.path.isfile(os.path.join(built, 'strata-2.0.0.tar.xz')) and
+          os.path.isfile(os.path.join(built, 'strata-2.1.0.tar.xz')))
     check('%s: the rollback left the tags that existed before' % label,
           'v5.0.0' in r.tags() and 'v2.0.0' in r.tags())
 

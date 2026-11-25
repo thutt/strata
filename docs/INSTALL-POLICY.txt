@@ -259,11 +259,14 @@ The release number is X.Y.0, with digits for X and Y: the version scheme reads
 only a tag named vX.Y.0 as a release (docs/VERSIONING.txt).  The tag message
 names the release, which is the first number of the version: "Strata 1.1.0
 (release 1)".  The options
-are --commit REV (the commit to tag, default HEAD), --build-dir DIR (the build
-root, default ${TMPDIR:-/tmp}/strata-release-VERSION; the files are made in
-DIR/release), --output DIR (also copy the two files there), --jobs N and
---dry-run, which checks everything, prints the commit and the tag and
-changes nothing.
+are --commit REV (the commit to tag, default HEAD), --jobs N and --dry-run,
+which checks everything, prints the commit and the tag and changes nothing.
+The build root comes from the environment and from nothing else: it is
+STRATA_BUILD_ROOT, which sourcing scripts/setup sets (source scripts/setup -b
+release /tmp/strata), and the tool refuses when it is not set.  The tarball
+and its checksum file are made in the directory release below it, where
+strata-build install makes them too.  There is no option to name the build
+root or another place for the two files.
 
 The tool makes these steps, in this order.
 
@@ -277,8 +280,10 @@ The tool makes these steps, in this order.
    the commit exists and carries no release tag already (a commit is one
    release only, because the version of a checkout is read from its release
    tag); that no tracked file is modified or staged (an untracked file does
-   not count); that the scratch worktree and the build directory do not exist
-   yet and that the build directory is outside the source tree.  A refusal
+   not count); that STRATA_BUILD_ROOT is set, that the build root is outside
+   the source tree, that the scratch worktree does not exist yet and that the
+   tarball of this version is not in the directory release yet (the tool never
+   makes a tarball over another).  A refusal
    prints a message, ends with the status 1 and has changed nothing.  An
    existing tag is refused with "the tag vVERSION exists already: nothing was
    changed" and the advice to delete it with git tag -d if it was never
@@ -294,13 +299,14 @@ The tool makes these steps, in this order.
    strata-VERSION.tar.xz and strata-VERSION.tar.xz.sha256 exist, sha256sum -c
    passes, the tarball holds the one directory strata-VERSION and holds PDF
    files of the manuals (the tarball script has checked every one).
-5. It removes the scratch worktree, copies the files to the --output
-   directory when there is one, and prints the tag, the commit, the paths,
-   the SHA-256 value, the names of the manual PDF files in the tarball and,
-   as text only, the next steps.
+5. It removes the scratch worktree and prints the tag, the commit, the
+   paths, the SHA-256 value, the names of the manual PDF files in the tarball
+   and, as text only, the next steps.
 
 If a step after the tag was made fails, the tool removes the tag it made, the
-scratch worktree and the build directory it made, and says so.  It never
+scratch worktree, the tarball and checksum file of this version if they were
+started, and the build root if the tool made it, and says so.  It leaves a
+build root that was there, and the files of other releases in it.  It never
 removes a tag that it did not make.  It never pushes, never signs, never
 contacts a network (except to ask a configured remote whether it has the tag
 in step 1; a remote that cannot be asked is reported and the check goes on

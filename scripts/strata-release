@@ -4,14 +4,16 @@
 # Makes a release: the tag vX.Y.0 on a commit, and the install tarball built
 # from that tag (see docs/INSTALL-POLICY.txt, section "Making a release"):
 #
-#     strata-release VERSION [--commit REV] [--build-dir DIR] [--output DIR]
-#                            [--jobs N] [--dry-run] [--help]
+#     strata-release VERSION [--commit REV] [--jobs N] [--dry-run] [--help]
 #
 # VERSION is the release number X.Y.0, for example 1.0.0 or 1.1.0.  The
 # release is the first number.  The tool is a tool of the developers: it is
 # never shipped, and it never pushes, signs or contacts a network.  It makes
 # the manuals and their PDF files too (they are in every release), so it
-# needs LaTeX: this is checked before anything is changed.
+# needs LaTeX: this is checked before anything is changed.  The build root
+# comes from the environment (STRATA_BUILD_ROOT, set by sourcing
+# scripts/setup), and the tarball and its checksum file are made in its
+# directory release; there is no option to put them anywhere else.
 #
 set -o pipefail;
 set -o nounset;
@@ -22,8 +24,7 @@ project_dir="$(dirname "${script_dir}")";
 
 version="";
 commit="HEAD";
-build_root="";
-output_dir="";
+build_root="${STRATA_BUILD_ROOT:-}";
 jobs="$(nproc 2>/dev/null || echo 2)";
 dry_run="no";
 
@@ -32,6 +33,7 @@ tag_made="no";
 worktree="";
 worktree_made="no";
 build_made="no";
+results_started="no";
 finished="no";
 
 
@@ -49,9 +51,10 @@ error.
 
   VERSION             the release number X.Y.0, for example 1.0.0 or 1.1.0.
   --commit REV        the commit to tag (default HEAD).
-  --build-dir DIR     the build root (default \${TMPDIR:-/tmp}/strata-release-
-                      VERSION); the files are made in DIR/release.
-  --output DIR        also copy the two files to DIR.
+
+The build root is the one of the environment: source scripts/setup first (for
+example: source scripts/setup -b release /tmp/strata).  The tarball and its
+checksum file are made in the directory release below it, and nowhere else.
   --jobs N            the number of jobs of the build (default: processors).
   --dry-run           check everything, print what would be done, change
                       nothing.
@@ -93,6 +96,11 @@ function cleanup
         removed="the tag v${version}${removed:+ and }${removed}";
     fi
 
+    if [ "${results_started}" = "yes" ]; then
+        rm -f -- "${build_root}/release/strata-${version}.tar.xz" \
+              "${build_root}/release/strata-${version}.tar.xz.sha256";
+    fi
+
     if [ "${build_made}" = "yes" ]; then
         rm -rf -- "${build_root}";
     fi
@@ -128,17 +136,11 @@ while [ "${#}" -gt 0 ]; do
             dry_run="yes";
             shift;
             ;;
-        --commit | --build-dir | --output | --jobs)
+        --commit | --jobs)
             [ "${#}" -ge 2 ] || die "${1} needs a value.";
             case "${1}" in
                 --commit)
                     commit="${2}";
-                    ;;
-                --build-dir)
-                    build_root="${2}";
-                    ;;
-                --output)
-                    output_dir="${2}";
                     ;;
                 --jobs)
                     jobs="${2}";
@@ -146,16 +148,10 @@ while [ "${#}" -gt 0 ]; do
             esac
             shift 2;
             ;;
-        --commit=* | --build-dir=* | --output=* | --jobs=*)
+        --commit=* | --jobs=*)
             case "${1}" in
                 --commit=*)
                     commit="${1#--commit=}";
-                    ;;
-                --build-dir=*)
-                    build_root="${1#--build-dir=}";
-                    ;;
-                --output=*)
-                    output_dir="${1#--output=}";
                     ;;
                 --jobs=*)
                     jobs="${1#--jobs=}";
@@ -192,6 +188,14 @@ case "${jobs}" in
 esac
 
 major="${version%%.*}";
+
+# The build root is the one of the environment, and there is no other way to
+# name it: the tarball and its checksum file are made in its directory release.
+if [ -z "${build_root}" ]; then
+    die "STRATA_BUILD_ROOT is not set: run 'source scripts/setup -b release" \
+        "DIR' first, for the build root DIR of the environment: nothing was" \
+        "changed.";
+fi
 
 for tool in git tar xz sha256sum; do
     command -v "${tool}" >/dev/null 2>&1 || die "${tool} is not installed.";
@@ -264,10 +268,6 @@ worktree="${project_dir}/.claude/worktrees/release-${version}";
 [ ! -e "${worktree}" ] ||
     die "the scratch worktree ${worktree} exists: remove it first.";
 
-if [ -z "${build_root}" ]; then
-    build_root="${TMPDIR:-/tmp}/strata-release-${version}";
-fi
-
 build_root="$(realpath -m -- "${build_root}")";
 
 case "${build_root}/" in
@@ -282,9 +282,13 @@ case "${project_dir}/" in
         ;;
 esac
 
-[ ! -e "${build_root}" ] ||
-    die "the build directory ${build_root} exists: remove it or use" \
-        "--build-dir.";
+# The tarball of this release is not made over another one.
+for existing in "${build_root}/release/strata-${version}.tar.xz" \
+                "${build_root}/release/strata-${version}.tar.xz.sha256"; do
+    [ ! -e "${existing}" ] ||
+        die "${existing} exists already: remove it first (nothing was" \
+            "changed).";
+done
 
 subject="$(git -C "${project_dir}" log -1 --format=%s "${rev}")";
 echo "commit: ${rev}";
@@ -311,8 +315,12 @@ git -C "${project_dir}" worktree add --detach -q "${worktree}" \
     "v${version}" >/dev/null 2>&1 || die "the scratch worktree failed.";
 worktree_made="yes";
 
-build_made="yes";
+if [ ! -e "${build_root}" ]; then
+    build_made="yes";
+fi
+
 mkdir -p -- "${build_root}";
+results_started="yes";
 
 echo "strata-release: building v${version} in ${worktree} ...";
 
@@ -359,11 +367,6 @@ pdf_list="$(tar -tJf "${tarball}" |
 [ -n "${pdf_list}" ] ||
     die "the tarball holds no PDF file of a manual.";
 
-if [ -n "${output_dir}" ]; then
-    mkdir -p -- "${output_dir}";
-    cp -- "${tarball}" "${sumfile}" "${output_dir}/";
-fi
-
 git -C "${project_dir}" worktree remove --force "${worktree}";
 worktree_made="no";
 finished="yes";
@@ -375,9 +378,6 @@ echo "checksum: ${sumfile}";
 echo "SHA-256:  $(cut -d' ' -f1 "${sumfile}")";
 echo "manual PDF files in the tarball:";
 echo "${pdf_list}" | sed -e 's/^/  /';
-if [ -n "${output_dir}" ]; then
-    echo "copied to ${output_dir}";
-fi
 echo "Next, by hand (the tool pushes nothing):";
 echo "  git push github v${version}";
 echo "  then make a release on the page of the repository on GitHub from";

@@ -379,11 +379,12 @@ checks everything and changes nothing, and 'scripts/strata-release 1.0.0'
 makes the annotated tag v1.0.0 on HEAD (or on the commit of --commit), builds
 that tag in a scratch worktree, makes the manuals and their PDF files (it
 needs LaTeX, which it checks before it makes the tag) and leaves
-strata-1.0.0.tar.xz and its
-.sha256 file in the build directory (default /tmp/strata-release-1.0.0/
-release; --output DIR copies them).  An existing tag is refused and never
-changed, a failure removes the tag that the tool made, and nothing is pushed
-or signed.  The tool is never shipped.
+strata-1.0.0.tar.xz and its .sha256 file in the directory release of the build
+root of the environment (STRATA_BUILD_ROOT, set by sourcing scripts/setup:
+'source scripts/setup -b release /tmp/strata' first; the tool has no option to
+put the files anywhere else).  An existing tag is refused and never changed, a
+failure removes the tag that the tool made, and nothing is pushed or signed.
+The tool is never shipped.
 
 Sourcing setup also sets STRATA_HELP (the help file that the build makes) and
 STRATA_TEMPLATES (the templates folder of the source tree), so that a program
