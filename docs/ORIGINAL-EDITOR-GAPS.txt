@@ -55,7 +55,7 @@ Summary
                                                           medium
   Indent to Next Level     cumulative indent of the next  implement; small
                            level
-  Edit Window              two windows                    leave (no windows)
+  Edit Window              two windows                    built (Edit, Window)
   Repaginate, Clear-pages  show page breaks on screen     leave on worklist
   Text indent (Ctrl-G)     see its entry                  see its entry
 
@@ -452,10 +452,10 @@ original; the effect is measured on the print.
 
   Alt-F1 Compose, Ctrl-F2 Math, Alt-F8 Border: sections 1 to 3.
   Edit, Window (Open/Close, Adjust, Zoom-up, Zoom-down, Switch):
-    dimmed.  READ ONLY: the original splits the screen in two windows on
-    the same or on two documents (the Reference section on the Window menu
-    says Zoom-up expands the current window to full screen size).  Strata
-    has no windows.  Recommendation: leave; a possible later feature.
+    built since this was written (the manual, Edit, Window).  The original
+    splits the screen in two windows on the same or on two documents (the
+    Reference section on the Window menu says Zoom-up expands the current
+    window to full screen size).
   Print, Repaginate and Clear-pages: dimmed.  READ ONLY.  They need the
     page breaks that only the Printer knows.  Recommendation: leave on the
     worklist; a repagination that runs the Printer and shows the page

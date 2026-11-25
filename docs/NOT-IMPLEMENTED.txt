@@ -18,12 +18,17 @@ entry can be chosen and says it is not implemented), SHOWN (the panel field
 is shown and ignored), MESSAGE (the key only prints a message) or SILENT
 (nothing in the menus says so).  "Running" means a task is working on it.
 
+Corrected 2026-11-25: the entries for Edit Window, Tools Spell, Tools
+Thesaurus and "Running now", and the paper sizes of Global Page, were out of
+date and are corrected.  The other entries are as they were on 2026-11-13 and
+have not been checked again.
+
 
 1. SUMMARY
 ----------
 
-  stred menu bar     Dimmed: Edit Window, Tools Spell (four commands) and
-                    Tools Thesaurus.  Everything else can be chosen.
+  stred menu bar     Everything can be chosen (Edit Window, Tools Spell and
+                    Tools Thesaurus work: they were dimmed on 2026-11-13).
                     Print Repaginate and Print Clear-pages are not in the
                     menu (removed 2026-11-18: the page breaks are made when
                     a document is printed).
@@ -37,7 +42,7 @@ is shown and ignored), MESSAGE (the key only prints a message) or SILENT
                     edited; about half have no effect yet when a page is
                     made (section 5).
 
-  Running now:      Spell (str and stred) and Thesaurus.
+  Running now:      nothing that this report knows of.
   Wrong, to fix:    nothing is known to be wrong in the Preview entries.
 
 
@@ -59,8 +64,8 @@ Global.  All six commands open panels.  Not done inside them:
   - Format: nothing is stored and unused now.  The
     spacings (also those that a block or its named format sets), Page Break
     Level, Auto Numbering to Level and the fonts are used.
-  - Page: the paper sizes and margins are stored and shown; they are not yet
-    used by Print and Preview (SHOWN).  The Header and Footer fields ("...")
+  - Page: the paper sizes and margins are used by Print and Preview
+    (docs/PRINT-LATEX.txt).  The Header and Footer fields ("...")
     do not open the editor of the original: headers and footers cannot be
     edited (SILENT).
   - Options: six of thirteen settings are dimmed: Block Indicators (Solid
@@ -72,8 +77,8 @@ Global.  All six commands open panels.  Not done inside them:
   - Named: Edit and Delete work.
 
 Edit.  Title, Structured, Unstructured, Section and Document work.
-  - Window (Open/Close, Adjust, Zoom, Switch): DIMMED.  Strata has no
-    windows.  Ctrl-W (switch windows) is "no" in KEYSTROKES.txt.
+  - Window (Open, Close, Adjust, Zoom-up, Zoom-down, Switch): WORKS (the
+    manual, Edit, Window).  Ctrl-W (switch windows) is "no" in KEYSTROKES.txt.
 
 Print.
   - Draft and Final: DONE.  They make a PDF with strprint and send it to a
@@ -109,9 +114,8 @@ Print.
 
 Tools.
   - Macros, Library, Autosort and Count work.
-  - Spell (Document, Block, Section, Word): DIMMED.  Ctrl-C (spell check the
-    current word) only prints a message.  RUNNING.
-  - Thesaurus: DIMMED.  Ctrl-T only prints a message.  RUNNING.
+  - Spell (Document, Block, Section, Word) and Thesaurus: WORK.  Ctrl-C spell
+    checks the current word and Ctrl-T looks it up in the thesaurus.
 
 Quit.  Works.  (The Shell entry was removed on purpose: the system is
 multitasking.)

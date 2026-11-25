@@ -95,4 +95,4 @@ Ctrl-^ does the same from the keyboard.  Escape does not leave the mode.
 Window
 ------
 "Open/Close, Adjust, Zoom, Switch": the original can show several windows
-of the document.  It is dimmed: Strata has no windows yet.
+of the document.  Strata has them too (the manual, Edit, Window).
