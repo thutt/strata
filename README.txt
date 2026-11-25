@@ -195,10 +195,11 @@ X11 frontend
 Same programs, same keys, drawn in an X window of 80x50 character cells. With
 Xft installed it uses anti-aliased DejaVu Sans Mono with real bold and italic
 faces; otherwise it falls back to a monospaced Unicode core font. The keypad
-+ - * keys do the outline commands (collapse/expand/outline), Alt-F2...F9, Alt-F12 and
-Shift/Ctrl cursor combinations arrive natively (no Ctrl-F workaround needed),
-and closing the window acts as Ctrl-Q. In the Document Manager, Edit opens the
-Editor in a second window and the Document Manager returns when it closes.
++ - * keys do the outline commands (collapse/expand/outline), Alt-F2...F9,
+Alt-F12 and Shift/Ctrl cursor combinations arrive natively (no Ctrl-F
+workaround needed), and closing the window acts as Ctrl-Q. In the Document
+Manager, Edit opens the Editor in a second window and the Document Manager
+returns when it closes.
 
 Optional environment: STRATA_X11_XFT (fontconfig family, e.g. Liberation Mono; 0
 forces the core fonts), STRATA_X11_SIZE (Xft pixel size, default 16; core fonts
@@ -451,10 +452,10 @@ terminal answers that it is a VT100 or later, else ASCII.  A note is shown once
 on the message line, and the choice is written to the log.  STRATA_ASCII=1
 forces ASCII, STRATA_ASCII=0 forces UTF-8; the Setup field Terminal Characters
 (key terminal_charset: auto, ascii, vt100, utf8; the default, with no setting,
-is vt100, and auto is the choice that checks the terminal) does the same.  The font
-cannot be checked: a font without the shapes shows squares (choose VT100, whose
-lines the terminal draws itself).  To test a terminal by hand, type
-printf '\033(0lqqk\033(B\n' (a box top: the terminal speaks VT100) and
+is vt100, and auto is the choice that checks the terminal) does the same.
+The font cannot be checked: a font without the shapes shows squares (choose
+VT100, whose lines the terminal draws itself).  To test a terminal by hand,
+type printf '\033(0lqqk\033(B\n' (a box top: the terminal speaks VT100) and
 printf '\342\224\200\n' (a line: UTF-8 with the shape in the font).
 docs/TERMINALS.txt has the study of which terminals work.  The Editor needs at
 least 20 rows, and its X11 window is not made lower than 20 rows.  The height
@@ -493,8 +494,8 @@ Where a terminal cannot send a key, there is an alternate.
     records one (Ctrl-F1 ends the recording)
   - Commands: F2 Split, F6/Ctrl-E Format block, Ctrl-H hanging indent, F8 Table,
     F9 Search, F12 Menu, F1 Help
-  - Alt-F commands: Alt-F2...F9 and Alt-F12, or Ctrl-F for a menu of them (Append, Join,
-    Delete, Overtype, Set Attr, Go To, Replace, Marker)
+  - Alt-F commands: Alt-F2...F9 and Alt-F12, or Ctrl-F for a menu of them
+    (Append, Join, Delete, Overtype, Set Attr, Go To, Replace, Marker)
   - Files: Ctrl-S save, Ctrl-R retrieve, Ctrl-Q quit, Ctrl-P print (Final:
     a PDF and a printer)
 
