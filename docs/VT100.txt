@@ -1,0 +1,253 @@
+THE VT100 CHARACTER SET OF THE TERMINAL PROGRAMS
+================================================
+
+Files: src/term.c (choose_charset, the tables cp437_acs and cp437_ascii,
+term_present), src/config.c and src/str.c (the setting and the Setup field),
+tests/vt100.py, tests/tui.py (the screen model), tests/termcheck.py.
+
+1. THE THREE SCREENS
+
+The terminal programs (stred, str) draw their screen in one of three ways.
+The choice is made once per run, when the terminal is opened.
+
+  utf8    The shapes of the original character set (cp437_uni in
+          src/layout.c): double and single lines, shades, blocks, triangles,
+          arrows.  Every shape is written as its UTF-8 bytes.  The terminal
+          must read UTF-8 and its font must have the shapes.
+  vt100   Only ASCII bytes are written (no byte of 0x80 or more).  The
+          lines, the checkerboard, the diamond, the bullet and the arrows
+          are the letters of the DEC Special Graphics set, written between
+          ESC ( 0 and ESC ( B; everything else is ASCII.  The terminal does
+          not need UTF-8, a locale or a font with box characters.
+  ascii   Only ASCII bytes, with plain look-alikes (+ - | = # and so on).
+
+The X11 programs are not changed: they draw every cell with their own fonts
+and do not use the three screens.
+
+The setting terminal_charset (Setup, Terminal Characters) takes auto (the
+field says Automatic, and no line is written to the file), utf8, vt100 and
+ascii.  The variable STRATA_ASCII=1 forces ascii and STRATA_ASCII=0 forces
+utf8; it wins over the setting.
+
+2. THE MAPPING
+
+The program keeps its screen as cells of a CP437 character (term_put) or a
+Unicode character (term_putu).  Only the output differs.  In vt100 the table
+cp437_acs of src/term.c gives, for each shape of the CP437 set, the letter of
+the graphics set, or says "block", or says "none", and then the ASCII
+look-alike of cp437_ascii is used, as in ascii.  Every character is one
+column wide.
+
+  Shape (CP437 number)            UTF-8      vt100            ascii
+  ------------------------------  ---------  ---------------  -------------
+  single line corners, tees and   as drawn    the same shape:  + - |
+  cross (B3 B4 BF C0 to C5 D9 DA)            j k l m n t u v
+                                             w x
+  double lines and the mixed      as drawn   the single line  + = |
+  ones (B5 to BE, C6 to D8, BA               of the same
+  BB BC C8 to CF, CD)                        shape (the set has
+                                             no double lines)
+  horizontal line C4 and CD       as drawn   q               - and =
+  vertical line B3 and BA         as drawn   x               |
+  shades B0 B1 B2                 as drawn   a (checker-     : : #
+                                             board)
+  blocks DB to DF and FE          as drawn   a space in the  #
+                                             reverse attribute
+  triangles 10 11 1E 1F, arrows   as drawn   + , - . (the    > < ^ v
+  18 19 1A 1B                                arrows of the
+                                             set: right,
+                                             left, up, down)
+  the arrows 12 and 1D (two-way)  as drawn   ASCII           | and -
+  diamond 04                      as drawn   ` (diamond)     *
+  bullet 07, centered dots F9 FA  as drawn   ~ (centered     * and .
+                                             dot)
+  accented letters, Greek letters, as drawn  the ASCII       the same
+  math signs, currency signs, and            look-alike
+  the other shapes (faces, cards,            (e for an e
+  notes)                                     with an accent)
+  a character with no CP437 form  none       ?               ?
+
+Decisions:
+  - The arrows of the set (+ , - .) are used for the triangles of the lists
+    and the markers and for the arrows, because every VT100 has them; the
+    other shapes that the set lacks keep their ASCII look-alike.
+  - A block is a space in the reverse attribute (the attribute that the cell
+    has, with reverse added), so that it is a filled cell on every terminal
+    whatever the set has at the letter 0.  The half blocks (DC to DF) are
+    drawn as a full cell.
+  - The set has the accented letters of no language.  A character of a
+    DOCUMENT that is not ASCII is drawn as the ASCII look-alike of ascii
+    mode (reused: cp437_ascii) and is never lost from the document: the
+    screen is only a view, the text in memory and in the file is unchanged.
+  - Where the CP437 text of a document has a line or box shape (the table of
+    characters of the sample chars.doc), that shape is drawn as a line of
+    the set too, because the cell that is drawn has no mark of where the
+    shape came from.  The task asked for the ASCII look-alike there; it was
+    not built, and the case is rare.
+  - The letters of the set that the screen does not use (the degree sign,
+    plus-minus, the signs of order, pi, the sterling sign) are not used: the
+    degree sign and the others of a document are drawn as their ASCII
+    look-alike.
+
+3. THE DETECTION (auto)
+
+The reasons are written in the log of the run (str) as the choice always
+was: "term: the screen is drawn in VT100, not in UTF-8: <reason>".  That is a
+warning, so that a release build records it; a choice by the variable or the
+setting, and UTF-8, are notes, which only debug builds record.  The order:
+
+  (a) STRATA_ASCII (1 ascii, 0 utf8), then the setting terminal_charset
+      (utf8, vt100, ascii).  Nothing is asked of the terminal.
+  (b) In a multiplexer (TMUX or STY is set, or TERM begins with screen or
+      tmux): UTF-8 when the locale is UTF-8, else vt100 when the entry of
+      TERM has the line characters, else ascii.  A multiplexer translates
+      the characters itself, so what the terminal behind it does is not what
+      the program writes to; the locale (that of the multiplexer) and the
+      type of terminal that the multiplexer shows are what counts.  Nothing
+      is asked of the terminal.
+  (c) A locale that is UTF-8: the terminal is asked (the probe: U+2502 is
+      written at a known cell and the cursor position is requested; one
+      column means a terminal that reads UTF-8).  One column, or no answer
+      in 800 ms, gives utf8.  An answer of more than one column goes on to
+      (d).
+  (d) A locale that is not UTF-8, or the answer of the probe was more than
+      one column: vt100 when the terminal can draw it, else ascii (e).  The
+      probe is NOT asked when the locale is not UTF-8: the answer could not
+      change the choice (utf8 needs the locale, too), and a terminal that is
+      not in UTF-8 would show the three bytes of the probe as odd
+      characters.  With that, vt100 writes no byte of 0x80 or more at all.
+      The terminal can draw VT100 when
+        1. the entry of TERM in the terminal database has the string acsc
+           (acs_chars) with the letters of the set at themselves (jj kk ll
+           mm nn qq tt uu vv ww xx), or
+        2. the entry is missing or has no such string, and the terminal
+           answers the question who it is (ESC [ c, waiting 100 ms at most,
+           and only when the input is a terminal) with a VT100 or a later
+           model: ESC [ ? 1 ; 2 c is a VT100, 6 a VT102, and 62 to 69 the
+           VT220 and later models.  The answers 4, 7 and 12 (VT132, VT131,
+           VT125) are taken too.  No answer, or another answer, is no.
+      The query is made only when the entry of TERM does not decide.
+
+The choice that the program made by itself leaves a notice for the first
+screen: "No UTF-8 terminal: VT100 lines are drawn. See Setup,
+terminal_charset." or "No UTF-8 or VT100 terminal: ASCII is drawn. See Setup,
+terminal_charset."  A choice by the variable or by the setting leaves none.
+
+The terminal database is read from the files of the terminfo folders in the
+order that the library of the system uses (TERMINFO, the folder .terminfo of
+the home, TERMINFO_DIRS, /etc/terminfo, /lib/terminfo, /usr/share/terminfo,
+/usr/lib/terminfo), because the library (ncurses) is not linked: src/term.c
+reads the compiled entry itself (the string number 146, acs_chars).  A
+machine with no database folder at all uses the names xterm, rxvt, vt100,
+vt102, vt220, screen, tmux, st, alacritty, kitty, foot, wezterm and putty
+(also with a hyphen and a suffix).  A type that is in the database without
+the capability (dumb, ansi) is asked who it is.  The entry of ansi has the
+string, but its letters are bytes of the PC set, not of the DEC set, so it is
+not taken.
+
+A failed or absent answer never holds up the start: the wait is 100 ms for
+the question who it is, and the probe keeps its 800 ms as before.
+
+4. HOW THE SET IS SWITCHED
+
+  - A run of cells that are lines is written with one ESC ( 0, the letters,
+    and ESC ( B before the next cell that is not a line.
+  - The cells are compared as the program draws them (the character and the
+    attribute): the checkerboard and the letter a are different cells, as
+    are a block and a space, so that a cell is redrawn when its look
+    changes.
+  - Every update ends in ASCII, and the set is switched off before every
+    move of the cursor (ESC [ row ; column H), because a terminal may take
+    the next bytes for a set change.  The cursor is shown after that.
+  - ESC ( B is the first thing of the sequence that is written at the exit,
+    at a signal that ends the program (SIGHUP, SIGINT, SIGQUIT, SIGTERM,
+    SIGSEGV, SIGBUS, SIGABRT, SIGFPE, SIGILL, by the handler), and before a
+    child program runs (the Document Manager runs the Editor, the Viewer and
+    the others after term_close).  It is written when the terminal is opened,
+    too, in case the terminal was left in the set.
+  - Ctrl-Z is the key Undo of the Editor (the terminal is in raw mode), so
+    the program is not suspended by the key.  A stop by a signal from
+    outside leaves the terminal in ASCII, because every update ends in it.
+  - A program that is killed by SIGKILL cannot restore anything: the same as
+    for the colour of the cursor and the alternate screen.
+
+5. LIMITS
+
+  - No double lines and no shades other than the checkerboard: the set has
+    none.  The double-line frames of the original are single lines.
+  - No accented letters: they are drawn as the letter without the accent.
+  - A terminal that lies in TERM (a type that has the capability on a
+    terminal that has not) draws letters where the lines belong; the cure is
+    the setting ascii.  A terminal that lacks the arrows of the set (they are
+    in the VT100, but not every emulator draws them) shows + , - . in place
+    of the arrows; the setting ascii shows > < ^ v.
+  - Nothing here is a test of the fonts of the terminals: the lines of the
+    set are drawn by the terminal itself, the arrows by its font.
+
+6. HOW IT WAS TESTED
+
+tests/vt100.py (in the smoke list) runs str and stred in the pty of
+tests/tui.py, whose screen model knows ESC ( 0 and ESC ( B and maps the
+letters to the shapes (so that the existing screen checks see the shapes),
+and has the steps gfx (the letters of the cells written in the set),
+signal:NAME and rawbytes (the bytes as they were written).  The checks:
+
+  - TERM=xterm, LANG=C, no answer: the menu has the single-line box with its
+    title and text; the letters l k m j q x are the cells in the set; the
+    text is not; no byte of 0x80 or more in the whole session (menu, Setup);
+    one ESC ( 0 for a run; no empty switch; the set is off at the end of
+    every update, before every move and at the end; no probe and no question
+    who it is; the notice names the setting; the log names the reason.
+  - The Editor: a document of ASCII text, the same with an accented letter
+    typed (drawn as e, kept as the byte 82, saved as after the same keys on
+    the UTF-8 screen), the table of the characters.
+  - After SIGTERM the bytes of the handler begin with ESC ( B and leave the
+    alternate screen; after Ctrl-Z; after Quit; before the output of a child
+    program (a shell script that the Document Manager runs in place of the
+    Editor).
+  - UTF-8: LANG=en_US.UTF-8 with the probe answered by one column gives the
+    double lines; with no answer it does too; with the answer of three
+    columns it gives vt100.
+  - The setting vt100, utf8 and ascii force their mode whatever the terminal
+    and the locale say; STRATA_ASCII wins over the setting; auto and an
+    unknown value are the automatic choice.
+  - An unknown TERM with no answer gives ascii in less than 4 seconds; the
+    answers of a VT100 and of a VT220 give vt100; another answer gives
+    ascii; TERM=xterm is not asked; TERM=dumb gives ascii; TERM=linux gives
+    vt100; a description in a folder that TERMINFO names is read.
+  - A multiplexer (TMUX in the environment): TERM=screen with a locale that
+    is not UTF-8 gives vt100, an unknown type gives ascii, a UTF-8 locale
+    gives utf8; nothing is asked in any of them.
+
+tests/termcheck.py (the start check, in the smoke list) was brought up to
+date: the cases that expected ASCII from a locale C and a type of terminal
+that xterm has now expect vt100; the ASCII cases use TERM=dumb; the Setup
+test knows the new value (Automatic, UTF-8, VT100, ASCII).
+
+7. WHAT XTERM SHOWS
+
+Not checked again for this work: xterm is not installed on the machine on
+which the work was done (alien), so no xterm was run under Xvfb and no
+picture of an xterm was taken.  What is known comes from earlier work:
+
+  - The pictures of the sample that came with the order (the stand-alone
+    program vt100menu.c, not part of the repository), made in an xterm with
+    LC_ALL=C: the single-line box of the VT100 set is drawn right with no
+    option and no font setting; and the double lines of the UTF-8 screen
+    fall apart in the same xterm (each box character shows as a letter with
+    a circumflex and other signs, the box is gone).
+  - docs/TERMINALS.txt has the probes of xterm 407 of an earlier machine
+    (the table of section 3): the outcomes there are what was observed then;
+    they were not repeated.  The owner said that the statements of the
+    manual about xterm were wrong; the manual no longer calls xterm the
+    recommended terminal and no longer gives the options as facts (see
+    manual/src/gs-need.src).
+  - Not observed, and so not claimed: the effect of the options -lc, -u8,
+    -fa and -fs, of the resources utf8, locale and faceName, and of the
+    metaSendsEscape resource, in this version; and the arrows of the set in
+    xterm.
+
+To check a terminal yourself (also written in the manual): the command
+printf '\033(0lqqk\033(B\n' prints the top of a box if the terminal speaks
+VT100, and printf '\342\224\200\n' prints a horizontal line if it reads UTF-8
+and has the shape in its font.

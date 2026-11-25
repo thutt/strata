@@ -95,7 +95,8 @@ static Config cfg;
 /* The rows of the windows (Setup); 0 is the default of the version. */
 static int x11_rows_val;
 static int term_rows_val;
-static char charset_val[8]; /* Setup: terminal_charset: auto, utf8, ascii */
+/* Setup: terminal_charset: auto, utf8, vt100, ascii. */
+static char charset_val[8];
 static char paper_val[8]; /* Setup: default_paper: "" for Letter, or a4 */
 static int undo_levels_val; /* Setup: the operations that Undo keeps. */
 static int backups_val; /* Setup: the numbered backups that a save keeps. */
@@ -2597,7 +2598,8 @@ do_setup(void)
     char file_line[PATH_MAX + 40];
     static const char *yes_no[] = {"Yes", "No"};
     static const char *papers[] = {"Letter", "A4"};
-    static const char *charset_choices[] = {"Automatic", "UTF-8", "ASCII"};
+    static const char *charset_choices[] = {"Automatic", "UTF-8", "VT100",
+                                            "ASCII"};
 
     pj_queues(&q);
     setup_queues = q.pending != 0 ? SETUP_QUEUES_PENDING : q.n;
@@ -2709,13 +2711,15 @@ do_setup(void)
                "", "none");
     field_init(&f[SU_A_CHARSET], "Terminal Characters:",
                strcmp(charset_val, "utf8") == 0  ? "UTF-8" :
+               strcmp(charset_val, "vt100") == 0 ? "VT100" :
                strcmp(charset_val, "ascii") == 0 ? "ASCII" :
                                                    "Automatic",
                0, NULL);
     f[SU_A_CHARSET].choices = charset_choices;
-    f[SU_A_CHARSET].nchoices = 3;
+    f[SU_A_CHARSET].nchoices = 4;
     field_hint(&f[SU_A_CHARSET],
-               "How the terminal draws its screen: Automatic, UTF-8 or ASCII.",
+               "How the terminal draws its screen: Automatic, UTF-8, VT100 or "
+               "ASCII.",
                "Automatic", NULL);
     field_init(&f[SU_A_EDITOR], "Editor program:", msed_path, 0, NULL);
     field_hint(&f[SU_A_EDITOR],
@@ -2801,6 +2805,7 @@ do_setup(void)
     undo_levels_val = config_clamp_undo(atoi(f[SU_UNDO].val));
     str_copy(charset_val, sizeof charset_val,
              strcmp(f[SU_A_CHARSET].val, "UTF-8") == 0 ? "utf8" :
+             strcmp(f[SU_A_CHARSET].val, "VT100") == 0 ? "vt100" :
              strcmp(f[SU_A_CHARSET].val, "ASCII") == 0 ? "ascii" :
                                                       "auto");
     str_copy(paper_val, sizeof paper_val,

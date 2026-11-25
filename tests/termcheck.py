@@ -49,7 +49,11 @@ tmp = tempfile.mkdtemp(prefix='termcheck')
 doc = os.path.join(tmp, 'chars.doc')
 shutil.copy(sample, doc)
 PROBE = b'\x1b[2;1H\xe2\x94\x82\x1b[6n'
-NOTICE = 'No UTF-8 terminal: ASCII is drawn.'
+NOTICE = 'No UTF-8 or VT100 terminal: ASCII is drawn.'
+NOTICE_VT = 'No UTF-8 terminal: VT100 lines are drawn.'
+# A terminal type with no line characters: the choice is ASCII (the type
+# xterm has them, and a locale that is not UTF-8 then means VT100).
+PLAIN = 'dumb'
 
 
 def check(name, cond, extra=''):
@@ -69,10 +73,10 @@ def home(config=''):
 
 
 def start(lang, answer, force=None, config='', mux=False, steps=(),
-          prog=None, pre=()):
+          prog=None, pre=(), term='xterm'):
     """Run the Editor on the sample; returns (raw bytes, the screens)."""
     env = {'STRATA_ASCII': force, 'LANG': lang, 'LC_ALL': None,
-           'LC_CTYPE': None, 'STRATA_HOME': home(config),
+           'LC_CTYPE': None, 'STRATA_HOME': home(config), 'TERM': term,
            'TMUX': 'x' if mux else None, 'STY': None}
     out = tui.session(prog or [stred, doc, '-H', helpf],
                       list(pre) + ['waitfor:Character set', 'rawbytes',
@@ -100,29 +104,30 @@ check('utf8 terminal, UTF-8 locale: the screen has the UTF-8 shapes',
       BOXH in raw and TRI in raw and high(raw) > 100, high(raw))
 check('utf8 terminal, UTF-8 locale: no notice', NOTICE not in s[0], s[0])
 
-raw, s = start('C', 'latin1')
-check('8-bit terminal, locale C: no byte above 0x7F after the question',
-      high(rest(raw)) == 0 and raw.count(PROBE) == 1, high(rest(raw)))
-check('8-bit terminal, locale C: the first line shows ASCII is drawn',
-      NOTICE in s[0] and 'font is not checked' in s[0], s[0])
-check('8-bit terminal, locale C: look-alikes: "1 Character set<"',
+raw, s = start('C', 'latin1', term=PLAIN)
+check('plain terminal, locale C: no byte above 0x7F in the session',
+      high(raw) == 0 and PROBE not in raw, high(raw))
+check('plain terminal, locale C: the first line shows ASCII is drawn',
+      NOTICE in s[0] and 'terminal_charset' in s[0], s[0])
+check('plain terminal, locale C: look-alikes: "1 Character set<"',
       '1 Character set<' in s[0] and '\u25c4' not in s[0], s[0])
-raw, s = start('C', 'latin1', steps=['DOWN', 'show'])
+raw, s = start('C', 'latin1', steps=['DOWN', 'show'], term=PLAIN)
 check('the notice is gone after the first key', NOTICE not in s[1], s[1])
 
-raw, s = start('en_US.UTF-8', 'latin1')
+raw, s = start('en_US.UTF-8', 'latin1', term=PLAIN)
 check('8-bit terminal with a UTF-8 locale: the terminal wins, ASCII',
       high(rest(raw)) == 0 and NOTICE in s[0], (high(rest(raw)), s[0]))
 
 raw, s = start('C', 'utf8')
-check('UTF-8 terminal with locale C: the terminal wins, UTF-8 shapes',
-      BOXH in raw and TRI in raw and NOTICE not in s[0], s[0])
+check('UTF-8 terminal with locale C: the locale wins, the VT100 lines',
+      BOXH not in raw and high(raw) == 0 and NOTICE_VT in s[0], s[0])
 
 # ---- no answer: the locale decides, and the start does not hang ----------
 for lang, ascii_ in (('C', True), ('en_US.UTF-8', False), ('POSIX', True),
                      ('de_DE.utf8', False)):
+    # (A locale that is not UTF-8 asks no question: see tests/vt100.py.)
     t0 = time.time()
-    raw, s = start(lang, None)
+    raw, s = start(lang, None, term=PLAIN)
     took = time.time() - t0
     check('no answer, locale %s: %s' % (lang, 'ASCII' if ascii_ else 'UTF-8'),
           (high(rest(raw)) == 0) == ascii_ and
@@ -137,8 +142,8 @@ check('a key typed while the check waits for the answer is read after it',
       '1 ZCharacter set' in s[1], s[1])
 
 # ---- multiplexers: the locale decides at once -----------------------------
-raw, s = start('C', 'utf8', mux=True)
-check('in tmux, locale C: ASCII, and no question was asked',
+raw, s = start('C', 'utf8', mux=True, term=PLAIN)
+check('in tmux, locale C, plain terminal type: ASCII, and no question',
       high(raw) == 0 and b'\x1b[6n' not in raw and NOTICE in s[0],
       (high(raw), s[0]))
 raw, s = start('en_US.UTF-8', 'latin1', mux=True)
@@ -188,7 +193,7 @@ raw, s = start('en_US.UTF-8', 'utf8', force='0', steps=['F1', 'wait', 'show'])
 check('the F1 key still works (Help opens)', 'HELP: Edit Screen' in s[1], s[1])
 
 # ---- the table: every shape has a look-alike -------------------------------
-raw, s = start('C', 'latin1')
+raw, s = start('C', 'latin1', config='terminal_charset=ascii\n')
 rows = {}
 for line in s[0].split('\n'):
     m = re.match(r'^(?:[*\u2666]|\[FONT\])?([0-9A-F]0) {2}(.*?)(<|\u25c4)?\s*$',
@@ -242,7 +247,7 @@ if os.path.exists(strprog):
                       ['rawbytes'] + tui.OPEN_SETUP + ['wait', 'rawbytes'],
                       env={'STRATA_ASCII': None,
                       'LANG': 'C', 'LC_ALL': None, 'STRATA_HOME': h,
-                      'TMUX': None}, answer='latin1')
+                      'TERM': PLAIN, 'TMUX': None}, answer='latin1')
     check('Document Manager in ASCII: no byte above 0x7F, also in Setup',
           high(rest(eval(out[0]))) == 0 and high(eval(out[1])) == 0 and
           len(eval(out[1])) > 200, (high(eval(out[1])), out[1][:100]))
@@ -259,13 +264,22 @@ if os.path.exists(strprog):
                 'wait'], env=env)
     conf = open(os.path.join(h, 'config')).read() \
         if os.path.exists(os.path.join(h, 'config')) else ''
+    check('Setup saves Terminal Characters VT100 as terminal_charset=vt100',
+          '\nterminal_charset=vt100\n' in '\n' + conf, conf)
+    out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
+    check('Setup shows VT100 again at the next start',
+          any('Terminal Characters:' in l and 'VT100' in l
+              for l in out[0].split('\n')), out[0])
+    tui.session([strprog, '-H', helpf], sh + ['RIGHT', 'INS', 'wait'],
+                env=env)
+    conf = open(os.path.join(h, 'config')).read()
     check('Setup saves Terminal Characters ASCII as terminal_charset=ascii',
           '\nterminal_charset=ascii\n' in '\n' + conf, conf)
     out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
     check('Setup shows ASCII again at the next start',
           any('Terminal Characters:' in l and 'ASCII' in l
               for l in out[0].split('\n')), out[0])
-    tui.session([strprog, '-H', helpf], sh + ['LEFT', 'LEFT', 'INS',
+    tui.session([strprog, '-H', helpf], sh + ['LEFT', 'LEFT', 'LEFT', 'INS',
                 'wait'], env=env)
     conf = open(os.path.join(h, 'config')).read()
     check('Setup: Automatic leaves no line terminal_charset',
@@ -278,7 +292,8 @@ if os.path.exists(strprog):
           '\u2500' not in out[0] and '\u2502' not in out[0] and '+=' in
           out[0], out[0])
     out = tui.session([strprog, '-H', helpf], ['show'],
-                      env=dict(env2, STRATA_HOME=home(), LANG='C'),
+                      env=dict(env2, STRATA_HOME=home(), LANG='C',
+                               TERM=PLAIN),
                       answer='latin1')
     check('the Document Manager shows that ASCII was chosen',
           NOTICE in out[0], out[0])

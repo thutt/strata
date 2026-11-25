@@ -453,7 +453,8 @@ set_value(Config *c, const char *key, const char *val)
     } else if (strcmp(key, "terminal_rows") == 0) {
         set_rows(&c->terminal_rows, val);
     } else if (strcmp(key, "terminal_charset") == 0) {
-        if (strcmp(val, "utf8") == 0 || strcmp(val, "ascii") == 0) {
+        if (strcmp(val, "utf8") == 0 || strcmp(val, "vt100") == 0 ||
+            strcmp(val, "ascii") == 0) {
             str_copy(c->terminal_charset, sizeof c->terminal_charset, val);
         } else if (strcmp(val, "auto") == 0) {
             c->terminal_charset[0] = '\0';

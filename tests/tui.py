@@ -115,10 +115,31 @@ for i in range(1, 13):   # Alt-F via xterm modifier 3
     KEYS['C-F%d' % i] = '\x1b[' + code.replace(';3', ';5')
     KEYS['S-F%d' % i] = '\x1b[' + code.replace(';3', ';2')
 
+# The DEC Special Graphics set (ESC ( 0): the letter that is written and the
+# shape that the terminal shows for it.  Strata writes the line characters
+# in this set in its VT100 mode (docs/VT100.txt).
+DEC_GRAPHICS = {
+    '`': '\u25c6', 'a': '\u2592', 'f': '\u00b0', 'g': '\u00b1',
+    'h': '\u2424', 'i': '\u240b', 'j': '\u2518', 'k': '\u2510',
+    'l': '\u250c', 'm': '\u2514', 'n': '\u253c', 'o': '\u23ba',
+    'p': '\u23bb', 'q': '\u2500', 'r': '\u23bc', 's': '\u23bd',
+    't': '\u251c', 'u': '\u2524', 'v': '\u2534', 'w': '\u252c',
+    'x': '\u2502', 'y': '\u2264', 'z': '\u2265', '{': '\u03c0',
+    '|': '\u2260', '}': '\u00a3', '~': '\u00b7', '+': '\u2192',
+    ',': '\u2190', '-': '\u2191', '.': '\u2193', '0': '\u25a0'}
+
+
 class Screen:
     def __init__(self, rows, cols):
         self.r, self.c = rows, cols
         self.g = [[' '] * cols for _ in range(rows)]
+        # 1 where the cell was written in the graphics set (ESC ( 0): the
+        # letter of the cell is then the one that was written; the screen
+        # model shows the shape (DEC_GRAPHICS) in self.g.  self.gset is 1
+        # while the graphics set is on, and self.letters has the letters.
+        self.gr = [[0] * cols for _ in range(rows)]
+        self.letters = [[' '] * cols for _ in range(rows)]
+        self.gset = 0
         self.a = [[0] * cols for _ in range(rows)]
         # 1 where the cell was written dim (SGR 2); the step dim:ROW,COL.
         self.dm = [[0] * cols for _ in range(rows)]
@@ -140,7 +161,8 @@ class Screen:
         self.pend = ''
         last = s.rfind('\x1b')
         if last >= 0 and re.match(r'\x1b(\[[?0-9;]*[A-Za-z]|\][^\x07\x1b]*'
-                                  r'(\x07|\x1b\\)|[^\[\]])', s[last:]) is None:
+                                  r'(\x07|\x1b\\)|\([0B]|[^\[\](])',
+                                  s[last:]) is None:
             self.pend = s[last:]; s = s[:last]
         while i < len(s):
             ch = s[i]
@@ -149,10 +171,17 @@ class Screen:
                 # cursor): it ends with BEL or with ESC and a backslash.
                 m = re.match(r'\x1b\][^\x07\x1b]*(\x07|\x1b\\)?', s[i:])
                 i += m.end()
+            elif ch == '\x1b' and i + 2 < len(s) and s[i+1] == '(':
+                # The set of G0: 0 is the graphics set, B is ASCII.
+                self.gset = 1 if s[i+2] == '0' else 0
+                i += 3
             elif ch == '\x1b' and i + 1 < len(s) and s[i+1] == '[':
                 m = re.match(r'\x1b\[([?0-9;]*)([A-Za-z])', s[i:])
                 if not m: i += 1; continue
                 p, f = m.group(1), m.group(2); i += m.end()
+                if f == 'J':
+                    self.gr = [[0] * self.c for _ in range(self.r)]
+                    self.letters = [[' '] * self.c for _ in range(self.r)]
                 if f == 'H':
                     q = (p.split(';') + ['1', '1'])[:2]; self.y = int(q[0]
                         or 1) - 1; self.x = int(q[1] or 1) - 1
@@ -189,6 +218,10 @@ class Screen:
             elif ch == '\x1b': i += 1
             else:
                 if 0 <= self.y < self.r and 0 <= self.x < self.c:
+                    self.gr[self.y][self.x] = self.gset
+                    self.letters[self.y][self.x] = ch
+                    if self.gset and ch in DEC_GRAPHICS:
+                        ch = DEC_GRAPHICS[ch]
                     self.g[self.y][self.x] = ch;
                     self.a[self.y][self.x] = self.attr
                     self.dm[self.y][self.x] = self.dimmed
@@ -200,6 +233,14 @@ class Screen:
         for y in range(self.r):
             line = ''.join(self.g[y]).rstrip()
             out.append(line)
+        return '\n'.join(out)
+    def dump_gfx(self):
+        """The rows with the letters of the cells that were written in the
+        graphics set, and a space for every other cell."""
+        out = []
+        for y in range(self.r):
+            out.append(''.join(self.letters[y][x] if self.gr[y][x] else ' '
+                               for x in range(self.c)).rstrip())
         return '\n'.join(out)
     def dump_rev(self):
         """rows with reverse-video runs shown inside \u27e6 \u27e7"""
@@ -231,7 +272,7 @@ def drop_place(path):
 
 
 def session(prog, steps, rows=25, cols=80, delay=0.12, status=False,
-            env=None, answer=None):
+            env=None, answer=None, da=None):
     """Run prog (argv list) in a pty, execute steps, return the list of
     screen dumps ('show' / 'rev' steps).  env is a dictionary of variables
     for the program (a value of None takes the variable out); the step
@@ -241,7 +282,11 @@ def session(prog, steps, rows=25, cols=80, delay=0.12, status=False,
     terminal: 'utf8' (a character moves the cursor one column), 'latin1' (a
     byte moves it one column, and the byte 0x9A is answered with the reply
     of a terminal to who are you, as an xterm in 8-bit mode does), or None
-    (never).  The step rawbytes gives the bytes of the raw log, as repr."""
+    (never).  da is the answer to the question who are you (ESC [ c) as
+    bytes, or None (never).  The step rawbytes gives the bytes of the raw
+    log, as repr; the step gfx shows the letters of the cells that were
+    written in the graphics set (ESC ( 0); signal:NAME sends the signal to
+    the program, and alive tells whether it still runs."""
     # STRATA_WRAP is a command that starts the program (a test helper only:
     # tests/vgrun.py names valgrind with it); the words are split as a shell
     # would split them, and the program follows them.
@@ -258,6 +303,8 @@ def session(prog, steps, rows=25, cols=80, delay=0.12, status=False,
     fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack('HHHH', rows, cols, 0, 0))
     scr = Screen(rows, cols); dumps = []; rawlog = bytearray()
     def reply(d):
+        if da is not None:
+            for _ in range(d.count(b'\x1b[c')): os.write(fd, da)
         if answer is None: return
         for m in re.finditer(rb'\x1b\[(\d+);(\d+)H([^\x1b]*)\x1b\[6n', d):
             body = m.group(3)
@@ -279,6 +326,7 @@ def session(prog, steps, rows=25, cols=80, delay=0.12, status=False,
                 reply(d)
                 scr.feed(d)
         return True
+    gone = None
     pump(0.6)
     for line in steps:
         line = line.rstrip('\n')
@@ -290,6 +338,13 @@ def session(prog, steps, rows=25, cols=80, delay=0.12, status=False,
         elif line.startswith('bytes:'):
             # Bytes that a terminal sends by itself, in hex: an answer.
             os.write(fd, bytes.fromhex(line[6:])); pump(0.3)
+        elif line == 'gfx': dumps.append(scr.dump_gfx())
+        elif line.startswith('signal:'):
+            os.kill(pid, getattr(signal, 'SIG' + line[7:])); pump(0.5)
+        elif line == 'alive':
+            r, _s2 = os.waitpid(pid, os.WNOHANG)
+            dumps.append(repr(r == 0))
+            if r != 0: gone = _s2
         elif line == 'rawbytes':
             dumps.append(repr(bytes(rawlog))); rawlog.clear()
         elif line == 'raw':
@@ -349,10 +404,11 @@ def session(prog, steps, rows=25, cols=80, delay=0.12, status=False,
                 else: raise ValueError('unknown key ' + k)
                 pump(delay)
     pump(0.3)
-    st = None
+    st = gone
     try:
-        r, s_ = os.waitpid(pid, os.WNOHANG)
-        if r: st = s_
+        if gone is None:
+            r, s_ = os.waitpid(pid, os.WNOHANG)
+            if r: st = s_
     except Exception: pass
     if st is None:
         try: os.kill(pid, 15); os.waitpid(pid, 0)

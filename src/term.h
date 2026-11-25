@@ -93,7 +93,7 @@ const char *
 term_charset_notice(void);
 
 
-/* 1 when the screen is drawn with ASCII characters only. */
+/* 1 when no byte of 0x80 or more is written (the VT100 and ASCII sets). */
 int
 term_is_ascii(void);
 

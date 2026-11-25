@@ -52,7 +52,7 @@ SCRIPTS = ['smoke.py', 'movesect.py', 'windows.py', 'retnamed.py', 'textindent.p
            'levelindent.py', 'winding.py', 'romanbig.py', 'borderprint.py',
            'attrtable.py', 'picturecolour.py', 'numrun.py', 'termlag.py',
            'sectionmark.py', 'autolists.py', 'templates.py', 'labels.py', 'hyctest.py', 'pbspace.py',
-           'strataname.py', 'namedwind.py', 'lmsmark.py', 'termcheck.py',
+           'strataname.py', 'namedwind.py', 'lmsmark.py', 'termcheck.py', 'vt100.py',
            'setuppages.py',
            'gsdoc.py', 'tplfield.py', 'inslist.py', 'cursorpos.py',
            'deepsect.py',

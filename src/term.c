@@ -27,6 +27,8 @@
 #include <strings.h>
 #include <unistd.h>
 #include <termios.h>
+#include <time.h>
+#include <limits.h>
 #include <signal.h>
 #include <poll.h>
 #include <sys/ioctl.h>
@@ -45,8 +47,18 @@ static int have_orig_tio;
 static int is_open;
 static int handlers_installed;
 
-/* Sent to the terminal at exit: attributes, cursor, normal screen. */
-static const char reset_seq[] = "\x1b[0m\x1b[?25h\x1b[?1049l";
+/* The sequence that selects the ASCII set and the one that selects the
+   graphics set (DEC Special Graphics) for the characters that follow. */
+#define SEQ_ASCII "\x1b(B"
+#define SEQ_GRAPHICS "\x1b(0"
+
+
+/*
+ * Sent to the terminal at exit: the ASCII character set (a terminal that is
+ * left in the graphics set shows letters as lines), attributes, cursor,
+ * normal screen.
+ */
+static const char reset_seq[] = SEQ_ASCII "\x1b[0m\x1b[?25h\x1b[?1049l";
 static volatile sig_atomic_t resized;
 
 /*
@@ -78,14 +90,23 @@ on_winch(int s UNUSED)
 
 
 /*
- * The characters of the screen: UTF-8 (the shapes of cp437_uni) or ASCII.
+ * The characters of the screen: UTF-8 (the shapes of cp437_uni), VT100 (the
+ * line characters of the DEC Special Graphics set, ESC ( 0, and ASCII for
+ * the rest: no byte of 0x80 or more is ever written) or ASCII.
  *
- * ascii_mode is 1 when every cell is drawn with an ASCII look-alike of the
- * character (cp437_ascii).  It is decided once per run, when the terminal is
- * first opened: see choose_charset.  The notice is the one line that the
- * first screen says when the program chose ASCII by itself.
+ * charset_mode is decided once per run, when the terminal is first opened:
+ * see choose_charset.  In CS_ASCII every cell is drawn with an ASCII
+ * look-alike of the character (cp437_ascii).  The notice is the one line
+ * that the first screen says when the program chose by itself a set that is
+ * not UTF-8.
  */
-static int ascii_mode;
+enum {
+    CS_UTF8,
+    CS_VT100,
+    CS_ASCII
+};
+
+static int charset_mode;
 static int charset_chosen;
 static char charset_notice[96];
 
@@ -147,6 +168,78 @@ ascii_of(unsigned cp)
 }
 
 
+/*
+ * The VT100 form of each cell of the CP437 screen set, by the number of the
+ * character: the letter of the DEC Special Graphics set that draws it, a
+ * space for a character that has none (it is drawn as its ASCII look-alike),
+ * or '#' for a block (a space in the reverse attribute).  The set has the
+ * single lines only, so a double line is drawn as the single line of the
+ * same shape.  The letters are: j k l m the corners (right bottom, right
+ * top, left top, left bottom), n the cross, q the horizontal line, t u v w
+ * the tees (left, right, bottom, top), x the vertical line, a the
+ * checkerboard, the quote ` the diamond, the tilde the centered dot, and
+ * + , - . the arrows (right, left, up, down).  Sixteen characters to a row.
+ */
+static const char cp437_acs[256 + 1] =
+    "    `  ~        " /* 00 */
+    "+,      -.+,  -." /* 10 */
+    "                " /* 20 */
+    "                " /* 30 */
+    "                " /* 40 */
+    "                " /* 50 */
+    "                " /* 60 */
+    "                " /* 70 */
+    "                " /* 80 */
+    "                " /* 90 */
+    "                " /* A0 */
+    "aaaxuuukkuxkjjjk" /* B0 */
+    "mvwtqnttmlvwtqnv" /* C0 */
+    "vwwmmllnnjl#####" /* D0 */
+    "                " /* E0 */
+    "         ~~   # "; /* F0 */
+
+
+/*
+ * The form of the Unicode character cp of a cell in the VT100 set: the
+ * letter of the graphics set (the cell is written between ESC ( 0 and
+ * ESC ( B) with *graphic set to 1, a space with *block set to 1 for a block
+ * (the cell is written in the reverse attribute), or else the ASCII
+ * look-alike.
+ */
+static char
+vt100_of(unsigned cp, int *graphic, int *block)
+{
+    *graphic = 0;
+    *block = 0;
+
+    if (cp >= 0x20 && cp < 0x7F) {
+        return chr(iun(cp));
+    }
+
+    for (int i = 1; i < 256; i++) {
+        if (cp437_uni[i] == cp) {
+            char a = cp437_acs[i];
+
+            if (a == '#') {
+                *block = 1;
+
+                return ' ';
+            }
+
+            if (a != ' ') {
+                *graphic = 1;
+
+                return a;
+            }
+
+            return cp437_ascii[i];
+        }
+    }
+
+    return cp == 0 ? ' ' : '?';
+}
+
+
 /* Whether the name of the locale (LC_ALL, LC_CTYPE, LANG) is UTF-8. */
 static int
 locale_is_utf8(void)
@@ -186,6 +279,246 @@ in_multiplexer(void)
     return getenv("TMUX") != NULL || getenv("STY") != NULL ||
            (t != NULL && (strncmp(t, "screen", 6) == 0 ||
                           strncmp(t, "tmux", 4) == 0));
+}
+
+
+/*
+ * The number of the string capability acs_chars in a compiled terminal
+ * description (the order of the capabilities of the terminfo format).
+ */
+#define TI_ACS_CHARS 146
+
+
+/* The 16-bit number at the offset o of the bytes of a description. */
+static int
+ti_short(const char *d, size_t o)
+{
+    int v = u8(d[o]) | (u8(d[o + 1]) << 8);
+
+    return v >= 0x8000 ? v - 0x10000 : v;
+}
+
+
+/*
+ * Whether the compiled description d (n bytes) of a terminal has the string
+ * acs_chars and whether it maps the letters of the line characters to
+ * themselves, as the DEC Special Graphics set does (a terminal whose table
+ * maps the letters to other bytes does not take ESC ( 0).  Returns 1 or 0,
+ * or -1 when the bytes are no description.
+ */
+static int
+ti_has_acsc(const char *d, size_t n)
+{
+    static const char pairs[] = "jjkkllmmnnqqttuuvvwwxx";
+
+    if (n < 12) {
+        return -1;
+    }
+
+    int magic = ti_short(d, 0);
+    int names = ti_short(d, 2);
+    int bools = ti_short(d, 4);
+    int nums = ti_short(d, 6);
+    int strs = ti_short(d, 8);
+    int width = magic == 0x11A ? 2 : 4;
+
+    if ((magic != 0x11A && magic != 0x21E) || names < 0 || bools < 0 ||
+        nums < 0 || strs <= TI_ACS_CHARS) {
+        return magic == 0x11A || magic == 0x21E ? 0 : -1;
+    }
+
+    size_t o = 12 + usz(names) + usz(bools);
+
+    o += o % 2;
+    o += usz(nums) * usz(width);
+
+    size_t table = o + usz(strs) * 2;
+
+    if (table > n) {
+        return -1;
+    }
+
+    int off = ti_short(d, o + TI_ACS_CHARS * 2);
+
+    if (off < 0 || table + usz(off) >= n) {
+        return 0;
+    }
+
+    const char *a = d + table + usz(off);
+    size_t room = n - table - usz(off);
+
+    for (size_t i = 0; pairs[i] != '\0'; i += 2) {
+        int found = 0;
+
+        for (size_t k = 0; k + 1 < room && a[k] != '\0'; k += 2) {
+            if (a[k] == pairs[i] && a[k + 1] == pairs[i + 1]) {
+                found = 1;
+            }
+        }
+
+        if (found == 0) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+
+/*
+ * Reads the description of the terminal named term from the folder dir
+ * (a database in the layout of the terminfo folders: x/xterm or 78/xterm).
+ * Returns the result of ti_has_acsc, or -1 when the folder has no entry.
+ */
+static int
+ti_read_in(const char *dir, const char *term)
+{
+    char path[PATH_MAX];
+    char buf[16384];
+
+    for (int hexdir = 0; hexdir < 2; hexdir++) {
+        int k;
+
+        if (hexdir == 0) {
+            k = snprintf(path, sizeof path, "%s/%c/%s", dir, term[0], term);
+        } else {
+            k = snprintf(path, sizeof path, "%s/%02x/%s", dir,
+                         uns(u8(term[0])), term);
+        }
+
+        if (k < 0 || usz(k) >= sizeof path) {
+            continue;
+        }
+
+        FILE *f = fopen(path, "rb");
+
+        if (f == NULL) {
+            continue;
+        }
+
+        size_t n = fread(buf, 1, sizeof buf, f);
+
+        fclose(f);
+
+        return ti_has_acsc(buf, n);
+    }
+
+    return -1;
+}
+
+
+/*
+ * The names of the terminals that have the line characters of the VT100 set
+ * in their descriptions, for a machine that has no terminal database at all.
+ */
+static int
+name_has_acsc(const char *term)
+{
+    static const char *const names[] = {
+        "xterm", "rxvt", "vt100", "vt102", "vt220", "screen", "tmux", "st",
+        "alacritty", "kitty", "foot", "wezterm", "putty"};
+
+    for (size_t i = 0; i < sizeof names / sizeof names[0]; i++) {
+        size_t n = strlen(names[i]);
+
+        if (strncmp(term, names[i], n) == 0 &&
+            (term[n] == '\0' || term[n] == '-')) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+
+/*
+ * Whether the entry of the terminal type in the terminal database has the
+ * line characters of the VT100 set (the string acs_chars with the letters of
+ * the set).  The database is searched like the library of the system does
+ * (TERMINFO, the folder .terminfo of the home, TERMINFO_DIRS, the folders
+ * of the system); the library itself is not linked.  Returns 1 for a yes.  A
+ * type that is not in the database, and a type that has no such capability,
+ * give 0 (the terminal is then asked who it is); a machine with no database
+ * at all uses the names of name_has_acsc.
+ */
+static int
+term_has_acsc(void)
+{
+    const char *term = getenv("TERM");
+    const char *ti = getenv("TERMINFO");
+    const char *dirs = getenv("TERMINFO_DIRS");
+    const char *home = getenv("HOME");
+    char dir[PATH_MAX];
+    int seen_db = 0;
+
+    if (term == NULL || term[0] == '\0' || strchr(term, '/') != NULL) {
+        return 0;
+    }
+
+    if (ti != NULL && ti[0] != '\0') {
+        int r = ti_read_in(ti, term);
+
+        if (r >= 0) {
+            return r;
+        }
+
+        seen_db = 1;
+    }
+
+    if (home != NULL && home[0] != '\0') {
+        snprintf(dir, sizeof dir, "%s/.terminfo", home);
+
+        int r = ti_read_in(dir, term);
+
+        if (r >= 0) {
+            return r;
+        }
+    }
+
+    if (dirs != NULL && dirs[0] != '\0') {
+        const char *p = dirs;
+
+        while (*p != '\0') {
+            size_t n = strcspn(p, ":");
+
+            if (n > 0 && n < sizeof dir) {
+                memcpy(dir, p, n);
+                dir[n] = '\0';
+
+                int r = ti_read_in(dir, term);
+
+                if (r >= 0) {
+                    return r;
+                }
+
+                seen_db = 1;
+            }
+
+            p += n;
+
+            if (*p == ':') {
+                p++;
+            }
+        }
+    }
+
+    static const char *const system_dirs[] = {
+        "/etc/terminfo", "/lib/terminfo", "/usr/share/terminfo",
+        "/usr/lib/terminfo"};
+
+    for (size_t i = 0; i < sizeof system_dirs / sizeof system_dirs[0]; i++) {
+        int r = ti_read_in(system_dirs[i], term);
+
+        if (r >= 0) {
+            return r;
+        }
+
+        if (access(system_dirs[i], R_OK) == 0) {
+            seen_db = 1;
+        }
+    }
+
+    return seen_db == 0 ? name_has_acsc(term) : 0;
 }
 
 
@@ -460,15 +793,163 @@ probe_cell(void)
 }
 
 
+/* The longest wait for the answer to the question who the terminal is. */
+#define DA_MS 100
+
+
+/* The milliseconds from the time t0 (CLOCK_MONOTONIC) until now. */
+static long
+since_ms(const struct timespec *t0)
+{
+    struct timespec t1;
+
+    clock_gettime(CLOCK_MONOTONIC, &t1);
+
+    return (t1.tv_sec - t0->tv_sec) * 1000 +
+           (t1.tv_nsec - t0->tv_nsec) / 1000000;
+}
+
+
 /*
- * Decides once whether the screen is drawn with ASCII look-alikes, from (in
- * this order) the variable STRATA_ASCII (1 or 0), the setting
- * terminal_charset (ascii, utf8), and in the automatic case from the
- * terminal itself: in a multiplexer from the locale; else from the answer
- * of probe_cell (one column: UTF-8, anything else: not), and when there is
- * no answer from the locale.  The font cannot be tested.  The choice and
- * its reason go to the log; a choice that the program made by itself leaves
- * a notice for the first screen.
+ * Whether a device attributes answer (the first number of ESC [ ? n ; ... c)
+ * names a VT100 or a later terminal of that family: 1 is the VT100 (ESC [ ?
+ * 1 ; 2 c), 4 the VT132, 6 the VT102, 7 the VT131, 12 the VT125 and 62 to 69
+ * the VT220 and the later models.
+ */
+static int
+da_is_vt100(int first)
+{
+    return first == 1 || first == 4 || first == 6 || first == 7 ||
+           first == 12 || (first >= 62 && first <= 69);
+}
+
+
+/*
+ * Asks the terminal who it is (the device attributes query, ESC [ c) and
+ * waits at most DA_MS milliseconds for the answer.  The answer is read
+ * here, so that it is never taken for keys; what the user typed meanwhile is
+ * kept in pending.  Returns 1 when the terminal answers that it is a VT100
+ * or a later model, else 0 (also when no answer comes).
+ */
+static int
+probe_da(void)
+{
+    struct timespec t0;
+    int state = 0;
+    int first = -1;
+    int num = 0;
+    unsigned char seen[32];
+    int nseen = 0;
+
+    clock_gettime(CLOCK_MONOTONIC, &t0);
+    fputs("\x1b[c", stdout);
+    fflush(stdout);
+    probing = 1;
+
+    for (int guard = 0; guard < 400; guard++) {
+        long left = DA_MS - since_ms(&t0);
+        int c = left > 0 ? rd(isz(lsz(left))) : -1;
+
+        if (c < 0) {
+            probing = 0;
+
+            return 0;
+        }
+
+        if (state == 0 && c == 0x1b) {
+            state = 1;
+            nseen = 0;
+            first = -1;
+            num = 0;
+        } else if (state == 1 && c == '[') {
+            state = 2;
+        } else if (state == 2 && c == '?') {
+            state = 3;
+        } else if (state == 3 && c >= '0' && c <= '9') {
+            num = num * 10 + (c - '0');
+        } else if (state == 3 && c == ';') {
+            first = first < 0 ? num : first;
+            num = 0;
+        } else if (state == 3 && c == 'c') {
+            first = first < 0 ? num : first;
+            probing = 0;
+
+            return da_is_vt100(first);
+        } else {
+            /* Not the answer: the bytes are the user's, keep them. */
+            for (int i = 0; i < nseen && pending_n < PENDING_MAX; i++) {
+                pending[pending_n++] = seen[i];
+            }
+
+            if (state == 0 && pending_n < PENDING_MAX) {
+                pending[pending_n++] = u8(c);
+            }
+
+            state = 0;
+            nseen = 0;
+
+            continue;
+        }
+
+        if (nseen < (int)sizeof seen) {
+            seen[nseen++] = u8(c);
+        }
+    }
+
+    probing = 0;
+
+    return 0;
+}
+
+
+/* Whether the terminal can draw the VT100 lines: the entry of its type in
+   the terminal database has them, or the answer to the device attributes
+   query is that of a VT100 or later. */
+static int
+vt100_capable(const char **how)
+{
+    if (term_has_acsc() != 0) {
+        *how = "the terminal type has the line characters (acsc)";
+
+        return 1;
+    }
+
+    if (probe_da() != 0) {
+        *how = "the terminal answers that it is a VT100 or later";
+
+        return 1;
+    }
+
+    *how = "the terminal type has no line characters and the terminal is "
+           "not a VT100";
+
+    return 0;
+}
+
+
+/* The name of a mode for the log. */
+static const char *
+mode_name(int mode)
+{
+    return mode == CS_UTF8 ? "UTF-8" : mode == CS_VT100 ? "VT100" : "ASCII";
+}
+
+
+/*
+ * Decides once how the screen is drawn: UTF-8, VT100 or ASCII.  The order:
+ * (a) the variable STRATA_ASCII (1 or 0) and the setting terminal_charset
+ * (utf8, vt100, ascii); (b) in a multiplexer, which translates the
+ * characters itself, UTF-8 when the locale is UTF-8, else VT100 when the
+ * terminal type has the line characters, else ASCII; (c) in a UTF-8 locale
+ * the answer of probe_cell: one column means UTF-8, and so does no answer;
+ * (d) else (a locale that is not UTF-8, or a terminal that moved the cursor
+ * by more than one column) VT100 when the terminal can draw it
+ * (vt100_capable); (e) else ASCII.  The question of the probe is not asked
+ * when the locale is not UTF-8, because the answer cannot change the
+ * choice.  The font cannot be tested.  The
+ * choice and its reason go to the log (as a warning when the program chose
+ * a set that is not UTF-8); that choice leaves a notice for the first
+ * screen.
  */
 static void
 choose_charset(void)
@@ -476,7 +957,8 @@ choose_charset(void)
     const char *force = getenv("STRATA_ASCII");
     Config cfg;
     const char *how;
-    int ascii;
+    const char *why = "";
+    int mode;
     int automatic = 0;
 
     if (charset_chosen != 0) {
@@ -487,49 +969,82 @@ choose_charset(void)
     config_load(&cfg);
 
     if (force != NULL && strcmp(force, "1") == 0) {
-        ascii = 1;
+        mode = CS_ASCII;
         how = "STRATA_ASCII=1";
     } else if (force != NULL && strcmp(force, "0") == 0) {
-        ascii = 0;
+        mode = CS_UTF8;
         how = "STRATA_ASCII=0";
     } else if (strcmp(cfg.terminal_charset, "ascii") == 0) {
-        ascii = 1;
+        mode = CS_ASCII;
         how = "the setting terminal_charset=ascii";
     } else if (strcmp(cfg.terminal_charset, "utf8") == 0) {
-        ascii = 0;
+        mode = CS_UTF8;
         how = "the setting terminal_charset=utf8";
+    } else if (strcmp(cfg.terminal_charset, "vt100") == 0) {
+        mode = CS_VT100;
+        how = "the setting terminal_charset=vt100";
     } else if (in_multiplexer() != 0) {
         automatic = 1;
-        ascii = locale_is_utf8() == 0;
-        how = ascii != 0 ? "multiplexer, locale is not UTF-8" :
-                           "multiplexer, locale is UTF-8";
+
+        if (locale_is_utf8() != 0) {
+            mode = CS_UTF8;
+            how = "multiplexer, locale is UTF-8";
+        } else if (term_has_acsc() != 0) {
+            mode = CS_VT100;
+            how = "multiplexer, locale is not UTF-8, the terminal type has "
+                  "the line characters";
+        } else {
+            mode = CS_ASCII;
+            how = "multiplexer, locale is not UTF-8, the terminal type has "
+                  "no line characters";
+        }
+    } else if (locale_is_utf8() == 0) {
+        /* A locale that is not UTF-8 settles it: the question would only
+           make a terminal that is not in UTF-8 show three odd characters. */
+        automatic = 1;
+        mode = vt100_capable(&why) != 0 ? CS_VT100 : CS_ASCII;
+        how = "the locale is not UTF-8";
     } else {
         int col = probe_cell();
 
         automatic = 1;
 
-        if (col > 0) {
-            ascii = col != 2;
-            how = ascii != 0 ? "the terminal moved the cursor by more than "
-                               "one column" :
-                               "the terminal moved the cursor by one column";
+        if (col == 2) {
+            mode = CS_UTF8;
+            how = "the terminal moved the cursor by one column and the "
+                  "locale is UTF-8";
+        } else if (col <= 0) {
+            mode = CS_UTF8;
+            how = "no answer from the terminal, locale is UTF-8";
         } else {
-            ascii = locale_is_utf8() == 0;
-            how = ascii != 0 ? "no answer from the terminal, locale is not "
-                               "UTF-8" :
-                               "no answer from the terminal, locale is UTF-8";
+            mode = vt100_capable(&why) != 0 ? CS_VT100 : CS_ASCII;
+            how = "the terminal moved the cursor by more than one column";
         }
     }
 
-    if (automatic != 0 && ascii != 0) {
+    if (automatic != 0 && mode == CS_VT100) {
         snprintf(charset_notice, sizeof charset_notice,
-                 "No UTF-8 terminal: ASCII is drawn. The font is not "
-                 "checked. See Setup.");
+                 "No UTF-8 terminal: VT100 lines are drawn. See Setup, "
+                 "terminal_charset.");
+    } else if (automatic != 0 && mode == CS_ASCII) {
+        snprintf(charset_notice, sizeof charset_notice,
+                 "No UTF-8 or VT100 terminal: ASCII is drawn. See Setup, "
+                 "terminal_charset.");
     }
 
-    ascii_mode = ascii;
-    log_note("term: the screen is drawn in %s: %s (the font is not checked)",
-             ascii != 0 ? "ASCII" : "UTF-8", how);
+    charset_mode = mode;
+
+    /* A set that is not UTF-8, chosen by the program, is logged as a warning
+       so that a release build records it too: it is what a person who sees
+       odd characters needs to know. */
+    if (automatic != 0 && mode != CS_UTF8) {
+        log_warn("term: the screen is drawn in %s, not in UTF-8: %s%s%s (the "
+                 "font is not checked)", mode_name(mode), how,
+                 why[0] != '\0' ? "; " : "", why);
+    } else {
+        log_note("term: the screen is drawn in %s: %s (the font is not "
+                 "checked)", mode_name(mode), how);
+    }
 }
 
 
@@ -552,7 +1067,7 @@ term_charset_notice(void)
 int
 term_is_ascii(void)
 {
-    return ascii_mode;
+    return charset_mode != CS_UTF8;
 }
 
 
@@ -599,7 +1114,7 @@ term_open(void)
     alloc_bufs();
     color_init(0);
     /* alternate screen, enable xterm modifyOtherKeys-free basic mode */
-    fputs("\x1b[?1049h", stdout);
+    fputs(SEQ_ASCII "\x1b[?1049h", stdout);
     choose_charset();
     clear_screen();
     fputs("\x1b[H", stdout);
@@ -695,10 +1210,14 @@ term_gui_info(int *cell_w UNUSED, int *cell_h UNUSED, unsigned *fg UNUSED,
 }
 
 
+/*
+ * Writes the bytes of a cell to o: the UTF-8 bytes of the character, or its
+ * ASCII look-alike (the VT100 set has its own function, vt100_of).
+ */
 static void
 utf8(char *o, int *n, unsigned cp)
 {
-    if (ascii_mode != 0) {
+    if (charset_mode != CS_UTF8) {
         o[(*n)++] = ascii_of(cp);
 
         return;
@@ -743,6 +1262,7 @@ term_present(void)
     char *out = malloc(usz(R) * usz(C) * 72 + 256);
     int n = 0;
     int cur_attr = -1;
+    int graphics = 0; /* 1 while the terminal is in the graphics set */
 
     n += sprintf(out + n, "\x1b[?25l");
 
@@ -758,6 +1278,12 @@ term_present(void)
                 continue;
             }
 
+            /* The ASCII set is on before the cursor is moved. */
+            if (graphics != 0) {
+                n += sprintf(out + n, SEQ_ASCII);
+                graphics = 0;
+            }
+
             n += sprintf(out + n, "\x1b[%d;%dH", y + 1, x + 1);
 
             for (; x < C; x++) {
@@ -768,15 +1294,42 @@ term_present(void)
                     break;
                 }
 
-                if (iun(b->attr) != cur_attr) {
-                    n += cell_sequence(out + n, iun(b->attr));
-                    cur_attr = iun(b->attr);
+                int attr = iun(b->attr);
+                int graphic = 0;
+                char ch = ' ';
+
+                if (charset_mode == CS_VT100) {
+                    int block = 0;
+
+                    ch = vt100_of(b->cp, &graphic, &block);
+                    attr |= block != 0 ? TA_REVERSE : 0;
                 }
 
-                utf8(out, &n, b->cp);
+                if (attr != cur_attr) {
+                    n += cell_sequence(out + n, attr);
+                    cur_attr = attr;
+                }
+
+                if (graphic != graphics) {
+                    n += sprintf(out + n, graphic != 0 ? SEQ_GRAPHICS :
+                                                         SEQ_ASCII);
+                    graphics = graphic;
+                }
+
+                if (charset_mode == CS_VT100) {
+                    out[n++] = ch;
+                } else {
+                    utf8(out, &n, b->cp);
+                }
+
                 *f = *b;
             }
         }
+    }
+
+    /* An update always ends in the ASCII set. */
+    if (graphics != 0) {
+        n += sprintf(out + n, SEQ_ASCII);
     }
 
     if (cvis != 0) {
