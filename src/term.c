@@ -177,12 +177,15 @@ ascii_of(unsigned cp)
  * same shape.  The letters are: j k l m the corners (right bottom, right
  * top, left top, left bottom), n the cross, q the horizontal line, t u v w
  * the tees (left, right, bottom, top), x the vertical line, a the
- * checkerboard, the quote ` the diamond, the tilde the centered dot, and
- * + , - . the arrows (right, left, up, down).  Sixteen characters to a row.
+ * checkerboard, the quote ` the diamond and the tilde the centered dot.  The
+ * letters + , - . of the set are arrows in the definition of the VT100, but a
+ * terminal that draws them with a font shows plain signs (observed in an
+ * xterm), so the triangles and the arrows keep their ASCII look-alikes > < ^
+ * v.  Sixteen characters to a row.
  */
 static const char cp437_acs[256 + 1] =
     "    `  ~        " /* 00 */
-    "+,      -.+,  -." /* 10 */
+    "                " /* 10 */
     "                " /* 20 */
     "                " /* 30 */
     "                " /* 40 */

@@ -221,6 +221,11 @@ run([stred, acc2, '-H', helpf], force='0', wait='Character',
 check('Editor: the saved document is the same as after the same keys in the '
       'UTF-8 screen', saved_vt == open(acc2, 'rb').read() and
       saved_vt != orig, len(saved_vt))
+check('Editor, the table of the characters: the triangles and arrows are '
+      'the ASCII shapes > < ^ v, not the signs + , - . of the set',
+      re.search(r'10 +> < \| !', shown[0]) is not None and
+      re.search(r'10 +> < \| ! P S - \| \^ v > < L - \^ v', shown[0])
+      is not None, shown[0])
 check('Editor, the table of the characters: no byte above 0x7F and the set '
       'is off at the end', high(raw + more) == 0 and
       violations(raw + more) == [], violations(raw + more)[:3])
