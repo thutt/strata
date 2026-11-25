@@ -56,6 +56,7 @@ OFF = b'\x1b(B'
 MENU = 'Strata Document Manager'
 NOTICE_VT = 'No UTF-8 terminal: VT100 lines are drawn.'
 NOTICE_ASCII = 'No UTF-8 or VT100 terminal: ASCII is drawn.'
+AUTO = 'terminal_charset=auto\n'
 DA_VT100 = b'\x1b[?1;2c'
 DA_VT220 = b'\x1b[?62;1;2;6;9;15;18;21;22c'
 
@@ -105,7 +106,7 @@ def violations(raw):
 
 
 def run(prog, lang='C', term='xterm', answer=None, da=None, force=None,
-        config='', mux=False, steps=(), extra_env=None, wait='Document',
+        config=AUTO, mux=False, steps=(), extra_env=None, wait='Document',
         rows=25, status=False):
     """Run a program with the terminal and the locale of a case; returns the
     raw bytes of the whole session and the screens of the 'show' steps."""
@@ -322,10 +323,47 @@ check('STRATA_ASCII=1 wins over the setting (ASCII, no graphics set)',
 raw, shown, h = dm(lang='C', config='terminal_charset=auto\n',
                    steps=['show', 'rawbytes'])
 check('the setting auto is the automatic choice', ON in raw, shown[0])
-raw, shown, h = dm(lang='C', config='terminal_charset=garbage\n',
+raw, shown, h = dm(lang='en_US.UTF-8', answer='utf8',
+                   config='terminal_charset=auto\n',
                    steps=['show', 'rawbytes'])
-check('an unknown value of the setting is the automatic choice',
-      ON in raw, shown[0])
+check('the setting auto in a UTF-8 terminal and locale runs the detection '
+      'and draws UTF-8', ON not in raw and PROBE in raw and
+      '\u2554' in shown[0], shown[0])
+
+# ---- the default: with no setting the screen is VT100 --------------------------
+for lang, answer in (('en_US.UTF-8', 'utf8'), ('C', None), ('C', 'latin1')):
+    raw, shown, h = dm(lang=lang, answer=answer, config='',
+                       steps=['show', 'rawbytes'])
+    more = eval(shown[-1])
+    check('no setting (locale %s, answer %s): the default is VT100: the '
+          'graphics set, no byte above 0x7F, no question, no notice' %
+          (lang, answer), '\u250c' in shown[0] and ON in raw and
+          high(raw + more) == 0 and PROBE not in raw and DA_QUERY not in raw
+          and NOTICE_VT not in shown[0] and NOTICE_ASCII not in shown[0],
+          shown[0])
+    check('no setting (locale %s, answer %s): the log names the default' %
+          (lang, answer), not NOTES or 'the default: there is no setting '
+          'terminal_charset' in log_of(h), log_of(h)[:300])
+raw, shown, h = dm(lang='en_US.UTF-8', answer='utf8', config='',
+                   term='nosuchterm-xyz', steps=['show', 'rawbytes'])
+check('no setting, a terminal type that is not known: still VT100 (the '
+      'default asks nothing)', ON in raw and DA_QUERY not in raw and
+      high(raw + eval(shown[-1])) == 0, shown[0])
+raw, shown, h = dm(lang='en_US.UTF-8', answer='utf8',
+                   config='terminal_charset=garbage\n',
+                   steps=['show', 'rawbytes'])
+check('an unknown value of the setting is the default, VT100',
+      '\u250c' in shown[0] and ON in raw and high(raw +
+      eval(shown[-1])) == 0, shown[0])
+raw, shown, h = dm(lang='en_US.UTF-8', answer='utf8', config='', force='0',
+                   steps=['show', 'rawbytes'])
+check('STRATA_ASCII=0 wins over the default', '\u2554' in shown[0] and
+      ON not in raw, shown[0])
+raw, shown, h = dm(lang='en_US.UTF-8', answer='utf8', config='', force='1',
+                   steps=['show', 'rawbytes'])
+check('STRATA_ASCII=1 wins over the default', ON not in raw and
+      high(raw + eval(shown[-1])) == 0 and '\u250c' not in shown[0],
+      shown[0])
 
 # ---- the type of the terminal and the answer to who are you ---------------
 t0 = time.time()
@@ -402,6 +440,52 @@ raw, shown, h = dm(term='screen', mux=True, lang='en_US.UTF-8',
 check('in tmux, UTF-8 locale: UTF-8 whatever the terminal answers',
       ON not in raw and '\u2554' in shown[0] and b'\x1b[6n' not in raw,
       shown[0])
+
+# ---- every main screen in the VT100 screen --------------------------------
+# With no setting the screen is VT100.  Each screen below is walked through
+# in a UTF-8 locale, the case of a terminal whose font lacks the shapes: no
+# byte above 0x7F is written at all, the terminal is never left in the
+# graphics set, and a box has the corners of the graphics set, not the plus
+# and hyphen look-alikes of ASCII.
+def walk(label, prog, steps, wait, boxes=True):
+    raw, shown, h = run(prog, lang='en_US.UTF-8', answer='utf8', config='',
+                        steps=steps + ['rawbytes'], wait=wait)
+    more = eval(shown[-1])
+    screens = shown[:-1]
+    allraw = raw + more
+    check('%s: %d screens, no byte above 0x7F in the whole session' %
+          (label, len(screens)), high(allraw) == 0 and len(screens) > 0,
+          (high(allraw), len(screens)))
+    check('%s: the graphics set is never left on' % label,
+          violations(allraw) == [], violations(allraw)[:3])
+    if boxes:
+        look = [i for i, s in enumerate(screens)
+                if re.search(r'\+-{2,}|={3,}\+|\+={2,}', s)]
+        check('%s: no ASCII look-alike corner of a box (+-- or =+=) on any '
+              'screen' % label, look == [], look)
+        check('%s: every screen has the line characters of the set' % label,
+              all('\u2500' in s or '\u2502' in s for s in screens),
+              [i for i, s in enumerate(screens)
+               if not ('\u2500' in s or '\u2502' in s)])
+    return screens
+
+
+dm_steps = ['show']
+dm_steps += tui.OPEN_SETUP + ['show', 'PGDN', 'show', 'PGDN', 'show',
+                              'PGDN', 'show', 'ESC', 'wait']
+for n in range(5):
+    dm_steps += ['HOME'] + ['DOWN'] * n + ['ENTER', 'wait', 'show', 'ESC',
+                                           'wait']
+walk('the Document Manager (menu, Setup, every panel)',
+     [strprog, '-H', helpf], dm_steps, MENU)
+ed_steps = ['show', 'F1', 'wait', 'show', 'ESC', 'F12', 'wait', 'show',
+            'RIGHT', 'show', 'RIGHT', 'show', 'RIGHT', 'show', 'ESC', 'ESC',
+            'F9', 'wait', 'show', 'ESC', 'A-F9', 'wait', 'show', 'ESC',
+            'C-F12', 'wait', 'show', 'ESC', 'A-F6', 'wait', 'show', 'ESC',
+            'F6', 'wait', 'show', 'ESC', 'F8', 'wait', 'show', 'ESC',
+            'F3', 'wait', 'show', 'ESC']
+walk('the Editor (text, menus, help, Find, Replace, markers, lists)',
+     [stred, doc, '-H', helpf], ed_steps, 'Character set', boxes=False)
 
 shutil.rmtree(tmp, ignore_errors=True)
 print('vt100: %d failures' % fails)

@@ -19,7 +19,8 @@ The Editor writes U+2502 at the start and asks the terminal where the cursor
 is; one column more means a terminal that reads UTF-8, three mean one that
 does not.  Without an answer (800 ms) the locale decides; in tmux and screen
 the locale decides at once.  STRATA_ASCII=1 and 0 and the setting
-terminal_charset (auto, utf8, ascii) settle it.  When the program chose ASCII
+terminal_charset (auto, ascii, vt100, utf8) settle it; with no setting the
+screen is VT100, the default, and the detection runs only for auto.  When the program chose ASCII
 by itself, the first message line shows so.  Every cell is then drawn as an
 ASCII look-alike.  The answers of a terminal are never typed as keys.
 
@@ -72,7 +73,10 @@ def home(config=''):
     return h
 
 
-def start(lang, answer, force=None, config='', mux=False, steps=(),
+AUTO = 'terminal_charset=auto\n'
+
+
+def start(lang, answer, force=None, config=AUTO, mux=False, steps=(),
           prog=None, pre=(), term='xterm'):
     """Run the Editor on the sample; returns (raw bytes, the screens)."""
     env = {'STRATA_ASCII': force, 'LANG': lang, 'LC_ALL': None,
@@ -169,6 +173,20 @@ check('STRATA_ASCII wins over the setting', BOXH in raw, high(raw))
 raw, s = start('en_US.UTF-8', 'utf8', config='terminal_charset=auto\n')
 check('the setting auto is the automatic choice', BOXH in raw, high(raw))
 
+# ---- the default: no setting is the VT100 screen ----------------------------
+for lang, answer in (('en_US.UTF-8', 'utf8'), ('C', 'latin1')):
+    raw, s = start(lang, answer, config='')
+    check('no setting (%s, answer %s): the default is VT100: no byte above '
+          '0x7F, no question, the graphics set, no notice' % (lang, answer),
+          high(raw) == 0 and PROBE not in raw and b'\x1b(0' in raw and
+          NOTICE not in s[0] and NOTICE_VT not in s[0], (high(raw), s[0]))
+raw, s = start('en_US.UTF-8', 'utf8', config='terminal_charset=garbage\n')
+check('an unknown value of the setting is the default, VT100',
+      high(raw) == 0 and b'\x1b(0' in raw, high(raw))
+raw, s = start('en_US.UTF-8', 'utf8', config='terminal_charset=auto\n')
+check('the setting auto in a UTF-8 terminal and locale runs the detection '
+      'and draws UTF-8', PROBE in raw and BOXH in raw, high(raw))
+
 # ---- the answers of the terminal are not keys -----------------------------
 # Forced UTF-8 on a terminal in 8-bit mode: some shapes contain the byte 0x9A,
 # and the terminal answers who it is.  The reply must not be typed.
@@ -242,7 +260,7 @@ check('the table: no cell of the sample is a question mark but the '
 
 # ---- the Document Manager and its Setup ------------------------------------
 if os.path.exists(strprog):
-    h = home()
+    h = home(AUTO)
     out = tui.session([strprog, '-H', helpf],
                       ['rawbytes'] + tui.OPEN_SETUP + ['wait', 'rawbytes'],
                       env={'STRATA_ASCII': None,
@@ -253,37 +271,90 @@ if os.path.exists(strprog):
           len(eval(out[1])) > 200, (high(eval(out[1])), out[1][:100]))
     # Terminal Characters is on the page of the advanced settings of Setup:
     # PgDn from the first page reaches it, and the field is the third there.
+    # The choices are Automatic, ASCII, VT100 and UTF-8 in this order, the
+    # space bar and the arrow keys step through them and wrap, and with no
+    # setting the field shows VT100, the default.
+    h = home()
     sh = tui.OPEN_SETUP + ['PGDN', 'DOWN', 'DOWN']
     env = {'STRATA_ASCII': '0', 'LANG': 'en_US.UTF-8', 'LC_ALL': None,
            'STRATA_HOME': h, 'TMUX': None}
+
+    def field(shown):
+        for l in shown.split('\n'):
+            m = re.search(r'Terminal Characters:\s+([A-Za-z0-9-]+)', l)
+            if m is not None:
+                return m.group(1)
+        return None
+
     out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
-    check('Setup has the field Terminal Characters, Automatic at the start',
-          any('Terminal Characters:' in l and 'Automatic' in l
-              for l in out[0].split('\n')), out[0])
-    tui.session([strprog, '-H', helpf], sh + ['RIGHT', 'RIGHT', 'INS',
-                'wait'], env=env)
-    conf = open(os.path.join(h, 'config')).read() \
-        if os.path.exists(os.path.join(h, 'config')) else ''
-    check('Setup saves Terminal Characters VT100 as terminal_charset=vt100',
-          '\nterminal_charset=vt100\n' in '\n' + conf, conf)
+    check('Setup has the field Terminal Characters, VT100 at the start '
+          '(no setting: the default)', field(out[0]) == 'VT100', out[0])
+    steps = ['show']
+    for k in ('RIGHT', 'RIGHT', 'RIGHT'):
+        steps += [k, 'show']
+    out = tui.session([strprog, '-H', helpf], sh + steps, env=env)
+    order = [field(x) for x in out]
+    check('the right arrow steps VT100, UTF-8 and stops at the last choice '
+          '(the arrow keys do not wrap: the space bar does)',
+          order == ['VT100', 'UTF-8', 'UTF-8', 'UTF-8'], order)
+    steps = ['show']
+    for k in ('text: ', 'text: ', 'text: ', 'text: '):
+        steps += [k, 'show']
+    out = tui.session([strprog, '-H', helpf], sh + steps, env=env)
+    order = [field(x) for x in out]
+    check('the space bar steps the field in the same order and wraps',
+          order == ['VT100', 'UTF-8', 'Automatic', 'ASCII', 'VT100'], order)
+    steps = ['show', 'LEFT', 'show', 'LEFT', 'show', 'LEFT', 'show']
+    out = tui.session([strprog, '-H', helpf], sh + steps, env=env)
+    order = [field(x) for x in out]
+    check('the left arrow steps back: VT100, ASCII, Automatic and stops at '
+          'the first choice', order == ['VT100', 'ASCII', 'Automatic',
+                                         'Automatic'], order)
+
+    def saved(keys):
+        tui.session([strprog, '-H', helpf], sh + keys + ['INS', 'wait'],
+                    env=env)
+        p = os.path.join(h, 'config')
+        return open(p).read() if os.path.exists(p) else ''
+
+    conf = saved(['text: '])
+    check('Setup saves UTF-8 as terminal_charset=utf8',
+          '\nterminal_charset=utf8\n' in '\n' + conf, conf)
     out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
-    check('Setup shows VT100 again at the next start',
-          any('Terminal Characters:' in l and 'VT100' in l
-              for l in out[0].split('\n')), out[0])
-    tui.session([strprog, '-H', helpf], sh + ['RIGHT', 'INS', 'wait'],
-                env=env)
-    conf = open(os.path.join(h, 'config')).read()
-    check('Setup saves Terminal Characters ASCII as terminal_charset=ascii',
+    check('Setup shows UTF-8 again at the next start',
+          field(out[0]) == 'UTF-8', out[0])
+    conf = saved(['text: '])
+    check('Setup saves Automatic as terminal_charset=auto (not as a missing '
+          'line: a missing line is VT100)',
+          '\nterminal_charset=auto\n' in '\n' + conf, conf)
+    out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
+    check('Setup shows Automatic again at the next start',
+          field(out[0]) == 'Automatic', out[0])
+    conf = saved(['text: '])
+    check('Setup saves ASCII as terminal_charset=ascii',
           '\nterminal_charset=ascii\n' in '\n' + conf, conf)
     out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
     check('Setup shows ASCII again at the next start',
-          any('Terminal Characters:' in l and 'ASCII' in l
-              for l in out[0].split('\n')), out[0])
-    tui.session([strprog, '-H', helpf], sh + ['LEFT', 'LEFT', 'LEFT', 'INS',
-                'wait'], env=env)
-    conf = open(os.path.join(h, 'config')).read()
-    check('Setup: Automatic leaves no line terminal_charset',
-          'terminal_charset' not in conf, conf)
+          field(out[0]) == 'ASCII', out[0])
+    conf = saved(['text: '])
+    check('Setup saves VT100 as terminal_charset=vt100',
+          '\nterminal_charset=vt100\n' in '\n' + conf, conf)
+    out = tui.session([strprog, '-H', helpf], sh + ['show'], env=env)
+    check('Setup shows VT100 again at the next start',
+          field(out[0]) == 'VT100', out[0])
+    for value, shown in (('auto', 'Automatic'), ('ascii', 'ASCII'),
+                         ('utf8', 'UTF-8'), ('vt100', 'VT100')):
+        h3 = home('terminal_charset=%s\n' % value)
+        out = tui.session([strprog, '-H', helpf], sh + ['show'],
+                          env=dict(env, STRATA_HOME=h3))
+        check('an old settings file with terminal_charset=%s keeps its '
+              'meaning: Setup shows %s' % (value, shown),
+              field(out[0]) == shown, out[0])
+    h3 = home('x11_rows=60\n')
+    out = tui.session([strprog, '-H', helpf], sh + ['show'],
+                      env=dict(env, STRATA_HOME=h3))
+    check('an old settings file without the line shows VT100',
+          field(out[0]) == 'VT100', out[0])
     h2 = home('terminal_charset=ascii\n')
     env2 = dict(env, STRATA_ASCII=None, STRATA_HOME=h2, LANG='en_US.UTF-8')
     out = tui.session([strprog, '-H', helpf], ['show'], env=env2,
@@ -292,7 +363,7 @@ if os.path.exists(strprog):
           '\u2500' not in out[0] and '\u2502' not in out[0] and '+=' in
           out[0], out[0])
     out = tui.session([strprog, '-H', helpf], ['show'],
-                      env=dict(env2, STRATA_HOME=home(), LANG='C',
+                      env=dict(env2, STRATA_HOME=home(AUTO), LANG='C',
                                TERM=PLAIN),
                       answer='latin1')
     check('the Document Manager shows that ASCII was chosen',

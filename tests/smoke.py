@@ -3715,7 +3715,8 @@ check('colors: a terminal with no colors gets the attributes, no colors',
     '\x1b[0m\x1b[2J' in d[0], repr(d[0][:300]))
 d = cols(['wait', 'raw', 'END', 'ENTER', 'wait', 'raw'], '16')
 check('colors: at the end the colors and the cursor color of the terminal '
-    'are put back', d[1].endswith('\x1b]112\x07\x1b[0m\x1b[?25h\x1b[?1049l'),
+    'are put back', d[1].endswith('\x1b]112\x07\x1b(B\x1b[0m\x1b[?25h'
+    '\x1b[?1049l'),
     repr(d[1][-120:]))
 
 def colhome(text=None):
