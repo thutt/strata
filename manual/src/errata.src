@@ -102,8 +102,9 @@ has, and needs neither UTF-8 nor a special font.  The VT100 form has no double
 lines, so a double line is drawn single.
 
 {b:What to do.}  Use the field Terminal Characters of Setup, on its third page,
-to choose Automatic, ASCII, VT100 or UTF-8.  {x:term-choose} says how it works
-and {x:term-check} gives two commands that show what your terminal does.
+to choose Automatic, ASCII, VT100 or UTF-8.  The terminals part of Getting
+Started says how Strata chooses, and gives two commands that show what your
+terminal does.
 
 .h2 A letter with an accent is shown as another letter [errata-accents]
 {b:What is seen.}  On the VT100 screen and on the ASCII screen a letter with an
