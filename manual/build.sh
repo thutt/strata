@@ -106,6 +106,11 @@ function help
     echo "           Started (it has the Tutorial and the system"
     echo "           requirements) and File Formats"
     echo "           documents and their PDF files."
+    echo "  challenge  Make the document \"How do your document preparation"
+    echo "           systems fare?\" and its PDF from src/challenge.src,"
+    echo "           with the pictures of challenge/pictures (the pictures"
+    echo "           are made on purpose by challenge/shots.py).  It is not"
+    echo "           part of all and is not shipped."
     echo "  docs     Make a .doc file for every chapter."
     echo "  samples  Make the sample documents."
     echo "  pics     Take the pictures with shots.py (needs Xvfb, xwd) into"
@@ -306,6 +311,18 @@ function cards
             --special .STRATA_BUILD_TYPE release \
             -o "${pdf}/${n}.pdf" || echo "build.sh: ${n} failed"
     done
+}
+
+# The document of the challenge: made from its own source, with the pictures
+# of the folder challenge as the pictures of the tree.  It is not shipped.
+function challenge
+{
+    mkdir -p "${doc}" "${pdf}"
+    ${mk} "${src}/challenge.src" "${doc}/challenge.doc" || return 1
+    (cd "${doc}" && "${xbin}/strprint" challenge.doc \
+        --docdir "${here}/challenge" \
+        --special .STRATA_BUILD_TYPE release \
+        -o "${pdf}/challenge.pdf")
 }
 
 function samples
@@ -593,6 +610,7 @@ case "${target}" in
     developer) developer ;;
     check-edition) check-edition ;;
     cards) cards ;;
+    challenge) challenge ;;
     docs) docs ;;
     samples) samples ;;
     publish) publish ;;

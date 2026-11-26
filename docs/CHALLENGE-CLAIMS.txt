@@ -1,0 +1,119 @@
+Strata is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Strata is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Strata.  If not, see <https://www.gnu.org/licenses/>.
+
+
+THE CLAIMS OF THE CHALLENGE DOCUMENT
+====================================
+
+The document "How do your document preparation systems fare?" is made from
+manual/src/challenge.src by "manual/build.sh challenge" (the PDF is
+challenge.pdf of the manual folder of the build).  It is not part of the
+install tarball and not part of "build.sh all".  This file says where every
+statement of it comes from.  tests/challenge.py checks that the numbers of
+the document are the numbers of section 7 of docs/BIG-DOCUMENTS.txt, which
+gives the commands.
+
+The rules (the owner's, kept in docs/WORKLIST.txt):
+
+  1. Only what was measured on Strata is stated, with the machine and the
+     commands that give the numbers.
+  2. No number about another program, unless the owner measures it.
+  3. A claim about a competitor must be checked against its own public
+     documentation, must say what that program can do, and must not say that
+     it lacks a feature that it has.
+  4. The document names no program of the original product and no
+     reference to it.  It says Editor, Document Manager, Printer, Viewer.
+
+How the rules were kept.  The document makes no statement about any other
+program, and names none: rules 2 and 3 are kept by saying nothing.  It states
+the challenge as questions (section "The questions") and says what was
+measured for Strata.  If a later version names another program, the feature
+and the page of its documentation where it was checked must be written into
+this file first, and tests/challenge.py has a list of names (OTHER_NAMES)
+that fails until then.
+
+Where each number comes from (all of them: docs/BIG-DOCUMENTS.txt, section 7).
+
+  The document of the manual   "build.sh single", release edition: 724 pages
+                               (pdfinfo), 1,910,286 bytes (ls), items and
+                               the identical Saves (bigtest, roundtrip),
+                               headlines, index entries and figures (the
+                               records H, I and F of the .meta file).
+  The machine                  lscpu, free and "pdftex --version" of the
+                               virtual machine.
+  The Editor tables            bigtest (without a terminal) and
+                               tests/bigtui.py (in a pseudo-terminal), run
+                               on the release build.
+  The Printer table            strprint (the whole manual, two passes, the
+                               DVI route), stred --print (the parts), "time
+                               -v" for the memory, "strata-build manual" for
+                               the manual set, "strata-build big" for the
+                               synthetic document of 1,312 pages.
+  The rate                     724 pages in 65.2 s: 11.1 pages every second
+                               (the quotient, in the document as an equation).
+  The Viewer                   tests/big.py (viewer), run in a debug build,
+                               which is slower than a release build; the
+                               document says so.
+
+Where each statement about a feature comes from (the pictures and the pages
+of the manual are in manual/challenge/pictures, pages.txt there says which
+page of the PDF each picture is).
+
+  Equations are TeX math in a marker, typeset by the Printer, drawn on the
+  screen by the Editor        manual chapter 9 (the page of the picture:
+                               ch-equation).
+  A cross-reference is a marker that names its target; the number or page is
+  made when the document is printed
+                               manual/mkmanual.py (the header: the contents,
+                               the index and the list of figures are tables
+                               of cross-reference markers) and the chapter on
+                               the Cross-reference marker.
+  The pages of the contents, the index and the list of figures are checked
+  against the PDF            manual/checkpdf.py (build.sh check-edition) and
+                               tests/big.py (the synthetic document).
+  Numbered sections, an outline to a level, Go To a section, Autosort
+                               chapter 3 of the manual (Edit) and the
+                               commands that bigtest times.
+  Tables with borders         the tables on the page of the picture
+                               ch-table (section 5.38 of the
+                               manual) and the Border panel of the chapter
+                               Edit.
+  Keep blocks                 section "Keep" of the chapter Markers and the
+                               table of the Keep markers of the chapter
+                               Print and Preview (build rule: a region
+                               stays on one page).
+  Print Error markers and the Error Log
+                               the chapters Markers and Print and Preview
+                               (the picture ch-errors is a copy of
+                               doc/pictures/markers-errors.png, taken by
+                               manual/scenes/errlog.py from the Editor).
+  Line numbering, in the Preview and in the PDF alike
+                               docs/LINENUMBERING-LATEX.txt and
+                               tests/lineno.py; the picture
+                               ch-numbered is page 1 of
+                               samples/letters/complaint-to-utility-us.doc
+                               printed with the record FZM1.
+
+Left out on purpose.
+
+  UTF-8 as a feature point: the item "UTF-8 instead of the code page" of
+  docs/WORKLIST.txt is an exploration and is not complete.
+  Statements about Microsoft Word, Google Docs or any other program.
+  Numbers of the older machine (docs/BIG-DOCUMENTS.txt sections 2 to 6): they
+  belong to a manual of 753 pages and to another machine.
+
+The pictures.  The Editor with the whole manual open, and its outline, were
+taken by manual/challenge/shots.py from the X11 build on the virtual display,
+with the Reference Manual of this release open.  Four pictures are pages of
+the PDF of the manual (or of a sample) drawn by pdftoppm.  They are sources
+kept in git; shots.py is run on purpose, never by a build.

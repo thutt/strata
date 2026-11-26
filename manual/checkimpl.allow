@@ -30,6 +30,9 @@ ls /usr/share/mythes/th_en_US_v2.dat
 skip: strata-file-format.src
 skip: strata-file-format1.src
 skip: strata-file-format2.src
+# The challenge document gives measurements and the commands that repeat them,
+# so it names bytes, passes and files on purpose; it is not the manual.
+skip: challenge.src
 # Conversion, Messages, Glossary: the code page is a value of the Character Set field.
 the code page
 # Setup: the PDF Directory and the PDF Viewer take a full path, a path that

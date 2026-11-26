@@ -172,6 +172,13 @@ def viewer(bindir, dvi):
     if not os.path.exists(bindir + "/dviview"):
         print("SKIP: the Viewer was not built")
         return
+
+    # A release build writes no log, and the pages that the Viewer drew are
+    # read from its log, so the page by page part of this test needs a build
+    # that logs.
+    if os.environ.get("STRATA_BUILD_TYPE") == "release":
+        print("SKIP: the Viewer of a release build writes no log")
+        return
     rfd, wfd = os.pipe()
     xvfb = subprocess.Popen(["Xvfb", "-displayfd", str(wfd), "-screen", "0",
                              "1280x1024x24"], stdout=subprocess.DEVNULL,

@@ -174,3 +174,95 @@ Nothing had to be changed for a limit; the changes were for time (section 2).
                  structure.
   python3 -I manual/checkpdf.py PDF META [PAGES]
                  the check of the PDF against the list of headlines.
+
+
+7. Measured again on 2026-11-25 (the document of the challenge)
+-----------------------------------------------------------------
+The sections above were measured on an older and a bigger manual and on
+another machine.  Every number of the document "How do your document
+preparation systems fare?" (manual/src/challenge.src) was measured again, on
+one clean virtual machine, by the commands below.  The machine: four virtual
+processors of an Intel Xeon E5-2630L v4 at 1.8 GHz, 7.9 GB of memory, Ubuntu
+26.04, pdfTeX 1.40.28 (TeX Live 2025, Debian), the release build of the
+commit that the document was made from.  The packages were installed with the
+list of scripts/check-tools.  Times are wall clock.
+
+The document: the Reference Manual of the release edition, made by
+"scripts/strata-build manual" (all documents and PDF files of the set: 85 s):
+1,910,286 bytes, 11,266 items (the command "roundtrip" says so), 36,795
+lines of the layout (the line "items 11266, lines 36795" of bigtest), 1,121
+headlines, 3,251 index entries and 191 figures (the records H, I and F of
+strata-reference-manual.doc.meta), 724 pages in the PDF.  The document is
+copied into a folder of its own, with its .meta file, and STRATA_HOME names a
+folder of its own.
+
+The Editor without a terminal, release build:
+
+    BIGTEST_NEEDLE_AFTER=85 bigtest strata-reference-manual.doc sourced 5000
+
+  load 87 ms; first layout 423 ms; Page Down to the end 60 ms; search from the
+  start to the needle (item 10,334 of 11,266) 326 ms; search for a word that
+  is not there 14 ms; replace all (20,393 occurrences of "the") 20 ms and the
+  layout after it 295 ms; Go To the last section 1 ms; outline: collapse 82
+  ms, level 3 59 ms; type 40 characters with the layout after each 177 ms;
+  Save 131 ms; reload 23 ms; second Save 16 ms; peak memory 29.5 MB.  The
+  first Save and the second Save are 1,910,303 bytes both.
+  The check "the layout has the lines of 700 pages" of bigtest reports FAIL
+  for this document: the check is a lower limit for the synthetic documents
+  of "strata-build big" (a thousand pages and more), and the manual has 36,795
+  lines.  Every other line of the run is ok.
+
+The Editor in a terminal, release build (the second of two runs; the first
+run had a first screen of 261 ms):
+
+    python3 -I -B tests/bigtui.py stred strata-reference-manual.doc sourced \
+        5.0 5.2
+
+  first screen 552 ms; Page Down mean 6 ms and worst 40 ms; Ctrl-End 2 ms;
+  search from the start to the end 492 ms; a word that is not there 21 ms;
+  Go To section 3.5 5 ms; outline level 1 53 ms; a typed character 106 ms at
+  the worst of 19; Enter 9 ms; Backspace 19 ms; resident memory 23 MB at the
+  start and 52 MB at the end.
+
+The Printer, release build, in the folder of the document, with the pictures
+of manual/doc/pictures in the folder "pictures" next to it:
+
+    strprint strata-reference-manual.doc --docdir manual/doc \
+        --special .STRATA_BUILD_TYPE release --progress -o m.pdf
+
+  724 pages, 65.2 s, two LaTeX passes, the largest process 81.9 MB, a PDF of
+  9,964,653 bytes.  The same with --dvi: 83.1 s, a DVI file of 7,229,868 bytes
+  and the largest process 82.0 MB.  A part by sections:
+
+    stred --print strata-reference-manual.doc --from 3 --to 4 \
+        --no-error-log -o p.pdf
+
+  sections 3 to 4: 187 pages in 26.7 s (33.9 MB); sections 5 to 6: 146 pages
+  in 7.4 s (33.6 MB).  Without the folder of the pictures next to the
+  document a part of the manual took 53.6 s, because every missing picture is
+  an error that the Printer works round: the pictures must be next to the
+  document.
+
+The synthetic document of 1,312 pages ("strata-build big", release build):
+the PDF in 43.0 s, two passes, the largest process 35.2 MB; the contents (2,745
+rows) and the index (3,599 rows) agree with the pages; a part (sections 5 to
+6, 60 pages) in 3.9 s; the DVI file in 42.2 s.  The Editor on it: load 0.13 s,
+a typed character 78 ms at the worst.
+
+The Viewer, in a debug build (a release build writes no log, and the log
+gives the pages that were drawn): the window of the DVI file of the manual
+after 1.66 s; the slowest page 114 ms.  In that run the page 2 was not drawn
+before the key for the next page was repeated, so the check "page to page"
+of the test reported FAIL on this slow machine; the pages 3 to 11, 724, 500
+and 1 were drawn.  The same test on the synthetic document passed in a debug
+build.  In a release build the page by page part of tests/big.py is
+skipped, because it needs the log.
+
+One defect of the commands was found and fixed with this document: tests/big.py
+ran the page by page part of the Viewer test in a release build, where it
+cannot work (it reported FAIL).  It is skipped there now.
+
+What the manual check says: "build.sh check-edition" runs checkpdf.py of the
+release PDF with --release.  Run without --release, checkpdf.py reports the
+headlines of the text for developers (section A.6) as missing from the
+release PDF, which is right.

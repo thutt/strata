@@ -486,19 +486,17 @@ Documentation workflow (decided by the owner)
 
 Marketing document: the big document challenge
 ----------------------------------------------
-  [ ] DEFERRED by the owner: pushed out until there is something
-      more concrete and finished to show.  Do not start it, and do
-      not ask about it, until the owner puts it back.  The manual is
-      now 625 pages (not 700+), so every number below must be
-      measured again when the item is taken up.
-      Feature points to add when the document is taken up: line
-      numbering (a real page of a numbered Preview as the picture;
-      docs/LINENUMBERING-LATEX.txt has what was measured and read).
-      Also, if the item "UTF-8 instead of the code page" (below) is
-      completed by the time the document is taken up: UTF-8 as a feature
-      point (the text of documents in UTF-8, with the languages and
-      characters it allows; say only what has been built and tested, and
-      leave the point out if the item is not complete).
+  [x] DONE on 2026-11-25 (taken up again by the owner): the document is
+      manual/src/challenge.src, made by "manual/build.sh challenge" (8
+      pages); the numbers were measured again on a clean virtual machine
+      (docs/BIG-DOCUMENTS.txt, section 7: the manual is 724 pages now); every
+      statement is traced in docs/CHALLENGE-CLAIMS.txt; the pictures are in
+      manual/challenge/pictures (made by manual/challenge/shots.py); the test
+      is tests/challenge.py.  The document makes no statement about any other
+      program, so the rules below about competitors are kept by silence.
+      Line numbering is a feature point; UTF-8 is left out because its item
+      is an exploration that is not complete.  The notes below are the
+      original request and its rules.
       The original request: when the task "single" is merged, make a marketing-style document
       (a Strata .doc made with Strata, and its PDF made by the Printer)
       that proudly shows the numbers and results of the stress test of

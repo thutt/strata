@@ -1,0 +1,188 @@
+# The document "How do your document preparation systems fare?": the numbers
+# of the stress test of the Reference Manual, a few pages of the features
+# that a long document needs, and the questions to put to any system.  The
+# numbers are the ones measured by docs/BIG-DOCUMENTS.txt (section 7) and
+# {c:docs/CHALLENGE-CLAIMS.txt} says where every statement comes from.  No
+# statement is made about any other program.
+.doc Strata: How do your document preparation systems fare?
+
+.h1 How do your document preparation systems fare? [ch-challenge]
+.center
+A challenge, with the numbers of Strata
+.center
+Version @VERSION@
+.center
+Logic Magicians Software
+.center
+{latex:\lmslogo[0.8]}
+
+Strata is a document preparation system for long technical documents.  Its
+Reference Manual is one Strata document of 724 pages, and the Printer of Strata
+prints it.  This document gives what was measured on that document, the
+commands that give the numbers again, and a challenge: take the longest
+document that you have, ask your system the same questions ({n:ch-questions}),
+and send the answers.
+
+Only what was measured on Strata is stated here.  Nothing is said about any
+other program, because no other program was measured.
+
+.h1 The document that was measured [ch-document]
+The document is the Reference Manual of this release, made by the generator of
+the manual and printed in the release edition.  It has chapters, numbered
+sections to four levels, a contents, an index and a list of figures, tables,
+pictures, equations and cross-references throughout; the pages of the contents
+and of the index are cross-references that the Printer fills in.
+.table 40 20
+What | Measured
+Pages of the PDF | 724
+Size of the document on disk | 1910286 bytes
+Items of the document (blocks, headlines and markers) | 11266
+Lines of the document when laid out for the screen | 36795
+Headlines | 1121
+Index entries | 3251
+Figures in the list of figures | 191
+.end
+{Fig:ch-open} shows the Editor with the whole document open.
+.pic pictures/ch-open.png 5 The Editor with the whole manual open. [ch-open]
+
+.h1 The machine [ch-machine]
+Every number below was measured on one virtual machine of a farm, started
+clean for the purpose, with the programs of the release build: four virtual
+processors of an Intel Xeon E5-2630L v4 at 1.8 GHz, 7.9 GB of memory, Ubuntu
+26.04, pdfTeX 1.40.28 (TeX Live 2025).  The times are wall clock times.  A
+faster machine gives smaller times; a number varies from one run to the next
+by some tens of milliseconds.
+
+.h1 The Editor [ch-editor]
+The first table gives the commands that were timed without a terminal (the
+test program {c:tests/bigtest.c} runs the commands of a person on the
+document in memory), the second the keys that were typed into the Editor in a
+terminal ({c:tests/bigtui.py} types them into a pseudo-terminal and times each
+one until the screen is quiet).
+.table 48 12
+Command, without a terminal | Time
+Load the document | 87 ms
+First layout of the 724 pages | 423 ms
+Page Down from the start through the whole document | 60 ms
+Search from the start to a word near the end | 326 ms
+Search for a word that is not there | 14 ms
+Replace all: 20393 occurrences of one word | 20 ms
+The layout that follows the replacement | 295 ms
+Go To the last section | 1 ms
+Outline: collapse the whole document | 82 ms
+Outline: show the headlines to level 3 | 59 ms
+Type 40 characters, laying out after each one | 177 ms
+Save | 131 ms
+Load the saved document again | 23 ms
+Peak memory of the whole run | 29.5 MB
+.end
+.table 48 12
+Key, in a terminal | Time
+First screen after the start | 552 ms
+Page Down, mean of 30 | 6 ms
+Page Down, the slowest of 30 | 40 ms
+Ctrl-End and Ctrl-Home | 2 ms
+Search from the start to the end | 492 ms
+Go To section 3.5 | 5 ms
+Outline to level 1 | 53 ms
+A typed character, the slowest of 19 | 106 ms
+Resident memory at the start | 23 MB
+Resident memory at the end | 52 MB
+.end
+The document is read and written again with no change of a byte, and a second
+Save of a document that was saved and loaded again gives the same bytes as the
+first Save.  {Fig:ch-outline} shows the outline of the manual.
+.pic pictures/ch-outline.png 5 The outline, to level 1. [ch-outline]
+
+.h1 The Printer [ch-printer]
+The Printer typesets with LaTeX.  The first pass writes the page of every
+headline and the second pass puts the pages into the contents, the index and
+the list of figures; a third pass was not needed.
+.table 48 12
+Print | Time
+The whole manual as a PDF of 724 pages (two passes) | 65 s
+The same as a DVI file for the Viewer | 83 s
+Sections 3 and 4 (187 pages) | 27 s
+Sections 5 and 6 (146 pages) | 7 s
+All the documents and PDF files of the manual set | 85 s
+A synthetic document of 1312 pages as a PDF | 43 s
+.end
+The largest process of the Printer was 82 MB for the manual and 35 MB for the
+synthetic document.  The rate of the whole manual is
+{eq:\frac{{724}}{{65.2}}\approx 11.1}
+pages every second.
+
+The Viewer, in a build that checks itself and is slower than the release build,
+opened the DVI file of the manual after 1.7 s, and the slowest page that it
+drew in a run through the pages took 114 ms.
+
+.h1 What a long document needs besides speed [ch-features]
+A document of hundreds of pages needs more than a fast editor.  These are the
+things that the manual itself uses, and how they look in Strata.
+.table 24 36
+Feature | What Strata does
+Equations | The text of an equation is TeX math in a marker; the Printer
+ typesets it, and the Editor draws it on the screen ({fig:ch-equation}).
+Cross-references | A reference to a section, a figure or a page is a marker
+ that names its target; the number or the page is made when the document is
+ printed, so it follows every edit.
+Contents, index, list of figures | Made from the headlines, the index
+ entries and the figures; the pages in them are checked against the PDF
+ ({fig:ch-index}).
+Structured sections | Numbered sections and subsections, an outline that
+ collapses to a level, Go To a section, and Autosort of sections.
+Tables | Rows and columns with borders, in the text and in the print
+ ({fig:ch-table}).
+Keep blocks | A region of blocks that stays on one page, so that a table or a
+ figure with its caption is not split.
+Print Error markers | A print with faults ends with a list in the Error Log,
+ and a marker at each fault in the document ({fig:ch-errors}).
+Line numbering | The printed lines are numbered in the margin, in the Preview
+ and in the PDF alike ({fig:ch-numbered}).
+.end
+.pic pictures/ch-equation.png 3.2 Equations, text and result. [ch-equation]
+.pic pictures/ch-table.png 3.2 A page of the manual with tables. [ch-table]
+.pic pictures/ch-errors.png 5 Print Error markers at the faults. [ch-errors]
+.pic pictures/ch-numbered.png 3.2 A page with numbered lines. [ch-numbered]
+.pic pictures/ch-index.png 3.2 A page of the index of the manual. [ch-index]
+
+.h1 The questions [ch-questions]
+Take the longest document that you have, of at least several hundred pages, and
+put these questions to the system that you use.  For Strata the number that
+answers each one is in the tables of {n:ch-editor} and {n:ch-printer}.
+.table 6 54
+No. | The question
+1 | How long does the document take to open, and how long to show the first
+ screen?
+2 | How long does a key to the next page take, in the middle of the document?
+3 | How long does a search take from the first page to a word on the last page?
+4 | How long does it take to replace a common word in the whole document, and
+ to lay the document out again?
+5 | How long does one typed character take in the middle of the document?
+6 | How long does the Save take, and is the next Save the same bytes?
+7 | How much memory is in use at the end?
+8 | How long does the whole document take to print to a PDF, and are the
+ contents, the index and every cross-reference right in that PDF?
+9 | How long does a range of sections take to print?
+10 | How long is it before the first page of a preview is shown?
+.end
+How do your document preparation systems fare?
+
+.h1 How to repeat the measurements [ch-repeat]
+The commands are in the source tree of Strata.  The machine, the programs and
+the versions are named in {n:ch-machine}; a different machine gives different
+times.
+.code
+source scripts/setup -b release /tmp/strata-rel
+scripts/strata-build term x11
+scripts/strata-build manual
+scripts/strata-build big
+.end
+The target manual makes the documents and the PDF files of the manual set, with
+the Reference Manual as one document, and the target big runs the tests on a
+synthetic document of more than a thousand pages: the Editor, the Printer, the
+contents and the index checked against the pages, and the Viewer when it has
+been built (the help of the script lists the targets).  The file
+{c:docs/BIG-DOCUMENTS.txt} lists the commands that were used for the tables, one
+by one, and the file {c:docs/CHALLENGE-CLAIMS.txt} says where every number and
+every statement of this document comes from.
