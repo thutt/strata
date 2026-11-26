@@ -48,43 +48,41 @@ that fails until then.
 Where each number comes from (all of them: docs/BIG-DOCUMENTS.txt, section 7).
 
   The document of the manual   "build.sh single", release edition: 724 pages
-                               (pdfinfo), 1,910,286 bytes (ls), items and
-                               the identical Saves (bigtest, roundtrip),
-                               headlines, index entries and figures (the
-                               records H, I and F of the .meta file).
+                               (pdfinfo), 1,910,286 bytes (ls), items
+                               (bigtest, roundtrip), headlines, index
+                               entries and figures (the records H, I and F
+                               of the .meta file).
   The machine                  lscpu, free and "pdftex --version" of the
                                virtual machine.
   The Editor tables            bigtest (without a terminal) and
                                tests/bigtui.py (in a pseudo-terminal), run
                                on the release build.
-  The Printer table            strprint (the whole manual, two passes, the
-                               DVI route), stred --print (the parts), "time
-                               -v" for the memory, "strata-build manual" for
-                               the manual set, "strata-build big" for the
-                               synthetic document of 1,312 pages.
+  The Printer table            strprint (the whole manual, the DVI route),
+                               stred --print (the parts), "time -v" for the
+                               memory, "strata-build manual" for the manual
+                               set, "strata-build big" for the synthetic
+                               document of 1,312 pages.
   The rate                     724 pages in 65.2 s: 11.1 pages every second
                                (the quotient, in the document as an equation).
-  The Viewer                   tests/big.py (viewer), run in a debug build,
-                               which is slower than a release build; the
-                               document says so.
+  The Viewer                   not in the document any more (the owner:
+                               no word about build types).
 
 Where each statement about a feature comes from (the pictures and the pages
 of the manual are in manual/challenge/pictures, pages.txt there says which
 page of the PDF each picture is).
 
-  Equations are TeX math in a marker, typeset by the Printer, drawn on the
-  screen by the Editor        manual chapter 9 (the page of the picture:
+  Equations are TeX math, drawn on the screen as typeset
+                               manual chapter 9 (the page of the picture:
                                ch-equation).
-  A cross-reference is a marker that names its target; the number or page is
-  made when the document is printed
-                               manual/mkmanual.py (the header: the contents,
+  Cross references are live: they are kept up to date as the document is
+  changed                      manual/mkmanual.py (the header: the contents,
                                the index and the list of figures are tables
                                of cross-reference markers) and the chapter on
                                the Cross-reference marker.
   The pages of the contents, the index and the list of figures are checked
   against the PDF            manual/checkpdf.py (build.sh check-edition) and
                                tests/big.py (the synthetic document).
-  Numbered sections, an outline to a level, Go To a section, Autosort
+  Numbered sections, an outline to a level, Go To a section
                                chapter 3 of the manual (Edit) and the
                                commands that bigtest times.
   Tables with borders         the tables on the page of the picture
@@ -100,7 +98,7 @@ page of the PDF each picture is).
                                (the picture ch-errors is a copy of
                                doc/pictures/markers-errors.png, taken by
                                manual/scenes/errlog.py from the Editor).
-  Line numbering, in the Preview and in the PDF alike
+  Line numbering in the margin
                                docs/LINENUMBERING-LATEX.txt and
                                tests/lineno.py; the picture
                                ch-numbered is page 1 of

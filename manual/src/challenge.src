@@ -27,11 +27,9 @@ Only what was measured on Strata is stated here.  Nothing is said about any
 other program, because no other program was measured.
 
 .h1 The document that was measured [ch-document]
-The document is the Reference Manual of this release, made by the generator of
-the manual and printed in the release edition.  It has chapters, numbered
-sections to four levels, a contents, an index and a list of figures, tables,
-pictures, equations and cross-references throughout; the pages of the contents
-and of the index are cross-references that the Printer fills in.
+The document is the Reference Manual of this release.  It has chapters,
+numbered sections to four levels, a contents, an index and a list of figures,
+and tables, pictures, equations and cross-references throughout.
 .table 40 20
 What | Measured
 Pages of the PDF | 724
@@ -114,25 +112,23 @@ A document of hundreds of pages needs more than a fast editor.  These are the
 things that the manual itself uses, and how they look in Strata.
 .table 24 36
 Feature | What Strata does
-Equations | The text of an equation is TeX math in a marker; the Printer
- typesets it, and the Editor draws it on the screen ({fig:ch-equation}).
-Cross-references | A reference to a section, a figure or a page is a marker
- that names its target; the number or the page is made when the document is
- printed, so it follows every edit.
+Equations | Written as TeX math, and drawn on the screen as typeset
+ ({fig:ch-equation}).
+Cross-references | Live cross references to a section, a figure or a page,
+ kept up to date as the document is changed.
 Contents, index, list of figures | Made automatically, and always right
  ({fig:ch-index}).
 Structured sections | Numbered sections and subsections, an outline that
  collapses to a level, and Go To a section.
-Tables | Rows and columns with borders, in the text and in the print
- ({fig:ch-table}).
+Tables | Rows and columns with borders ({fig:ch-table}).
 Keep blocks | A region of blocks that stays on one page, so that a table or a
  figure with its caption is not split.
 Print Error markers | A print with faults ends with a list in the Error Log,
  and a marker at each fault in the document ({fig:ch-errors}).
-Line numbering | The printed lines are numbered in the margin, in the Preview
- and in the PDF alike ({fig:ch-numbered}).  A number gives every reader the
- same exact place to point to: a reviewer writes "page 12, line 7" in a
- manual, and a lawyer or a judge cites a line of a contract or a brief.
+Line numbering | The lines are numbered in the margin ({fig:ch-numbered}).
+ A number gives every reader the same exact place to point to: a reviewer
+ writes "page 12, line 7" in a manual, and a lawyer or a judge cites a line
+ of a contract or a brief.
 .end
 .pic pictures/ch-equation.png 3.2 Equations, text and result. [ch-equation]
 .pic pictures/ch-table.png 3.2 A page of the manual with tables. [ch-table]
