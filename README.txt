@@ -292,10 +292,12 @@ Package names are Debian/Ubuntu names. Nothing outside this list is needed.
 To install the full set of the programs (everything above, and the LaTeX
 fonts that the list of the TeX Font Association requires):
 
-    sudo apt-get install build-essential libx11-dev libxft-dev libfreetype-dev \
+    sudo apt-get install build-essential make libx11-dev libx11-6 libxft-dev \
+        libxft2 libfreetype-dev libfontconfig-dev \
         mythes-en-us dictionaries-common aspell aspell-en hunspell \
         hunspell-en-us curl unzip cups-client evince ghostscript \
         texlive-latex-base texlive-latex-extra texlive-latex-recommended \
+        texlive-binaries texlive-pictures texlive-plain-generic lmodern \
         texlive-fonts-recommended texlive-fonts-extra texlive-extra-utils \
         tex-gyre
 
@@ -314,8 +316,14 @@ The tests (strata-build test, smoke, xtest) and the manual (manual/build.sh)
 need, in addition to the full set above:
 
   - python3: every test and every tool of the manual.
-  - xvfb, xdotool and x11-apps (xwd): the X11 tests, the Viewer tests and the
-    pictures of the manual run the X11 programs on a virtual display.
+  - xvfb, xdotool, x11-apps (xwd) and x11-utils (xwininfo): the X11 tests, the
+    Viewer tests, the install test and the pictures of the manual run the X11
+    programs on a virtual display.
+  - bubblewrap (bwrap): the install and temporary file tests run in a private
+    view of the file system.
+  - curl, unzip and cups-client (lp): the tests of Install Now of the TeX Font
+    Association and of the choice of the printer fail without them, although
+    Strata itself runs without them.
   - poppler-utils (pdftotext, pdftoppm, pdfinfo, pdffonts): the print tests
     and the checks of the PDF files read the PDF files with them.
   - dvipng: the equations on the screen of the X11 version and the tests of
@@ -326,7 +334,8 @@ need, in addition to the full set above:
 
 To install the programs of the tests as well:
 
-    sudo apt-get install python3 xvfb xdotool x11-apps poppler-utils dvipng
+    sudo apt-get install python3 xvfb xdotool x11-apps x11-utils bubblewrap \
+        poppler-utils dvipng curl unzip cups-client
 
 A test that is skipped reports why and which program is missing; a test that
 fails for a missing program is a fault of the list above and is to be
