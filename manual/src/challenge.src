@@ -53,11 +53,9 @@ by some tens of milliseconds.
 
 .pagebreak
 .h1 The Editor [ch-editor]
-The first table gives the commands that were timed without a terminal (the
+The first table gives the commands that were timed without a terminal: the
 test program {c:tests/bigtest.c} runs the commands of a person on the
-document in memory), the second the keys that were typed into the Editor in a
-terminal ({c:tests/bigtui.py} types them into a pseudo-terminal and times each
-one until the screen is quiet).
+document in memory.
 .table 48 12
 Command, without a terminal | Time
 Load the document | 87 ms
@@ -75,6 +73,9 @@ Save | 131 ms
 Load the saved document again | 23 ms
 Peak memory of the whole run | 29.5 MB
 .end
+The second table gives the keys that were typed into the Editor in a
+terminal: {c:tests/bigtui.py} types them into a pseudo-terminal and times each
+one until the screen is quiet.
 .table 48 12
 Key, in a terminal | Time
 First screen after the start | 552 ms
