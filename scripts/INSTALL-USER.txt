@@ -27,7 +27,11 @@ knowledge of the source.
 
 4. At the end the script may print "Optional programs are missing:" with the
    programs, what is lost without each one, and one command that an
-   administrator can run to install them.  Strata runs without them.
+   administrator can run to install them.  A missing library or program
+   never stops the install.  Strata runs without them, except a program that
+   the list names as not starting (the window version, str-x11, needs the
+   libraries libxft2 and libfontconfig1); it starts when the package is
+   installed.
 
 5. Start the programs.  If the directory usr/bin below your home directory is
    not in your PATH, type the whole name: ~/usr/bin/str starts the Document

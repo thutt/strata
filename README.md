@@ -92,8 +92,11 @@ home directory is typed out. Esc goes back, and F1 shows the help.
 
 ### Requirements
 
-A terminal or an X server. Everything else is optional, and the editing needs
-nothing besides Strata itself.
+A terminal or an X server. Everything else is optional, and the editing in a
+terminal needs nothing besides Strata itself. The window version, `str-x11`,
+needs the libraries `libxft2` and `libfontconfig1`. A missing library or
+program never stops the install: the install is made, and its end names what
+is missing and which program will not start until it is installed.
 
 LaTeX is needed for Print and Preview. The install script checks for it and
 lists what is missing at its end, after everything else; the installation is
@@ -109,8 +112,11 @@ The install script names these packages for LaTeX and the programs around it:
 
 - `texlive-latex-base` (`pdflatex` and `latex`, and the files `fancyhdr.sty`
   and others), `texlive-binaries` (`dvipdfmx` and `kpsewhich`),
-  `texlive-latex-extra` (`adjustbox.sty`), `texlive-pictures` (`tikz.sty`)
-  and `lmodern` (the default LaTeX fonts).
+  `texlive-latex-extra` (`adjustbox.sty` and others), `texlive-pictures`
+  (`tikz.sty`), `texlive-plain-generic` (`ulem.sty`),
+  `texlive-latex-recommended` (`xcolor.sty` and others),
+  `texlive-fonts-recommended` (the fonts Times, Helvetica and Palatino),
+  `tex-gyre` (the TeX Gyre fonts) and `lmodern` (the default LaTeX fonts).
 - `dvipng`: equations, LaTeX markers and keycaps as images in the window
   version.
 - `ghostscript`: pictures from PDF and EPS files.
