@@ -45,8 +45,8 @@ Nothing is installed.
 
   --build   The tools that build Strata and the manual (the compiler, make,
             the X11, Xft and FreeType headers, Python 3).
-  --tests   The tools that run the tests (Xvfb, xdotool, xwd, bwrap and the
-            poppler utilities).
+  --tests   The tools that run the tests (Xvfb, xdotool, xwd, xwininfo,
+            bwrap, the poppler utilities, lp, curl and unzip).
   --run     The programs that run Strata and print with it (LaTeX, dvipng,
             ghostscript, a spell checker, the thesaurus and the libraries of
             the X11 version).
@@ -262,6 +262,8 @@ function check_tests
     need_program required Xvfb xvfb "the X11 tests run on a virtual display"
     need_program required xdotool xdotool "the X11 tests type keys with it"
     need_program required xwd x11-apps "the X11 tests take screenshots"
+    need_program required xwininfo x11-utils \
+        "the install test finds the window of the installed X11 Editor"
     need_program required bwrap bubblewrap \
         "the install and temporary file tests run in a private view"
     need_program required pdftotext poppler-utils \
@@ -270,6 +272,12 @@ function check_tests
     need_program required pdftoppm poppler-utils \
         "the manual pictures and the print tests"
     need_program required pdffonts poppler-utils "the print tests"
+    need_program required lp cups-client \
+        "the test of the printer choice (Strata itself runs without it)"
+    need_program required curl curl \
+        "the test of Install Now of the TeX Font Association"
+    need_program required unzip unzip \
+        "the test of Install Now of the TeX Font Association"
 }
 
 
@@ -304,6 +312,14 @@ function check_run
     need_tex_file required fancyhdr.sty texlive-latex-base \
         "headers and footers"
     need_tex_file required lmodern.sty lmodern "the default LaTeX fonts"
+    need_tex_file required ptmr8t.tfm texlive-fonts-recommended \
+        "the font Times of the Printer (a print and the manuals need it)"
+    need_tex_file required phvb8t.tfm texlive-fonts-recommended \
+        "the font Helvetica (the headlines and the logo of the manuals)"
+    need_tex_file required pplr8t.tfm texlive-fonts-recommended \
+        "the font Palatino (the title page of the manuals)"
+    need_tex_file required tgtermes.sty tex-gyre \
+        "the TeX Gyre fonts of the font list (numbers 15 to 18)"
     need_one_program required aspell hunspell "hunspell hunspell-en-us" \
         "the spell check (aspell with aspell-en does as well)"
     need_directory required /usr/share/mythes mythes-en-us \
