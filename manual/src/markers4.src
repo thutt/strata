@@ -40,6 +40,13 @@ modes show a diamond (Diamond), the word LaTeX (Name) or the words LaTeX
 instructions (Short and Long).  The text of the marker is not shown in the
 document; the editor of the marker shows it.  A text export and the picture of
 the screen have the plain words.
+The manuals write the names Strata, LaTeX and TeX, the name of the company, the
+section sign and the word Appendix as LaTeX markers, because a print draws them
+as logos and signs.  Where a picture cannot be drawn, in the terminal version
+and when LaTeX is not installed, these markers are shown as the plain words
+Strata, LaTeX, TeX, Logic Magicians Software, Sec. and Appendix, and not as the
+label.  A LaTeX marker with any other text keeps its label, and so does one
+whose display mode you have chosen yourself.
 .pic pictures/markers-latex-label.png 5.1 LaTeX markers on the screen of the X11 version: the logo and the bold word are pictures; the centered rule is a block, so it is a label.
 .h3 As a picture on the screen [marker-latex-picture]
 .ix LaTeX marker, as a picture

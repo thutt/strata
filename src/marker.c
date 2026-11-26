@@ -18,6 +18,7 @@
 #include "util.h"
 #include "marker.h"
 #include "layout.h"
+#include <ctype.h>
 #include <limits.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -1378,12 +1379,95 @@ mode_label(int type, int mode, const MPayload *p, char *buf, size_t cap)
 static int force_long;
 
 
+/*
+ * The plain words of a LaTeX marker that stands for a name or a sign: the
+ * documents of the manual write the name Strata, the names LaTeX and TeX, the
+ * company name and the section sign as LaTeX markers, which a window draws as
+ * a picture.  A screen that cannot draw the picture, and a printout of text,
+ * show these words, not the label of a LaTeX marker.  Returns 1 and the words
+ * in out when the text of the marker is one of them, else 0.
+ */
+static int
+latex_plain_word(const char *tex, char *out, size_t cap)
+{
+    static const struct {
+        const char *tex;
+        const char *word;
+    } exact[] = {
+        {"\\strata", "Strata"},
+        {"\\LaTeX{}", "LaTeX"},
+        {"\\LaTeX", "LaTeX"},
+        {"\\TeX{}", "TeX"},
+        {"\\TeX", "TeX"},
+        {"\\lms", "Logic Magicians Software"},
+        {"\\S{}", "Sec. "}
+    };
+    static const struct {
+        const char *prefix;
+        const char *word;
+    } logos[] = {
+        {"\\stratalogo", "Strata"},
+        {"\\lmslogo", "Logic Magicians Software"}
+    };
+    size_t i;
+    size_t n;
+
+    for (i = 0; i < sizeof exact / sizeof exact[0]; i++) {
+        if (strcmp(tex, exact[i].tex) == 0) {
+            str_copy(out, cap, exact[i].word);
+
+            return 1;
+        }
+    }
+
+    /* A logo with an optional scale: \stratalogo or \stratalogo[3]. */
+    for (i = 0; i < sizeof logos / sizeof logos[0]; i++) {
+        n = strlen(logos[i].prefix);
+
+        if (strncmp(tex, logos[i].prefix, n) == 0 &&
+            (tex[n] == '\0' || tex[n] == '[')) {
+            str_copy(out, cap, logos[i].word);
+
+            return 1;
+        }
+    }
+
+    /* A word kept in a box and followed by a space: \mbox{Appendix}~. */
+    if (strncmp(tex, "\\mbox{", 6) == 0) {
+        const char *end = strchr(tex + 6, '}');
+
+        if (end != NULL && end > tex + 6 && strcmp(end, "}~") == 0) {
+            for (n = 6; tex + n < end; n++) {
+                if (isalpha((unsigned char)tex[n]) == 0) {
+                    return 0;
+                }
+            }
+
+            n = (size_t)(end - tex - 6);
+
+            if (n + 2 > cap) {
+                return 0;
+            }
+
+            memcpy(out, tex + 6, n);
+            out[n] = ' ';
+            out[n + 1] = '\0';
+
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+
 /* Change the label the way the display mode of the marker's type says. */
 static MRender
 apply_mode(const Tok *k, MRender r, const MPayload *p, char *buf, size_t cap)
 {
     int dflt;
     int mode;
+    int picture_failed = 0;
 
     /* A Print Error is shown in every mode and never printed. */
     if (tok_mtype(k) == MT_PRINT_ERROR) {
@@ -1444,6 +1528,36 @@ apply_mode(const Tok *k, MRender r, const MPayload *p, char *buf, size_t cap)
          tok_mtype(k) == MT_LATEX) &&
         marker_failed_fn(k) != 0) {
         mode = MM_SHORT;
+        picture_failed = 1;
+    }
+
+    /*
+     * A LaTeX marker that stands for a name or a sign is shown as the plain
+     * word when its picture cannot be made, when the program draws no picture
+     * at all (the terminal version has no hook for pictures) and in a printout
+     * of text, and not as the label LaTeX instructions.  A mode that the
+     * author chose for LaTeX markers is kept.
+     */
+    if (tok_mtype(k) == MT_LATEX && force_long == 0 &&
+        (marker_print_mode != 0 || picture_failed != 0 ||
+         (mode == MM_INLINE && marker_failed_fn == NULL))) {
+        char tex[160];
+        char word[96];
+        size_t len;
+
+        if (marker_latex_text(k, tex, sizeof tex) >= 0) {
+            len = strlen(tex);
+
+            while (len > 0 && (tex[len - 1] == '\n' || tex[len - 1] == ' ')) {
+                tex[--len] = '\0';
+            }
+
+            if (latex_plain_word(tex, word, sizeof word) != 0) {
+                str_copy(buf, cap, word);
+
+                return marker_print_mode != 0 ? MR_TEXT : MR_VALUE;
+            }
+        }
     }
 
     /* A comment is printed in a draft print only. */
