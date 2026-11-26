@@ -184,7 +184,13 @@
 # of the section with the number N of the generator (used by the generator
 # itself; the sources do not need it).
 #   - TEXT             A bullet item; a line that begins with N. is a
-#                      numbered item.  A continuation line starts with spaces.
+#                      numbered item (the number is typed text).  A line
+#                      that begins with "+ " is a counted item: a Counter
+#                      marker (counter 1) in front of the text prints the
+#                      number, the first item of a run sets the counter to 1
+#                      and every later item adds one, so that the numbers
+#                      follow the edits of the list.  A continuation line
+#                      starts with spaces.
 #
 # Inside text: {k:Ctrl-S} is a keycap, {b:text} bold, {i:text} italic,
 # {u:text} underlined, {c:text} the program font, {fn:text} a footnote,
@@ -1148,6 +1154,7 @@ class Parser:
         self.kind = None
         self.words = []
         self.centre = False
+        self.counted = False
 
     def run(self, path):
         """Parse a whole file."""
@@ -1177,9 +1184,15 @@ class Parser:
             data = b"\x01\x07 \x1a" + data
         elif self.kind.startswith("num"):
             data = cp(self.kind[3:] + ".") + b" \x1a" + data
+        elif self.kind == "count":
+            # The first item of a run sets the counter to 1, the others add
+            # one to it; the counter number is left out (counter 1).
+            first = [] if self.counted else [b"21"]
+            data = marker(17, first) + b" \x1a" + data
         elif self.kind == "centre":
             props = [b"BFJ2"]
         self.b.add(props, data)
+        self.counted = self.kind == "count"
         self.kind = None
         self.words = []
 
@@ -1205,6 +1218,7 @@ class Parser:
             return
         if line.startswith("."):
             self.flush()
+            self.counted = False
             self.directive(line)
             return
         m = re.match(r"- (.*)", line)
@@ -1214,6 +1228,10 @@ class Parser:
         m = re.match(r"(\d+)\. (.*)", line)
         if m:
             self.start("num" + m.group(1), m.group(2))
+            return
+        m = re.match(r"\+ (.*)", line)
+        if m:
+            self.start("count", m.group(1))
             return
         if line.startswith(" ") and self.kind is not None:
             self.words.append(line.strip())

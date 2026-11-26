@@ -380,6 +380,18 @@ check("the generator fits the widths of a table that is wider than the line",
 spec = importlib.util.spec_from_file_location("mkgen", GEN)
 mkgen = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mkgen)
+# A counted item is a Counter marker (17) and no typed number.  The first item
+# of a run sets the counter to 1, the next ones only add one, and a run that
+# follows other text sets it to 1 again.
+code, out, data = generate(".doc T\n.h1 A [a]\n+ one\n+ two\n+ three\n\n"
+                           "Text.\n\n+ again\n")
+counter = mkgen.MARK + b"17("
+check("a counted item is a Counter marker: four markers, no typed number",
+      code == 0 and data.count(counter) == 4 and b"1. " not in data, out[:200])
+check("only the first item of each run sets the counter to 1",
+      data.count(counter + b"21" + mkgen.CRLF) == 2, out[:200])
+check("the text of a counted item follows the marker and a tab",
+      data.count(b" \x1aone") == 1 and data.count(b" \x1aagain") == 1)
 check("the index lists a term without its leading article",
       mkgen.index_term("The font list") == "Font list" and
       mkgen.index_term("An index") == "Index" and
