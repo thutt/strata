@@ -26,6 +26,8 @@ the whole PATH, so that the test does not depend on what this machine has
 (the headers and the libraries it cannot hide are only listed)."""
 import sys as _s; _s.dont_write_bytecode = True
 import os
+import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -64,9 +66,14 @@ def run(cmd, env):
 CORE = ('bash sh env dirname basename cat grep sed awk tr sort uniq printf '
         'date ls true false test head tail wc cut id uname').split()
 TEST_TOOLS = {'Xvfb': 'xvfb', 'xdotool': 'xdotool', 'xwd': 'x11-apps',
-              'bwrap': 'bubblewrap', 'pdftotext': 'poppler-utils',
-              'pdfinfo': 'poppler-utils', 'pdftoppm': 'poppler-utils',
-              'pdffonts': 'poppler-utils'}
+              'xwininfo': 'x11-utils', 'bwrap': 'bubblewrap',
+              'pdftotext': 'poppler-utils', 'pdfinfo': 'poppler-utils',
+              'pdftoppm': 'poppler-utils', 'pdffonts': 'poppler-utils',
+              'lp': 'cups-client', 'curl': 'curl', 'unzip': 'unzip'}
+# The tools that a clean machine lacked and that a test needed (found by
+# building, running the tests and the manual on such a machine): each one
+# is tried alone below.
+FOUND_BY_USE = ('xwininfo', 'lp', 'curl', 'unzip')
 BUILD_TOOLS = {'make': 'make', 'python3': 'python3'}
 
 wk = tempfile.mkdtemp(prefix='chkt.')
@@ -146,6 +153,14 @@ try:
                TEST_TOOLS[tool]) in out, out)
         if tool == 'xdotool':
             break
+    for tool in FOUND_BY_USE:
+        without = with_tools([t for t in TEST_TOOLS if t != tool])
+        st, out = run([script, '--tests'], without)
+        check('tests: without %s alone it is named with its package %s' %
+              (tool, TEST_TOOLS[tool]),
+              st == 1 and ('MISSING   %s (package %s)' % (
+                  tool, TEST_TOOLS[tool])) in out and
+              out.count('MISSING') == 1, out)
     # --------------------------------------------------------- --quiet
     st, out = run([script, '--tests', '--quiet'], full)
     check('quiet: with --quiet and nothing missing only the end is printed',
@@ -209,6 +224,59 @@ try:
               'programs absent the status is 0',
               st == 0 and 'optional  lp (package cups-client)' in out and
               'Nothing required is missing (3 optional' in out, out)
+    # The fonts of the Printer: the files of texlive-fonts-recommended (Times,
+    # Helvetica and Palatino) and of tex-gyre are not found by kpsewhich, and
+    # every other file is.
+    FONT_FILES = {'ptmr8t.tfm': 'texlive-fonts-recommended',
+                  'phvb8t.tfm': 'texlive-fonts-recommended',
+                  'pplr8t.tfm': 'texlive-fonts-recommended',
+                  'tgtermes.sty': 'tex-gyre'}
+
+    def run_without_fonts(skip, script_path=script):
+        d = tempfile.mkdtemp(dir=wk)
+        for n in ('pdflatex', 'latex', 'dvipdfmx', 'dvipng', 'gs',
+                  'hunspell'):
+            p2 = os.path.join(d, n)
+            open(p2, 'w').write('#!/bin/sh\nexit 0\n')
+            os.chmod(p2, 0o755)
+        p2 = os.path.join(d, 'kpsewhich')
+        open(p2, 'w').write('#!/bin/sh\nfor f in "$@"; do case "$f" in %s) '
+                            ';; *) echo "/x/$f";; esac; done\n' %
+                            '|'.join(skip))
+        os.chmod(p2, 0o755)
+        e = dict(env)
+        e['PATH'] = d + ':' + fake
+        return run([script_path, '--run'], e)
+
+    st, out = run_without_fonts(FONT_FILES)
+    bad = [n for n, pk in FONT_FILES.items()
+           if 'MISSING   %s (package %s)' % (n, pk) not in out]
+    check('run: the font files of the Printer (Times, Helvetica, Palatino, '
+          'TeX Gyre) are named with their packages when kpsewhich does not '
+          'find them', not bad, '\n'.join(bad) + '\n' + out)
+    check('run: the apt command has texlive-fonts-recommended and tex-gyre '
+          'once each', out.count('sudo apt-get install') == 1 and
+          out.split('sudo apt-get install')[1].split().count(
+              'texlive-fonts-recommended') == 1 and
+          out.split('sudo apt-get install')[1].split().count('tex-gyre') == 1,
+          out)
+    for n, pk in FONT_FILES.items():
+        st, out = run_without_fonts([n])
+        check('run: only %s missing: it is named with %s' % (n, pk),
+              ('MISSING   %s (package %s)' % (n, pk)) in out and
+              out.count('MISSING') == 1, out)
+    # A copy of the script without the lines of the font files must fail the
+    # check above: the check can see an entry that is removed.
+    text = open(script).read()
+    spoiled = os.path.join(wk, 'spoiled-check-tools')
+    open(spoiled, 'w').write(re.sub(
+        r'\n    need_tex_file required (?:ptmr8t\.tfm|phvb8t\.tfm|pplr8t\.tfm'
+        r'|tgtermes\.sty) [^\n]*\\\n[^\n]*', '', text))
+    os.chmod(spoiled, 0o755)
+    st, out = run_without_fonts(FONT_FILES, spoiled)
+    check('mutation: a copy of the script without the entries of the font '
+          'files does not name them', 'MISSING   pplr8t.tfm' not in out,
+          out)
     st, out = run([script, '--run', '--tests'], env)
     check('run: two groups give both lists',
           'MISSING   pdflatex' in out and 'MISSING   Xvfb' in out, out)
@@ -242,6 +310,35 @@ try:
     st, out = run([build_script, 'check-tools', '--tests'], full)
     check('strata-build: the options reach the script (a machine with every '
           'tool of the tests ends with status 0)', st == 0, out)
+
+    # -------------- the packages of the script and of README.txt agree
+    # Every package that the script names is in a line 'sudo apt-get install'
+    # of README.txt (the lines go on while they end in a backslash), so that
+    # the two lists cannot drift apart.
+    packages = set()
+    statements = open(script).read().replace('\\\n', ' ').split('\n')
+    for s in statements:
+        s = s.strip()
+        if not s.startswith('need_'):
+            continue
+        words = shlex.split(s)
+        index = 4 if words[0] == 'need_one_program' else 3
+        packages.update(words[index].split())
+    readme = open(os.path.join(project, 'README.txt')).read().replace(
+        '\\\n', ' ').split('\n')
+    named = set()
+    for l in readme:
+        if l.strip().startswith('sudo apt-get install'):
+            named.update(l.split()[3:])
+    named.discard('--no-install-recommends')
+    check('readme: every package that the script names is in an apt-get '
+          'install line of README.txt',
+          len(packages) > 25 and packages <= named,
+          sorted(packages - named))
+    check('readme: the list of the script includes the packages that a '
+          'clean machine lacked', all(p in packages for p in (
+              'texlive-fonts-recommended', 'tex-gyre', 'bubblewrap',
+              'x11-utils', 'cups-client', 'unzip')), sorted(packages))
 finally:
     shutil.rmtree(wk, ignore_errors=True)
 
