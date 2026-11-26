@@ -1,4 +1,5 @@
 .doc Equation gallery
+.fontmarkers short
 .h1 Equation gallery
 
 Inline: the area of a circle is {eq:A=\pi r^{{2}}} and its circumference is {eq:C=2\pi r}.

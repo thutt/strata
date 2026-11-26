@@ -1,4 +1,5 @@
 .doc Equation demonstration
+.fontmarkers short
 .h1 Equations
 
 The roots of {eq:ax^{{2}}+bx+c=0} are given by the formula below.

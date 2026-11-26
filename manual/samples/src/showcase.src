@@ -1,4 +1,5 @@
 .doc Strata showcase
+.fontmarkers short
 .h1 Showcase of Strata features [showcase]
 This document uses what Strata can do in a page: a keycap such as {k:Ctrl-S}, an equation such as {eq:x^2+y^2=z^2} inside a line of text, a footnote{fn:A footnote is a marker that holds text; it is printed at the foot of the page.} and a reference to another section, {ref:figures}.
 .h2 Keys and equations

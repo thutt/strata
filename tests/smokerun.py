@@ -58,7 +58,7 @@ SCRIPTS = ['smoke.py', 'movesect.py', 'windows.py', 'retnamed.py', 'textindent.p
            'deepsect.py',
            'letters.py', 'envsamples.py', 'story.py', 'keymap_check.py',
            'keypart.py', 'longnames.py', 'picturecursor.py',
-           'markerdefault.py', 'tableedge.py', 'papernames.py',
+           'markerdefault.py', 'logomark.py', 'tableedge.py', 'papernames.py',
            'envpreview.py', 'envfont.py', 'picmissing.py', 'picnames.py',
            'structconv.py', 'previewestimate.py', 'lpslow.py',
            'printsearch.py', 'lmsetting.py', 'printchoice.py',

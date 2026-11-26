@@ -27,6 +27,11 @@
 #   .contents LEVEL    The level of the table of contents that the print of the
 #                      document makes (0 to 99); the default is 0, none.
 #   .center            The next paragraph is centred.
+#   .fontmarkers MODE  The display mode of the Font markers of the document:
+#                      hidden (the default: the words of the program font
+#                      are plain words on a terminal, with no [FONT]) or
+#                      short (the markers are shown, as in the sample
+#                      documents).
 #   .code ... .end     Lines that are kept as they are, in a program font.
 #   .table W1 W2 ...   Rows of cells separated by a bar; the widths are in
 #                      character cells.  The first row is the heading.  The
@@ -547,6 +552,7 @@ class Builder:
         # makes the parts, with the page numbers, when the document is
         # printed (docs/AUTOLISTS.txt).
         self.contents = 0
+        self.font_hidden = True
         self.auto_lists = False
 
     def cond_state(self):
@@ -908,6 +914,13 @@ class Builder:
             out.append(h + CRLF)
         if not self.numbering:
             out.insert(len(out) - 2, b"FLA0" + CRLF)
+        # The Font markers of a document are not shown on the screen unless
+        # its source says .fontmarkers short: the words of the program font
+        # are plain words to a reader in a terminal (the record OM15,4: the
+        # display mode of the Font marker is Hidden).  A person can show them
+        # again with the display of hidden markers.
+        if self.font_hidden:
+            out.append(b"OM15,4" + CRLF)
         if self.flat:
             # A part: no structure, the blocks of the root only.
             out.append(b"*B0" + CRLF)
@@ -1255,6 +1268,12 @@ class Parser:
                 label = m.group(1)
                 rest = rest[:m.start()]
             self.b.section(int(word[2]), rest, label)
+        elif word == ".fontmarkers":
+            # The display mode that the document gives to its Font markers:
+            # hidden (the default of a document of the manual) or short.
+            if rest not in ("hidden", "short"):
+                raise SourceError(".fontmarkers needs hidden or short")
+            self.b.font_hidden = rest == "hidden"
         elif word == ".contents":
             # The level of the table of contents that a print of the
             # document makes (the record YCL): a document of the manual has

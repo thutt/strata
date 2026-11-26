@@ -1,4 +1,5 @@
 .doc Equation with an error
+.fontmarkers short
 .h1 An equation with an error
 
 {eq:\frac{{1}}{{2}} + \badcmd{{x}}}
