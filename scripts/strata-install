@@ -696,6 +696,24 @@ function in_list
 }
 
 
+# Prints the file to install for a committed document: the document of the
+# same name in manual/doc of the build directory, when it is there and is not
+# empty, else the committed document itself.  The documents of the build are
+# made from the tree that is built, so a build of a release tag has its
+# version number on the title page, which a committed document never has (it
+# says "development", so that it does not change with every branch).
+function built_or_committed
+{
+    local built="${build_dir}/manual/doc/$(basename "${1}")"
+
+    if [ -s "${built}" ]; then
+        echo "${built}"
+    else
+        echo "${1}"
+    fi
+}
+
+
 # Prints the file of a manual document in the source tree: manual/doc/NAME.doc,
 # or manual/NAME.doc for a name with a folder in it (challenge/challenge).
 function manual_source
@@ -824,9 +842,12 @@ function install_from_tree
     put_file 644 "${tree_dir}/docs/KNOWN-ISSUES.txt" \
              "${prefix}/share/doc/strata/KNOWN-ISSUES.txt"
 
+    # The documents of the manual build, made from the tree that is built (a
+    # release tag gives the version number on their title page), are
+    # installed when they are there; else the committed documents are.
     for doc in "${tree_dir}"/manual/doc/*.doc; do
         if [ -f "${doc}" ] && ! is_undelivered "${doc}"; then
-            put_file 644 "${doc}" \
+            put_file 644 "$(built_or_committed "${doc}")" \
                      "${prefix}/share/strata/doc/$(basename "${doc}")"
         fi
     done
@@ -949,7 +970,8 @@ function install_from_tree
     # The document of the challenge, with the pictures that it names in a
     # folder next to it.  Its PDF file is installed with the other manuals.
     challenge_dir="${prefix}/share/strata/doc/challenge"
-    put_file 644 "${tree_dir}/manual/challenge/challenge.doc" \
+    put_file 644 "$(built_or_committed \
+                    "${tree_dir}/manual/challenge/challenge.doc")" \
              "${challenge_dir}/challenge.doc"
 
     for sample in "${tree_dir}"/manual/challenge/pictures/*.png; do

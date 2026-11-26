@@ -699,6 +699,37 @@ check('mutation: an install script that does not pass --require-manuals makes '
       'a release directory without a PDF file, so the check fails',
       no2 is not None and st == 0 and os.path.exists(rel8))
 
+# The documents of the manual build are installed in place of the committed
+# ones: a build of a release tag has its version number on the title page,
+# and a committed document says "development".
+bd = fake_build(os.path.join(tmp, 'f-built'))
+os.makedirs(os.path.join(bd, 'manual', 'doc'))
+marker = b'built from the tree that is installed\n'
+for n in ('errata.doc', 'challenge.doc'):
+    with open(os.path.join(bd, 'manual', 'doc', n), 'wb') as f:
+        f.write(marker)
+dest = os.path.join(tmp, 'f-built-dest')
+st, out = run([os.path.join(scripts, 'strata-install'), '--build-dir', bd,
+               '--destdir', dest, '--prefix', '/usr', '--no-prereqs',
+               '--quiet'], env, work)
+inst = os.path.join(dest, 'usr', 'share', 'strata', 'doc')
+
+
+def same(a, b):
+    with open(a, 'rb') as fa, open(b, 'rb') as fb:
+        return fa.read() == fb.read()
+
+
+check('install: a document of the manual build is installed in place of the '
+      'committed one, in doc and in doc/challenge',
+      st == 0 and
+      open(os.path.join(inst, 'errata.doc'), 'rb').read() == marker and
+      open(os.path.join(inst, 'challenge', 'challenge.doc'),
+           'rb').read() == marker, out[-300:])
+check('install: a document that the build does not have is the committed one',
+      same(os.path.join(inst, 'cheat.doc'),
+           os.path.join(tree, 'manual', 'doc', 'cheat.doc')))
+
 # The tarball of the mutations is not kept: make it again as it should be,
 # with the time of the commit and not the time of this test.
 plain = dict(env)
