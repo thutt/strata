@@ -40,7 +40,31 @@ The cases
      terminal or X server and the font are required, and the script cannot
      check those.
    - A missing optional program never stops the install: Strata is
-     installed, and the exit status is 0.
+     installed, and the exit status is 0.  This holds for a shared library
+     too (decision of 2026-11-26, after the clean-machine trial of 1.0.0):
+     the libraries libxft2 and libfontconfig1 that the window version
+     needs were required items, and the install of an ordinary user stopped
+     with "4 required item(s) missing", although a user without root cannot
+     install a library and the terminal version needs none (str, stred and
+     strprint link only the C library).  A missing library is an optional
+     item of the block, with the programs that will not start until its
+     package is installed (str-x11 and stred-x11; dviview for the libraries
+     of the Viewer), and the closing sentence of the block says that only
+     the programs named as not starting are lost.
+   - The check of the TeX files that a print needs is the check of
+     scripts/check-tools: adjustbox.sty, needspace.sty, extarticle.cls,
+     pmboxdraw.sty (texlive-latex-extra), tikz.sty (texlive-pictures),
+     ulem.sty (texlive-plain-generic), xcolor.sty, setspace.sty,
+     pdflscape.sty (texlive-latex-recommended), fancyhdr.sty
+     (texlive-latex-base), ptmr8t.tfm, phvb8t.tfm, pplr8t.tfm
+     (texlive-fonts-recommended), tgtermes.sty (tex-gyre) and lmodern.sty
+     (lmodern).  The clean-machine trial found that a print failed with
+     only the first five packages of the old list.
+   - The pictures that the installed manuals name are installed in
+     share/strata/doc/pictures, next to the documents, so that a print or a
+     preview of an installed manual has no picture error.  The list shown at
+     the end of the install gives the count and the folder, and not the
+     names of the 200 files.
    - Nothing about the missing programs is printed in the middle of the run,
      where it could scroll off the screen.  The check records them.
    - The warning is the LAST block of the output, after the list of what

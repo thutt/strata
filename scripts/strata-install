@@ -172,6 +172,7 @@ The layout under the prefix:
                                      the installed Strata needs
   share/strata/strata.hlp            the help file
   share/strata/doc/                  the documents of Strata
+  share/strata/doc/pictures/         the pictures that the documents name
   share/strata/doc/challenge/        the document "How do your document
                                      preparation systems fare?", and its
                                      pictures in a directory next to it
@@ -425,27 +426,60 @@ function check_tex_file
 }
 
 
-# Checks the shared libraries of one built program: a library that the loader
-# cannot find is a missing requirement.
+# The shared libraries that the loader could not find, and the programs that
+# need each one: the names of the libraries in order, and for each library the
+# names of its programs.  A missing library never stops an install: the
+# programs are installed, and the warning at the end says which of them will
+# not start until the package of the library is installed.
+lib_order=()
+declare -A lib_users=()
+
+
+# Records the shared libraries of one built program that the loader cannot
+# find (report_libraries tells about them).
 function check_libraries
 {
     local program="${1}"
+    local name
     local line
+    local lib
 
     if ! have_program ldd || [ ! -x "${program}" ]; then
         return 0
     fi
 
+    name="$(basename "${program}")"
+
     while IFS= read -r line; do
         case "${line}" in
             *"not found"*)
-                local lib="${line%% *}"
+                lib="${line%% *}"
                 lib="${lib#"${lib%%[![:space:]]*}"}"
-                report missing "${lib}" "$(library_package "${lib}")" \
-                       "$(basename "${program}") cannot start without it"
+
+                if [ -z "${lib_users[${lib}]+x}" ]; then
+                    lib_order+=("${lib}")
+                    lib_users["${lib}"]="${name}"
+                elif [[ " ${lib_users[${lib}]} " != *" ${name} "* ]]; then
+                    lib_users["${lib}"]+=" ${name}"
+                fi
                 ;;
         esac
     done < <(ldd "${program}" 2>/dev/null || true)
+}
+
+
+# Reports each library that check_libraries found missing, once, as an
+# optional item that names the programs that will not start without it.
+function report_libraries
+{
+    local lib
+    local users
+
+    for lib in "${lib_order[@]}"; do
+        users="${lib_users[${lib}]// /, }"
+        report optional "${lib}" "$(library_package "${lib}")" \
+               "${users} will not start until it is installed"
+    done
 }
 
 
@@ -474,6 +508,8 @@ function run_check
     note "Checking what the installed Strata needs."
     check_missing_required=0
     check_missing_optional=0
+    lib_order=()
+    lib_users=()
 
     # Programs that an earlier install fetched into the prefix count.
     if [ -r "${destdir}${prefix}/share/strata/prereq-env.sh" ]; then
@@ -495,6 +531,7 @@ function run_check
         check_libraries "${build_dir}/term/dviview"
     fi
 
+    report_libraries
     check_program optional pdflatex texlive-latex-base \
         "printing to a PDF file or to a printer"
     check_program optional latex texlive-latex-base \
@@ -525,7 +562,27 @@ function run_check
     check_tex_file fancyhdr.sty texlive-latex-base \
         "headers, footers and the table of contents"
     check_tex_file adjustbox.sty texlive-latex-extra "tables of the Printer"
+    check_tex_file needspace.sty texlive-latex-extra "printing to a PDF file"
+    check_tex_file extarticle.cls texlive-latex-extra \
+        "printing to a PDF file"
+    check_tex_file pmboxdraw.sty texlive-latex-extra "printing to a PDF file"
     check_tex_file tikz.sty texlive-pictures "borders and pictures"
+    check_tex_file ulem.sty texlive-plain-generic \
+        "underlined text in a print"
+    check_tex_file xcolor.sty texlive-latex-recommended \
+        "colours in a print"
+    check_tex_file setspace.sty texlive-latex-recommended \
+        "the line spacing of a print"
+    check_tex_file pdflscape.sty texlive-latex-recommended \
+        "pages printed sideways"
+    check_tex_file ptmr8t.tfm texlive-fonts-recommended \
+        "the font Times of a print"
+    check_tex_file phvb8t.tfm texlive-fonts-recommended \
+        "the font Helvetica of a print"
+    check_tex_file pplr8t.tfm texlive-fonts-recommended \
+        "the font Palatino of a print"
+    check_tex_file tgtermes.sty tex-gyre \
+        "the TeX Gyre fonts of the font list"
 
     if [ -d /usr/share/mythes ] ||
        [ -d "${destdir}${prereq_dir}/usr/share/mythes" ]; then
@@ -804,6 +861,7 @@ function install_from_tree
     local doc
     local pdf
     local pdf_count
+    local pic
     local prog
     local sample
     local tpl
@@ -849,6 +907,15 @@ function install_from_tree
         if [ -f "${doc}" ] && ! is_undelivered "${doc}"; then
             put_file 644 "$(built_or_committed "${doc}")" \
                      "${prefix}/share/strata/doc/$(basename "${doc}")"
+        fi
+    done
+
+    # The pictures that the manuals name, in a folder next to the documents:
+    # a print or a preview of an installed manual finds them there.
+    for pic in "${tree_dir}"/manual/doc/pictures/*.png; do
+        if [ -f "${pic}" ]; then
+            put_file 644 "${pic}" \
+                     "${prefix}/share/strata/doc/pictures/$(basename "${pic}")"
         fi
     done
 
@@ -1164,6 +1231,7 @@ function show_installed
     local count
     local groups=("bin|Programs"
                   "share/strata/doc|Documents"
+                  "share/strata/doc/pictures|Pictures of the manuals"
                   "share/strata/doc/challenge|Document of the challenge"
                   "share/strata/doc/challenge/pictures|Challenge pictures"
                   "share/strata/pdf|Manuals as PDF files"
@@ -1203,7 +1271,13 @@ function show_installed
 
         if [ "${count}" -gt 0 ]; then
             echo "  ${label}: ${count} files in ${dir}"
-            echo "${names# }" | fold -s -w 68 | sed -e 's/ *$//' -e 's/^/    /'
+
+            # A long list of names, such as the pictures of the manuals, is
+            # left out: the count and the folder say enough.
+            if [ "${count}" -le 20 ]; then
+                echo "${names# }" | fold -s -w 68 |
+                    sed -e 's/ *$//' -e 's/^/    /'
+            fi
         fi
     done
 
@@ -1455,11 +1529,19 @@ function final_warning
     local order=()
     local -A lost=()
     local all=()
+    local any_library="no"
+
+    local runs=("Strata runs without them.  Each feature that needs one reports"
+                "that it is missing when the feature is used.")
 
     [ ${#late_items[@]} -gt 0 ] || return 0
 
     for item in "${late_items[@]}"; do
         IFS='|' read -r name package what <<<"${item}"
+
+        case "${name}" in
+            *.so*) any_library="yes" ;;
+        esac
 
         if [ -z "${lost[${package}]+x}" ]; then
             order+=("${package}")
@@ -1468,6 +1550,13 @@ function final_warning
             lost["${package}"]+="; ${what}"
         fi
     done
+
+    if [ "${any_library}" = "yes" ]; then
+        runs=("Strata runs without them, except the programs that are named"
+              "above as not starting: they start when the package is"
+              "installed.  Each feature that needs one of the others reports"
+              "that it is missing when the feature is used.")
+    fi
 
     {
         echo
@@ -1481,8 +1570,8 @@ function final_warning
         done
 
         echo
-        echo "Strata runs without them.  Each feature that needs one reports"
-        echo "that it is missing when the feature is used."
+
+        printf '%s\n' "${runs[@]}"
 
         if have_program apt-get; then
             echo "An administrator installs them with:"

@@ -47,6 +47,7 @@ file name in the scripts folder, or an absolute path), which is how the
 mutations of the test are tried."""
 import sys as _s; _s.dont_write_bytecode = True
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -191,6 +192,20 @@ check('install: the release directory and the work directory are '
                        if n.startswith(('release/', 'work/'))))
 check('install: the project folder is unchanged', project_state() ==
       state_before)
+# The pictures that the installed manuals name are in the folder next to them,
+# so that a print of a manual finds every one.
+named = set()
+docdir = os.path.join(prefix, 'share', 'strata', 'doc')
+for dn in os.listdir(docdir):
+    if dn.endswith('.doc'):
+        with open(os.path.join(docdir, dn), 'rb') as fd:
+            named.update(re.findall(rb'pictures/([A-Za-z0-9._-]+\.png)',
+                                    fd.read()))
+missing_pics = sorted(n.decode() for n in named if not os.path.isfile(
+    os.path.join(docdir, 'pictures', n.decode())))
+check('install: every picture that an installed manual names is in '
+      'share/strata/doc/pictures (%d named)' % len(named),
+      len(named) > 100 and not missing_pics, missing_pics[:10])
 check('install: the programs are executable files in the prefix',
       all(os.access(os.path.join(prefix, 'bin', n), os.X_OK)
           for n in ('str', 'stred', 'strprint', 'strata-run')))
@@ -231,10 +246,13 @@ mythes = os.path.isdir('/usr/share/mythes')
 opt_count = [0]
 
 
-def machine(present):
+def machine(present, tex_missing=(), libs_missing=False):
     """A PATH of the basic tools, a stub apt-get and the stubs of the
     optional programs named in present; the other optional programs are not
-    in the PATH.  Returns the environment and the home directory."""
+    in the PATH.  The stub of kpsewhich knows every file except those named
+    in tex_missing.  With libs_missing the stub of ldd says that the two
+    libraries of the X11 programs are not found.  Returns the environment and
+    the home directory."""
     opt_count[0] += 1
     top = os.path.join(tmp, 'opt%d' % opt_count[0])
     bindir = os.path.join(top, 'bin')
@@ -248,12 +266,22 @@ def machine(present):
     for n in ['apt-get'] + list(present):
         path = os.path.join(bindir, n)
         if n == 'kpsewhich':
-            text = ('#!/bin/sh\nfor f in "$@"; do echo "/x/$f"; done\n'
-                    'exit 0\n')
+            text = ('#!/bin/sh\nfor f in "$@"; do\ncase "$f" in\n%s) ;;\n'
+                    '*) echo "/x/$f" ;;\nesac\ndone\nexit 0\n' %
+                    '|'.join(tex_missing if tex_missing else ['none.none']))
         else:
             text = '#!/bin/sh\nexit 0\n'
         with open(path, 'w') as f:
             f.write(text)
+        os.chmod(path, 0o755)
+    if libs_missing:
+        path = os.path.join(bindir, 'ldd')
+        os.unlink(path)
+        with open(path, 'w') as f:
+            f.write('#!/bin/sh\ncase "$1" in\n*-x11)\n'
+                    'echo "\tlibXft.so.2 => not found"\n'
+                    'echo "\tlibfontconfig.so.1 => not found" ;;\n'
+                    '*) echo "\tlibc.so.6 => /lib/libc.so.6" ;;\nesac\n')
         os.chmod(path, 0o755)
     return ({'PATH': bindir, 'HOME': hm, 'LANG': 'C',
              'TMPDIR': os.path.join(tmp, 'tmp')}, hm)
@@ -273,6 +301,9 @@ def only_block_lines(block):
     the two fixed sentences."""
     fixed = ('Strata runs without them.  Each feature that needs one '
              'reports', 'that it is missing when the feature is used.',
+             'Strata runs without them, except the programs that are named',
+             'above as not starting: they start when the package is',
+             'installed.  Each feature that needs one of the others reports',
              'An administrator installs them with:',
              'Install the packages listed above with the package manager',
              'of this system.')
@@ -335,6 +366,58 @@ check('optional: with only ghostscript missing the block names ghostscript '
       all(w not in flat for w in ('texlive', 'dvipng', 'hunspell', 'curl',
                                   'unzip', 'cups-client')) and
       ('mythes-en-us' in flat) == (not mythes), flat)
+
+# A shared library that the X11 programs need is missing: the install is made
+# all the same, status 0, and the block names the libraries and the programs
+# that will not start.  A user without root cannot install a library, and the
+# terminal version needs none.
+env_lib, home_lib = machine(OPTIONAL, libs_missing=True)
+st, out = run([os.path.join(rel, 'strata-install')], env_lib, work)
+all_output.append(out)
+early, blk = block_of(out)
+flat = ' '.join(' '.join(blk or []).split())
+check('libraries: with libXft and libfontconfig missing the install of an '
+      'ordinary user is made, status 0, with no required item',
+      st == 0 and 'required item' not in out and os.path.isfile(
+          os.path.join(home_lib, 'usr', 'bin', 'str')), out[-500:])
+check('libraries: the block names each library once, its package and the '
+      'programs that will not start until it is installed',
+      blk is not None and flat.count('libxft2') >= 1 and
+      flat.count('libfontconfig1') >= 1 and
+      'str-x11, stred-x11 will not start until it is installed' in flat,
+      flat[:700])
+check('libraries: the block says that only the named programs do not '
+      'start, and gives the command of an administrator with the packages',
+      blk is not None and 'except the programs that are named above as not '
+      'starting' in flat and 'libxft2' in flat.split(
+          'sudo apt-get install --no-install-recommends')[-1], flat)
+check('libraries: the terminal programs are not named as not starting',
+      blk is not None and 'str will not start' not in flat and
+      'stred will not start' not in flat, flat)
+
+# Every file and font that a print needs is checked: when one is missing the
+# block names its package.
+TEX_FILES = {'needspace.sty': 'texlive-latex-extra',
+             'extarticle.cls': 'texlive-latex-extra',
+             'pmboxdraw.sty': 'texlive-latex-extra',
+             'ulem.sty': 'texlive-plain-generic',
+             'xcolor.sty': 'texlive-latex-recommended',
+             'setspace.sty': 'texlive-latex-recommended',
+             'pdflscape.sty': 'texlive-latex-recommended',
+             'ptmr8t.tfm': 'texlive-fonts-recommended',
+             'phvb8t.tfm': 'texlive-fonts-recommended',
+             'pplr8t.tfm': 'texlive-fonts-recommended',
+             'tgtermes.sty': 'tex-gyre'}
+for fname, pkg in sorted(TEX_FILES.items()):
+    env_t, home_t = machine(OPTIONAL, tex_missing=[fname])
+    st, out = run([os.path.join(rel, 'strata-install')], env_t, work)
+    all_output.append(out)
+    early, blk = block_of(out)
+    flat = ' '.join(' '.join(blk or []).split())
+    others = set(TEX_FILES.values()) - {pkg}
+    check('tex: with %s missing the block names the package %s and the '
+          'status is 0' % (fname, pkg), st == 0 and blk is not None and
+          pkg in flat and not any(o in flat for o in others), flat[:400])
 
 # Every optional program is there.
 env_all, home_all = machine(OPTIONAL)

@@ -278,6 +278,13 @@ check('content: every manual document and the PDF file of every manual are in '
       all((name + '/payload/share/strata/pdf/' + d) in names
           for d in listed_pdfs),
       [n for n in names if '/doc/' in n or '/pdf/' in n][:12])
+pic_dir = name + '/payload/share/strata/doc/pictures/'
+tree_pics = sorted(os.listdir(os.path.join(tree, 'manual', 'doc', 'pictures')))
+check('content: every picture of the manuals is in the folder doc/pictures '
+      'of the payload (%d pictures)' % len(tree_pics),
+      len(tree_pics) > 100 and
+      all((pic_dir + p) in names for p in tree_pics),
+      [n for n in names if '/doc/pictures/' in n][:5])
 check('content: the install script, the payload and INSTALL.txt are in it',
       all((name + '/' + n) in names for n in
           ('strata-install', 'payload/bin/stred', 'payload/bin/str',
