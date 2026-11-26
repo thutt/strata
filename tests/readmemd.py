@@ -6,11 +6,11 @@
 #     python3 -I -B tests/readmemd.py
 #
 # The file is ASCII, has no line over 80 columns, has the sections in the
-# order that the owner set, names no release that does not exist, names no
-# original program, links only to files that exist (the one outside link is
-# the license page), and says no more than the sources support.  The checks
-# are made again on texts that break one rule each, and each such text has
-# to fail a check.
+# order that the owner set, says nothing about a release or a branch, names
+# only the program str and none of its parts, names no original program,
+# links only to files that exist (the one outside link is the license page),
+# and says no more than the sources support.  The checks are made again on
+# texts that break one rule each, and each such text has to fail a check.
 #
 """Check README.md."""
 
@@ -25,7 +25,14 @@ fails = 0
 SECTIONS = ['What is in it', 'What it does', 'Install',
             'Build from the source', 'Documentation', 'Known issues',
             'Repository']
-BAD_WORDS = [r'\blotus\b', r'\bmanuscript\b', r'\boriginal\b', r'\bbugs?\b',
+# The README says nothing about a release (the build type in the command
+# 'source scripts/setup -b release' is the one place for the word) and names
+# none of the parts of str, and it names no branch.
+BAD_WORDS = [r'\bbranch', r'\bdevelopment-\d', r'\brelease', r'\bstatus\b',
+             r'\bpreparation\b', r'\bstred\b',
+             r'\bstrprint\b', r'\bdviview\b', r'\bEditor\b',
+             r'\bPrinter\b', r'\bViewer\b', r'\bDocument Manager\b',
+             r'\blotus\b', r'\bmanuscript\b', r'\boriginal\b', r'\bbugs?\b',
              r'\bpowerful\b', r'\bblazing\b', r'\bseamless', r'\bbest\b']
 
 
@@ -62,8 +69,13 @@ def problems(text, files, tags):
     if heads != SECTIONS:
         found.append('the sections are %s' % heads)
 
+    allowed = text.replace('scripts/setup -b release', 'scripts/setup -b X')
+
     for pat in BAD_WORDS:
-        if re.search(pat, text, re.IGNORECASE) is not None:
+        flags = 0 if pat.startswith(r'\b') and pat[2:3].isupper() else \
+            re.IGNORECASE
+
+        if re.search(pat, allowed, flags) is not None:
             found.append('the text has a word that is not allowed: ' + pat)
 
     for m in re.finditer(r'\]\(([^)]*)\)', text):
@@ -89,16 +101,9 @@ def problems(text, files, tags):
     if re.search(r'!\[|<img|badge|shields\.io', text) is not None:
         found.append('the text has an image or a badge')
 
-    if re.search(r'^Status: the first release is in preparation',
-                 text, re.MULTILINE) is None:
-        found.append('the status line is missing')
-
     if re.search(r'GNU General Public License, version 3 or later',
                  text) is None:
         found.append('the license is not named')
-
-    if len(tags) != 0 and 'v1.0.0' in tags:
-        found.append('a release tag exists: the status is stale')
 
     return found
 
@@ -117,11 +122,9 @@ def section(text, head):
 def places(text):
     """The three texts that have to name LaTeX, by their labels."""
     first = text.split('\n## ')[0]
-    progs = [ln for ln in section(text, 'What is in it').split('\n')
-             if ln.startswith('| `strprint`')]
 
     return {'the first paragraph': first,
-            'the programs list': ''.join(progs),
+            'the program section': section(text, 'What is in it'),
             'the requirements': section(text, 'Requirements')}
 
 
@@ -162,8 +165,6 @@ def main():
     found = problems(text, files, [])
     check('README.md breaks no rule', found == [], found)
 
-    check('no release tag exists', tags == [], tags)
-
     for needle in ['sha256sum -c', 'tar -xJf', 'bash strata-install',
                    'scripts/strata-build test', 'scripts/check-tools',
                    'source scripts/setup']:
@@ -182,16 +183,14 @@ def main():
     for name in sorted(names):
         check('README.md names the manual ' + name, name in text)
 
-    for name in ['stred', 'str', 'strprint', 'dviview']:
-        check('README.md names the program ' + name,
-              '`' + name + '`' in text)
+    check('README.md names the program str', '`str`' in text)
 
-    # LaTeX is named in the first paragraph, in the programs list and in
+    # LaTeX is named in the first paragraph, in the program section and in
     # the requirements.
     for label, where in latex_places(text).items():
         check('README.md names LaTeX in ' + label, where)
 
-    for label in ['the first paragraph', 'the programs list',
+    for label in ['the first paragraph', 'the program section',
                   'the requirements']:
         broken = text_without_latex(text, label)
         check('a mutation fails: no LaTeX in ' + label,
@@ -209,17 +208,15 @@ def main():
         ('a version', text + 'Version 1.0.0 is out.\n'),
         ('a badge', text + '![x](a.png)\n'),
         ('a hype word', text + 'A powerful editor.\n'),
-        ('no status line',
-         text.replace('Status: the first release is in preparation',
-                      'Status: ready')),
+        ('a status line', text + 'Status: in preparation.\n'),
+        ('a branch', text + 'The branch development-1 holds the work.\n'),
+        ('a release', text + 'The first release is out.\n'),
+        ('a part of str', text + 'The `stred` program is the Editor.\n'),
     ]
 
     for label, mutated in mutations:
         check('a mutation fails: ' + label,
               problems(mutated, files, []) != [])
-
-    check('a mutation fails: a release tag exists',
-          problems(text, files, ['v1.0.0']) != [])
 
     if fails != 0:
         print('%d check(s) failed' % fails)
