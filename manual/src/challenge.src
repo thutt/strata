@@ -144,22 +144,21 @@ Line numbering | The printed lines are numbered in the margin, in the Preview
 Take the longest document that you have, of at least several hundred pages, and
 put these questions to the system that you use.  For Strata the number that
 answers each one is in the tables of {n:ch-editor} and {n:ch-printer}.
-.table 6 54
-No. | The question
-1 | How long does the document take to open, and how long to show the first
- screen?
-2 | How long does a key to the next page take, in the middle of the document?
-3 | How long does a search take from the first page to a word on the last page?
-4 | How long does it take to replace a common word in the whole document, and
- to lay the document out again?
-5 | How long does one typed character take in the middle of the document?
-6 | How long does the Save take?
-7 | How much memory is in use at the end?
-8 | How long does the whole document take to print to a PDF, and are the
- contents, the index and every cross-reference right in that PDF?
-9 | How long does a range of sections take to print?
-10 | How long is it before the first page of a preview is shown?
-.end
+
+1. How long does the document take to open, and how long to show the first
+   screen?
+2. How long does a key to the next page take, in the middle of the document?
+3. How long does a search take from the first page to a word on the last page?
+4. How long does it take to replace a common word in the whole document, and
+   to lay the document out again?
+5. How long does one typed character take in the middle of the document?
+6. How long does the Save take?
+7. How much memory is in use at the end?
+8. How long does the whole document take to print to a PDF, and are the
+   contents, the index and every cross-reference right in that PDF?
+9. How long does a range of sections take to print?
+10.  How long is it before the first page of a preview is shown?
+
 How do your document preparation systems fare?
 
 .h1 How to repeat the measurements [ch-repeat]
