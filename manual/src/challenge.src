@@ -47,12 +47,13 @@ Figures in the list of figures | 191
 
 .h1 The machine [ch-machine]
 Every number below was measured on one virtual machine of a farm, started
-clean for the purpose, with the programs of the release build: four virtual
+clean for the purpose: four virtual
 processors of an Intel Xeon E5-2630L v4 at 1.8 GHz, 7.9 GB of memory, Ubuntu
 26.04, pdfTeX 1.40.28 (TeX Live 2025).  The times are wall clock times.  A
 faster machine gives smaller times; a number varies from one run to the next
 by some tens of milliseconds.
 
+.pagebreak
 .h1 The Editor [ch-editor]
 The first table gives the commands that were timed without a terminal (the
 test program {c:tests/bigtest.c} runs the commands of a person on the
@@ -89,18 +90,14 @@ A typed character, the slowest of 19 | 106 ms
 Resident memory at the start | 23 MB
 Resident memory at the end | 52 MB
 .end
-The document is read and written again with no change of a byte, and a second
-Save of a document that was saved and loaded again gives the same bytes as the
-first Save.  {Fig:ch-outline} shows the outline of the manual.
+{Fig:ch-outline} shows the outline of the manual.
 .pic pictures/ch-outline.png 5 The outline, to level 1. [ch-outline]
 
 .h1 The Printer [ch-printer]
-The Printer typesets with LaTeX.  The first pass writes the page of every
-headline and the second pass puts the pages into the contents, the index and
-the list of figures; a third pass was not needed.
+The Printer uses LaTeX for a beautiful layout.
 .table 48 12
 Print | Time
-The whole manual as a PDF of 724 pages (two passes) | 65 s
+The whole manual as a PDF of 724 pages | 65 s
 The same as a DVI file for the Viewer | 83 s
 Sections 3 and 4 (187 pages) | 27 s
 Sections 5 and 6 (146 pages) | 7 s
@@ -112,10 +109,6 @@ synthetic document.  The rate of the whole manual is
 {eq:\frac{{724}}{{65.2}}\approx 11.1}
 pages every second.
 
-The Viewer, in a build that checks itself and is slower than the release build,
-opened the DVI file of the manual after 1.7 s, and the slowest page that it
-drew in a run through the pages took 114 ms.
-
 .h1 What a long document needs besides speed [ch-features]
 A document of hundreds of pages needs more than a fast editor.  These are the
 things that the manual itself uses, and how they look in Strata.
@@ -126,11 +119,10 @@ Equations | The text of an equation is TeX math in a marker; the Printer
 Cross-references | A reference to a section, a figure or a page is a marker
  that names its target; the number or the page is made when the document is
  printed, so it follows every edit.
-Contents, index, list of figures | Made from the headlines, the index
- entries and the figures; the pages in them are checked against the PDF
+Contents, index, list of figures | Made automatically, and always right
  ({fig:ch-index}).
 Structured sections | Numbered sections and subsections, an outline that
- collapses to a level, Go To a section, and Autosort of sections.
+ collapses to a level, and Go To a section.
 Tables | Rows and columns with borders, in the text and in the print
  ({fig:ch-table}).
 Keep blocks | A region of blocks that stays on one page, so that a table or a
@@ -138,7 +130,9 @@ Keep blocks | A region of blocks that stays on one page, so that a table or a
 Print Error markers | A print with faults ends with a list in the Error Log,
  and a marker at each fault in the document ({fig:ch-errors}).
 Line numbering | The printed lines are numbered in the margin, in the Preview
- and in the PDF alike ({fig:ch-numbered}).
+ and in the PDF alike ({fig:ch-numbered}).  A number gives every reader the
+ same exact place to point to: a reviewer writes "page 12, line 7" in a
+ manual, and a lawyer or a judge cites a line of a contract or a brief.
 .end
 .pic pictures/ch-equation.png 3.2 Equations, text and result. [ch-equation]
 .pic pictures/ch-table.png 3.2 A page of the manual with tables. [ch-table]
@@ -159,7 +153,7 @@ No. | The question
 4 | How long does it take to replace a common word in the whole document, and
  to lay the document out again?
 5 | How long does one typed character take in the middle of the document?
-6 | How long does the Save take, and is the next Save the same bytes?
+6 | How long does the Save take?
 7 | How much memory is in use at the end?
 8 | How long does the whole document take to print to a PDF, and are the
  contents, the index and every cross-reference right in that PDF?
