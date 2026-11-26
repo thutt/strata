@@ -48,6 +48,48 @@ and is asked before any missing package is installed. The option `--dry-run`
 shows what would be done, and the option `--uninstall` removes Strata again.
 Then `~/usr/bin/str` starts Strata.
 
+### Where the files are installed
+
+The files go below a prefix: the directory `usr` of the home directory for an
+ordinary user, and `/usr` for an administrator. PREFIX stands for it below.
+
+    PREFIX/bin/str                     Strata in a terminal
+    PREFIX/bin/str-x11                 Strata in an X11 window, when built
+    PREFIX/bin/strata-run COMMAND      runs COMMAND with the environment
+                                       that the installed Strata needs
+    PREFIX/share/strata/strata.hlp     the help file
+    PREFIX/share/strata/doc/           the manuals, as Strata documents
+    PREFIX/share/strata/doc/challenge/ the challenge document and its
+                                       pictures
+    PREFIX/share/strata/pdf/           the manuals, as PDF files
+    PREFIX/share/strata/samples/       sample documents: letters, envelopes,
+                                       labels, fonts, comments, story
+    PREFIX/share/strata/tutorial/      the documents of the Tutorial
+    PREFIX/share/strata/templates/     the templates of New, in folders
+    PREFIX/share/strata/manifest       every file and directory installed
+    PREFIX/share/doc/strata/           the license, README.txt and
+                                       KNOWN-ISSUES.txt
+
+The programs that `str` starts are in `PREFIX/bin` as well.
+
+### Starting Strata and opening Getting Started
+
+Start the program in a terminal with `str`, or in an X11 window with
+`str-x11`; for an ordinary user the full names are `~/usr/bin/str` and
+`~/usr/bin/str-x11`, for an administrator `/usr/bin/str` and
+`/usr/bin/str-x11`. The menu that appears lists what to do with documents.
+Move with Up and Down, and press Ins or Enter to choose.
+
+To read the guide for a new user, choose Edit / Preview / Print Document. In
+the panel, give the whole name of the document as the Document Name and press
+Ins:
+
+    /home/NAME/usr/share/strata/doc/GettingStarted.doc    ordinary user
+    /usr/share/strata/doc/GettingStarted.doc              administrator
+
+NAME is the user name. A tilde is not expanded in a document name, so the
+home directory is typed out. Esc goes back, and F1 shows the help.
+
 ### Requirements
 
 A terminal or an X server. Everything else is optional, and the editing needs
@@ -92,7 +134,8 @@ tool.
 
 ## Documentation
 
-Strata delivers these manuals, as documents that it opens and as PDF files:
+Strata delivers these manuals, as documents that it opens (in
+`PREFIX/share/strata/doc`) and as PDF files (in `PREFIX/share/strata/pdf`):
 
 - `GettingStarted`: the guide for a new user.
 - `strata-reference-manual`: the Reference Manual.
@@ -101,6 +144,12 @@ Strata delivers these manuals, as documents that it opens and as PDF files:
 - `terminal-keys`: the keys that a terminal keeps for itself.
 - `challenge`: "How do your document preparation systems fare?", the
   measured numbers for a long document, as a Strata document and a PDF file.
+
+Every manual has a PDF file with the name of the document and the ending
+`.pdf`, such as `PREFIX/share/strata/pdf/GettingStarted.pdf` and
+`PREFIX/share/strata/pdf/strata-reference-manual.pdf`, except `terminal-keys`,
+which is a part of the Reference Manual and has none of its own. For an
+ordinary user PREFIX is `~/usr`, for an administrator `/usr`.
 
 Their sources are in [manual/src](manual/src), and the design documents are in
 [docs](docs).
@@ -114,16 +163,34 @@ Characters in Setup selects Automatic, ASCII, VT100 or UTF-8.
 
 ## Repository
 
+The top of the source tree:
+
 | Directory | Contents |
 |-----------|----------|
 | `src` | the programs |
 | `tools` | helper programs |
 | `tests` | the tests |
-| `scripts` | the build and install scripts |
-| `manual` | the sources of the manuals and the manual build |
+| `scripts` | the build, install and version scripts |
+| `manual` | the manuals and the manual build |
 | `docs` | design notes and studies |
 | `help` | the text of the on-line help |
-| `templates` | templates for letters, envelopes and labels |
+| `templates` | the templates of New |
 | `samples` | sample documents |
+| `logo` | the definitions of the logos in the documents |
+| `notes` | working notes |
 
-The license is in [COPYING](COPYING).
+Below `manual`:
+
+| Directory | Contents |
+|-----------|----------|
+| `manual/src` | the sources of the manuals, one text file for each part |
+| `manual/doc` | the manuals as Strata documents, and their pictures |
+| `manual/challenge` | the challenge document and its pictures |
+| `manual/samples` | the documents that the Tutorial teaches with |
+| `manual/scenes` | the scripts that take the pictures of pages |
+
+Below `templates` and `samples` are the folders `letters`, `envelopes` and
+`labels`; `samples` has also `fonts`, `comments` and `story`.
+
+The files at the top are `Makefile` (used by `scripts/strata-build`),
+`README.txt` for developers and [COPYING](COPYING), the license.

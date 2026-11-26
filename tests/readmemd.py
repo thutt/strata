@@ -36,6 +36,28 @@ BAD_WORDS = [r'\bbranch', r'\bdevelopment-\d', r'\brelease', r'\bstatus\b',
              r'\bpowerful\b', r'\bblazing\b', r'\bseamless', r'\bbest\b']
 
 
+# The four things that the owner asked for: the layout of the source, the
+# layout of the install, how to start str and open Getting Started, and where
+# the PDF files are.  Each is a text that has to be in README.md.
+REQUIRED = [('the layout of the install', '### Where the files are installed'),
+            ('the install layout names the PDF folder',
+             'PREFIX/share/strata/pdf/'),
+            ('the install layout names the folder of the documents',
+             'PREFIX/share/strata/doc/'),
+            ('how to start Strata and open Getting Started',
+             '### Starting Strata and opening Getting Started'),
+            ('the name of the Getting Started document',
+             'share/strata/doc/GettingStarted.doc'),
+            ('the programs str and str-x11 are named for the start',
+             '`str-x11`'),
+            ('the PDF file of Getting Started is named',
+             'share/strata/pdf/GettingStarted.pdf'),
+            ('the PDF file of the Reference Manual is named',
+             'share/strata/pdf/strata-reference-manual.pdf'),
+            ('the layout of the source tree', 'The top of the source tree:'),
+            ('the layout below manual', 'Below `manual`:')]
+
+
 def check(label, ok, detail=''):
     global fails
     if ok:
@@ -100,6 +122,10 @@ def problems(text, files, tags):
 
     if re.search(r'!\[|<img|badge|shields\.io', text) is not None:
         found.append('the text has an image or a badge')
+
+    for label, needle in REQUIRED:
+        if needle not in text:
+            found.append('the text lacks ' + label)
 
     if re.search(r'GNU General Public License, version 3 or later',
                  text) is None:
@@ -195,6 +221,11 @@ def main():
         broken = text_without_latex(text, label)
         check('a mutation fails: no LaTeX in ' + label,
               latex_places(broken)[label] is False)
+
+    for label, needle in REQUIRED:
+        check('README.md has ' + label, needle in text)
+        check('a mutation fails: no ' + label,
+              problems(text.replace(needle, 'x'), files, []) != [])
 
     # Mutations: each text breaks one rule and has to fail.
     mutations = [
