@@ -253,12 +253,16 @@ if build_dir == '' or not os.path.exists(os.path.join(xbin, 'strprint')) or \
 else:
     out = tempfile.mkdtemp(prefix='challenge')
     env = dict(os.environ, XBIN=xbin, MANUAL_OUT=out)
+    # A folder for the PDF files that the caller names would hold the PDF
+    # file and not the folder of this run.
+    env.pop('PDFDIR', None)
     r = subprocess.run(['bash', os.path.join(root, 'manual', 'build.sh'),
                         'challenge'], env=env, capture_output=True,
                        text=True)
     pdf = os.path.join(out, 'pdf', 'challenge.pdf')
     check('build.sh challenge makes the PDF', r.returncode == 0 and
-          os.path.exists(pdf), r.stdout[-300:] + r.stderr[-300:])
+          os.path.exists(pdf),
+          'status %d: ' % r.returncode + r.stdout[-300:] + r.stderr[-300:])
     if os.path.exists(pdf):
         info = subprocess.run(['pdfinfo', pdf], capture_output=True,
                               text=True).stdout
