@@ -519,8 +519,9 @@ try:
     # ---- LaTeX missing: every marker is drawn by settings -------------------
     empty = os.path.join(tmp, 'empty')
     os.makedirs(empty, exist_ok=True)
-    r = Run('nolatex', document(['\\TeX{}', '{\\bfseries Bold}', '\\newpage']),
-            dirs=[empty])
+    # The text of the first marker is not a name: a name is shown as the word.
+    r = Run('nolatex', document(['\\textit{ink}', '{\\bfseries Bold}',
+                                 '\\newpage']), dirs=[empty])
     r.wait(lambda run: '[LaTeX instructions]' in run.screen(), 60)
     time.sleep(3.0)
     s = r.screen()
@@ -531,6 +532,17 @@ try:
     check('LaTeX missing: the message line shows that LaTeX is not '
           'installed', r.wait(lambda run: 'drawn as Short: LaTeX is not '
           'installed' in run.screen(), 20), r.screen())
+    r.stop()
+
+    # A marker whose text is a name (the TeX logo) is drawn by the plain word
+    # when LaTeX is missing, and not by the label.
+    r = Run('nolatexname', document(['\\TeX{}']), dirs=[empty])
+    r.wait(lambda run: '00 TeX end' in run.screen(), 60)
+    time.sleep(1.0)
+    s = r.screen()
+    check('LaTeX missing: the marker of the TeX logo is drawn as the word '
+          'TeX', '00 TeX end' in s and '[LaTeX instructions]' not in s and
+          '\ue000' not in s, s)
     r.stop()
 
     # ---- The cache and the compiles -----------------------------------------
@@ -587,7 +599,7 @@ try:
     open(slog, 'w').close()
     fake_program(os.path.join(sdir, 'pdflatex'),
                  'echo "$$ $(date +%%s.%%N)" >> %s\nsleep 20\n' % slog)
-    r = Run('slow', document(['\\TeX{}'] * 9),
+    r = Run('slow', document(['\\textit{ink}'] * 9),
             dirs=[sdir, '/usr/bin', '/bin'])
     r.wait(lambda run: '[LaTeX instructions]' in run.screen(), 60)
     r.wait(lambda run: open(slog).read().strip() != '', 30)
@@ -667,7 +679,8 @@ try:
     r.stop()
 
     # ---- The Printer setting that forbids LaTeX markers ---------------------
-    r = Run('forbid', document(['\\TeX{}']), config='latex_markers=no\n')
+    r = Run('forbid', document(['\\textit{ink}']),
+            config='latex_markers=no\n')
     r.wait(lambda run: '[LaTeX instructions]' in run.screen(), 60)
     time.sleep(3.0)
     for _ in range(3):
@@ -822,7 +835,7 @@ try:
 
     # ---- The terminal Editor is unchanged -----------------------------------
     tdoc = os.path.join(tmp, 'term.doc')
-    open(tdoc, 'wb').write(document(['\\TeX{}', '{\\bfseries Bold}']))
+    open(tdoc, 'wb').write(document(['\\textit{ink}', '{\\bfseries Bold}']))
     open(count, 'w').close()
     saved = {k: os.environ.get(k) for k in ('STRATA_HOME',
              'STRATA_PROGRAM_DIRS')}

@@ -69,11 +69,12 @@ def read(path):
 
 
 def latex_doc(path, extra=b''):
-    """A document with a LaTeX marker in a block of its own."""
+    """A document with a LaTeX marker in a block of its own.  The text of the
+    marker is not a name (a name such as \\TeX{} is shown as the word)."""
     with open(path, 'wb') as f:
         f.write(b'*R3\r\nMR1001\r\nPP\\1\\\x00\r\nP1C33\r\nFHA1\r\nFTT5\r\n'
                 b'DP0,8500,11000\r\n' + extra + b'*B0\r\nS\r\nTa \x1341(S\r\n'
-                b'T\\TeX{}\x00\r\n\x13) b\x1d\x00\r\n*E\r\n')
+                b'T\\textbf{x}\x00\r\n\x13) b\x1d\x00\r\n*E\r\n')
 
 
 try:
