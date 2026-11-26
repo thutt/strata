@@ -17,9 +17,12 @@ THE CLAIMS OF THE CHALLENGE DOCUMENT
 
 The document "How do your document preparation systems fare?" is made from
 manual/src/challenge.src by "manual/build.sh challenge" (the PDF is
-challenge.pdf of the manual folder of the build).  It is not part of the
-install tarball and not part of "build.sh all".  This file says where every
-statement of it comes from.  tests/challenge.py checks that the numbers of
+challenge.pdf of the manual folder of the build).  It is part of "build.sh
+all" and of the install: the PDF file with the other manuals, and the
+document manual/challenge/challenge.doc (a committed file, made by "build.sh
+publish") in the folder share/strata/doc/challenge of the install, with its
+pictures in a folder next to it.  This file says where every statement of it
+comes from.  tests/challenge.py checks that the numbers of
 the document are the numbers of section 7 of docs/BIG-DOCUMENTS.txt, which
 gives the commands.
 

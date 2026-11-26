@@ -99,6 +99,8 @@ Strata delivers these manuals, as documents that it opens and as PDF files:
 - `cheat`, `cheat-short` and `mathcheat`: the cards.
 - `errata`: the known anomalies of the terminal programs.
 - `terminal-keys`: the keys that a terminal keeps for itself.
+- `challenge`: "How do your document preparation systems fare?", the
+  measured numbers for a long document, as a Strata document and a PDF file.
 
 Their sources are in [manual/src](manual/src), and the design documents are in
 [docs](docs).

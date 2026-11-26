@@ -492,7 +492,10 @@ Marketing document: the big document challenge
       (docs/BIG-DOCUMENTS.txt, section 7: the manual is 724 pages now); every
       statement is traced in docs/CHALLENGE-CLAIMS.txt; the pictures are in
       manual/challenge/pictures (made by manual/challenge/shots.py); the test
-      is tests/challenge.py.  The document makes no statement about any other
+      is tests/challenge.py.  The document and its PDF file are delivered by
+      the install (owner, 2026-11-25): the PDF with the other manuals, the
+      Strata document in the folder doc/challenge with its pictures.  The
+      document makes no statement about any other
       program, so the rules below about competitors are kept by silence.
       Line numbering is a feature point; UTF-8 is left out because its item
       is an exploration that is not complete.  The notes below are the

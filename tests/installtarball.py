@@ -375,14 +375,18 @@ check('version: a build with no supported version makes no tarball and the '
 tree_docs = sorted(n[:-4] for n in os.listdir(os.path.join(tree, 'manual',
                                                            'doc'))
                    if n.endswith('.doc') and 'strata-file-format' not in n)
+# The document of the challenge is in a folder of its own, with its pictures.
+tree_docs.append('challenge/challenge')
 check('manuals: the list is the documents of manual/doc that the install '
-      'delivers (all but the specification of the file formats)',
-      sorted(d[:-4] for d in listed_docs) == tree_docs,
+      'delivers (all but the specification of the file formats), and the '
+      'document of the challenge in its own folder',
+      sorted(d[:-4] for d in listed_docs) == sorted(tree_docs),
       (listed_docs, tree_docs))
 check('manuals: every manual has a PDF file in the list, except the part '
       'terminal-keys that is a part of the Reference Manual',
       sorted(d[:-4] for d in listed_pdfs) ==
-      sorted(set(tree_docs) - {'terminal-keys'}), listed_pdfs)
+      sorted(n.split('/')[-1] for n in set(tree_docs) - {'terminal-keys'}),
+      listed_pdfs)
 
 COMMAND = 'scripts/strata-build manual'
 
@@ -453,8 +457,11 @@ for n in ('strata-install-tarball', 'strata-install', 'INSTALL-USER.txt'):
     shutil.copy2(os.path.join(scripts, n), os.path.join(sp, 'scripts', n))
 for n in listed_docs:
     if n != 'GettingStarted.doc':
-        shutil.copy2(os.path.join(tree, 'manual', 'doc', n),
-                     os.path.join(sp, 'manual', 'doc', n))
+        # A name with a folder (challenge/challenge.doc) is below manual.
+        sub = 'manual' if '/' in n else os.path.join('manual', 'doc')
+        os.makedirs(os.path.join(sp, sub, os.path.dirname(n)),
+                    exist_ok=True)
+        shutil.copy2(os.path.join(tree, sub, n), os.path.join(sp, sub, n))
 d = fake_build(os.path.join(tmp, 'f-doc'))
 ok, why = refused(os.path.join(sp, 'scripts', 'strata-install-tarball'), d,
                   'GettingStarted.doc')

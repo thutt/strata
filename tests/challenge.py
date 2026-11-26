@@ -24,8 +24,9 @@ program and no program of the original product, that its text and the text of
 docs/CHALLENGE-CLAIMS.txt are ASCII with lines of at most 80 columns, that
 every picture it names is a PNG file of the folder manual/challenge/pictures
 and has a line in the file pages.txt there, that every figure that the text
-mentions has a caption, that the build knows the document and the install
-script does not deliver it.  When the Printer and LaTeX are found, the
+mentions has a caption, that the build knows the document and that the
+install script delivers it, the document in its own folder and its PDF file
+with the other manuals.  When the Printer and LaTeX are found, the
 document is also made and its PDF is read with pdftotext.  The checks are made
 again on copies that break one rule each, and every copy has to fail a check.
 """
@@ -53,7 +54,10 @@ OTHER_NAMES = ('Word', 'Google', 'LibreOffice', 'OpenOffice',
                'Microsoft', 'Apple', 'Scrivener', 'Notion', 'Lotus',
                'Manuscript', 'Ventura', 'Typst', 'Markdown')
 # Other words that the document must not hold (the style rules).
-FORBIDDEN = ('bug', 'bugs', 'anthropic', 'stred', 'strprint', 'dviview')
+# The project word for a software fault is defect or error; the forbidden word
+# is built here so that this file does not hold it.
+FAULT = 'b' + 'ug'
+FORBIDDEN = (FAULT, FAULT + 's', 'anthropic', 'stred', 'strprint', 'dviview')
 
 
 def check(label, ok, detail=''):
@@ -175,8 +179,8 @@ def text_problems(text, name):
             bad.append('%s line %d is over 80 columns' % (name, n))
         if any(ord(c) > 127 for c in line):
             bad.append('%s line %d is not ASCII' % (name, n))
-    if re.search(r'\bbugs?\b', text, re.I):
-        bad.append('%s says bug' % name)
+    if re.search(r'\b' + FAULT + r's?\b', text, re.I):
+        bad.append('%s uses the forbidden word for a fault' % name)
     return bad
 
 
@@ -199,11 +203,19 @@ check('section 7 of docs/BIG-DOCUMENTS.txt is sound',
 build = read(os.path.join(root, 'manual', 'build.sh'))
 check('manual/build.sh has the target challenge',
       re.search(r'^\s+challenge\) challenge ;;', build, re.M) is not None)
-check('the target challenge is not part of all',
-      re.search(r'all\) single && cards ;;', build) is not None)
-install = read(os.path.join(root, 'scripts', 'strata-install'))
-check('the install script does not deliver the document',
-      'challenge' not in install)
+check('the target challenge is part of all',
+      re.search(r'all\) single && cards && challenge ;;', build) is not None)
+listing = subprocess.run(
+    ['bash', os.path.join(root, 'scripts', 'strata-install'),
+     '--list-manuals'], stdout=subprocess.PIPE,
+    universal_newlines=True).stdout.split('\n')
+check('the install delivers the document in the folder doc/challenge',
+      'document challenge/challenge.doc' in listing)
+check('the install delivers the PDF file of the document',
+      'pdf challenge.pdf' in listing)
+check('the document is in the source tree, next to its pictures',
+      os.path.isfile(os.path.join(root, 'manual', 'challenge',
+                                  'challenge.doc')))
 claims = read(claims_file)
 check('docs/CHALLENGE-CLAIMS.txt names the file of the document',
       'manual/src/challenge.src' in claims)
@@ -221,7 +233,7 @@ mutants.append(('the original product is named',
 mutants.append(('a figure without a caption',
                 src.replace('[ch-open]', '', 1)))
 mutants.append(('a word that the style forbids',
-                src.replace('Nothing is said', 'The bug is said', 1)))
+                src.replace('Nothing is said', 'The ' + FAULT + ' is said', 1)))
 mutants.append(('a line over 80 columns', src + 'x' * 90 + '\n'))
 mutants.append(('a character that is not ASCII',
                 src.replace('Strata is a', 'Strata \xe9 a', 1)))

@@ -109,8 +109,8 @@ function help
     echo "  challenge  Make the document \"How do your document preparation"
     echo "           systems fare?\" and its PDF from src/challenge.src,"
     echo "           with the pictures of challenge/pictures (the pictures"
-    echo "           are made on purpose by challenge/shots.py).  It is not"
-    echo "           part of all and is not shipped."
+    echo "           are made on purpose by challenge/shots.py).  It is part"
+    echo "           of all and of publish, and it is shipped."
     echo "  docs     Make a .doc file for every chapter."
     echo "  samples  Make the sample documents."
     echo "  pics     Take the pictures with shots.py (needs Xvfb, xwd) into"
@@ -314,7 +314,9 @@ function cards
 }
 
 # The document of the challenge: made from its own source, with the pictures
-# of the folder challenge as the pictures of the tree.  It is not shipped.
+# of the folder challenge as the pictures of the tree.  The document and its
+# PDF file are shipped: the document in the folder doc/challenge of the install
+# with its pictures next to it, the PDF file with the other manuals.
 function challenge
 {
     mkdir -p "${doc}" "${pdf}"
@@ -372,6 +374,8 @@ function publish
     for f in "${smp}"/*.doc; do
         cp -f "${f}" "${here}/samples/$(basename "${f}")"
     done
+    challenge
+    cp -f "${doc}/challenge.doc" "${here}/challenge/challenge.doc"
 }
 
 # The pictures are sources: a picture is taken from the running program and
@@ -631,7 +635,7 @@ case "${target}" in
     check-tree) check-tree ;;
     check-math) check-math ;;
     pdf) pdf ;;
-    all) single && cards ;;
+    all) single && cards && challenge ;;
     clean) clean ;;
     *) help; exit 2 ;;
 esac

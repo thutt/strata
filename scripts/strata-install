@@ -85,17 +85,20 @@ term_programs=(str stred strprint)
 x11_programs=(str stred)
 
 # The manuals that a release delivers.  The documents are in manual/doc of
-# the source tree; their PDF files are made by the manual build into
-# manual/pdf of the build directory.  The variable STRATA_MANUALS_HINT may
-# name the command that makes them; it is shown in the fatal error.  The
+# the source tree, except the document challenge, which is in its own folder
+# manual/challenge with the pictures that it names, and is installed in the
+# folder doc/challenge of the install with its pictures below it.  The PDF
+# files are made by the manual build into manual/pdf of the build directory.
+# The variable STRATA_MANUALS_HINT may name the command that makes them; it is
+# shown in the fatal error.  The
 # document terminal-keys is a part of the Reference Manual and has no PDF of
 # its own.  The specification of the file formats is never delivered.  This
 # is the one list: the tarball is made from it, and tests/installtarball.py
 # proves that it is the set of the documents that the install delivers.
 manual_documents=(GettingStarted cheat cheat-short mathcheat errata
-                  strata-reference-manual terminal-keys)
+                  strata-reference-manual terminal-keys challenge/challenge)
 manual_pdfs=(GettingStarted cheat cheat-short mathcheat errata
-             strata-reference-manual)
+             strata-reference-manual challenge)
 
 
 # Prints the help text.
@@ -169,6 +172,9 @@ The layout under the prefix:
                                      the installed Strata needs
   share/strata/strata.hlp            the help file
   share/strata/doc/                  the documents of Strata
+  share/strata/doc/challenge/        the document "How do your document
+                                     preparation systems fare?", and its
+                                     pictures in a directory next to it
   share/strata/pdf/                  the manuals as PDF files
   share/strata/samples/              the sample documents
   share/strata/samples/letters/      the sample business letters (US Letter
@@ -690,6 +696,17 @@ function in_list
 }
 
 
+# Prints the file of a manual document in the source tree: manual/doc/NAME.doc,
+# or manual/NAME.doc for a name with a folder in it (challenge/challenge).
+function manual_source
+{
+    case "${1}" in
+        */*) echo "${tree_dir}/manual/${1}.doc" ;;
+        *) echo "${tree_dir}/manual/doc/${1}.doc" ;;
+    esac
+}
+
+
 # Prints one line for each manual that is not as it must be: a document
 # of the source tree that is missing, or a PDF file of the build directory
 # that is missing, empty or not a PDF file (it does not begin with %PDF).
@@ -699,7 +716,7 @@ function manual_problems
     local file
 
     for name in "${manual_documents[@]}"; do
-        file="${tree_dir}/manual/doc/${name}.doc"
+        file="$(manual_source "${name}")"
         if [ ! -f "${file}" ]; then
             echo "missing: ${file}"
         elif [ ! -s "${file}" ]; then
@@ -928,6 +945,19 @@ function install_from_tree
                      "${tutorial_dir}/pictures/$(basename "${sample}")"
         fi
     done
+
+    # The document of the challenge, with the pictures that it names in a
+    # folder next to it.  Its PDF file is installed with the other manuals.
+    challenge_dir="${prefix}/share/strata/doc/challenge"
+    put_file 644 "${tree_dir}/manual/challenge/challenge.doc" \
+             "${challenge_dir}/challenge.doc"
+
+    for sample in "${tree_dir}"/manual/challenge/pictures/*.png; do
+        if [ -f "${sample}" ]; then
+            put_file 644 "${sample}" \
+                     "${challenge_dir}/pictures/$(basename "${sample}")"
+        fi
+    done
 }
 
 
@@ -1112,6 +1142,8 @@ function show_installed
     local count
     local groups=("bin|Programs"
                   "share/strata/doc|Documents"
+                  "share/strata/doc/challenge|Document of the challenge"
+                  "share/strata/doc/challenge/pictures|Challenge pictures"
                   "share/strata/pdf|Manuals as PDF files"
                   "share/strata/samples|Sample documents, macros and libraries"
                   "share/strata/samples/letters|Sample business letters"

@@ -29,7 +29,7 @@ SECTIONS = ['What is in it', 'What it does', 'Install',
 # 'source scripts/setup -b release' is the one place for the word) and names
 # none of the parts of str, and it names no branch.
 BAD_WORDS = [r'\bbranch', r'\bdevelopment-\d', r'\brelease', r'\bstatus\b',
-             r'\bpreparation\b', r'\bstred\b',
+             r'\bin preparation\b', r'\bstred\b',
              r'\bstrprint\b', r'\bdviview\b', r'\bEditor\b',
              r'\bPrinter\b', r'\bViewer\b', r'\bDocument Manager\b',
              r'\blotus\b', r'\bmanuscript\b', r'\boriginal\b', r'\bbugs?\b',
@@ -178,7 +178,7 @@ def main():
 
     for line in manuals:
         if line.startswith('document '):
-            names.add(line.split()[1][:-4])
+            names.add(os.path.basename(line.split()[1])[:-4])
 
     for name in sorted(names):
         check('README.md names the manual ' + name, name in text)

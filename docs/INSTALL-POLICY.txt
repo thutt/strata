@@ -145,9 +145,12 @@ The manuals are required.  It is a fatal error to make the tarball without
 the manuals and the PDF files of the manuals (owner decision, 2026-11-24).
 The manuals are the documents GettingStarted, cheat, cheat-short, mathcheat,
 errata, strata-reference-manual and terminal-keys of manual/doc in the source
-tree (committed files), and the PDF files of the first six (terminal-keys is a
-part of the Reference Manual and has none of its own) in manual/pdf of the
-build directory.  The specification of the file formats is never delivered.
+tree (committed files), and the document challenge ("How do your document
+preparation systems fare?"; manual/challenge/challenge.doc, installed in the
+folder doc/challenge with its pictures below it, owner decision 2026-11-25),
+and the PDF files of all of them but terminal-keys (a part of the Reference
+Manual with none of its own) in manual/pdf of the build directory.  The
+specification of the file formats is never delivered.
 The one list is in scripts/strata-install (strata-install --list-manuals
 prints it); the tarball script and the tests use it, so that they cannot
 differ, and tests/installtarball.py proves that it is the set of the
