@@ -592,6 +592,25 @@ ifneq ($(XFT_H),)
 XFTFLAGS = -DHAVE_XFT -I/usr/include/freetype2
 XFTLIBS  = -lXft -lfontconfig
 endif
+
+# The answer of the test for the Xft headers decides how the X11 programs are
+# built: the flag -DHAVE_XFT and the libraries.  It is kept in a file of the
+# X11 directory, written when the Makefile is read and only when the answer is
+# not in it, so that the time of the file changes only when the answer
+# changes.  The object of the X11 frontend, the only one that has code for
+# Xft, depends on the file: when the headers appear after a build, or go
+# away, the next build makes that object and the programs again, and when
+# nothing changed nothing is made again.
+XFT_ANSWER := $(if $(XFT_H),xft,no-xft)
+ifeq ($(BIN),$(O)/x11)
+XFT_STAMP      := $(O)/x11/xft-answer
+XFT_STAMP_MADE := $(shell mkdir -p $(dir $(XFT_STAMP)); \
+    if test ! -f $(XFT_STAMP) || \
+       test "$$(cat $(XFT_STAMP))" != '$(XFT_ANSWER)'; then \
+        printf '%s\n' '$(XFT_ANSWER)' > $(XFT_STAMP); \
+    fi)
+$(BIN)/$(TERMO).o: $(XFT_STAMP)
+endif
 x11:
 	$(Q)test -f /usr/include/X11/Xlib.h || { \
 	    echo "x11: Xlib.h not found; install libx11-dev."; exit 1; }
