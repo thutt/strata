@@ -899,6 +899,36 @@ draw_logo_cell(int x, int y, unsigned cp, XftFont *normal, XftColor *fgc)
 #endif
 
 
+/*
+ * Whether a font of the X server has a glyph for the Unicode character cp:
+ * the character is in the range of the font and its entry in the table of
+ * the sizes has some size.  A font that has one size for all the characters
+ * (no table) is taken to have all the characters of its range.
+ */
+static int
+core_has_glyph(const XFontStruct *fs, unsigned cp)
+{
+    unsigned hi = cp >> 8;
+    unsigned lo = cp & 0xFF;
+
+    if (hi < fs->min_byte1 || hi > fs->max_byte1 ||
+        lo < fs->min_char_or_byte2 || lo > fs->max_char_or_byte2) {
+        return 0;
+    }
+
+    if (fs->per_char == NULL) {
+        return 1;
+    }
+
+    unsigned cols = fs->max_char_or_byte2 - fs->min_char_or_byte2 + 1;
+    unsigned at = (hi - fs->min_byte1) * cols + (lo - fs->min_char_or_byte2);
+    const XCharStruct *c = &fs->per_char[at];
+
+    return c->width != 0 || c->ascent != 0 || c->descent != 0 ||
+           c->lbearing != 0 || c->rbearing != 0;
+}
+
+
 static void
 draw_run(int x, int y, int n, int attr)
 {
@@ -932,12 +962,18 @@ draw_run(int x, int y, int n, int attr)
                 continue;
             }
 
-            XftFont *ff =
-                XftCharExists(dpy, f, c) != 0 ?
-                    f :
-                    (xf_fb != NULL && XftCharExists(dpy, xf_fb, c) != 0 ?
-                         xf_fb :
-                         f);
+            XftFont *ff = f;
+
+            if (XftCharExists(dpy, f, c) == 0) {
+                if (xf_fb != NULL && XftCharExists(dpy, xf_fb, c) != 0) {
+                    ff = xf_fb;
+                } else {
+                    /* No font that is loaded has the character, so the font
+                       would draw its box for a missing glyph: the ASCII
+                       look-alike of the cell is drawn instead. */
+                    c = uns(layout_ascii_of(c));
+                }
+            }
 
             XftDrawString32(xd, fgc, ff, (x + i) * cw, y * chh + asc, &c, 1);
         }
@@ -965,6 +1001,12 @@ draw_run(int x, int y, int n, int attr)
 
         if (cp == TERM_LOGO_A || cp == TERM_LOGO_E) {
             cp = cp == TERM_LOGO_A ? 'A' : 'E';
+        }
+
+        /* A character that the font has no glyph for is drawn as its ASCII
+           look-alike: the server would draw a box or nothing. */
+        if (cp != ' ' && core_has_glyph(fnt[lk.bold != 0 ? 1 : 0], cp) == 0) {
+            cp = uns(layout_ascii_of(cp));
         }
 
         s[i].byte1 = u8(iun(cp >> 8));

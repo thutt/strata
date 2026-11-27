@@ -124,49 +124,6 @@ static int probing; /* 1 while probe_cell waits: pending is not read */
 #define PROBE_ROW 2
 #define PROBE_MS 800
 
-/*
- * The ASCII look-alike of each cell of the CP437 screen set, by the number
- * of the character (the table cp437_uni of layout.c has the Unicode ones):
- * the box and block characters, the arrows, the triangles, the accented
- * letters (the letter without the accent) and the Greek and math signs.
- * Sixteen characters to a row; the plain ASCII rows are the characters.
- */
-static const char cp437_ascii[256 + 1] =
-    " oO*****#o#MFdD*" /* 00 */
-    "><|!PS-|^v><L-^v" /* 10 */
-    " !\"#$%&'()*+,-./" /* 20 */
-    "0123456789:;<=>?" /* 30 */
-    "@ABCDEFGHIJKLMNO" /* 40 */
-    "PQRSTUVWXYZ[\\]^_" /* 50 */
-    "`abcdefghijklmno" /* 60 */
-    "pqrstuvwxyz{|}~^" /* 70 */
-    "CueaaaaceeeiiiAA" /* 80 */
-    "EaAooouuyOUcLYPf" /* 90 */
-    "aiounNao?--//!<>" /* A0 */
-    "::#|++++++|+++++" /* B0 */
-    "++++-++++++++=++" /* C0 */
-    "+++++++++++#####" /* D0 */
-    "aBGpSoutFOOd8oen" /* E0 */
-    "=+><||/~o..vn2# "; /* F0 */
-
-
-/* The ASCII character for the Unicode character cp of a cell. */
-static char
-ascii_of(unsigned cp)
-{
-    if (cp >= 0x20 && cp < 0x7F) {
-        return (char)cp;
-    }
-
-    for (int i = 1; i < 256; i++) {
-        if (cp437_uni[i] == cp) {
-            return cp437_ascii[i];
-        }
-    }
-
-    return cp == 0 ? ' ' : '?';
-}
-
 
 /*
  * The VT100 form of each cell of the CP437 screen set, by the number of the
@@ -1226,7 +1183,7 @@ static void
 utf8(char *o, int *n, unsigned cp)
 {
     if (charset_mode != CS_UTF8) {
-        o[(*n)++] = ascii_of(cp);
+        o[(*n)++] = layout_ascii_of(cp);
 
         return;
     }

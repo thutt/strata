@@ -159,6 +159,10 @@ extern int layout_show_marks;
 extern int layout_show_dots; /* draw a dot for every space */
 extern int layout_hide_shy; /* draw no mark for a soft hyphen (export) */
 extern const unsigned short cp437_uni[256];
+extern const char cp437_ascii[256 + 1];
+
+/* The ASCII look-alike of the Unicode character of a cell. */
+char layout_ascii_of(unsigned cp);
 
 /*
  * Names of files are UTF-8 and the screen has the cells of the code page of
