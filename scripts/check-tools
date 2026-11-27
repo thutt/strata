@@ -30,6 +30,7 @@ want_run="no"
 quiet="no"
 missing_count=0
 optional_count=0
+setting_count=0
 missing_packages=()
 
 
@@ -255,6 +256,27 @@ function check_build
 }
 
 
+# Checks that bwrap can make its private view of the file system.  The
+# tests that run in it need unprivileged user namespaces.  On Ubuntu 24.04 the
+# AppArmor setting kernel.apparmor_restrict_unprivileged_userns forbids them
+# to an ordinary user, and no package is missing then: a setting of the
+# machine has to change, which is counted apart from the missing items.
+function check_bwrap_runs
+{
+    if ! command -v -- bwrap >/dev/null 2>&1; then
+        return 0
+    fi
+
+    if bwrap --ro-bind / / true >/dev/null 2>&1; then
+        say "$(printf '  %-9s %s' "ok" "bwrap makes its private view")"
+    else
+        setting_count=$((setting_count + 1))
+        printf '  %-9s %s\n' "SETTING" \
+               "bwrap cannot make its private view of the file system"
+    fi
+}
+
+
 # The tools that run the tests.
 function check_tests
 {
@@ -267,6 +289,7 @@ function check_tests
         "the install test finds the window of the installed X11 Editor"
     need_program required bwrap bubblewrap \
         "the install and temporary file tests run in a private view"
+    check_bwrap_runs
     need_program required pdftotext poppler-utils \
         "the print tests read the PDF"
     need_program required pdfinfo poppler-utils "the print tests"
@@ -387,20 +410,36 @@ fi
 
 echo
 
-if [ "${missing_count}" -eq 0 ]; then
+if [ "${missing_count}" -eq 0 ] && [ "${setting_count}" -eq 0 ]; then
     echo "Nothing required is missing (${optional_count} optional item(s)" \
          "missing)."
     exit 0
 fi
 
-echo "${missing_count} required item(s) missing."
-echo "To install them on Debian or Ubuntu, as an administrator:"
-echo
-echo "    sudo apt-get install --no-install-recommends ${missing_packages[*]}"
-echo
-echo "If it fails with 404 Not Found, the package index is old: run" \
-     "sudo apt-get update"
-echo "and repeat the command."
-echo
+if [ "${missing_count}" -gt 0 ]; then
+    echo "${missing_count} required item(s) missing."
+    echo "To install them on Debian or Ubuntu, as an administrator:"
+    echo
+    echo "    sudo apt-get install --no-install-recommends" \
+         "${missing_packages[*]}"
+    echo
+    echo "If it fails with 404 Not Found, the package index is old: run" \
+         "sudo apt-get update"
+    echo "and repeat the command."
+    echo
+fi
+
+if [ "${setting_count}" -gt 0 ]; then
+    echo "${setting_count} setting(s) of this machine have to change; no" \
+         "package is missing for them."
+    echo "bwrap needs unprivileged user namespaces.  On Ubuntu 24.04, as an" \
+         "administrator:"
+    echo
+    echo "    sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0"
+    echo
+    echo "The setting returns at the next boot; a file in /etc/sysctl.d" \
+         "keeps it."
+    echo
+fi
 
 exit 1

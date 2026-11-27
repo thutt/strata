@@ -98,6 +98,30 @@ try:
         e['PATH'] = d + ':' + fake
         return e
 
+    # ------------------------------ bwrap that cannot make its view
+    # A stand-in bwrap that fails, as on Ubuntu 24.04 with the AppArmor
+    # restriction: a setting is reported apart from the packages.
+    dfail = tempfile.mkdtemp(dir=wk)
+    for n in list(TEST_TOOLS):
+        p = os.path.join(dfail, n)
+        open(p, 'w').write('#!/bin/sh\nexit %d\n' %
+                           (1 if n == 'bwrap' else 0))
+        os.chmod(p, 0o755)
+    efail = dict(env)
+    efail['PATH'] = dfail + ':' + fake
+    st, out = run([script, '--tests'], efail)
+    check('bwrap: one that cannot make its view is reported as a setting, '
+          'with the status 1',
+          st == 1 and 'SETTING   bwrap cannot make its private view' in out
+          and 'kernel.apparmor_restrict_unprivileged_userns=0' in out, out)
+    check('bwrap: the report asks for no package and prints no apt-get '
+          'command', 'sudo apt-get install' not in out and
+          'required item(s) missing' not in out, out)
+    st, out = run([script, '--tests'], with_tools(list(TEST_TOOLS)))
+    check('bwrap: one that works is reported ok and nothing is missing',
+          st == 0 and 'ok        bwrap makes its private view' in out and
+          'SETTING' not in out, out)
+
     # --------------------------------------------------------- the help
     st, out = run([script, '--help'], env)
     check('help: --help ends with status 0 and names the groups',
