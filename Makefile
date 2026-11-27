@@ -681,6 +681,7 @@ xtest: x11
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xlogo.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xmarkglyph.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xkeycap.py
+	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xkeytable.py
 	PYTHONDONTWRITEBYTECODE=1 STRED_X11=$(O)/x11/stred \
 	STRATA_HELP=$(O)/strata.hlp python3 -I -B tests/xclose.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 TBIN=$(O)/term \
