@@ -35,7 +35,8 @@ The cases
    - The default prefix is ${HOME}/usr.  Without a HOME the option
      --prefix is required.
    - The programs that Strata can use at run time are OPTIONAL prerequisites
-     (LaTeX with the files of the Printer, dvipng, ghostscript, aspell or
+     (LaTeX with the files of the Printer, dvipng, pdftoppm of poppler-utils,
+     ghostscript, aspell or
      hunspell, the thesaurus data, a print queue, curl and unzip).  Only the
      terminal or X server and the font are required, and the script cannot
      check those.

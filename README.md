@@ -117,8 +117,9 @@ The install script names these packages for LaTeX and the programs around it:
   `texlive-latex-recommended` (`xcolor.sty` and others),
   `texlive-fonts-recommended` (the fonts Times, Helvetica and Palatino),
   `tex-gyre` (the TeX Gyre fonts) and `lmodern` (the default LaTeX fonts).
-- `dvipng`: equations, LaTeX markers and keycaps as images in the window
-  version.
+- `dvipng`: equations as images in the window version.
+- `poppler-utils` (`pdftoppm`): pictures, keycaps and LaTeX markers as images
+  in the window version.
 - `ghostscript`: pictures from PDF and EPS files.
 
 For the other optional programs:

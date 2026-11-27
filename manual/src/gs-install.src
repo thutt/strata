@@ -93,15 +93,18 @@ stay.  Packages that an administrator's install put in with {c:apt} stay,
 because other programs may use them.
 .h2 The programs that Strata needs [prereqs]
 All of these programs are optional for running Strata, and the table in
-{x:software} says what each one is for.  Printing and Preview need LaTeX, the
-equations in the window version need {c:dvipng}, the pictures in a print need
-ghostscript, and the spell check and the thesaurus need a spelling program and
-the thesaurus data.  The first step of the install script is a check of the
+{x:software} says what each one is for.  Printing and Preview need LaTeX.  In
+the window version the equations need {c:dvipng}, and the pictures, keycaps and
+LaTeX markers need {c:pdftoppm}; without them these are shown in their short
+form, and everything else works.  The pictures in a print need ghostscript, and
+the spell check and the thesaurus need a spelling program and the thesaurus
+data.  The first step of the install script is a check of the
 system, which lists which of them are present and which are missing:
 .code
 What Strata needs to run:
   present  LaTeX: Print to PDF, Preview and the equations on the screen
-  missing  dvipng: equations, keycaps and pictures in the window version
+  missing  dvipng: equations as images in the window version
+  present  pdftoppm: pictures, keycaps and LaTeX markers in the window version
   present  ghostscript: pictures in a print
   present  spell check: aspell or hunspell
   missing  thesaurus: Tools, Thesaurus

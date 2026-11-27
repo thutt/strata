@@ -22,12 +22,17 @@ A fixed-width font with line characters | Required | DejaVu Sans Mono,
  Liberation Mono, Cousine or FreeMono.  Without such a font the lines and bars
  of the screen are drawn as empty squares.
 LaTeX | Optional | Printing to a PDF file or to a printer, Preview, and the
- drawing of equations, LaTeX markers and keycaps as images in the window
- version.  Without LaTeX Strata works, but nothing can be printed or previewed.
- The equations, LaTeX markers and keycaps are shown in their short form.
-{c:dvipng} | Optional | Drawing equations, LaTeX markers and keycaps as images
- in the window version; LaTeX makes them and {c:dvipng} turns them into
- images.  Without it they stay in their short form.
+ drawing of equations, pictures, LaTeX markers and keycaps as images in the
+ window version.  Without LaTeX Strata works, but nothing can be printed or
+ previewed.  The equations, LaTeX markers and keycaps are shown in their short
+ form.
+{c:dvipng} | Optional | Drawing equations as images in the window version;
+ LaTeX typesets the equation and {c:dvipng} turns the result into an image.
+ Without it the equations stay in their short form.
+{c:pdftoppm} (package {c:poppler-utils}) | Optional | Drawing pictures, keycaps
+ and LaTeX markers as images in the window version; LaTeX typesets them and
+ {c:pdftoppm} turns the result into an image.  Without it they stay in their
+ short form.  Printing and Preview do not need it.
 An X display for the Viewer | Optional | Preview shows its pages in the Viewer,
  which needs an X display even when you work in a terminal.
 ghostscript | Optional | Printing a picture that is a PostScript or EPS file.
