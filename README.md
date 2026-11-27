@@ -31,6 +31,8 @@ typeset by LaTeX, and Preview shows the pages that result.
 - Line numbering in the margin of a print.
 - Templates for letters, envelopes and labels.
 - A spell check and a thesaurus, when their dictionaries are installed.
+- In the X11 window, the wheel of the mouse scrolls the text and a click
+  puts the cursor there; every command is also on a key.
 
 ## Install
 

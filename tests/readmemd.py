@@ -55,7 +55,9 @@ REQUIRED = [('the layout of the install', '### Where the files are installed'),
             ('the PDF file of the Reference Manual is named',
              'share/strata/pdf/strata-reference-manual.pdf'),
             ('the layout of the source tree', 'The top of the source tree:'),
-            ('the layout below manual', 'Below `manual`:')]
+            ('the layout below manual', 'Below `manual`:'),
+            ('the mouse in the X11 window',
+             'the wheel of the mouse scrolls the text')]
 
 
 def check(label, ok, detail=''):
