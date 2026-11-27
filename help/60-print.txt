@@ -123,8 +123,8 @@ The Viewer needs an X display.  In the Viewer: {N}, {Space} or {PgDn} for the
 next
 page, {P} or {PgUp} for the previous one, {G} to go to a page, {+} and {-} to
 zoom,
-{0} for 100 percent, the arrow keys to pan, and {Q} to leave.  {F1} or {?} hides
-and shows the keys.
+{0} for 100 percent, the arrow keys or the wheel to pan, and {Q} to leave.
+{F1} or {?} hides and shows the keys.
 
 If the print found errors the pages carry a banner, and the Viewer shows a
 red line: PRINT FAILED.  See [[Print Errors]].

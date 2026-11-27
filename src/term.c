@@ -1709,3 +1709,19 @@ term_getkey_raw(int timeout_ms)
         return c;
     }
 }
+
+
+/* The terminal version does not use the mouse and never switches it on. */
+void
+term_mouse_mode(int mode)
+{
+    (void)mode;
+}
+
+
+void
+term_mouse_cell(int *row, int *col)
+{
+    *row = 0;
+    *col = 0;
+}

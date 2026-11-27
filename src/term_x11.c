@@ -473,8 +473,8 @@ term_open(void)
                               uns(rows * chh), 0,
                               pixel_of(color_active()->pair[CK_NORMAL].fg),
                               pixel_of(normal_bg()));
-    XSelectInput(dpy, win, KeyPressMask | KeyReleaseMask | ExposureMask |
-                 StructureNotifyMask | FocusChangeMask);
+    XSelectInput(dpy, win, KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                 ExposureMask | StructureNotifyMask | FocusChangeMask);
     wm_delete = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
     XSetWMProtocols(dpy, win, &wm_delete, 1);
     XSizeHints sh;
@@ -1545,6 +1545,80 @@ map_key(XKeyEvent *ev)
     return K_NONE;
 }
 
+/* The mode of the mouse for the current read and the last click. */
+static int mouse_mode;
+static int click_row;
+static int click_col;
+
+
+void
+term_mouse_mode(int mode)
+{
+    mouse_mode = mode;
+}
+
+
+void
+term_mouse_cell(int *row, int *col)
+{
+    *row = click_row;
+    *col = click_col;
+}
+
+
+/* A step of the wheel in a list is three rows, and Ctrl makes it a page. */
+#define WHEEL_ROWS 3
+
+
+/*
+ * A press of a mouse button.  Returns the key that stands for it, or
+ * K_NONE when the event is dropped.  The keys are the ones a list already
+ * knows (MOUSE_WHEEL_KEYS), or the mouse keys of the Editor (MOUSE_EDITOR).
+ */
+static int
+button_event(const XButtonEvent *b)
+{
+    int ctrl = (b->state & ControlMask) != 0;
+
+    if (mouse_mode == MOUSE_OFF) {
+        return K_NONE;
+    }
+
+    if (b->button == Button4 || b->button == Button5) {
+        int up = b->button == Button4;
+
+        if (mouse_mode == MOUSE_EDITOR) {
+            return (up != 0 ? K_WHEEL_UP : K_WHEEL_DOWN) |
+                   (ctrl != 0 ? KM_CTRL : 0);
+        }
+
+        if (ctrl != 0) {
+            return up != 0 ? K_PGUP : K_PGDN;
+        }
+
+        int keys[WHEEL_ROWS - 1];
+
+        for (int i = 0; i < WHEEL_ROWS - 1; i++) {
+            keys[i] = up != 0 ? K_UP : K_DOWN;
+        }
+
+        term_inject(keys, WHEEL_ROWS - 1);
+
+        return up != 0 ? K_UP : K_DOWN;
+    }
+
+    if (b->button == Button1 && mouse_mode == MOUSE_EDITOR && cw > 0 &&
+        chh > 0 && b->x >= 0 && b->y >= 0) {
+        click_row = b->y / chh;
+        click_col = b->x / cw;
+
+        return K_CLICK;
+    }
+
+    return K_NONE;
+}
+
+
 /* handle one pending event; returns a key, K_RESIZE, K_NONE (event
    consumed), or -2 when none pending */
 
@@ -1607,6 +1681,9 @@ handle_event(void)
             }
 
             return map_key(&e.xkey);
+
+        case ButtonPress:
+            return button_event(&e.xbutton);
 
         case KeyRelease:
             if (modifier_event(&e.xkey, 0) != 0) {

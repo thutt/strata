@@ -357,6 +357,22 @@ Gaps against the original:
     and size fields above would still apply to it).
 
 
+C2. The mouse (X11 window and Viewer only; the terminal version has none)
+-------------------------------------------------------------------------
+  Mouse                  Function                          Orig Strata
+  ---------------------- --------------------------------- ---- ------
+  Wheel                  Scroll the text by 3 rows         -    yes
+  Ctrl and wheel         Scroll by half a screen           -    yes
+  Wheel in a list, help  Three Up or Down keys (Ctrl: PgUp - yes
+                         or PgDn)
+  Left click in text     Put the cursor on the character   -    yes
+                         under the pointer; in a highlight
+                         move its end
+  Wheel in the Viewer    Pan the page as Up and Down do    -    yes
+  Everything else        Ignored: menus, boxes, status     -    no
+                         line, the key strip, dragging,
+                         double click, the other buttons
+
 D. Keys that could not be verified
 ----------------------------------
 

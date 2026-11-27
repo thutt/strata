@@ -35,6 +35,8 @@ adds the following.
   are drawn as pictures, when LaTeX is installed ({n:appx11-pictures}).
 - The text has bold and italic faces, and any color that you choose for
   every kind of text ({n:appx11-colour}).
+- The mouse wheel scrolls the text, and a click puts the cursor where the
+  mouse arrow is ({n:appx11-mouse}).
 
 .h2 What the X11 version needs [appx11-needs]
 .ix X11, requirements
@@ -384,6 +386,41 @@ be saved is used until the program ends, and nothing is shown on the screen.
 The width is always 80 columns and is not kept.  The terminal version has a
 number of its own ({n:appterm-size}).
 
+.h2 The mouse [appx11-mouse]
+.ix Mouse
+.ix Wheel
+.ix Click, cursor
+The window takes two things from the mouse, and nothing else.  The terminal
+version does not use the mouse at all: no mouse report is requested from
+the terminal, so the selection and the paste of the terminal work as they do in
+any other program.
+.table 22 38
+Mouse | What is done
+Wheel | The text scrolls by three rows for each step, and by half a
+  | screen when {k:Ctrl} is held.  The cursor is moved into the
+  | rows that are shown, so that the next key does not bring the
+  | view back.  In a list, in a pager and in the help the wheel
+  | does what three {k:Up} or {k:Down} keys do ({k:PgUp} and
+  | {k:PgDn} with {k:Ctrl}).
+Left button | A click in the text puts the cursor on the character
+  | under the mouse arrow.  A click after the end of a row puts it at
+  | the end of the row; a click on a tab puts it on the tab; a click
+  | on a picture puts it on the picture, on the row that was
+  | clicked; in a table the cell is found, and below the text of a
+  | column that is shorter than the next column the cursor goes to
+  | the end of that column.  While text is highlighted, the click
+  | moves the end of the highlight, in the same text for a Text or
+  | Column highlight, and to any block for a Block or Section
+  | highlight.
+.end
+Everything else is ignored: a click in a menu, in a box that asks for a
+choice or for text, on the status line, on the lines that separate the
+sections, on the keys at the foot, or in the other window of a split screen;
+the other buttons; and the wheel in a menu or in a box that is not a list.
+Dragging does not select text, and the double click has no meaning.  The
+mouse is not recorded in a macro.  Every command is still on a key, and a
+person who uses only the keyboard sees no change.
+
 .h2 Moving text between programs [appx11-clip]
 .ix Clipboard
 .ix Selection, X11
@@ -402,7 +439,7 @@ Into Strata from another | Save the text in a file with that program
  program | and use File, Import.
 .end
 In the X11 version the selection and the clipboard of the display are not
-used.  In the terminal version the paste of the terminal types the text as
+used, and dragging with the mouse selects nothing ({n:appx11-mouse}).  In the terminal version the paste of the terminal types the text as
 keys ({n:appterm-chars}).
 
 .h2 Equations and keycaps on the screen [appx11-pictures]
@@ -455,7 +492,8 @@ fits the width of the window; it is hidden and shown again with {k:F1} or
 The keys are in {x:print-dviview}.  The key {k:g} opens the
 entry for a page number in the bar: type up to eight digits, {k:Backspace}
 deletes one, {k:Enter} goes (a number out of range is brought into range) and
-{k:Esc} cancels; in the entry no other key does anything.  The zoom runs from
+{k:Esc} cancels; in the entry no other key does anything.  The wheel of the
+mouse pans the page by the step of {k:Up} and {k:Down}.  The zoom runs from
 25 to 800 percent and keeps the center of the window where it was.  A new
 page starts at the top left.  Closing the window with the window manager also
 closes the Viewer.

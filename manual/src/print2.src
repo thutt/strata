@@ -212,6 +212,8 @@ Key | What it does
 {k:G} | Go to a page: the bar prompts for a number (below).
 {k:Up}, {k:Down}, {k:Left}, {k:Right} | Pan the page by 60 pixels.  The page
  cannot be moved beyond its edges.
+Wheel | Pans the page up or down by 60 pixels for each step, as {k:Up}
+ and {k:Down} do.  The other mouse buttons do nothing.
 {k:+}, {k:=}, {k:Keypad +} | Zoom in by 25 percent, up to 800 percent.
 {k:-}, {k:Keypad -} | Zoom out by 25 percent, down to 25 percent.
 {k:0}, {k:Keypad 0}, {k:Keypad *} | Back to 100 percent.

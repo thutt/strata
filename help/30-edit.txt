@@ -274,6 +274,20 @@ with Soft Hyphen finds them, and a search for a word goes through them.  Words
 that you want always broken in the same way can go into the hyphenation list:
 see [[Maintain Dictionaries]].
 
+= The Mouse
+~ Mouse
+~ Wheel
+The mouse is used in the X11 window only; the terminal version does
+not use it, and the terminal keeps its own selection and paste.  The
+wheel scrolls the text by three rows, and by half a screen with
+{Ctrl}; the cursor stays in the rows that are shown.  In a list and in
+this help the wheel is three {Up} or {Down} keys.  A click with the
+left button puts the cursor on the character under the mouse arrow;
+while text is highlighted the click moves the end of the highlight.  A
+click in a menu, in a box, on the status line or on the keys at the
+foot is ignored, and the wheel does nothing in a menu.  Nothing can be
+selected by dragging, and every command is still on a key.
+
 = Typing Special Characters
 ~ Special characters
 Text is made of the characters of the PC character set (code page 437), which

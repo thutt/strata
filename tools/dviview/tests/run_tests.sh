@@ -328,6 +328,21 @@ function test_scroll {
     snap scroll_left
     python3 -I "${tool}" same "${work}/s0.png" "${out}/scroll_left.png" || st=1
     result "scroll: Right moves the page, Left returns" ${st}
+
+    # The wheel scrolls like the arrow keys: three steps down give the
+    # picture of three Down keys, three steps up return to the start.
+    st=0
+    xdotool mousemove --window "${win}" 60 60
+    xdotool click --repeat 3 --delay 60 5
+    sleep 0.3
+    snap wheel_down
+    python3 -I "${tool}" same "${work}/s0.png" "${out}/wheel_down.png" && st=1
+    python3 -I "${tool}" same "${out}/scroll_down.png" "${out}/wheel_down.png" || st=1
+    xdotool click --repeat 3 --delay 60 4
+    sleep 0.3
+    snap wheel_up
+    python3 -I "${tool}" same "${work}/s0.png" "${out}/wheel_up.png" || st=1
+    result "scroll: wheel down moves the page like Down, wheel up returns" ${st}
     stop_viewer
 }
 

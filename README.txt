@@ -200,6 +200,11 @@ Alt-F12 and Shift/Ctrl cursor combinations arrive natively (no Ctrl-F
 workaround needed), and closing the window acts as Ctrl-Q. In the Document
 Manager, Edit opens the Editor in a second window and the Document Manager
 returns when it closes.
+The mouse is used in this window only: the wheel scrolls the text (three rows,
+half a screen with Ctrl; Up and Down in a list) and a click in the text puts
+the cursor there. Menus, boxes and the status line ignore it, and dragging
+selects nothing. The Viewer pans its page with the wheel. The terminal
+version does not use the mouse (docs/MOUSE.txt).
 
 Optional environment: STRATA_X11_XFT (fontconfig family, e.g. Liberation Mono; 0
 forces the core fonts), STRATA_X11_SIZE (Xft pixel size, default 16; core fonts

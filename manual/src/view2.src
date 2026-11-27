@@ -54,6 +54,9 @@ Equations | The label of the | Typeset pictures, if
 Keycap markers | Reverse video text. | Boxes, or pictures.
 Labels of the keys | Always the plain | Follow Shift, Ctrl
  | ones. | and Alt while held.
+Mouse | Not used; the | The wheel scrolls; a click
+ | terminal keeps its | puts the cursor.
+ | own selection. |
 Closing | {k:Ctrl-Q}. | The window close button
  | | acts as {k:Ctrl-Q}.
 {k:Alt-F} keys, | Often kept back by | Arrive as they are.

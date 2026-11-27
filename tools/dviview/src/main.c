@@ -617,8 +617,8 @@ open_window(Ui *ui)
                                   to_uint(w), to_uint(h), 0,
                                   BlackPixel(ui->dpy, scr),
                                   WhitePixel(ui->dpy, scr));
-    XSelectInput(ui->dpy, ui->win, KeyPressMask | ExposureMask |
-                 StructureNotifyMask);
+    XSelectInput(ui->dpy, ui->win, KeyPressMask | ButtonPressMask |
+                 ExposureMask | StructureNotifyMask);
     memset(&hints, 0, sizeof hints);
     hints.flags = PMinSize;
     hints.min_width = 100;
@@ -641,6 +641,29 @@ open_window(Ui *ui)
 }
 
 
+/*
+ * A press of a wheel button scrolls the page by the step of the arrow keys.
+ * The Viewer has no key that scrolls by half a screen, so the Ctrl key
+ * changes nothing here.  Returns 1 when the window must be redrawn.
+ */
+static int
+handle_wheel(Ui *ui, const XButtonEvent *be)
+{
+    if (be->button == Button4) {
+        scroll_y -= SCROLL_STEP;
+    } else if (be->button == Button5) {
+        scroll_y += SCROLL_STEP;
+    } else {
+        return 0;
+    }
+
+    clamp_scroll(ui);
+    set_title(ui);
+
+    return 1;
+}
+
+
 /* Handles one event; returns 1 to redraw, -1 to quit, 0 to do nothing. */
 static int
 handle_event(Ui *ui, XEvent *ev)
@@ -648,6 +671,8 @@ handle_event(Ui *ui, XEvent *ev)
     switch (ev->type) {
     case KeyPress:
         return handle_key(ui, &ev->xkey);
+    case ButtonPress:
+        return handle_wheel(ui, &ev->xbutton);
     case Expose:
         return 1;
     case ConfigureNotify:

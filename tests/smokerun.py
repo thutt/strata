@@ -69,7 +69,7 @@ SCRIPTS = ['smoke.py', 'movesect.py', 'windows.py', 'retnamed.py', 'textindent.p
            'menuroute.py', 'tplfolders.py', 'installtarball.py',
            'publishclone.py', 'release.py', 'pdfguard.py',
            'errata.py', 'readmemd.py', 'challenge.py', 'dviviewbuild.py',
-           'rebuildheaders.py']
+           'rebuildheaders.py', 'mousetui.py']
 
 
 def expand(names):

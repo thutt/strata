@@ -231,7 +231,7 @@ popup_menu(const char *title, const char **items, int n, int sel)
 
         term_cursor(0, 0, 0);
         term_present();
-        int k = term_getkey(-1);
+        int k = term_getkey_mouse(-1, MOUSE_WHEEL_KEYS);
         if (k == K_F(1)) {
             help_context(help_place(title));
             continue;
@@ -476,7 +476,7 @@ list_desc_run(const char *title, const char **names, const char **descs,
         term_cursor(0, 0, 0);
         term_present();
 
-        int k = term_getkey(-1);
+        int k = term_getkey_mouse(-1, MOUSE_WHEEL_KEYS);
 
         if (k == K_F(1)) {
             help_context(help_place(title));
@@ -2025,7 +2025,7 @@ pager(const char *title, char **lines, int n)
                   TS_KEYS);
         term_cursor(0, 0, 0);
         term_present();
-        int k = K_BASE(term_getkey(-1));
+        int k = K_BASE(term_getkey_mouse(-1, MOUSE_WHEEL_KEYS));
 
         if (k == K_ESC || k == 13 || k == 'q' || k == 17) {
             return;
@@ -2227,7 +2227,7 @@ help_viewer(int topic)
         term_cursor(0, 0, 0);
         term_present();
 
-        int k = term_getkey(-1);
+        int k = term_getkey_mouse(-1, MOUSE_WHEEL_KEYS);
         int base = K_BASE(k);
         int done = 0;
         int link_topic = nl != 0 ? pg.span[lk[sel]].topic : -1;
