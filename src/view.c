@@ -1020,8 +1020,13 @@ sel_item_range(Editor *e, int *lo, int *hi)
 }
 
 
-/* The pictures already given to the terminal in this drawing. */
-static int (*eq_done)[2];
+/*
+ * The pictures already given to the terminal in this drawing: the first line
+ * of the picture, the token and the column that the token is in.  Two
+ * columns of a table have tokens with the same number in the same line, so
+ * the column is a part of the key.
+ */
+static int (*eq_done)[3];
 static int eq_ndone;
 static int eq_cap;
 
@@ -1088,15 +1093,19 @@ draw_equation(Editor *e, int li, const Cell *cells, int x, int x0, int y0)
         left--;
     }
 
+    int col = -1;
+    const Text *t = line_text(e, li, x, &col);
+
     for (int i = 0; i < eq_ndone; i++) {
-        if (eq_done[i][0] == top && eq_done[i][1] == tok) {
+        if (eq_done[i][0] == top && eq_done[i][1] == tok &&
+            eq_done[i][2] == col) {
             return;
         }
     }
 
     if (eq_ndone == eq_cap) {
         int cap = eq_cap == 0 ? 64 : eq_cap * 2;
-        int(*grown)[2] = realloc(eq_done, usz(cap) * sizeof *grown);
+        int(*grown)[3] = realloc(eq_done, usz(cap) * sizeof *grown);
 
         if (grown == NULL) {
             return;
@@ -1108,10 +1117,8 @@ draw_equation(Editor *e, int li, const Cell *cells, int x, int x0, int y0)
 
     eq_done[eq_ndone][0] = top;
     eq_done[eq_ndone][1] = tok;
+    eq_done[eq_ndone][2] = col;
     eq_ndone++;
-
-    int col = -1;
-    const Text *t = line_text(e, li, x, &col);
 
     if (t == NULL || layout_eq_image == NULL) {
         return;
