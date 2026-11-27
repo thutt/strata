@@ -5,6 +5,7 @@
 # from that tag (see docs/INSTALL-POLICY.txt, section "Making a release"):
 #
 #     strata-release VERSION [--commit REV] [--jobs N] [--dry-run] [--help]
+#     strata-release VERSION --rebuild [--jobs N] [--dry-run]
 #
 # VERSION is the release number X.Y.0, for example 1.0.0 or 1.1.0.  The
 # release is the first number.  The tool is a tool of the developers: it is
@@ -15,6 +16,13 @@
 # scripts/setup), and the tarball and its checksum file are made in its
 # directory release; there is no option to put them anywhere else.
 #
+# With --rebuild the tag vVERSION must exist already (an annotated tag): no
+# tag is made, moved or removed, and the tarball and its checksum file are
+# made again from the tree of that tag, on this machine.  The bytes of such a
+# tarball differ from those of the release made on another machine, because
+# the programs and the PDF files are made by the tools of the machine; the
+# checksum that counts is the one of the file that was published.
+#
 set -o pipefail;
 set -o nounset;
 set -o errexit;
@@ -24,6 +32,8 @@ project_dir="$(dirname "${script_dir}")";
 
 version="";
 commit="HEAD";
+commit_given="no";
+rebuild="no";
 build_root="${STRATA_BUILD_ROOT:-}";
 jobs="$(nproc 2>/dev/null || echo 2)";
 dry_run="no";
@@ -51,6 +61,14 @@ error.
 
   VERSION             the release number X.Y.0, for example 1.0.0 or 1.1.0.
   --commit REV        the commit to tag (default HEAD).
+  --rebuild           make the tarball again from the EXISTING annotated tag
+                      vVERSION: no tag is made, moved or removed, and the
+                      commit is the one of the tag (--commit is an error
+                      with it).  The bytes of the tarball differ from those
+                      of a release made on another machine, because the
+                      programs and the PDF files are made by the tools of
+                      this machine; the checksum that counts is the one of
+                      the file that was published.
 
 The build root is the one of the environment: source scripts/setup first (for
 example: source scripts/setup -b release /tmp/strata).  The tarball and its
@@ -136,11 +154,16 @@ while [ "${#}" -gt 0 ]; do
             dry_run="yes";
             shift;
             ;;
+        --rebuild)
+            rebuild="yes";
+            shift;
+            ;;
         --commit | --jobs)
             [ "${#}" -ge 2 ] || die "${1} needs a value.";
             case "${1}" in
                 --commit)
                     commit="${2}";
+                    commit_given="yes";
                     ;;
                 --jobs)
                     jobs="${2}";
@@ -152,6 +175,7 @@ while [ "${#}" -gt 0 ]; do
             case "${1}" in
                 --commit=*)
                     commit="${1#--commit=}";
+                    commit_given="yes";
                     ;;
                 --jobs=*)
                     jobs="${1#--jobs=}";
@@ -179,6 +203,11 @@ if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.0$ ]]; then
     die "the version must be X.Y.0, with digits for X and Y, for example" \
         "1.0.0 or 1.1.0 (scripts/strata-version reads only a tag named" \
         "vX.Y.0 as a release): not '${version}'.";
+fi
+
+if [ "${rebuild}" = "yes" ] && [ "${commit_given}" = "yes" ]; then
+    die "--commit cannot be used with --rebuild: the tag v${version} decides" \
+        "the commit.";
 fi
 
 case "${jobs}" in
@@ -221,47 +250,67 @@ if ! tools_report="$("${check_tools}" --build --run --quiet 2>&1)"; then
         "(see above): nothing was changed.";
 fi
 
-# The first check of all: the tag.  A tag of any kind counts.
-if git -C "${project_dir}" rev-parse -q --verify \
-       "refs/tags/v${version}" >/dev/null 2>&1; then
-    refuse_tag_exists;
-fi
+# The first check of all: the tag.  A tag of any kind counts.  With --rebuild
+# the tag must exist, as an annotated tag of a commit, and it is never
+# changed.
+tag_object="";
 
-# A remote that has the tag counts too.  This is the one place where the tool
-# asks another repository, and only when a remote is configured.
-for remote in $(git -C "${project_dir}" remote); do
-    if remote_tags="$(git -C "${project_dir}" ls-remote --tags "${remote}" \
-                          "refs/tags/v${version}" 2>/dev/null)"; then
-        if [ -n "${remote_tags}" ]; then
-            echo "strata-release: the remote ${remote} has the tag" \
-                 "v${version}: nothing was changed" >&2;
-            exit 1;
-        fi
-    else
-        echo "strata-release: the remote ${remote} could not be asked about" \
-             "the tag v${version}; the check was made without it." >&2;
+if [ "${rebuild}" = "yes" ]; then
+    tag_object="$(git -C "${project_dir}" rev-parse -q --verify \
+                      "refs/tags/v${version}" 2>/dev/null)" ||
+        die "the tag v${version} does not exist: --rebuild makes the" \
+            "tarball again from an existing tag (nothing was changed).";
+    [ "$(git -C "${project_dir}" cat-file -t "${tag_object}")" = "tag" ] ||
+        die "the tag v${version} is not an annotated tag: --rebuild needs" \
+            "the annotated tag that strata-release made (nothing was" \
+            "changed).";
+    commit="v${version}";
+else
+    if git -C "${project_dir}" rev-parse -q --verify \
+           "refs/tags/v${version}" >/dev/null 2>&1; then
+        refuse_tag_exists;
     fi
-done
+
+    # A remote that has the tag counts too.  This is the one place where the
+    # tool asks another repository, and only when a remote is configured.
+    for remote in $(git -C "${project_dir}" remote); do
+        if remote_tags="$(git -C "${project_dir}" ls-remote --tags \
+                              "${remote}" "refs/tags/v${version}" \
+                              2>/dev/null)"; then
+            if [ -n "${remote_tags}" ]; then
+                echo "strata-release: the remote ${remote} has the tag" \
+                     "v${version}: nothing was changed" >&2;
+                exit 1;
+            fi
+        else
+            echo "strata-release: the remote ${remote} could not be asked" \
+                 "about the tag v${version}; the check was made without" \
+                 "it." >&2;
+        fi
+    done
+fi
 
 rev="$(git -C "${project_dir}" rev-parse -q --verify \
            "${commit}^{commit}" 2>/dev/null)" ||
     die "there is no commit '${commit}'.";
 
-# A commit is one release only: scripts/strata-version takes the version of a
-# checkout from the release tag on it, so a second release tag would be built
-# under the name of the first.
-other_tag="$(git -C "${project_dir}" tag --points-at "${rev}" |
-             grep -E '^v[0-9]+\.[0-9]+\.0$' | head -n 1)" || other_tag="";
-if [ -n "${other_tag}" ]; then
-    die "the commit ${rev} has the release tag ${other_tag} already: a" \
-        "commit is one release only.";
-fi
+if [ "${rebuild}" = "no" ]; then
+    # A commit is one release only: scripts/strata-version takes the version
+    # of a checkout from the release tag on it, so a second release tag would
+    # be built under the name of the first.
+    other_tag="$(git -C "${project_dir}" tag --points-at "${rev}" |
+                 grep -E '^v[0-9]+\.[0-9]+\.0$' | head -n 1)" || other_tag="";
+    if [ -n "${other_tag}" ]; then
+        die "the commit ${rev} has the release tag ${other_tag} already: a" \
+            "commit is one release only.";
+    fi
 
-# Untracked files do not count; a changed or staged tracked file does.
-if [ -n "$(git -C "${project_dir}" status --porcelain \
-               --untracked-files=no)" ]; then
-    die "a tracked file is modified or staged: commit or restore it first," \
-        "so that the release holds what is committed.";
+    # Untracked files do not count; a changed or staged tracked file does.
+    if [ -n "$(git -C "${project_dir}" status --porcelain \
+                   --untracked-files=no)" ]; then
+        die "a tracked file is modified or staged: commit or restore it" \
+            "first, so that the release holds what is committed.";
+    fi
 fi
 
 worktree="${project_dir}/.claude/worktrees/release-${version}";
@@ -293,7 +342,12 @@ done
 subject="$(git -C "${project_dir}" log -1 --format=%s "${rev}")";
 echo "commit: ${rev}";
 echo "        ${subject}";
-echo "tag:    v${version} (Strata ${version} (release ${major}))";
+if [ "${rebuild}" = "yes" ]; then
+    echo "tag:    v${version} (existing tag, not changed)";
+else
+    echo "tag:    v${version} (Strata ${version} (release ${major}))";
+fi
+
 echo "build:  ${build_root}/release";
 
 if [ "${dry_run}" = "yes" ]; then
@@ -302,13 +356,16 @@ if [ "${dry_run}" = "yes" ]; then
 fi
 
 # The tag, made without -f, so that git refuses a tag that appeared since the
-# check above.
-if ! git -C "${project_dir}" tag -a "v${version}" \
-         -m "Strata ${version} (release ${major})" "${rev}" 2>/dev/null; then
-    refuse_tag_exists;
-fi
+# check above.  With --rebuild the tag exists and nothing is made.
+if [ "${rebuild}" = "no" ]; then
+    if ! git -C "${project_dir}" tag -a "v${version}" \
+             -m "Strata ${version} (release ${major})" "${rev}" 2>/dev/null;
+    then
+        refuse_tag_exists;
+    fi
 
-tag_made="yes";
+    tag_made="yes";
+fi
 
 mkdir -p -- "${project_dir}/.claude/worktrees";
 git -C "${project_dir}" worktree add --detach -q "${worktree}" \
@@ -369,6 +426,15 @@ pdf_list="$(tar -tJf "${tarball}" |
 
 git -C "${project_dir}" worktree remove --force "${worktree}";
 worktree_made="no";
+
+# The tag is the same object as before the build.
+if [ "${rebuild}" = "yes" ]; then
+    [ "$(git -C "${project_dir}" rev-parse "refs/tags/v${version}")" = \
+      "${tag_object}" ] ||
+        die "the tag v${version} is not the object that it was: this must" \
+            "not happen.";
+fi
+
 finished="yes";
 
 echo "tag:      v${version}";
@@ -378,7 +444,14 @@ echo "checksum: ${sumfile}";
 echo "SHA-256:  $(cut -d' ' -f1 "${sumfile}")";
 echo "manual PDF files in the tarball:";
 echo "${pdf_list}" | sed -e 's/^/  /';
-echo "Next, by hand (the tool pushes nothing):";
-echo "  git push github v${version}";
-echo "  then make a release on the page of the repository on GitHub from";
-echo "  the tag v${version}, with the two files above attached.";
+
+if [ "${rebuild}" = "yes" ]; then
+    echo "The tag v${version} was not changed.  The bytes of this tarball";
+    echo "differ from a release made on another machine, so the checksum";
+    echo "that counts is the one of the file that was published.";
+else
+    echo "Next, by hand (the tool pushes nothing):";
+    echo "  git push github v${version}";
+    echo "  then make a release on the page of the repository on GitHub from";
+    echo "  the tag v${version}, with the two files above attached.";
+fi

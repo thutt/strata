@@ -41,6 +41,14 @@ Strata is needed.  The tests check that:
     any other, and a machine without the tools of the manual (LaTeX) is
     refused at the start with nothing changed;
   - a tagged checkout whose version is not the version is an error;
+  - the option --rebuild makes the tarball and its checksum file again from
+    an existing annotated tag: a missing tag, a tag that is not annotated and
+    the option --commit with it are refused and nothing is changed; --dry-run
+    with it changes nothing; the real run makes the files in the directory
+    release of the build root, leaves the tag the same object, makes no other
+    tag, removes its scratch worktree and says that the bytes differ from a
+    release made elsewhere; a failed step removes the tarball and the
+    worktree and never the tag;
   - the tool run with --dry-run in the real repository changes nothing.
 
 The checks are made again on copies of the tool that have been spoiled, one
@@ -427,6 +435,82 @@ def scenarios(tool_text, label):
           "'9.9.9', not '8.0.0'" in out and 'v8.0.0' not in r.tags() and
           not os.path.exists(r.wt_dir('8.0.0')), (st, out))
 
+    # ---- --rebuild: the tarball again from an existing tag ---------------
+    def other_root(name):
+        return dict(r.env, STRATA_BUILD_ROOT=os.path.join(r.tmpdir, name))
+
+    tags_before = r.tags()
+    st, out = r.release('9.2.0', '--rebuild', e=other_root('rb0'))
+    check('%s: --rebuild of a tag that does not exist is refused and nothing '
+          'is made' % label, st == 1 and 'does not exist' in out and
+          'nothing was changed' in out and r.tags() == tags_before and
+          r.worktrees() == 1 and
+          not os.path.exists(os.path.join(r.tmpdir, 'rb0')), (st, out))
+    st, out = r.release('2.0.0', '--rebuild', '--commit', r.good2,
+                        e=other_root('rb1'))
+    check('%s: --rebuild with --commit is refused and nothing is made' %
+          label, st == 1 and '--commit cannot be used with --rebuild' in out
+          and r.tags() == tags_before and
+          not os.path.exists(os.path.join(r.tmpdir, 'rb1')), (st, out))
+    light = git(r.dir, 'rev-parse', 'refs/tags/v5.1.0')
+    st, out = r.release('5.1.0', '--rebuild', e=other_root('rb2'))
+    check('%s: --rebuild of a tag that is not annotated is refused and the '
+          'tag is not changed' % label, st == 1 and
+          'not an annotated tag' in out and
+          git(r.dir, 'rev-parse', 'refs/tags/v5.1.0') == light and
+          not os.path.exists(os.path.join(r.tmpdir, 'rb2')), (st, out))
+    write(os.path.join(r.dir, 'src', 'keep'), 'changed\n')
+    was = git(r.dir, 'rev-parse', 'refs/tags/v2.0.0')
+    st, out = r.release('2.0.0', '--rebuild', '--dry-run',
+                        e=other_root('rb3'))
+    check('%s: --rebuild --dry-run names the existing tag and changes '
+          'nothing (a modified tracked file does not matter: the tag is '
+          'built)' % label, st == 0 and r.good in out and
+          'existing tag, not changed' in out and
+          'dry run: nothing was changed' in out and r.tags() == tags_before
+          and git(r.dir, 'rev-parse', 'refs/tags/v2.0.0') == was and
+          r.worktrees() == 1 and
+          not os.path.exists(os.path.join(r.tmpdir, 'rb3')), (st, out))
+    git(r.dir, 'reset', '-q', '--hard')
+    st, out = r.release('2.0.0', '--rebuild', e=other_root('rb4'))
+    rb = os.path.join(r.tmpdir, 'rb4', 'release')
+    check('%s: --rebuild of an existing tag succeeds' % label, st == 0, out)
+    names = sorted(n for n in os.listdir(rb) if n.startswith('strata-')
+                   and (n.endswith('.xz') or n.endswith('.sha256'))) \
+        if os.path.isdir(rb) else []
+    check('%s: --rebuild makes strata-2.0.0.tar.xz and its .sha256 in the '
+          'directory release of the build root' % label,
+          names == ['strata-2.0.0.tar.xz', 'strata-2.0.0.tar.xz.sha256'],
+          names)
+    st2, out2 = run(['sha256sum', '-c', 'strata-2.0.0.tar.xz.sha256'], rb) \
+        if names else (1, 'no files')
+    check('%s: --rebuild: sha256sum -c passes' % label, st2 == 0, out2)
+    check('%s: --rebuild leaves the tag the same object, makes no other tag '
+          'and removes its scratch worktree' % label,
+          git(r.dir, 'rev-parse', 'refs/tags/v2.0.0') == was and
+          r.tags() == tags_before and not os.path.exists(r.wt_dir('2.0.0'))
+          and r.worktrees() == 1, (r.tags(), tags_before))
+    check('%s: --rebuild prints the commit of the tag, the SHA-256 and says '
+          'that the bytes differ from a release made elsewhere, and does '
+          'not tell to push' % label, r.good in out and 'SHA-256:' in out
+          and 'differ from a release made on another machine' in out and
+          'git push' not in out, out)
+    check('%s: --rebuild built the tag: the order is build, manual, install'
+          % label, os.path.exists(os.path.join(rb, 'order.log')) and
+          read(os.path.join(rb, 'order.log')).split() ==
+          ['build', 'manual', 'install'])
+    git(r.dir, 'tag', '-a', 'v10.0.0', '-m', 'failing', r.failing)
+    tags_with = r.tags()
+    was10 = git(r.dir, 'rev-parse', 'refs/tags/v10.0.0')
+    st, out = r.release('10.0.0', '--rebuild', e=other_root('rb5'))
+    check('%s: a failed --rebuild removes the worktree and the build '
+          'directory it made and never the tag' % label, st == 1 and
+          'removed the scratch worktree' in out and
+          'removed the tag' not in out and r.tags() == tags_with and
+          git(r.dir, 'rev-parse', 'refs/tags/v10.0.0') == was10 and
+          not os.path.exists(r.wt_dir('10.0.0')) and r.worktrees() == 1 and
+          not os.path.exists(os.path.join(r.tmpdir, 'rb5')), (st, out))
+
     # ---- a tag that appears between the check and the creation --------------
     wrapper_dir = os.path.join(r.tmpdir, 'wrap')
     os.makedirs(wrapper_dir)
@@ -479,9 +563,9 @@ def spoiled(text):
     out = []
     breaks = (
         ('the check of the changed tracked files is removed',
-         'if [ -n "$(git -C "${project_dir}" status --porcelain \\\n'
-         '               --untracked-files=no)" ]; then',
-         'if false; then'),
+         '    if [ -n "$(git -C "${project_dir}" status --porcelain \\\n'
+         '                   --untracked-files=no)" ]; then',
+         '    if false; then'),
         ('the rollback is removed', 'trap cleanup EXIT;', ':'),
         ('the check of the version of the checkout is removed',
          'if [ "${built_version}" != "${version}" ]; then', 'if false; then'),
@@ -496,9 +580,24 @@ def spoiled(text):
          'if ! tools_report="$("${check_tools}" --build --run --quiet '
          '2>&1)"; then', 'if false; then'),
         ('the check of the existing tag is removed',
-         'if git -C "${project_dir}" rev-parse -q --verify \\\n'
-         '       "refs/tags/v${version}" >/dev/null 2>&1; then',
-         'if false; then'))
+         '    if git -C "${project_dir}" rev-parse -q --verify \\\n'
+         '           "refs/tags/v${version}" >/dev/null 2>&1; then',
+         '    if false; then'),
+        ('the refusal of --rebuild with --commit is removed',
+         'if [ "${rebuild}" = "yes" ] && [ "${commit_given}" = "yes" ]; '
+         'then', 'if false; then'),
+        ('the check that the tag is annotated is removed',
+         '[ "$(git -C "${project_dir}" cat-file -t "${tag_object}")" = '
+         '"tag" ] ||', 'false ||'),
+        ('--rebuild makes the tag too',
+         'if [ "${rebuild}" = "no" ]; then\n'
+         '    if ! git -C "${project_dir}" tag -a',
+         'if true; then\n'
+         '    if ! git -C "${project_dir}" tag -a'),
+        ('--rebuild takes the rollback of the tag',
+         '    tag_made="yes";\nfi\n',
+         '    tag_made="yes";\nfi\n'
+         'if [ "${rebuild}" = "yes" ]; then tag_made="yes"; fi\n'))
     for label, old, new in breaks:
         if old not in text:
             out.append((label, None))
