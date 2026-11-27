@@ -282,6 +282,7 @@ developers (tests/installtarball.py checks that).
 
     scripts/strata-release 1.0.0 --dry-run
     scripts/strata-release 1.0.0
+    scripts/strata-release 1.0.0 --rebuild
 
 The release number is X.Y.0, with digits for X and Y: the version scheme reads
 only a tag named vX.Y.0 as a release (docs/VERSIONING.txt).  The tag message
@@ -343,6 +344,24 @@ never touches the working tree of the project.  To make a release again for
 the same number, delete the tag with git tag -d vVERSION when it was not
 pushed.
 
+To make the tarball again from a tag that exists, for example on another
+machine that has the tag in a clone, the option --rebuild is used:
+scripts/strata-release 1.0.0 --rebuild (after source scripts/setup -b
+release DIR).  The tag vVERSION must exist and must be an annotated tag of a
+commit, or the tool refuses and changes nothing; --commit is an error with
+it, because the tag decides the commit.  Step 1 does not ask for a free tag,
+for a commit without a release tag or for an unmodified working tree (the
+tag is built in the scratch worktree, not the working tree), and step 2 is
+left out: no tag is made, moved or removed, whatever happens, and the tool
+checks at the end that the tag is the object that it was.  Steps 3 to 5 are
+the same, and the closing lines say that the tag was not changed and that
+the bytes of the tarball differ from those of a release made on another
+machine, because the programs and the PDF files are made by the tools of the
+machine (the tar itself uses the time of the commit and sorted names): the
+checksum that counts is the one of the file that was published.  A failure
+removes the tarball, the scratch worktree and the build root that the tool
+made, and never the tag.
+
 The tool makes the tag and the tarball.  The release branch of section 1 of
 docs/VERSIONING.txt and the publication of the files on GitHub are made by
 hand.
@@ -352,7 +371,12 @@ repository with small stand-ins for the build and the tarball, so that no
 build is needed.  It checks the refusals, the dry run, the tag and its
 message, the file names, the checksum, that nothing is pushed, the output
 directory, the rollback, a tag that appears between the check and the
-creation, a wrong version of the checkout, and a dry run in the real
-repository.  A copy of the tool without the check of changed files, without the
-rollback, without the check of the version, with a push, or without the check
-of the existing tag each fails a check.
+creation, a wrong version of the checkout, the option --rebuild (a missing
+tag, a tag that is not annotated, --commit, the dry run, a real rebuild that
+leaves the tag the same object, and a failed rebuild that never removes the
+tag), and a dry run in the real repository.  A copy of the tool without the
+check of changed files, without the rollback, without the check of the
+version, with a push, without the check of the existing tag, without the
+refusal of --commit with --rebuild, without the check that the tag is
+annotated, that makes the tag in a rebuild or that rolls the tag back in a
+rebuild each fails a check.

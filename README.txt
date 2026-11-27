@@ -395,7 +395,10 @@ root of the environment (STRATA_BUILD_ROOT, set by sourcing scripts/setup:
 'source scripts/setup -b release /tmp/strata' first; the tool has no option to
 put the files anywhere else).  An existing tag is refused and never changed, a
 failure removes the tag that the tool made, and nothing is pushed or signed.
-The tool is never shipped.
+'scripts/strata-release 1.0.0 --rebuild' makes the tarball again from the tag
+that exists (for example in a clone on another machine) and changes no tag; its
+bytes differ from a release made elsewhere, so the checksum that counts is the
+one of the published file.  The tool is never shipped.
 
 Sourcing setup also sets STRATA_HELP (the help file that the build makes) and
 STRATA_TEMPLATES (the templates folder of the source tree), so that a program

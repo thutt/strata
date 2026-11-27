@@ -131,9 +131,10 @@ message of 1.1.0 is "Strata 1.1.0 (release 1)") and builds the installation
 tarball from a detached checkout of that tag, whose version is then x.y.0
 and whose tarball is called strata-x.y.0.tar.xz.  A commit carries one
 release tag only.  The tool never moves or deletes an existing tag and
-refuses a tag that exists; it never pushes.  docs/INSTALL-POLICY.txt,
-section "Making a release", has the steps.  The tool does not make the
-release branch that the text above describes.
+refuses a tag that exists; it never pushes.  With --rebuild it makes the
+tarball again from a tag that exists and changes no tag.
+docs/INSTALL-POLICY.txt, section "Making a release", has the steps.  The
+tool does not make the release branch that the text above describes.
 
 5. The file format version
 --------------------------
