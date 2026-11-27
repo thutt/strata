@@ -595,6 +595,10 @@ endif
 x11:
 	$(Q)test -f /usr/include/X11/Xlib.h || { \
 	    echo "x11: Xlib.h not found; install libx11-dev."; exit 1; }
+	$(Q)test -n "$(XFTFLAGS)" || echo "x11: NOTE: built without Xft (the" \
+	    "headers of Xft are not found): the text uses the fonts of the X" \
+	    "server.  Install libxft-dev, libfontconfig-dev and" \
+	    "libfreetype-dev for the anti-aliased text."
 	$(Q)$(MAKE) --no-print-directory $(O)/strata.hlp templates-link
 	$(Q)$(MAKE) --no-print-directory BIN=$(O)/x11 TERMO=term_x11 \
 	    CFLAGS='$(CFLAGS) $(XFTFLAGS)' \
@@ -606,8 +610,10 @@ x11:
 # the X11 directory, where stred looks for it.  Both directories are made
 # here, so that the order of the targets and the number of jobs do not matter.
 # The viewer needs the headers of X11, FreeType and PNG.  When one of them is
-# missing the build stops and names the packages, as the target x11 does for
-# its header, because the default build builds everything.
+# missing the viewer is not built and the build says so, with the packages
+# that are missing and what is lost (the Preview); it is no error, because
+# the rest of Strata works without the viewer.  strata-build repeats it in
+# its closing lines.
 DVIVIEW_HEADERS := X11/Xlib.h:libx11-dev ft2build.h:libfreetype-dev \
                    png.h:libpng-dev
 dviview:
@@ -621,8 +627,9 @@ dviview:
 	    fi; \
 	done; \
 	if test -n "$$missing"; then \
-	    echo "dviview: cannot be built: install$$missing."; \
-	    exit 1; \
+	    echo "dviview: NOT BUILT: header files are missing, so the" \
+	        "Preview cannot show its pages.  Install$$missing."; \
+	    exit 0; \
 	fi; \
 	mkdir -p $(O)/term $(O)/x11; \
 	$(MAKE) --no-print-directory -C tools/dviview \
@@ -653,6 +660,7 @@ xtest: x11
 	LSAN_OPTIONS=suppressions=$(CURDIR)/tests/lsan.supp \
 	python3 -I -B tests/xsmoke.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xlogo.py
+	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xmarkglyph.py
 	PYTHONDONTWRITEBYTECODE=1 XBIN=$(O)/x11 python3 -I -B tests/xkeycap.py
 	PYTHONDONTWRITEBYTECODE=1 STRED_X11=$(O)/x11/stred \
 	STRATA_HELP=$(O)/strata.hlp python3 -I -B tests/xclose.py

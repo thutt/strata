@@ -21,8 +21,9 @@ The target dviview of the Makefile puts the program in the terminal directory
 and in the X11 directory of the build.  It makes both directories itself, so
 that the program is there whatever the order of the targets and the number of
 jobs: a build in which the X11 directory does not exist yet when the viewer is
-finished must still give both files.  A missing header stops the build with
-the names of the packages, and no program is left over.  The checks are made
+finished must still give both files.  A missing header does not stop the
+build: the viewer is not built, and the build and the closing lines of
+strata-build say so and name the packages.  The checks are made
 on a fresh build directory in a scratch place.
 """
 
@@ -83,16 +84,28 @@ check('the two viewers are the same program',
 st, out = build('dviview', b1)
 check('a second build with both directories there succeeds', st == 0, out)
 
-# 3. A header that is not there: the build stops, names the package and
-# leaves no program.
+# 3. A header that is not there: the viewer is not built, and the build says
+# so loudly: the package, what is lost, and the closing lines of strata-build.
 b3 = os.path.join(tmp, 'three')
 st, out = build('dviview DVIVIEW_HEADERS=no-such-header.h:libnone-dev', b3)
-check('a missing header stops the build', st != 0, out)
-check('the message names the package that is missing',
-      'dviview: cannot be built: install libnone-dev.' in out, out)
+check('a missing header is no error of the build', st == 0, out)
+check('the build says that the viewer was not built and names the package',
+      'dviview: NOT BUILT' in out and 'Install libnone-dev.' in out, out)
+check('the closing lines warn that the viewer was not built',
+      'WARNING: the Viewer dviview was NOT built' in out, out)
 check('no viewer is left after the stop',
       not os.path.exists(os.path.join(b3, 'debug', 'term', 'dviview')) and
       not os.path.exists(os.path.join(b3, 'debug', 'x11', 'dviview')))
+check('a build that has the headers ends with the line of the viewer',
+      '  Viewer:   ' in build('dviview', os.path.join(tmp, 'four'))[1])
+
+# A machine that lacks nothing gets no note about missing tools at the start.
+have_all = subprocess.run([os.path.join(root, 'scripts', 'check-tools'),
+    '--build', '--quiet'], stdout=subprocess.DEVNULL,
+    stderr=subprocess.DEVNULL).returncode == 0
+if have_all:
+    check('a machine that lacks nothing gets no note at the start',
+          'something that the build needs is missing' not in out)
 
 # 4. The headers that the viewer needs are named in the Makefile and in the
 # list of check-tools, so that the tool names the same packages.

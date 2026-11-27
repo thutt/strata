@@ -199,20 +199,47 @@ if [ "${1}" != "help" ]; then
     echo "strata-build: ${STRATA_BUILD_TYPE:-debug} build in ${build}"
 fi
 
+# Say at the start what the build lacks, so that the lines of a skipped part
+# are not a surprise at the end: the list is the one of scripts/check-tools.
+case "${1}" in
+    all | x11 | dviview)
+        lacking_status=0
+        lacking="$("${STRATA_ROOT}/scripts/check-tools" --build --quiet \
+                       2>/dev/null)" || lacking_status=1
+
+        if [ "${lacking_status}" -ne 0 ]; then
+            echo "strata-build: NOTE: something that the build needs is" \
+                 "missing (scripts/check-tools --build names the packages):"
+            echo "${lacking}" | sed -e 's/^/  /'
+        fi
+        ;;
+esac
+
 make -C "${STRATA_DIR}" -j"${jobs}" "${@}"
 
 # Tell the user where the programs are after a build.
 case "${1}" in
-    all)
-        echo "strata-build: done."
-        echo "  Terminal: ${build}/term/stred and ${build}/term/str"
-        echo "  X11:      ${build}/x11/stred and ${build}/x11/str"
+    all | dviview)
+        if [ "${1}" = "all" ]; then
+            echo "strata-build: done."
+            echo "  Terminal: ${build}/term/stred and ${build}/term/str"
+            echo "  X11:      ${build}/x11/stred and ${build}/x11/str"
+
+            if ! ldd "${build}/x11/stred" 2>/dev/null | grep -q libXft; then
+                echo "strata-build: WARNING: the X11 version was built" \
+                     "without Xft: its text uses the fonts of the X server" \
+                     "(install libxft-dev, libfontconfig-dev and" \
+                     "libfreetype-dev, then build again)."
+            fi
+        fi
 
         if [ -x "${build}/term/dviview" ] && [ -x "${build}/x11/dviview" ]; then
             echo "  Viewer:   ${build}/term/dviview and ${build}/x11/dviview"
         else
-            echo "strata-build: the Viewer dviview was not built in" \
-                 "${build}/term and ${build}/x11."
+            echo "strata-build: WARNING: the Viewer dviview was NOT built" \
+                 "in ${build}/term and ${build}/x11: the Preview cannot" \
+                 "show its pages (see the line 'dviview: NOT BUILT' above;" \
+                 "scripts/check-tools --build names the packages)."
         fi
         ;;
 esac
