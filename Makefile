@@ -602,25 +602,36 @@ x11:
 	    $(O)/x11/strprint
 
 # The DVI viewer of F12, Print, Preview.  Its objects go to the build
-# directory; the program is put next to stred, where stred looks for it.
-# Without the headers of X11 and FreeType nothing is built and that is no
-# error: the preview then says that the viewer is missing.
+# directory; the program is put next to stred in the terminal directory and in
+# the X11 directory, where stred looks for it.  Both directories are made
+# here, so that the order of the targets and the number of jobs do not matter.
+# The viewer needs the headers of X11, FreeType and PNG.  When one of them is
+# missing the build stops and names the packages, as the target x11 does for
+# its header, because the default build builds everything.
+DVIVIEW_HEADERS := X11/Xlib.h:libx11-dev ft2build.h:libfreetype-dev \
+                   png.h:libpng-dev
 dviview:
-	$(Q)if test -f /usr/include/X11/Xlib.h && \
-	    test -d /usr/include/freetype2; then \
-	    mkdir -p $(O)/term; \
-	    $(MAKE) --no-print-directory -C tools/dviview \
-	        BUILD=$(abspath $(O))/dviview-obj \
-	        STRATA_BUILD_TYPE=$(STRATA_BUILD_TYPE) \
-	        STRATA_VERSION='$(VERSION)' \
-	        PROG=$(abspath $(O))/term/dviview \
-	        $(abspath $(O))/term/dviview && \
-	    if test -d $(O)/x11; then \
-	        cp -f $(O)/term/dviview $(O)/x11/dviview; \
+	$(Q)missing=""; \
+	for spec in $(DVIVIEW_HEADERS); do \
+	    h=$${spec%%:*}; \
+	    p=$${spec#*:}; \
+	    if ! printf '#include <%s>\n' "$$h" | \
+	        $(CC) -I/usr/include/freetype2 -E -x c - >/dev/null 2>&1; then \
+	        missing="$$missing $$p"; \
 	    fi; \
-	else \
-	    echo "dviview: X11 or FreeType headers not found; skipped."; \
-	fi
+	done; \
+	if test -n "$$missing"; then \
+	    echo "dviview: cannot be built: install$$missing."; \
+	    exit 1; \
+	fi; \
+	mkdir -p $(O)/term $(O)/x11; \
+	$(MAKE) --no-print-directory -C tools/dviview \
+	    BUILD=$(abspath $(O))/dviview-obj \
+	    STRATA_BUILD_TYPE=$(STRATA_BUILD_TYPE) \
+	    STRATA_VERSION='$(VERSION)' \
+	    PROG=$(abspath $(O))/term/dviview \
+	    $(abspath $(O))/term/dviview && \
+	cp -f $(O)/term/dviview $(O)/x11/dviview
 
 # The tests must work when the temporary directory has a long path, as it has
 # on a machine whose scratch folder is deep: these targets run the smoke tests

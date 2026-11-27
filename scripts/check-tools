@@ -251,6 +251,7 @@ function check_build
         "the Viewer (Preview)"
     need_header required fontconfig/fontconfig.h libfontconfig-dev \
         "fonts in the X11 version"
+    need_header required png.h libpng-dev "the Viewer (pictures in a preview)"
 }
 
 

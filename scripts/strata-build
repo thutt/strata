@@ -207,5 +207,12 @@ case "${1}" in
         echo "strata-build: done."
         echo "  Terminal: ${build}/term/stred and ${build}/term/str"
         echo "  X11:      ${build}/x11/stred and ${build}/x11/str"
+
+        if [ -x "${build}/term/dviview" ] && [ -x "${build}/x11/dviview" ]; then
+            echo "  Viewer:   ${build}/term/dviview and ${build}/x11/dviview"
+        else
+            echo "strata-build: the Viewer dviview was not built in" \
+                 "${build}/term and ${build}/x11."
+        fi
         ;;
 esac

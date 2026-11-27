@@ -286,14 +286,15 @@ Package names are Debian/Ubuntu names. Nothing outside this list is needed.
     the Printer, F12, Print, Draft and Final (a PDF through the Printer and
     pdflatex), and F12, Print, Preview, which runs the Printer with latex and
     then the Viewer.  All optional: without them Print and Preview say what is
-    missing.  The Viewer needs libx11-dev and libfreetype-dev to build
-    ("strata-build dviview" skips it without them) and an X display to run.
+    missing.  The Viewer needs libx11-dev, libfreetype-dev and libpng-dev to
+    build ("strata-build dviview" stops and names the packages that are
+    missing) and an X display to run.
 
 To install the full set of the programs (everything above, and the LaTeX
 fonts that the list of the TeX Font Association requires):
 
     sudo apt-get install build-essential make libx11-dev libx11-6 libxft-dev \
-        libxft2 libfreetype-dev libfontconfig-dev \
+        libxft2 libfreetype-dev libfontconfig-dev libpng-dev \
         mythes-en-us dictionaries-common aspell aspell-en hunspell \
         hunspell-en-us curl unzip cups-client evince ghostscript \
         texlive-latex-base texlive-latex-extra texlive-latex-recommended \
