@@ -65,6 +65,9 @@ other keys for those: {k:Ctrl-F} opens a menu of the {k:Alt-F} commands,
 window every key arrives as it is, unless the window manager keeps it.  The
 keypad keys {k:Keypad +}, {k:Keypad -} and {k:Keypad *} fold and open sections.
 Equations, keycaps and pictures are shown as images only in the window.
+In the window the wheel of the mouse scrolls the text and a click puts the
+cursor where the arrow is ({x:appx11-mouse}); every command is also on a
+key, and the terminal version does not use the mouse.
 The window is 80 columns wide and 50 lines high until you change it.  The height
 is the setting Window Rows of Setup, or you can change the height of the window
 with your window manager: the height that you give the window is kept.
