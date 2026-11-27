@@ -539,7 +539,9 @@ function run_check
     check_program optional dvipdfmx texlive-binaries \
         "printing to a PDF file or to a printer"
     check_program optional dvipng dvipng \
-        "equations, LaTeX markers and keycaps as images in the window version"
+        "equations as images in the window version"
+    check_program optional pdftoppm poppler-utils \
+        "pictures, keycaps and LaTeX markers as images in the window version"
     check_program optional gs ghostscript \
         "pictures from PDF and EPS files"
     check_program optional kpsewhich texlive-binaries \
@@ -1358,6 +1360,10 @@ function missing_packages
         echo dvipng
     fi
 
+    if ! program_present pdftoppm; then
+        echo poppler-utils
+    fi
+
     if ! program_present gs; then
         echo ghostscript
     fi
@@ -1392,6 +1398,7 @@ function package_group
     case "${1}" in
         texlive-*|lmodern) echo "latex" ;;
         dvipng) echo "dvipng" ;;
+        poppler-utils) echo "pictures" ;;
         ghostscript) echo "ghostscript" ;;
         *) echo "spelling" ;;
     esac
@@ -1429,6 +1436,7 @@ function show_status
     local state
     local latex="present"
     local dvipng="present"
+    local pdftoppm="present"
     local gs="present"
     local spell="present"
     local thesaurus="present"
@@ -1441,6 +1449,10 @@ function show_status
 
     if ! program_present dvipng; then
         dvipng="missing"
+    fi
+
+    if ! program_present pdftoppm; then
+        pdftoppm="missing"
     fi
 
     if ! program_present gs; then
@@ -1461,7 +1473,9 @@ function show_status
     printf '  %-8s %s\n' "${latex}" \
            "LaTeX: Print to PDF, Preview and the equations on the screen"
     printf '  %-8s %s\n' "${dvipng}" \
-           "dvipng: equations, keycaps and pictures in the X11 version"
+           "dvipng: equations as images in the X11 version"
+    printf '  %-8s %s\n' "${pdftoppm}" \
+           "pdftoppm: pictures, keycaps and LaTeX markers in the X11 version"
     printf '  %-8s %s\n' "${gs}" "ghostscript: pictures in a print"
     printf '  %-8s %s\n' "${spell}" "spell check: aspell or hunspell"
     printf '  %-8s %s\n' "${thesaurus}" "thesaurus: Tools, Thesaurus"
@@ -1712,7 +1726,7 @@ function plan_prereqs
         return 0
     fi
 
-    for group in latex dvipng ghostscript spelling; do
+    for group in latex dvipng pictures ghostscript spelling; do
         gpk=()
 
         for pkg in "${pkgs[@]}"; do

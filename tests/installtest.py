@@ -94,6 +94,7 @@ STUB_PACKAGES = [
     ('tex-common', '6.18', 100000, 200),
     ('libkpathsea6', '2024.2', 300000, 600),
     ('dvipng', '1.17', 150000, 300),
+    ('poppler-utils', '24.02.0', 200000, 400),
     ('ghostscript', '10.0.0', 5000000, 20000),
     ('hunspell', '1.7.2', 80000, 300),
     ('hunspell-en-us', '1:2020.12', 600000, 900),
@@ -419,14 +420,19 @@ def prereq_default_test():
               'What Strata needs to run:' in out, out)
 
         def row(label):
-            r = [l for l in lines if label in l and l.startswith('  ')]
+            r = [l for l in lines
+                 if (label + ':') in l and l.startswith('  ')]
             return r[0] if len(r) == 1 else ''
 
         check('status: on a machine with none of the programs LaTeX, '
-              'dvipng, ghostscript and the spell check are missing',
+              'dvipng, pdftoppm, ghostscript and the spell check are missing',
               all(row(x).split()[:1] == ['missing'] for x in
-                  ('LaTeX', 'dvipng', 'ghostscript', 'spell check')),
-              out)
+                  ('LaTeX', 'dvipng', 'pdftoppm', 'ghostscript',
+                   'spell check')), out)
+        check('status: the lines say what dvipng and pdftoppm are for',
+              'equations as images' in row('dvipng') and
+              'pictures, keycaps and LaTeX markers' in row('pdftoppm') and
+              'keycaps' not in row('dvipng'), out)
         check('status: the thesaurus is %s as this machine shows' % thes,
               row('thesaurus').split()[:1] == [thes], out)
         # Ghostscript is there: it is present and is not asked for.
@@ -662,8 +668,8 @@ def user_prereq_test():
         hm = env['HOME']
         mythes = os.path.isdir('/usr/share/mythes')
         full = os.path.join(wk, 'full')
-        for n in ('pdflatex', 'latex', 'dvipdfmx', 'dvipng', 'gs', 'aspell',
-                  'lp', 'lpstat', 'curl', 'unzip'):
+        for n in ('pdflatex', 'latex', 'dvipdfmx', 'dvipng', 'pdftoppm', 'gs',
+                  'aspell', 'lp', 'lpstat', 'curl', 'unzip'):
             stub_program(full, n)
         stub_program(full, 'kpsewhich',
                      '#!/bin/sh\nfor f in "$@"; do echo "/x/$f"; done\n'
@@ -672,8 +678,8 @@ def user_prereq_test():
         env_full['PATH'] = full + ':' + fake
         # Everything but ghostscript.
         nogs = os.path.join(wk, 'nogs')
-        for n in ('pdflatex', 'latex', 'dvipdfmx', 'dvipng', 'aspell', 'lp',
-                  'lpstat', 'curl', 'unzip'):
+        for n in ('pdflatex', 'latex', 'dvipdfmx', 'dvipng', 'pdftoppm',
+                  'aspell', 'lp', 'lpstat', 'curl', 'unzip'):
             stub_program(nogs, n)
         stub_program(nogs, 'kpsewhich',
                      '#!/bin/sh\nfor f in "$@"; do echo "/x/$f"; done\n'

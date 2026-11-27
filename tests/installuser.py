@@ -239,8 +239,8 @@ BASICS = ('uniq expr od comm fold stat getconf perl bash sh yes cp tail cat '
           'rm rmdir mkdir tr sed readlink sort env ldd tar gzip xz zstd '
           'uname id ln mv touch date true false test sleep wc cut find '
           'xargs printf tee').split()
-OPTIONAL = ('pdflatex latex dvipdfmx dvipng gs kpsewhich aspell lp lpstat '
-            'curl unzip').split()
+OPTIONAL = ('pdflatex latex dvipdfmx dvipng pdftoppm gs kpsewhich aspell lp '
+            'lpstat curl unzip').split()
 FIRST = 'Optional programs are missing:'
 mythes = os.path.isdir('/usr/share/mythes')
 opt_count = [0]
@@ -327,7 +327,9 @@ check('optional: the block names each missing package with what is lost '
       'without it and the command of an administrator',
       blk is not None and all(w in flat for w in (
           'texlive-latex-base', 'printing to a PDF file or to a printer',
-          'dvipng', 'equations, LaTeX markers and keycaps as images',
+          'dvipng', 'equations as images in the window version',
+          'poppler-utils',
+          'pictures, keycaps and LaTeX markers as images in the window version',
           'ghostscript', 'pictures from PDF and EPS files', 'hunspell',
           'hunspell-en-us', 'the spell check', 'cups-client',
           'printing on a printer', 'curl', 'unzip',
@@ -336,8 +338,9 @@ check('optional: the block names each missing package with what is lost '
 check('optional: the command line of the administrator holds every package '
       'of the block', blk is not None and all(
           p in flat.split('sudo apt-get install --no-install-recommends')[-1]
-          for p in ('texlive-latex-base', 'dvipng', 'ghostscript', 'hunspell',
-                    'hunspell-en-us', 'cups-client', 'curl', 'unzip')), flat)
+          for p in ('texlive-latex-base', 'dvipng', 'poppler-utils',
+                    'ghostscript', 'hunspell', 'hunspell-en-us', 'cups-client',
+                    'curl', 'unzip')), flat)
 check('optional: nothing about the missing programs is printed before the '
       'block: no word missing, no "is not installed", no package, no '
       'command of an administrator', not [
@@ -363,8 +366,30 @@ flat = ' '.join(' '.join(blk or []).split())
 check('optional: with only ghostscript missing the block names ghostscript '
       'and the thesaurus when it is missing, and no other package; status '
       '0', st == 0 and blk is not None and 'ghostscript' in flat and
-      all(w not in flat for w in ('texlive', 'dvipng', 'hunspell', 'curl',
-                                  'unzip', 'cups-client')) and
+      all(w not in flat for w in ('texlive', 'dvipng', 'poppler-utils',
+                                  'hunspell', 'curl', 'unzip',
+                                  'cups-client')) and
+      ('mythes-en-us' in flat) == (not mythes), flat)
+
+# Only pdftoppm is missing: the window version shows the pictures, keycaps
+# and LaTeX markers in their short form, and the block says so and names the
+# package (poppler-utils), and dvipng is not blamed for it.
+others = [n for n in OPTIONAL if n != 'pdftoppm']
+env_pp, home_pp = machine(others)
+st, out = run([os.path.join(rel, 'strata-install')], env_pp, work)
+all_output.append(out)
+early, blk = block_of(out)
+flat = ' '.join(' '.join(blk or []).split())
+cmd = flat.split('sudo apt-get install --no-install-recommends')[-1]
+check('optional: with only pdftoppm missing the block names poppler-utils '
+      'with what is lost and the command of the administrator has it, and '
+      'no other package but the thesaurus when it is missing; status 0',
+      st == 0 and blk is not None and 'poppler-utils' in flat and
+      'pictures, keycaps and LaTeX markers as images in the window version'
+      in flat and 'poppler-utils' in cmd and
+      all(w not in flat for w in ('texlive', 'dvipng', 'ghostscript',
+                                  'hunspell', 'curl', 'unzip',
+                                  'cups-client')) and
       ('mythes-en-us' in flat) == (not mythes), flat)
 
 # A shared library that the X11 programs need is missing: the install is made
