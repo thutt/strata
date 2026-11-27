@@ -31,8 +31,9 @@ X11 frontend
     (the layout caps the page at 80 columns, as in the original; extra width is
     currently blank), keep the popups centred, and check str and the help viewer
     at many sizes.
-  - Mouse support (cursor placement, selection, wheel scrolling): studied in
-    docs/MOUSE.txt; a staged plan is recommended, nothing is built yet.
+  - Mouse support: stages 1 and 2 (the wheel, a click that places the
+    cursor) are done in the X11 window and the Viewer (docs/MOUSE.txt);
+    the terminal version, selection by dragging and the clipboard are not.
   - Window title showing the document name and a modified marker.
   - Font choice from a menu; HiDPI scaling.
 
@@ -876,7 +877,8 @@ Mouse operations (explore)
 --------------------------
   [x] STUDY DONE: see docs/MOUSE.txt (what exists, scrolling, click
       mapping, paste and selection, recommendation in four stages, and
-      the owner's decisions).  The work itself is not started.
+      the owner's decisions).  Stages 1 and 2 are built (see the item
+      Release 1.1.0 below); the other stages are not started.
   [ ] Explore the idea of allowing simple mouse operations in the Editor
       and the Document Manager: scrolling and cursor positioning; maybe
       pasting; maybe text selection.  This item is an EXPLORATION: its
@@ -4915,7 +4917,12 @@ The table of contents of a print  -- DONE.
     tests/mktocdata.py.  The index and the lists of figures and tables
     (D3b, D3c) are done too (alien-24, tests/indexlist.py).
 
-Release 1.5: rudimentary mouse support  -- SCHEDULED after release 1.
+Release 1.1.0: rudimentary mouse support  -- stages 1 and 2 DONE
+  - Status, 2026-11-27: stages 1 and 2 below are built and merged into
+    development-1 for the release 1.1.0 (the X11 window and the Viewer:
+    the wheel and a click); stages 3 and 4 and the decisions at the end
+    of this item are still open.  The rest of the item is the plan as it
+    was written, kept as history.
   - The owner (2026-11-16): put rudimentary mouse support on the schedule
     AFTER release 1, in release 1.5 perhaps.  Nothing of it is built before
     release 1.
